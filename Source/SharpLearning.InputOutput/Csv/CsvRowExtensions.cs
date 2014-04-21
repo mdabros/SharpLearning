@@ -10,7 +10,7 @@ namespace SharpLearning.InputOutput.Csv
     public static class CsvRowExtensions
     {
         /// <summary>
-        /// Parses the CsvRows to a vector. Only CsvRows with a single column can be used
+        /// Parses the CsvRows to a double array. Only CsvRows with a single column can be used
         /// </summary>
         /// <param name="dataRows"></param>
         /// <returns></returns>
@@ -27,7 +27,25 @@ namespace SharpLearning.InputOutput.Csv
         }
 
         /// <summary>
-        /// Parses the CsvRows to an F64Matrix
+        /// Parses the CsvRows to a string array. Only CsvRows with a single column can be used
+        /// </summary>
+        /// <param name="dataRows"></param>
+        /// <returns></returns>
+        public static string[] ToStringVector(this IEnumerable<CsvRow> dataRows)
+        {
+            var first = dataRows.First();
+
+            if (first.ColumnNameToIndex.Count != 1)
+            {
+                throw new ArgumentException("Vector can only be genereded from a single column");
+            }
+
+            return dataRows.SelectMany(values => values.Values).ToArray();
+        }
+
+
+        /// <summary>
+        /// Parses the CsvRows to a F64Matrix
         /// </summary>
         /// <param name="dataRows"></param>
         /// <returns></returns>
@@ -44,6 +62,26 @@ namespace SharpLearning.InputOutput.Csv
             }).ToArray();
 
             return new F64Matrix(features, rows, cols);
+        }
+
+        /// <summary>
+        /// Parses the CsvRows to a StringMatrix
+        /// </summary>
+        /// <param name="dataRows"></param>
+        /// <returns></returns>
+        public static StringMatrix ToStringMatrix(this IEnumerable<CsvRow> dataRows)
+        {
+            var first = dataRows.First();
+            var cols = first.ColumnNameToIndex.Count;
+            var rows = 0;
+
+            var features = dataRows.SelectMany(values =>
+            {
+                rows++;
+                return values.Values;
+            }).ToArray();
+
+            return new StringMatrix(features, rows, cols);
         }
 
         /// <summary>

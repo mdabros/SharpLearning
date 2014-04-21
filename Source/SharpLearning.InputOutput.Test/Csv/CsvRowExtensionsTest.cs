@@ -15,6 +15,8 @@ namespace SharpLearning.InputOutput.Test.Csv
         static readonly string[] Data = new string[] { "1", "2", "3", "4" };
         static readonly Dictionary<string, int> ColumnNameToIndex = new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "3", 2 }, { "4", 3 } };
         readonly F64Matrix ExpectedF64Matrix = new F64Matrix(Data.Select(value => FloatingPointConversion.ToF64(value)).ToArray(), 1, 4);
+        readonly StringMatrix ExpectedStringMatrix = new StringMatrix(Data, 1, 4);
+
         readonly string ExpectedWrite = "1;2;3;4\r\n1;2;3;4";
 
         [TestMethod]
@@ -24,6 +26,15 @@ namespace SharpLearning.InputOutput.Test.Csv
             var actual = sut.ToF64Matrix();
             Assert.AreEqual(ExpectedF64Matrix, actual);
         }
+
+        [TestMethod]
+        public void CsvRowExtensions_ToStringMatrix()
+        {
+            var sut = new List<CsvRow> { new CsvRow(Data, ColumnNameToIndex) };
+            var actual = sut.ToStringMatrix();
+            Assert.AreEqual(ExpectedStringMatrix, actual);
+        }
+
 
         [TestMethod]
         public void CsvRowExtensions_ToF64Vector()
@@ -37,6 +48,20 @@ namespace SharpLearning.InputOutput.Test.Csv
                             .ToF64Vector();
 
             CollectionAssert.AreEqual(new double[] { 1 }, actual);
+        }
+
+        [TestMethod]
+        public void CsvRowExtensions_ToStringVector()
+        {
+            var text = "one;two;three;four" + Environment.NewLine +
+                       "1;2;3;4";
+
+            var sut = new CsvParser(() => new StringReader(text));
+
+            var actual = sut.EnumerateRows("one")
+                            .ToStringVector();
+
+            CollectionAssert.AreEqual(new string[] { "1" }, actual);
         }
 
         [TestMethod]
