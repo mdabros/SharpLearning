@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using System.IO;
 
 namespace SharpLearning.InputOutput.Csv
 {
@@ -72,12 +73,12 @@ namespace SharpLearning.InputOutput.Csv
             }
         }
 
-        //public static void Write(this IEnumerable<CsvRow> dataRows, TextWriter writer, char separator = CsvParser.DefaultDelimiter)
-        //{
-        //    using (var csvWriter = new CsvWriter(writer, separator))
-        //    {
-        //        csvWriter.Write(dataRows);
-        //    }
-        //}
+        public static void Write(this IEnumerable<CsvRow> dataRows, TextWriter writer, char separator = CsvParser.DefaultDelimiter)
+        {
+            using (var csvWriter = new CsvWriter(writer, separator))
+            {
+                csvWriter.Write(dataRows);
+            }
+        }
     }
 }
