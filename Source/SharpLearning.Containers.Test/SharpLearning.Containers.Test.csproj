@@ -53,6 +53,8 @@
     <Compile Include="FloatingPointConversionTest.cs" />
     <Compile Include="Matrices\F64MatrixExtensionsTest.cs" />
     <Compile Include="Matrices\F64MatrixTest.cs" />
+    <Compile Include="Matrices\StringMatrixExtensionsTest.cs" />
+    <Compile Include="Matrices\StringMatrixTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

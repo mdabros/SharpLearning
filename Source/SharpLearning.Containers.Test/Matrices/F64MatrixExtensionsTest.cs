@@ -13,6 +13,16 @@ namespace SharpLearning.Containers.Test.Matrices
         readonly double[] CombineData = new double[] { 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6 };
 
         [TestMethod]
+        public void F64MatrixExtensions_ToStringMatrix()
+        {
+            var matrix = new F64Matrix(InputData, 2, 3);
+            var actual = matrix.ToStringMatrix();
+
+            var expected = new StringMatrix(InputData.Select(v => FloatingPointConversion.ToString(v)).ToArray(), 2, 3);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void F64MatrixExtensions_CombineF64Matrices()
         {
             var matrix1 = new F64Matrix(InputData, 2, 3);

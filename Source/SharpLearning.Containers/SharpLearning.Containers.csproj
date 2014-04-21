@@ -43,6 +43,8 @@
     <Compile Include="Matrices\F64MatrixExtensions.cs" />
     <Compile Include="Matrices\F64Matrix.cs" />
     <Compile Include="Matrices\IMatrix.cs" />
+    <Compile Include="Matrices\StringMatrix.cs" />
+    <Compile Include="Matrices\StringMatrixExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

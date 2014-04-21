@@ -2,20 +2,18 @@
 
 namespace SharpLearning.Containers.Matrices
 {
-    public static class F64MatrixExtensions
+    public static class StringMatrixExtensions
     {
-
         /// <summary>
-        /// Converts F64Matrix to StringMatrix
+        /// Converts StringMatrix to F64Matrix. This will fail if there are values not parsable as a double
         /// </summary>
-        /// <param name="matrix"></param>
+        /// <param name="stringMatrix"></param>
         /// <returns></returns>
-        public static StringMatrix ToStringMatrix(this F64Matrix matrix)
+        public static F64Matrix ToF64Matrix(this StringMatrix stringMatrix)
         {
-            var stringFeatures = Array.ConvertAll(matrix.GetFeatureArray(), FloatingPointConversion.ToString);
-            return new StringMatrix(stringFeatures, matrix.GetNumberOfRows(), matrix.GetNumberOfColumns());
+            var features = Array.ConvertAll(stringMatrix.GetFeatureArray(), FloatingPointConversion.ToF64);
+            return new F64Matrix(features, stringMatrix.GetNumberOfRows(), stringMatrix.GetNumberOfColumns());
         }
-
 
         /// <summary>
         /// Combines vector1 and vector2 columnwise. Vector2 is added to the end of vector1 
@@ -23,7 +21,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-        public static F64Matrix CombineCols(this double[] v1, double[] v2)
+        public static StringMatrix CombineCols(this string[] v1, string[] v2)
         {
             if (v1.Length != v2.Length)
             {
@@ -33,7 +31,7 @@ namespace SharpLearning.Containers.Matrices
             var rows = v1.Length;
             var cols = 2;
 
-            var features = new double[v1.Length + v2.Length];
+            var features = new string[v1.Length + v2.Length];
 
             var featuresIndex = 0;
             for (int i = 0; i < v1.Length; i++)
@@ -44,7 +42,7 @@ namespace SharpLearning.Containers.Matrices
                 featuresIndex++;
             }
 
-            return new F64Matrix(features, rows, cols);
+            return new StringMatrix(features, rows, cols);
         }
 
         /// <summary>
@@ -53,7 +51,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="m"></param>
         /// <param name="v"></param>
         /// <returns></returns>
-        public static F64Matrix CombineCols(this F64Matrix m, double[] v)
+        public static StringMatrix CombineCols(this StringMatrix m, string[] v)
         {
             if (m.GetNumberOfRows() != v.Length)
             {
@@ -63,7 +61,7 @@ namespace SharpLearning.Containers.Matrices
             var rows = v.Length;
             var cols = m.GetNumberOfColumns() + 1;
 
-            var features = new double[rows * cols];
+            var features = new string[rows * cols];
             var matrixArray = m.GetFeatureArray();
 
             var combineIndex = 0;
@@ -80,16 +78,16 @@ namespace SharpLearning.Containers.Matrices
             }
 
 
-            return new F64Matrix(features, rows, cols);
+            return new StringMatrix(features, rows, cols);
         }
 
         /// <summary>
-        /// Combines matrix1 and matrix2 columnwise. Matrix2 is added to the end of matrix1
+        /// Combines matrix1 and matrix2 columnwise. Matrix2 is added to the end of matrix1 
         /// </summary>
         /// <param name="m1"></param>
         /// <param name="m2"></param>
         /// <returns></returns>
-        public static F64Matrix CombineCols(this F64Matrix m1, F64Matrix m2)
+        public static StringMatrix CombineCols(this StringMatrix m1, StringMatrix m2)
         {
             if (m1.GetNumberOfRows() != m2.GetNumberOfRows())
             {
@@ -102,7 +100,7 @@ namespace SharpLearning.Containers.Matrices
             var matrixArray = m1.GetFeatureArray();
             var otherArray = m2.GetFeatureArray();
 
-            var features = new double[matrixArray.Length + otherArray.Length];
+            var features = new string[matrixArray.Length + otherArray.Length];
 
             var combineIndex = 0;
             for (int i = 0; i < rows; i++)
@@ -117,8 +115,8 @@ namespace SharpLearning.Containers.Matrices
                 combineIndex += m2.GetNumberOfColumns();
             }
 
-
-            return new F64Matrix(features, rows, columns);
+            return new StringMatrix(features, rows, columns);
         }
+
     }
 }
