@@ -1,14 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SharpLearning.Containers;
+﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace SharpLearning.InputOutput.Csv
 {
     public static class CsvRowExtensions
     {
+
+        /// <summary>
+        /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on. 
+        /// Notice that all matching rows are held in memory
+        /// </summary>
+        /// <param name="thisRows"></param>
+        /// <param name="otherRows"></param>
+        /// <param name="rowMatcher"></param>
+        /// <returns></returns>
+        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, Func<CsvRow, CsvRow, bool> rowMatcher)
+        {
+            var newColumnNameToIndex = thisRows.First().ColumnNameToIndex;
+            var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
+            foreach (var kvp in otherColumnNameToIndex)
+            {
+                if(newColumnNameToIndex.ContainsKey(kvp.Key))
+                {
+                    newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
+                }
+                else
+                {
+                    newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
+                }
+            }
+
+            var newRows = new List<CsvRow>();
+            foreach (var thisRow in thisRows)
+            {
+                foreach (var otherRow in otherRows)
+                {
+                    var thisValues = thisRow.Values;
+                    var otherValues = otherRow.Values;
+                    var newValues = new string[thisValues.Length + otherValues.Length];
+                    
+                    thisValues.CopyTo(newValues, 0);
+                    otherValues.CopyTo(newValues, thisValues.Length);
+
+                    if(rowMatcher(thisRow, otherRow))
+                    {
+                        newRows.Add(new CsvRow(newValues, newColumnNameToIndex));
+                        break;
+                    }
+                }
+            }
+
+            return newRows;
+        }
+
+        static string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
+        {
+            if(!columnNameToIndex.ContainsKey(key))
+            {
+                return key;
+            }
+            else
+            {
+                var index = 1;
+                var newKey = key + "_" + index;
+                while(columnNameToIndex.ContainsKey(newKey))
+                {
+                    index++;
+                    newKey = key + "_" + index;
+                }
+                return newKey;
+            }
+        }
 
         /// <summary>
         /// Gets the CsvRow value based on the supplied column name
