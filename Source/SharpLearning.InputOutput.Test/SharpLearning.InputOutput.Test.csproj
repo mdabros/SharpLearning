@@ -77,7 +77,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TimeData1.txt" />
+    <None Include="Resources\TimeData1.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -89,7 +89,7 @@
     <None Include="Resources\AptitudeTestData.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="TimeData2.txt" />
+    <None Include="Resources\TimeData2.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
