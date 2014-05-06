@@ -12,7 +12,6 @@ namespace SharpLearning.InputOutput.Csv
 
         /// <summary>
         /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on. 
-        /// Notice that all matching rows are held in memory
         /// </summary>
         /// <param name="thisRows"></param>
         /// <param name="otherRows"></param>
@@ -34,7 +33,6 @@ namespace SharpLearning.InputOutput.Csv
                 }
             }
 
-            var newRows = new List<CsvRow>();
             foreach (var thisRow in thisRows)
             {
                 foreach (var otherRow in otherRows)
@@ -48,13 +46,11 @@ namespace SharpLearning.InputOutput.Csv
 
                     if(rowMatcher(thisRow, otherRow))
                     {
-                        newRows.Add(new CsvRow(newValues, newColumnNameToIndex));
+                        yield return new CsvRow(newValues, newColumnNameToIndex);
                         break;
                     }
                 }
             }
-
-            return newRows;
         }
 
         static string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
