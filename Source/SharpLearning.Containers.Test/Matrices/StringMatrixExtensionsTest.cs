@@ -10,8 +10,9 @@ namespace SharpLearning.Containers.Test.Matrices
     public class StringMatrixExtensionsTest
     {
         readonly string[] InputData = new string[] { "1", "2", "3", "4", "5", "6" };
-        readonly string[] CombineData = new string[] { "1", "2", "3", "1", "2", "3", "4", "5", "6", "4", "5", "6" };
-        
+        readonly string[] CombineDataCols = new string[] { "1", "2", "3", "1", "2", "3", "4", "5", "6", "4", "5", "6" };
+        readonly string[] CombineDataRows = new string[] { "1", "2", "3", "4", "5", "6", "1", "2", "3", "4", "5", "6" };
+
         [TestMethod]
         public void StringMatrixExtensions_ToF64Matrix()
         {
@@ -22,14 +23,25 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
-        public void StringMatrixExtensions_CombineStringMatrices()
+        public void StringMatrixExtensions_CombineStringMatrices_Cols()
         {
             var matrix1 = new StringMatrix(InputData,2, 3);
             var matrix2 = new StringMatrix(InputData,2, 3);
 
             var actual = matrix1.CombineCols(matrix2);
 
-            Assert.AreEqual(new StringMatrix(CombineData, 2, 6), actual);
+            Assert.AreEqual(new StringMatrix(CombineDataCols, 2, 6), actual);
+        }
+
+        [TestMethod]
+        public void StringMatrixExtensions_CombineStringMatrices_Rows()
+        {
+            var matrix1 = new StringMatrix(InputData, 2, 3);
+            var matrix2 = new StringMatrix(InputData, 2, 3);
+
+            var actual = matrix1.CombineRows(matrix2);
+
+            Assert.AreEqual(new StringMatrix(CombineDataRows, 4, 3), actual);
         }
 
         [TestMethod]

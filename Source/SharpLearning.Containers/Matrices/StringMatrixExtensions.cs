@@ -118,5 +118,31 @@ namespace SharpLearning.Containers.Matrices
             return new StringMatrix(features, rows, columns);
         }
 
+        /// <summary>
+        /// Combines matrix1 and matrix2 rowwise. Matrix2 is added to the end of matrix1 
+        /// </summary>
+        /// <param name="m1"></param>
+        /// <param name="m2"></param>
+        /// <returns></returns>
+        public static StringMatrix CombineRows(this StringMatrix m1, StringMatrix m2)
+        {
+            if (m1.GetNumberOfColumns() != m2.GetNumberOfColumns())
+            {
+                throw new ArgumentException("matrices must have same number of rows inorder to be combined");
+            }
+
+            var rows = m1.GetNumberOfRows() + m2.GetNumberOfRows();
+            var columns = m1.GetNumberOfColumns();
+
+            var matrixArray = m1.GetFeatureArray();
+            var otherArray = m2.GetFeatureArray();
+
+            var features = new string[matrixArray.Length + otherArray.Length];
+
+            Array.Copy(matrixArray, features, matrixArray.Length);
+            Array.Copy(otherArray, 0, features, matrixArray.Length, otherArray.Length);
+
+            return new StringMatrix(features, rows, columns);
+        }
     }
 }
