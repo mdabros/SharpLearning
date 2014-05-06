@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput", "SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput.Test", "SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
@@ -10,6 +12,24 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Containers.Test", "SharpLearning.Containers.Test\SharpLearning.Containers.Test.csproj", "{27819CEA-B582-419B-8169-D1AD3DE3B1E1}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SharpLearning.InputOutput\\SharpLearning.InputOutput.csproj
+		SccProjectName1 = SharpLearning.InputOutput
+		SccLocalPath1 = SharpLearning.InputOutput
+		SccProjectUniqueName2 = SharpLearning.InputOutput.Test\\SharpLearning.InputOutput.Test.csproj
+		SccProjectName2 = SharpLearning.InputOutput.Test
+		SccLocalPath2 = SharpLearning.InputOutput.Test
+		SccProjectUniqueName3 = SharpLearning.Containers\\SharpLearning.Containers.csproj
+		SccProjectName3 = SharpLearning.Containers
+		SccLocalPath3 = SharpLearning.Containers
+		SccProjectUniqueName4 = SharpLearning.Containers.Test\\SharpLearning.Containers.Test.csproj
+		SccProjectName4 = SharpLearning.Containers.Test
+		SccLocalPath4 = SharpLearning.Containers.Test
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

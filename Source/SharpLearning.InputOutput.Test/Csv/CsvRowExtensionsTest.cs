@@ -1,11 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
-using System.Collections.Generic;
-using SharpLearning.Containers.Matrices;
-using System.Linq;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace SharpLearning.InputOutput.Test.Csv
 {
@@ -18,6 +18,24 @@ namespace SharpLearning.InputOutput.Test.Csv
         readonly StringMatrix ExpectedStringMatrix = new StringMatrix(Data, 1, 4);
 
         readonly string ExpectedWrite = "1;2;3;4\r\n1;2;3;4";
+
+        [TestMethod]
+        public void CsvRowExtensions_GetValues()
+        {
+            var sut = new CsvRow(Data, ColumnNameToIndex);
+            var actual = sut.GetValues(new string[] {"1", "3"});
+            var expected = new string[] { "1", "3" };
+            CollectionAssert.AreEqual(expected, actual);
+        }
+        
+        [TestMethod]
+        public void CsvRowExtensions_GetValue()
+        {
+            var sut = new CsvRow(Data, ColumnNameToIndex);
+            var actual = sut.GetValue("3");
+            var expected = "3";
+            Assert.AreEqual(expected, actual);
+        }
 
         [TestMethod]
         public void CsvRowExtensions_ToF64Matrix()

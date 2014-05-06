@@ -9,6 +9,31 @@ namespace SharpLearning.InputOutput.Csv
 {
     public static class CsvRowExtensions
     {
+
+        /// <summary>
+        /// Gets the CsvRow value based on the supplied column name
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="columnNames"></param>
+        /// <returns></returns>
+        public static string GetValue(this CsvRow row, string columnName)
+        {
+            return row.Values[(row.ColumnNameToIndex[columnName])];
+        }
+
+
+        /// <summary>
+        /// Gets the CsvRow values based on the supplied column names
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="columnNames"></param>
+        /// <returns></returns>
+        public static string[] GetValues(this CsvRow row, string[] columnNames)
+        {
+            var indices = columnNames.Select(n => row.ColumnNameToIndex[n]).ToArray();
+            return row.Values.GetIndices(indices);
+        }
+
         /// <summary>
         /// Parses the CsvRows to a double array. Only CsvRows with a single column can be used
         /// </summary>
@@ -23,7 +48,7 @@ namespace SharpLearning.InputOutput.Csv
                 throw new ArgumentException("Vector can only be genereded from a single column");
             }
 
-            return dataRows.SelectMany(values => values.Values.Select(v => FloatingPointConversion.ToF64(v))).ToArray();
+            return dataRows.SelectMany(values => values.Values.AsF64()).ToArray();
         }
 
         /// <summary>
@@ -58,7 +83,7 @@ namespace SharpLearning.InputOutput.Csv
             var features = dataRows.SelectMany(values =>
             {
                 rows++;
-                return values.Values.Select(v => FloatingPointConversion.ToF64(v));
+                return values.Values.AsF64();
             }).ToArray();
 
             return new F64Matrix(features, rows, cols);
