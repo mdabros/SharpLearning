@@ -58,6 +58,13 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Regression\MeanSquaredErrorRegressionMetricTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
+      <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
+      <Name>SharpLearning.Metrics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
