@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Csv\CsvParser.cs" />
     <Compile Include="Csv\CsvRowExtensions.cs" />
     <Compile Include="Csv\CsvRow.cs" />

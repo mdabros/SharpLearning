@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayExtensions.cs" />
+    <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="FloatingPointConversion.cs" />
     <Compile Include="Matrices\F64MatrixExtensions.cs" />
     <Compile Include="Matrices\F64Matrix.cs" />

@@ -54,6 +54,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
     <Compile Include="Csv\CsvParserTest.cs" />
     <Compile Include="Csv\CsvRowExtensionsTest.cs" />
     <Compile Include="Csv\CsvRowTest.cs" />
