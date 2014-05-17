@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput", "SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput.Test", "SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
@@ -11,9 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Containers", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Containers.Test", "SharpLearning.Containers.Test\SharpLearning.Containers.Test.csproj", "{27819CEA-B582-419B-8169-D1AD3DE3B1E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Metrics", "SharpLearning.Metrics\SharpLearning.Metrics.csproj", "{43B1CCC0-DFBF-427C-9147-E47A4263326B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Metrics.Test", "SharpLearning.Metrics.Test\SharpLearning.Metrics.Test.csproj", "{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -29,6 +31,12 @@ Global
 		SccProjectUniqueName4 = SharpLearning.Containers.Test\\SharpLearning.Containers.Test.csproj
 		SccProjectName4 = SharpLearning.Containers.Test
 		SccLocalPath4 = SharpLearning.Containers.Test
+		SccProjectUniqueName5 = SharpLearning.Metrics\\SharpLearning.Metrics.csproj
+		SccProjectName5 = SharpLearning.Metrics
+		SccLocalPath5 = SharpLearning.Metrics
+		SccProjectUniqueName6 = SharpLearning.Metrics.Test\\SharpLearning.Metrics.Test.csproj
+		SccProjectName6 = SharpLearning.Metrics.Test
+		SccLocalPath6 = SharpLearning.Metrics.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +59,14 @@ Global
 		{27819CEA-B582-419B-8169-D1AD3DE3B1E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27819CEA-B582-419B-8169-D1AD3DE3B1E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27819CEA-B582-419B-8169-D1AD3DE3B1E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43B1CCC0-DFBF-427C-9147-E47A4263326B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43B1CCC0-DFBF-427C-9147-E47A4263326B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43B1CCC0-DFBF-427C-9147-E47A4263326B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43B1CCC0-DFBF-427C-9147-E47A4263326B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
