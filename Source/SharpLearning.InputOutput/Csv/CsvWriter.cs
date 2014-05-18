@@ -98,7 +98,7 @@ namespace SharpLearning.InputOutput.Csv
             Dispose(true);
         }
 
-        protected void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (!m_disposed)
             {
