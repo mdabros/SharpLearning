@@ -34,5 +34,15 @@ namespace SharpLearning.Containers.Test
 
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void ArrayExtensions_AsInt32()
+        {
+            var sut = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var actual = sut.AsInt32();
+            var expected = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
     }
 }

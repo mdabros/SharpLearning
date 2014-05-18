@@ -46,6 +46,10 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Classification\ClassificationMatrix.cs" />
+    <Compile Include="Classification\IClassificationMetric.cs" />
+    <Compile Include="Classification\ClassificationMatrixStringConverter.cs" />
+    <Compile Include="Classification\TotalErrorClassificationMetric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regression\IRegressionMetric.cs" />
     <Compile Include="Regression\MeanAbsolutErrorRegressionMetric.cs" />
@@ -53,6 +57,7 @@
     <Compile Include="Regression\RootMeanLogRegressionMetric.cs" />
     <Compile Include="Regression\RootMeanSquareRegressionMetric.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
