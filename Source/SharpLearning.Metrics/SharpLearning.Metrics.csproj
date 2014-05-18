@@ -50,6 +50,7 @@
     <Compile Include="Regression\IRegressionMetric.cs" />
     <Compile Include="Regression\MeanAbsolutErrorRegressionMetric.cs" />
     <Compile Include="Regression\MeanSquaredErrorRegressionMetric.cs" />
+    <Compile Include="Regression\RootMeanLogRegressionMetric.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

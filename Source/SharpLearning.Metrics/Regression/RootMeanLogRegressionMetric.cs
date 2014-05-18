@@ -2,10 +2,10 @@
 
 namespace SharpLearning.Metrics.Regression
 {
-    public sealed class MeanAbsolutErrorRegressionMetric : IRegressionMetric
+    public sealed class RootMeanLogRegressionMetric : IRegressionMetric
     {
         /// <summary>
-        /// Calculates the mean absolute error between the targets and predictions e = Sum(abs(t - p))/length(t) 
+        /// Calculates the root mean logarithmic error between the targets and predictions e = Sum(Log(t +1) - log(p +1)))/length(t) 
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
@@ -17,12 +17,12 @@ namespace SharpLearning.Metrics.Regression
             {
                 var targetValue = targets[i];
                 var estimate = predictions[i];
-                var error = Math.Abs(targetValue - estimate);
-                meanSquareError += error;
+                var error = Math.Log(estimate + 1) - Math.Log(targetValue + 1);
+                meanSquareError += error * error;
             }
             meanSquareError *= (1.0 / targets.Length);
 
-            return meanSquareError;
+            return Math.Sqrt(meanSquareError);
         }
     }
 }

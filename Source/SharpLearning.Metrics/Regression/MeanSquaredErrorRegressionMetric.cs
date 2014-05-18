@@ -1,11 +1,11 @@
-﻿
-using System;
+﻿using System;
+
 namespace SharpLearning.Metrics.Regression
 {
-    public class MeanSquaredErrorRegressionMetric : IRegressionMetric
+    public sealed class MeanSquaredErrorRegressionMetric : IRegressionMetric
     {
         /// <summary>
-        /// Calculates the meansquared error between the targets and predictions e = (t - p)^2 
+        /// Calculates the meansquared error between the targets and predictions e = sum((t - p)^2)/length(t) 
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
