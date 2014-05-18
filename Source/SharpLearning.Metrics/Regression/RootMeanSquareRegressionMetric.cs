@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SharpLearning.Metrics.Regression
 {
-    public sealed class RootMeanLogRegressionMetric : IRegressionMetric
+    public sealed class RootMeanSquareRegressionMetric : IRegressionMetric
     {
         /// <summary>
-        /// Calculates the root mean logarithmic error between the targets and predictions e = Sum(Log(t +1) - log(p +1)))/length(t) 
+        /// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))  
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
@@ -19,7 +23,7 @@ namespace SharpLearning.Metrics.Regression
             {
                 var targetValue = targets[i];
                 var estimate = predictions[i];
-                var error = Math.Log(estimate + 1) - Math.Log(targetValue + 1);
+                var error = targetValue - estimate;
                 meanSquareError += error * error;
             }
             meanSquareError *= (1.0 / targets.Length);
