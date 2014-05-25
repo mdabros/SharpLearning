@@ -1,9 +1,9 @@
 ﻿
 namespace SharpLearning.Metrics.Classification
 {
-    public interface IClassificationMetric
+    public interface IClassificationMetric<T>
     {
-        double Error(double[] targets, double[] predictions);
-        string ErrorString(double[] targets, double[] predictions);
+        double Error(T[] targets, T[] predictions);
+        string ErrorString(T[] targets, T[] predictions);
     }
 }

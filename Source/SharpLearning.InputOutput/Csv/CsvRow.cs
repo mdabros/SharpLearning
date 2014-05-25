@@ -7,7 +7,7 @@ namespace SharpLearning.InputOutput.Csv
     /// <summary>
     /// CsvRow holding the row values and column name to index
     /// </summary>
-    public sealed class CsvRow
+    public class CsvRow
     {
         public readonly string[] Values;
         public readonly Dictionary<string, int> ColumnNameToIndex;

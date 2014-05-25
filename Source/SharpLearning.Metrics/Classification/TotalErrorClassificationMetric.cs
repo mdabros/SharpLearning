@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
 {
-    public sealed class TotalErrorClassificationMetric : IClassificationMetric
+    public sealed class TotalErrorClassificationMetric<T> : IClassificationMetric<T>
     {
-        readonly ClassificationMatrixStringConverter m_converter = new ClassificationMatrixStringConverter();
-        readonly ClassificationMatrix m_classificationMatrix = new ClassificationMatrix();
+        readonly ClassificationMatrixStringConverter<T> m_converter = new ClassificationMatrixStringConverter<T>();
+        readonly ClassificationMatrix<T> m_classificationMatrix = new ClassificationMatrix<T>();
 
-        public double Error(double[] targets, double[] predictions)
+        public double Error(T[] targets, T[] predictions)
         {
             var uniques = UniqueTargets(targets, predictions);
 
@@ -18,7 +18,7 @@ namespace SharpLearning.Metrics.Classification
             return TotalError(uniques, confusionMatrix);
         }
 
-        double TotalError(List<double> uniques, int[][] confusionMatrix)
+        double TotalError(List<T> uniques, int[][] confusionMatrix)
         {
             var totalSum = confusionMatrix.SelectMany(v => v).Sum();
             var errorSum = totalSum;
@@ -31,7 +31,7 @@ namespace SharpLearning.Metrics.Classification
             return (double)errorSum / (double)totalSum;
         }
 
-        List<double> UniqueTargets(double[] targets, double[] predictions)
+        List<T> UniqueTargets(T[] targets, T[] predictions)
         {
             var uniquePredictions = predictions.Distinct();
             var uniqueTargets = targets.Distinct();
@@ -41,7 +41,7 @@ namespace SharpLearning.Metrics.Classification
             return uniques;
         }
 
-        public string ErrorString(double[] targets, double[] predictions)
+        public string ErrorString(T[] targets, T[] predictions)
         {
             var uniques = UniqueTargets(targets, predictions);
 

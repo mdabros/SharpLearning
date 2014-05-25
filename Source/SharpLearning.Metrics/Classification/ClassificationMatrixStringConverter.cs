@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SharpLearning.Metrics.Classification
 {
-    public sealed class ClassificationMatrixStringConverter
+    public sealed class ClassificationMatrixStringConverter<T>
     {
         /// <summary>
         /// Creates a string representation of the classification matrix consisting of the provided confusion matrix and error matrix
@@ -14,7 +14,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="errorMatrix"></param>
         /// <param name="error"></param>
         /// <returns></returns>
-        public string Convert(List<double> uniqueTargets, int[][] confusionMatrix, double[][] errorMatrix, double error)
+        public string Convert(List<T> uniqueTargets, int[][] confusionMatrix, double[][] errorMatrix, double error)
         {
             var combinedMatrix = CombineMatrices(confusionMatrix, errorMatrix);
 

@@ -14,7 +14,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var errorMatrix = new double[][] { new double[] { 1.0, 0.0 }, new double[] { 1.0, 0.0 } };
             var uniqueTargets = new List<double> { 1.0, 2.0 };
 
-            var sut = new ClassificationMatrixStringConverter();
+            var sut = new ClassificationMatrixStringConverter<double>();
             var actual = sut.Convert(uniqueTargets, confusionMatrix, errorMatrix, 0.0);
 
             var expected = ";1;2;1;2\r\n1;10.00;0.00;1.00;0.00\r\n2;0.00;10.00;1.00;0.00\r\nError: 0.00000\r\n";

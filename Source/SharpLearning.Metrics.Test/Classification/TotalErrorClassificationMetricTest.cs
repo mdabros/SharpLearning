@@ -12,7 +12,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var predictions = new double[] { 0, 1, 1, 2, 3, 4, 4 };
             var targets = new double[] { 0, 1, 1, 2, 2, 3, 4 };
 
-            var sut = new TotalErrorClassificationMetric();
+            var sut = new TotalErrorClassificationMetric<double>();
             var actual = sut.Error(targets, predictions);
 
             Assert.AreEqual(0.2857142857142857, actual);
@@ -24,7 +24,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var predictions = new double[] { 0, 1, 1, 2, 3, 4, 4 };
             var targets = new double[] { 0, 1, 1, 2, 3, 4, 4 };
 
-            var sut = new TotalErrorClassificationMetric();
+            var sut = new TotalErrorClassificationMetric<double>();
             var actual = sut.Error(targets, predictions);
 
             Assert.AreEqual(0.0, actual);
@@ -36,7 +36,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var predictions = new double[] { 1, 1, 1, 1 };
             var targets = new double[] { 0, 0, 0, 0 };
 
-            var sut = new TotalErrorClassificationMetric();
+            var sut = new TotalErrorClassificationMetric<double>();
             var actual = sut.Error(targets, predictions);
 
             Assert.AreEqual(1.0, actual);
@@ -48,7 +48,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var predictions = new double[] { 0, 1, 1, 2, 3, 4, 4 };
             var targets = new double[] { 0, 1, 1, 2, 2, 3, 4 };
 
-            var sut = new TotalErrorClassificationMetric();
+            var sut = new TotalErrorClassificationMetric<double>();
             var actual = sut.ErrorString(targets, predictions);
 
             Assert.AreEqual(ExpectedStringResult, actual);
