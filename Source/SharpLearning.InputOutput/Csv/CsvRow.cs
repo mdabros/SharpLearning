@@ -12,7 +12,7 @@ namespace SharpLearning.InputOutput.Csv
         public readonly string[] Values;
         public readonly Dictionary<string, int> ColumnNameToIndex;
 
-        public CsvRow(string[] data, Dictionary<string, int> columnNameToIndex)
+        public CsvRow(Dictionary<string, int> columnNameToIndex, params string[] data)
         {
             if (data == null) { throw new ArgumentException("row"); }
             if (columnNameToIndex == null) { throw new ArgumentException("columnNameToIndex"); }

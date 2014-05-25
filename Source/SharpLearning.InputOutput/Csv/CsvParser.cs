@@ -46,7 +46,7 @@ namespace SharpLearning.InputOutput.Csv
                 while ((line = reader.ReadLine()) != null)
                 {
                     var lineSplit = Split(line, indices);
-                    yield return new CsvRow(lineSplit, subColumnNameToIndex);
+                    yield return new CsvRow(subColumnNameToIndex, lineSplit);
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace SharpLearning.InputOutput.Csv
                 while ((line = reader.ReadLine()) != null)
                 {
                     var lineSplit = Split(line, indices);
-                    yield return new CsvRow(lineSplit, subColumnNameToIndex);
+                    yield return new CsvRow(subColumnNameToIndex, lineSplit);
                 }
             }
         }
@@ -89,7 +89,7 @@ namespace SharpLearning.InputOutput.Csv
                 while ((line = reader.ReadLine()) != null)
                 {
                     var lineSplit = Split(line);
-                    yield return new CsvRow(lineSplit, columnNameToIndex);
+                    yield return new CsvRow(columnNameToIndex, lineSplit);
                 }
             }
         }

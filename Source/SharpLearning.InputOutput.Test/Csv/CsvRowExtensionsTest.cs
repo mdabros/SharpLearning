@@ -22,7 +22,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_GetValues()
         {
-            var sut = new CsvRow(Data, ColumnNameToIndex);
+            var sut = new CsvRow(ColumnNameToIndex, Data);
             var actual = sut.GetValues(new string[] {"1", "3"});
             var expected = new string[] { "1", "3" };
             CollectionAssert.AreEqual(expected, actual);
@@ -31,7 +31,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_GetValue()
         {
-            var sut = new CsvRow(Data, ColumnNameToIndex);
+            var sut = new CsvRow(ColumnNameToIndex, Data);
             var actual = sut.GetValue("3");
             var expected = "3";
             Assert.AreEqual(expected, actual);
@@ -39,8 +39,8 @@ namespace SharpLearning.InputOutput.Test.Csv
 
         [TestMethod]
         public void CsvRowExtensions_ToF64Matrix()
-        {  
-            var sut = new List<CsvRow> { new CsvRow(Data, ColumnNameToIndex) };
+        {
+            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
             var actual = sut.ToF64Matrix();
             Assert.AreEqual(ExpectedF64Matrix, actual);
         }
@@ -48,7 +48,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_ToStringMatrix()
         {
-            var sut = new List<CsvRow> { new CsvRow(Data, ColumnNameToIndex) };
+            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
             var actual = sut.ToStringMatrix();
             Assert.AreEqual(ExpectedStringMatrix, actual);
         }
@@ -85,7 +85,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_Write()
         {
-            var sut = new List<CsvRow> { new CsvRow(Data, ColumnNameToIndex) };
+            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
 
             var writer = new StringWriter();
             sut.Write(writer);

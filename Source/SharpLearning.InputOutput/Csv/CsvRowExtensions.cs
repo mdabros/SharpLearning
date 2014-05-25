@@ -46,7 +46,7 @@ namespace SharpLearning.InputOutput.Csv
 
                     if(rowMatcher(thisRow, otherRow))
                     {
-                        yield return new CsvRow(newValues, newColumnNameToIndex);
+                        yield return new CsvRow(newColumnNameToIndex, newValues);
                         break;
                     }
                 }
@@ -194,7 +194,7 @@ namespace SharpLearning.InputOutput.Csv
                                 .Select(value => value.ToString())
                                 .ToArray();
 
-                yield return new CsvRow(row, columnNameToIndex);
+                yield return new CsvRow(columnNameToIndex, row);
             }
         }
 
