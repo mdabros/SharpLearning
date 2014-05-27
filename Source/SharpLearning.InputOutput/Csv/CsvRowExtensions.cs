@@ -198,11 +198,18 @@ namespace SharpLearning.InputOutput.Csv
             }
         }
 
-        public static void Write(this IEnumerable<CsvRow> dataRows, TextWriter writer, char separator = CsvParser.DefaultDelimiter)
+        /// <summary>
+        /// Writes the CsvRows to the provided stream
+        /// </summary>
+        /// <param name="dataRows"></param>
+        /// <param name="writer"></param>
+        /// <param name="separator"></param>
+        /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
+        public static void Write(this IEnumerable<CsvRow> dataRows, TextWriter writer, char separator = CsvParser.DefaultDelimiter, bool writeHeader = true)
         {
             using (var csvWriter = new CsvWriter(writer, separator))
             {
-                csvWriter.Write(dataRows);
+                csvWriter.Write(dataRows, writeHeader);
             }
         }
     }

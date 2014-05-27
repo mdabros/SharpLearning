@@ -23,17 +23,21 @@ namespace SharpLearning.InputOutput.Csv
         }
 
         /// <summary>
-        /// Writes the CsvRows to file
+        /// Writes the CsvRows to stream
         /// </summary>
-        /// <param name="rows"></param>
-        public void Write(IEnumerable<CsvRow> rows)
+        /// <param name="rows">the rows to write</param>
+        /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
+        public void Write(IEnumerable<CsvRow> rows, bool writeHeader=true)
         {
-            var headerValues = rows.First().ColumnNameToIndex
-                                     .OrderBy(kvp => kvp.Value)
-                                     .Select(kvp => kvp.Key);
+            if (writeHeader)
+            {
+                var headerValues = rows.First().ColumnNameToIndex
+                                         .OrderBy(kvp => kvp.Value)
+                                         .Select(kvp => kvp.Key);
 
-            var headerLine = CreateHeader(headerValues);
-            m_writer.Write(headerLine);
+                var headerLine = CreateHeader(headerValues);
+                m_writer.Write(headerLine);
+            }
 
             foreach (var row in rows)
             {
