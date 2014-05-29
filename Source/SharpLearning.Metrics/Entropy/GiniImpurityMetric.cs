@@ -5,6 +5,12 @@ namespace SharpLearning.Metrics.Entropy
     {
         readonly IntCustomDictionary m_dict = new IntCustomDictionary();
 
+        /// <summary>
+        /// Calculates the Gini impurity of a sample. Main use is for decision tree classification
+        /// http://en.wikipedia.org/wiki/Decision_tree_learning
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
         public double Entropy(double[] values)
         {
             m_dict.Clear();
