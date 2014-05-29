@@ -60,6 +60,7 @@
     <Compile Include="Classification\ClassificationMatrixStringConverterTest.cs" />
     <Compile Include="Classification\ClassificationMatrixTest.cs" />
     <Compile Include="Classification\TotalErrorClassificationMetricTest.cs" />
+    <Compile Include="Entropy\GiniImpurityMetricTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regression\MeanAbsolutErrorRegressionMetricTest.cs" />
     <Compile Include="Regression\MeanSquaredErrorRegressionMetricTest.cs" />
