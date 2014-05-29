@@ -13,9 +13,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Metrics", "Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Metrics.Test", "SharpLearning.Metrics.Test\SharpLearning.Metrics.Test.csproj", "{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.DecisionTrees", "SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj", "{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.DecisionTrees.Test", "SharpLearning.DecisionTrees.Test\SharpLearning.DecisionTrees.Test.csproj", "{0AC6C985-1733-4083-8188-999FF7986861}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 9
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -37,6 +41,12 @@ Global
 		SccProjectUniqueName6 = SharpLearning.Metrics.Test\\SharpLearning.Metrics.Test.csproj
 		SccProjectName6 = SharpLearning.Metrics.Test
 		SccLocalPath6 = SharpLearning.Metrics.Test
+		SccProjectUniqueName7 = SharpLearning.DecisionTrees\\SharpLearning.DecisionTrees.csproj
+		SccProjectName7 = SharpLearning.DecisionTrees
+		SccLocalPath7 = SharpLearning.DecisionTrees
+		SccProjectUniqueName8 = SharpLearning.DecisionTrees.Test\\SharpLearning.DecisionTrees.Test.csproj
+		SccProjectName8 = SharpLearning.DecisionTrees.Test
+		SccLocalPath8 = SharpLearning.DecisionTrees.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +77,14 @@ Global
 		{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AC6C985-1733-4083-8188-999FF7986861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AC6C985-1733-4083-8188-999FF7986861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AC6C985-1733-4083-8188-999FF7986861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AC6C985-1733-4083-8188-999FF7986861}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
