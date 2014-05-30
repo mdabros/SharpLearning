@@ -4,7 +4,6 @@ namespace SharpLearning.Containers.Matrices
 {
     public static class F64MatrixExtensions
     {
-
         /// <summary>
         /// Converts F64Matrix to StringMatrix
         /// </summary>

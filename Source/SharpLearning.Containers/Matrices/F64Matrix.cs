@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpLearning.Containers.Views;
+using System;
 using System.Linq;
 
 namespace SharpLearning.Containers.Matrices
@@ -6,7 +7,7 @@ namespace SharpLearning.Containers.Matrices
     /// <summary>
     /// Matrix of doubles
     /// </summary>
-    public sealed class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
+    public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     {
         double[] m_featureArray;
         readonly int m_rows;
@@ -83,6 +84,7 @@ namespace SharpLearning.Containers.Matrices
 
             return row;
         }
+
 
         /// <summary>
         /// Gets the specified column
@@ -171,6 +173,11 @@ namespace SharpLearning.Containers.Matrices
         public int GetNumberOfRows()
         {
             return m_rows;
+        }
+
+        public F64MatrixPinnedPtr GetPinnedPointer()
+        {
+            return new F64MatrixPinnedPtr(this);
         }
 
         public bool Equals(F64Matrix other)
