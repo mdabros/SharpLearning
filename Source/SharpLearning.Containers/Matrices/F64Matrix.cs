@@ -175,6 +175,10 @@ namespace SharpLearning.Containers.Matrices
             return m_rows;
         }
 
+        /// <summary>
+        /// Gets a pinned pointer to the F64Matrix
+        /// </summary>
+        /// <returns></returns>
         public F64MatrixPinnedPtr GetPinnedPointer()
         {
             return new F64MatrixPinnedPtr(this);

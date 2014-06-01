@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using SharpLearning.Containers.Views;
+using System.Linq;
 
 namespace SharpLearning.Containers
 {
@@ -49,6 +50,16 @@ namespace SharpLearning.Containers
         public static int[] AsInt32(this double[] v)
         {
             return v.Select(s => (int)s).ToArray();
+        }
+
+        /// <summary>
+        /// Gets a pinned pointer to the double array
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static F64VectorPinnedPtr GetPinnedPointer(this double[] v)
+        {
+            return new F64VectorPinnedPtr(v);
         }
     }
 }

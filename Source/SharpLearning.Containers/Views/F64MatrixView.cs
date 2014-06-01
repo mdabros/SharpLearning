@@ -2,7 +2,7 @@
 namespace SharpLearning.Containers.Views
 {
     /// <summary>
-    /// Creates a view over an F64Matrix
+    /// View over an F64Matrix
     /// </summary>
     public unsafe struct F64MatrixView
     {

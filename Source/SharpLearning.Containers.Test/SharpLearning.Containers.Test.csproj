@@ -66,6 +66,7 @@
     <Compile Include="Matrices\StringMatrixExtensionsTest.cs" />
     <Compile Include="Matrices\StringMatrixTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\F64VectorViewTest.cs" />
     <Compile Include="Views\Interval2DTest.cs" />
     <Compile Include="Views\F64MatrixViewTest.cs" />
     <Compile Include="Views\Interval1DTest.cs" />

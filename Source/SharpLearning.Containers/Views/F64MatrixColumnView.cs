@@ -40,7 +40,7 @@ namespace SharpLearning.Containers.Views
    		public int Rows { get { return m_rows; } }
 
         /// <summary>
-        /// Gets the of the column view
+        /// Gets the interval of the column view
         /// </summary>
         public Interval1D Interval { get { return new Interval1D(0, m_rows); } }
 
