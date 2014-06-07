@@ -44,6 +44,17 @@ namespace SharpLearning.Containers.Views
                 return false;
         }
 
+        public static bool operator !=(Interval2D x, Interval2D y)
+        { 
+            return !(x == y); 
+        }
+        
+        public static bool operator ==(Interval2D x, Interval2D y)
+        { 
+            return (x.Cols == y.Cols) && 
+                   (x.Rows== y.Rows); 
+        }
+
         public override int GetHashCode()
         {
             return this.Cols.GetHashCode() ^ this.Rows.GetHashCode();

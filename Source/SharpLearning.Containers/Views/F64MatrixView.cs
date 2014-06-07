@@ -11,7 +11,25 @@ namespace SharpLearning.Containers.Views
         readonly int m_cols;
         readonly int m_strideInBytes;
         readonly double* m_dataPtr;
-        
+
+        /// <summary>
+        /// Gets the number of columns
+        /// </summary>
+        /// <returns></returns>
+        public int GetNumberOfColumns()
+        {
+            return m_cols;
+        }
+
+        /// <summary>
+        /// Gets the number of rows
+        /// </summary>
+        /// <returns></returns>
+        public int GetNumberOfRows()
+        {
+            return m_rows;
+        }
+
         /// <summary>
         /// Creates a view over an F64Matrix
         /// </summary>

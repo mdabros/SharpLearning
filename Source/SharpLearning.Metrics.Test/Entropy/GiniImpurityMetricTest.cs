@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Containers.Views;
 using SharpLearning.Metrics.Entropy;
 
 namespace SharpLearning.Metrics.Test.Entropy
@@ -22,5 +23,24 @@ namespace SharpLearning.Metrics.Test.Entropy
             var val3 = sut.Entropy(set3);
             Assert.AreEqual(0.0, val3);
         }
+
+        [TestMethod]
+        public void GiniImpurityMetric_Entropy_Interval()
+        {
+            var set1 = new double[] { 0, 1, 2, 3, 4, 3, 2, 1, 0 };
+            var set2 = new double[] { 1, 1, 1, 1, 2, 2, 2, 2 };
+            var set3 = new double[] { 1, 1, 1, 1, 1, 1, 1, 1 };
+
+            var sut = new GiniImpurityMetric();
+            var interval = Interval1D.Create(2, 7);
+
+            var val1 = sut.Entropy(set1, interval);
+            Assert.AreEqual(0.88888888888888884, val1);
+            var val2 = sut.Entropy(set2, interval);
+            Assert.AreEqual(0.796875, val2);
+            var val3 = sut.Entropy(set3, interval);
+            Assert.AreEqual(0.609375, val3);
+        }
+
     }
 }

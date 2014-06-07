@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Views;
+using System;
 using System.Linq;
 
 namespace SharpLearning.Containers
@@ -60,6 +61,64 @@ namespace SharpLearning.Containers
         public static F64VectorPinnedPtr GetPinnedPointer(this double[] v)
         {
             return new F64VectorPinnedPtr(v);
+        }
+
+        /// <summary>
+        /// Sorts the keys and values based on the keys within the provided interval 
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValues"></typeparam>
+        /// <param name="keys"></param>
+        /// <param name="interval"></param>
+        /// <param name="values"></param>
+        public static void SortWith<TKey, TValues>(this TKey[] keys, Interval1D interval, TValues[] values)
+        {
+            Array.Sort(keys, values, interval.FromInclusive, interval.Length);
+        }
+
+        /// <summary>
+        /// Copies the source to the distination within the provided interval
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="interval"></param>
+        /// <param name="distination"></param>
+        public static void CopyTo<T>(this T[] source, Interval1D interval, T[] distination)
+        {
+            Array.Copy(source, interval.FromInclusive, distination, interval.FromInclusive, interval.Length);
+        }
+
+        /// <summary>
+        /// Copies the provided indices from source to destination within the provided interval
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="indices"></param>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        public static void IndexedCopy<T>(this int[] indices, T[] source, Interval1D interval, T[] destination)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                var index = indices[i];
+                destination[i] = source[index];
+            }
+        }
+
+        /// <summary>
+        /// Copies the provided indices from source to destination within the provided interval
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="indices"></param>
+        /// <param name="source"></param>
+        /// <param name="interval"></param>
+        /// <param name="destination"></param>
+        public static void IndexedCopy(this int[] indices, F64MatrixColumnView source, Interval1D interval, double[] destination)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                var index = indices[i];
+                destination[i] = source[index];
+            }
         }
     }
 }

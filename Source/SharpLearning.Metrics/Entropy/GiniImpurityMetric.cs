@@ -1,4 +1,5 @@
-﻿
+﻿using SharpLearning.Containers.Views;
+
 namespace SharpLearning.Metrics.Entropy
 {
     public sealed class GiniImpurityMetric : IEntropyMetric
@@ -16,6 +17,36 @@ namespace SharpLearning.Metrics.Entropy
             m_dict.Clear();
 
             for (int i = 0; i < values.Length; i++)
+            {
+                var targetInt = (int)values[i];
+
+                int pos = m_dict.InitOrGetPosition(targetInt);
+                int prevCount = m_dict.GetAtPosition(pos);
+                m_dict.StoreAtPosition(pos, ++prevCount);
+            }
+
+            var totalInv = 1.0 / values.Length;
+            var giniSum = 0.0;
+            foreach (var pair in m_dict)
+            {
+                var ratio = pair.Value * totalInv;
+                giniSum += ratio * ratio;
+            }
+
+            return 1 - giniSum;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public double Entropy(double[] values, Interval1D interval)
+        {
+            m_dict.Clear();
+
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
                 var targetInt = (int)values[i];
 

@@ -69,6 +69,10 @@
     <Compile Include="Regression\RootMeanSquareRegressionMetricTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
       <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
       <Name>SharpLearning.Metrics</Name>

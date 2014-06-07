@@ -61,7 +61,12 @@
     <Compile Include="Regression\RootMeanLogRegressionMetric.cs" />
     <Compile Include="Regression\RootMeanSquareRegressionMetric.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

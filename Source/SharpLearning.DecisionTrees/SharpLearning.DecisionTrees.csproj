@@ -46,8 +46,32 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="LeafValueFactories\ClassificationLeafValueFactory.cs" />
+    <Compile Include="LeafValueFactories\ILeafValueFactory.cs" />
+    <Compile Include="LeafValueFactories\RegressionLeafValueFactory.cs" />
+    <Compile Include="Learners\CartLearner.cs" />
+    <Compile Include="Models\RegressionCartModel.cs" />
+    <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
+    <Compile Include="Learners\RegressionCartLearner.cs" />
+    <Compile Include="FeatureCandidateSelectors\AllFeatureCandidateSelector.cs" />
+    <Compile Include="Learners\FeatureSplit.cs" />
+    <Compile Include="FeatureCandidateSelectors\IFeatureCandidateSelector.cs" />
+    <Compile Include="Nodes\BinaryDicisionNodeBase.cs" />
+    <Compile Include="Nodes\ContinousBinaryDecisionNode.cs" />
+    <Compile Include="Nodes\IBinaryDecisionNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
+      <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
+      <Name>SharpLearning.Metrics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

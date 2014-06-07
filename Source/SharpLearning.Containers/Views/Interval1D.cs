@@ -33,6 +33,17 @@ namespace SharpLearning.Containers.Views
             return new Interval1D(fromInclusive, toExclusive);
         }
 
+        public static bool operator !=(Interval1D x, Interval1D y)
+        {
+            return !(x == y);
+        }
+
+        public static bool operator ==(Interval1D x, Interval1D y)
+        {
+            return (x.FromInclusive == y.FromInclusive) &&
+                   (x.ToExclusive == y.ToExclusive);
+        }
+
         public bool Equals(Interval1D other)
         {
             return (this.FromInclusive == other.FromInclusive) && 
