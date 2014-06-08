@@ -35,11 +35,11 @@ namespace SharpLearning.Metrics.Test.Entropy
             var interval = Interval1D.Create(2, 7);
 
             var val1 = sut.Entropy(set1, interval);
-            Assert.AreEqual(0.88888888888888884, val1);
+            Assert.AreEqual(0.6399999999999999, val1);
             var val2 = sut.Entropy(set2, interval);
-            Assert.AreEqual(0.796875, val2);
+            Assert.AreEqual(0.47999999999999987, val2);
             var val3 = sut.Entropy(set3, interval);
-            Assert.AreEqual(0.609375, val3);
+            Assert.AreEqual(0.0, val3);
         }
 
     }

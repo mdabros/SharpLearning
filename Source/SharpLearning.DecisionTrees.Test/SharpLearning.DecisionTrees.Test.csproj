@@ -60,7 +60,9 @@
     <Compile Include="FeatureCandidateSelectors\AllCandidateSelectorTest.cs" />
     <Compile Include="LeafValueFactories\ClassificationLeafValueFactoryTest.cs" />
     <Compile Include="LeafValueFactories\RegressionLeafValueFactoryTest.cs" />
+    <Compile Include="Learners\ClassificationCartLearnerTest.cs" />
     <Compile Include="Learners\RegressionCartLearnerTest.cs" />
+    <Compile Include="Models\ClassificationCartModelTest.cs" />
     <Compile Include="Models\RegressionCartModelTest.cs" />
     <Compile Include="Nodes\ContinousBinaryDecisionNodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -97,7 +99,12 @@
   <ItemGroup>
     <None Include="Resources\DecisionTreeData.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\AptitudeData.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Glass.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

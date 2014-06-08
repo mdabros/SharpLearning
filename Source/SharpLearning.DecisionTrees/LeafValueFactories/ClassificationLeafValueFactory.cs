@@ -21,7 +21,7 @@ namespace SharpLearning.DecisionTrees.LeafValueFactories
             var groups = values.GroupBy(v => v);
             var list = groups.OrderByDescending(g => g.Count()).ToList();
 
-            return list[0].Key;
+            return list.First().Key;
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SharpLearning.DecisionTrees.LeafValueFactories
                 }
             }
 
-            return m_dictionary.OrderByDescending(kvp => kvp.Value).First().Value;
+            return m_dictionary.OrderByDescending(kvp => kvp.Value).First().Key;
         }
     }
 }

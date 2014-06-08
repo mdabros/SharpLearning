@@ -50,6 +50,8 @@
     <Compile Include="LeafValueFactories\ILeafValueFactory.cs" />
     <Compile Include="LeafValueFactories\RegressionLeafValueFactory.cs" />
     <Compile Include="Learners\CartLearner.cs" />
+    <Compile Include="Learners\ClassificationCartLearner.cs" />
+    <Compile Include="Models\ClassificationCartModel.cs" />
     <Compile Include="Models\RegressionCartModel.cs" />
     <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
     <Compile Include="Learners\RegressionCartLearner.cs" />

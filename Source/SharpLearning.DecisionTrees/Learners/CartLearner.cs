@@ -211,11 +211,23 @@ namespace SharpLearning.DecisionTrees.Learners
                 }
                 else
                 {
-                    m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
-
+                    if (first)
+                    {
+                        indices.IndexedCopy(targets, parentInterval, m_workTargets);
+                    }
+                    else
+                    {
+                        m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
+                    }
                     node.Parent = parentNode;
                     node.FeatureIndex = -1;
                     node.Value = m_leafValueFactory.Calculate(m_workTargets, parentInterval);
+
+                    if (first)
+                    {
+                        root = node;
+                        first = false;
+                    }
                 }
 
                 switch (parentItem.NodeType)

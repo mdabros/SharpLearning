@@ -55,7 +55,7 @@ namespace SharpLearning.Metrics.Entropy
                 m_dict.StoreAtPosition(pos, ++prevCount);
             }
 
-            var totalInv = 1.0 / values.Length;
+            var totalInv = 1.0 / interval.Length;
             var giniSum = 0.0;
             foreach (var pair in m_dict)
             {
