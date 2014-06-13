@@ -16,7 +16,7 @@ namespace SharpLearning.DecisionTrees.Nodes
                 return Value;
             }
 
-            if (observation[FeatureIndex] > Value)
+            if (observation[FeatureIndex] <= Value)
             {
                 return Left.Predict(observation);
             }

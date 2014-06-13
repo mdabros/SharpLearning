@@ -113,7 +113,7 @@ namespace SharpLearning.DecisionTrees.Learners
             m_featureCandidateSelector.Select(observations.GetNumberOfColumns(), m_featureCandidates);
 
             var stack = new Stack<DecisionNodeCreationItem>(m_maximumTreeDepth);
-            stack.Push(new DecisionNodeCreationItem(null, NodeSplitType.Root, allInterval, rootEntropy, 0));
+            stack.Push(new DecisionNodeCreationItem(null, NodePositionType.Root, allInterval, rootEntropy, 0));
 
             var first = true;
             IBinaryDecisionNode root = null;
@@ -135,6 +135,7 @@ namespace SharpLearning.DecisionTrees.Learners
                 var parentNode = parentItem.Parent;
                 var parentEntropy = parentItem.Entropy;
                 var parentNodeDepth = parentItem.NodeDepth;
+                var parentNodePositionType = parentItem.NodeType;
 
                 if (first && parentItem.Parent != null)
                 {
@@ -201,18 +202,22 @@ namespace SharpLearning.DecisionTrees.Learners
                 }
 
                 m_bestSplitWorkIndices.CopyTo(parentInterval, m_workIndices);
-                var node = new ContinousBinaryDecisionNode();
 
                 if (bestSplitIndex >= 0 && bestInformationGain > m_minimumInformationGain && m_maximumTreeDepth > parentNodeDepth)
                 {
+                    var split = new ContinousBinaryDecisionNode
+                    {
+                        Parent = parentNode,
+                        FeatureIndex = bestFeatureSplit.Index,
+                        Value = bestFeatureSplit.Value
+                    };
 
-                    node.Parent = parentNode;
-                    node.FeatureIndex = bestFeatureSplit.Index;
-                    node.Value = bestFeatureSplit.Value;
                     var nodeDepth = parentNodeDepth + 1;
 
-                    stack.Push(new DecisionNodeCreationItem(node, NodeSplitType.Right, bestRightInterval, bestRightEntropy, nodeDepth));
-                    stack.Push(new DecisionNodeCreationItem(node, NodeSplitType.Left, bestLeftInterval, bestLeftEntropy, nodeDepth));
+                    stack.Push(new DecisionNodeCreationItem(split, NodePositionType.Right, bestRightInterval, bestRightEntropy, nodeDepth));
+                    stack.Push(new DecisionNodeCreationItem(split, NodePositionType.Left, bestLeftInterval, bestLeftEntropy, nodeDepth));
+
+                    parentNode.AddChild(parentNodePositionType, split);
                 }
                 else
                 {
@@ -224,29 +229,18 @@ namespace SharpLearning.DecisionTrees.Learners
                     {
                         m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
                     }
-                    node.Parent = parentNode;
-                    node.FeatureIndex = -1;
-                    node.Value = m_leafValueFactory.Calculate(m_workTargets, parentInterval);
+
+                    var leaf = new ContinousBinaryDecisionNode();
+                    leaf.Parent = parentNode;
+                    leaf.FeatureIndex = -1;
+                    leaf.Value = m_leafValueFactory.Calculate(m_workTargets, parentInterval);
+                    parentNode.AddChild(parentNodePositionType, leaf);
 
                     if (first)
                     {
-                        root = node;
+                        root = leaf;
                         first = false;
                     }
-                }
-
-                switch (parentItem.NodeType)
-                {
-                    case NodeSplitType.Root:
-                        break;
-                    case NodeSplitType.Left:
-                        parentNode.Right = node;
-                        break;
-                    case NodeSplitType.Right:
-                        parentNode.Left = node;
-                        break;
-                    default:
-                        break;
                 }
             }
 

@@ -53,6 +53,7 @@
     <Compile Include="Learners\ClassificationCartLearner.cs" />
     <Compile Include="Models\ClassificationCartModel.cs" />
     <Compile Include="Models\RegressionCartModel.cs" />
+    <Compile Include="Nodes\BinaryDecisionNodeExtensions.cs" />
     <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
     <Compile Include="Learners\RegressionCartLearner.cs" />
     <Compile Include="FeatureCandidateSelectors\AllFeatureCandidateSelector.cs" />

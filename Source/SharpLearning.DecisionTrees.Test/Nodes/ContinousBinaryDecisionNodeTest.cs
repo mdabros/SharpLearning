@@ -39,8 +39,8 @@ namespace SharpLearning.DecisionTrees.Test.Nodes
         public void ContinousBinaryDecisionNode_Predict()
         {
             var sut = new ContinousBinaryDecisionNode { FeatureIndex = 0, Value = 20 };
-            var left = new ContinousBinaryDecisionNode { FeatureIndex = -1, Value = 30 };
-            var right = new ContinousBinaryDecisionNode { FeatureIndex = -1, Value = 10 };
+            var right = new ContinousBinaryDecisionNode { FeatureIndex = -1, Value = 30 };
+            var left = new ContinousBinaryDecisionNode { FeatureIndex = -1, Value = 10 };
             sut.Left = left;
             sut.Right = right;
     
