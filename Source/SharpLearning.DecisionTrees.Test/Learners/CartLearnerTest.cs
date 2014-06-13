@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Metrics.Entropy;
-using SharpLearning.DecisionTrees.LeafValueFactories;
+using SharpLearning.DecisionTrees.LeafFactories;
 
 namespace SharpLearning.DecisionTrees.Test.Learners
 {
@@ -16,7 +16,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             new CartLearner(0, 1, 0.1, 
                 new GiniImpurityMetric(), 
                 new AllFeatureCandidateSelector(), 
-                new ClassificationLeafValueFactory());
+                new ClassificationLeafFactory());
         }
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             new CartLearner(1, 0, 0.1,
                 new GiniImpurityMetric(),
                 new AllFeatureCandidateSelector(),
-                new ClassificationLeafValueFactory());
+                new ClassificationLeafFactory());
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             new CartLearner(1, 1, 0,
                 new GiniImpurityMetric(),
                 new AllFeatureCandidateSelector(),
-                new ClassificationLeafValueFactory());
+                new ClassificationLeafFactory());
         }
     }
 }

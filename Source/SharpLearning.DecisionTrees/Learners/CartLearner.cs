@@ -1,7 +1,7 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
-using SharpLearning.DecisionTrees.LeafValueFactories;
+using SharpLearning.DecisionTrees.LeafFactories;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.Metrics.Entropy;
@@ -20,7 +20,7 @@ namespace SharpLearning.DecisionTrees.Learners
         readonly IEntropyMetric m_entropyMetric;
         //readonly ISplitFinder m_splitFinder;
         readonly IFeatureCandidateSelector m_featureCandidateSelector;
-        readonly ILeafValueFactory m_leafValueFactory;
+        readonly ILeafFactory m_leafValueFactory;
         
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
@@ -42,7 +42,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="featureCandidateSelector">The feature candidate selector used to decide which feature indices the learner can choose from at each split</param>
         /// <param name="leafValueFactory">The type of leaf created when no more splits can be made</param>
         public CartLearner(int minimumSplitSize, int maximumTreeDepth, double minimumInformationGain, IEntropyMetric entropyMetric, //ISplitFinder splitFinder, 
-                           IFeatureCandidateSelector featureCandidateSelector, ILeafValueFactory leafValueFactory)
+                           IFeatureCandidateSelector featureCandidateSelector, ILeafFactory leafValueFactory)
         {
             if (entropyMetric == null) { throw new ArgumentNullException("entropyMetric"); }
             //if (splitFinder == null) { throw new ArgumentNullException("splitFinder"); }
@@ -221,27 +221,17 @@ namespace SharpLearning.DecisionTrees.Learners
                 }
                 else
                 {
-                    if (first)
-                    {
-                        indices.IndexedCopy(targets, parentInterval, m_workTargets);
-                    }
-                    else
-                    {
-                        m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
-                    }
+                    m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
+                    
+                    var leaf = m_leafValueFactory.Create(parentNode, m_workTargets, parentInterval);
 
-                    var leaf = new ContinousBinaryDecisionNode();
-                    leaf.Parent = parentNode;
-                    leaf.FeatureIndex = -1;
-                    leaf.Value = m_leafValueFactory.Calculate(m_workTargets, parentInterval);
                     parentNode.AddChild(parentNodePositionType, leaf);
-
-                    if (first)
-                    {
-                        root = leaf;
-                        first = false;
-                    }
                 }
+            }
+
+            if(root == null) // No valid split return single leaf result
+            {
+                root = m_leafValueFactory.Create(null, targets);
             }
 
             return root;

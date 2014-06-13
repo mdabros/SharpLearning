@@ -1,36 +1,45 @@
 ﻿using SharpLearning.Containers.Views;
+using SharpLearning.DecisionTrees.Nodes;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.DecisionTrees.LeafValueFactories
+namespace SharpLearning.DecisionTrees.LeafFactories
 {
     /// <summary>
     /// Uses majority vote for leaf value calculation
     /// </summary>
-    public sealed class ClassificationLeafValueFactory : ILeafValueFactory
+    public sealed class ClassificationLeafFactory : ILeafFactory
     {
         Dictionary<double, int> m_dictionary = new Dictionary<double, int>();
 
         /// <summary>
-        /// Provides the value of a leaf given a range of values. Using majority vote
+        /// Provides a classification leaf given a range of values. Using majority vote
         /// </summary>
+        /// <param name="parent"></param>
         /// <param name="values"></param>
         /// <returns></returns>
-        public double Calculate(double[] values)
+        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values)
         {
             var groups = values.GroupBy(v => v);
             var list = groups.OrderByDescending(g => g.Count()).ToList();
 
-            return list.First().Key;
+            var leafValue = list.First().Key;
+            return new ContinousBinaryDecisionNode
+            {
+                Parent = parent,
+                FeatureIndex = -1,
+                Value = leafValue
+            };
         }
 
         /// <summary>
-        /// Provides the value of a leaf given a range of values and a calculation interval. using majority vote
+        /// Provides a classification leaf given a range of values and a calculation interval. using majority vote
         /// </summary>
+        /// <param name="parent"></param>
         /// <param name="values"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public double Calculate(double[] values, Interval1D interval)
+        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, Interval1D interval)
         {
             m_dictionary.Clear();
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
@@ -46,7 +55,13 @@ namespace SharpLearning.DecisionTrees.LeafValueFactories
                 }
             }
 
-            return m_dictionary.OrderByDescending(kvp => kvp.Value).First().Key;
+            var leafValue = m_dictionary.OrderByDescending(kvp => kvp.Value).First().Key;
+            return new ContinousBinaryDecisionNode
+            {
+                Parent = parent,
+                FeatureIndex = -1,
+                Value = leafValue
+            };
         }
     }
 }

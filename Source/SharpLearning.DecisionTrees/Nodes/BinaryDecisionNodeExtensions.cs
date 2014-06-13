@@ -24,7 +24,7 @@ namespace SharpLearning.DecisionTrees.Nodes
                     parent.Right = child;
                     break;
                 default:
-                    throw new InvalidOperationException("Unsupported split type");
+                    throw new InvalidOperationException("Unsupported position type");
             }
         }
     }

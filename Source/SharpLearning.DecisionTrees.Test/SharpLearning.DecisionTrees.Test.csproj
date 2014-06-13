@@ -58,8 +58,8 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="FeatureCandidateSelectors\AllCandidateSelectorTest.cs" />
-    <Compile Include="LeafValueFactories\ClassificationLeafValueFactoryTest.cs" />
-    <Compile Include="LeafValueFactories\RegressionLeafValueFactoryTest.cs" />
+    <Compile Include="LeafFactories\ClassificationLeafFactoryTest.cs" />
+    <Compile Include="LeafFactories\RegressionLeafFactoryTest.cs" />
     <Compile Include="Learners\CartLearnerTest.cs" />
     <Compile Include="Learners\ClassificationCartLearnerTest.cs" />
     <Compile Include="Learners\RegressionCartLearnerTest.cs" />
