@@ -20,7 +20,7 @@ namespace SharpLearning.DecisionTrees.Learners
         readonly IEntropyMetric m_entropyMetric;
         //readonly ISplitFinder m_splitFinder;
         readonly IFeatureCandidateSelector m_featureCandidateSelector;
-        readonly ILeafFactory m_leafValueFactory;
+        readonly ILeafFactory m_leafFactory;
         
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
@@ -40,14 +40,14 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="entropyMetric">The entropy metric used to calculate the best splits</param>
         /// <param name="featureCandidateSelector">The feature candidate selector used to decide which feature indices the learner can choose from at each split</param>
-        /// <param name="leafValueFactory">The type of leaf created when no more splits can be made</param>
+        /// <param name="leafFactory">The type of leaf created when no more splits can be made</param>
         public CartLearner(int minimumSplitSize, int maximumTreeDepth, double minimumInformationGain, IEntropyMetric entropyMetric, //ISplitFinder splitFinder, 
-                           IFeatureCandidateSelector featureCandidateSelector, ILeafFactory leafValueFactory)
+                           IFeatureCandidateSelector featureCandidateSelector, ILeafFactory leafFactory)
         {
             if (entropyMetric == null) { throw new ArgumentNullException("entropyMetric"); }
             //if (splitFinder == null) { throw new ArgumentNullException("splitFinder"); }
             if (featureCandidateSelector == null) { throw new ArgumentNullException("featureCandidateSelector"); }
-            if (leafValueFactory == null) { throw new ArgumentNullException("leafValueFactory");}
+            if (leafFactory == null) { throw new ArgumentNullException("leafValueFactory");}
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
@@ -56,7 +56,7 @@ namespace SharpLearning.DecisionTrees.Learners
             //m_splitFinder = splitFinder;
             m_entropyMetric = entropyMetric;
             m_featureCandidateSelector = featureCandidateSelector;
-            m_leafValueFactory = leafValueFactory;
+            m_leafFactory = leafFactory;
             m_minimumSplitSize = minimumSplitSize;
             m_minimumInformationGain = minimumInformationGain;
         }
@@ -223,7 +223,7 @@ namespace SharpLearning.DecisionTrees.Learners
                 {
                     m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
                     
-                    var leaf = m_leafValueFactory.Create(parentNode, m_workTargets, parentInterval);
+                    var leaf = m_leafFactory.Create(parentNode, m_workTargets, parentInterval);
 
                     parentNode.AddChild(parentNodePositionType, leaf);
                 }
@@ -231,7 +231,7 @@ namespace SharpLearning.DecisionTrees.Learners
 
             if(root == null) // No valid split return single leaf result
             {
-                root = m_leafValueFactory.Create(null, targets);
+                root = m_leafFactory.Create(null, targets);
             }
 
             return root;
