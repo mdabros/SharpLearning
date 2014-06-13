@@ -2,7 +2,7 @@
 
 namespace SharpLearning.DecisionTrees.Nodes
 {
-    public enum NodeType { Root, Left, Right }
+    public enum NodeSplitType { Root, Left, Right }
 
     /// <summary>
     /// Structure used for decision tree learning
@@ -10,16 +10,18 @@ namespace SharpLearning.DecisionTrees.Nodes
     public struct DecisionNodeCreationItem
     {
         public readonly IBinaryDecisionNode Parent;
-        public readonly NodeType NodeType;
+        public readonly NodeSplitType NodeType;
         public readonly Interval1D Interval;
         public readonly double Entropy;
+        public readonly int NodeDepth;
 
-        public DecisionNodeCreationItem(IBinaryDecisionNode node, NodeType nodeType, Interval1D interval, double entropy)
+        public DecisionNodeCreationItem(IBinaryDecisionNode node, NodeSplitType nodeType, Interval1D interval, double entropy, int nodeDepth)
         {
             Parent = node;
             NodeType = nodeType;
             Interval = interval;
             Entropy = entropy;
+            NodeDepth = nodeDepth;
         }
     }
 }

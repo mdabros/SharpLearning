@@ -48,6 +48,9 @@ namespace SharpLearning.DecisionTrees.Learners
             //if (splitFinder == null) { throw new ArgumentNullException("splitFinder"); }
             if (featureCandidateSelector == null) { throw new ArgumentNullException("featureCandidateSelector"); }
             if (leafValueFactory == null) { throw new ArgumentNullException("leafValueFactory");}
+            if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
+            if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
+            if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
 
             m_maximumTreeDepth = maximumTreeDepth;
             //m_splitFinder = splitFinder;
@@ -110,7 +113,7 @@ namespace SharpLearning.DecisionTrees.Learners
             m_featureCandidateSelector.Select(observations.GetNumberOfColumns(), m_featureCandidates);
 
             var stack = new Stack<DecisionNodeCreationItem>(m_maximumTreeDepth);
-            stack.Push(new DecisionNodeCreationItem(null, NodeType.Root, allInterval, rootEntropy));
+            stack.Push(new DecisionNodeCreationItem(null, NodeSplitType.Root, allInterval, rootEntropy, 0));
 
             var first = true;
             IBinaryDecisionNode root = null;
@@ -131,6 +134,7 @@ namespace SharpLearning.DecisionTrees.Learners
                 var parentInterval = parentItem.Interval;
                 var parentNode = parentItem.Parent;
                 var parentEntropy = parentItem.Entropy;
+                var parentNodeDepth = parentItem.NodeDepth;
 
                 if (first && parentItem.Parent != null)
                 {
@@ -199,15 +203,16 @@ namespace SharpLearning.DecisionTrees.Learners
                 m_bestSplitWorkIndices.CopyTo(parentInterval, m_workIndices);
                 var node = new ContinousBinaryDecisionNode();
 
-                if (bestSplitIndex >= 0 && bestInformationGain > m_minimumInformationGain)
+                if (bestSplitIndex >= 0 && bestInformationGain > m_minimumInformationGain && m_maximumTreeDepth > parentNodeDepth)
                 {
 
                     node.Parent = parentNode;
                     node.FeatureIndex = bestFeatureSplit.Index;
                     node.Value = bestFeatureSplit.Value;
+                    var nodeDepth = parentNodeDepth + 1;
 
-                    stack.Push(new DecisionNodeCreationItem(node, NodeType.Right, bestRightInterval, bestRightEntropy));
-                    stack.Push(new DecisionNodeCreationItem(node, NodeType.Left, bestLeftInterval, bestLeftEntropy));
+                    stack.Push(new DecisionNodeCreationItem(node, NodeSplitType.Right, bestRightInterval, bestRightEntropy, nodeDepth));
+                    stack.Push(new DecisionNodeCreationItem(node, NodeSplitType.Left, bestLeftInterval, bestLeftEntropy, nodeDepth));
                 }
                 else
                 {
@@ -232,12 +237,12 @@ namespace SharpLearning.DecisionTrees.Learners
 
                 switch (parentItem.NodeType)
                 {
-                    case NodeType.Root:
+                    case NodeSplitType.Root:
                         break;
-                    case NodeType.Left:
+                    case NodeSplitType.Left:
                         parentNode.Right = node;
                         break;
-                    case NodeType.Right:
+                    case NodeSplitType.Right:
                         parentNode.Left = node;
                         break;
                     default:

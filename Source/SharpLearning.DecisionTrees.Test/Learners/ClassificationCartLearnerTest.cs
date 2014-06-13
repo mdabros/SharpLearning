@@ -1,14 +1,12 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
-using System.IO;
-using SharpLearning.DecisionTrees.Test.Properties;
-using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.Metrics.Classification;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.DecisionTrees.Test.Properties;
+using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Classification;
+using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace SharpLearning.DecisionTrees.Test.Learners
 {
@@ -16,41 +14,79 @@ namespace SharpLearning.DecisionTrees.Test.Learners
     public class ClassificationCartLearnerTest
     {
         [TestMethod]
-        public void ClassificationCartLearner_Learn_Aptitude()
+        public void ClassificationCartLearner_Learn_Aptitude_Depth_100()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
-
-            var sut = new ClassificationCartLearner(1, 100, 0.001);
-            var model = sut.Learn(observations, targets);
-
-            var predictions = model.Predict(observations);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var error = evaluator.Error(targets, predictions);
-
+            var error = ClassificationCartLearner_Learn_Aptitude(100);
             Assert.AreEqual(0.038461538461538464, error, 0.0000001);
         }
 
         [TestMethod]
-        public void ClassificationCartLearner_Learn_Glass()
+        public void ClassificationCartLearner_Learn_Aptitude_depth_1()
+        {
+            var error = ClassificationCartLearner_Learn_Aptitude(1);
+            Assert.AreEqual(0.23076923076923078, error, 0.0000001);
+        }
+
+        [TestMethod]
+        public void ClassificationCartLearner_Learn_Aptitude_depth_5()
+        {
+            var error = ClassificationCartLearner_Learn_Aptitude(5);
+            Assert.AreEqual(0.076923076923076927, error, 0.0000001);
+        }
+
+        [TestMethod]
+        public void ClassificationCartLearner_Learn_Glass_100()
+        {
+            var error = ClassificationCartLearner_Learn_Glass(100);
+            Assert.AreEqual(0.0, error, 0.0000001);
+        }
+
+        [TestMethod]
+        public void ClassificationCartLearner_Learn_Glass_Depth_1()
+        {
+            var error = ClassificationCartLearner_Learn_Glass(1);
+            Assert.AreEqual(0.5280373831775701, error, 0.0000001);
+        }
+
+        [TestMethod]
+        public void ClassificationCartLearner_Learn_Glass_Depth_5()
+        {
+            var error = ClassificationCartLearner_Learn_Glass(5);
+            Assert.AreEqual(0.16822429906542055, error, 0.0000001);
+        }
+
+        double ClassificationCartLearner_Learn_Glass(int treeDepth)
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationCartLearner(1, 100, 0.001);
+            var sut = new ClassificationCartLearner(1, treeDepth, 0.001);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
 
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, predictions);
+            return error;
+        }
 
-            Assert.AreEqual(0.0, error, 0.0000001);
+        double ClassificationCartLearner_Learn_Aptitude(int treeDepth)
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var rows = targets.Length;
+
+            var sut = new ClassificationCartLearner(1, treeDepth, 0.001);
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var error = evaluator.Error(targets, predictions);
+            return error;
         }
 
         [Ignore]
@@ -90,7 +126,5 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             Trace.WriteLine("Error: " + error);
             Trace.WriteLine("Time: " + timer.ElapsedMilliseconds);
         }
-
-
     }
 }
