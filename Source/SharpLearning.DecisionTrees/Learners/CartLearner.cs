@@ -33,7 +33,7 @@ namespace SharpLearning.DecisionTrees.Learners
 
         // Variable importances are based on the work each variable does (information gain).
         // the scores at each split is scaled by the amount of data the node splits
-        // if a node splits om 30% of the total data it will add
+        // if a node splits on 30% of the total data it will add
         // informationGain * 0.3 to its importance score.
         // Based on this explanation:
         // http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
@@ -113,6 +113,8 @@ namespace SharpLearning.DecisionTrees.Learners
             Array.Resize(ref m_workIndices, indices.Length);
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
             Array.Resize(ref m_variableImportance, observations.GetNumberOfColumns());
+
+            var uniqueValues = targets.Distinct().ToArray();
 
             var allInterval = Interval1D.Create(0, indices.Length);
             indices.CopyTo(allInterval, m_workIndices);
@@ -236,7 +238,7 @@ namespace SharpLearning.DecisionTrees.Learners
                 {
                     m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
                     
-                    var leaf = m_leafFactory.Create(parentNode, m_workTargets, parentInterval);
+                    var leaf = m_leafFactory.Create(parentNode, m_workTargets, uniqueValues, parentInterval);
 
                     parentNode.AddChild(parentNodePositionType, leaf);
                 }
@@ -244,7 +246,7 @@ namespace SharpLearning.DecisionTrees.Learners
 
             if(root == null) // No valid split return single leaf result
             {
-                root = m_leafFactory.Create(null, targets);
+                root = m_leafFactory.Create(null, targets, uniqueValues);
             }
 
             return root;

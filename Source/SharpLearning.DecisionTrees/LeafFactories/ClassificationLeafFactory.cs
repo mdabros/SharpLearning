@@ -17,19 +17,29 @@ namespace SharpLearning.DecisionTrees.LeafFactories
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="values"></param>
+        /// <param name="uniqueValues"></param>
         /// <returns></returns>
-        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values)
+        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, double[] uniqueValues)
         {
             var groups = values.GroupBy(v => v);
             var list = groups.OrderByDescending(g => g.Count()).ToList();
+            var probabilityFactor = 1.0 / values.Length;
+            var probabilities = groups.ToDictionary(g => g.Key, g => g.Count() * probabilityFactor);
+
+            foreach (var unique in uniqueValues)
+            {
+                if(!probabilities.ContainsKey(unique))
+                {
+                    probabilities.Add(unique, 0);
+                }
+            }
 
             var leafValue = list.First().Key;
-            return new ContinousBinaryDecisionNode
-            {
-                Parent = parent,
-                FeatureIndex = -1,
-                Value = leafValue
-            };
+            var leaf = new ClassificationBinaryDecisionNode(probabilities);
+            leaf.Parent = parent;
+            leaf.FeatureIndex = -1;
+            leaf.Value = leafValue;
+            return leaf;
         }
 
         /// <summary>
@@ -37,9 +47,10 @@ namespace SharpLearning.DecisionTrees.LeafFactories
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="values"></param>
+        /// <param name="uniqueValues"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, Interval1D interval)
+        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, double[] uniqueValues, Interval1D interval)
         {
             m_dictionary.Clear();
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
@@ -56,12 +67,23 @@ namespace SharpLearning.DecisionTrees.LeafFactories
             }
 
             var leafValue = m_dictionary.OrderByDescending(kvp => kvp.Value).First().Key;
-            return new ContinousBinaryDecisionNode
+
+            var probabilityFactor = 1.0 / interval.Length;
+            var probabilities = m_dictionary.ToDictionary(g => g.Key, g => g.Value * probabilityFactor);
+
+            foreach (var unique in uniqueValues)
             {
-                Parent = parent,
-                FeatureIndex = -1,
-                Value = leafValue
-            };
+                if (!probabilities.ContainsKey(unique))
+                {
+                    probabilities.Add(unique, 0);
+                }
+            }
+
+            var leaf = new ClassificationBinaryDecisionNode(probabilities);
+            leaf.Parent = parent;
+            leaf.FeatureIndex = -1;
+            leaf.Value = leafValue;
+            return leaf;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,33 @@ namespace SharpLearning.DecisionTrees.Models
             for (int i = 0; i < rows; i++)
             {
                 predictions[i] = m_root.Predict(observations.GetRow(i));
+            }
+
+            return predictions;
+        }
+
+        /// <summary>
+        /// Predicts a single observation with probabilities
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public ProbabilityPrediction PredictProbability(double[] observation)
+        {
+            return m_root.PredictProbability(observation);
+        }
+
+        /// <summary>
+        /// Predicts a set of observations with probabilities
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        public ProbabilityPrediction[] PredictProbability(F64Matrix observations)
+        {
+            var rows = observations.GetNumberOfRows();
+            var predictions = new ProbabilityPrediction[rows];
+            for (int i = 0; i < rows; i++)
+            {
+                predictions[i] = m_root.PredictProbability(observations.GetRow(i));
             }
 
             return predictions;

@@ -10,12 +10,13 @@ namespace SharpLearning.DecisionTrees.LeafFactories
     public sealed class RegressionLeafFactory : ILeafFactory
     {
         /// <summary>
-        /// Provides a regression leaf. Using the mean of the values
+        /// Provides a regression leaf given a range of values and a calculation interval. Using the mean of the values
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="values"></param>
+        /// <param name="uniqueValues"></param>
         /// <returns></returns>
-        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values)
+        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, double[] uniqueValues)
         {
             var leafValue = values.Sum() / values.Length;
             return new ContinousBinaryDecisionNode
@@ -31,9 +32,10 @@ namespace SharpLearning.DecisionTrees.LeafFactories
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="values"></param>
+        /// <param name="uniqueValues"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, Interval1D interval)
+        public IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, double[] uniqueValues, Interval1D interval)
         {
             var sum = 0.0;
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)

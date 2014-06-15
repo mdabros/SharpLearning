@@ -1,10 +1,19 @@
 ﻿using SharpLearning.Containers;
 using System;
+using System.Collections.Generic;
 
 namespace SharpLearning.DecisionTrees.Nodes
 {
-    public sealed class ContinousBinaryDecisionNode : BinaryDicisionNodeBase, IBinaryDecisionNode
+    public sealed class ClassificationBinaryDecisionNode : BinaryDicisionNodeBase, IBinaryDecisionNode
     {
+        readonly Dictionary<double, double> m_probabilities;
+
+        public ClassificationBinaryDecisionNode(Dictionary<double, double> probabilities)
+        {
+            if (probabilities == null) { throw new ArgumentException("probabilities"); }
+            m_probabilities = probabilities;
+        }
+
         /// <summary>
         /// Predicts using a continous node strategy
         /// </summary>
@@ -38,7 +47,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         {
             if (IsLeaf())
             {
-                throw new NotSupportedException("ContinousBinaryDecisionNode does not support probability predictions");
+                return new ProbabilityPrediction(Value, m_probabilities);
             }
 
             if (observation[FeatureIndex] <= Value)

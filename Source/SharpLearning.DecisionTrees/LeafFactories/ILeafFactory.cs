@@ -18,16 +18,18 @@ namespace SharpLearning.DecisionTrees.LeafFactories
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="values"></param>
+        /// <param name="uniqueValues"></param>
         /// <returns></returns>
-        IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values);
+        IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, double[] uniqueValues);
 
         /// <summary>
-        /// Provides a leaf given a range of values and a calculation interval
+        /// Provides a leaf given a range of values
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="values"></param>
+        /// <param name="uniqueValues"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, Interval1D interval);
+        IBinaryDecisionNode Create(IBinaryDecisionNode parent, double[] values, double[] uniqueValues, Interval1D interval);
     }
 }

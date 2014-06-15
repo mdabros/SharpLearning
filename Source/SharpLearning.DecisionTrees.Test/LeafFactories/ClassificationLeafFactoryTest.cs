@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.DecisionTrees.LeafFactories;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Nodes;
+using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Test.LeafFactories
 {
@@ -14,7 +15,7 @@ namespace SharpLearning.DecisionTrees.Test.LeafFactories
         {
             var values = new double[] { 1, 1, 1, 2, 2 };
             var sut = new ClassificationLeafFactory();
-            var actual = sut.Create(new ContinousBinaryDecisionNode(), values);
+            var actual = sut.Create(new ContinousBinaryDecisionNode(), values, values.Distinct().ToArray());
 
             Assert.AreEqual(1, actual.Value);
             Assert.AreEqual(-1, actual.FeatureIndex);
@@ -27,7 +28,7 @@ namespace SharpLearning.DecisionTrees.Test.LeafFactories
         {
             var values = new double[] { 1, 1, 2, 2 };
             var sut = new ClassificationLeafFactory();
-            var actual = sut.Create(new ContinousBinaryDecisionNode(), values);
+            var actual = sut.Create(new ContinousBinaryDecisionNode(), values, values.Distinct().ToArray());
 
             Assert.AreEqual(1, actual.Value);
             Assert.AreEqual(-1, actual.FeatureIndex);
@@ -40,7 +41,7 @@ namespace SharpLearning.DecisionTrees.Test.LeafFactories
         {
             var values = new double[] { 1, 1, 1, 2, 2 };
             var sut = new ClassificationLeafFactory();
-            var actual = sut.Create(new ContinousBinaryDecisionNode(), values, Interval1D.Create(2, 5));
+            var actual = sut.Create(new ContinousBinaryDecisionNode(), values, values.Distinct().ToArray(), Interval1D.Create(2, 5));
 
             Assert.AreEqual(2, actual.Value);
             Assert.AreEqual(-1, actual.FeatureIndex);

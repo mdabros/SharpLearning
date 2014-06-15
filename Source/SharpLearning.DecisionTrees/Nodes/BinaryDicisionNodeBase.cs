@@ -1,4 +1,5 @@
 ﻿
+using SharpLearning.Containers;
 namespace SharpLearning.DecisionTrees.Nodes
 {
     /// <summary>
@@ -119,5 +120,12 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="observation"></param>
         /// <returns></returns>
         public abstract double Predict(double[] observation);
+
+        /// <summary>
+        /// Predicts probabilities using the decision tree structure
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public abstract ProbabilityPrediction PredictProbability(double[] observation);
     }
 }
