@@ -32,7 +32,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new RegressionCartModel Learn(F64Matrix observations, double[] targets)
         {
-            return new RegressionCartModel(base.Learn(observations,targets));
+            return new RegressionCartModel(base.Learn(observations,targets), m_variableImportance);
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new RegressionCartModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            return new RegressionCartModel(base.Learn(observations, targets, indices));
+            return new RegressionCartModel(base.Learn(observations, targets, indices), m_variableImportance);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new RegressionCartModel Learn(F64MatrixView observations, double[] targets, int[] indices)
         {
-            return new RegressionCartModel(base.Learn(observations, targets, indices));
+            return new RegressionCartModel(base.Learn(observations, targets, indices), m_variableImportance);
         }
     }
 }

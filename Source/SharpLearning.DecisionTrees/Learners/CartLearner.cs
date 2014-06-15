@@ -2,7 +2,6 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.LeafFactories;
-using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.Metrics.Entropy;
 using System;
@@ -31,6 +30,14 @@ namespace SharpLearning.DecisionTrees.Learners
         List<int> m_featureCandidates = new List<int>();
         int[] m_bestSplitWorkIndices = new int[0];
         int m_maximumTreeDepth;
+
+        // Variable importances are based on the work each variable does (information gain).
+        // the scores at each split is scaled by the amount of data the node splits
+        // if a node splits om 30% of the total data it will add
+        // informationGain * 0.3 to its importance score.
+        // Based on this explanation:
+        // http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
+        protected double[] m_variableImportance = new double[0];
 
         /// <summary>
         /// 
@@ -99,10 +106,13 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public IBinaryDecisionNode Learn(F64MatrixView observations, double[] targets, int[] indices)
         {
+            Array.Clear(m_variableImportance, 0, m_variableImportance.Length);
+
             Array.Resize(ref m_workTargets, indices.Length);
             Array.Resize(ref m_workFeature, indices.Length);
             Array.Resize(ref m_workIndices, indices.Length);
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
+            Array.Resize(ref m_variableImportance, observations.GetNumberOfColumns());
 
             var allInterval = Interval1D.Create(0, indices.Length);
             indices.CopyTo(allInterval, m_workIndices);
@@ -117,6 +127,7 @@ namespace SharpLearning.DecisionTrees.Learners
 
             var first = true;
             IBinaryDecisionNode root = null;
+
 
             while (stack.Count > 0)
             {
@@ -205,6 +216,8 @@ namespace SharpLearning.DecisionTrees.Learners
 
                 if (bestSplitIndex >= 0 && bestInformationGain > m_minimumInformationGain && m_maximumTreeDepth > parentNodeDepth)
                 {
+                    m_variableImportance[bestFeatureSplit.Index] += bestInformationGain * parentInterval.Length / allInterval.Length;
+
                     var split = new ContinousBinaryDecisionNode
                     {
                         Parent = parentNode,

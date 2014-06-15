@@ -33,7 +33,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationCartModel Learn(F64Matrix observations, double[] targets)
         {
-            return new ClassificationCartModel(base.Learn(observations, targets));
+            return new ClassificationCartModel(base.Learn(observations, targets), m_variableImportance);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationCartModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            return new ClassificationCartModel(base.Learn(observations, targets, indices));
+            return new ClassificationCartModel(base.Learn(observations, targets, indices), m_variableImportance);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationCartModel Learn(F64MatrixView observations, double[] targets, int[] indices)
         {
-            return new ClassificationCartModel(base.Learn(observations, targets, indices));
+            return new ClassificationCartModel(base.Learn(observations, targets, indices), m_variableImportance);
         }
     }
 }
