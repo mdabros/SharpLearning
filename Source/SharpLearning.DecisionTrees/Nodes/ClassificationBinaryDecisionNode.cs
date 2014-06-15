@@ -6,7 +6,7 @@ namespace SharpLearning.DecisionTrees.Nodes
 {
     public sealed class ClassificationBinaryDecisionNode : BinaryDicisionNodeBase, IBinaryDecisionNode
     {
-        readonly Dictionary<double, double> m_probabilities;
+        public readonly Dictionary<double, double> m_probabilities;
 
         public ClassificationBinaryDecisionNode(Dictionary<double, double> probabilities)
         {

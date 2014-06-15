@@ -46,6 +46,7 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="LeafFactories\LaplaceAdjustedClassificationLeafFactory.cs" />
     <Compile Include="LeafFactories\ClassificationLeafFactory.cs" />
     <Compile Include="LeafFactories\ILeafFactory.cs" />
     <Compile Include="LeafFactories\RegressionLeafFactory.cs" />

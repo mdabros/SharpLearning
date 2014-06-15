@@ -6,11 +6,11 @@ using System.Linq;
 namespace SharpLearning.DecisionTrees.LeafFactories
 {
     /// <summary>
-    /// Uses majority vote for leaf value calculation. 
-    /// Uses class frequencies directly for probability estimates.
-    /// This is the best approach when using trees in ensembles like bagging, random forest and boosting.
+    /// Uses majority vote for leaf value calculation.
+    /// Uses class frequencies adjusted using Laplace correction for probability estimates.
+    /// This is improves probability estimates when using a single decision tree
     /// </summary>
-    public sealed class ClassificationLeafFactory : ILeafFactory
+    public sealed class LaplaceAdjustedClassificationLeafFactory : ILeafFactory
     {
         Dictionary<double, int> m_dictionary = new Dictionary<double, int>();
 
@@ -25,14 +25,15 @@ namespace SharpLearning.DecisionTrees.LeafFactories
         {
             var groups = values.GroupBy(v => v);
             var list = groups.OrderByDescending(g => g.Count()).ToList();
-            var probabilityFactor = 1.0 / values.Length;
-            var probabilities = groups.ToDictionary(g => g.Key, g => g.Count() * probabilityFactor);
+            var adjustedLength = values.Length + uniqueValues.Length;
+            var probabilityFactor = 1.0 / adjustedLength;
+            var probabilities = groups.ToDictionary(g => g.Key, g => (g.Count() + 1) * probabilityFactor);
 
             foreach (var unique in uniqueValues)
             {
                 if(!probabilities.ContainsKey(unique))
                 {
-                    probabilities.Add(unique, 0);
+                    probabilities.Add(unique, 1 * probabilityFactor);
                 }
             }
 
@@ -70,14 +71,15 @@ namespace SharpLearning.DecisionTrees.LeafFactories
 
             var leafValue = m_dictionary.OrderByDescending(kvp => kvp.Value).First().Key;
 
-            var probabilityFactor = 1.0 / interval.Length;
-            var probabilities = m_dictionary.ToDictionary(g => g.Key, g => g.Value * probabilityFactor);
+            var adjustedLength = interval.Length + uniqueValues.Length;
+            var probabilityFactor = 1.0 / adjustedLength;
+            var probabilities = m_dictionary.ToDictionary(g => g.Key, g => (g.Value + 1) * probabilityFactor);
 
             foreach (var unique in uniqueValues)
             {
                 if (!probabilities.ContainsKey(unique))
                 {
-                    probabilities.Add(unique, 0);
+                    probabilities.Add(unique, 1 * probabilityFactor);
                 }
             }
 

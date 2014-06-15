@@ -9,15 +9,15 @@ using System.Linq;
 namespace SharpLearning.DecisionTrees.Test.LeafFactories
 {
     [TestClass]
-    public class ClassificationLeafFactoryTest
+    public class LaplaceAdjustedClassificationLeafFactoryTest
     {
         [TestMethod]
-        public void ClassificationLeafValueFactory_Create()
+        public void LaplaceAdjustedClassificationLeafValueFactory_Create()
         {
             var values = new double[] { 1, 1, 1, 2, 2 };
-            var sut = new ClassificationLeafFactory();
+            var sut = new LaplaceAdjustedClassificationLeafFactory();
             var actual = sut.Create(new ContinousBinaryDecisionNode(), values, values.Distinct().ToArray());
-            var expectedProbabilities = new ProbabilityPrediction(1, new Dictionary<double, double> { { 1.0, 0.6 }, { 2.0, 0.4 } });
+            var expectedProbabilities = new ProbabilityPrediction(1, new Dictionary<double, double> { { 1.0, 0.571428571428571}, { 2.0, 0.428571428571429 } });
             var actualProbabilities = actual.PredictProbability(values);
 
             Assert.AreEqual(expectedProbabilities, actualProbabilities);
@@ -28,10 +28,10 @@ namespace SharpLearning.DecisionTrees.Test.LeafFactories
         }
 
         [TestMethod]
-        public void ClassificationLeafValueFactory_Create_Equal()
+        public void LaplaceAdjustedClassificationLeafValueFactory_Create_Equal()
         {
             var values = new double[] { 1, 1, 2, 2 };
-            var sut = new ClassificationLeafFactory();
+            var sut = new LaplaceAdjustedClassificationLeafFactory();
             var actual = sut.Create(new ContinousBinaryDecisionNode(), values, values.Distinct().ToArray());
             var expectedProbabilities = new ProbabilityPrediction(1, new Dictionary<double, double> { { 1.0, 0.5 }, { 2.0, 0.5 } });
             var actualProbabilities = actual.PredictProbability(values);
@@ -44,12 +44,12 @@ namespace SharpLearning.DecisionTrees.Test.LeafFactories
         }
 
         [TestMethod]
-        public void ClassificationLeafValueFactory_Create_Interval()
+        public void LaplaceAdjustedClassificationLeafValueFactory_Create_Interval()
         {
             var values = new double[] { 1, 1, 1, 2, 2 };
-            var sut = new ClassificationLeafFactory();
+            var sut = new LaplaceAdjustedClassificationLeafFactory();
             var actual = sut.Create(new ContinousBinaryDecisionNode(), values, values.Distinct().ToArray(), Interval1D.Create(2, 5));
-            var expectedProbabilities = new ProbabilityPrediction(2, new Dictionary<double, double> { { 1.0, 0.3333333333 }, { 2.0, 0.666666666666667 }});
+            var expectedProbabilities = new ProbabilityPrediction(2, new Dictionary<double, double> { { 1.0, 0.4 }, { 2.0, 0.6 } });
             var actualProbabilities = actual.PredictProbability(values);
 
             Assert.AreEqual(expectedProbabilities, actualProbabilities);

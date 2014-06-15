@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="FeatureCandidateSelectors\AllCandidateSelectorTest.cs" />
     <Compile Include="LeafFactories\ClassificationLeafFactoryTest.cs" />
+    <Compile Include="LeafFactories\LaplaceAdjustedClassificationLeafFactoryTest.cs" />
     <Compile Include="LeafFactories\RegressionLeafFactoryTest.cs" />
     <Compile Include="Learners\CartLearnerTest.cs" />
     <Compile Include="Learners\ClassificationCartLearnerTest.cs" />

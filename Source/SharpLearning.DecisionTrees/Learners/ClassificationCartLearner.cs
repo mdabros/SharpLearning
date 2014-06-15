@@ -21,7 +21,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         public ClassificationCartLearner(int minimumSplitSize, int maximumTreeDepth, double minimumInformationGain)
             : base(minimumSplitSize, maximumTreeDepth, minimumInformationGain, new GiniImpurityMetric(), //new LinearSplitFinder(),
-                   new AllFeatureCandidateSelector(), new ClassificationLeafFactory())
+                   new AllFeatureCandidateSelector(), new LaplaceAdjustedClassificationLeafFactory())
         {
         }
 
