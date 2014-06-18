@@ -57,7 +57,7 @@
     <Compile Include="Entropy\NaiveSinglePassVarianceEntropyMetric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ranking\AveragePrecisionRankingMetric.cs" />
-    <Compile Include="Ranking\RankingMetric.cs" />
+    <Compile Include="Ranking\IRankingMetric.cs" />
     <Compile Include="Regression\IRegressionMetric.cs" />
     <Compile Include="Regression\MeanAbsolutErrorRegressionMetric.cs" />
     <Compile Include="Regression\MeanSquaredErrorRegressionMetric.cs" />

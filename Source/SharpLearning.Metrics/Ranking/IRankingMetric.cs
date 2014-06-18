@@ -5,7 +5,7 @@ namespace SharpLearning.Metrics.Ranking
     /// Ranking metric interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface RankingMetric<T>
+    public interface IRankingMetric<T>
     {
         /// <summary>
         /// Calculates the ranking error

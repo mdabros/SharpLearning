@@ -7,7 +7,7 @@ namespace SharpLearning.Metrics.Ranking
     /// Calculates the average precision ranking metric
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class AveragePrecisionRankingMetric<T> : RankingMetric<T>
+    public sealed class AveragePrecisionRankingMetric<T> : IRankingMetric<T>
     {
         readonly int m_k;
         readonly HashSet<T> m_workTargets = new HashSet<T>();
