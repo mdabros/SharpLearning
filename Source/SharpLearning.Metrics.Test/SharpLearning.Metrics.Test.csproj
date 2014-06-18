@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="Classification\ClassificationMatrixStringConverterTest.cs" />
     <Compile Include="Classification\ClassificationMatrixTest.cs" />
+    <Compile Include="Classification\RocAucClassificationMetricTest.cs" />
     <Compile Include="Classification\TotalErrorClassificationMetricTest.cs" />
     <Compile Include="Entropy\GiniImpurityMetricTest.cs" />
     <Compile Include="Entropy\NaiveSinglePassVarianceEntropyMetricTest.cs" />
