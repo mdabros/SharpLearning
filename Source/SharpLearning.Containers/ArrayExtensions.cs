@@ -120,5 +120,27 @@ namespace SharpLearning.Containers
                 destination[i] = source[index];
             }
         }
+
+        /// <summary>
+        /// Checks if a value is contained in the provided interval of an array 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="interval"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool Contains<T>(this T[] array, Interval1D interval, T value)
+        {
+            var contained = false;
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                if(array[i].Equals(value))
+                {
+                    contained = true;
+                    break;
+                }
+            }
+            return contained;
+        }
     }
 }
