@@ -49,6 +49,18 @@ namespace SharpLearning.Containers
                 return Equals((ProbabilityPrediction)obj);
             return false;
         }
+
+
+        public static bool operator ==(ProbabilityPrediction p1, ProbabilityPrediction p2)
+        {
+            return p1.Equals(p2);
+        }
+
+        public static bool operator !=(ProbabilityPrediction p1, ProbabilityPrediction p2)
+        {
+            return !p1.Equals(p2);
+        }
+
         public override int GetHashCode()
         {
             return Prediction.GetHashCode() ^ Probabilities.GetHashCode();
@@ -56,8 +68,8 @@ namespace SharpLearning.Containers
 
         bool Equal(double a, double b)
         {
-            var diff = a * m_tolerence;
-            if(a - b <= diff)
+            var diff = Math.Abs(a * m_tolerence);
+            if(Math.Abs(a - b) <= diff)
             {
                 return true;
             }
