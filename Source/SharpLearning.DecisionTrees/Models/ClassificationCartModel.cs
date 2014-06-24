@@ -51,6 +51,24 @@ namespace SharpLearning.DecisionTrees.Models
         }
 
         /// <summary>
+        /// Predicts the observation subset provided by indices
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        public double[] Predict(F64Matrix observations, int[] indices)
+        {
+            var rows = observations.GetNumberOfRows();
+            var predictions = new double[indices.Length];
+            for (int i = 0; i < indices.Length; i++)
+            {
+                predictions[i] = m_root.Predict(observations.GetRow(indices[i]));
+            }
+
+            return predictions;
+        }
+
+
+        /// <summary>
         /// Predicts a single observation with probabilities
         /// </summary>
         /// <param name="observation"></param>
@@ -76,6 +94,24 @@ namespace SharpLearning.DecisionTrees.Models
 
             return predictions;
         }
+
+        /// <summary>
+        /// Predicts the observation subset provided by indices with probabilities
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        public ProbabilityPrediction[] PredictProbability(F64Matrix observations, int[] indices)
+        {
+            var rows = observations.GetNumberOfRows();
+            var predictions = new ProbabilityPrediction[indices.Length];
+            for (int i = 0; i < indices.Length; i++)
+            {
+                predictions[i] = m_root.PredictProbability(observations.GetRow(indices[i]));
+            }
+
+            return predictions;
+        }
+
 
         /// <summary>
         /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name

@@ -9,26 +9,26 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace SharpLearning.DecisionTrees.Test.Models
+namespace SharpLearning.DecisionTrees.Test.suts
 {
     [TestClass]
-    public class ClassificationCartModelTest
+    public class ClassificationCartsutTest
     {
         [TestMethod]
-        public void ClassificationCartModel_Single_Observation()
+        public void ClassificationCartsut_Predict_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationCartLearner(1, 100, 0.001);
-            var model = sut.Learn(observations, targets);
+            var learner = new ClassificationCartLearner(1, 100, 0.001);
+            var sut = learner.Learn(observations, targets);
 
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = model.Predict(observations.GetRow(i));
+                predictions[i] = sut.Predict(observations.GetRow(i));
             }
 
             var evaluator = new TotalErrorClassificationMetric<double>();
@@ -38,17 +38,17 @@ namespace SharpLearning.DecisionTrees.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationCartModel_Single_Multiple()
+        public void ClassificationCartsut_Precit_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationCartLearner(1, 100, 0.001);
-            var model = sut.Learn(observations, targets);
+            var learner = new ClassificationCartLearner(1, 100, 0.001);
+            var sut = learner.Learn(observations, targets);
 
-            var predictions = model.Predict(observations);
+            var predictions = sut.Predict(observations);
 
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, predictions);
@@ -57,20 +57,42 @@ namespace SharpLearning.DecisionTrees.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationCartMode_PredictProbability_Single_Observation()
+        public void ClassificationCartsut_Predict_Multiple_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationCartLearner(5, 100, 0.001);
-            var model = sut.Learn(observations, targets);
+            var learner = new ClassificationCartLearner(1, 5, 0.001);
+            var sut = learner.Learn(observations, targets);
+
+            var indices = new int[] { 0, 3, 4, 5, 6, 7, 8, 9, 20, 21 };
+            var predictions = sut.Predict(observations, indices);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var indexedTargets = targets.GetIndices(indices);
+            var error = evaluator.Error(indexedTargets, predictions);
+
+            Assert.AreEqual(0.1, error, 0.0000001);
+        }
+
+
+        [TestMethod]
+        public void ClassificationCartMode_PredictProbability_Single()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var rows = targets.Length;
+
+            var learner = new ClassificationCartLearner(5, 100, 0.001);
+            var sut = learner.Learn(observations, targets);
 
             var actual = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                actual[i] = model.PredictProbability(observations.GetRow(i));
+                actual[i] = sut.PredictProbability(observations.GetRow(i));
             }
 
             var evaluator = new TotalErrorClassificationMetric<double>();
@@ -83,17 +105,17 @@ namespace SharpLearning.DecisionTrees.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationCartMode_PredictProbability_Multiple_Observation()
+        public void ClassificationCartMode_PredictProbability_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationCartLearner(5, 100, 0.001);
-            var model = sut.Learn(observations, targets);
+            var learner = new ClassificationCartLearner(5, 100, 0.001);
+            var sut = learner.Learn(observations, targets);
 
-            var actual = model.PredictProbability(observations);
+            var actual = sut.PredictProbability(observations);
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
 
@@ -104,17 +126,41 @@ namespace SharpLearning.DecisionTrees.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationCartModel_GetVariableImportance()
+        public void ClassificationCartMode_PredictProbability_Multiple_Indexed()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var rows = targets.Length;
+
+            var learner = new ClassificationCartLearner(5, 100, 0.001);
+            var sut = learner.Learn(observations, targets);
+
+            var indices = new int[] { 0, 3, 4, 5, 6, 7, 8, 9, 20, 21 };
+            var actual = sut.PredictProbability(observations, indices);
+
+            var indexedTargets = targets.GetIndices(indices);
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var error = evaluator.Error(indexedTargets, actual.Select(p => p.Prediction).ToArray());
+
+            Assert.AreEqual(0.1, error, 0.0000001);
+
+            var expected = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 1, 0.307692307692308 }, { 0, 0.692307692307692 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 1, 0.307692307692308 }, { 0, 0.692307692307692 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 1, 0.571428571428571 }, { 0, 0.428571428571429 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 1, 0.307692307692308 }, { 0, 0.692307692307692 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 1, 0.714285714285714 }, { 0, 0.285714285714286 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 1, 0.307692307692308 }, { 0, 0.692307692307692 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.857142857142857 }, { 1, 0.142857142857143 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 1, 0.714285714285714 }, { 0, 0.285714285714286 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.857142857142857 }, { 1, 0.142857142857143 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 1, 0.714285714285714 }, { 0, 0.285714285714286 }, }), };
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ClassificationCartsut_GetVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, { "PreviousExperience_month", 1 } };
 
-            var sut = new ClassificationCartLearner(1, 100, 0.001);
-            var model = sut.Learn(observations, targets);
+            var learner = new ClassificationCartLearner(1, 100, 0.001);
+            var sut = learner.Learn(observations, targets);
             
-            var actual = model.GetVariableImportance(featureNameToIndex);
+            var actual = sut.GetVariableImportance(featureNameToIndex);
             var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 }, { "AptitudeTestScore", 17.2872340425532 } };
 
             Assert.AreEqual(expected.Count, actual.Count);
@@ -128,16 +174,16 @@ namespace SharpLearning.DecisionTrees.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationCartModel_GetRawVariableImportance()
+        public void ClassificationCartsut_GetRawVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var sut = new ClassificationCartLearner(1, 100, 0.001);
-            var model = sut.Learn(observations, targets);
+            var learner = new ClassificationCartLearner(1, 100, 0.001);
+            var sut = learner.Learn(observations, targets);
 
-            var actual = model.GetRawVariableImportance();
+            var actual = sut.GetRawVariableImportance();
             var expected = new double[] { 0.064102564102564111, 0.37080867850098614 };
 
             Assert.AreEqual(expected.Length, actual.Length);

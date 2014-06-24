@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
+using System;
+using System.Linq;
 
 namespace SharpLearning.Containers.Test
 {
@@ -164,6 +166,16 @@ namespace SharpLearning.Containers.Test
                 var expected = new double[] { 0, 10, 20, 20, 20, 0 };
                 CollectionAssert.AreEqual(expected, destination);
             }
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_Shuffle()
+        {
+            var actual = Enumerable.Range(0, 10).ToArray();
+            actual.Shuffle(new Random(42));
+
+            var expected = new int[] { 9, 0, 4, 2, 5, 7, 3, 8, 1, 6 };
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 }
