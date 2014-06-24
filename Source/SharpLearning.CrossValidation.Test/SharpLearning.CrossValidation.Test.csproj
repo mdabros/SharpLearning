@@ -55,7 +55,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
-      <Link>AssemblyVersion.cs</Link>
+      <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="CrossValidationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,18 +70,6 @@
     <ProjectReference Include="..\SharpLearning.CrossValidation\SharpLearning.CrossValidation.csproj">
       <Project>{86038cef-f3b5-45c5-bbbc-8f700a1cfb86}</Project>
       <Name>SharpLearning.CrossValidation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj">
-      <Project>{8efe2f3f-779d-46d3-bea4-6f04a52f52e1}</Project>
-      <Name>SharpLearning.DecisionTrees</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
-      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
-      <Name>SharpLearning.InputOutput</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
-      <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
-      <Name>SharpLearning.Metrics</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
