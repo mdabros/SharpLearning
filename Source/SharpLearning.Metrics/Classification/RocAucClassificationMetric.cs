@@ -30,7 +30,7 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public double Error(T[] targets, double[] positiveTargetProbabilities)
         {
-            if (targets.Distinct().Count() != 2)
+            if (targets.Distinct().Count() > 2)
             { throw new ArgumentException("AucClassificationMetric only supports binary classification problems"); }
 
             var targetProbabilities = targets.Zip(positiveTargetProbabilities, (l, s) => new { target = l, Probability = s });

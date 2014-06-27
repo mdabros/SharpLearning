@@ -9,6 +9,17 @@ namespace SharpLearning.Metrics.Test.Classification
     public class RocAucClassificationMetricTest
     {
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RocAucClassificationMetric_Error_Not_Binary()
+        {
+            var targets = new double[] { 0, 1, 2 };
+            var probabilities = new double[] { 0, 1, 2 };
+
+            var sut = new RocAucClassificationMetric<double>(1);
+            var actual = sut.Error(targets, probabilities);
+        }
+
+        [TestMethod]
         public void RocAucClassificationMetric_Error_No_Error()
         {
             var targets = new double[] { 0, 1 };
