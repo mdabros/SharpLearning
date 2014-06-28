@@ -60,7 +60,7 @@ namespace SharpLearning.RandomForest.Test.Models
 
 
         [TestMethod]
-        public void ClassificationCartMode_PredictProbability_Single()
+        public void ClassificationRandomForestModel_PredictProbability_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -88,7 +88,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationCartMode_PredictProbability_Multiple()
+        public void ClassificationRandomForestModel_PredictProbability_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();

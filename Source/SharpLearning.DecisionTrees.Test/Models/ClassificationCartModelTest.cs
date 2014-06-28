@@ -15,7 +15,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
     public class ClassificationCartsutTest
     {
         [TestMethod]
-        public void ClassificationCartsut_Predict_Single()
+        public void ClassificationCartModel_Predict_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -38,7 +38,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         }
 
         [TestMethod]
-        public void ClassificationCartsut_Precit_Multiple()
+        public void ClassificationCartModel_Precit_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -57,7 +57,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         }
 
         [TestMethod]
-        public void ClassificationCartsut_Predict_Multiple_Indexed()
+        public void ClassificationCartModel_Predict_Multiple_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -79,7 +79,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
 
 
         [TestMethod]
-        public void ClassificationCartMode_PredictProbability_Single()
+        public void ClassificationCartModel_PredictProbability_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -105,7 +105,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         }
 
         [TestMethod]
-        public void ClassificationCartMode_PredictProbability_Multiple()
+        public void ClassificationCartModel_PredictProbability_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -126,7 +126,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         }
 
         [TestMethod]
-        public void ClassificationCartMode_PredictProbability_Multiple_Indexed()
+        public void ClassificationCartModel_PredictProbability_Multiple_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -150,7 +150,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         }
 
         [TestMethod]
-        public void ClassificationCartsut_GetVariableImportance()
+        public void ClassificationCartModel_GetVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -174,7 +174,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         }
 
         [TestMethod]
-        public void ClassificationCartsut_GetRawVariableImportance()
+        public void ClassificationCartModel_GetRawVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
