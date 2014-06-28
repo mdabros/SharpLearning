@@ -19,21 +19,35 @@ namespace SharpLearning.RandomForest.Learners
     {
         readonly int m_trees;
         readonly int m_featuresPrSplit;
+        readonly int m_minimumSplitSize;
+        readonly double m_minimumInformationGain;
+        readonly int m_maximumTreeDepth;
         readonly Random m_random;
         int[] m_workIndices = new int[0];
-
+       
         /// <summary>
         /// The random forest is an ensemble learner consisting of a series of randomized decision trees
         /// </summary>
         /// <param name="trees">Number of trees to use in the ensemble</param>
+        /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
+        /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
+        /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public ClassificationRandomForestLearner(int trees, int featuresPrSplit, int seed)
+        public ClassificationRandomForestLearner(int trees, int minimumSplitSize, int maximumTreeDepth, 
+            int featuresPrSplit, double minimumInformationGain, int seed)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
             if (featuresPrSplit < 1) { throw new ArgumentException("features pr split must be at least 1"); }
+            if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
+            if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
+            if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
+
             m_trees = trees;
+            m_minimumSplitSize = minimumSplitSize;
+            m_maximumTreeDepth = maximumTreeDepth;
             m_featuresPrSplit = featuresPrSplit;
+            m_minimumInformationGain = minimumInformationGain;
 
             m_random = new Random(seed);
         }
@@ -58,7 +72,6 @@ namespace SharpLearning.RandomForest.Learners
                     treeIndices[j] = m_random.Next(treeIndices.Length);
                 }
 
-                var distinct = treeIndices.Distinct().Count();
                 var model = CreateTreeModel(observations, targets, treeIndices);
                 var modelVariableImportance = model.GetRawVariableImportance();
                 
@@ -75,7 +88,9 @@ namespace SharpLearning.RandomForest.Learners
 
         ClassificationCartModel CreateTreeModel(F64Matrix observations, double[] targets, int[] indices)
         {
-            var learner = new CartLearner(5, 100, m_featuresPrSplit, 0.0001, new GiniImpurityMetric(),
+            var learner = new CartLearner(m_minimumSplitSize, m_maximumTreeDepth, 
+                m_featuresPrSplit, m_minimumInformationGain, 
+                new GiniImpurityMetric(),
                 new RandomFeatureCandidateSelector(m_random.Next()),
                 new ClassificationLeafFactory());
 

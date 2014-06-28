@@ -59,7 +59,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationRandomForestLearner(trees, 1, 42);
+            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001, 42);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -76,7 +76,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationRandomForestLearner(trees, 1, 42);
+            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001, 42);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);

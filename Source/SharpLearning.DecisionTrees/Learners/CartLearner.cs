@@ -44,7 +44,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="minimumSplitSize">The minimum size </param>
+        /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
