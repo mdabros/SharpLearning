@@ -177,5 +177,36 @@ namespace SharpLearning.Containers.Test
             var expected = new int[] { 9, 0, 4, 2, 5, 7, 3, 8, 1, 6 };
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void ArrayExtensions_Stratify_Even()
+        {
+            var actual = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            actual.Stratify(actual, new Random(42), 2);
+
+            var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, };
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_Stratify_Uneven()
+        {
+            var actual = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            actual.Stratify(actual, new Random(42), 3);
+
+            var expected = new int[] { 1, 1, 1, 2, 2, 3, 1, 1, 1, 2, 2, 3, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3 };
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_Stratify_Too_Many_Folds()
+        {
+            var actual = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            actual.Stratify(actual, new Random(42), 10);
+
+            var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, };
+            CollectionAssert.AreEqual(expected, actual);
+        }
     }
 }

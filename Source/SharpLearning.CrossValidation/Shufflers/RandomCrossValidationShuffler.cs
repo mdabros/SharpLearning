@@ -6,7 +6,7 @@ namespace SharpLearning.CrossValidation.Shufflers
     /// <summary>
     /// uses a random strategy to shuffles the provided indices
     /// </summary>
-    public sealed class RandomCrossValidationShuffler : ICrossValidationShuffler
+    public sealed class RandomCrossValidationShuffler<T> : ICrossValidationShuffler<T>
     {
         readonly Random m_random;
 
@@ -21,7 +21,7 @@ namespace SharpLearning.CrossValidation.Shufflers
         /// <param name="indices"></param>
         /// <param name="targets"></param>
         /// <param name="folds"></param>
-        public void Shuffle(int[] indices, double[] targets, int folds)
+        public void Shuffle(int[] indices, T[] targets, int folds)
         {
             indices.Shuffle(m_random);
         }

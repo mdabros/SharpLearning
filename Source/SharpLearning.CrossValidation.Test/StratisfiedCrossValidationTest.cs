@@ -1,34 +1,39 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
-using System;
 using System.Linq;
 
 namespace SharpLearning.CrossValidation.Test
 {
+    /// <summary>
+    /// Summary description for StratisfiedCrossValidationTest
+    /// </summary>
     [TestClass]
-    public class RandomCrossValidationTest
+    public class StratisfiedCrossValidationTest
     {
         [TestMethod]
-        public void RandomCrossValidation_CrossValidate_Folds_2()
+        public void StratisfiedCrossValidation_CrossValidate_Folds_2()
         {
             var actual = AssertCrossValidation(2);
-            var expected = new double[] { 2, 7, 5, 3, 4, 9, 8, 1, 6, 0 };
+            var expected = new double[] { 5, 8, 3, 6, 7, 4, 2, 9, 1, 0 };
 
             CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void RandomCrossValidation_CrossValidate_Folds_10()
+        public void StratisfiedCrossValidation_CrossValidate_Folds_4()
         {
-            var actual = AssertCrossValidation(10);
-            var expected = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var actual = AssertCrossValidation(4);
+            var expected = new double[] { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
 
             CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void RandomCrossValidation_CrossValidate_Too_Many_Folds()
+        public void StratisfiedCrossValidation_CrossValidate_Too_Many_Folds()
         {
             AssertCrossValidation(20);
         }
@@ -36,9 +41,9 @@ namespace SharpLearning.CrossValidation.Test
         double[] AssertCrossValidation(int folds)
         {
             var observations = new F64Matrix(10, 10);
-            var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
 
-            var sut = new RandomCrossValidation<double, double>(ModelLearner, folds, 42);
+            var sut = new StratisfiedCrossValidation<double, double>(ModelLearner, folds, 42);
             var actual = sut.CrossValidate(observations, targets);
             return actual;
         }

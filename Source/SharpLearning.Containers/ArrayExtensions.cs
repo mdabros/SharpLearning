@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers.Views;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.Containers
@@ -149,9 +150,9 @@ namespace SharpLearning.Containers
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
         /// <param name="rng"></param>
-        public static void Shuffle<T>(this T[] list, Random rng)
+        public static void Shuffle<T>(this IList<T> list, Random rng)
         {
-            int n = list.Length;
+            int n = list.Count;
             while (n > 1)
             {
                 n--;
@@ -159,6 +160,56 @@ namespace SharpLearning.Containers
                 T value = list[k];
                 list[k] = list[n];
                 list[n] = value;
+            }
+        }
+
+        /// <summary>
+        /// Shuffles the indices then orders them inorder to get the same distribution in each fold. 
+        /// </summary>
+        /// <typeparam name="TIndex"></typeparam>
+        /// <typeparam name="TValues"></typeparam>
+        /// <param name="indices"></param>
+        /// <param name="values"></param>
+        /// <param name="rng"></param>
+        /// <param name="folds"></param>
+        public static void Stratify<TIndex, TValues>(this TIndex[] indices, IReadOnlyList<TValues> values, Random rng, int folds)
+        {
+            var zipped = indices.Zip(values, (i, v) => new { Index = i, Value = v }).ToList();
+            zipped.Shuffle(rng);
+
+            var grps = zipped.GroupBy(v => v.Value);
+            var countsPrFold = grps.Select(g => new { Key = g.Key, CountPrFold = g.Count() / folds }).ToDictionary(v => v.Key, v => v.CountPrFold);
+
+            foreach (var kvp in countsPrFold)
+            {
+                if (kvp.Value == 0) { throw new ArgumentException("Class: " + kvp.Key + " is too small for " + folds + "-fold statification "); }
+            }
+
+            Array.Clear(indices, 0, indices.Length);
+
+            var index = 0;
+            for (int i = 0; i < folds; i++)
+            {
+                foreach (var grp in grps)
+                {
+                    var counts = countsPrFold[grp.Key];
+                    if (i == folds - 1)
+                    {
+                        var currentIndices = grp.Skip(i * counts).Take(grp.Count()).Select(v => v.Index);
+                        foreach (var item in currentIndices)
+                        {
+                            indices[index++] = item; 
+                        }
+                    }
+                    else
+                    {
+                        var currentIndices = grp.Skip(i * counts).Take(counts).Select(v => v.Index);
+                        foreach (var item in currentIndices)
+                        {
+                            indices[index++] = item;
+                        }
+                    }
+                }
             }
         }
     }

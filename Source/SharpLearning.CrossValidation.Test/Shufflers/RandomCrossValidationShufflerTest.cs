@@ -12,7 +12,7 @@ namespace SharpLearning.CrossValidation.Test.Shufflers
         {
             var actual = Enumerable.Range(0, 10).ToArray();
             var targets = new double[] { 0, 1, 2, 3 ,4 ,5 ,6 ,7 ,8 ,9 };
-            var sut = new RandomCrossValidationShuffler(42);
+            var sut = new RandomCrossValidationShuffler<double>(42);
 
             sut.Shuffle(actual, targets, 3);
 

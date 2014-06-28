@@ -10,11 +10,11 @@ namespace SharpLearning.CrossValidation
     /// Cross validation for evaluating how learning algorithms perform on unseen observations
     /// </summary>
     /// <typeparam name="TOut"></typeparam>
-    public class CrossValidation<TOut>
+    public class CrossValidation<TOut, TTarget>
     {
-        readonly Func<F64Matrix, double[], int[], Func<F64Matrix, int[], TOut[]>> m_modelCreator;
+        readonly CrossValidationLearner<TOut, TTarget> m_modelLearner;
         readonly int m_crossValidationFolds;
-        readonly ICrossValidationShuffler m_shuffler;
+        readonly ICrossValidationShuffler<TTarget> m_shuffler;
 
         int[] m_workIndices = new int[0];
         int[] m_trainingIndices = new int[0];
@@ -23,19 +23,19 @@ namespace SharpLearning.CrossValidation
         /// <summary>
         /// Cross validation for evaluating how learning algorithms perform on unseen observations
         /// </summary>
-        /// <param name="modelCreator">The func should provide a learning algorithm 
+        /// <param name="modelLearner">The func should provide a learning algorithm 
         /// that returns a model predicting multiple observations</param>
         /// <param name="shuffler">Shuffling strategy for the provided indices 
         /// before they are divided into the provided folds</param>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
-        public CrossValidation(Func<F64Matrix, double[], int[], Func<F64Matrix, int[], TOut[]>> modelCreator,
-                                    ICrossValidationShuffler shuffler, int crossValidationFolds)
+        public CrossValidation(CrossValidationLearner<TOut, TTarget> modelLearner,
+                                    ICrossValidationShuffler<TTarget> shuffler, int crossValidationFolds)
         {
-            if (modelCreator == null) { throw new ArgumentNullException("trainer"); }
+            if (modelLearner == null) { throw new ArgumentNullException("trainer"); }
             if (shuffler == null) { throw new ArgumentNullException("shuffler"); }
             if (crossValidationFolds < 1) { throw new ArgumentException("CrossValidationFolds "); }
 
-            m_modelCreator = modelCreator;
+            m_modelLearner = modelLearner;
             m_shuffler = shuffler;
             m_crossValidationFolds = crossValidationFolds;
         }
@@ -46,7 +46,7 @@ namespace SharpLearning.CrossValidation
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public TOut[] CrossValidate(F64Matrix observations, double[] targets)
+        public TOut[] CrossValidate(F64Matrix observations, TTarget[] targets)
         {
             var rows = targets.Length;
             if (m_crossValidationFolds > rows) 
@@ -70,7 +70,7 @@ namespace SharpLearning.CrossValidation
             for (int i = 0; i < m_crossValidationFolds; i++)
             {
                 AddCurrentIndices(foldIndices, rows, i);
-                var model = m_modelCreator(observations, targets, m_trainingIndices);
+                var model = m_modelLearner(observations, targets, m_trainingIndices);
                 var predictions = model(observations, m_holdoutIndices);
 
                 for (int j = 0; j < m_holdoutIndices.Length; j++)
