@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput", "SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput.Test", "SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
@@ -21,9 +23,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.CrossValidati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.CrossValidation.Test", "SharpLearning.CrossValidation.Test\SharpLearning.CrossValidation.Test.csproj", "{3EE06D66-F60E-472C-B999-4D46BAC18D0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.RandomForest", "SharpLearning.RandomForest\SharpLearning.RandomForest.csproj", "{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.RandomForest.Test", "SharpLearning.RandomForest.Test\SharpLearning.RandomForest.Test.csproj", "{D7C8B7B5-2BBC-4C10-BB26-696AFC1407A0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 11
+		SccNumberOfProjects = 13
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -57,6 +63,12 @@ Global
 		SccProjectUniqueName10 = SharpLearning.CrossValidation.Test\\SharpLearning.CrossValidation.Test.csproj
 		SccProjectName10 = SharpLearning.CrossValidation.Test
 		SccLocalPath10 = SharpLearning.CrossValidation.Test
+		SccProjectUniqueName11 = SharpLearning.RandomForest\\SharpLearning.RandomForest.csproj
+		SccProjectName11 = SharpLearning.RandomForest
+		SccLocalPath11 = SharpLearning.RandomForest
+		SccProjectUniqueName12 = SharpLearning.RandomForest.Test\\SharpLearning.RandomForest.Test.csproj
+		SccProjectName12 = SharpLearning.RandomForest.Test
+		SccLocalPath12 = SharpLearning.RandomForest.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +115,14 @@ Global
 		{3EE06D66-F60E-472C-B999-4D46BAC18D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EE06D66-F60E-472C-B999-4D46BAC18D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EE06D66-F60E-472C-B999-4D46BAC18D0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7C8B7B5-2BBC-4C10-BB26-696AFC1407A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7C8B7B5-2BBC-4C10-BB26-696AFC1407A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7C8B7B5-2BBC-4C10-BB26-696AFC1407A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7C8B7B5-2BBC-4C10-BB26-696AFC1407A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

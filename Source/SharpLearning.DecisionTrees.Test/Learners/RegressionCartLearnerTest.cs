@@ -41,7 +41,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("T").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionCartLearner(4, treeDepth, 0.1);
+            var sut = new RegressionCartLearner(4, treeDepth, 2, 0.1);
 
             var model = sut.Learn(observations, targets);
 
@@ -75,7 +75,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
                 }
             }
 
-            var sut = new RegressionCartLearner(1, 100, 0.001);
+            var sut = new RegressionCartLearner(1, 100, cols, 0.001);
             var timer = new Stopwatch();
             timer.Start();
             var model = sut.Learn(observations, targets);

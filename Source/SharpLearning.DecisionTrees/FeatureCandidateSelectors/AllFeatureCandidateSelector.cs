@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SharpLearning.DecisionTrees.Learners
+namespace SharpLearning.DecisionTrees.FeatureCandidateSelectors
 {
     /// <summary>
     /// Selects all features as candidates
@@ -12,13 +12,13 @@ namespace SharpLearning.DecisionTrees.Learners
         /// </summary>
         /// <param name="count"></param>
         /// <param name="candidates"></param>
-        public void Select(int count, List<int> candidates)
+        public void Select(int selectCount, int totalCount, List<int> candidates)
         {
-            if (count > candidates.Capacity)
+            if (selectCount > candidates.Capacity)
             {
-                candidates.Capacity = count;
+                candidates.Capacity = selectCount;
             }
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < selectCount; i++)
             {
                 candidates.Add(i);
             }

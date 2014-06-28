@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SharpLearning.DecisionTrees")]
+[assembly: AssemblyTitle("SharpLearning.RandomForest.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SharpLearning.DecisionTrees")]
+[assembly: AssemblyProduct("SharpLearning.RandomForest.Test")]
 [assembly: AssemblyCopyright("Copyright © Mads Dabros 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,4 +20,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("08e092dd-a061-4e76-8923-9323a738bea3")]
+[assembly: Guid("e7e393eb-0a10-446a-a538-65749a552202")]

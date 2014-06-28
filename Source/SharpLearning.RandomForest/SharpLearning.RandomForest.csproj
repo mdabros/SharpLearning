@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}</ProjectGuid>
+    <ProjectGuid>{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpLearning.DecisionTrees</RootNamespace>
-    <AssemblyName>SharpLearning.DecisionTrees</AssemblyName>
+    <RootNamespace>SharpLearning.RandomForest</RootNamespace>
+    <AssemblyName>SharpLearning.RandomForest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -46,31 +46,18 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="FeatureCandidateSelectors\RandomFeatureCandidateSelector.cs" />
-    <Compile Include="LeafFactories\LaplaceAdjustedClassificationLeafFactory.cs" />
-    <Compile Include="LeafFactories\ClassificationLeafFactory.cs" />
-    <Compile Include="LeafFactories\ILeafFactory.cs" />
-    <Compile Include="LeafFactories\RegressionLeafFactory.cs" />
-    <Compile Include="Learners\CartLearner.cs" />
-    <Compile Include="Learners\ClassificationCartLearner.cs" />
-    <Compile Include="Models\ClassificationCartModel.cs" />
-    <Compile Include="Models\RegressionCartModel.cs" />
-    <Compile Include="Nodes\BinaryDecisionNodeExtensions.cs" />
-    <Compile Include="Nodes\ClassificationBinaryDecisionNode.cs" />
-    <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
-    <Compile Include="Learners\RegressionCartLearner.cs" />
-    <Compile Include="FeatureCandidateSelectors\AllFeatureCandidateSelector.cs" />
-    <Compile Include="Learners\FeatureSplit.cs" />
-    <Compile Include="FeatureCandidateSelectors\IFeatureCandidateSelector.cs" />
-    <Compile Include="Nodes\BinaryDicisionNodeBase.cs" />
-    <Compile Include="Nodes\ContinousBinaryDecisionNode.cs" />
-    <Compile Include="Nodes\IBinaryDecisionNode.cs" />
+    <Compile Include="Learners\ClassificationRandomForestLearner.cs" />
+    <Compile Include="Models\ClassificationRandomForestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj">
+      <Project>{8efe2f3f-779d-46d3-bea4-6f04a52f52e1}</Project>
+      <Name>SharpLearning.DecisionTrees</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
       <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>

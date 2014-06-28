@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace SharpLearning.DecisionTrees.Learners
+namespace SharpLearning.DecisionTrees.FeatureCandidateSelectors
 {
     /// <summary>
     /// Provides feature candidates/indices to select from
     /// </summary>
     public interface IFeatureCandidateSelector
     {
-        void Select(int count, List<int> candidates);
+        void Select(int selectCount, int totalCount, List<int> candidates);
     }
 }

@@ -62,7 +62,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationCartLearner(1, treeDepth, 0.001);
+            var sut = new ClassificationCartLearner(1, treeDepth, observations.GetNumberOfColumns(), 0.001);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -79,7 +79,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationCartLearner(1, treeDepth, 0.001);
+            var sut = new ClassificationCartLearner(1, treeDepth, 2, 0.001);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -112,7 +112,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
                 }
             }
 
-            var sut = new ClassificationCartLearner(1, 100, 0.001);
+            var sut = new ClassificationCartLearner(1, 100, cols, 0.001);
             var timer = new Stopwatch();
             timer.Start();
             var model = sut.Learn(observations, targets);
