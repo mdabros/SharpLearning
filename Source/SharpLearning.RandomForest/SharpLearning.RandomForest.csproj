@@ -63,6 +63,10 @@
       <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
       <Name>SharpLearning.Metrics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Threading\SharpLearning.Threading.csproj">
+      <Project>{a2f37b85-ee5b-4e09-9edf-f391dbd53b5f}</Project>
+      <Name>SharpLearning.Threading</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

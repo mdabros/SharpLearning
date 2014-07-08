@@ -5,7 +5,9 @@ using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.Metrics.Entropy;
 using SharpLearning.RandomForest.Models;
+using SharpLearning.Threading;
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 
 namespace SharpLearning.RandomForest.Learners
@@ -23,8 +25,9 @@ namespace SharpLearning.RandomForest.Learners
         readonly double m_minimumInformationGain;
         readonly int m_maximumTreeDepth;
         readonly Random m_random;
-        int[] m_workIndices = new int[0];
-       
+
+        readonly ThreadedWorker<ClassificationCartModel> m_threadedWorker;
+
         /// <summary>
         /// The random forest is an ensemble learner consisting of a series of randomized decision trees
         /// </summary>
@@ -34,14 +37,16 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random number generator</param>
+        /// <param name="numberOfThreads">Number of threads to use for paralization</param>
         public ClassificationRandomForestLearner(int trees, int minimumSplitSize, int maximumTreeDepth, 
-            int featuresPrSplit, double minimumInformationGain, int seed)
+            int featuresPrSplit, double minimumInformationGain, int seed, int numberOfThreads)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
             if (featuresPrSplit < 1) { throw new ArgumentException("features pr split must be at least 1"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
+            if (numberOfThreads < 1) { throw new ArgumentException("Number of threads must be at least 1"); }
 
             m_trees = trees;
             m_minimumSplitSize = minimumSplitSize;
@@ -50,6 +55,23 @@ namespace SharpLearning.RandomForest.Learners
             m_minimumInformationGain = minimumInformationGain;
 
             m_random = new Random(seed);
+
+            m_threadedWorker = new ThreadedWorker<ClassificationCartModel>(numberOfThreads);
+        }
+
+        /// <summary>
+        /// The random forest is an ensemble learner consisting of a series of randomized decision trees
+        /// </summary>
+        /// <param name="trees">Number of trees to use in the ensemble</param>
+        /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
+        /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
+        /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
+        /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
+        /// <param name="seed">Seed for the random number generator</param>
+        public ClassificationRandomForestLearner(int trees = 50, int minimumSplitSize = 5, int maximumTreeDepth = 100, 
+            int featuresPrSplit = 3, double minimumInformationGain = 0.0001, int seed = 42)
+          : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, Environment.ProcessorCount)
+        {
         }
 
         /// <summary>
@@ -59,24 +81,18 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="targets"></param>
         /// <returns></returns>
         public ClassificationRandomForestModel Learn(F64Matrix observations, double[] targets)
-        {
-            Array.Resize(ref m_workIndices, targets.Length);
-            var models = new ClassificationCartModel[m_trees];
-            var treeIndices = new int[m_workIndices.Length];
+        {          
+            var results = new ConcurrentBag<ClassificationCartModel>();
+            var tasks = new ConcurrentQueue<Action<ConcurrentBag<ClassificationCartModel>>>();
             
             for (int i = 0; i < m_trees; i++)
             {
-                for (int j = 0; j < treeIndices.Length; j++)
-                {
-                    treeIndices[j] = m_random.Next(treeIndices.Length);
-                }
-
-                var model = CreateTreeModel(observations, targets, treeIndices);
-
-
-                models[i] = model;
+                tasks.Enqueue((r) => CreateTreeModel(observations, targets, r));
             }
 
+            m_threadedWorker.Run(tasks, results);
+
+            var models = results.ToArray();
             var rawVariableImportance = VariableImportance(models, observations.GetNumberOfColumns());
 
             return new ClassificationRandomForestModel(models, rawVariableImportance);
@@ -98,16 +114,25 @@ namespace SharpLearning.RandomForest.Learners
             return rawVariableImportance;
         }
 
-        ClassificationCartModel CreateTreeModel(F64Matrix observations, double[] targets, int[] indices)
+        void CreateTreeModel(F64Matrix observations, double[] targets, ConcurrentBag<ClassificationCartModel> models)
         {
+            var treeIndices = new int[targets.Length];
+
+            for (int j = 0; j < treeIndices.Length; j++)
+            {
+                treeIndices[j] = m_random.Next(treeIndices.Length);
+            }
+            
             var learner = new CartLearner(m_minimumSplitSize, m_maximumTreeDepth, 
                 m_featuresPrSplit, m_minimumInformationGain, 
                 new GiniImpurityMetric(),
                 new RandomFeatureCandidateSelector(m_random.Next()),
                 new ClassificationLeafFactory());
 
-            return new ClassificationCartModel(learner.Learn(observations, targets, indices),
+            var model = new ClassificationCartModel(learner.Learn(observations, targets, treeIndices),
                 learner.m_variableImportance);
+
+            models.Add(model);
         }
     }
 }
