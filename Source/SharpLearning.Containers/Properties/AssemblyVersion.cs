@@ -10,5 +10,5 @@
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("0.4.*")]
-[assembly: AssemblyFileVersion("0.5.1.1")]
+[assembly: AssemblyFileVersion("0.6.0.0")]
 // SharpLearning
