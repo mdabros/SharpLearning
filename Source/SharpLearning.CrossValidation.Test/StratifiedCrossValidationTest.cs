@@ -8,10 +8,10 @@ using System.Linq;
 namespace SharpLearning.CrossValidation.Test
 {
     /// <summary>
-    /// Summary description for StratisfiedCrossValidationTest
+    /// Summary description for StratifiedCrossValidationTest
     /// </summary>
     [TestClass]
-    public class StratisfiedCrossValidationTest
+    public class StratifiedCrossValidationTest
     {
         [TestMethod]
         public void StratisfiedCrossValidation_CrossValidate_Folds_2()
@@ -43,7 +43,7 @@ namespace SharpLearning.CrossValidation.Test
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
 
-            var sut = new StratisfiedCrossValidation<double, double>(ModelLearner, folds, 42);
+            var sut = new StratifiedCrossValidation<double, double>(ModelLearner, folds, 42);
             var actual = sut.CrossValidate(observations, targets);
             return actual;
         }

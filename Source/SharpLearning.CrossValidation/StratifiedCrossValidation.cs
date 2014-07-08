@@ -8,7 +8,7 @@ namespace SharpLearning.CrossValidation
     /// http://en.wikipedia.org/wiki/Stratified_sampling
     /// </summary>
     /// <typeparam name="TOut"></typeparam>
-    public sealed class StratisfiedCrossValidation<TOut, TTarget> : CrossValidation<TOut, TTarget>
+    public sealed class StratifiedCrossValidation<TOut, TTarget> : CrossValidation<TOut, TTarget>
     {
         /// <summary>
         /// Cross validation for evaluating how learning algorithms generalise on new data
@@ -16,7 +16,7 @@ namespace SharpLearning.CrossValidation
         /// <param name="modelLearner">The func should provide a learning algorithm 
         /// that returns a model predicting multiple observations</param>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
-        public StratisfiedCrossValidation(CrossValidationLearner<TOut, TTarget> modelLearner, int crossValidationFolds)
+        public StratifiedCrossValidation(CrossValidationLearner<TOut, TTarget> modelLearner, int crossValidationFolds)
             : base(modelLearner, new StratifyCrossValidationShuffler<TTarget>(DateTime.Now.Millisecond), crossValidationFolds)
         {
         }
@@ -28,7 +28,7 @@ namespace SharpLearning.CrossValidation
         /// that returns a model predicting multiple observations</param>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
         /// <param name="seed"></param>
-        public StratisfiedCrossValidation(CrossValidationLearner<TOut, TTarget> modelLearner, int crossValidationFolds, int seed)
+        public StratifiedCrossValidation(CrossValidationLearner<TOut, TTarget> modelLearner, int crossValidationFolds, int seed)
             : base(modelLearner, new StratifyCrossValidationShuffler<TTarget>(seed), crossValidationFolds)
         {
         }

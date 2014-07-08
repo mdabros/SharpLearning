@@ -62,7 +62,7 @@
     <Compile Include="RandomCrossValidationTest.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShufflerTest.cs" />
     <Compile Include="Shufflers\StratifyCrossValidationShufflerTest.cs" />
-    <Compile Include="StratisfiedCrossValidationTest.cs" />
+    <Compile Include="StratifiedCrossValidationTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
