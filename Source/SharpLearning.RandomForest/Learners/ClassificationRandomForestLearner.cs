@@ -63,7 +63,6 @@ namespace SharpLearning.RandomForest.Learners
             Array.Resize(ref m_workIndices, targets.Length);
             var models = new ClassificationCartModel[m_trees];
             var treeIndices = new int[m_workIndices.Length];
-            var rawVariableImportance = new double[observations.GetNumberOfColumns()];
             
             for (int i = 0; i < m_trees; i++)
             {
@@ -73,17 +72,30 @@ namespace SharpLearning.RandomForest.Learners
                 }
 
                 var model = CreateTreeModel(observations, targets, treeIndices);
-                var modelVariableImportance = model.GetRawVariableImportance();
-                
-                for (int j = 0; j < modelVariableImportance.Length; j++)
-                {
-                    rawVariableImportance[j] += modelVariableImportance[j];
-                }
+
 
                 models[i] = model;
             }
 
+            var rawVariableImportance = VariableImportance(models, observations.GetNumberOfColumns());
+
             return new ClassificationRandomForestModel(models, rawVariableImportance);
+        }
+
+        double[] VariableImportance(ClassificationCartModel[] models, int numberOfFeatures)
+        {
+            var rawVariableImportance = new double[numberOfFeatures];
+
+            foreach (var model in models)
+            {
+                var modelVariableImportance = model.GetRawVariableImportance();
+
+                for (int j = 0; j < modelVariableImportance.Length; j++)
+                {
+                    rawVariableImportance[j] += modelVariableImportance[j];
+                }
+            }
+            return rawVariableImportance;
         }
 
         ClassificationCartModel CreateTreeModel(F64Matrix observations, double[] targets, int[] indices)
