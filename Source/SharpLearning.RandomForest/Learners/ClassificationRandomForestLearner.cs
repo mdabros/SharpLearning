@@ -70,7 +70,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="seed">Seed for the random number generator</param>
         public ClassificationRandomForestLearner(int trees = 50, int minimumSplitSize = 5, int maximumTreeDepth = 100, 
             int featuresPrSplit = 3, double minimumInformationGain = 0.0001, int seed = 42)
-          : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, Environment.ProcessorCount)
+          : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain, 
+            seed, Environment.ProcessorCount)
         {
         }
 
@@ -87,7 +88,8 @@ namespace SharpLearning.RandomForest.Learners
             
             for (int i = 0; i < m_trees; i++)
             {
-                tasks.Enqueue((r) => CreateTreeModel(observations, targets, r));
+                tasks.Enqueue((r) => CreateTreeModel(observations, targets, 
+                    new Random(m_random.Next()), r));
             }
 
             m_threadedWorker.Run(tasks, results);
@@ -114,19 +116,20 @@ namespace SharpLearning.RandomForest.Learners
             return rawVariableImportance;
         }
 
-        void CreateTreeModel(F64Matrix observations, double[] targets, ConcurrentBag<ClassificationCartModel> models)
+        void CreateTreeModel(F64Matrix observations, double[] targets, Random random, 
+            ConcurrentBag<ClassificationCartModel> models)
         {
             var treeIndices = new int[targets.Length];
 
             for (int j = 0; j < treeIndices.Length; j++)
             {
-                treeIndices[j] = m_random.Next(treeIndices.Length);
+                treeIndices[j] = random.Next(treeIndices.Length);
             }
             
             var learner = new CartLearner(m_minimumSplitSize, m_maximumTreeDepth, 
                 m_featuresPrSplit, m_minimumInformationGain, 
                 new GiniImpurityMetric(),
-                new RandomFeatureCandidateSelector(m_random.Next()),
+                new RandomFeatureCandidateSelector(random.Next()),
                 new ClassificationLeafFactory());
 
             var model = new ClassificationCartModel(learner.Learn(observations, targets, treeIndices),
