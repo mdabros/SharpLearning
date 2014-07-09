@@ -9,8 +9,6 @@ namespace SharpLearning.Containers
     /// </summary>
     public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     {
-        const double m_tolerence = 0.00001;
-
         public readonly double Prediction;
         public readonly Dictionary<double, double> Probabilities;
 
@@ -65,6 +63,8 @@ namespace SharpLearning.Containers
         {
             return Prediction.GetHashCode() ^ Probabilities.GetHashCode();
         }
+
+        const double m_tolerence = 0.00001;
 
         bool Equal(double a, double b)
         {

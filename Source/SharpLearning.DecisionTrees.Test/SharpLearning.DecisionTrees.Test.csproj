@@ -75,6 +75,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SplitSearchers\FeatureSplitTest.cs" />
+    <Compile Include="SplitSearchers\FindSplitResultTest.cs" />
+    <Compile Include="SplitSearchers\IntervalEntropyTest.cs" />
+    <Compile Include="SplitSearchers\LinearSplitSearcherTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">

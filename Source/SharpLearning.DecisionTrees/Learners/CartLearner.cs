@@ -8,6 +8,7 @@ using SharpLearning.Metrics.Entropy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.DecisionTrees.SplitSearchers;
 
 namespace SharpLearning.DecisionTrees.Learners
 {
@@ -18,11 +19,10 @@ namespace SharpLearning.DecisionTrees.Learners
     public class CartLearner
     {
         readonly IEntropyMetric m_entropyMetric;
-        //readonly ISplitFinder m_splitFinder;
+        readonly ISplitSearcher m_splitSearcher;
         readonly IFeatureCandidateSelector m_featureCandidateSelector;
         readonly ILeafFactory m_leafFactory;
         
-        readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
         readonly int m_featuresPrSplit;
 
@@ -44,32 +44,30 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="entropyMetric">The entropy metric used to calculate the best splits</param>
+        /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
         /// <param name="featureCandidateSelector">The feature candidate selector used to decide which feature indices the learner can choose from at each split</param>
         /// <param name="leafFactory">The type of leaf created when no more splits can be made</param>
-        public CartLearner(int minimumSplitSize, int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain, IEntropyMetric entropyMetric, //ISplitFinder splitFinder, 
-                           IFeatureCandidateSelector featureCandidateSelector, ILeafFactory leafFactory)
+        public CartLearner(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain, IEntropyMetric entropyMetric,
+            ISplitSearcher splitSearcher, IFeatureCandidateSelector featureCandidateSelector, ILeafFactory leafFactory)
         {
             if (entropyMetric == null) { throw new ArgumentNullException("entropyMetric"); }
-            //if (splitFinder == null) { throw new ArgumentNullException("splitFinder"); }
+            if (splitSearcher == null) { throw new ArgumentException("splitSearcher"); }
             if (featureCandidateSelector == null) { throw new ArgumentNullException("featureCandidateSelector"); }
             if (leafFactory == null) { throw new ArgumentNullException("leafValueFactory");}
-            if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (featuresPrSplit < 1) { throw new ArgumentException("features pr split must be at least 1"); }
-
+            
+            m_entropyMetric = entropyMetric;
             m_maximumTreeDepth = maximumTreeDepth;
             m_featuresPrSplit = featuresPrSplit;
-            //m_splitFinder = splitFinder;
-            m_entropyMetric = entropyMetric;
+            m_splitSearcher = splitSearcher;
             m_featureCandidateSelector = featureCandidateSelector;
             m_leafFactory = leafFactory;
-            m_minimumSplitSize = minimumSplitSize;
             m_minimumInformationGain = minimumInformationGain;
         }
 
@@ -120,13 +118,13 @@ namespace SharpLearning.DecisionTrees.Learners
             Array.Resize(ref m_variableImportance, observations.GetNumberOfColumns());
             m_featureCandidates.Clear();
 
-            var uniqueValues = targets.Distinct().ToArray();
-
             var allInterval = Interval1D.Create(0, indices.Length);
             indices.CopyTo(allInterval, m_workIndices);
 
             m_workIndices.IndexedCopy(targets, allInterval, m_workTargets);
             var rootEntropy = m_entropyMetric.Entropy(m_workTargets, allInterval);
+
+            var uniqueValues = targets.Distinct().ToArray();
 
             m_featureCandidateSelector.Select(m_featuresPrSplit, observations.GetNumberOfColumns(), m_featureCandidates);
 
@@ -135,19 +133,10 @@ namespace SharpLearning.DecisionTrees.Learners
 
             var first = true;
             IBinaryDecisionNode root = null;
-
-
+            
             while (stack.Count > 0)
             {
-                int bestSplitIndex = -1;
-                double bestInformationGain = 0;
-                double bestLeftEntropy = 0.0;
-                double bestRightEntropy = 0.0;
-                Interval1D bestLeftInterval = Interval1D.Create(0, 1);
-                Interval1D bestRightInterval = Interval1D.Create(0, 1);
-
-                var bestFeatureSplit = new FeatureSplit();
-                
+                var bestSplitResult = FindSplitResult.Initial();
                 var parentItem = stack.Pop();
 
                 var parentInterval = parentItem.Interval;
@@ -168,59 +157,25 @@ namespace SharpLearning.DecisionTrees.Learners
                     m_workFeature.SortWith(parentInterval, m_workIndices);
                     m_workIndices.IndexedCopy(targets, parentInterval, m_workTargets);
 
-                    bool newBestSplit = false;
+                    var splitResult = m_splitSearcher.FindBestSplit(bestSplitResult, featureIndex, m_workFeature, m_workTargets, 
+                        m_entropyMetric, parentInterval, parentEntropy);
 
-                    int prevSplit = parentInterval.FromInclusive;
-                    var prevValue = m_workFeature[prevSplit];
-                    var prevTarget = m_workTargets[prevSplit];
-
-                    for (int j = prevSplit + 1; j < parentInterval.ToExclusive; j++)
+                    if (splitResult.NewBestSplit)
                     {
-                        var currentValue = m_workFeature[j];
-                        var currentTarget = m_workTargets[j];
-                        if (prevValue != currentValue && prevTarget != currentTarget)
-                        {
-                            var currentSplit = j;
-                            var leftSize = currentSplit - parentInterval.FromInclusive;
-                            var rightSize = parentInterval.ToExclusive - currentSplit;
-
-                            if (Math.Min(leftSize, rightSize) >= m_minimumSplitSize)
-                            {
-                                var leftInterval = Interval1D.Create(parentInterval.FromInclusive, currentSplit);
-                                var rightInterval = Interval1D.Create(currentSplit, parentInterval.ToExclusive);
-
-                                var leftEntropy = m_entropyMetric.Entropy(m_workTargets, leftInterval);
-                                var rightEntropy = m_entropyMetric.Entropy(m_workTargets, rightInterval);
-                                var lengthInv = 1.0 / parentInterval.Length;
-                                var informationGain = parentEntropy - ((leftSize * lengthInv) * leftEntropy + (rightSize * lengthInv) * rightEntropy);
-
-                                if (informationGain > bestInformationGain)
-                                {
-                                    bestSplitIndex = currentSplit;
-                                    bestFeatureSplit = new FeatureSplit((currentValue + prevValue) * 0.5, featureIndex);
-                                    bestInformationGain = informationGain;
-                                    bestLeftInterval = leftInterval;
-                                    bestRightInterval = rightInterval;
-                                    bestLeftEntropy = leftEntropy;
-                                    bestRightEntropy = rightEntropy;
-                                    newBestSplit = true;
-                                }
-
-                                prevSplit = j;
-                            }
-                        }
-
-                        prevValue = currentValue;
-                        prevTarget = currentTarget;
-                    }
-
-                    if (newBestSplit)
-                    {
+                        bestSplitResult = splitResult;
                         m_workIndices.CopyTo(parentInterval, m_bestSplitWorkIndices);
                     }
                 }
 
                 m_bestSplitWorkIndices.CopyTo(parentInterval, m_workIndices);
+
+                var bestSplitIndex = bestSplitResult.BestSplitIndex;
+                var bestInformationGain = bestSplitResult.BestInformationGain;
+                var bestLeftEntropy = bestSplitResult.LeftIntervalEntropy.Entropy;
+                var bestRightEntropy = bestSplitResult.RightIntervalEntropy.Entropy;
+                var bestLeftInterval = bestSplitResult.LeftIntervalEntropy.Interval;
+                var bestRightInterval = bestSplitResult.RightIntervalEntropy.Interval;
+                var bestFeatureSplit = bestSplitResult.BestFeatureSplit;
 
                 if (bestSplitIndex >= 0 && bestInformationGain > m_minimumInformationGain && m_maximumTreeDepth > parentNodeDepth)
                 {
@@ -243,7 +198,7 @@ namespace SharpLearning.DecisionTrees.Learners
                 else
                 {
                     m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
-                    
+
                     var leaf = m_leafFactory.Create(parentNode, m_workTargets, uniqueValues, parentInterval);
 
                     parentNode.AddChild(parentNodePositionType, leaf);

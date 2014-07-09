@@ -3,6 +3,7 @@ using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.LeafFactories;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.Metrics.Entropy;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.Threading;
@@ -126,9 +127,10 @@ namespace SharpLearning.RandomForest.Learners
                 treeIndices[j] = random.Next(treeIndices.Length);
             }
             
-            var learner = new CartLearner(m_minimumSplitSize, m_maximumTreeDepth, 
-                m_featuresPrSplit, m_minimumInformationGain, 
+            var learner = new CartLearner(m_maximumTreeDepth, 
+                m_featuresPrSplit, m_minimumInformationGain,
                 new GiniImpurityMetric(),
+                new LinearSplitSearcher(m_minimumSplitSize),
                 new RandomFeatureCandidateSelector(random.Next()),
                 new ClassificationLeafFactory());
 

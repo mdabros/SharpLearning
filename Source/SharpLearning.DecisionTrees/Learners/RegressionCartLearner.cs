@@ -3,6 +3,7 @@ using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.LeafFactories;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.Metrics.Entropy;
 
 namespace SharpLearning.DecisionTrees.Learners
@@ -21,8 +22,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         public RegressionCartLearner(int minimumSplitSize, int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain)
-            : base(minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain, new NaiveSinglePassVarianceEntropyMetric(), //new LinearSplitFinder(),
-                   new AllFeatureCandidateSelector(), new RegressionLeafFactory())
+            : base(maximumTreeDepth, featuresPrSplit, minimumInformationGain, new NaiveSinglePassVarianceEntropyMetric(), 
+                   new LinearSplitSearcher(minimumSplitSize), new AllFeatureCandidateSelector(), new RegressionLeafFactory())
         {
         }
 
