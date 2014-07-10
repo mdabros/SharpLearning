@@ -75,6 +75,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SplitSearchers\BinarySplitSearcherTest.cs" />
     <Compile Include="SplitSearchers\FeatureSplitTest.cs" />
     <Compile Include="SplitSearchers\FindSplitResultTest.cs" />
     <Compile Include="SplitSearchers\IntervalEntropyTest.cs" />

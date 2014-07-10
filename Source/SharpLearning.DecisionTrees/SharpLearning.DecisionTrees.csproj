@@ -69,6 +69,7 @@
     <Compile Include="SplitSearchers\FindSplitResult.cs" />
     <Compile Include="SplitSearchers\IntervalEntropy.cs" />
     <Compile Include="SplitSearchers\ISplitSearcher.cs" />
+    <Compile Include="SplitSearchers\BinarySplitSearcher.cs" />
     <Compile Include="SplitSearchers\LinearSplitSearcher.cs" />
   </ItemGroup>
   <ItemGroup>
