@@ -83,12 +83,10 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
 
                 if (leftLeftSize >= 1 && leftRightSize >= 1 && rightLeftSize >= 1 && rightRightSize >= 1)
                 {
-                    var leftEntropy = entropyMetric.Entropy(targets, leftInterval);
-                    var leftSplitResult = SplitResult(leftEntropy, leftInterval, leftIndex,
+                    var leftSplitResult = SplitResult(parentEntropy, parentInterval, leftIndex,
                         feature, targets, featureIndex, entropyMetric);
 
-                    var rightEntropy = entropyMetric.Entropy(targets, rightInterval);
-                    var rightSplitResult = SplitResult(rightEntropy, rightInterval, rightIndex,
+                    var rightSplitResult = SplitResult(parentEntropy, parentInterval, rightIndex,
                         feature, targets, featureIndex, entropyMetric);
 
                     var leftRootDiff = leftSplitResult.BestInformationGain - parentSplitResult.BestInformationGain;
@@ -99,13 +97,13 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                         if (leftSplitResult.BestInformationGain > rightSplitResult.BestInformationGain &&
                            leftSplitResult.BestInformationGain > parentSplitResult.BestInformationGain)
                         {
-                            return BinaryFindBestSplit(leftSplitResult, leftEntropy, leftInterval,
+                            return BinaryFindBestSplit(leftSplitResult, parentEntropy, parentInterval,
                                 feature, targets, featureIndex, entropyMetric);
                         }
                         else if (rightSplitResult.BestInformationGain > leftSplitResult.BestInformationGain &&
                                  rightSplitResult.BestInformationGain > parentSplitResult.BestInformationGain)
                         {
-                            return BinaryFindBestSplit(rightSplitResult, rightEntropy, rightInterval,
+                            return BinaryFindBestSplit(rightSplitResult, parentEntropy, parentInterval,
                                 feature, targets, featureIndex, entropyMetric);
                         }
                     }
