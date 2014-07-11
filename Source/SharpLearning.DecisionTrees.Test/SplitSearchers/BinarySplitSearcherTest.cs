@@ -36,8 +36,9 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var actual = sut.FindBestSplit(initialResult, 0, feature, targets, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
-            var expected = new FindSplitResult(true, 16, 0.055424063116370714, new FeatureSplit(4.0, 0),
-                new IntervalEntropy(Interval1D.Create(0, 15), 0.39111111111111119), new IntervalEntropy(Interval1D.Create(16, 26), 0.5));
+            var expected = new FindSplitResult(true, 15, 0.037941545633853213, new FeatureSplit(3.5, 0),
+                new IntervalEntropy(Interval1D.Create(0, 15), 0.39111111111111119),
+                new IntervalEntropy(Interval1D.Create(15, 26), 0.49586776859504134));
 
             Assert.AreEqual(expected, actual);
         }
@@ -59,9 +60,9 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var actual = sut.FindBestSplit(initialResult, 0, feature, targets, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
-            var expected = new FindSplitResult(true, 100, 1.501967818636019, new FeatureSplit(0.514162, 0),
-                new IntervalEntropy(Interval1D.Create(0, 99), 0.67790141128220549), 
-                new IntervalEntropy(Interval1D.Create(100, 200), 0.5455296923931825));
+            var expected = new FindSplitResult(true, 75, 1.5538386100911894, new FeatureSplit(0.397254, 0),
+                new IntervalEntropy(Interval1D.Create(0, 75), 0.30446428970865669),
+                new IntervalEntropy(Interval1D.Create(75, 200), 0.70764983149658633));
 
             Assert.AreEqual(expected, actual);
         }
@@ -82,9 +83,9 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var actual = sut.FindBestSplit(initialResult, 0, feature, targets, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
-            var expected = new FindSplitResult(true, 4709, 0.023682634320643214, new FeatureSplit(1.38629436111989, 0),
-                new IntervalEntropy(Interval1D.Create(0, 4708), 0.71819825831986472),
-                new IntervalEntropy(Interval1D.Create(4709, 9418), 0.6208901043491899));
+            var expected = new FindSplitResult(true, 6391, 0.02182606648710006, new FeatureSplit(1.7005986908310751, 0),
+                new IntervalEntropy(Interval1D.Create(0, 6391), 0.70606468409101264),
+                new IntervalEntropy(Interval1D.Create(6391, 9418), 0.597976432567197));
 
             Assert.AreEqual(expected, actual);
         }
