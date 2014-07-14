@@ -1,4 +1,7 @@
 ﻿using SharpLearning.Containers.Views;
+using SharpLearning.Containers;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SharpLearning.Metrics.Entropy
 {
@@ -25,19 +28,22 @@ namespace SharpLearning.Metrics.Entropy
                 m_dict.StoreAtPosition(pos, ++prevCount);
             }
 
-            var totalInv = 1.0 / values.Length;
+            var totalInv = 1.0 / (values.Length * values.Length);
             var giniSum = 0.0;
+
             foreach (var pair in m_dict)
             {
-                var ratio = pair.Value * totalInv;
-                giniSum += ratio * ratio;
+                giniSum += pair.Value * pair.Value;
             }
+
+            giniSum = giniSum * totalInv;
 
             return 1 - giniSum;
         }
 
         /// <summary>
-        /// 
+        /// Calculates the Gini impurity of a sample. Main use is for decision tree classification
+        /// http://en.wikipedia.org/wiki/Decision_tree_learning
         /// </summary>
         /// <param name="values"></param>
         /// <param name="interval"></param>
@@ -55,13 +61,50 @@ namespace SharpLearning.Metrics.Entropy
                 m_dict.StoreAtPosition(pos, ++prevCount);
             }
 
-            var totalInv = 1.0 / interval.Length;
+            var totalInv = 1.0 / (interval.Length * interval.Length);
             var giniSum = 0.0;
+
             foreach (var pair in m_dict)
             {
-                var ratio = pair.Value * totalInv;
-                giniSum += ratio * ratio;
+                giniSum += pair.Value * pair.Value;
             }
+
+            giniSum = giniSum * totalInv;
+
+            return 1 - giniSum;
+        }
+
+        /// <summary>
+        /// Calculates the Gini impurity of a sample. Main use is for decision tree classification
+        /// http://en.wikipedia.org/wiki/Decision_tree_learning
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="weights"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public double Entropy(double[] values, double[] weights, Interval1D interval)
+        {
+            m_dict.Clear();
+
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                var targetInt = (int)values[i];
+
+                int pos = m_dict.InitOrGetPosition(targetInt);
+                int prevCount = m_dict.GetAtPosition(pos);
+                m_dict.StoreAtPosition(pos, ++prevCount);
+            }
+
+            var weight = weights.Sum(interval);
+            var totalInv = 1.0 / (weight * weight);
+            var giniSum = 0.0;
+
+            foreach (var pair in m_dict)
+            {
+                giniSum += pair.Value * pair.Value;
+            }
+
+            giniSum = giniSum * totalInv;
 
             return 1 - giniSum;
         }

@@ -145,6 +145,22 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// Sums the values within the provided interval
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public static double Sum(this double[] array, Interval1D interval)
+        {
+            var sum = 0.0;
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                sum += array[i];
+            }
+            return sum;
+        }
+
+        /// <summary>
         /// Shuffles the array in random order
         /// </summary>
         /// <typeparam name="T"></typeparam>

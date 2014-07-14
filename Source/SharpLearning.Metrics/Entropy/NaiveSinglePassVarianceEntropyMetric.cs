@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Views;
+using SharpLearning.Containers;
 
 namespace SharpLearning.Metrics.Entropy
 {
@@ -53,6 +54,45 @@ namespace SharpLearning.Metrics.Entropy
             if (divisor == 0) { return 0.0; }
 
             var variance = (sumSqr - ((sum * sum) / n)) / divisor;
+            return variance;
+        }
+
+
+        public double Entropy(double[] values, double[] weights, Interval1D interval)
+        {
+            var weightSum = 0.0;
+            var weightSumSqr = 0.0;
+            var mean = 0.0;
+
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                var w = weights[i];
+                var x = values[i];
+                weightSum += w;
+                weightSumSqr += w * w;
+                mean += x * w; 
+            }
+
+            if (weightSum == 0.0)
+                return 0.0;
+
+            mean = mean / weightSum;
+            var meanSum = 0.0;
+
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+			{
+                var w = weights[i];
+                var x = values[i];
+                meanSum += w * (x - mean) * (x - mean);     			    
+			}
+
+            var divisor = (weightSum * weightSum - weightSumSqr);
+            
+            if (divisor == 0.0)
+                return 0.0;
+
+            var variance = (weightSum / divisor) * meanSum;
+
             return variance;
         }
     }

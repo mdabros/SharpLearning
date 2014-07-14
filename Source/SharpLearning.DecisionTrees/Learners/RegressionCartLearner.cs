@@ -27,25 +27,22 @@ namespace SharpLearning.DecisionTrees.Learners
         {
         }
 
+        public new RegressionCartModel Learn(F64Matrix observations, double[] targets)
+        {
+            return new RegressionCartModel(base.Learn(observations, targets), m_variableImportance);
+        }
+
         /// <summary>
         /// Learns a CART regression tree from the provided observations and targets
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public new RegressionCartModel Learn(F64Matrix observations, double[] targets)
+        public new RegressionCartModel Learn(F64Matrix observations, double[] targets, double[] weights)
         {
-            return new RegressionCartModel(base.Learn(observations,targets), m_variableImportance);
+            return new RegressionCartModel(base.Learn(observations, targets, weights), m_variableImportance);
         }
 
-        /// <summary>
-        /// Learns a CART regression tree from the provided observations and targets but limited to the observation indices provided by indices.
-        /// Indices can contain the same index multiple times.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
         public new RegressionCartModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return new RegressionCartModel(base.Learn(observations, targets, indices), m_variableImportance);
@@ -59,9 +56,27 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
+        public new RegressionCartModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
+        {
+            return new RegressionCartModel(base.Learn(observations, targets, indices, weights), m_variableImportance);
+        }
+
         public new RegressionCartModel Learn(F64MatrixView observations, double[] targets, int[] indices)
         {
             return new RegressionCartModel(base.Learn(observations, targets, indices), m_variableImportance);
+        }
+
+        /// <summary>
+        /// Learns a CART regression tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public new RegressionCartModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
+        {
+            return new RegressionCartModel(base.Learn(observations, targets, indices, weights), m_variableImportance);
         }
     }
 }

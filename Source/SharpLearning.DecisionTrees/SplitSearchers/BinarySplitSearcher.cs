@@ -3,6 +3,7 @@ using SharpLearning.Metrics.Entropy;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using SharpLearning.Containers;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
@@ -38,7 +39,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="featureIndex"></param>
         /// <returns></returns>
         public FindSplitResult FindBestSplit(FindSplitResult currentBestSplitResult, int featureIndex, double[] feature, double[] targets,
-           IEntropyMetric entropyMetric, Interval1D parentInterval, double parentEntropy)
+           double[] weights, IEntropyMetric entropyMetric, Interval1D parentInterval, double parentEntropy)
         {
             m_workIntervals.Clear();
             AddThresholdIntervals(feature, targets, parentInterval);
@@ -56,7 +57,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
             var intervals = m_workIntervals[middle];
             
             var bestSplitResult = SplitResult(parentEntropy, intervals.Item1, intervals.Item2.Item1, intervals.Item2.Item2,
-                parentInterval, targets, featureIndex, entropyMetric);
+                parentInterval, weights, targets, featureIndex, entropyMetric);
 
             var bestInformationGain = currentBestSplitResult.BestInformationGain;
 
@@ -67,14 +68,14 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                 var leftIntervals = m_workIntervals[leftIndex];
 
                 var leftSplit = SplitResult(parentEntropy, leftIntervals.Item1, leftIntervals.Item2.Item1, leftIntervals.Item2.Item2, 
-                    parentInterval, targets, featureIndex, entropyMetric);
+                    parentInterval, weights, targets, featureIndex, entropyMetric);
                 
                 var right = intervals.Item2.Item2;
                 var rightIndex = (end + 1 + middle) / 2;
                 var rightIntervals = m_workIntervals[rightIndex];
 
                 var rightSplit = SplitResult(parentEntropy, rightIntervals.Item1, rightIntervals.Item2.Item1, rightIntervals.Item2.Item2, 
-                    parentInterval, targets, featureIndex, entropyMetric);
+                    parentInterval, weights, targets, featureIndex, entropyMetric);
 
                 var leftDiff = leftSplit.BestInformationGain - bestInformationGain;
                 var rightDiff = rightSplit.BestInformationGain - bestInformationGain;
@@ -139,15 +140,49 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         }
 
         FindSplitResult SplitResult(double parentEntropy, FeatureSplit featureSplit, Interval1D leftInterval, Interval1D rightInterval,
-            Interval1D parentInterval, double[] targets, int featureIndex, IEntropyMetric entropyMetric)
+            Interval1D parentInterval, double[] weights, double[] targets, int featureIndex, IEntropyMetric entropyMetric)
         {
-            var leftEntropy = entropyMetric.Entropy(targets, leftInterval);
-            var rightEntropy = entropyMetric.Entropy(targets, rightInterval);
-            var lengthInv = 1.0 / parentInterval.Length;
-            var informationGain = parentEntropy - ((leftInterval.Length * lengthInv) * leftEntropy + (rightInterval.Length * lengthInv) * rightEntropy);
+            var leftEntropy = 0.0;
+            var rightEntropy = 0.0;
+            var informationGain = 0.0;
+
+            if (weights.Length == 0)
+            {
+                leftEntropy = entropyMetric.Entropy(targets, leftInterval);
+                rightEntropy = entropyMetric.Entropy(targets, rightInterval);
+
+                var lengthInv = 1.0 / (parentInterval.Length);
+                var leftRatio = leftInterval.Length * lengthInv;
+                var rightRatio = rightInterval.Length * lengthInv;
+
+                var wLeftEntropy = (leftRatio) * leftEntropy;
+                var wRightEntropy = (rightRatio) * rightEntropy;
+
+                informationGain = parentEntropy - (wLeftEntropy + wRightEntropy);
+            }
+            else
+            {
+                leftEntropy = entropyMetric.Entropy(targets, weights, leftInterval);
+                rightEntropy = entropyMetric.Entropy(targets, weights, rightInterval);
+
+                var parentWeight = weights.Sum(parentInterval);
+                var leftWeight = weights.Sum(leftInterval);
+                var rightWeight = weights.Sum(rightInterval);
+
+                var lengthInv = 1.0 / (parentWeight);
+                var leftRatio = leftWeight * lengthInv;
+                var rightRatio = rightWeight * lengthInv;
+
+                var wLeftEntropy = (leftRatio) * leftEntropy;
+                var wRightEntropy = (rightRatio) * rightEntropy;
+
+                informationGain = parentEntropy - (wLeftEntropy + wRightEntropy);
+            }
 
             return new FindSplitResult(false, featureSplit.Index, informationGain,
-                new FeatureSplit(featureSplit.Value, featureIndex), new IntervalEntropy(leftInterval, leftEntropy), new IntervalEntropy(rightInterval, rightEntropy));
+                new FeatureSplit(featureSplit.Value, featureIndex), 
+                new IntervalEntropy(leftInterval, leftEntropy), 
+                new IntervalEntropy(rightInterval, rightEntropy));
         }
     }
 }

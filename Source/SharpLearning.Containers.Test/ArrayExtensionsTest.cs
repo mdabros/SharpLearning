@@ -169,6 +169,16 @@ namespace SharpLearning.Containers.Test
         }
 
         [TestMethod]
+        public void ArrayExtensions_Sum()
+        {
+            var values = new double[] { 0, 10, 20, 30, 40, 50 };
+            var actual = values.Sum(Interval1D.Create(1, 5));
+
+            Assert.AreEqual(100, actual);
+        }
+
+
+        [TestMethod]
         public void ArrayExtensions_Shuffle()
         {
             var actual = Enumerable.Range(0, 10).ToArray();

@@ -6,6 +6,7 @@ using System.IO;
 using SharpLearning.DecisionTrees.Test.Properties;
 using SharpLearning.Metrics.Entropy;
 using SharpLearning.Containers.Views;
+using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Test.SplitSearchers
 {
@@ -33,7 +34,9 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var sut = new LinearSplitSearcher(1);
             var parentEntropy = entropyMetric.Entropy(targets);
 
-            var actual = sut.FindBestSplit(initialResult, 0, feature, targets, entropyMetric,
+            var weights = new double[0];
+
+            var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
             var expected = new FindSplitResult(true, 15, 0.037941545633853213, new FeatureSplit(3.5, 0),
@@ -42,6 +45,33 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void LinearSplitSearcher_FindBestSplit_Weight()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var feature = parser.EnumerateRows("AptitudeTestScore").ToF64Vector();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var entropyMetric = new GiniImpurityMetric();
+            var initialResult = FindSplitResult.Initial();
+
+            Array.Sort(feature, targets);
+
+            var sut = new LinearSplitSearcher(1);
+            var parentEntropy = entropyMetric.Entropy(targets);
+
+            var weights = targets.Select(v => Weight(v, 0.5)).ToArray();
+
+            var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
+                Interval1D.Create(0, feature.Length), parentEntropy);
+
+            var expected = new FindSplitResult(true, 15, 0.33829952099182869, new FeatureSplit(3.5, 0),
+                new IntervalEntropy(Interval1D.Create(0, 15), 0.18934911242603547),
+                new IntervalEntropy(Interval1D.Create(15, 26), 0.046875));
+
+            Assert.AreEqual(expected, actual);
+        }
+
 
         [TestMethod]
         public void LinearSplitSearcher_FindBestSplit_DecisionTreeData()
@@ -56,8 +86,9 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
 
             var sut = new LinearSplitSearcher(1);
             var parentEntropy = entropyMetric.Entropy(targets);
+            var weights = new double[0];
 
-            var actual = sut.FindBestSplit(initialResult, 0, feature, targets, entropyMetric,
+            var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
             var expected = new FindSplitResult(true, 75, 1.5538386100911894, new FeatureSplit(0.397254, 0),
@@ -80,7 +111,9 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var sut = new LinearSplitSearcher(1);
             var parentEntropy = entropyMetric.Entropy(targets);
 
-            var actual = sut.FindBestSplit(initialResult, 0, feature, targets, entropyMetric,
+            var weights = new double[0];
+            
+            var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
             var expected = new FindSplitResult(true, 6391, 0.02182606648710006, new FeatureSplit(1.7005986908310751, 0),
@@ -89,5 +122,13 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
 
             Assert.AreEqual(expected, actual);
         }
+
+        double Weight(double v, double weight)
+        {
+            if (v == 1.0)
+                return weight;
+            return 1.0;
+        }
+
     }
 }

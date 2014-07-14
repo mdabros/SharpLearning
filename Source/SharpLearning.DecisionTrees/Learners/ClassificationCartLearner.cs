@@ -29,7 +29,7 @@ namespace SharpLearning.DecisionTrees.Learners
         }
 
         /// <summary>
-        /// Learns a CART classification tree from the provided observations and targets
+        /// 
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -37,6 +37,19 @@ namespace SharpLearning.DecisionTrees.Learners
         public new ClassificationCartModel Learn(F64Matrix observations, double[] targets)
         {
             return new ClassificationCartModel(base.Learn(observations, targets), m_variableImportance);
+        }
+
+        /// <summary>
+        /// Learns a CART classification tree from the provided observations and targets. 
+        /// Weights can be provided in order to weight each sample individually
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public new ClassificationCartModel Learn(F64Matrix observations, double[] targets, double[] weights)
+        {
+            return new ClassificationCartModel(base.Learn(observations, targets, weights), m_variableImportance);
         }
 
         /// <summary>
@@ -54,6 +67,19 @@ namespace SharpLearning.DecisionTrees.Learners
 
         /// <summary>
         /// Learns a CART classification tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times. Weights can be provided in order to weight each sample individually.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public new ClassificationCartModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
+        {
+            return new ClassificationCartModel(base.Learn(observations, targets, indices, weights), m_variableImportance);
+        }
+
+        /// <summary>
+        /// Learns a CART classification tree from the provided observations and targets but limited to the observation indices provided by indices.
         /// Indices can contain the same index multiple times.
         /// </summary>
         /// <param name="observations"></param>
@@ -64,5 +90,19 @@ namespace SharpLearning.DecisionTrees.Learners
         {
             return new ClassificationCartModel(base.Learn(observations, targets, indices), m_variableImportance);
         }
+
+        /// <summary>
+        /// Learns a CART classification tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public new ClassificationCartModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
+        {
+            return new ClassificationCartModel(base.Learn(observations, targets, indices, weights), m_variableImportance);
+        }
+
     }
 }

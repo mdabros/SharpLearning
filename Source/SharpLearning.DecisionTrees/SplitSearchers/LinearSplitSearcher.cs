@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Views;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Views;
 using SharpLearning.Metrics.Entropy;
 using System;
 
@@ -32,8 +33,8 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="parentEntropy"></param>
         /// <param name="featureIndex"></param>
         /// <returns></returns>
-        public FindSplitResult FindBestSplit(FindSplitResult currentBestSplitResult, int featureIndex, double[] feature, double[] targets, 
-            IEntropyMetric entropyMetric, Interval1D parentInterval, double parentEntropy)
+        public FindSplitResult FindBestSplit(FindSplitResult currentBestSplitResult, int featureIndex, double[] feature, double[] targets,
+            double[] weights, IEntropyMetric entropyMetric, Interval1D parentInterval, double parentEntropy)
         {
             var newBestSplit = false;
 
@@ -56,19 +57,51 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                 if (prevValue != currentValue && prevTarget != currentTarget)
                 {
                     var currentSplit = j;
-                    var leftSize = currentSplit - parentInterval.FromInclusive;
-                    var rightSize = parentInterval.ToExclusive - currentSplit;
+                    var leftSize = (double)(currentSplit - parentInterval.FromInclusive);
+                    var rightSize = (double)(parentInterval.ToExclusive - currentSplit);
 
                     if (Math.Min(leftSize, rightSize) >= m_minimumSplitSize)
                     {
                         var leftInterval = Interval1D.Create(parentInterval.FromInclusive, currentSplit);
                         var rightInterval = Interval1D.Create(currentSplit, parentInterval.ToExclusive);
 
-                        var leftEntropy = entropyMetric.Entropy(targets, leftInterval);
-                        var rightEntropy = entropyMetric.Entropy(targets, rightInterval);
-                        var lengthInv = 1.0 / parentInterval.Length;
-                        var informationGain = parentEntropy - ((leftSize * lengthInv) * leftEntropy + (rightSize * lengthInv) * rightEntropy);
+                        var informationGain = 0.0;
+                        var leftEntropy = 0.0;
+                        var rightEntropy = 0.0;
 
+                        if(weights.Length == 0)
+                        {
+                            leftEntropy = entropyMetric.Entropy(targets, leftInterval);
+                            rightEntropy = entropyMetric.Entropy(targets, rightInterval);
+
+                            var lengthInv = 1.0 / (parentInterval.Length);
+                            var leftRatio = leftInterval.Length * lengthInv;
+                            var rightRatio = rightInterval.Length * lengthInv;
+
+                            var wLeftEntropy = (leftRatio) * leftEntropy;
+                            var wRightEntropy = (rightRatio) * rightEntropy;
+
+                            informationGain = parentEntropy - (wLeftEntropy + wRightEntropy);
+                        }
+                        else
+                        {
+                            leftEntropy = entropyMetric.Entropy(targets, weights, leftInterval);
+                            rightEntropy = entropyMetric.Entropy(targets, weights, rightInterval);
+
+                            var parentWeight = weights.Sum(parentInterval);
+                            var leftWeight = weights.Sum(leftInterval);
+                            var rightWeight = weights.Sum(rightInterval);
+          
+                            var lengthInv = 1.0 / (parentWeight);
+                            var leftRatio = leftWeight * lengthInv;
+                            var rightRatio = rightWeight * lengthInv;
+
+                            var wLeftEntropy = (leftRatio) * leftEntropy;
+                            var wRightEntropy = (rightRatio) * rightEntropy;
+
+                            informationGain = parentEntropy - (wLeftEntropy + wRightEntropy);
+                        }
+                                                
                         if (informationGain > bestInformationGain)
                         {
                             bestSplitIndex = currentSplit;

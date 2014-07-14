@@ -28,6 +28,7 @@ namespace SharpLearning.DecisionTrees.Learners
 
         double[] m_workTargets = new double[0];
         double[] m_workFeature = new double[0];
+        double[] m_workWeights = new double[0];
         int[] m_workIndices = new int[0];
         List<int> m_featureCandidates = new List<int>();
         int[] m_bestSplitWorkIndices = new int[0];
@@ -79,8 +80,20 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public IBinaryDecisionNode Learn(F64Matrix observations, double[] targets)
         {
+            return Learn(observations, targets, new double[0]);
+        }
+
+        /// <summary>
+        /// Learns a CART decision tree from the provided observations and targets.
+        /// Weights can be provided in order to weight each sample individually
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public IBinaryDecisionNode Learn(F64Matrix observations, double[] targets, double[] weights)
+        {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
-            return Learn(observations, targets, indices);
+            return Learn(observations, targets, indices, weights);
         }
 
         /// <summary>
@@ -93,9 +106,23 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public IBinaryDecisionNode Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            return Learn(observations, targets, indices, new double[0]);
+        }
+
+        /// <summary>
+        /// Learns a CART decision tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times. Weights can be provided in order to weight each sample individually
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <param name="weights">Provide weights inorder to weigh each sample separetely</param>
+        /// <returns></returns>
+        public IBinaryDecisionNode Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
+        {
             using (var pinnedFeatures = observations.GetPinnedPointer())
             {
-                return Learn(pinnedFeatures.View(), targets, indices);
+                return Learn(pinnedFeatures.View(), targets, indices, weights);
             }
         }
 
@@ -109,20 +136,48 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public IBinaryDecisionNode Learn(F64MatrixView observations, double[] targets, int[] indices)
         {
+            return Learn(observations, targets, indices, new double[0]);
+        }
+
+        /// <summary>
+        /// Learns a CART decision tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times. Weights can be provided in order to weight each sample individually
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <param name="weights">Provide weights inorder to weigh each sample separetely</param>
+        /// <returns></returns>
+        public IBinaryDecisionNode Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
+        {
             Array.Clear(m_variableImportance, 0, m_variableImportance.Length);
 
             Array.Resize(ref m_workTargets, indices.Length);
             Array.Resize(ref m_workFeature, indices.Length);
             Array.Resize(ref m_workIndices, indices.Length);
+
+
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
             Array.Resize(ref m_variableImportance, observations.GetNumberOfColumns());
             m_featureCandidates.Clear();
 
             var allInterval = Interval1D.Create(0, indices.Length);
-            indices.CopyTo(allInterval, m_workIndices);
 
+            indices.CopyTo(allInterval, m_workIndices);
             m_workIndices.IndexedCopy(targets, allInterval, m_workTargets);
-            var rootEntropy = m_entropyMetric.Entropy(m_workTargets, allInterval);
+
+            var rootEntropy = 0.0;
+
+            if(weights.Length != 0)
+            {
+                Array.Resize(ref m_workWeights, indices.Length);
+                m_workIndices.IndexedCopy(weights, allInterval, m_workWeights);
+                rootEntropy = m_entropyMetric.Entropy(m_workTargets, m_workWeights, allInterval);
+            }
+            else
+            {
+                rootEntropy = m_entropyMetric.Entropy(m_workTargets, allInterval);
+            }
 
             var uniqueValues = targets.Distinct().ToArray();
 
@@ -157,8 +212,13 @@ namespace SharpLearning.DecisionTrees.Learners
                     m_workFeature.SortWith(parentInterval, m_workIndices);
                     m_workIndices.IndexedCopy(targets, parentInterval, m_workTargets);
 
-                    var splitResult = m_splitSearcher.FindBestSplit(bestSplitResult, featureIndex, m_workFeature, m_workTargets, 
-                        m_entropyMetric, parentInterval, parentEntropy);
+                    if(weights.Length != 0)
+                    {
+                        m_workIndices.IndexedCopy(weights, parentInterval, m_workWeights);
+                    }
+
+                    var splitResult = m_splitSearcher.FindBestSplit(bestSplitResult, featureIndex, m_workFeature, m_workTargets,
+                        m_workWeights, m_entropyMetric, parentInterval, parentEntropy);
 
                     if (splitResult.NewBestSplit)
                     {
