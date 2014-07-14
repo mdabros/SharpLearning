@@ -57,7 +57,14 @@ namespace SharpLearning.Metrics.Entropy
             return variance;
         }
 
-
+        /// <summary>
+        /// Calculates the weighted variance of a sample over the provided interval. Main use is for decision tree regression
+        /// http://en.wikipedia.org/wiki/Decision_tree_learning
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="weights"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
         public double Entropy(double[] values, double[] weights, Interval1D interval)
         {
             var weightSum = 0.0;

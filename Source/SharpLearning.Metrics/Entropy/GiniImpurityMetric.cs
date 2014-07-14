@@ -75,7 +75,7 @@ namespace SharpLearning.Metrics.Entropy
         }
 
         /// <summary>
-        /// Calculates the Gini impurity of a sample. Main use is for decision tree classification
+        /// Calculates the weighted Gini impurity of a sample. Main use is for decision tree classification
         /// http://en.wikipedia.org/wiki/Decision_tree_learning
         /// </summary>
         /// <param name="values"></param>
