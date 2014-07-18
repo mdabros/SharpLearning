@@ -10,7 +10,6 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
     {
         const double m_tolerence = 0.00001;
 
-        public readonly bool NewBestSplit;
         public readonly int BestSplitIndex;
         public readonly double BestInformationGain;
         public readonly FeatureSplit BestFeatureSplit;
@@ -27,10 +26,9 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="bestFeatureSplit"></param>
         /// <param name="leftIntervalEntropy"></param>
         /// <param name="rightIntervalEntropy"></param>
-        public FindSplitResult(bool newBestSplit, int bestSplitIndex, double bestInformationGain, FeatureSplit bestFeatureSplit,
+        public FindSplitResult(int bestSplitIndex, double bestInformationGain, FeatureSplit bestFeatureSplit,
             IntervalEntropy leftIntervalEntropy, IntervalEntropy rightIntervalEntropy)
         {
-            NewBestSplit = newBestSplit;
             BestSplitIndex = bestSplitIndex;
             BestInformationGain = bestInformationGain;
             BestFeatureSplit = bestFeatureSplit;
@@ -44,13 +42,12 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <returns></returns>
         public static FindSplitResult Initial()
         {
-            return new FindSplitResult(false, -1, 0.0, new FeatureSplit(),
+            return new FindSplitResult(-1, 0.0, new FeatureSplit(),
                 IntervalEntropy.Initial(), IntervalEntropy.Initial());
         }
 
         public bool Equals(FindSplitResult other)
         {
-            if (NewBestSplit != other.NewBestSplit) { return false; }
             if (BestSplitIndex != other.BestSplitIndex) { return false; }
             if (!Equal(BestInformationGain, other.BestInformationGain)) { return false; }
             if (!BestFeatureSplit.Equals(other.BestFeatureSplit)) { return false; }
@@ -80,8 +77,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
 
         public override int GetHashCode()
         {
-            return NewBestSplit.GetHashCode() ^
-                BestSplitIndex.GetHashCode() ^
+            return BestSplitIndex.GetHashCode() ^
                 BestInformationGain.GetHashCode() ^
                 BestFeatureSplit.GetHashCode() ^
                 LeftIntervalEntropy.GetHashCode() ^

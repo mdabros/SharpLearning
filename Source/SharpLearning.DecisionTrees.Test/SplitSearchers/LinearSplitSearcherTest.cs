@@ -39,7 +39,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
-            var expected = new FindSplitResult(true, 15, 0.037941545633853213, new FeatureSplit(3.5, 0),
+            var expected = new FindSplitResult(15, 0.037941545633853213, new FeatureSplit(3.5, 0),
                 new IntervalEntropy(Interval1D.Create(0, 15), 0.39111111111111119), 
                 new IntervalEntropy(Interval1D.Create(15, 26), 0.49586776859504134));
 
@@ -65,7 +65,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
-            var expected = new FindSplitResult(true, 15, 0.33829952099182869, new FeatureSplit(3.5, 0),
+            var expected = new FindSplitResult(15, 0.33829952099182869, new FeatureSplit(3.5, 0),
                 new IntervalEntropy(Interval1D.Create(0, 15), 0.18934911242603547),
                 new IntervalEntropy(Interval1D.Create(15, 26), 0.046875));
 
@@ -91,7 +91,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
-            var expected = new FindSplitResult(true, 75, 1.5538386100911894, new FeatureSplit(0.397254, 0),
+            var expected = new FindSplitResult(75, 1.5538386100911894, new FeatureSplit(0.397254, 0),
                 new IntervalEntropy(Interval1D.Create(0, 75), 0.30446428970865669),
                 new IntervalEntropy(Interval1D.Create(75, 200), 0.70764983149658633));
 
@@ -116,7 +116,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var actual = sut.FindBestSplit(initialResult, 0, feature, targets, weights, entropyMetric,
                 Interval1D.Create(0, feature.Length), parentEntropy);
 
-            var expected = new FindSplitResult(true, 6391, 0.02182606648710006, new FeatureSplit(1.7005986908310751, 0),
+            var expected = new FindSplitResult(6391, 0.02182606648710006, new FeatureSplit(1.7005986908310751, 0),
                 new IntervalEntropy(Interval1D.Create(0, 6391), 0.70606468409101264),
                 new IntervalEntropy(Interval1D.Create(6391, 9418), 0.597976432567197));
 

@@ -227,7 +227,7 @@ namespace SharpLearning.DecisionTrees.Learners
                         var splitResult = m_splitSearcher.FindBestSplit(bestSplitResult, featureIndex, m_workFeature, m_workTargets,
                             m_workWeights, m_entropyMetric, parentInterval, parentEntropy);
 
-                        if (splitResult.NewBestSplit)
+                        if (splitResult.BestInformationGain > bestSplitResult.BestInformationGain)
                         {
                             bestSplitResult = splitResult;
                             m_workIndices.CopyTo(parentInterval, m_bestSplitWorkIndices);

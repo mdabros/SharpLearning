@@ -36,15 +36,14 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         public FindSplitResult FindBestSplit(FindSplitResult currentBestSplitResult, int featureIndex, double[] feature, double[] targets,
             double[] weights, IEntropyMetric entropyMetric, Interval1D parentInterval, double parentEntropy)
         {
-            var newBestSplit = false;
-
             var bestSplitIndex = currentBestSplitResult.BestSplitIndex;
-            var bestInformationGain = currentBestSplitResult.BestInformationGain;
             var bestLeftEntropy = currentBestSplitResult.LeftIntervalEntropy.Entropy;
             var bestRightEntropy = currentBestSplitResult.RightIntervalEntropy.Entropy;
             var bestLeftInterval = currentBestSplitResult.LeftIntervalEntropy.Interval;
             var bestRightInterval = currentBestSplitResult.RightIntervalEntropy.Interval;
             var bestFeatureSplit = currentBestSplitResult.BestFeatureSplit;
+
+            var bestInformationGain = 0.0;
 
             int prevSplit = parentInterval.FromInclusive;
             var prevValue = feature[prevSplit];
@@ -111,7 +110,6 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                             bestRightInterval = rightInterval;
                             bestLeftEntropy = leftEntropy;
                             bestRightEntropy = rightEntropy;
-                            newBestSplit = true;
                         }
 
                         prevSplit = j;
@@ -122,7 +120,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                 prevTarget = currentTarget;
             }
 
-            return new FindSplitResult(newBestSplit, bestSplitIndex, bestInformationGain, bestFeatureSplit, 
+            return new FindSplitResult(bestSplitIndex, bestInformationGain, bestFeatureSplit, 
                 new IntervalEntropy(bestLeftInterval, bestLeftEntropy),
                 new IntervalEntropy(bestRightInterval, bestRightEntropy));
         }

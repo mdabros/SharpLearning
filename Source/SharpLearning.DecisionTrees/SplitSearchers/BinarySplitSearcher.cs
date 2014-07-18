@@ -41,13 +41,11 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         public FindSplitResult FindBestSplit(FindSplitResult currentBestSplitResult, int featureIndex, double[] feature, double[] targets,
            double[] weights, IEntropyMetric entropyMetric, Interval1D parentInterval, double parentEntropy)
         {
-            m_workIntervals.Clear();
             AddThresholdIntervals(feature, targets, parentInterval);
 
             if (m_workIntervals.Count == 0)
             {
-                return new FindSplitResult(false, currentBestSplitResult.BestSplitIndex, currentBestSplitResult.BestInformationGain,
-                        currentBestSplitResult.BestFeatureSplit, currentBestSplitResult.LeftIntervalEntropy, currentBestSplitResult.RightIntervalEntropy);
+                return currentBestSplitResult;
             }
 
             int start = 0;
@@ -59,7 +57,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
             var bestSplitResult = SplitResult(parentEntropy, intervals.Item1, intervals.Item2.Item1, intervals.Item2.Item2,
                 parentInterval, weights, targets, featureIndex, entropyMetric);
 
-            var bestInformationGain = currentBestSplitResult.BestInformationGain;
+            var bestInformationGain = 0.0;
 
             while ((end - start) >= 1)
             {
@@ -82,9 +80,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
 
                 if (leftDiff <= 0 && rightDiff <= 0.0)
                 {
-                    var newBest = bestSplitResult.BestInformationGain >= bestInformationGain;
-
-                    return new FindSplitResult(newBest, bestSplitResult.BestSplitIndex, bestSplitResult.BestInformationGain, 
+                    return new FindSplitResult(bestSplitResult.BestSplitIndex, bestSplitResult.BestInformationGain, 
                         bestSplitResult.BestFeatureSplit, bestSplitResult.LeftIntervalEntropy, bestSplitResult.RightIntervalEntropy);
                 }
                 else if(leftSplit.BestInformationGain >= rightSplit.BestInformationGain)
@@ -105,14 +101,14 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                 }
             }
             
-            var newBest2 = bestSplitResult.BestInformationGain >= bestInformationGain;
-
-            return new FindSplitResult(newBest2, bestSplitResult.BestSplitIndex, bestSplitResult.BestInformationGain,
+            return new FindSplitResult(bestSplitResult.BestSplitIndex, bestSplitResult.BestInformationGain,
                 bestSplitResult.BestFeatureSplit, bestSplitResult.LeftIntervalEntropy, bestSplitResult.RightIntervalEntropy);
         }
 
         void AddThresholdIntervals(double[] feature, double[] targets, Interval1D parentInterval)
         {
+            m_workIntervals.Clear();
+
             for (int j = parentInterval.FromInclusive + 1; j < parentInterval.ToExclusive; j++)
             {
                 // Add as candidate thresholds only adjacent values v[i] and v[i+1]
@@ -179,7 +175,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                 informationGain = parentEntropy - (wLeftEntropy + wRightEntropy);
             }
 
-            return new FindSplitResult(false, featureSplit.Index, informationGain,
+            return new FindSplitResult(featureSplit.Index, informationGain,
                 new FeatureSplit(featureSplit.Value, featureIndex), 
                 new IntervalEntropy(leftInterval, leftEntropy), 
                 new IntervalEntropy(rightInterval, rightEntropy));
