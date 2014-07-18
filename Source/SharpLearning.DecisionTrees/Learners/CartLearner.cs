@@ -26,6 +26,9 @@ namespace SharpLearning.DecisionTrees.Learners
         readonly double m_minimumInformationGain;
         readonly int m_featuresPrSplit;
 
+        //readonly int m_miniminSplitSize;
+        //readonly double m_minimumLeafWeight;
+
         double[] m_workTargets = new double[0];
         double[] m_workFeature = new double[0];
         double[] m_workWeights = new double[0];
@@ -195,40 +198,48 @@ namespace SharpLearning.DecisionTrees.Learners
                 var parentItem = stack.Pop();
 
                 var parentInterval = parentItem.Interval;
-                var parentNode = parentItem.Parent;
-                var parentEntropy = parentItem.Entropy;
                 var parentNodeDepth = parentItem.NodeDepth;
+                var parentNode = parentItem.Parent;
                 var parentNodePositionType = parentItem.NodeType;
-
+                var parentEntropy = parentItem.Entropy;
+                                            
                 if (first && parentItem.Parent != null)
                 {
                     root = parentNode;
                     first = false;
                 }
 
-                foreach (var featureIndex in m_featureCandidates)
+                var isLeaf = (parentNodeDepth >= m_maximumTreeDepth);
+
+                if(!isLeaf)
                 {
-                    m_workIndices.IndexedCopy(observations.ColumnView(featureIndex), parentInterval, m_workFeature);
-                    m_workFeature.SortWith(parentInterval, m_workIndices);
-                    m_workIndices.IndexedCopy(targets, parentInterval, m_workTargets);
-
-                    if(weights.Length != 0)
+                    foreach (var featureIndex in m_featureCandidates)
                     {
-                        m_workIndices.IndexedCopy(weights, parentInterval, m_workWeights);
+                        m_workIndices.IndexedCopy(observations.ColumnView(featureIndex), parentInterval, m_workFeature);
+                        m_workFeature.SortWith(parentInterval, m_workIndices);
+                        m_workIndices.IndexedCopy(targets, parentInterval, m_workTargets);
+
+                        if(weights.Length != 0)
+                        {
+                            m_workIndices.IndexedCopy(weights, parentInterval, m_workWeights);
+                        }
+
+                        var splitResult = m_splitSearcher.FindBestSplit(bestSplitResult, featureIndex, m_workFeature, m_workTargets,
+                            m_workWeights, m_entropyMetric, parentInterval, parentEntropy);
+
+                        if (splitResult.NewBestSplit)
+                        {
+                            bestSplitResult = splitResult;
+                            m_workIndices.CopyTo(parentInterval, m_bestSplitWorkIndices);
+                        }
                     }
 
-                    var splitResult = m_splitSearcher.FindBestSplit(bestSplitResult, featureIndex, m_workFeature, m_workTargets,
-                        m_workWeights, m_entropyMetric, parentInterval, parentEntropy);
+                    isLeaf = isLeaf || (bestSplitResult.BestSplitIndex < 0);
+                    isLeaf = isLeaf || (bestSplitResult.BestInformationGain < m_minimumInformationGain);
 
-                    if (splitResult.NewBestSplit)
-                    {
-                        bestSplitResult = splitResult;
-                        m_workIndices.CopyTo(parentInterval, m_bestSplitWorkIndices);
-                    }
+                    m_bestSplitWorkIndices.CopyTo(parentInterval, m_workIndices);
                 }
-
-                m_bestSplitWorkIndices.CopyTo(parentInterval, m_workIndices);
-
+                
                 var bestSplitIndex = bestSplitResult.BestSplitIndex;
                 var bestInformationGain = bestSplitResult.BestInformationGain;
                 var bestLeftEntropy = bestSplitResult.LeftIntervalEntropy.Entropy;
@@ -237,7 +248,15 @@ namespace SharpLearning.DecisionTrees.Learners
                 var bestRightInterval = bestSplitResult.RightIntervalEntropy.Interval;
                 var bestFeatureSplit = bestSplitResult.BestFeatureSplit;
 
-                if (bestSplitIndex >= 0 && bestInformationGain > m_minimumInformationGain && m_maximumTreeDepth > parentNodeDepth)
+                if(isLeaf)
+                {
+                    m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
+
+                    var leaf = m_leafFactory.Create(parentNode, m_workTargets, uniqueValues, parentInterval);
+
+                    parentNode.AddChild(parentNodePositionType, leaf);
+                }
+                else
                 {
                     m_variableImportance[bestFeatureSplit.Index] += bestInformationGain * parentInterval.Length / allInterval.Length;
 
@@ -254,14 +273,6 @@ namespace SharpLearning.DecisionTrees.Learners
                     stack.Push(new DecisionNodeCreationItem(split, NodePositionType.Left, bestLeftInterval, bestLeftEntropy, nodeDepth));
 
                     parentNode.AddChild(parentNodePositionType, split);
-                }
-                else
-                {
-                    m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
-
-                    var leaf = m_leafFactory.Create(parentNode, m_workTargets, uniqueValues, parentInterval);
-
-                    parentNode.AddChild(parentNodePositionType, leaf);
                 }
             }
 
