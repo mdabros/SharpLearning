@@ -59,6 +59,8 @@
     </Compile>
     <Compile Include="FeatureCandidateSelectors\AllCandidateSelectorTest.cs" />
     <Compile Include="FeatureCandidateSelectors\RandomFeatureCandidateSelectorTest.cs" />
+    <Compile Include="ImpurityCalculators\ChildImpuritiesTest.cs" />
+    <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculatorTest.cs" />
     <Compile Include="LeafFactories\ClassificationLeafFactoryTest.cs" />
     <Compile Include="LeafFactories\LaplaceAdjustedClassificationLeafFactoryTest.cs" />
     <Compile Include="LeafFactories\RegressionLeafFactoryTest.cs" />
