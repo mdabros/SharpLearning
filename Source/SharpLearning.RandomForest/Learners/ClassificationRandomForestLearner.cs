@@ -27,7 +27,7 @@ namespace SharpLearning.RandomForest.Learners
         readonly int m_maximumTreeDepth;
         readonly Random m_random;
 
-        readonly ThreadedWorker<ClassificationCartModel> m_threadedWorker;
+        readonly ThreadedWorker<ClassificationDecisionTreeModel> m_threadedWorker;
 
         /// <summary>
         /// The random forest is an ensemble learner consisting of a series of randomized decision trees
@@ -57,7 +57,7 @@ namespace SharpLearning.RandomForest.Learners
 
             m_random = new Random(seed);
 
-            m_threadedWorker = new ThreadedWorker<ClassificationCartModel>(numberOfThreads);
+            m_threadedWorker = new ThreadedWorker<ClassificationDecisionTreeModel>(numberOfThreads);
         }
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <returns></returns>
         public ClassificationRandomForestModel Learn(F64Matrix observations, double[] targets)
         {          
-            var results = new ConcurrentBag<ClassificationCartModel>();
-            var tasks = new ConcurrentQueue<Action<ConcurrentBag<ClassificationCartModel>>>();
+            var results = new ConcurrentBag<ClassificationDecisionTreeModel>();
+            var tasks = new ConcurrentQueue<Action<ConcurrentBag<ClassificationDecisionTreeModel>>>();
             
             for (int i = 0; i < m_trees; i++)
             {
@@ -101,7 +101,7 @@ namespace SharpLearning.RandomForest.Learners
             return new ClassificationRandomForestModel(models, rawVariableImportance);
         }
 
-        double[] VariableImportance(ClassificationCartModel[] models, int numberOfFeatures)
+        double[] VariableImportance(ClassificationDecisionTreeModel[] models, int numberOfFeatures)
         {
             var rawVariableImportance = new double[numberOfFeatures];
 
@@ -118,7 +118,7 @@ namespace SharpLearning.RandomForest.Learners
         }
 
         void CreateTreeModel(F64Matrix observations, double[] targets, Random random, 
-            ConcurrentBag<ClassificationCartModel> models)
+            ConcurrentBag<ClassificationDecisionTreeModel> models)
         {
             var treeIndices = new int[targets.Length];
 
@@ -127,14 +127,14 @@ namespace SharpLearning.RandomForest.Learners
                 treeIndices[j] = random.Next(treeIndices.Length);
             }
             
-            var learner = new CartLearner(m_maximumTreeDepth, 
+            var learner = new DecisionTreeLearner(m_maximumTreeDepth, 
                 m_featuresPrSplit, m_minimumInformationGain,
                 new GiniImpurityMetric(),
                 new LinearSplitSearcher(m_minimumSplitSize),
                 new RandomFeatureCandidateSelector(random.Next()),
                 new ClassificationLeafFactory());
 
-            var model = new ClassificationCartModel(learner.Learn(observations, targets, treeIndices),
+            var model = new ClassificationDecisionTreeModel(learner.Learn(observations, targets, treeIndices),
                 learner.m_variableImportance);
 
             models.Add(model);

@@ -8,14 +8,14 @@ using System.Linq;
 namespace SharpLearning.DecisionTrees.Models
 {
     /// <summary>
-    /// CART Decision tree model
+    /// Classification Decision tree model
     /// </summary>
-    public sealed class ClassificationCartModel
+    public sealed class ClassificationDecisionTreeModel
     {
         readonly IBinaryDecisionNode m_root;
         readonly double[] m_variableImportance;
 
-        public ClassificationCartModel(IBinaryDecisionNode root, double[] variableImprotance)
+        public ClassificationDecisionTreeModel(IBinaryDecisionNode root, double[] variableImprotance)
         {
             if (root == null) { throw new ArgumentNullException("root"); }
             if (variableImprotance == null) { throw new ArgumentException("variableImprotance"); }

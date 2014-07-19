@@ -7,14 +7,14 @@ using System.Linq;
 namespace SharpLearning.DecisionTrees.Models
 {
     /// <summary>
-    /// CART Decision tree model
+    /// Regression Decision tree model
     /// </summary>
-    public sealed class RegressionCartModel
+    public sealed class RegressionDecisionTreeModel
     {
         readonly IBinaryDecisionNode m_root;
         readonly double[] m_variableImportance;
 
-        public RegressionCartModel(IBinaryDecisionNode root, double[] variableImportance)
+        public RegressionDecisionTreeModel(IBinaryDecisionNode root, double[] variableImportance)
         {
             if (root == null) { throw new ArgumentNullException("root"); }
             if (variableImportance == null) { throw new ArgumentException("variableImportance"); }

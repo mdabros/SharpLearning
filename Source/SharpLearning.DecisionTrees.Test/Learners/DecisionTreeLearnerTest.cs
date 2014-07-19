@@ -9,13 +9,13 @@ using SharpLearning.DecisionTrees.SplitSearchers;
 namespace SharpLearning.DecisionTrees.Test.Learners
 {
     [TestClass]
-    public class CartLearnerTest
+    public class DecisionTreeLearnerTest
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void CartLearner_InvalidMaximumTreeSize()
+        public void DecisionTreeLearner_InvalidMaximumTreeSize()
         {
-            new CartLearner(0, 1, 0.1,
+            new DecisionTreeLearner(0, 1, 0.1,
                 new GiniImpurityMetric(),
                 new LinearSplitSearcher(1),
                 new AllFeatureCandidateSelector(),
@@ -24,9 +24,9 @@ namespace SharpLearning.DecisionTrees.Test.Learners
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void CartLearner_InvalidFeaturesPrSplit()
+        public void DecisionTreeLearner_InvalidFeaturesPrSplit()
         {
-            new CartLearner(1, 0, 0.1,
+            new DecisionTreeLearner(1, 0, 0.1,
                 new GiniImpurityMetric(),
                 new LinearSplitSearcher(1),
                 new AllFeatureCandidateSelector(),
@@ -35,9 +35,9 @@ namespace SharpLearning.DecisionTrees.Test.Learners
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void CartLearner_InvalidMinimumInformationGain()
+        public void DecisionTreeLearner_InvalidMinimumInformationGain()
         {
-            new CartLearner(1, 1, 0,
+            new DecisionTreeLearner(1, 1, 0,
                 new GiniImpurityMetric(),
                 new LinearSplitSearcher(1),
                 new AllFeatureCandidateSelector(),

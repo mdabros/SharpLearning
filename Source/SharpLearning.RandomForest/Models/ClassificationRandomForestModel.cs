@@ -12,7 +12,7 @@ namespace SharpLearning.RandomForest.Models
     /// </summary>
     public sealed class ClassificationRandomForestModel
     {
-        readonly ClassificationCartModel[] m_models;
+        readonly ClassificationDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace SharpLearning.RandomForest.Models
         /// </summary>
         /// <param name="models">The decision tree models</param>
         /// <param name="rawVariableImportance">The summed variable importance from all decision trees</param>
-        public ClassificationRandomForestModel(ClassificationCartModel[] models, double[] rawVariableImportance)
+        public ClassificationRandomForestModel(ClassificationDecisionTreeModel[] models, double[] rawVariableImportance)
         {
             if (models == null) { throw new ArgumentNullException("models"); }
             if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }

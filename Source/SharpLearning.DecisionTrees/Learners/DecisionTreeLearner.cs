@@ -13,10 +13,10 @@ using SharpLearning.DecisionTrees.SplitSearchers;
 namespace SharpLearning.DecisionTrees.Learners
 {
     /// <summary>
-    /// Trains a CART (Classification and Regression Tree) Decision tree
+    /// Trains a Decision tree
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
-    public class CartLearner
+    public class DecisionTreeLearner
     {
         readonly IEntropyMetric m_entropyMetric;
         readonly ISplitSearcher m_splitSearcher;
@@ -55,7 +55,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
         /// <param name="featureCandidateSelector">The feature candidate selector used to decide which feature indices the learner can choose from at each split</param>
         /// <param name="leafFactory">The type of leaf created when no more splits can be made</param>
-        public CartLearner(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain, IEntropyMetric entropyMetric,
+        public DecisionTreeLearner(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain, IEntropyMetric entropyMetric,
             ISplitSearcher splitSearcher, IFeatureCandidateSelector featureCandidateSelector, ILeafFactory leafFactory)
         {
             if (entropyMetric == null) { throw new ArgumentNullException("entropyMetric"); }
@@ -76,7 +76,7 @@ namespace SharpLearning.DecisionTrees.Learners
         }
 
         /// <summary>
-        /// Learns a CART decision tree from the provided observations and targets
+        /// Learns a decision tree from the provided observations and targets
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -87,7 +87,7 @@ namespace SharpLearning.DecisionTrees.Learners
         }
 
         /// <summary>
-        /// Learns a CART decision tree from the provided observations and targets.
+        /// Learns a decision tree from the provided observations and targets.
         /// Weights can be provided in order to weight each sample individually
         /// </summary>
         /// <param name="observations"></param>
@@ -100,7 +100,7 @@ namespace SharpLearning.DecisionTrees.Learners
         }
 
         /// <summary>
-        /// Learns a CART decision tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Learns a decision tree from the provided observations and targets but limited to the observation indices provided by indices.
         /// Indices can contain the same index multiple times.
         /// </summary>
         /// <param name="observations"></param>
@@ -113,7 +113,7 @@ namespace SharpLearning.DecisionTrees.Learners
         }
 
         /// <summary>
-        /// Learns a CART decision tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Learns a decision tree from the provided observations and targets but limited to the observation indices provided by indices.
         /// Indices can contain the same index multiple times. Weights can be provided in order to weight each sample individually
         /// </summary>
         /// <param name="observations"></param>
@@ -130,7 +130,7 @@ namespace SharpLearning.DecisionTrees.Learners
         }
 
         /// <summary>
-        /// Learns a CART decision tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Learns a decision tree from the provided observations and targets but limited to the observation indices provided by indices.
         /// Indices can contain the same index multiple times.
         /// </summary>
         /// <param name="observations"></param>
@@ -143,7 +143,7 @@ namespace SharpLearning.DecisionTrees.Learners
         }
 
         /// <summary>
-        /// Learns a CART decision tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Learns a decision tree from the provided observations and targets but limited to the observation indices provided by indices.
         /// Indices can contain the same index multiple times. Weights can be provided in order to weight each sample individually
         /// </summary>
         /// <param name="observations"></param>

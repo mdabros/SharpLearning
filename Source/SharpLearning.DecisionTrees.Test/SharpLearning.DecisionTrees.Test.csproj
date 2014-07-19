@@ -62,11 +62,11 @@
     <Compile Include="LeafFactories\ClassificationLeafFactoryTest.cs" />
     <Compile Include="LeafFactories\LaplaceAdjustedClassificationLeafFactoryTest.cs" />
     <Compile Include="LeafFactories\RegressionLeafFactoryTest.cs" />
-    <Compile Include="Learners\CartLearnerTest.cs" />
-    <Compile Include="Learners\ClassificationCartLearnerTest.cs" />
-    <Compile Include="Learners\RegressionCartLearnerTest.cs" />
-    <Compile Include="Models\ClassificationCartModelTest.cs" />
-    <Compile Include="Models\RegressionCartModelTest.cs" />
+    <Compile Include="Learners\DecisionTreeLearnerTest.cs" />
+    <Compile Include="Learners\ClassificationDecisionTreeLearnerTest.cs" />
+    <Compile Include="Learners\RegressionDecisionTreeLearnerTest.cs" />
+    <Compile Include="Models\ClassificationDecisionTreeModelTest.cs" />
+    <Compile Include="Models\RegressionDecisionTreeModelTest.cs" />
     <Compile Include="Nodes\BinaryDecisionNodeExtensionsTest.cs" />
     <Compile Include="Nodes\ContinousBinaryDecisionNodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
