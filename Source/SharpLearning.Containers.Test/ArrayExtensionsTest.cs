@@ -177,6 +177,17 @@ namespace SharpLearning.Containers.Test
             Assert.AreEqual(100, actual);
         }
 
+
+        [TestMethod]
+        public void ArrayExtensions_Sum_Indexed()
+        {
+            var values = new double[] { 0, 10, 20, 30, 40, 50 };
+            var indices = new int[] { 0, 2, 3 };
+            var actual = values.Sum(indices);
+
+            Assert.AreEqual(50, actual);
+        }
+
         [TestMethod]
         public void ArrayExtensions_WeightedMean()
         {
@@ -185,7 +196,18 @@ namespace SharpLearning.Containers.Test
             var actual = values.WeightedMean(weights);
 
             Assert.AreEqual(20.33898305084746, actual, 0.0001);
-        }       
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_WeightedMean_Indexed()
+        {
+            var values = new double[] { 0, 10, 20, 30, 40, 50 };
+            var weights = new double[] { 1.0, 1.5, 0.1, 3, 0.2, 0.1 };
+            var indices = new int[] { 0, 2, 3 };
+            var actual = values.WeightedMean(weights, indices);
+
+            Assert.AreEqual(22.439024390243905, actual, 0.0001);
+        } 
         
         [TestMethod]
         public void ArrayExtensions_Shuffle()

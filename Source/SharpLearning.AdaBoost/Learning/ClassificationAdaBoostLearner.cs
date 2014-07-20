@@ -1,6 +1,7 @@
 ﻿using SharpLearning.AdaBoost.Models;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
@@ -36,6 +37,7 @@ namespace SharpLearning.AdaBoost.Learning
         
         double[] m_workErrors = new double[0];
         double[] m_sampleWeights = new double[0];
+        double[] m_indexedTargets = new double[0];
 
         /// <summary>
         /// Classification AdaBoost learner using the SAMME algorithm for multi-class support:
@@ -71,33 +73,61 @@ namespace SharpLearning.AdaBoost.Learning
         /// <returns></returns>
         public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets)
         {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Learn an adaboost classification model
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
             m_modelLearner = new DecisionTreeLearner(m_maximumTreeDepth, observations.GetNumberOfColumns(),
                 m_minimumInformationGain, 42,
                 new OnlyUniqueThresholdsSplitSearcher(m_minimumSplitSize),
                 new GiniClasificationImpurityCalculator());
 
-            m_uniqueTargetValues = targets.Distinct().Count();
+            var uniques = new HashSet<double>();
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var value = targets[i];
+                if(!uniques.Contains(value))
+                {
+                    uniques.Add(value);
+                }
+            }
+
+            m_uniqueTargetValues = uniques.Count;
 
             m_modelErrors.Clear();
             m_modelWeights.Clear();
             m_models.Clear();
 
             Array.Resize(ref m_sampleWeights, targets.Length);
+
             Array.Resize(ref m_workErrors, targets.Length);
+            Array.Resize(ref m_indexedTargets, indices.Length);
 
+            indices.IndexedCopy(targets, Interval1D.Create(0, indices.Length),
+                m_indexedTargets);
 
-            var initialWeight = 1.0 / targets.Length;
-            for (int i = 0; i < m_sampleWeights.Length; i++)
+            var initialWeight = 1.0 / indices.Length;
+            for (int i = 0; i < indices.Length; i++)
             {
-                m_sampleWeights[i] = initialWeight;
+                var index = indices[i];
+                m_sampleWeights[index] = initialWeight;
             }
 
             for (int i = 0; i < m_iterations; i++)
             {
-                if (!Boost(observations, targets, i))
+                if (!Boost(observations, targets, indices, i))
                     break;
 
-                var ensembleError = ErrorEstimate(observations, targets);
+                var ensembleError = ErrorEstimate(observations, indices);
 
                 if (ensembleError == 0.0)
                     break;
@@ -105,16 +135,17 @@ namespace SharpLearning.AdaBoost.Learning
                 if (m_modelErrors[i] == 0.0)
                     break;
 
-                var weightSum = m_sampleWeights.Sum();
+                var weightSum = m_sampleWeights.Sum(indices);
                 if (weightSum <= 0.0)
                     break;
-                
+
                 if (i == m_iterations - 1)
                 {
                     // Normalize weights
-                    for (int j = 0; j < m_sampleWeights.Length; j++)
+                    for (int j = 0; j < indices.Length; j++)
                     {
-                        m_sampleWeights[j] = m_sampleWeights[j] / weightSum;
+                        var index = indices[i];
+                        m_sampleWeights[index] = m_sampleWeights[index] / weightSum;
                     }
                 }
             }
@@ -122,30 +153,33 @@ namespace SharpLearning.AdaBoost.Learning
             var featuresCount = observations.GetNumberOfColumns();
             var variableImportance = VariableImportance(featuresCount);
 
-            return new ClassificationAdaBoostModel(m_models.ToArray(), m_modelWeights.ToArray(), 
+            return new ClassificationAdaBoostModel(m_models.ToArray(), m_modelWeights.ToArray(),
                 variableImportance);
         }
 
-        bool Boost(F64Matrix observations, double[] targets, int iteration)
+
+        bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)
         {
-            var model = new ClassificationDecisionTreeModel(m_modelLearner.Learn(observations, targets, m_sampleWeights),
+            var model = new ClassificationDecisionTreeModel(m_modelLearner.Learn(observations, targets, 
+                indices, m_sampleWeights),
                 m_modelLearner.m_variableImportance);
 
-            var predictions = model.Predict(observations);
+            var predictions = model.Predict(observations, indices);
 
             for (int i = 0; i < predictions.Length; i++)
             {
-                if (targets[i] != predictions[i])
+                var index = indices[i];
+                if (m_indexedTargets[i] != predictions[i])
                 {
-                    m_workErrors[i] = 1.0;
+                    m_workErrors[index] = 1.0;
                 }
                 else
                 {
-                    m_workErrors[i] = 0.0;
+                    m_workErrors[index] = 0.0;
                 }
             }
 
-            var modelError = m_workErrors.WeightedMean(m_sampleWeights);
+            var modelError = m_workErrors.WeightedMean(m_sampleWeights, indices);
 
             if (modelError <= 0.0)
             {
@@ -169,12 +203,13 @@ namespace SharpLearning.AdaBoost.Learning
             // Only boost if not last iteration
             if (iteration != m_iterations - 1)
             {
-                for (int i = 0; i < m_sampleWeights.Length; i++)
+                for (int i = 0; i < indices.Length; i++)
                 {
-                    var sampleWeight = m_sampleWeights[i];
+                    var index = indices[i];
+                    var sampleWeight = m_sampleWeights[index];
                     if(sampleWeight > 0.0 || modelWeight < 0.0)
                     {
-                        m_sampleWeights[i] = sampleWeight * Math.Exp(modelWeight * m_workErrors[i]);
+                        m_sampleWeights[index] = sampleWeight * Math.Exp(modelWeight * m_workErrors[index]);
                     }
                 }
             }
@@ -186,20 +221,21 @@ namespace SharpLearning.AdaBoost.Learning
             return true;
         }
 
-        double ErrorEstimate(F64Matrix observations, double[] targets)
+        double ErrorEstimate(F64Matrix observations, int[] indices)
         {
-            var rows = targets.Length;
+            var rows = indices.Length;
             var predictions = new double[rows];
             
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = Predict(observations.GetRow(i));
+                var index = indices[i];
+                predictions[i] = Predict(observations.GetRow(index));
             }
 
-            var error = m_errorMetric.Error(targets, predictions);
+            var error = m_errorMetric.Error(m_indexedTargets, predictions);
 
             //Trace.WriteLine("Error: " + error);
-            //Trace.WriteLine(m_errorMetric.ErrorString(targets, predictions));
+            //Trace.WriteLine(m_errorMetric.ErrorString(m_indexedTargets, predictions));
 
             return error;
         }

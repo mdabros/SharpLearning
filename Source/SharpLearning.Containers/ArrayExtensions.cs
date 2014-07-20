@@ -161,6 +161,23 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// Sums the values given by the indices
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public static double Sum(this double[] array, int[] indices)
+        {
+            var sum = 0.0;
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var index = indices[i];
+                sum += array[index];
+            }
+            return sum;
+        }
+
+        /// <summary>
         /// Calculates the weighted mean
         /// </summary>
         /// <param name="array"></param>
@@ -175,6 +192,30 @@ namespace SharpLearning.Containers
             }
 
             mean = mean / weights.Sum();
+
+            return mean;
+        }
+
+        /// <summary>
+        /// Calculates the weighted mean from the indices
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static double WeightedMean(this double[] array, double[] weights, int[] indices)
+        {
+            var mean = 0.0;
+            var wSum = 0.0;
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var index = indices[i];
+                var w = weights[index];
+                wSum += w;
+
+                mean += array[index] * w;
+            }
+
+            mean = mean / wSum;
 
             return mean;
         }
