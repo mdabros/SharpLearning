@@ -51,7 +51,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
                 gini += value * value;
             }
 
-            gini = 1.0 - gini / (m_weightedInterval * m_weightedInterval);
+            gini = 1.0 - gini / (m_weightedTotal * m_weightedTotal);
 
             return gini;
         }
@@ -64,8 +64,8 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         public override double ImpurityImprovement(double impurity)
         {
             var childImpurities = ChildImpurities();
-            var leftImpurity = (m_weightedLeft / m_weightedInterval) * childImpurities.Left;
-            var rightImpurity = (m_weightedRight / m_weightedInterval) * childImpurities.Right;
+            var leftImpurity = (m_weightedLeft / m_weightedTotal) * childImpurities.Left;
+            var rightImpurity = (m_weightedRight / m_weightedTotal) * childImpurities.Right;
 
             return impurity - leftImpurity - rightImpurity;
         }

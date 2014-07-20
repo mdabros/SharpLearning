@@ -1,81 +1,78 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Views;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
+using SharpLearning.Containers.Views;
 using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 {
     [TestClass]
-    public class GiniClasificationImpurityCalculatorTest
+    public class RegressionImpurityCalculatorTest
     {
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_ImpurityImprovement()
+        public void RegressionImpurityCalculator_ImpurityImprovement()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            var unique = values.Distinct().ToArray();
-
+            
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, new double[0], parentInterval);
+            var sut = new RegressionImpurityCalculator(values, new double[0], parentInterval);
             var impurity = sut.NodeImpurity();
 
             sut.Update(50);
             var improvement1 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(0.33333333333333343, improvement1, 0.000001);
+            Assert.AreEqual(75.0, improvement1, 0.000001);
 
             sut.Update(96);
             var improvement2 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(0.28047839506172845, improvement2, 0.000001);
+            Assert.AreEqual(69.473379629629648, improvement2, 0.000001);
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_ImpurityImprovement_Weighted()
+        public void RegressionImpurityCalculator_ImpurityImprovement_Weighted()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            var unique = values.Distinct().ToArray();
 
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, weights, parentInterval);
+            var sut = new RegressionImpurityCalculator(values, weights, parentInterval);
             var impurity = sut.NodeImpurity();
 
             sut.Update(50);
             var improvement1 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(0.14015151515151511, improvement1, 0.000001);
+            Assert.AreEqual(167.04545454545456, improvement1, 0.000001);
 
             sut.Update(96);
             var improvement2 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(0.17358104858104859, improvement2, 0.000001);
+            Assert.AreEqual(162.78860028860029, improvement2, 0.000001);
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_ChildImpurities()
+        public void RegressionImpurityCalculator_ChildImpurities()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            var unique = values.Distinct().ToArray();
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, new double[0], parentInterval);
+            var sut = new RegressionImpurityCalculator(values, new double[0], parentInterval);
             var impurity = sut.NodeImpurity();
 
             sut.Update(50);
             var actual = sut.ChildImpurities();
-            var expected = new ChildImpurities(0.0, .5);
+            var expected = new ChildImpurities(0.0, -2.25);
 
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_NodeImpurity()
+        public void RegressionImpurityCalculator_NodeImpurity()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            var unique = values.Distinct().ToArray();
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, new double[0], parentInterval);
+            var sut = new RegressionImpurityCalculator(values, new double[0], parentInterval);
 
             sut.Update(50);
             var actual = sut.NodeImpurity();
@@ -84,20 +81,19 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_LeafValue_Weighted()
+        public void RegressionImpurityCalculator_LeafValue_Weighted()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            var unique = values.Distinct().ToArray();
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, weights, parentInterval);
+            var sut = new RegressionImpurityCalculator(values, weights, parentInterval);
             var impurity = sut.NodeImpurity();
 
             sut.Update(50);
             var actual = sut.LeafValue();
 
-            Assert.AreEqual(2.0, actual, 0.000001);
+            Assert.AreEqual(1.75, actual, 0.000001);
         }
 
         double Weight(double t)

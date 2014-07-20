@@ -12,7 +12,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         Interval1D m_interval;
         int m_currentPosition;
 
-        protected double m_weightedInterval = 0.0;
+        protected double m_weightedTotal = 0.0;
         protected double m_weightedLeft = 0.0;
         protected double m_weightedRight = 0.0;
 
@@ -58,7 +58,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
                 var targetIndex = (int)targets[i];
                 m_weightedTargetCount[targetIndex] += w;
 
-                m_weightedInterval += w;
+                m_weightedTotal += w;
             }
 
             m_currentPosition = m_interval.FromInclusive;
@@ -73,7 +73,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_currentPosition = m_interval.FromInclusive;
 
             m_weightedLeft = 0.0;
-            m_weightedRight = m_weightedInterval;
+            m_weightedRight = m_weightedTotal;
 
             Array.Clear(m_weightedTargetCountLeft, 0, m_weightedTargetCountLeft.Length);
             Array.Copy(m_weightedTargetCount, m_weightedTargetCountRight, m_weightedTargetCount.Length);
