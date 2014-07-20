@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace SharpLearning.DecisionTrees.Nodes
 {
-    public sealed class ClassificationBinaryDecisionNode : BinaryDicisionNodeBase, IBinaryDecisionNode
+    public sealed class LeafBinaryDecisionNode : BinaryDicisionNodeBase, IBinaryDecisionNode
     {
         public readonly Dictionary<double, double> m_probabilities;
 
-        public ClassificationBinaryDecisionNode(Dictionary<double, double> probabilities)
+        public LeafBinaryDecisionNode(Dictionary<double, double> probabilities)
         {
             if (probabilities == null) { throw new ArgumentException("probabilities"); }
             m_probabilities = probabilities;

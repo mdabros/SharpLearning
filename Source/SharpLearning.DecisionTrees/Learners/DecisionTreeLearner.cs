@@ -18,17 +18,12 @@ namespace SharpLearning.DecisionTrees.Learners
     /// </summary>
     public class DecisionTreeLearner
     {
-        //readonly IEntropyMetric m_entropyMetric;
         readonly ISplitSearcher m_splitSearcher;
         readonly IImpurityCalculator m_impurityCalculator;
         readonly IFeatureCandidateSelector m_featureCandidateSelector;
-        //readonly ILeafFactory m_leafFactory;
         
         readonly double m_minimumInformationGain;
         readonly int m_featuresPrSplit;
-
-        //readonly int m_miniminSplitSize;
-        //readonly double m_minimumLeafWeight;
 
         double[] m_workTargets = new double[0];
         double[] m_workFeature = new double[0];
@@ -244,7 +239,7 @@ namespace SharpLearning.DecisionTrees.Learners
                     m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
                     m_impurityCalculator.UpdateInterval(parentInterval);
 
-                    var leaf = new ClassificationBinaryDecisionNode(m_impurityCalculator.LeafProbabilities())
+                    var leaf = new LeafBinaryDecisionNode(m_impurityCalculator.LeafProbabilities())
                     {
                         Parent = parentNode,
                         FeatureIndex = -1,
@@ -279,7 +274,7 @@ namespace SharpLearning.DecisionTrees.Learners
             {
                 m_impurityCalculator.UpdateInterval(allInterval);
 
-                root = new ClassificationBinaryDecisionNode(m_impurityCalculator.LeafProbabilities())
+                root = new LeafBinaryDecisionNode(m_impurityCalculator.LeafProbabilities())
                 {
                     Parent = null,
                     FeatureIndex = -1,

@@ -57,7 +57,7 @@
     <Compile Include="Models\ClassificationDecisionTreeModel.cs" />
     <Compile Include="Models\RegressionDecisionTreeModel.cs" />
     <Compile Include="Nodes\BinaryDecisionNodeExtensions.cs" />
-    <Compile Include="Nodes\ClassificationBinaryDecisionNode.cs" />
+    <Compile Include="Nodes\LeafBinaryDecisionNode.cs" />
     <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
     <Compile Include="Learners\RegressionDecisionTreeLearner.cs" />
     <Compile Include="FeatureCandidateSelectors\AllFeatureCandidateSelector.cs" />
