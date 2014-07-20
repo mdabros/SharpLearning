@@ -12,7 +12,8 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         readonly List<FeatureSplit> m_workIntervals = new List<FeatureSplit>();
 
         /// <summary>
-        /// Searches for the best split using a binary search strategy. 
+        /// Searches for the best split using a binary search strategy. The searcher only considers splits 
+        /// when both the threshold value and the target value has changed.
         /// The implementation assumes that the features and targets have been sorted
         /// together using the features as sort criteria
         /// </summary>
@@ -24,7 +25,8 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         }
 
         /// <summary>
-        /// Searches for the best split using a binary search strategy. 
+        /// Searches for the best split using a binary search strategy. The searcher only considers splits 
+        /// when both the threshold value and the target value has changed.
         /// The implementation assumes that the features and targets have been sorted
         /// together using the features as sort criteria
         /// </summary>

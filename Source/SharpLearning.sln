@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput", "SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput.Test", "SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
@@ -31,9 +29,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Threading", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Threading.Test", "SharpLearning.Threading.Test\SharpLearning.Threading.Test.csproj", "{25ECF647-81D1-4F3E-9FD4-83C950902915}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.AdaBoost", "SharpLearning.AdaBoost\SharpLearning.AdaBoost.csproj", "{1D2CB02C-820C-4D92-927C-46A948859B02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.AdaBoost.Test", "SharpLearning.AdaBoost.Test\SharpLearning.AdaBoost.Test.csproj", "{59594AF9-135B-4B55-A2A8-5B4CF6F08579}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 15
+		SccNumberOfProjects = 17
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -79,6 +81,12 @@ Global
 		SccProjectUniqueName14 = SharpLearning.Threading.Test\\SharpLearning.Threading.Test.csproj
 		SccProjectName14 = SharpLearning.Threading.Test
 		SccLocalPath14 = SharpLearning.Threading.Test
+		SccProjectUniqueName15 = SharpLearning.AdaBoost\\SharpLearning.AdaBoost.csproj
+		SccProjectName15 = SharpLearning.AdaBoost
+		SccLocalPath15 = SharpLearning.AdaBoost
+		SccProjectUniqueName16 = SharpLearning.AdaBoost.Test\\SharpLearning.AdaBoost.Test.csproj
+		SccProjectName16 = SharpLearning.AdaBoost.Test
+		SccLocalPath16 = SharpLearning.AdaBoost.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +149,14 @@ Global
 		{25ECF647-81D1-4F3E-9FD4-83C950902915}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25ECF647-81D1-4F3E-9FD4-83C950902915}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25ECF647-81D1-4F3E-9FD4-83C950902915}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D2CB02C-820C-4D92-927C-46A948859B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D2CB02C-820C-4D92-927C-46A948859B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D2CB02C-820C-4D92-927C-46A948859B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D2CB02C-820C-4D92-927C-46A948859B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59594AF9-135B-4B55-A2A8-5B4CF6F08579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59594AF9-135B-4B55-A2A8-5B4CF6F08579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59594AF9-135B-4B55-A2A8-5B4CF6F08579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59594AF9-135B-4B55-A2A8-5B4CF6F08579}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

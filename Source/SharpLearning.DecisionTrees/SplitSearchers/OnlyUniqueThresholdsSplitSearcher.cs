@@ -5,31 +5,29 @@ using System;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
-    public sealed class LinearSplitSearcher : ISplitSearcher
+    public sealed class OnlyUniqueThresholdsSplitSearcher : ISplitSearcher
     {
         readonly int m_minimumSplitSize;
         readonly double m_minimumLeafWeight;
 
         /// <summary>
-        /// Searches for the best split using a brute force approach. The searcher only considers splits 
-        /// when both the threshold value and the target value has changed.  
+        /// Searches for the best split using a brute force approach on all unique threshold values. 
         /// The implementation assumes that the features and targets have been sorted
         /// together using the features as sort criteria
         /// </summary>
         /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
-        public LinearSplitSearcher(int minimumSplitSize)
+        public OnlyUniqueThresholdsSplitSearcher(int minimumSplitSize)
             : this(minimumSplitSize, 0.0)
         {
         }
 
         /// <summary>
-        /// Searches for the best split using a brute force approach. The searcher only considers splits 
-        /// when both the threshold value and the target value has changed.  
+        /// Searches for the best split using a brute force approach on all unique threshold values. 
         /// The implementation assumes that the features and targets have been sorted
         /// together using the features as sort criteria
         /// </summary>
         /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
-        public LinearSplitSearcher(int minimumSplitSize, double minimumLeafWeight)
+        public OnlyUniqueThresholdsSplitSearcher(int minimumSplitSize, double minimumLeafWeight)
         {
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             m_minimumSplitSize = minimumSplitSize;
@@ -38,8 +36,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
 
 
         /// <summary>
-        /// Searches for the best split using a brute force approach. The searcher only considers splits 
-        /// when both the threshold value and the target value has changed.
+        /// Searches for the best split using a brute force approach on all unique threshold values. 
         /// The implementation assumes that the features and targets have been sorted
         /// together using the features as sort criteria
         /// </summary>
@@ -70,7 +67,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
             {
                 var currentValue = feature[j];
                 var currentTarget = targets[j];
-                if (prevValue != currentValue && prevTarget != currentTarget)
+                if (prevValue != currentValue)
                 {
                     var currentSplit = j;
                     var leftSize = (double)(currentSplit - parentInterval.FromInclusive);
