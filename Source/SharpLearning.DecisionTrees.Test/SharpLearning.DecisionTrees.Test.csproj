@@ -77,8 +77,7 @@
     </Compile>
     <Compile Include="SplitSearchers\BinarySplitSearcherTest.cs" />
     <Compile Include="SplitSearchers\FeatureSplitTest.cs" />
-    <Compile Include="SplitSearchers\FindSplitResultTest.cs" />
-    <Compile Include="SplitSearchers\IntervalEntropyTest.cs" />
+    <Compile Include="SplitSearchers\SplitResultTest.cs" />
     <Compile Include="SplitSearchers\LinearSplitSearcherTest.cs" />
   </ItemGroup>
   <ItemGroup>

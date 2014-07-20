@@ -4,7 +4,6 @@ using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
-using SharpLearning.Metrics.Entropy;
 
 namespace SharpLearning.DecisionTrees.Learners
 {

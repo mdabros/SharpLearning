@@ -1,5 +1,6 @@
 ﻿
 using System;
+
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
     /// <summary>
@@ -7,19 +8,19 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
     /// </summary>
     public struct FeatureSplit : IEquatable<FeatureSplit>
     {
-        public readonly double Value;
+        public readonly double Threshold;
         public readonly int Index;
 
         public FeatureSplit(double value, int index)
         {
-            this.Value = value;
+            this.Threshold = value;
             this.Index = index;
         }
 
         public bool Equals(FeatureSplit other)
         {
             if (Index != other.Index) { return false; }
-            if (!Equal(Value, other.Value)) { return false; }
+            if (!Equal(Threshold, other.Threshold)) { return false; }
 
             return true;
         }
@@ -44,7 +45,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
 
         public override int GetHashCode()
         {
-            return Index.GetHashCode() ^ Value.GetHashCode();
+            return Index.GetHashCode() ^ Threshold.GetHashCode();
         }
 
         const double m_tolerence = 0.00001;

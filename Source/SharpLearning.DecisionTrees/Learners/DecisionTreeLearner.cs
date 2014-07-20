@@ -3,7 +3,6 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.Nodes;
-using SharpLearning.Metrics.Entropy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,10 +46,9 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        /// <param name="entropyMetric">The entropy metric used to calculate the best splits</param>
         /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
+        /// <param name="impurityCalculator">Impurity calculator used to decide which split is optimal</param>
         /// <param name="featureCandidateSelector">The feature candidate selector used to decide which feature indices the learner can choose from at each split</param>
-        /// <param name="leafFactory">The type of leaf created when no more splits can be made</param>
         public DecisionTreeLearner(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain,
             ISplitSearcher splitSearcher, IImpurityCalculator impurityCalculator, IFeatureCandidateSelector featureCandidateSelector)
         {
@@ -174,6 +172,7 @@ namespace SharpLearning.DecisionTrees.Learners
             m_impurityCalculator.Init(uniqueValues, m_workTargets, m_workWeights, allInterval);
             var rootImpurity = m_impurityCalculator.NodeImpurity();
 
+            //Todo - move to loop so new feature can be selected at each split
             m_featureCandidateSelector.Select(m_featuresPrSplit, observations.GetNumberOfColumns(), m_featureCandidates);
 
             var stack = new Stack<DecisionNodeCreationItem>(m_maximumTreeDepth);
@@ -192,7 +191,7 @@ namespace SharpLearning.DecisionTrees.Learners
                 var parentNodeDepth = parentItem.NodeDepth;
                 var parentNode = parentItem.Parent;
                 var parentNodePositionType = parentItem.NodeType;
-                var parentImpurity = parentItem.Entropy;
+                var parentImpurity = parentItem.Impurity;
                                                           
                 if (first && parentItem.Parent != null)
                 {

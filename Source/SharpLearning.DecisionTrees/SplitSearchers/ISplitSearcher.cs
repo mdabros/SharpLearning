@@ -1,6 +1,5 @@
 ﻿using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
-using SharpLearning.Metrics.Entropy;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
