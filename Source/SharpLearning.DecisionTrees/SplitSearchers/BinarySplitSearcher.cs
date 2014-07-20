@@ -1,13 +1,13 @@
 ﻿using SharpLearning.Containers.Views;
-using SharpLearning.Metrics.Entropy;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using SharpLearning.Containers;
+using SharpLearning.Metrics.Entropy;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
-    public sealed class BinarySplitSearcher : ISplitSearcher
+    public sealed class BinarySplitSearcher //: ISplitSearcher
     {
         readonly int m_minimumSplitSize;
 

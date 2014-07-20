@@ -5,6 +5,7 @@ using SharpLearning.Metrics.Entropy;
 using SharpLearning.DecisionTrees.LeafFactories;
 using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.SplitSearchers;
+using SharpLearning.DecisionTrees.ImpurityCalculators;
 
 namespace SharpLearning.DecisionTrees.Test.Learners
 {
@@ -16,10 +17,9 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void DecisionTreeLearner_InvalidMaximumTreeSize()
         {
             new DecisionTreeLearner(0, 1, 0.1,
-                new GiniImpurityMetric(),
                 new LinearSplitSearcher(1),
-                new AllFeatureCandidateSelector(),
-                new ClassificationLeafFactory());
+                new GiniClasificationImpurityCalculator(),
+                new AllFeatureCandidateSelector());
         }
 
         [TestMethod]
@@ -27,10 +27,9 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void DecisionTreeLearner_InvalidFeaturesPrSplit()
         {
             new DecisionTreeLearner(1, 0, 0.1,
-                new GiniImpurityMetric(),
                 new LinearSplitSearcher(1),
-                new AllFeatureCandidateSelector(),
-                new ClassificationLeafFactory());
+                new GiniClasificationImpurityCalculator(),
+                new AllFeatureCandidateSelector());
         }
 
         [TestMethod]
@@ -38,10 +37,9 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void DecisionTreeLearner_InvalidMinimumInformationGain()
         {
             new DecisionTreeLearner(1, 1, 0,
-                new GiniImpurityMetric(),
                 new LinearSplitSearcher(1),
-                new AllFeatureCandidateSelector(),
-                new ClassificationLeafFactory());
+                new GiniClasificationImpurityCalculator(),
+                new AllFeatureCandidateSelector());
         }
     }
 }

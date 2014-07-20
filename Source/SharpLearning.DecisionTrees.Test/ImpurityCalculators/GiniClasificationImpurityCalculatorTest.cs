@@ -16,14 +16,16 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, new double[0], parentInterval);
+            var sut = new GiniClasificationImpurityCalculator();
+            sut.Init(unique, values, new double[0], parentInterval);
+
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var improvement1 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(0.33333333333333343, improvement1, 0.000001);
 
-            sut.Update(96);
+            sut.UpdateIndex(96);
             var improvement2 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(0.28047839506172845, improvement2, 0.000001);
         }
@@ -37,14 +39,16 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, weights, parentInterval);
+            var sut = new GiniClasificationImpurityCalculator();
+            sut.Init(unique, values, weights, parentInterval);
+
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var improvement1 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(0.14015151515151511, improvement1, 0.000001);
 
-            sut.Update(96);
+            sut.UpdateIndex(96);
             var improvement2 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(0.17358104858104859, improvement2, 0.000001);
         }
@@ -57,10 +61,12 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, new double[0], parentInterval);
+            var sut = new GiniClasificationImpurityCalculator();
+            sut.Init(unique, values, new double[0], parentInterval);
+
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var actual = sut.ChildImpurities();
             var expected = new ChildImpurities(0.0, .5);
 
@@ -75,9 +81,10 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, new double[0], parentInterval);
+            var sut = new GiniClasificationImpurityCalculator();
+            sut.Init(unique, values, new double[0], parentInterval);
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var actual = sut.NodeImpurity();
 
             Assert.AreEqual(0.66666666666666674, actual, 0.000001);
@@ -91,10 +98,12 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator(unique, values, weights, parentInterval);
+            var sut = new GiniClasificationImpurityCalculator();
+            sut.Init(unique, values, weights, parentInterval);
+
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var actual = sut.LeafValue();
 
             Assert.AreEqual(2.0, actual, 0.000001);

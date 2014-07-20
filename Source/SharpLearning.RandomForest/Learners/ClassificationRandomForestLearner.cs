@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
+using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.LeafFactories;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
@@ -129,10 +130,9 @@ namespace SharpLearning.RandomForest.Learners
             
             var learner = new DecisionTreeLearner(m_maximumTreeDepth, 
                 m_featuresPrSplit, m_minimumInformationGain,
-                new GiniImpurityMetric(),
                 new LinearSplitSearcher(m_minimumSplitSize),
-                new RandomFeatureCandidateSelector(random.Next()),
-                new ClassificationLeafFactory());
+                new GiniClasificationImpurityCalculator(),
+                new RandomFeatureCandidateSelector(random.Next()));
 
             var model = new ClassificationDecisionTreeModel(learner.Learn(observations, targets, treeIndices),
                 learner.m_variableImportance);

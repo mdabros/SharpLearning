@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers.Views;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.DecisionTrees.ImpurityCalculators
@@ -9,8 +10,8 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// </summary>
     public abstract class ClasificationImpurityCalculator
     {
-        Interval1D m_interval;
-        int m_currentPosition;
+        protected Interval1D m_interval;
+        protected int m_currentPosition;
 
         protected double m_weightedTotal = 0.0;
         protected double m_weightedLeft = 0.0;
@@ -25,6 +26,13 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
 
         protected double[] m_uniqueTargets;
 
+        public double WeightedLeft { get { return m_weightedLeft; } }
+        public double WeightedRight { get { return m_weightedRight; } }
+
+        public ClasificationImpurityCalculator()
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -32,7 +40,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="targets"></param>
         /// <param name="weights"></param>
         /// <param name="interval"></param>
-        public ClasificationImpurityCalculator(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval)
+        public void Init(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval)
         {
             if (targets == null) { throw new ArgumentException("targets"); }
             if (weights == null) { throw new ArgumentException("weights"); }
@@ -49,6 +57,12 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
 
             var w = 1.0;
             var weightsPresent = m_weights.Length != 0;
+
+            m_weightedTotal = 0.0;
+            m_weightedLeft = 0.0;
+            m_weightedRight = 0.0;
+
+            Array.Clear(m_weightedTargetCount, 0, m_weightedTargetCount.Length);
 
             for (int i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
             {
@@ -80,10 +94,20 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
+        /// Updates impurities according to the new interval
+        /// </summary>
+        /// <param name="newInterval"></param>
+        public void UpdateInterval(Interval1D newInterval)
+        {
+            Init(m_uniqueTargets, m_targets, m_weights, newInterval);
+        }
+
+
+        /// <summary>
         /// Updates impurity calculator with new split index
         /// </summary>
         /// <param name="newPosition"></param>
-        public void Update(int newPosition)
+        public void UpdateIndex(int newPosition)
         {
             if(m_currentPosition > newPosition)
             {
@@ -137,5 +161,11 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// </summary>
         /// <returns></returns>
         public abstract double LeafValue();
+
+        /// <summary>
+        /// Calculates the weighted leaf value
+        /// </summary>
+        /// <returns></returns>
+        public abstract Dictionary<double, double> LeafProbabilities();
     }
 }

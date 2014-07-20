@@ -1,14 +1,14 @@
 ﻿using SharpLearning.Containers.Views;
+using System.Collections.Generic;
 
 namespace SharpLearning.DecisionTrees.ImpurityCalculators
 {
     /// <summary>
     /// Classifiction impurity calculator using the gini impurity.
     /// </summary>
-    public sealed class GiniClasificationImpurityCalculator : ClasificationImpurityCalculator
+    public sealed class GiniClasificationImpurityCalculator : ClasificationImpurityCalculator, IImpurityCalculator
     {
-        public GiniClasificationImpurityCalculator(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval)
-            : base(uniqueTargets, targets, weights, interval)
+        public GiniClasificationImpurityCalculator()
         {
         }
 
@@ -91,6 +91,24 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             }
 
             return bestTarget;
+        }
+
+        /// <summary>
+        /// Laplace adjusted probabilities
+        /// </summary>
+        /// <returns></returns>
+        public override Dictionary<double, double> LeafProbabilities()
+        {
+            var probabilities = new Dictionary<double, double>();
+            var probabilityFactor = 1.0 / (m_weightedTotal + m_uniqueTargets.Length);
+
+            foreach (int targetValue in m_uniqueTargets)
+            {
+                var targetProbability = (m_weightedTargetCount[targetValue] + 1) * probabilityFactor;
+                probabilities.Add(targetValue, targetProbability);
+            }
+
+            return probabilities;
         }
     }
 }

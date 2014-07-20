@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Views;
+using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.Metrics.Entropy;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
@@ -9,18 +10,15 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
     public interface ISplitSearcher
     {
         /// <summary>
-        /// Finds the most optimal split for a given feature and targets
+        /// 
         /// </summary>
-        /// <param name="currentBestSplitResult"></param>
-        /// <param name="featureIndex"></param>
+        /// <param name="impurityCalculator"></param>
         /// <param name="feature"></param>
         /// <param name="targets"></param>
-        /// <param name="weights"></param>
-        /// <param name="entropyMetric"></param>
         /// <param name="parentInterval"></param>
-        /// <param name="parentEntropy"></param>
+        /// <param name="parentImpurity"></param>
         /// <returns></returns>
-        FindSplitResult FindBestSplit(FindSplitResult currentBestSplitResult, int featureIndex, double[] feature, double[] targets,
-            double[] weights, IEntropyMetric entropyMetric, Interval1D parentInterval, double parentEntropy);
+        SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets,
+                   Interval1D parentInterval, double parentImpurity);
     }
 }

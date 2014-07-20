@@ -16,14 +16,15 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new RegressionImpurityCalculator(values, new double[0], parentInterval);
+            var sut = new RegressionImpurityCalculator();
+            sut.Init(new double[0], values, new double[0], parentInterval);
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var improvement1 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(75.0, improvement1, 0.000001);
 
-            sut.Update(96);
+            sut.UpdateIndex(96);
             var improvement2 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(69.473379629629648, improvement2, 0.000001);
         }
@@ -36,14 +37,15 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new RegressionImpurityCalculator(values, weights, parentInterval);
+            var sut = new RegressionImpurityCalculator();
+            sut.Init(new double[0], values, weights, parentInterval);
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var improvement1 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(167.04545454545456, improvement1, 0.000001);
 
-            sut.Update(96);
+            sut.UpdateIndex(96);
             var improvement2 = sut.ImpurityImprovement(impurity);
             Assert.AreEqual(162.78860028860029, improvement2, 0.000001);
         }
@@ -55,10 +57,11 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new RegressionImpurityCalculator(values, new double[0], parentInterval);
+            var sut = new RegressionImpurityCalculator();
+            sut.Init(new double[0], values, new double[0], parentInterval);
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var actual = sut.ChildImpurities();
             var expected = new ChildImpurities(0.0, -2.25);
 
@@ -72,9 +75,10 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new RegressionImpurityCalculator(values, new double[0], parentInterval);
+            var sut = new RegressionImpurityCalculator();
+            sut.Init(new double[0], values, new double[0], parentInterval);
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var actual = sut.NodeImpurity();
 
             Assert.AreEqual(0.66666666666666674, actual, 0.000001);
@@ -87,10 +91,12 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new RegressionImpurityCalculator(values, weights, parentInterval);
+            var sut = new RegressionImpurityCalculator();
+            sut.Init(new double[0], values, weights, parentInterval);
+
             var impurity = sut.NodeImpurity();
 
-            sut.Update(50);
+            sut.UpdateIndex(50);
             var actual = sut.LeafValue();
 
             Assert.AreEqual(1.75, actual, 0.000001);

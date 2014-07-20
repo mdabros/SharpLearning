@@ -19,7 +19,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void RegressionDecisionTreeLearner_Learn_Depth_100()
         {
             var error = RegressionDecisionTreeLearner_Learn(100);
-            Assert.AreEqual(0.038873687234849852, error, 0.0000001);
+            Assert.AreEqual(0.032120286249559482, error, 0.0000001);
         }
 
         [TestMethod]
@@ -40,7 +40,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void RegressionDecisionTreeLearner_Learn_Depth_100_Weight_1()
         {
             var error = RegressionDecisionTreeLearner_Learn_Weighted(100, 1.0);
-            Assert.AreEqual(0.038873687234849852, error, 0.0000001);
+            Assert.AreEqual(0.032120286249559482, error, 0.0000001);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void RegressionDecisionTreeLearner_Learn_Depth_100_Weight_100()
         {
             var error = RegressionDecisionTreeLearner_Learn_Weighted(100, 100.0);
-            Assert.AreEqual(0.14322350107327153, error, 0.0000001);
+            Assert.AreEqual(0.032256921590414704, error, 0.0000001);
         }
 
         private static double RegressionDecisionTreeLearner_Learn(int treeDepth)
@@ -130,7 +130,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
                 }
             }
 
-            var sut = new RegressionDecisionTreeLearner(1, 100, cols, 0.001);
+            var sut = new RegressionDecisionTreeLearner(1, 100, cols, 0.00000001);
             var timer = new Stopwatch();
             timer.Start();
             var model = sut.Learn(observations, targets);

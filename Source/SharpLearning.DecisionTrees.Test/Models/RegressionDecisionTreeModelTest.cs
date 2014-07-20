@@ -32,7 +32,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.038873687234849852, error, 0.0000001);
+            Assert.AreEqual(0.032120286249559482, error, 0.0000001);
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.038873687234849852, error, 0.0000001);
+            Assert.AreEqual(0.032120286249559482, error, 0.0000001);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(indexedTargets, predictions);
 
-            Assert.AreEqual(0.043275595169820463, error, 0.0000001);
+            Assert.AreEqual(0.023821615502626264, error, 0.0000001);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();
-            var expected = new double[] { 0.0, 2.070405777290854 };
+            var expected = new double[] { 0.0, 364.56356850440511 };
 
             Assert.AreEqual(expected.Length, actual.Length);
 

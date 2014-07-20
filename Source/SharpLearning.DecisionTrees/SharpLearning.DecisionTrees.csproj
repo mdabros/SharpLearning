@@ -50,6 +50,7 @@
     <Compile Include="ImpurityCalculators\ChildImpurities.cs" />
     <Compile Include="ImpurityCalculators\ClasificationImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculator.cs" />
+    <Compile Include="ImpurityCalculators\IImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\RegressionImpurityCalculator.cs" />
     <Compile Include="LeafFactories\LaplaceAdjustedClassificationLeafFactory.cs" />
     <Compile Include="LeafFactories\ClassificationLeafFactory.cs" />

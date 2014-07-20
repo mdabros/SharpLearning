@@ -11,7 +11,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// Regression impurity calculator using variance and friedmans
     /// calculation for impurity improvement.
     /// </summary>
-    public sealed class RegressionImpurityCalculator
+    public sealed class RegressionImpurityCalculator : IImpurityCalculator
     {
         Interval1D m_interval;
         int m_currentPosition;
@@ -38,6 +38,13 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         double[] m_targets;
         double[] m_weights;
 
+        public double WeightedLeft { get { return m_weightedLeft; } }
+        public double WeightedRight { get { return m_weightedRight; } }
+
+        public RegressionImpurityCalculator()
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -45,7 +52,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="targets"></param>
         /// <param name="weights"></param>
         /// <param name="interval"></param>
-        public RegressionImpurityCalculator(double[] targets, double[] weights, Interval1D interval)
+        public void Init(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval)
         {
             if (targets == null) { throw new ArgumentException("targets"); }
             if (weights == null) { throw new ArgumentException("weights"); }
@@ -55,6 +62,25 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
 
             var w = 1.0;
             var weightsPresent = m_weights.Length != 0;
+
+            m_weightedTotal = 0.0;
+            m_weightedLeft = 0.0;
+            m_weightedRight = 0.0;
+
+            m_meanLeft = 0.0;
+            m_meanRight = 0.0;
+            m_meanTotal = 0.0;
+
+            m_sqSumLeft = 0.0;
+            m_sqSumRight = 0.0;
+            m_sqSumTotal = 0.0;
+
+            m_varRight = 0.0;
+            m_varLeft = 0.0;
+
+            m_sumLeft = 0.0;
+            m_sumRight = 0.0;
+            m_sumTotal = 0.0;
 
             for (int i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
             {
@@ -99,10 +125,19 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
+        /// Updates impurities according to the new interval
+        /// </summary>
+        /// <param name="newInterval"></param>
+        public void UpdateInterval(Interval1D newInterval)
+        {
+            Init(new double[0], m_targets, m_weights, newInterval);
+        }
+
+        /// <summary>
         /// Updates impurity calculator with new split index
         /// </summary>
         /// <param name="newPosition"></param>
-        public void Update(int newPosition)
+        public void UpdateIndex(int newPosition)
         {
             if (m_currentPosition > newPosition)
             {
@@ -198,6 +233,15 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         public double LeafValue()
         {
             return m_meanTotal;
+        }
+
+        /// <summary>
+        /// Probabilities are not availible for regression
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<double, double> LeafProbabilities()
+        {
+            return new Dictionary<double, double>();
         }
     }
 }

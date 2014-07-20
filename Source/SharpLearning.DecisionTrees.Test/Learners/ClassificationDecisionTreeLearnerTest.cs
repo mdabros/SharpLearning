@@ -103,28 +103,28 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void ClassificationDecisionTreeLearner_Learn_Aptitude_Depth_100_Weight_10()
         {
             var error = ClassificationDecisionTreeLearner_Learn_Aptitude_Weighted(100, 10);
-            Assert.AreEqual(0.19230769230769232, error, 0.0000001);
+            Assert.AreEqual(0.076923076923076927, error, 0.0000001);
         }
 
         [TestMethod]
         public void ClassificationDecisionTreeLearner_Learn_Aptitude_depth_5_Weight_10()
         {
             var error = ClassificationDecisionTreeLearner_Learn_Aptitude_Weighted(5, 10);
-            Assert.AreEqual(0.19230769230769232, error, 0.0000001);
+            Assert.AreEqual(0.076923076923076927, error, 0.0000001);
         }
 
         [TestMethod]
         public void ClassificationDecisionTreeLearner_Learn_Glass_100_Weight_10()
         {
             var error = ClassificationDecisionTreeLearner_Learn_Glass_Weighted(100, 10);
-            Assert.AreEqual(0.056074766355140186, error, 0.0000001);
+            Assert.AreEqual(0.070093457943925228, error, 0.0000001);
         }
 
         [TestMethod]
         public void ClassificationDecisionTreeLearner_Learn_Glass_Depth_5_Weight_10()
         {
             var error = ClassificationDecisionTreeLearner_Learn_Glass_Weighted(5, 10);
-            Assert.AreEqual(0.20093457943925233, error, 0.0000001);
+            Assert.AreEqual(0.13551401869158877, error, 0.0000001);
         }
 
         double ClassificationDecisionTreeLearner_Learn_Glass(int treeDepth)
@@ -228,7 +228,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
                 }
             }
 
-            var sut = new ClassificationDecisionTreeLearner(1, 100, cols, 0.001);
+            var sut = new ClassificationDecisionTreeLearner(1, 100, cols, 0.000000001);
             var timer = new Stopwatch();
             timer.Start();
             var model = sut.Learn(observations, targets);
@@ -242,6 +242,5 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             Trace.WriteLine("Error: " + error);
             Trace.WriteLine("Time: " + timer.ElapsedMilliseconds);
         }
-
     }
 }
