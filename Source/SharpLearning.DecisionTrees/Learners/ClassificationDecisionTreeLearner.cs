@@ -2,7 +2,6 @@
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
-using SharpLearning.DecisionTrees.LeafFactories;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
 

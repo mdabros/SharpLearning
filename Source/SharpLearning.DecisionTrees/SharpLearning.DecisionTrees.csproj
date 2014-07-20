@@ -52,10 +52,6 @@
     <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\IImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\RegressionImpurityCalculator.cs" />
-    <Compile Include="LeafFactories\LaplaceAdjustedClassificationLeafFactory.cs" />
-    <Compile Include="LeafFactories\ClassificationLeafFactory.cs" />
-    <Compile Include="LeafFactories\ILeafFactory.cs" />
-    <Compile Include="LeafFactories\RegressionLeafFactory.cs" />
     <Compile Include="Learners\DecisionTreeLearner.cs" />
     <Compile Include="Learners\ClassificationDecisionTreeLearner.cs" />
     <Compile Include="Models\ClassificationDecisionTreeModel.cs" />
