@@ -185,16 +185,11 @@ namespace SharpLearning.DecisionTrees.Learners
             m_impurityCalculator.Init(uniqueValues, m_workTargets, m_workWeights, allInterval);
             var rootImpurity = m_impurityCalculator.NodeImpurity();
 
-            //Todo - move to loop so new feature can be selected at each split
-
-
             var stack = new Stack<DecisionNodeCreationItem>(m_maximumTreeDepth);
             stack.Push(new DecisionNodeCreationItem(null, NodePositionType.Root, allInterval, rootImpurity, 0));
 
             var first = true;
             IBinaryDecisionNode root = null;
-
-           // m_featureCandidateSelector.Select(m_featuresPrSplit, observations.GetNumberOfColumns(), m_featureCandidates);
 
             while (stack.Count > 0)
             {
@@ -253,13 +248,20 @@ namespace SharpLearning.DecisionTrees.Learners
                 if(isLeaf)
                 {
                     m_bestSplitWorkIndices.IndexedCopy(targets, parentInterval, m_workTargets);
+
+                    if (weights.Length != 0)
+                    {
+                        m_bestSplitWorkIndices.IndexedCopy(weights, parentInterval, m_workWeights);
+                    }
+                    
                     m_impurityCalculator.UpdateInterval(parentInterval);
+                    var value = m_impurityCalculator.LeafValue(); 
 
                     var leaf = new LeafBinaryDecisionNode(m_impurityCalculator.LeafProbabilities())
                     {
                         Parent = parentNode,
                         FeatureIndex = -1,
-                        Value = m_impurityCalculator.LeafValue()
+                        Value = value
                     };
 
                     parentNode.AddChild(parentNodePositionType, leaf);
@@ -301,7 +303,7 @@ namespace SharpLearning.DecisionTrees.Learners
             return root;
         }
 
-        public void SetNextFeatures(int totalNumberOfFeature)
+        void SetNextFeatures(int totalNumberOfFeature)
         {
             if(m_featuresPrSplit != totalNumberOfFeature)
             {

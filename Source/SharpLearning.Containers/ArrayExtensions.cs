@@ -161,6 +161,25 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// Calculates the weighted mean
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static double WeightedMean(this double[] array, double[] weights)
+        {
+            var mean = 0.0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                mean += array[i] * weights[i];
+            }
+
+            mean = mean / weights.Sum();
+
+            return mean;
+        }
+
+        /// <summary>
         /// Shuffles the array in random order
         /// </summary>
         /// <typeparam name="T"></typeparam>
