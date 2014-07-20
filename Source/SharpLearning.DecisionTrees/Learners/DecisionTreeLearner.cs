@@ -19,7 +19,6 @@ namespace SharpLearning.DecisionTrees.Learners
     {
         readonly ISplitSearcher m_splitSearcher;
         readonly IImpurityCalculator m_impurityCalculator;
-        readonly IFeatureCandidateSelector m_featureCandidateSelector;
         
         readonly double m_minimumInformationGain;
         readonly int m_featuresPrSplit;
@@ -28,9 +27,15 @@ namespace SharpLearning.DecisionTrees.Learners
         double[] m_workFeature = new double[0];
         double[] m_workWeights = new double[0];
         int[] m_workIndices = new int[0];
-        List<int> m_featureCandidates = new List<int>();
+
+        int[] m_allFeatureIndices = new int[0];
+        int[] m_featureCandidates = new int[0];
+
         int[] m_bestSplitWorkIndices = new int[0];
         int m_maximumTreeDepth;
+
+        Random m_random;
+        bool m_featuresCandidatesSet = false;
 
         // Variable importances are based on the work each variable does (information gain).
         // the scores at each split is scaled by the amount of data the node splits
@@ -46,14 +51,14 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
+        /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
+        /// to the total amount of features in observations. The features will be selected at random for each split</param>
         /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
         /// <param name="impurityCalculator">Impurity calculator used to decide which split is optimal</param>
-        /// <param name="featureCandidateSelector">The feature candidate selector used to decide which feature indices the learner can choose from at each split</param>
-        public DecisionTreeLearner(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain,
-            ISplitSearcher splitSearcher, IImpurityCalculator impurityCalculator, IFeatureCandidateSelector featureCandidateSelector)
+        public DecisionTreeLearner(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain, int seed,
+            ISplitSearcher splitSearcher, IImpurityCalculator impurityCalculator)
         {
             if (splitSearcher == null) { throw new ArgumentException("splitSearcher"); }
-            if (featureCandidateSelector == null) { throw new ArgumentNullException("featureCandidateSelector"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (featuresPrSplit < 1) { throw new ArgumentException("features pr split must be at least 1"); }
@@ -63,8 +68,9 @@ namespace SharpLearning.DecisionTrees.Learners
             m_featuresPrSplit = featuresPrSplit;
             m_splitSearcher = splitSearcher;
             m_impurityCalculator = impurityCalculator;
-            m_featureCandidateSelector = featureCandidateSelector;
             m_minimumInformationGain = minimumInformationGain;
+
+            m_random = new Random(seed);
         }
 
         /// <summary>
@@ -151,10 +157,18 @@ namespace SharpLearning.DecisionTrees.Learners
             Array.Resize(ref m_workFeature, indices.Length);
             Array.Resize(ref m_workIndices, indices.Length);
 
+            var numberOfFeatures = observations.GetNumberOfColumns();
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
-            Array.Resize(ref m_variableImportance, observations.GetNumberOfColumns());
+            Array.Resize(ref m_variableImportance, numberOfFeatures);
+            Array.Resize(ref m_allFeatureIndices, numberOfFeatures);
+            Array.Resize(ref m_featureCandidates, m_featuresPrSplit);
 
-            m_featureCandidates.Clear();
+            m_featuresCandidatesSet = false;
+
+            for (int i = 0; i < m_allFeatureIndices.Length; i++)
+            {
+                m_allFeatureIndices[i] = i;
+            }
 
             var allInterval = Interval1D.Create(0, indices.Length);
 
@@ -173,13 +187,15 @@ namespace SharpLearning.DecisionTrees.Learners
             var rootImpurity = m_impurityCalculator.NodeImpurity();
 
             //Todo - move to loop so new feature can be selected at each split
-            m_featureCandidateSelector.Select(m_featuresPrSplit, observations.GetNumberOfColumns(), m_featureCandidates);
+
 
             var stack = new Stack<DecisionNodeCreationItem>(m_maximumTreeDepth);
             stack.Push(new DecisionNodeCreationItem(null, NodePositionType.Root, allInterval, rootImpurity, 0));
 
             var first = true;
             IBinaryDecisionNode root = null;
+
+           // m_featureCandidateSelector.Select(m_featuresPrSplit, observations.GetNumberOfColumns(), m_featureCandidates);
 
             while (stack.Count > 0)
             {
@@ -203,6 +219,8 @@ namespace SharpLearning.DecisionTrees.Learners
 
                 if(!isLeaf)
                 {
+                    SetNextFeatures(numberOfFeatures);
+
                     foreach (var featureIndex in m_featureCandidates)
                     {
                         m_workIndices.IndexedCopy(observations.ColumnView(featureIndex), parentInterval, m_workFeature);
@@ -282,6 +300,23 @@ namespace SharpLearning.DecisionTrees.Learners
             }
 
             return root;
+        }
+
+        public void SetNextFeatures(int totalNumberOfFeature)
+        {
+            if(m_featuresPrSplit != totalNumberOfFeature)
+            {
+                m_allFeatureIndices.Shuffle(m_random);
+                Array.Copy(m_allFeatureIndices, m_featureCandidates, 
+                    m_featuresPrSplit);
+            }
+            else if(!m_featuresCandidatesSet)
+            {
+                Array.Copy(m_allFeatureIndices, m_featureCandidates, 
+                    m_allFeatureIndices.Length);
+
+                m_featuresCandidatesSet = true;
+            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
             var predictions = new double[rows];
@@ -45,7 +45,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -64,7 +64,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
             var indices = new int[] { 0, 3, 4, 5, 6, 7, 8, 9, 20, 21 };
@@ -86,7 +86,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
             var actual = new ProbabilityPrediction[rows];
@@ -112,7 +112,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.PredictProbability(observations);
@@ -133,7 +133,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(5, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
             var indices = new int[] { 0, 3, 4, 5, 6, 7, 8, 9, 20, 21 };
@@ -157,7 +157,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, { "PreviousExperience_month", 1 } };
 
-            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
             
             var actual = sut.GetVariableImportance(featureNameToIndex);
@@ -180,7 +180,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001);
+            var learner = new ClassificationDecisionTreeLearner(1, 100, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();

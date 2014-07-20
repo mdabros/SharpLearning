@@ -128,10 +128,9 @@ namespace SharpLearning.RandomForest.Learners
             }
             
             var learner = new DecisionTreeLearner(m_maximumTreeDepth, 
-                m_featuresPrSplit, m_minimumInformationGain,
+                m_featuresPrSplit, m_minimumInformationGain, random.Next(),
                 new LinearSplitSearcher(m_minimumSplitSize),
-                new GiniClasificationImpurityCalculator(),
-                new RandomFeatureCandidateSelector(random.Next()));
+                new GiniClasificationImpurityCalculator());
 
             var model = new ClassificationDecisionTreeModel(learner.Learn(observations, targets, treeIndices),
                 learner.m_variableImportance);

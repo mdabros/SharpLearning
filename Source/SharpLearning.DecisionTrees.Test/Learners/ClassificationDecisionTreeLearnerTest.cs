@@ -134,7 +134,8 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, observations.GetNumberOfColumns(), 0.001);
+            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, observations.GetNumberOfColumns(), 
+                0.001, 42);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -151,7 +152,8 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, 2, 0.001);
+            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, 2, 0.001, 
+                42);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -169,7 +171,8 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var rows = targets.Length;
 
             var weights = targets.Select(v => Weight(v, 1, weight)).ToArray();
-            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, observations.GetNumberOfColumns(), 0.001);
+            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, observations.GetNumberOfColumns(), 
+                0.001, 42);
             var model = sut.Learn(observations, targets, weights);
 
             var predictions = model.Predict(observations);
@@ -187,7 +190,8 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var rows = targets.Length;
 
             var weights = targets.Select(v => Weight(v, 0, weight)).ToArray();
-            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, 2, 0.001);
+            var sut = new ClassificationDecisionTreeLearner(1, treeDepth, 2, 
+                0.001, 42);
             var model = sut.Learn(observations, targets, weights);
 
             var predictions = model.Predict(observations);
@@ -228,7 +232,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
                 }
             }
 
-            var sut = new ClassificationDecisionTreeLearner(1, 100, cols, 0.000000001);
+            var sut = new ClassificationDecisionTreeLearner(1, 100, cols, 0.000000001, 42);
             var timer = new Stopwatch();
             timer.Start();
             var model = sut.Learn(observations, targets);
