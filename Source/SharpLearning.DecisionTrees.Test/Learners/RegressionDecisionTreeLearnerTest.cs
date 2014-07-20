@@ -71,7 +71,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("T").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionDecisionTreeLearner(4, treeDepth, 2, 0.1, 42);
+            var sut = new RegressionDecisionTreeLearner(treeDepth, 4, 2, 0.1, 42);
 
             var model = sut.Learn(observations, targets);
 
@@ -89,7 +89,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("T").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionDecisionTreeLearner(4, treeDepth, 2, 0.1, 42);
+            var sut = new RegressionDecisionTreeLearner(treeDepth, 4, 2, 0.1, 42);
             var weights = targets.Select(v => Weight(v, weight)).ToArray();
             var model = sut.Learn(observations, targets, weights);
 
@@ -130,7 +130,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
                 }
             }
 
-            var sut = new RegressionDecisionTreeLearner(1, 100, cols, 0.00000001, 42);
+            var sut = new RegressionDecisionTreeLearner(100, 1, cols, 0.00000001, 42);
             var timer = new Stopwatch();
             timer.Start();
             var model = sut.Learn(observations, targets);

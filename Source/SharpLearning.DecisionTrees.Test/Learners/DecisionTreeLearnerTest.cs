@@ -23,7 +23,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         [ExpectedException(typeof(ArgumentException))]
         public void DecisionTreeLearner_InvalidFeaturesPrSplit()
         {
-            new DecisionTreeLearner(1, 0, 0.1, 42,
+            new DecisionTreeLearner(1, -1, 0.1, 42,
                 new LinearSplitSearcher(1),
                 new GiniClasificationImpurityCalculator());
         }

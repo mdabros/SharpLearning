@@ -20,7 +20,7 @@ namespace SharpLearning.RandomForest.Learners
     public sealed class ClassificationRandomForestLearner
     {
         readonly int m_trees;
-        readonly int m_featuresPrSplit;
+        int m_featuresPrSplit;
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
         readonly int m_maximumTreeDepth;
@@ -34,15 +34,15 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="trees">Number of trees to use in the ensemble</param>
         /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
-        /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
+        /// <param name="featuresPrSplit">Number of features used at each split in each tree. 0 means Sqrt(of availible features)</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public ClassificationRandomForestLearner(int trees, int minimumSplitSize, int maximumTreeDepth, 
-            int featuresPrSplit, double minimumInformationGain, int seed, int numberOfThreads)
+        public ClassificationRandomForestLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000,
+            int featuresPrSplit = 0, double minimumInformationGain = 0.000001, int seed = 42, int numberOfThreads = 1)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
-            if (featuresPrSplit < 1) { throw new ArgumentException("features pr split must be at least 1"); }
+            if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 1"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
@@ -68,8 +68,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public ClassificationRandomForestLearner(int trees = 50, int minimumSplitSize = 5, int maximumTreeDepth = 100, 
-            int featuresPrSplit = 3, double minimumInformationGain = 0.0001, int seed = 42)
+        public ClassificationRandomForestLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000, 
+            int featuresPrSplit = 0, double minimumInformationGain = .000001, int seed = 42)
           : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain, 
             seed, Environment.ProcessorCount)
         {
@@ -82,7 +82,12 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="targets"></param>
         /// <returns></returns>
         public ClassificationRandomForestModel Learn(F64Matrix observations, double[] targets)
-        {          
+        {   
+            if(m_featuresPrSplit == 0)
+            {
+                m_featuresPrSplit = observations.GetNumberOfColumns();
+            }
+            
             var results = new ConcurrentBag<ClassificationDecisionTreeModel>();
             var tasks = new ConcurrentQueue<Action<ConcurrentBag<ClassificationDecisionTreeModel>>>();
             

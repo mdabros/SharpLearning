@@ -20,7 +20,7 @@ namespace SharpLearning.DecisionTrees.Learners
         readonly IImpurityCalculator m_impurityCalculator;
         
         readonly double m_minimumInformationGain;
-        readonly int m_featuresPrSplit;
+        int m_featuresPrSplit;
 
         double[] m_workTargets = new double[0];
         double[] m_workFeature = new double[0];
@@ -48,7 +48,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// 
         /// </summary>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
-        /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
+        /// <param name="featuresPrSplit">The number of features to be selected between at each split. 
+        /// 0 means use all availible features</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
@@ -60,7 +61,7 @@ namespace SharpLearning.DecisionTrees.Learners
             if (splitSearcher == null) { throw new ArgumentException("splitSearcher"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
-            if (featuresPrSplit < 1) { throw new ArgumentException("features pr split must be at least 1"); }
+            if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 0"); }
             if (impurityCalculator == null) { throw new ArgumentException("impurityCalculator"); }
 
             m_maximumTreeDepth = maximumTreeDepth;
@@ -157,6 +158,12 @@ namespace SharpLearning.DecisionTrees.Learners
             Array.Resize(ref m_workIndices, indices.Length);
 
             var numberOfFeatures = observations.GetNumberOfColumns();
+
+            if(m_featuresPrSplit == 0)
+            {
+                m_featuresPrSplit = numberOfFeatures;
+            }
+
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
             Array.Resize(ref m_variableImportance, numberOfFeatures);
             Array.Resize(ref m_allFeatureIndices, numberOfFeatures);
@@ -185,7 +192,7 @@ namespace SharpLearning.DecisionTrees.Learners
             m_impurityCalculator.Init(uniqueValues, m_workTargets, m_workWeights, allInterval);
             var rootImpurity = m_impurityCalculator.NodeImpurity();
 
-            var stack = new Stack<DecisionNodeCreationItem>(m_maximumTreeDepth);
+            var stack = new Stack<DecisionNodeCreationItem>(100);
             stack.Push(new DecisionNodeCreationItem(null, NodePositionType.Root, allInterval, rootImpurity, 0));
 
             var first = true;
