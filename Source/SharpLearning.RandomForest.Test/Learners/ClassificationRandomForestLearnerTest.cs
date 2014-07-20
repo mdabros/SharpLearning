@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
 using SharpLearning.RandomForest.Learners;
@@ -55,6 +56,31 @@ namespace SharpLearning.RandomForest.Test.Learners
         {
             var error = ClassificationRandomForestLearner_Learn_Glass(100);
             Assert.AreEqual(0.02336448598130841, error, 0.0000001);
+        }
+
+        [TestMethod]
+        public void ClassificationRandomForestLearner_Learn_Glass_100_Indices()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var rows = targets.Length;
+
+            var sut = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 42, 1);
+            
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            indices.Shuffle(new Random(42));
+            indices = indices.Take((int)(targets.Length * 0.7))
+                .ToArray();
+
+            var model = sut.Learn(observations, targets, indices);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var error = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.10747663551401869, error, 0.0000001);
         }
 
         double ClassificationRandomForestLearner_Learn_Glass(int trees)

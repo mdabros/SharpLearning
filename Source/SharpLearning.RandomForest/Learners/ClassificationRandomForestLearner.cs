@@ -82,18 +82,30 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="targets"></param>
         /// <returns></returns>
         public ClassificationRandomForestModel Learn(F64Matrix observations, double[] targets)
-        {   
-            if(m_featuresPrSplit == 0)
+        {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Learns a classification random forest
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public ClassificationRandomForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            if (m_featuresPrSplit == 0)
             {
                 m_featuresPrSplit = observations.GetNumberOfColumns();
             }
-            
+
             var results = new ConcurrentBag<ClassificationDecisionTreeModel>();
             var tasks = new ConcurrentQueue<Action<ConcurrentBag<ClassificationDecisionTreeModel>>>();
-            
+
             for (int i = 0; i < m_trees; i++)
             {
-                tasks.Enqueue((r) => CreateTreeModel(observations, targets, 
+                tasks.Enqueue((r) => CreateTreeModel(observations, targets, indices,
                     new Random(m_random.Next()), r));
             }
 
@@ -121,14 +133,14 @@ namespace SharpLearning.RandomForest.Learners
             return rawVariableImportance;
         }
 
-        void CreateTreeModel(F64Matrix observations, double[] targets, Random random, 
+        void CreateTreeModel(F64Matrix observations, double[] targets, int[] indices, Random random, 
             ConcurrentBag<ClassificationDecisionTreeModel> models)
         {
-            var treeIndices = new int[targets.Length];
+            var treeIndices = new int[indices.Length];
 
-            for (int j = 0; j < treeIndices.Length; j++)
+            for (int j = 0; j < indices.Length; j++)
             {
-                treeIndices[j] = random.Next(treeIndices.Length);
+                treeIndices[j] = indices[random.Next(treeIndices.Length)];
             }
             
             var learner = new DecisionTreeLearner(m_maximumTreeDepth, 
