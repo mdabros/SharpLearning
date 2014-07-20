@@ -34,7 +34,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
-        /// 
+        /// Initialize the calculator with targets, weights and work interval
         /// </summary>
         /// <param name="uniqueTargets"></param>
         /// <param name="targets"></param>
