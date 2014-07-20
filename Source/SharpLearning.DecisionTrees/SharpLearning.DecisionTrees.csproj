@@ -46,7 +46,6 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="FeatureCandidateSelectors\RandomFeatureCandidateSelector.cs" />
     <Compile Include="ImpurityCalculators\ChildImpurities.cs" />
     <Compile Include="ImpurityCalculators\ClasificationImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculator.cs" />
@@ -60,9 +59,7 @@
     <Compile Include="Nodes\LeafBinaryDecisionNode.cs" />
     <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
     <Compile Include="Learners\RegressionDecisionTreeLearner.cs" />
-    <Compile Include="FeatureCandidateSelectors\AllFeatureCandidateSelector.cs" />
     <Compile Include="SplitSearchers\FeatureSplit.cs" />
-    <Compile Include="FeatureCandidateSelectors\IFeatureCandidateSelector.cs" />
     <Compile Include="Nodes\BinaryDicisionNodeBase.cs" />
     <Compile Include="Nodes\ContinousBinaryDecisionNode.cs" />
     <Compile Include="Nodes\IBinaryDecisionNode.cs" />

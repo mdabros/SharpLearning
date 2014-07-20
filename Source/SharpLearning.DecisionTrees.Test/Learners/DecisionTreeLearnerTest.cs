@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Metrics.Entropy;
-using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 

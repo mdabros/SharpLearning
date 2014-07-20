@@ -57,8 +57,6 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="FeatureCandidateSelectors\AllCandidateSelectorTest.cs" />
-    <Compile Include="FeatureCandidateSelectors\RandomFeatureCandidateSelectorTest.cs" />
     <Compile Include="ImpurityCalculators\ChildImpuritiesTest.cs" />
     <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculatorTest.cs" />
     <Compile Include="ImpurityCalculators\RegressionImpurityCalculatorTest.cs" />

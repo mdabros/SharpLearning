@@ -1,7 +1,6 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
-using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.Nodes;
 using System;
 using System.Collections.Generic;

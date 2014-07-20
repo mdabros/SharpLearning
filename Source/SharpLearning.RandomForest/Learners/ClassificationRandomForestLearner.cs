@@ -1,5 +1,4 @@
 ﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.DecisionTrees.FeatureCandidateSelectors;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
