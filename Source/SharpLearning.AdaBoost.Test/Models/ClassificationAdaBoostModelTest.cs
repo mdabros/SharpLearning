@@ -86,7 +86,7 @@ namespace SharpLearning.AdaBoost.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationAdaBoostLearner(10);
+            var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
 
             var actual = new ProbabilityPrediction[rows];
@@ -112,7 +112,7 @@ namespace SharpLearning.AdaBoost.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationAdaBoostLearner(10);
+            var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.PredictProbability(observations);
@@ -133,7 +133,7 @@ namespace SharpLearning.AdaBoost.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationAdaBoostLearner(10);
+            var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
 
             var indices = new int[] { 0, 3, 4, 5, 6, 7, 8, 9, 20, 21 };
@@ -158,7 +158,7 @@ namespace SharpLearning.AdaBoost.Test.Models
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
-            var learner = new ClassificationAdaBoostLearner(10);
+            var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
@@ -182,7 +182,7 @@ namespace SharpLearning.AdaBoost.Test.Models
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var learner = new ClassificationAdaBoostLearner(10);
+            var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();

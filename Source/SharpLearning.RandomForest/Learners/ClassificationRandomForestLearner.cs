@@ -38,8 +38,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public ClassificationRandomForestLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000,
-            int featuresPrSplit = 0, double minimumInformationGain = 0.000001, int seed = 42, int numberOfThreads = 1)
+        public ClassificationRandomForestLearner(int trees, int minimumSplitSize, int maximumTreeDepth,
+            int featuresPrSplit, double minimumInformationGain, int seed, int numberOfThreads)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 1"); }
@@ -97,7 +97,8 @@ namespace SharpLearning.RandomForest.Learners
         {
             if (m_featuresPrSplit == 0)
             {
-                m_featuresPrSplit = observations.GetNumberOfColumns();
+                var count = (int)Math.Sqrt(observations.GetNumberOfColumns());
+                m_featuresPrSplit = count <= 0 ? 1 : count;
             }
 
             var results = new ConcurrentBag<ClassificationDecisionTreeModel>();

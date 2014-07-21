@@ -23,7 +23,7 @@ namespace SharpLearning.AdaBoost.Learning
         readonly double m_learningRate;
 
         readonly int m_minimumSplitSize;
-        readonly int m_maximumTreeDepth;
+        int m_maximumTreeDepth;
         readonly double m_minimumInformationGain;
 
         int m_uniqueTargetValues;
@@ -46,15 +46,16 @@ namespace SharpLearning.AdaBoost.Learning
         /// <param name="iterations">Number of iterations (models) to boost</param>
         /// <param name="learningRate">How much each boost iteration should add (between 1.0 and 0.0)</param>
         /// <param name="maximumTreeDepth">The maximum depth of the tree models. 
-        /// for 2 class problem 1 is usually enough. For more classes or larger problems between 3 to 8 is recommended</param>
+        /// for 2 class problem 1 is usually enough. For more classes or larger problems between 3 to 8 is recommended. 
+        /// 0 will set the depth equal to the number of classes in the problem</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public ClassificationAdaBoostLearner(int iterations = 50, double learningRate = 1, int maximumTreeDepth = 3, int minimumSplitSize = 1, double minimumInformationGain = 0.000001)
+        public ClassificationAdaBoostLearner(int iterations = 50, double learningRate = 1, int maximumTreeDepth = 0, int minimumSplitSize = 1, double minimumInformationGain = 0.000001)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (learningRate > 1.0 || learningRate <= 0) { throw new ArgumentException("learningRate must be larger than zero and smaller than 1.0"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
-            if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
+            if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             
             m_iterations = iterations;
@@ -85,23 +86,28 @@ namespace SharpLearning.AdaBoost.Learning
         /// <returns></returns>
         public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            m_modelLearner = new DecisionTreeLearner(m_maximumTreeDepth, observations.GetNumberOfColumns(),
-                m_minimumInformationGain, 42,
-                new OnlyUniqueThresholdsSplitSearcher(m_minimumSplitSize),
-                new GiniClasificationImpurityCalculator());
-
             var uniques = new HashSet<double>();
 
             for (int i = 0; i < indices.Length; i++)
             {
                 var value = targets[i];
-                if(!uniques.Contains(value))
+                if (!uniques.Contains(value))
                 {
                     uniques.Add(value);
                 }
             }
 
             m_uniqueTargetValues = uniques.Count;
+
+            if (m_maximumTreeDepth == 0)
+            {
+                m_maximumTreeDepth = m_uniqueTargetValues;
+            }
+            
+            m_modelLearner = new DecisionTreeLearner(m_maximumTreeDepth, observations.GetNumberOfColumns(),
+                m_minimumInformationGain, 42,
+                new OnlyUniqueThresholdsSplitSearcher(m_minimumSplitSize),
+                new GiniClasificationImpurityCalculator());
 
             m_modelErrors.Clear();
             m_modelWeights.Clear();
