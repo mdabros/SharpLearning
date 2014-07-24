@@ -10,7 +10,8 @@ namespace SharpLearning.Containers.Test.Matrices
     public class F64MatrixExtensionsTest
     {
         readonly double[] InputData = new double[] { 1, 2, 3, 4, 5, 6 };
-        readonly double[] CombineData = new double[] { 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6 };
+        readonly double[] CombineDataCol = new double[] { 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6 };
+        readonly double[] CombineDataRows = new double[] { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6 };
 
         [TestMethod]
         public void F64MatrixExtensions_ToStringMatrix()
@@ -30,7 +31,7 @@ namespace SharpLearning.Containers.Test.Matrices
 
             var actual = matrix1.CombineCols(matrix2);
 
-            Assert.AreEqual(new F64Matrix(CombineData, 2, 6), actual);
+            Assert.AreEqual(new F64Matrix(CombineDataCol, 2, 6), actual);
         }
 
         [TestMethod]
@@ -54,6 +55,41 @@ namespace SharpLearning.Containers.Test.Matrices
 
             var actual = v1.CombineCols(v2);
             Assert.AreEqual(new F64Matrix(new double[] { 1, 1, 2, 2, 3, 3, 4, 4}, 4, 2), actual);
+        }
+
+        [TestMethod]
+        public void F64MatrixExtensions_CombineRows_VectorAndVector()
+        {
+            var v1 = new double[] { 1, 2, 3, 4 };
+            var v2 = new double[] { 1, 2, 3, 4 };
+
+            var actual = v1.CombineRows(v2);
+            Assert.AreEqual(new F64Matrix(new double[] { 1, 2, 3, 4, 1, 2, 3, 4 }, 2, 4), actual);
+        }
+
+        [TestMethod]
+        public void F64MatrixExtensions_CombineRows_F64MatrixAndVector()
+        {
+            var matrix = new F64Matrix(InputData, 2, 3);
+            var vector = new double[] { 3, 6, 7 };
+
+            var expected = new F64Matrix(new double[] {1, 2, 3, 
+                                                       4, 5, 6, 
+                                                       3, 6, 7}, 3, 3);
+            var actual = matrix.CombineRows(vector);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void F64MatrixExtensions_CombineRows_F64Matrices()
+        {
+            var matrix1 = new F64Matrix(InputData, 2, 3);
+            var matrix2 = new F64Matrix(InputData, 2, 3);
+
+            var actual = matrix1.CombineRows(matrix2);
+
+            Assert.AreEqual(new F64Matrix(CombineDataRows, 4, 3), actual);
         }
     }
 }
