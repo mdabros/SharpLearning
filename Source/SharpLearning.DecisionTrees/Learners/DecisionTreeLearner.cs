@@ -233,8 +233,6 @@ namespace SharpLearning.DecisionTrees.Learners
                             m_workIndices.IndexedCopy(weights, parentInterval, m_workWeights);
                         }
 
-                        m_impurityCalculator.UpdateInterval(parentInterval);
-
                         var splitResult = m_splitSearcher.FindBestSplit(m_impurityCalculator, m_workFeature, 
                             m_workTargets, parentInterval, parentImpurity);
 

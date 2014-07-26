@@ -61,7 +61,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
             var prevValue = feature[prevSplit];
             var prevTarget = targets[prevSplit];
 
-            impurityCalculator.Reset();
+            impurityCalculator.UpdateInterval(parentInterval);
 
             for (int j = prevSplit + 1; j < parentInterval.ToExclusive; j++)
             {

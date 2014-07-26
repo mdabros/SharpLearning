@@ -67,7 +67,6 @@
     <Compile Include="SplitSearchers\OnlyUniqueThresholdsSplitSearcher.cs" />
     <Compile Include="SplitSearchers\SplitResult.cs" />
     <Compile Include="SplitSearchers\ISplitSearcher.cs" />
-    <Compile Include="SplitSearchers\BinarySplitSearcher.cs" />
     <Compile Include="SplitSearchers\LinearSplitSearcher.cs" />
   </ItemGroup>
   <ItemGroup>
