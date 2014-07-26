@@ -54,7 +54,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void ClassificationDecisionTreeLearner_Learn_Glass_Depth_5()
         {
             var error = ClassificationDecisionTreeLearner_Learn_Glass(5);
-            Assert.AreEqual(0.16822429906542055, error, 0.0000001);
+            Assert.AreEqual(0.16355140186915887, error, 0.0000001);
         }
 
         [TestMethod]
@@ -96,7 +96,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         public void ClassificationDecisionTreeLearner_Learn_Glass_Depth_5_Weight_1()
         {
             var error = ClassificationDecisionTreeLearner_Learn_Glass_Weighted(5, 1);
-            Assert.AreEqual(0.16822429906542055, error, 0.0000001);
+            Assert.AreEqual(0.16355140186915887, error, 0.0000001);
         }
 
         [TestMethod]
