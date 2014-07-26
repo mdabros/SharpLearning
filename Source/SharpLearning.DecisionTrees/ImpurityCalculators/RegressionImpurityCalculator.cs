@@ -28,9 +28,9 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         double m_sqSumRight = 0.0;
         double m_sqSumTotal = 0.0;
                
-        double m_varRight = 0.0;
         double m_varLeft = 0.0;
-               
+        double m_varRight = 0.0;
+       
         double m_sumLeft = 0.0;
         double m_sumRight = 0.0;
         double m_sumTotal = 0.0;
@@ -60,9 +60,6 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_weights = weights;
             m_interval = interval;
 
-            var w = 1.0;
-            var weightsPresent = m_weights.Length != 0;
-
             m_weightedTotal = 0.0;
             m_weightedLeft = 0.0;
             m_weightedRight = 0.0;
@@ -81,6 +78,9 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_sumLeft = 0.0;
             m_sumRight = 0.0;
             m_sumTotal = 0.0;
+
+            var w = 1.0;
+            var weightsPresent = m_weights.Length != 0;
 
             for (int i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
             {
@@ -201,13 +201,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <returns></returns>
         public ChildImpurities ChildImpurities()
         {
-            var impurityLeft = (m_sqSumLeft / m_weightedLeft -
-                m_meanLeft * m_meanLeft);
-
-            var impurityRight = (m_sqSumRight / m_weightedRight -
-                m_meanRight * m_meanRight); ;
-            
-            return new ChildImpurities(impurityLeft, impurityRight);
+            return new ChildImpurities(m_varLeft, m_varRight);
         }
 
         /// <summary>

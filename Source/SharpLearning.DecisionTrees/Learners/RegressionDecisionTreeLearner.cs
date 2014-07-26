@@ -21,7 +21,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
-        public RegressionDecisionTreeLearner(int maximumTreeDepth=2000, int minimumSplitSize=5, int featuresPrSplit=0, double minimumInformationGain=0.000001, int seed=42)
+        public RegressionDecisionTreeLearner(int maximumTreeDepth=2000, int minimumSplitSize=1, int featuresPrSplit=0, double minimumInformationGain=0.000001, int seed=42)
             : base(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, new LinearSplitSearcher(minimumSplitSize), 
                 new RegressionImpurityCalculator())
         {
