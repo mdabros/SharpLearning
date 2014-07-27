@@ -65,6 +65,8 @@
     <Compile Include="Learners\RegressionDecisionTreeLearnerTest.cs" />
     <Compile Include="Models\ClassificationDecisionTreeModelTest.cs" />
     <Compile Include="Models\RegressionDecisionTreeModelTest.cs" />
+    <Compile Include="Nodes\LeafNodeFactoryTest.cs" />
+    <Compile Include="Nodes\NodeExtensionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -109,9 +111,7 @@
   <ItemGroup>
     <None Include="Resources\Glass.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Nodes\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
