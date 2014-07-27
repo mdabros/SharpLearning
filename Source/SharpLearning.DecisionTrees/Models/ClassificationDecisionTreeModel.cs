@@ -12,10 +12,10 @@ namespace SharpLearning.DecisionTrees.Models
     /// </summary>
     public sealed class ClassificationDecisionTreeModel
     {
-        readonly IBinaryDecisionNode m_root;
+        readonly BinaryTree m_root;
         readonly double[] m_variableImportance;
 
-        public ClassificationDecisionTreeModel(IBinaryDecisionNode root, double[] variableImprotance)
+        public ClassificationDecisionTreeModel(BinaryTree root, double[] variableImprotance)
         {
             if (root == null) { throw new ArgumentNullException("root"); }
             if (variableImprotance == null) { throw new ArgumentException("variableImprotance"); }

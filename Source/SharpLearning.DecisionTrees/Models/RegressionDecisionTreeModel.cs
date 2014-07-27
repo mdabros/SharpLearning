@@ -11,10 +11,10 @@ namespace SharpLearning.DecisionTrees.Models
     /// </summary>
     public sealed class RegressionDecisionTreeModel
     {
-        readonly IBinaryDecisionNode m_root;
+        readonly BinaryTree m_root;
         readonly double[] m_variableImportance;
 
-        public RegressionDecisionTreeModel(IBinaryDecisionNode root, double[] variableImportance)
+        public RegressionDecisionTreeModel(BinaryTree root, double[] variableImportance)
         {
             if (root == null) { throw new ArgumentNullException("root"); }
             if (variableImportance == null) { throw new ArgumentException("variableImportance"); }

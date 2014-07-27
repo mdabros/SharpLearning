@@ -2,6 +2,7 @@
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.DecisionTrees.SplitSearchers;
 
 namespace SharpLearning.DecisionTrees.Learners
@@ -103,6 +104,5 @@ namespace SharpLearning.DecisionTrees.Learners
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights), m_variableImportance);
         }
-
     }
 }

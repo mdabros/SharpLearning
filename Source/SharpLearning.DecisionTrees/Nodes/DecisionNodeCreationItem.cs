@@ -9,15 +9,15 @@ namespace SharpLearning.DecisionTrees.Nodes
     /// </summary>
     public struct DecisionNodeCreationItem
     {
-        public readonly IBinaryDecisionNode Parent;
+        public readonly int ParentIndex;
         public readonly NodePositionType NodeType;
         public readonly Interval1D Interval;
         public readonly double Impurity;
         public readonly int NodeDepth;
 
-        public DecisionNodeCreationItem(IBinaryDecisionNode node, NodePositionType nodeType, Interval1D interval, double impurity, int nodeDepth)
+        public DecisionNodeCreationItem(int parentIndex, NodePositionType nodeType, Interval1D interval, double impurity, int nodeDepth)
         {
-            Parent = node;
+            ParentIndex = parentIndex;
             NodeType = nodeType;
             Interval = interval;
             Impurity = impurity;

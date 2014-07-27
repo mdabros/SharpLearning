@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -55,14 +57,14 @@
     <Compile Include="Learners\ClassificationDecisionTreeLearner.cs" />
     <Compile Include="Models\ClassificationDecisionTreeModel.cs" />
     <Compile Include="Models\RegressionDecisionTreeModel.cs" />
-    <Compile Include="Nodes\BinaryDecisionNodeExtensions.cs" />
-    <Compile Include="Nodes\LeafBinaryDecisionNode.cs" />
+    <Compile Include="Nodes\INode.cs" />
+    <Compile Include="Nodes\LeafNode.cs" />
     <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
     <Compile Include="Learners\RegressionDecisionTreeLearner.cs" />
+    <Compile Include="Nodes\SplitNode.cs" />
+    <Compile Include="Nodes\NodeExtensions.cs" />
+    <Compile Include="Nodes\BinaryTree.cs" />
     <Compile Include="SplitSearchers\FeatureSplit.cs" />
-    <Compile Include="Nodes\BinaryDicisionNodeBase.cs" />
-    <Compile Include="Nodes\ContinousBinaryDecisionNode.cs" />
-    <Compile Include="Nodes\IBinaryDecisionNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SplitSearchers\OnlyUniqueThresholdsSplitSearcher.cs" />
     <Compile Include="SplitSearchers\SplitResult.cs" />
