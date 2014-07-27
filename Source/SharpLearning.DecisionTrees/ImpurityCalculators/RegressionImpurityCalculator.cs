@@ -230,12 +230,20 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
+        /// Unique target names are not availible for regression
+        /// </summary>
+        public double[] TargetNames
+        {
+            get { return new double[0]; }
+        }
+
+        /// <summary>
         /// Probabilities are not availible for regression
         /// </summary>
         /// <returns></returns>
-        public Dictionary<double, double> LeafProbabilities()
+        public double[] LeafProbabilities()
         {
-            return new Dictionary<double, double>();
+            return new double[0];
         }
     }
 }

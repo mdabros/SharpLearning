@@ -8,6 +8,14 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// </summary>
     public sealed class GiniClasificationImpurityCalculator : ClasificationImpurityCalculator, IImpurityCalculator
     {
+        /// <summary>
+        /// Gets the unique target names
+        /// </summary>
+        public double[] TargetNames
+        {
+            get { return m_uniqueTargets; }
+        }
+
         public GiniClasificationImpurityCalculator()
         {
         }
@@ -94,18 +102,19 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
-        /// Laplace adjusted probabilities
+        /// Laplace adjusted probabilities. Same order as m_uniqueTargetNames
         /// </summary>
         /// <returns></returns>
-        public override Dictionary<double, double> LeafProbabilities()
+        public override double[] LeafProbabilities()
         {
-            var probabilities = new Dictionary<double, double>();
+            var probabilities = new double[m_uniqueTargets.Length];
             var probabilityFactor = 1.0 / (m_weightedTotal + m_uniqueTargets.Length);
 
-            foreach (int targetValue in m_uniqueTargets)
+            for (int i = 0; i < m_uniqueTargets.Length; i++)
             {
+                int targetValue = (int)m_uniqueTargets[i];
                 var targetProbability = (m_weightedTargetCount[targetValue] + 1) * probabilityFactor;
-                probabilities.Add(targetValue, targetProbability);
+                probabilities[i] = targetProbability;
             }
 
             return probabilities;

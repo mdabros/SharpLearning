@@ -271,7 +271,7 @@ namespace SharpLearning.DecisionTrees.Learners
                     m_impurityCalculator.UpdateInterval(parentInterval);
                     var value = m_impurityCalculator.LeafValue();
 
-                    var leaf = new LeafNode(-1, value, currentNodeIndex++,
+                    var leaf = new LeafNode(-1, value, currentNodeIndex++, m_impurityCalculator.TargetNames,
                         m_impurityCalculator.LeafProbabilities());
                     
                     nodes.Add(leaf);
@@ -303,7 +303,8 @@ namespace SharpLearning.DecisionTrees.Learners
                 m_impurityCalculator.UpdateInterval(allInterval);
 
                 var leaf = new LeafNode(-1, m_impurityCalculator.LeafValue(), 
-                    currentNodeIndex++, m_impurityCalculator.LeafProbabilities());
+                    currentNodeIndex++, m_impurityCalculator.TargetNames,
+                    m_impurityCalculator.LeafProbabilities());
 
                 nodes.Add(leaf);
             }

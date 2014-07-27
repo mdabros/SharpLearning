@@ -74,7 +74,16 @@ namespace SharpLearning.DecisionTrees.Nodes
         {
             if (node.FeatureIndex == -1.0)
             {
-                return new ProbabilityPrediction(node.Value, node.Probabilities);
+                var targets = node.TargetNames;
+                var probabilities = node.Probabilities;
+                var targetProbabilities = new Dictionary<double, double>();
+
+                for (int i = 0; i < targets.Length; i++)
+                {
+                    targetProbabilities.Add(targets[i], probabilities[i]);
+                }
+
+                return new ProbabilityPrediction(node.Value, targetProbabilities);
             }
 
             if (observation[node.FeatureIndex] <= node.Value)

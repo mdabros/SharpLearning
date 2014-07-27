@@ -8,15 +8,11 @@ namespace SharpLearning.DecisionTrees.Nodes
     /// </summary>
     public struct LeafNode : INode
     {
-        public readonly int m_featureIndex;
-        public readonly int m_nodeIndex;
-        public readonly double m_value;
-        public readonly Dictionary<double, double> m_probabilities;
-        
-        //Consider more memory efficient alternative to dictionary
-
-        //public readonly double[] Targets;
-        //public readonly double[] Probabilities;
+        readonly int m_featureIndex;
+        readonly int m_nodeIndex;
+        readonly double m_value;
+        readonly double[] m_targetNames;
+        readonly double[] m_probabilities;
 
         /// <summary>
         /// Feature index used for split
@@ -59,11 +55,20 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Probabilities if availible
+        /// The probability estimates. 
+        /// Order is same as TargetNames
         /// </summary>
-        public Dictionary<double, double> Probabilities
+        public double[] Probabilities
         {
             get { return m_probabilities; }
+        }
+
+        /// <summary>
+        /// The availible target names
+        /// </summary>
+        public double[] TargetNames
+        {
+            get { return m_targetNames; }
         }
 
         /// <summary>
@@ -73,12 +78,15 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="value"></param>
         /// <param name="nodeIndex"></param>
         /// <param name="probabilities"></param>
-        public LeafNode(int featureIndex, double value, int nodeIndex, Dictionary<double, double> probabilities)
+        public LeafNode(int featureIndex, double value, int nodeIndex, 
+            double[] targetNames, double[] probabilities)
         {
             m_featureIndex = featureIndex;
-            m_nodeIndex = nodeIndex;
-            m_probabilities = probabilities;
             m_value = value;
+            m_nodeIndex = nodeIndex;
+            m_targetNames = targetNames;
+            m_probabilities = probabilities;
+
         }
     }
 }

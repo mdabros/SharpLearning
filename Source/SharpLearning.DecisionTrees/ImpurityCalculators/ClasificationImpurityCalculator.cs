@@ -166,6 +166,6 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// Calculates the weighted leaf value
         /// </summary>
         /// <returns></returns>
-        public abstract Dictionary<double, double> LeafProbabilities();
+        public abstract double[] LeafProbabilities();
     }
 }

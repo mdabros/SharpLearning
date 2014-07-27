@@ -47,10 +47,16 @@ namespace SharpLearning.DecisionTrees.Nodes
         { get { return m_nodeIndex; } }
 
         /// <summary>
-        /// Probabilities are not supported in split node
+        /// Split nodes does not support probabilities
         /// </summary>
-        public Dictionary<double, double> Probabilities
+        public double[] Probabilities
         { get { throw new NotSupportedException("Split nodes does not support probabilities"); } }
+
+        /// <summary>
+        /// Split nodes does not support TargetNames
+        /// </summary>
+        public double[] TargetNames
+        { get { throw new NotSupportedException("Split nodes does not support TargetNames"); } }
 
         /// <summary>
         /// 

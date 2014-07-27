@@ -74,11 +74,17 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         double LeafValue();
 
         /// <summary>
+        /// Gets the unique target names
+        /// </summary>
+        double[] TargetNames { get; }
+
+        /// <summary>
         /// Calculates the probabilities based in the current work interval. 
         /// Note that LeafProbabilities are only valid for classification impurity calculators.
-        /// Regression impurity calculators will return and empy result.
+        /// Regression impurity calculators will return and empy result. The orders of the probabilities 
+        /// is the same as TargetNames.
         /// </summary>
         /// <returns></returns>
-        Dictionary<double, double> LeafProbabilities();
+        double[] LeafProbabilities();
     }
 }

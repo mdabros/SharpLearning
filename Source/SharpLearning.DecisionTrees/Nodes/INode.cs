@@ -33,8 +33,15 @@ namespace SharpLearning.DecisionTrees.Nodes
         int NodeIndex { get; }
 
         /// <summary>
-        /// Probabilities if availible
+        /// The probability estimates. 
+        /// Order is same as TargetNames
         /// </summary>
-        Dictionary<double, double> Probabilities { get; }
+        double[] Probabilities { get; }
+
+        /// <summary>
+        /// The availible target names
+        /// </summary>
+        double[] TargetNames { get; }
+        
     }
 }
