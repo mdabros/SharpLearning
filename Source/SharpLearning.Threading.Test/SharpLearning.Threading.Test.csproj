@@ -58,6 +58,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorkerRunnerTest.cs" />
     <Compile Include="ThreadedWorkerTest.cs" />
   </ItemGroup>
   <ItemGroup>

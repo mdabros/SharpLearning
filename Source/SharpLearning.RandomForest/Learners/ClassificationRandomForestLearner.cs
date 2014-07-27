@@ -8,6 +8,7 @@ using SharpLearning.RandomForest.Models;
 using SharpLearning.Threading;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.RandomForest.Learners
@@ -25,8 +26,9 @@ namespace SharpLearning.RandomForest.Learners
         readonly double m_minimumInformationGain;
         readonly int m_maximumTreeDepth;
         readonly Random m_random;
+        readonly int m_numberOfThreads;
 
-        readonly ThreadedWorker<ClassificationDecisionTreeModel> m_threadedWorker;
+        WorkerRunner m_threadedWorker;
 
         /// <summary>
         /// The random forest is an ensemble learner consisting of a series of randomized decision trees
@@ -53,10 +55,9 @@ namespace SharpLearning.RandomForest.Learners
             m_maximumTreeDepth = maximumTreeDepth;
             m_featuresPrSplit = featuresPrSplit;
             m_minimumInformationGain = minimumInformationGain;
+            m_numberOfThreads = numberOfThreads;
 
             m_random = new Random(seed);
-
-            m_threadedWorker = new ThreadedWorker<ClassificationDecisionTreeModel>(numberOfThreads);
         }
 
         /// <summary>
@@ -102,15 +103,22 @@ namespace SharpLearning.RandomForest.Learners
             }
 
             var results = new ConcurrentBag<ClassificationDecisionTreeModel>();
-            var tasks = new ConcurrentQueue<Action<ConcurrentBag<ClassificationDecisionTreeModel>>>();
-
+            
+            var workItems = new ConcurrentQueue<int>();
             for (int i = 0; i < m_trees; i++)
             {
-                tasks.Enqueue((r) => CreateTreeModel(observations, targets, indices,
-                    new Random(m_random.Next()), r));
+                workItems.Enqueue(0);
             }
 
-            m_threadedWorker.Run(tasks, results);
+            var workers = new List<Action>();
+            for (int i = 0; i < m_numberOfThreads; i++)
+            {
+                workers.Add(() => CreateTreeModel(observations, targets, indices, new Random(m_random.Next()),
+                    results, workItems));                    
+            }
+
+            m_threadedWorker = new WorkerRunner(workers);
+            m_threadedWorker.Run();
 
             var models = results.ToArray();
             var rawVariableImportance = VariableImportance(models, observations.GetNumberOfColumns());
@@ -135,24 +143,31 @@ namespace SharpLearning.RandomForest.Learners
         }
 
         void CreateTreeModel(F64Matrix observations, double[] targets, int[] indices, Random random, 
-            ConcurrentBag<ClassificationDecisionTreeModel> models)
+            ConcurrentBag<ClassificationDecisionTreeModel> models, ConcurrentQueue<int> workItems)
         {
-            var treeIndices = new int[indices.Length];
-
-            for (int j = 0; j < indices.Length; j++)
-            {
-                treeIndices[j] = indices[random.Next(treeIndices.Length)];
-            }
-            
-            var learner = new DecisionTreeLearner(m_maximumTreeDepth, 
+            var learner = new DecisionTreeLearner(m_maximumTreeDepth,
                 m_featuresPrSplit, m_minimumInformationGain, random.Next(),
                 new LinearSplitSearcher(m_minimumSplitSize),
                 new GiniClasificationImpurityCalculator());
 
-            var model = new ClassificationDecisionTreeModel(learner.Learn(observations, targets, treeIndices),
-                learner.m_variableImportance);
+            //var learner = new ClassificationDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, m_featuresPrSplit,
+            //    m_minimumInformationGain, random.Next());
 
-            models.Add(model);
+            var treeIndices = new int[indices.Length];
+
+            int task = -1;
+            while (workItems.TryDequeue(out task))
+            {
+                for (int j = 0; j < indices.Length; j++)
+                {
+                    treeIndices[j] = indices[random.Next(treeIndices.Length)];
+                }
+
+                var model = new ClassificationDecisionTreeModel(learner.Learn(observations, targets, treeIndices),
+                    learner.m_variableImportance.ToArray());
+                //var model = learner.Learn(observations, targets, treeIndices);
+                models.Add(model);
+            }
         }
     }
 }
