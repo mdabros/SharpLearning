@@ -3,13 +3,15 @@
 namespace SharpLearning.DecisionTrees.Nodes
 {
     /// <summary>
-    /// Leaf node for binary decision tree
+    /// Probability Leaf node for binary decision tree
     /// </summary>
-    public struct LeafNode : INode
+    public struct ProbabilityLeafNode : INode
     {
         readonly int m_featureIndex;
         readonly int m_nodeIndex;
         readonly double m_value;
+        readonly double[] m_targetNames;
+        readonly double[] m_probabilities;
 
         /// <summary>
         /// Feature index used for split
@@ -57,7 +59,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// </summary>
         public double[] Probabilities
         {
-            get { throw new NotSupportedException("Not supported in leaf"); }
+            get { return m_probabilities; }
         }
 
         /// <summary>
@@ -65,7 +67,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// </summary>
         public double[] TargetNames
         {
-            get { throw new NotSupportedException("Not supported in leaf"); }
+            get { return m_targetNames; }
         }
 
         /// <summary>
@@ -74,11 +76,17 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="featureIndex"></param>
         /// <param name="value"></param>
         /// <param name="nodeIndex"></param>
-        public LeafNode(int featureIndex, double value, int nodeIndex)
+        /// <param name="targetNames"></param>
+        /// <param name="probabilities"></param>
+        public ProbabilityLeafNode(int featureIndex, double value, int nodeIndex, 
+            double[] targetNames, double[] probabilities)
         {
             m_featureIndex = featureIndex;
             m_value = value;
             m_nodeIndex = nodeIndex;
+            m_targetNames = targetNames;
+            m_probabilities = probabilities;
+
         }
     }
 }

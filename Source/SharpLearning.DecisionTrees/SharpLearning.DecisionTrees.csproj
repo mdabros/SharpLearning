@@ -59,6 +59,8 @@
     <Compile Include="Models\RegressionDecisionTreeModel.cs" />
     <Compile Include="Nodes\INode.cs" />
     <Compile Include="Nodes\LeafNode.cs" />
+    <Compile Include="Nodes\LeafNodeFactory.cs" />
+    <Compile Include="Nodes\ProbabilityLeafNode.cs" />
     <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
     <Compile Include="Learners\RegressionDecisionTreeLearner.cs" />
     <Compile Include="Nodes\SplitNode.cs" />

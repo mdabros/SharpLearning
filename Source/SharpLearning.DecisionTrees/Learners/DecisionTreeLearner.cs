@@ -1,12 +1,12 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
+using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Nodes;
+using SharpLearning.DecisionTrees.SplitSearchers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SharpLearning.DecisionTrees.SplitSearchers;
-using SharpLearning.DecisionTrees.ImpurityCalculators;
 
 namespace SharpLearning.DecisionTrees.Learners
 {
@@ -18,7 +18,8 @@ namespace SharpLearning.DecisionTrees.Learners
     {
         readonly ISplitSearcher m_splitSearcher;
         readonly IImpurityCalculator m_impurityCalculator;
-        
+        readonly LeafNodeFactory m_leafFactory = new LeafNodeFactory();
+
         readonly double m_minimumInformationGain;
         int m_featuresPrSplit;
 
@@ -271,7 +272,7 @@ namespace SharpLearning.DecisionTrees.Learners
                     m_impurityCalculator.UpdateInterval(parentInterval);
                     var value = m_impurityCalculator.LeafValue();
 
-                    var leaf = new LeafNode(-1, value, currentNodeIndex++, m_impurityCalculator.TargetNames,
+                    var leaf = m_leafFactory.Create(-1, value, currentNodeIndex++, m_impurityCalculator.TargetNames,
                         m_impurityCalculator.LeafProbabilities());
                     
                     nodes.Add(leaf);
@@ -302,7 +303,7 @@ namespace SharpLearning.DecisionTrees.Learners
             {
                 m_impurityCalculator.UpdateInterval(allInterval);
 
-                var leaf = new LeafNode(-1, m_impurityCalculator.LeafValue(), 
+                var leaf = m_leafFactory.Create(-1, m_impurityCalculator.LeafValue(), 
                     currentNodeIndex++, m_impurityCalculator.TargetNames,
                     m_impurityCalculator.LeafProbabilities());
 
