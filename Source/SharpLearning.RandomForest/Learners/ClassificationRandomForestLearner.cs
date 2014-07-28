@@ -145,13 +145,8 @@ namespace SharpLearning.RandomForest.Learners
         void CreateTreeModel(F64Matrix observations, double[] targets, int[] indices, Random random, 
             ConcurrentBag<ClassificationDecisionTreeModel> models, ConcurrentQueue<int> workItems)
         {
-            var learner = new DecisionTreeLearner(m_maximumTreeDepth,
-                m_featuresPrSplit, m_minimumInformationGain, random.Next(),
-                new LinearSplitSearcher(m_minimumSplitSize),
-                new GiniClasificationImpurityCalculator());
-
-            //var learner = new ClassificationDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, m_featuresPrSplit,
-            //    m_minimumInformationGain, random.Next());
+            var learner = new ClassificationDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, m_featuresPrSplit,
+                m_minimumInformationGain, random.Next());
 
             var treeIndices = new int[indices.Length];
 
@@ -163,9 +158,7 @@ namespace SharpLearning.RandomForest.Learners
                     treeIndices[j] = indices[random.Next(treeIndices.Length)];
                 }
 
-                var model = new ClassificationDecisionTreeModel(learner.Learn(observations, targets, treeIndices),
-                    learner.m_variableImportance.ToArray());
-                //var model = learner.Learn(observations, targets, treeIndices);
+                var model = learner.Learn(observations, targets, treeIndices);
                 models.Add(model);
             }
         }
