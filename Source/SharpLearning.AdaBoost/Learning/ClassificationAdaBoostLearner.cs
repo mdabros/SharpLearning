@@ -103,11 +103,9 @@ namespace SharpLearning.AdaBoost.Learning
             {
                 m_maximumTreeDepth = m_uniqueTargetValues;
             }
-            
-            m_modelLearner = new DecisionTreeLearner(m_maximumTreeDepth, observations.GetNumberOfColumns(),
-                m_minimumInformationGain, 42,
-                new OnlyUniqueThresholdsSplitSearcher(m_minimumSplitSize),
-                new GiniClasificationImpurityCalculator());
+
+            m_modelLearner = new ClassificationDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, 
+                observations.GetNumberOfColumns(), m_minimumInformationGain, 42);
 
             m_modelErrors.Clear();
             m_modelWeights.Clear();
