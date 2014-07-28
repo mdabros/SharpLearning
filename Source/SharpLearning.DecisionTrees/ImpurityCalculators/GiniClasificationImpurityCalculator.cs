@@ -13,7 +13,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// </summary>
         public double[] TargetNames
         {
-            get { return m_uniqueTargets; }
+            get { return m_targetNames; }
         }
 
         public GiniClasificationImpurityCalculator()
@@ -29,7 +29,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             var giniLeft = 0.0;
             var giniRight = 0.0;
 
-            foreach (var targetValue in m_uniqueTargets)
+            foreach (var targetValue in m_targetNames)
             {
                 var targetIndex = (int)targetValue;
                 var leftCount = m_weightedTargetCountLeft[targetIndex];
@@ -53,7 +53,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         {
             var gini = 0.0;
 
-            foreach (var targetValue in m_uniqueTargets)
+            foreach (var targetValue in m_targetNames)
             {
                 var value = m_weightedTargetCount[(int)targetValue];
                 gini += value * value;
@@ -87,7 +87,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             var bestTarget = 0.0;
             var maxWeight = 0.0;
 
-            foreach (var targetValue in m_uniqueTargets)
+            foreach (var targetValue in m_targetNames)
             {
                 var value = m_weightedTargetCount[(int)targetValue];
                 if (value > maxWeight)
@@ -107,12 +107,12 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <returns></returns>
         public override double[] LeafProbabilities()
         {
-            var probabilities = new double[m_uniqueTargets.Length];
-            var probabilityFactor = 1.0 / (m_weightedTotal + m_uniqueTargets.Length);
+            var probabilities = new double[m_targetNames.Length];
+            var probabilityFactor = 1.0 / (m_weightedTotal + m_targetNames.Length);
 
-            for (int i = 0; i < m_uniqueTargets.Length; i++)
+            for (int i = 0; i < m_targetNames.Length; i++)
             {
-                int targetValue = (int)m_uniqueTargets[i];
+                int targetValue = (int)m_targetNames[i];
                 var targetProbability = (m_weightedTargetCount[targetValue] + 1) * probabilityFactor;
                 probabilities[i] = targetProbability;
             }

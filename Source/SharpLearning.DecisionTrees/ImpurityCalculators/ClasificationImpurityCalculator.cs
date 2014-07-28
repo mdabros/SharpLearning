@@ -17,14 +17,15 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         protected double m_weightedLeft = 0.0;
         protected double m_weightedRight = 0.0;
 
-        protected double[] m_weightedTargetCount;
-        protected double[] m_weightedTargetCountLeft;
-        protected double[] m_weightedTargetCountRight;
+        protected double[] m_weightedTargetCount = new double[0];
+        protected double[] m_weightedTargetCountLeft = new double[0];
+        protected double[] m_weightedTargetCountRight = new double[0];
 
         protected double[] m_targets;
         protected double[] m_weights;
 
-        protected double[] m_uniqueTargets;
+        protected double[] m_targetNames;
+        protected int m_maxTargetNameIndex;
 
         public double WeightedLeft { get { return m_weightedLeft; } }
         public double WeightedRight { get { return m_weightedRight; } }
@@ -36,24 +37,29 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <summary>
         /// Initialize the calculator with targets, weights and work interval
         /// </summary>
-        /// <param name="uniqueTargets"></param>
+        /// <param name="targetNames"></param>
         /// <param name="targets"></param>
         /// <param name="weights"></param>
         /// <param name="interval"></param>
-        public void Init(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval)
+        public void Init(double[] targetNames, double[] targets, double[] weights, Interval1D interval)
         {
             if (targets == null) { throw new ArgumentException("targets"); }
             if (weights == null) { throw new ArgumentException("weights"); }
-            if (uniqueTargets == null) { throw new ArgumentException("uniqueTargets"); }
+            if (targetNames == null) { throw new ArgumentException("uniqueTargets"); }
             m_targets = targets;
             m_weights = weights;
-            m_uniqueTargets = uniqueTargets;
+            m_targetNames = targetNames;
             m_interval = interval;
 
-            var maxIndex = (int)m_uniqueTargets.Max() + 1;
-            m_weightedTargetCount = new double[maxIndex];
-            m_weightedTargetCountLeft = new double[maxIndex];
-            m_weightedTargetCountRight = new double[maxIndex];
+            SetMaxTargetIndex();
+            Array.Resize(ref m_weightedTargetCount, m_maxTargetNameIndex);
+            Array.Clear(m_weightedTargetCount, 0, m_maxTargetNameIndex);
+
+            Array.Resize(ref m_weightedTargetCountLeft, m_maxTargetNameIndex);
+            Array.Clear(m_weightedTargetCountLeft, 0, m_maxTargetNameIndex);
+            
+            Array.Resize(ref m_weightedTargetCountRight, m_maxTargetNameIndex);
+            Array.Clear(m_weightedTargetCountRight, 0, m_maxTargetNameIndex);
 
             var w = 1.0;
             var weightsPresent = m_weights.Length != 0;
@@ -78,7 +84,20 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_currentPosition = m_interval.FromInclusive;
             this.Reset();
         }
-
+        
+        void SetMaxTargetIndex()
+        {
+            m_maxTargetNameIndex = int.MinValue;
+            foreach (int value in m_targetNames)
+            {
+                if (value > m_maxTargetNameIndex)
+                {
+                    m_maxTargetNameIndex = value;
+                }
+            }
+            m_maxTargetNameIndex = m_maxTargetNameIndex + 1;
+        }
+        
         /// <summary>
         /// Resets impurity calculator
         /// </summary>
@@ -99,7 +118,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="newInterval"></param>
         public void UpdateInterval(Interval1D newInterval)
         {
-            Init(m_uniqueTargets, m_targets, m_weights, newInterval);
+            Init(m_targetNames, m_targets, m_weights, newInterval);
         }
 
 
