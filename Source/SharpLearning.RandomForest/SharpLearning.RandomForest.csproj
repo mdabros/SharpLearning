@@ -46,7 +46,9 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learners\RegressionRandomForestLearner.cs" />
     <Compile Include="Learners\ClassificationRandomForestLearner.cs" />
+    <Compile Include="Models\RegressionRandomForestModel.cs" />
     <Compile Include="Models\ClassificationRandomForestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

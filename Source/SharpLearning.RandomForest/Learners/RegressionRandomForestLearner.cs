@@ -11,11 +11,11 @@ using System.Linq;
 namespace SharpLearning.RandomForest.Learners
 {
     /// <summary>
-    /// Trains a classification random forest
+    /// Trains a regression random forest
     /// http://en.wikipedia.org/wiki/Random_forest
     /// http://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm
     /// </summary>
-    public sealed class ClassificationRandomForestLearner
+    public sealed class RegressionRandomForestLearner
     {
         readonly int m_trees;
         int m_featuresPrSplit;
@@ -33,11 +33,11 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="trees">Number of trees to use in the ensemble</param>
         /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
-        /// <param name="featuresPrSplit">Number of features used at each split in each tree. 0 means Sqrt(of availible features)</param>
+        /// <param name="featuresPrSplit">Number of features used at each split in each tree. 0 means (availible features) / 3.0</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public ClassificationRandomForestLearner(int trees, int minimumSplitSize, int maximumTreeDepth,
+        public RegressionRandomForestLearner(int trees, int minimumSplitSize, int maximumTreeDepth,
             int featuresPrSplit, double minimumInformationGain, int seed, int numberOfThreads)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
@@ -66,7 +66,7 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public ClassificationRandomForestLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000, 
+        public RegressionRandomForestLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000, 
             int featuresPrSplit = 0, double minimumInformationGain = .000001, int seed = 42)
           : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain, 
             seed, Environment.ProcessorCount)
@@ -79,7 +79,7 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public ClassificationRandomForestModel Learn(F64Matrix observations, double[] targets)
+        public RegressionRandomForestModel Learn(F64Matrix observations, double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             return Learn(observations, targets, indices);
@@ -91,15 +91,15 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public ClassificationRandomForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public RegressionRandomForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             if (m_featuresPrSplit == 0)
             {
-                var count = (int)Math.Sqrt(observations.GetNumberOfColumns());
+                var count = (int)(observations.GetNumberOfColumns() / 3.0);
                 m_featuresPrSplit = count <= 0 ? 1 : count;
             }
 
-            var results = new ConcurrentBag<ClassificationDecisionTreeModel>();
+            var results = new ConcurrentBag<RegressionDecisionTreeModel>();
             
             var workItems = new ConcurrentQueue<int>();
             for (int i = 0; i < m_trees; i++)
@@ -120,10 +120,10 @@ namespace SharpLearning.RandomForest.Learners
             var models = results.ToArray();
             var rawVariableImportance = VariableImportance(models, observations.GetNumberOfColumns());
 
-            return new ClassificationRandomForestModel(models, rawVariableImportance);
+            return new RegressionRandomForestModel(models, rawVariableImportance);
         }
 
-        double[] VariableImportance(ClassificationDecisionTreeModel[] models, int numberOfFeatures)
+        double[] VariableImportance(RegressionDecisionTreeModel[] models, int numberOfFeatures)
         {
             var rawVariableImportance = new double[numberOfFeatures];
 
@@ -139,10 +139,10 @@ namespace SharpLearning.RandomForest.Learners
             return rawVariableImportance;
         }
 
-        void CreateTreeModel(F64Matrix observations, double[] targets, int[] indices, Random random, 
-            ConcurrentBag<ClassificationDecisionTreeModel> models, ConcurrentQueue<int> workItems)
+        void CreateTreeModel(F64Matrix observations, double[] targets, int[] indices, Random random,
+            ConcurrentBag<RegressionDecisionTreeModel> models, ConcurrentQueue<int> workItems)
         {
-            var learner = new ClassificationDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, m_featuresPrSplit,
+            var learner = new RegressionDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, m_featuresPrSplit,
                 m_minimumInformationGain, random.Next());
 
             var treeIndices = new int[indices.Length];
