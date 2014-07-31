@@ -11,10 +11,10 @@ using System.Linq;
 namespace SharpLearning.RandomForest.Test.Models
 {
     [TestClass]
-    public class RegressionRandomForestModelTest
+    public class RegressionForestModelTest
     {
         [TestMethod]
-        public void RegressionRandomForestModel_Predict_Single()
+        public void RegressionForestModel_Predict_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -37,7 +37,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void RegressionRandomForestModel_Predict_Multiple()
+        public void RegressionForestModel_Predict_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -56,7 +56,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void RegressionRandomForestModel_Predict_Multiple_Indexed()
+        public void RegressionForestModel_Predict_Multiple_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -77,7 +77,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void RegressionRandomForestModel_GetVariableImportance()
+        public void RegressionForestModel_GetVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -103,7 +103,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void RegressionRandomForestModel_GetRawVariableImportance()
+        public void RegressionForestModel_GetRawVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();

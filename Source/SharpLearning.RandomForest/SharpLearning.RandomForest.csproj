@@ -48,8 +48,8 @@
     </Compile>
     <Compile Include="Learners\RegressionRandomForestLearner.cs" />
     <Compile Include="Learners\ClassificationRandomForestLearner.cs" />
-    <Compile Include="Models\RegressionRandomForestModel.cs" />
-    <Compile Include="Models\ClassificationRandomForestModel.cs" />
+    <Compile Include="Models\RegressionForestModel.cs" />
+    <Compile Include="Models\ClassificationForestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

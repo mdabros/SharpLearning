@@ -79,7 +79,7 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public RegressionRandomForestModel Learn(F64Matrix observations, double[] targets)
+        public RegressionForestModel Learn(F64Matrix observations, double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             return Learn(observations, targets, indices);
@@ -91,7 +91,7 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public RegressionRandomForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public RegressionForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             if (m_featuresPrSplit == 0)
             {
@@ -120,7 +120,7 @@ namespace SharpLearning.RandomForest.Learners
             var models = results.ToArray();
             var rawVariableImportance = VariableImportance(models, observations.GetNumberOfColumns());
 
-            return new RegressionRandomForestModel(models, rawVariableImportance);
+            return new RegressionForestModel(models, rawVariableImportance);
         }
 
         double[] VariableImportance(RegressionDecisionTreeModel[] models, int numberOfFeatures)

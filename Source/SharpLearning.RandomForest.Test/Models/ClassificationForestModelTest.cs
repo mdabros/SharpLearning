@@ -14,10 +14,10 @@ using System.Diagnostics;
 namespace SharpLearning.RandomForest.Test.Models
 {
     [TestClass]
-    public class ClassificationRandomForestModelTest
+    public class ClassificationForestModelTest
     {
         [TestMethod]
-        public void ClassificationRandomForestModel_Predict_Single()
+        public void ClassificationForestModel_Predict_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -40,7 +40,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationRandomForestModel_Predict_Multiple()
+        public void ClassificationForestModel_Predict_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -59,7 +59,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationRandomForestModel_Predict_Multiple_Indexed()
+        public void ClassificationForestModel_Predict_Multiple_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -81,7 +81,7 @@ namespace SharpLearning.RandomForest.Test.Models
 
 
         [TestMethod]
-        public void ClassificationRandomForestModel_PredictProbability_Single()
+        public void ClassificationForestModel_PredictProbability_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -107,7 +107,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationRandomForestModel_PredictProbability_Multiple()
+        public void ClassificationForestModel_PredictProbability_Multiple()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -128,7 +128,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationRandomForestModel_PredictProbability_Multiple_Indexed()
+        public void ClassificationForestModel_PredictProbability_Multiple_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -152,7 +152,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationRandomForestModel_GetVariableImportance()
+        public void ClassificationForestModel_GetVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -178,7 +178,7 @@ namespace SharpLearning.RandomForest.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationRandomForestModel_GetRawVariableImportance()
+        public void ClassificationForestModel_GetRawVariableImportance()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();

@@ -8,19 +8,19 @@ using System.Linq;
 namespace SharpLearning.RandomForest.Models
 {
     /// <summary>
-    /// Classification random forest model consiting of a series of decision trees
+    /// Classification forest model consiting of a series of decision trees
     /// </summary>
-    public sealed class ClassificationRandomForestModel
+    public sealed class ClassificationForestModel
     {
         readonly ClassificationDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;
 
         /// <summary>
-        /// Classification random forest model consiting of a series of decision trees
+        /// Classification forest model consiting of a series of decision trees
         /// </summary>
         /// <param name="models">The decision tree models</param>
         /// <param name="rawVariableImportance">The summed variable importance from all decision trees</param>
-        public ClassificationRandomForestModel(ClassificationDecisionTreeModel[] models, double[] rawVariableImportance)
+        public ClassificationForestModel(ClassificationDecisionTreeModel[] models, double[] rawVariableImportance)
         {
             if (models == null) { throw new ArgumentNullException("models"); }
             if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
