@@ -74,6 +74,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SplitSearchers\OnlyUniqueThresholdsSplitSearcherTest.cs" />
+    <Compile Include="SplitSearchers\RandomSplitSearcherTest.cs" />
     <Compile Include="SplitSearchers\SplitResultTest.cs" />
     <Compile Include="SplitSearchers\LinearSplitSearcherTest.cs" />
   </ItemGroup>
