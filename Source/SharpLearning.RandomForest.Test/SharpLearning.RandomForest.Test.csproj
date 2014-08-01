@@ -58,6 +58,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Learners\ClassificationExtremelyRandomizedTreesLearnerTest.cs" />
+    <Compile Include="Learners\RegressionExtremelyRandomizedTreesLearnerTest.cs" />
     <Compile Include="Learners\RegressionRandomForestLearnerTest.cs" />
     <Compile Include="Learners\ClassificationRandomForestLearnerTest.cs" />
     <Compile Include="Models\RegressionForestModelTest.cs" />
