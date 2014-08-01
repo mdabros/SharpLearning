@@ -77,7 +77,7 @@ namespace SharpLearning.RandomForest.Learners
         }
 
         /// <summary>
-        /// Learns a classification Extremely randomized trees model
+        /// Learns a regression Extremely randomized trees model
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -89,7 +89,7 @@ namespace SharpLearning.RandomForest.Learners
         }
 
         /// <summary>
-        /// Learns a classification Extremely randomized trees model
+        /// Learns a regression extremely randomized trees model
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -98,7 +98,7 @@ namespace SharpLearning.RandomForest.Learners
         {
             if (m_featuresPrSplit == 0)
             {
-                var count = (int)Math.Sqrt(observations.GetNumberOfColumns());
+                var count = (int)(observations.GetNumberOfColumns() / 3.0);
                 m_featuresPrSplit = count <= 0 ? 1 : count;
             }
 
