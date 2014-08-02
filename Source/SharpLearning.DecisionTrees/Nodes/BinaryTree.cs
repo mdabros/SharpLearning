@@ -9,16 +9,22 @@ namespace SharpLearning.DecisionTrees.Nodes
     /// </summary>
     public sealed class BinaryTree
     {
-        readonly List<INode> m_nodes;
+        readonly List<Node> m_nodes;
+        readonly List<double[]> m_probabilities;
+        readonly double[] m_targetNames;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="nodes"></param>
-        public BinaryTree(List<INode> nodes)
+        public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames)
         {
             if (nodes == null) { throw new ArgumentNullException("nodes"); }
+            if (probabilities == null) { throw new ArgumentException("probabilities"); }
+            if (targetNames == null) { throw new ArgumentException("targetNames"); }
             m_nodes = nodes;
+            m_probabilities = probabilities;
+            m_targetNames = targetNames;
         }
 
         /// <summary>
@@ -46,7 +52,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
-        double Predict(INode node, double[] observation)
+        double Predict(Node node, double[] observation)
         {
             if (node.FeatureIndex == -1.0)
             {
@@ -70,17 +76,16 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
-        ProbabilityPrediction PredictProbability(INode node, double[] observation)
+        ProbabilityPrediction PredictProbability(Node node, double[] observation)
         {
             if (node.FeatureIndex == -1.0)
             {
-                var targets = node.TargetNames;
-                var probabilities = node.Probabilities;
+                var probabilities = m_probabilities[node.ProbabilityIndex];
                 var targetProbabilities = new Dictionary<double, double>();
 
-                for (int i = 0; i < targets.Length; i++)
+                for (int i = 0; i < m_targetNames.Length; i++)
                 {
-                    targetProbabilities.Add(targets[i], probabilities[i]);
+                    targetProbabilities.Add(m_targetNames[i], probabilities[i]);
                 }
 
                 return new ProbabilityPrediction(node.Value, targetProbabilities);

@@ -12,19 +12,19 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="parent"></param>
         /// <param name="child"></param>
         /// <param name="type"></param>
-        public static void UpdateParent(this List<INode> nodes, INode parent, INode child, NodePositionType type)
+        public static void UpdateParent(this List<Node> nodes, Node parent, Node child, NodePositionType type)
         {
             switch (type)
             {
                 case NodePositionType.Root:
                     break;
                 case NodePositionType.Left:
-                    nodes[parent.NodeIndex] = new SplitNode(parent.FeatureIndex, parent.Value,
-                        child.NodeIndex, parent.RightIndex, parent.NodeIndex);
+                    nodes[parent.NodeIndex] = new Node(parent.FeatureIndex, parent.Value,
+                        child.NodeIndex, parent.RightIndex, parent.NodeIndex, parent.ProbabilityIndex);
                     break;
                 case NodePositionType.Right:
-                    nodes[parent.NodeIndex] = new SplitNode(parent.FeatureIndex, parent.Value,
-                        parent.LeftIndex, child.NodeIndex, parent.NodeIndex);
+                    nodes[parent.NodeIndex] = new Node(parent.FeatureIndex, parent.Value,
+                        parent.LeftIndex, child.NodeIndex, parent.NodeIndex, parent.ProbabilityIndex);
                     break;
                 default:
                     throw new InvalidOperationException("Unsupported position type");

@@ -57,13 +57,9 @@
     <Compile Include="Learners\ClassificationDecisionTreeLearner.cs" />
     <Compile Include="Models\ClassificationDecisionTreeModel.cs" />
     <Compile Include="Models\RegressionDecisionTreeModel.cs" />
-    <Compile Include="Nodes\INode.cs" />
-    <Compile Include="Nodes\LeafNode.cs" />
-    <Compile Include="Nodes\LeafNodeFactory.cs" />
-    <Compile Include="Nodes\ProbabilityLeafNode.cs" />
     <Compile Include="Nodes\DecisionNodeCreationItem.cs" />
     <Compile Include="Learners\RegressionDecisionTreeLearner.cs" />
-    <Compile Include="Nodes\SplitNode.cs" />
+    <Compile Include="Nodes\Node.cs" />
     <Compile Include="Nodes\NodeExtensions.cs" />
     <Compile Include="Nodes\BinaryTree.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

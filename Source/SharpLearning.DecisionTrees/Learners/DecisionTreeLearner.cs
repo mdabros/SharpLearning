@@ -18,7 +18,6 @@ namespace SharpLearning.DecisionTrees.Learners
     {
         readonly ISplitSearcher m_splitSearcher;
         readonly IImpurityCalculator m_impurityCalculator;
-        readonly LeafNodeFactory m_leafFactory = new LeafNodeFactory();
 
         readonly double m_minimumInformationGain;
         int m_featuresPrSplit;
@@ -188,17 +187,20 @@ namespace SharpLearning.DecisionTrees.Learners
                 m_workIndices.IndexedCopy(weights, allInterval, m_workWeights);
             }
 
-            var uniqueValues = targets.Distinct().ToArray();
+            var targetNames = targets.Distinct().ToArray();
 
-            m_impurityCalculator.Init(uniqueValues, m_workTargets, m_workWeights, allInterval);
+            m_impurityCalculator.Init(targetNames, m_workTargets, m_workWeights, allInterval);
             var rootImpurity = m_impurityCalculator.NodeImpurity();
 
-            var nodes = new List<INode>();
+            var nodes = new List<Node>();
+            var probabilities = new List<double[]>();
+            
             var stack = new Stack<DecisionNodeCreationItem>(100);
             stack.Push(new DecisionNodeCreationItem(0, NodePositionType.Root, allInterval, rootImpurity, 0));
 
             var first = true;
             var currentNodeIndex = 0;
+            var currentProbabilityIndex = 0;
 
             while (stack.Count > 0)
             {
@@ -208,7 +210,7 @@ namespace SharpLearning.DecisionTrees.Learners
 
                 var parentInterval = parentItem.Interval;
                 var parentNodeDepth = parentItem.NodeDepth;
-                INode parentNode = SplitNode.Default();
+                Node parentNode = Node.Default();
 
                 if(nodes.Count != 0)
                 {
@@ -220,8 +222,8 @@ namespace SharpLearning.DecisionTrees.Learners
 
                 if (first && parentNode.FeatureIndex != -1)
                 {
-                    nodes[0] = new SplitNode(parentNode.FeatureIndex, 
-                        parentNode.Value, -1, -1, parentNode.NodeIndex);
+                    nodes[0] = new Node(parentNode.FeatureIndex, 
+                        parentNode.Value, -1, -1, parentNode.NodeIndex, parentNode.ProbabilityIndex);
                                            
                     first = false;
                 }
@@ -272,8 +274,9 @@ namespace SharpLearning.DecisionTrees.Learners
                     m_impurityCalculator.UpdateInterval(parentInterval);
                     var value = m_impurityCalculator.LeafValue();
 
-                    var leaf = m_leafFactory.Create(-1, value, currentNodeIndex++, m_impurityCalculator.TargetNames,
-                        m_impurityCalculator.LeafProbabilities());
+                    var leaf = new Node(-1, value, -1, -1, 
+                        currentNodeIndex++, currentProbabilityIndex++);
+                    probabilities.Add(m_impurityCalculator.LeafProbabilities());
                     
                     nodes.Add(leaf);
                     nodes.UpdateParent(parentNode, leaf, parentNodePositionType);
@@ -282,7 +285,8 @@ namespace SharpLearning.DecisionTrees.Learners
                 {
                     m_variableImportance[bestFeatureIndex] += bestSplitResult.ImpurityImprovement * parentInterval.Length / allInterval.Length;
 
-                    var split = new SplitNode(bestFeatureIndex, bestSplitResult.Threshold, -1,-1, currentNodeIndex++);
+                    var split = new Node(bestFeatureIndex, bestSplitResult.Threshold, -1,-1, 
+                        currentNodeIndex++, -1);
                     
                     nodes.Add(split);
                     nodes.UpdateParent(parentNode, split, parentNodePositionType);
@@ -303,14 +307,14 @@ namespace SharpLearning.DecisionTrees.Learners
             {
                 m_impurityCalculator.UpdateInterval(allInterval);
 
-                var leaf = m_leafFactory.Create(-1, m_impurityCalculator.LeafValue(), 
-                    currentNodeIndex++, m_impurityCalculator.TargetNames,
-                    m_impurityCalculator.LeafProbabilities());
+                var leaf = new Node(-1, m_impurityCalculator.LeafValue(), -1, -1, 
+                    currentNodeIndex++, currentProbabilityIndex++);
+                probabilities.Add(m_impurityCalculator.LeafProbabilities());
 
                 nodes.Add(leaf);
             }
 
-            return new BinaryTree(nodes);
+            return new BinaryTree(nodes, probabilities, targetNames);
         }
 
         void SetNextFeatures(int totalNumberOfFeature)
