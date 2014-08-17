@@ -1,9 +1,9 @@
 ﻿using SharpLearning.Containers.Views;
 using SharpLearning.Containers;
 
-namespace SharpLearning.Metrics.Entropy
+namespace SharpLearning.Metrics.Impurity
 {
-    public sealed class NaiveSinglePassVarianceEntropyMetric : IEntropyMetric
+    public sealed class NaiveSinglePassVarianceImpurityMetric : IImpurityMetric
     {
         /// <summary>
         /// Calculates the variance of a sample. Main use is for decision tree regression
@@ -11,7 +11,7 @@ namespace SharpLearning.Metrics.Entropy
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public double Entropy(double[] values)
+        public double Impurity(double[] values)
         {
             var n = 0;
             var sum = 0.0;
@@ -37,7 +37,7 @@ namespace SharpLearning.Metrics.Entropy
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public double Entropy(double[] values, Interval1D interval)
+        public double Impurity(double[] values, Interval1D interval)
         {
             var n = 0;
             var sum = 0.0;
@@ -65,7 +65,7 @@ namespace SharpLearning.Metrics.Entropy
         /// <param name="weights"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public double Entropy(double[] values, double[] weights, Interval1D interval)
+        public double Impurity(double[] values, double[] weights, Interval1D interval)
         {
             var weightSum = 0.0;
             var weightSumSqr = 0.0;

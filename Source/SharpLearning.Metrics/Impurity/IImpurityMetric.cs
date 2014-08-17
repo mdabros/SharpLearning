@@ -1,15 +1,16 @@
 ﻿
 using SharpLearning.Containers.Views;
-namespace SharpLearning.Metrics.Entropy
+
+namespace SharpLearning.Metrics.Impurity
 {
-    public interface IEntropyMetric
+    public interface IImpurityMetric
     {
         /// <summary>
         /// Calculates the entropy of a sample
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        double Entropy(double[] values);
+        double Impurity(double[] values);
 
         /// <summary>
         /// Calculates the entropy of a sample within the provided interval
@@ -17,7 +18,7 @@ namespace SharpLearning.Metrics.Entropy
         /// <param name="values"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        double Entropy(double[] values, Interval1D interval);
+        double Impurity(double[] values, Interval1D interval);
 
         /// <summary>
         /// Calculates the weighted entropy within the provided interval
@@ -26,6 +27,6 @@ namespace SharpLearning.Metrics.Entropy
         /// <param name="weights"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        double Entropy(double[] values, double[] weights, Interval1D interval);
+        double Impurity(double[] values, double[] weights, Interval1D interval);
     }
 }

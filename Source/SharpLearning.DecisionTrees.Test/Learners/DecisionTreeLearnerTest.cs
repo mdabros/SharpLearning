@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.Metrics.Entropy;
-using SharpLearning.DecisionTrees.SplitSearchers;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.DecisionTrees.SplitSearchers;
+using System;
 
 namespace SharpLearning.DecisionTrees.Test.Learners
 {

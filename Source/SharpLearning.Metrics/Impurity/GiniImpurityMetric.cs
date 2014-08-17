@@ -3,9 +3,9 @@ using SharpLearning.Containers;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace SharpLearning.Metrics.Entropy
+namespace SharpLearning.Metrics.Impurity
 {
-    public sealed class GiniImpurityMetric : IEntropyMetric
+    public sealed class GiniImpurityMetric : IImpurityMetric
     {
         readonly IntCustomDictionary m_dict = new IntCustomDictionary();
 
@@ -15,7 +15,7 @@ namespace SharpLearning.Metrics.Entropy
         /// </summary>
         /// <param name="values"></param>
         /// <returns></returns>
-        public double Entropy(double[] values)
+        public double Impurity(double[] values)
         {
             m_dict.Clear();
 
@@ -48,7 +48,7 @@ namespace SharpLearning.Metrics.Entropy
         /// <param name="values"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public double Entropy(double[] values, Interval1D interval)
+        public double Impurity(double[] values, Interval1D interval)
         {
             m_dict.Clear();
 
@@ -82,7 +82,7 @@ namespace SharpLearning.Metrics.Entropy
         /// <param name="weights"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public double Entropy(double[] values, double[] weights, Interval1D interval)
+        public double Impurity(double[] values, double[] weights, Interval1D interval)
         {
             m_dict.Clear();
 

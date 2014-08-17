@@ -51,10 +51,10 @@
     <Compile Include="Classification\IClassificationMetric.cs" />
     <Compile Include="Classification\ClassificationMatrixStringConverter.cs" />
     <Compile Include="Classification\TotalErrorClassificationMetric.cs" />
-    <Compile Include="Entropy\GiniImpurityMetric.cs" />
-    <Compile Include="Entropy\IEntropyMetric.cs" />
-    <Compile Include="Entropy\InCustomDictionary.cs" />
-    <Compile Include="Entropy\NaiveSinglePassVarianceEntropyMetric.cs" />
+    <Compile Include="Impurity\GiniImpurityMetric.cs" />
+    <Compile Include="Impurity\IImpurityMetric.cs" />
+    <Compile Include="Impurity\InCustomDictionary.cs" />
+    <Compile Include="Impurity\NaiveSinglePassVarianceImpurityMetric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ranking\AveragePrecisionRankingMetric.cs" />
     <Compile Include="Ranking\IRankingMetric.cs" />

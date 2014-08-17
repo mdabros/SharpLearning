@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SharpLearning.Metrics.Entropy
+namespace SharpLearning.Metrics.Impurity
 {
     // http://blog.teamleadnet.com/2012/07/ultra-fast-hashtable-dictionary-with.html
     // https://code.google.com/p/mapreduce-net/source/browse/MapReduce.NET/Collections/CustomDictionary.cs
