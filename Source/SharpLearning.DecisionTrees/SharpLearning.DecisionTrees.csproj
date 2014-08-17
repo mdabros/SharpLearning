@@ -53,6 +53,7 @@
     <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\IImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\RegressionImpurityCalculator.cs" />
+    <Compile Include="ImpurityCalculators\TargetCounts.cs" />
     <Compile Include="Learners\DecisionTreeLearner.cs" />
     <Compile Include="Learners\ClassificationDecisionTreeLearner.cs" />
     <Compile Include="Models\ClassificationDecisionTreeModel.cs" />

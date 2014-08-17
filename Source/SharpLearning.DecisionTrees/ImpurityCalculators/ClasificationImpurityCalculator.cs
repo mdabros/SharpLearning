@@ -17,15 +17,16 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         protected double m_weightedLeft = 0.0;
         protected double m_weightedRight = 0.0;
 
-        protected double[] m_weightedTargetCount = new double[0];
-        protected double[] m_weightedTargetCountLeft = new double[0];
-        protected double[] m_weightedTargetCountRight = new double[0];
+        internal TargetCounts m_weightedTargetCount = new TargetCounts();
+        internal TargetCounts m_weightedTargetCountLeft = new TargetCounts();
+        internal TargetCounts m_weightedTargetCountRight = new TargetCounts();
 
         protected double[] m_targets;
         protected double[] m_weights;
 
         protected double[] m_targetNames;
         protected int m_maxTargetNameIndex;
+        protected int m_targetIndexOffSet;
 
         public double WeightedLeft { get { return m_weightedLeft; } }
         public double WeightedRight { get { return m_weightedRight; } }
@@ -51,15 +52,19 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_targetNames = targetNames;
             m_interval = interval;
 
-            SetMaxTargetIndex();
-            Array.Resize(ref m_weightedTargetCount, m_maxTargetNameIndex);
-            Array.Clear(m_weightedTargetCount, 0, m_maxTargetNameIndex);
+            SetMinMaxTargetNames();
+            if(m_targetIndexOffSet > 0)
+            {
+                m_targetIndexOffSet = 0;
+            }
+            else
+            {
+                m_targetIndexOffSet = m_targetIndexOffSet * -1; 
+            }
 
-            Array.Resize(ref m_weightedTargetCountLeft, m_maxTargetNameIndex);
-            Array.Clear(m_weightedTargetCountLeft, 0, m_maxTargetNameIndex);
-            
-            Array.Resize(ref m_weightedTargetCountRight, m_maxTargetNameIndex);
-            Array.Clear(m_weightedTargetCountRight, 0, m_maxTargetNameIndex);
+            m_weightedTargetCount.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
+            m_weightedTargetCountLeft.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
+            m_weightedTargetCountRight.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
 
             var w = 1.0;
             var weightsPresent = m_weights.Length != 0;
@@ -67,8 +72,6 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_weightedTotal = 0.0;
             m_weightedLeft = 0.0;
             m_weightedRight = 0.0;
-
-            Array.Clear(m_weightedTargetCount, 0, m_weightedTargetCount.Length);
 
             for (int i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
             {
@@ -85,16 +88,23 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             this.Reset();
         }
         
-        void SetMaxTargetIndex()
+        void SetMinMaxTargetNames()
         {
             m_maxTargetNameIndex = int.MinValue;
+            m_targetIndexOffSet = int.MaxValue;
+
             foreach (int value in m_targetNames)
             {
                 if (value > m_maxTargetNameIndex)
                 {
                     m_maxTargetNameIndex = value;
                 }
+                else if(value < m_targetIndexOffSet)
+                {
+                    m_targetIndexOffSet = value;
+                }
             }
+
             m_maxTargetNameIndex = m_maxTargetNameIndex + 1;
         }
         
@@ -108,8 +118,8 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_weightedLeft = 0.0;
             m_weightedRight = m_weightedTotal;
 
-            Array.Clear(m_weightedTargetCountLeft, 0, m_weightedTargetCountLeft.Length);
-            Array.Copy(m_weightedTargetCount, m_weightedTargetCountRight, m_weightedTargetCount.Length);
+            m_weightedTargetCountLeft.Clear();
+            m_weightedTargetCountRight.SetCounts(m_weightedTargetCount);
         }
 
         /// <summary>
