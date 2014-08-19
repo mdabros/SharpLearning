@@ -141,7 +141,7 @@ namespace SharpLearning.AdaBoost.Learning
                     // Normalize weights
                     for (int j = 0; j < indices.Length; j++)
                     {
-                        var index = indices[i];
+                        var index = indices[j];
                         m_sampleWeights[index] = m_sampleWeights[index] / weightSum;
                     }
                 }
