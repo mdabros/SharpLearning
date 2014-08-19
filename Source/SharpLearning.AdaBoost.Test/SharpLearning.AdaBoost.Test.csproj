@@ -57,6 +57,7 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learning\RegressionAdaBoostLearnerTest.cs" />
     <Compile Include="Learning\ClassificationAdaBoostLearnerTest.cs" />
     <Compile Include="Models\ClassificationAdaBoostModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,6 +66,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WeightedRandomSamplerTest.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

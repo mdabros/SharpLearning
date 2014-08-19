@@ -65,6 +65,19 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// Sorts the keys and values based on the keys
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValues"></typeparam>
+        /// <param name="keys"></param>
+        /// <param name="interval"></param>
+        /// <param name="values"></param>
+        public static void SortWith<TKey, TValues>(this TKey[] keys, TValues[] values)
+        {
+            Array.Sort(keys, values, 0, keys.Length);
+        }
+
+        /// <summary>
         /// Sorts the keys and values based on the keys within the provided interval 
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
@@ -178,6 +191,25 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// Returns the cummulative sum of an array
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public static double[] CumSum(this double[] array)
+        {
+            var sum = 0.0;
+            var cumsum = new double[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                sum += array[i];
+                cumsum[i] = sum;
+            }
+
+            return cumsum;
+        }
+
+        /// <summary>
         /// Calculates the weighted mean
         /// </summary>
         /// <param name="array"></param>
@@ -194,6 +226,29 @@ namespace SharpLearning.Containers
             mean = mean / weights.Sum();
 
             return mean;
+        }
+
+        /// <summary>
+        /// Calculates the weighted median. Expects values and weights to be sorted according to values
+        /// http://stackoverflow.com/questions/9794558/weighted-median-computation
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static double WeightedMedian(this double[] values, double[] weights)
+        {
+            double total = weights.Sum(); // the total weight
+
+            int k = 0;
+            double sum = total - weights[0]; // sum is the total weight of all `x[i] > x[k]`
+
+            while (sum > total / 2)
+            {
+                ++k;
+                sum -= weights[k];
+            }
+
+            return values[k];
         }
 
         /// <summary>

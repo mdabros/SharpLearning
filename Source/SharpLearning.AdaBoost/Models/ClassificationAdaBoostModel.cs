@@ -18,7 +18,7 @@ namespace SharpLearning.AdaBoost.Models
         Dictionary<double, double> m_predictions = new Dictionary<double, double>();
 
         /// <summary>
-        /// 
+        /// AdaBoost classification model. Consist of a series of tree model and corresponding weights
         /// </summary>
         /// <param name="models"></param>
         /// <param name="modelWeights"></param>
@@ -36,7 +36,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Predicts a single observations using majority vote
+        /// Predicts a single observations using weighted majority vote
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -64,7 +64,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using majority vote
+        /// Predicts a set of obervations using weighted majority vote
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
