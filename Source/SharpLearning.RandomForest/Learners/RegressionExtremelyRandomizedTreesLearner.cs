@@ -3,6 +3,7 @@ using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
+using SharpLearning.DecisionTrees.TreeBuilders;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.Threading;
 using System;
@@ -145,12 +146,13 @@ namespace SharpLearning.RandomForest.Learners
         void CreateTreeModel(F64Matrix observations, double[] targets, int[] indices, Random random,
             ConcurrentBag<RegressionDecisionTreeModel> models, ConcurrentQueue<int> workItems)
         {
-            var learner = new DecisionTreeLearner(m_maximumTreeDepth,
-                m_featuresPrSplit,
-                m_minimumInformationGain,
-                m_random.Next(),
-                new RandomSplitSearcher(m_minimumSplitSize, m_random.Next()),
-                new RegressionImpurityCalculator());
+            var learner = new DecisionTreeLearner(
+                new DepthFirstTreeBuilder(m_maximumTreeDepth,
+                    m_featuresPrSplit,
+                    m_minimumInformationGain,
+                    m_random.Next(),
+                    new RandomSplitSearcher(m_minimumSplitSize, m_random.Next()),
+                    new RegressionImpurityCalculator()));
 
             var treeIndices = new int[indices.Length];
 
@@ -162,9 +164,7 @@ namespace SharpLearning.RandomForest.Learners
                     treeIndices[j] = indices[random.Next(treeIndices.Length)];
                 }
 
-                var model = new RegressionDecisionTreeModel(learner.Learn(observations, targets, treeIndices), 
-                    learner.m_variableImportance);
-
+                var model = new RegressionDecisionTreeModel(learner.Learn(observations, targets, treeIndices));
                 models.Add(model);
             }
         }

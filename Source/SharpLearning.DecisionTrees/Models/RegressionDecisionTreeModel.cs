@@ -14,12 +14,11 @@ namespace SharpLearning.DecisionTrees.Models
         readonly BinaryTree m_root;
         readonly double[] m_variableImportance;
 
-        public RegressionDecisionTreeModel(BinaryTree root, double[] variableImportance)
+        public RegressionDecisionTreeModel(BinaryTree root)
         {
             if (root == null) { throw new ArgumentNullException("root"); }
-            if (variableImportance == null) { throw new ArgumentException("variableImportance"); }
             m_root = root;
-            m_variableImportance = variableImportance;
+            m_variableImportance = m_root.VariableImportance;
         }
 
         /// <summary>

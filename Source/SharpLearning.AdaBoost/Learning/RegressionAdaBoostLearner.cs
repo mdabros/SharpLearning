@@ -25,7 +25,7 @@ namespace SharpLearning.AdaBoost.Learning
         int m_maximumTreeDepth;
         readonly double m_minimumInformationGain;
 
-        DecisionTreeLearner m_modelLearner;
+        RegressionDecisionTreeLearner m_modelLearner;
 
         readonly MeanAbsolutErrorRegressionMetric m_errorMetric = new MeanAbsolutErrorRegressionMetric();
 
@@ -158,10 +158,10 @@ namespace SharpLearning.AdaBoost.Learning
         bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)
         {
             m_sampler.Sample(indices, m_sampleWeights, m_sampleIndices);
-            
-            var model = new RegressionDecisionTreeModel(m_modelLearner.Learn(observations, targets,
-                m_sampleIndices), // weighted sampling is used instead of weights in training
-                m_modelLearner.m_variableImportance);
+
+            var model = m_modelLearner.Learn(observations, targets,
+                m_sampleIndices); // weighted sampling is used instead of weights in training
+                
 
             var predictions = model.Predict(observations, indices);
 

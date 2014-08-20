@@ -15,12 +15,11 @@ namespace SharpLearning.DecisionTrees.Models
         readonly BinaryTree m_root;
         readonly double[] m_variableImportance;
 
-        public ClassificationDecisionTreeModel(BinaryTree root, double[] variableImprotance)
+        public ClassificationDecisionTreeModel(BinaryTree root)
         {
             if (root == null) { throw new ArgumentNullException("root"); }
-            if (variableImprotance == null) { throw new ArgumentException("variableImprotance"); }
             m_root = root;
-            m_variableImportance = variableImprotance;
+            m_variableImportance = root.VariableImportance;
         }
 
         /// <summary>

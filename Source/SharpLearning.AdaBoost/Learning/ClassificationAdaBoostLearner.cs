@@ -2,10 +2,8 @@
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
-using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.Metrics.Classification;
 using System;
 using System.Collections.Generic;
@@ -28,7 +26,7 @@ namespace SharpLearning.AdaBoost.Learning
         readonly double m_minimumInformationGain;
 
         int m_uniqueTargetValues;
-        DecisionTreeLearner m_modelLearner;
+        ClassificationDecisionTreeLearner m_modelLearner;
 
         readonly TotalErrorClassificationMetric<double> m_errorMetric = new TotalErrorClassificationMetric<double>();
 
@@ -165,9 +163,8 @@ namespace SharpLearning.AdaBoost.Learning
 
         bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)
         {
-            var model = new ClassificationDecisionTreeModel(m_modelLearner.Learn(observations, targets, 
-                indices, m_sampleWeights),
-                m_modelLearner.m_variableImportance);
+            var model = m_modelLearner.Learn(observations, targets, 
+                indices, m_sampleWeights);
 
             var predictions = model.Predict(observations, indices);
 

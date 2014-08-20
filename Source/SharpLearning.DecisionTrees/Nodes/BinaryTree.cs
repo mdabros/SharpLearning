@@ -12,19 +12,23 @@ namespace SharpLearning.DecisionTrees.Nodes
         readonly List<Node> m_nodes;
         readonly List<double[]> m_probabilities;
         readonly double[] m_targetNames;
+        public readonly double[] VariableImportance;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="nodes"></param>
-        public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames)
+        public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames, 
+            double[] variableImportance)
         {
             if (nodes == null) { throw new ArgumentNullException("nodes"); }
-            if (probabilities == null) { throw new ArgumentException("probabilities"); }
-            if (targetNames == null) { throw new ArgumentException("targetNames"); }
+            if (probabilities == null) { throw new ArgumentNullException("probabilities"); }
+            if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
+            if (variableImportance == null) { throw new ArgumentNullException("variableImportance"); }
             m_nodes = nodes;
             m_probabilities = probabilities;
             m_targetNames = targetNames;
+            VariableImportance = variableImportance;
         }
 
         /// <summary>

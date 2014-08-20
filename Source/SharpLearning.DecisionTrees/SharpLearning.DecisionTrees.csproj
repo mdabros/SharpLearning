@@ -69,6 +69,8 @@
     <Compile Include="SplitSearchers\SplitResult.cs" />
     <Compile Include="SplitSearchers\ISplitSearcher.cs" />
     <Compile Include="SplitSearchers\LinearSplitSearcher.cs" />
+    <Compile Include="TreeBuilders\DepthFirstTreeBuilder.cs" />
+    <Compile Include="TreeBuilders\ITreeBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">

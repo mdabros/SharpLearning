@@ -2,8 +2,8 @@
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.DecisionTrees.SplitSearchers;
+using SharpLearning.DecisionTrees.TreeBuilders;
 
 namespace SharpLearning.DecisionTrees.Learners
 {
@@ -24,8 +24,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
         public ClassificationDecisionTreeLearner(int maximumTreeDepth=2000, int minimumSplitSize=1, int featuresPrSplit=0, double minimumInformationGain=0.000001, int seed=42)
-            : base(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, new OnlyUniqueThresholdsSplitSearcher(minimumSplitSize),
-                   new GiniClasificationImpurityCalculator())
+            : base(new DepthFirstTreeBuilder(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, new OnlyUniqueThresholdsSplitSearcher(minimumSplitSize),
+                   new GiniClasificationImpurityCalculator()))          
         {
         }
                 
@@ -37,7 +37,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets)
         {
-            return new ClassificationDecisionTreeModel(base.Learn(observations, targets), m_variableImportance);
+            return new ClassificationDecisionTreeModel(base.Learn(observations, targets));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, double[] weights)
         {
-            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, weights), m_variableImportance);
+            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, weights));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices), m_variableImportance);
+            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices));
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
         {
-            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights), m_variableImportance);
+            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights));
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices)
         {
-            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices), m_variableImportance);
+            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices));
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
         {
-            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights), m_variableImportance);
+            return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights));
         }
     }
 }
