@@ -76,6 +76,7 @@
     <Compile Include="SplitSearchers\RandomSplitSearcherTest.cs" />
     <Compile Include="SplitSearchers\SplitResultTest.cs" />
     <Compile Include="SplitSearchers\LinearSplitSearcherTest.cs" />
+    <Compile Include="TreeBuilders\BestFirstTreeBuilderTest.cs" />
     <Compile Include="TreeBuilders\DepthFirstTreeBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>

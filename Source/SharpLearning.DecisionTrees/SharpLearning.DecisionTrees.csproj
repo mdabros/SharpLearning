@@ -69,6 +69,7 @@
     <Compile Include="SplitSearchers\SplitResult.cs" />
     <Compile Include="SplitSearchers\ISplitSearcher.cs" />
     <Compile Include="SplitSearchers\LinearSplitSearcher.cs" />
+    <Compile Include="TreeBuilders\BestFirstTreeBuilder.cs" />
     <Compile Include="TreeBuilders\DepthFirstTreeBuilder.cs" />
     <Compile Include="TreeBuilders\ITreeBuilder.cs" />
   </ItemGroup>
