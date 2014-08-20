@@ -46,7 +46,22 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learners\RegressionGradientBoostLearner.cs" />
+    <Compile Include="LossFunctions\ILossFunction.cs" />
+    <Compile Include="LossFunctions\LeastSquaresLossFunction.cs" />
+    <Compile Include="Models\RegressionGradientBoostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj">
+      <Project>{8efe2f3f-779d-46d3-bea4-6f04a52f52e1}</Project>
+      <Name>SharpLearning.DecisionTrees</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

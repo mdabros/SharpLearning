@@ -1,38 +1,51 @@
 ﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.DecisionTrees.Nodes;
+using SharpLearning.DecisionTrees.Models;
+using SharpLearning.GradientBoost.LossFunctions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.DecisionTrees.Models
+namespace SharpLearning.GradientBoost.Models
 {
-    /// <summary>
-    /// Regression Decision tree model
-    /// </summary>
-    public sealed class RegressionDecisionTreeModel
+    public sealed class RegressionGradientBoostModel
     {
-        public readonly BinaryTree Tree;
-        readonly double[] m_variableImportance;
+        readonly RegressionDecisionTreeModel[] m_models;
+        readonly double[] m_rawVariableImportance;
+        readonly ILossFunction m_lossFunction;
+        readonly double[] m_predictions;
 
-        public RegressionDecisionTreeModel(BinaryTree tree)
+        public RegressionGradientBoostModel(RegressionDecisionTreeModel[] models, double[] rawVariableImportance, ILossFunction lossFunction)
         {
-            if (tree == null) { throw new ArgumentNullException("root"); }
-            Tree = tree;
-            m_variableImportance = Tree.VariableImportance;
+            if (models == null) { throw new ArgumentNullException("models"); }
+            if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
+            if (lossFunction == null) { throw new ArgumentNullException("lossFunction"); }
+
+            m_models = models;
+            m_rawVariableImportance = rawVariableImportance;
+            m_lossFunction = lossFunction;
+
+            m_predictions = new double[models.Length];
         }
 
         /// <summary>
-        /// Predicts a single observation
+        /// Predicts a single observations using the mean of all predictors
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            return Tree.Predict(observation);
+            var prediction = m_lossFunction.InitialLoss;
+
+            foreach (var model in m_models)
+            {
+                prediction += m_lossFunction.LearningRate * model.Predict(observation);
+            }
+
+            return prediction;
         }
 
         /// <summary>
-        /// Predicts a set of observations 
+        /// Predicts a set of obervations using the mean of all predictors
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -42,7 +55,7 @@ namespace SharpLearning.DecisionTrees.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = Tree.Predict(observations.GetRow(i));
+                predictions[i] = Predict(observations.GetRow(i));
             }
 
             return predictions;
@@ -59,7 +72,7 @@ namespace SharpLearning.DecisionTrees.Models
             var predictions = new double[indices.Length];
             for (int i = 0; i < indices.Length; i++)
             {
-                predictions[i] = Tree.Predict(observations.GetRow(indices[i]));
+                predictions[i] = Predict(observations.GetRow(indices[i]));
             }
 
             return predictions;
@@ -72,9 +85,9 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
-            var max = m_variableImportance.Max();
+            var max = m_rawVariableImportance.Max();
 
-            var scaledVariableImportance = m_variableImportance
+            var scaledVariableImportance = m_rawVariableImportance
                 .Select(v => (v / max) * 100.0)
                 .ToArray();
 
@@ -89,7 +102,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            return m_variableImportance;
+            return m_rawVariableImportance;
         }
     }
 }

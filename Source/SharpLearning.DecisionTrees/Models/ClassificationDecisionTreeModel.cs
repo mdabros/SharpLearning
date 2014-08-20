@@ -12,14 +12,14 @@ namespace SharpLearning.DecisionTrees.Models
     /// </summary>
     public sealed class ClassificationDecisionTreeModel
     {
-        readonly BinaryTree m_root;
+        public readonly BinaryTree Tree;
         readonly double[] m_variableImportance;
 
-        public ClassificationDecisionTreeModel(BinaryTree root)
+        public ClassificationDecisionTreeModel(BinaryTree tree)
         {
-            if (root == null) { throw new ArgumentNullException("root"); }
-            m_root = root;
-            m_variableImportance = root.VariableImportance;
+            if (tree == null) { throw new ArgumentNullException("root"); }
+            Tree = tree;
+            m_variableImportance = tree.VariableImportance;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            return m_root.Predict(observation);
+            return Tree.Predict(observation);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace SharpLearning.DecisionTrees.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = m_root.Predict(observations.GetRow(i));
+                predictions[i] = Tree.Predict(observations.GetRow(i));
             }
 
             return predictions;
@@ -60,7 +60,7 @@ namespace SharpLearning.DecisionTrees.Models
             var predictions = new double[indices.Length];
             for (int i = 0; i < indices.Length; i++)
             {
-                predictions[i] = m_root.Predict(observations.GetRow(indices[i]));
+                predictions[i] = Tree.Predict(observations.GetRow(indices[i]));
             }
 
             return predictions;
@@ -74,7 +74,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
-            return m_root.PredictProbability(observation);
+            return Tree.PredictProbability(observation);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace SharpLearning.DecisionTrees.Models
             var predictions = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = m_root.PredictProbability(observations.GetRow(i));
+                predictions[i] = Tree.PredictProbability(observations.GetRow(i));
             }
 
             return predictions;
@@ -105,7 +105,7 @@ namespace SharpLearning.DecisionTrees.Models
             var predictions = new ProbabilityPrediction[indices.Length];
             for (int i = 0; i < indices.Length; i++)
             {
-                predictions[i] = m_root.PredictProbability(observations.GetRow(indices[i]));
+                predictions[i] = Tree.PredictProbability(observations.GetRow(indices[i]));
             }
 
             return predictions;
