@@ -7,7 +7,6 @@ using SharpLearning.DecisionTrees.Models;
 using SharpLearning.Metrics.Classification;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.AdaBoost.Learning
@@ -236,7 +235,7 @@ namespace SharpLearning.AdaBoost.Learning
 
             var error = m_errorMetric.Error(m_indexedTargets, predictions);
 
-            Trace.WriteLine("Error: " + error);
+            //Trace.WriteLine("Error: " + error);
             //Trace.WriteLine(m_errorMetric.ErrorString(m_indexedTargets, predictions));
 
             return error;

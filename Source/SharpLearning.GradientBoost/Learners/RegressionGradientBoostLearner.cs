@@ -6,6 +6,7 @@ using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
 using SharpLearning.GradientBoost.LossFunctions;
 using SharpLearning.GradientBoost.Models;
+using SharpLearning.Metrics.Regression;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,10 +105,13 @@ namespace SharpLearning.GradientBoost.Learners
             Array.Resize(ref m_predictions, targets.Length);
 
             m_lossFunction.InitializeLoss(targets, m_predictions, indices);
-
+            var evaluator = new MeanAbsolutErrorRegressionMetric();
             for (int i = 0; i < m_iterations; i++)
             {
                 FitStage(i, observations, targets, indices);
+                
+                //Trace.WriteLine(evaluator.Error(targets.GetIndices(indices), 
+                //    m_predictions.GetIndices(indices)));
             }
 
             var models = m_models.ToArray();
