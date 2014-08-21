@@ -11,18 +11,20 @@ namespace SharpLearning.GradientBoost.Models
     {
         readonly RegressionDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;
-        readonly ILossFunction m_lossFunction;
+        readonly double m_learningRate;
+        readonly double m_initialLoss;
         readonly double[] m_predictions;
 
-        public RegressionGradientBoostModel(RegressionDecisionTreeModel[] models, double[] rawVariableImportance, ILossFunction lossFunction)
+        public RegressionGradientBoostModel(RegressionDecisionTreeModel[] models, double[] rawVariableImportance, 
+            double learningRate, double initialLoss)
         {
             if (models == null) { throw new ArgumentNullException("models"); }
             if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
-            if (lossFunction == null) { throw new ArgumentNullException("lossFunction"); }
-
+            if (learningRate <= 0.0) { throw new ArgumentException("learning rate must be larger than 0"); }
             m_models = models;
             m_rawVariableImportance = rawVariableImportance;
-            m_lossFunction = lossFunction;
+            m_learningRate = learningRate;
+            m_initialLoss = initialLoss;
 
             m_predictions = new double[models.Length];
         }
@@ -34,11 +36,11 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            var prediction = m_lossFunction.InitialLoss;
+            var prediction = m_initialLoss;
 
             foreach (var model in m_models)
             {
-                prediction += m_lossFunction.LearningRate * model.Predict(observation);
+                prediction += m_learningRate * model.Predict(observation);
             }
 
             return prediction;

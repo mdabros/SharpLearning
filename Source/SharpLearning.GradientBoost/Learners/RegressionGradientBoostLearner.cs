@@ -76,9 +76,9 @@ namespace SharpLearning.GradientBoost.Learners
 
             var models = m_models.ToArray();
             var variableImportance = VariableImportance(models, observations.GetNumberOfColumns());
-            var loss = new LeastSquaresLossFunction(m_learningRate, m_lossFunction.InitialLoss); // currently only least squares is supported
 
-            return new RegressionGradientBoostModel(models, variableImportance, loss);
+            return new RegressionGradientBoostModel(models, variableImportance, 
+                m_learningRate, m_lossFunction.InitialLoss);
         }
 
         void FitStage(int iteration, F64Matrix observations, double[] targets)
