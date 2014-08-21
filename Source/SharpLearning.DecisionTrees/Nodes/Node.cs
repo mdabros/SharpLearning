@@ -36,7 +36,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <summary>
         /// Probability tree index
         /// </summary>
-        public readonly int ProbabilityIndex;
+        public readonly int LeafProbabilityIndex;
 
         /// <summary>
         /// 
@@ -46,16 +46,16 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="leftIndex"></param>
         /// <param name="rightIndex"></param>
         /// <param name="nodeIndex"></param>
-        /// <param name="probabilityIndex"></param>
+        /// <param name="leafProbabilityIndex"></param>
         public Node(int featureIndex, double value, int leftIndex, 
-            int rightIndex, int nodeIndex, int probabilityIndex)
+            int rightIndex, int nodeIndex, int leafProbabilityIndex)
         {
             FeatureIndex = featureIndex;
             Value = value;
             RightIndex = rightIndex;
             LeftIndex = leftIndex;
             NodeIndex = nodeIndex;
-            ProbabilityIndex = probabilityIndex;
+            LeafProbabilityIndex = leafProbabilityIndex;
         }
 
         /// <summary>

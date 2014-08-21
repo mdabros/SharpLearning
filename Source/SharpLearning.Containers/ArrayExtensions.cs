@@ -269,6 +269,21 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// Calculates the median within the provided interval.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static double Median(this double[] values, Interval1D interval)
+        {
+            var array = new double[interval.Length];
+            values.CopyTo(interval, array);
+            Array.Sort(array);
+
+            return array[interval.Length / 2];
+        }
+
+        /// <summary>
         /// Calculates the weighted mean from the indices
         /// </summary>
         /// <param name="array"></param>

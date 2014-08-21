@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Views;
 using System;
 using System.Collections.Generic;
 
@@ -9,25 +10,28 @@ namespace SharpLearning.DecisionTrees.Nodes
     /// </summary>
     public sealed class BinaryTree
     {
-        readonly List<Node> m_nodes;
-        readonly List<double[]> m_probabilities;
-        readonly double[] m_targetNames;
+        public readonly List<Node> Nodes;
+        public readonly List<Interval1D> LeafIntervals;
+        public readonly List<double[]> Probabilities;
+        public readonly double[] TargetNames;
         public readonly double[] VariableImportance;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="nodes"></param>
-        public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames, 
-            double[] variableImportance)
+        public BinaryTree(List<Node> nodes, List<double[]> probabilities, List<Interval1D> leafIntervals,
+            double[] targetNames, double[] variableImportance)
         {
             if (nodes == null) { throw new ArgumentNullException("nodes"); }
             if (probabilities == null) { throw new ArgumentNullException("probabilities"); }
+            if (leafIntervals == null) { throw new ArgumentNullException("leafIntervals"); }
             if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
             if (variableImportance == null) { throw new ArgumentNullException("variableImportance"); }
-            m_nodes = nodes;
-            m_probabilities = probabilities;
-            m_targetNames = targetNames;
+            Nodes = nodes;
+            Probabilities = probabilities;
+            LeafIntervals = leafIntervals;
+            TargetNames = targetNames;
             VariableImportance = variableImportance;
         }
 
@@ -38,7 +42,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            return Predict(m_nodes[0], observation);
+            return Predict(Nodes[0], observation);
         }
 
         /// <summary>
@@ -48,7 +52,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <returns></returns>
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
-            return PredictProbability(m_nodes[0], observation);
+            return PredictProbability(Nodes[0], observation);
         }
 
         /// <summary>
@@ -65,11 +69,11 @@ namespace SharpLearning.DecisionTrees.Nodes
 
             if (observation[node.FeatureIndex] <= node.Value)
             {
-                return Predict(m_nodes[node.LeftIndex], observation);
+                return Predict(Nodes[node.LeftIndex], observation);
             }
             else
             {
-                return Predict(m_nodes[node.RightIndex], observation);
+                return Predict(Nodes[node.RightIndex], observation);
             }
 
             throw new InvalidOperationException("The tree is degenerated.");
@@ -84,12 +88,12 @@ namespace SharpLearning.DecisionTrees.Nodes
         {
             if (node.FeatureIndex == -1.0)
             {
-                var probabilities = m_probabilities[node.ProbabilityIndex];
+                var probabilities = Probabilities[node.LeafProbabilityIndex];
                 var targetProbabilities = new Dictionary<double, double>();
 
-                for (int i = 0; i < m_targetNames.Length; i++)
+                for (int i = 0; i < TargetNames.Length; i++)
                 {
-                    targetProbabilities.Add(m_targetNames[i], probabilities[i]);
+                    targetProbabilities.Add(TargetNames[i], probabilities[i]);
                 }
 
                 return new ProbabilityPrediction(node.Value, targetProbabilities);
@@ -97,11 +101,11 @@ namespace SharpLearning.DecisionTrees.Nodes
 
             if (observation[node.FeatureIndex] <= node.Value)
             {
-                return PredictProbability(m_nodes[node.LeftIndex], observation);
+                return PredictProbability(Nodes[node.LeftIndex], observation);
             }
             else
             {
-                return PredictProbability(m_nodes[node.RightIndex], observation);
+                return PredictProbability(Nodes[node.RightIndex], observation);
             }
 
             throw new InvalidOperationException("The tree is degenerated.");

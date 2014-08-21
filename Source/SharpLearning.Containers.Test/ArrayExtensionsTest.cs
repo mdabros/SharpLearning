@@ -250,7 +250,25 @@ namespace SharpLearning.Containers.Test
             var actual = x.WeightedMedian(w);
 
             Assert.AreEqual(6, actual, 0.0001);
-        } 
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_Median()
+        {
+            var values = new double[] { 0, 10, 20, 30, 40, 50, 60 };
+            var actual = values.Median(Interval1D.Create(0, values.Length));
+
+            Assert.AreEqual(30, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_Median_Interval()
+        {
+            var values = new double[] { 0, 10, 20, 30, 40, 50, 60 };
+            var actual = values.Median(Interval1D.Create(0, 3));
+
+            Assert.AreEqual(10, actual);
+        }
 
         
         [TestMethod]
