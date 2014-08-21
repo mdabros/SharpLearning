@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
 using System;
-using System.Linq;
 
 namespace SharpLearning.GradientBoost.LossFunctions
 {
@@ -26,28 +26,31 @@ namespace SharpLearning.GradientBoost.LossFunctions
             m_mean = initialLoss;
         }
 
-        public void InitializeLoss(double[] targets, double[] predictions)
+        public void InitializeLoss(double[] targets, double[] predictions, int[] indices)
         {
-            m_mean = targets.Sum() / targets.Length;
-            for (int i = 0; i < targets.Length; i++)
+            m_mean = targets.Sum(indices) / indices.Length;
+            for (int i = 0; i < indices.Length; i++)
 			{
-                predictions[i] = m_mean;
+                var index = indices[i];
+                predictions[index] = m_mean;
 			}
         }
 
-        public void NegativeGradient(double[] targets, double[] predictions, double[] residuals)
+        public void NegativeGradient(double[] targets, double[] predictions, double[] residuals, int[] indices)
         {
-            for (int i = 0; i < targets.Length; i++)
+            for (int i = 0; i < indices.Length; i++)
             {
-                residuals[i] = targets[i] - predictions[i];
+                var index = indices[i];
+                residuals[index] = targets[index] - predictions[index];
             }
         }
 
-        public void UpdateModel(BinaryTree tree, F64Matrix observations, double[] predictions)
+        public void UpdateModel(BinaryTree tree, F64Matrix observations, double[] predictions, int[] indices)
         {
-            for (int i = 0; i < predictions.Length; i++)
+            for (int i = 0; i < indices.Length; i++)
             {
-                predictions[i] += m_learningRate * tree.Predict(observations.GetRow(i));
+                var index = indices[i];
+                predictions[index] += m_learningRate * tree.Predict(observations.GetRow(index));
             }
         }
     }

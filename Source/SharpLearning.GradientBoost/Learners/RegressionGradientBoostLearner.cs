@@ -8,9 +8,16 @@ using SharpLearning.GradientBoost.LossFunctions;
 using SharpLearning.GradientBoost.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpLearning.GradientBoost.Learners
 {
+    /// <summary>
+    /// Regression gradient boost learner based on 
+    /// http://statweb.stanford.edu/~jhf/ftp/trebst.pdf
+    /// A series of regression trees are fitted stage wise on the residuals of the previous stage.
+    /// The resulting models are ensembled together using addition.
+    /// </summary>
     public class RegressionGradientBoostLearner
     {
         readonly ILossFunction m_lossFunction;
@@ -29,6 +36,16 @@ namespace SharpLearning.GradientBoost.Learners
 
         List<RegressionDecisionTreeModel> m_models = new List<RegressionDecisionTreeModel>();
 
+        /// <summary>
+        ///  Regression gradient boost learner. 
+        ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
+        /// </summary>
+        /// <param name="iterations">The number of iterations or stages</param>
+        /// <param name="learningRate">How much each iteration should contribute with</param>
+        /// <param name="maximumTreeDepth">The maximum depth of the tree models</param>
+        /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
+        /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
+        /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         public RegressionGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3, 
             int maximumLeafCount=2000, int minimumSplitSize = 1, double minimumInformationGain = 0.000001)
         {
@@ -51,7 +68,26 @@ namespace SharpLearning.GradientBoost.Learners
             m_minimumInformationGain = minimumInformationGain;
         }
 
+        /// <summary>
+        /// Learns a RegressionGradientBoostModel 
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
         public RegressionGradientBoostModel Learn(F64Matrix observations, double[] targets)
+        {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Learns a RegressionGradientBoostModel
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public RegressionGradientBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             m_learner = new DecisionTreeLearner(
                 new BestFirstTreeBuilder(m_maximumTreeDepth, m_maximumLeafCount,
@@ -67,11 +103,11 @@ namespace SharpLearning.GradientBoost.Learners
             Array.Clear(m_predictions, 0, m_predictions.Length);
             Array.Resize(ref m_predictions, targets.Length);
 
-            m_lossFunction.InitializeLoss(targets, m_predictions);
+            m_lossFunction.InitializeLoss(targets, m_predictions, indices);
 
             for (int i = 0; i < m_iterations; i++)
             {
-                FitStage(i, observations, targets);
+                FitStage(i, observations, targets, indices);
             }
 
             var models = m_models.ToArray();
@@ -81,13 +117,13 @@ namespace SharpLearning.GradientBoost.Learners
                 m_learningRate, m_lossFunction.InitialLoss);
         }
 
-        void FitStage(int iteration, F64Matrix observations, double[] targets)
+        void FitStage(int iteration, F64Matrix observations, double[] targets, int[] indices)
         {
-            m_lossFunction.NegativeGradient(targets, m_predictions, m_redisuals);
-            
-            var model = new RegressionDecisionTreeModel(m_learner.Learn(observations, m_redisuals));
+            m_lossFunction.NegativeGradient(targets, m_predictions, m_redisuals, indices);
 
-            m_lossFunction.UpdateModel(model.Tree, observations, m_predictions);
+            var model = new RegressionDecisionTreeModel(m_learner.Learn(observations, m_redisuals, indices));
+
+            m_lossFunction.UpdateModel(model.Tree, observations, m_predictions, indices);
 
             m_models.Add(model);
         }

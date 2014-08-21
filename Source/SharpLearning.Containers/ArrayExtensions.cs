@@ -136,6 +136,23 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// Copies the provided indices from source to destination
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="indices"></param>
+        /// <param name="source"></param>
+        /// <param name="interval"></param>
+        /// <param name="destination"></param>
+        public static void IndexedCopy<T>(this int[] indices, T[] source, T[] destination)
+        {
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var index = indices[i];
+                destination[i] = source[index];
+            }
+        }
+
+        /// <summary>
         /// Checks if a value is contained in the provided interval of an array 
         /// </summary>
         /// <typeparam name="T"></typeparam>
