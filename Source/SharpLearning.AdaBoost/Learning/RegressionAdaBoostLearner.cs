@@ -11,6 +11,8 @@ using System.Linq;
 
 namespace SharpLearning.AdaBoost.Learning
 {
+    public enum AdaBoostRegressionLoss { Linear, Squared, Exponential }
+
     /// <summary>
     /// Regression AdaBoost learner using the R2 algorithm 
     /// using weighted sampling to target the observations with largest error and
@@ -28,6 +30,7 @@ namespace SharpLearning.AdaBoost.Learning
         RegressionDecisionTreeLearner m_modelLearner;
 
         readonly MeanAbsolutErrorRegressionMetric m_errorMetric = new MeanAbsolutErrorRegressionMetric();
+        readonly AdaBoostRegressionLoss m_loss;
 
         List<double> m_modelErrors = new List<double>();
         List<double> m_modelWeights = new List<double>();
@@ -49,11 +52,12 @@ namespace SharpLearning.AdaBoost.Learning
         /// <param name="learningRate">How much each boost iteration should add (between 1.0 and 0.0)</param>
         /// <param name="maximumTreeDepth">The maximum depth of the tree models. 
         /// 0 will set the depth to default 3</param>
+        /// <param name="loss">Type of loss used when boosting weights. Linear is default</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random sampling</param>
         public RegressionAdaBoostLearner(int iterations = 50, double learningRate = 1, int maximumTreeDepth = 0, 
-            int minimumSplitSize = 1, double minimumInformationGain = 0.000001, int seed = 42)
+            AdaBoostRegressionLoss loss = AdaBoostRegressionLoss.Linear, int minimumSplitSize = 1, double minimumInformationGain = 0.000001, int seed = 42)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (learningRate > 1.0 || learningRate <= 0) { throw new ArgumentException("learningRate must be larger than zero and smaller than 1.0"); }
@@ -66,6 +70,7 @@ namespace SharpLearning.AdaBoost.Learning
 
             m_minimumSplitSize = minimumSplitSize;
             m_maximumTreeDepth = maximumTreeDepth;
+            m_loss = loss;
             m_minimumInformationGain = minimumInformationGain;
 
             m_sampler = new WeightedRandomSampler(seed);
@@ -182,13 +187,21 @@ namespace SharpLearning.AdaBoost.Learning
                 {
                     error = error / maxError;
                 }
-                
-                // Square loss
-                //error = error * error;
 
-                // Exponential loss
-                //error = 1.0 - Math.Exp(-error);
-
+                switch (m_loss)
+                {
+                    case AdaBoostRegressionLoss.Linear:
+                        break;
+                    case AdaBoostRegressionLoss.Squared:
+                        error = error * error;
+                        break;
+                    case AdaBoostRegressionLoss.Exponential:
+                        error = 1.0 - Math.Exp(-error);
+                        break;
+                    default:
+                        throw new ArgumentException("Unsupported loss type");
+                }
+                                
                 m_workErrors[i] = error;
             }
 

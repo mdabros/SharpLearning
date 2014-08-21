@@ -14,7 +14,7 @@ namespace SharpLearning.AdaBoost.Test.Learning
     public class RegressionAdaBoostLearnerTest
     {
         [TestMethod]
-        public void RegressionAdaBoostLearner_Learn_AptitudeData()
+        public void RegressionAdaBoostLearner_Learn_AptitudeData_LinearLoss()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -29,6 +29,42 @@ namespace SharpLearning.AdaBoost.Test.Learning
             var actual = evaluator.Error(targets, predictions);
 
             Assert.AreEqual(0.14185814185814186, actual);
+        }
+
+        [TestMethod]
+        public void RegressionAdaBoostLearner_Learn_AptitudeData_SquaredLoss()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+
+            var sut = new RegressionAdaBoostLearner(10, 1, 0, AdaBoostRegressionLoss.Squared);
+
+            var model = sut.Learn(observations, targets);
+            var predictions = model.Predict(observations);
+
+            var evaluator = new MeanAbsolutErrorRegressionMetric();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.13672161172161174, actual);
+        }
+
+        [TestMethod]
+        public void RegressionAdaBoostLearner_Learn_AptitudeData_ExponentialLoss()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+
+            var sut = new RegressionAdaBoostLearner(10, 1, 0, AdaBoostRegressionLoss.Exponential);
+
+            var model = sut.Learn(observations, targets);
+            var predictions = model.Predict(observations);
+
+            var evaluator = new MeanAbsolutErrorRegressionMetric();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.10370879120879124, actual);
         }
 
         [TestMethod]
