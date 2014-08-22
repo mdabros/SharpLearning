@@ -269,18 +269,55 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
-        /// Calculates the median within the provided interval.
+        /// Calculates the median from the provided indices.
         /// </summary>
         /// <param name="values"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public static double Median(this double[] values, Interval1D interval)
+        public static double Median(this double[] values, int[] indices)
         {
-            var array = new double[interval.Length];
-            values.CopyTo(interval, array);
+            var array = new double[indices.Length];
+            indices.IndexedCopy(values, array);
             Array.Sort(array);
 
-            return array[interval.Length / 2];
+            if (indices.Length % 2 == 0)
+            {
+                var index1 = (int)((indices.Length / 2.0) - 0.5);
+                var v1 = array[index1];
+
+                var index2 = (int)((indices.Length / 2.0) + 0.5);
+                var v2 = array[index2];
+
+                return (v1 + v2) / 2.0;
+            }
+
+            return array[indices.Length / 2];
+        }
+
+        /// <summary>
+        /// Calculates the median
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static double Median(this double[] values)
+        {
+            var array = new double[values.Length];
+            Array.Copy(values, array, values.Length);
+            Array.Sort(array);
+
+            if (array.Length % 2 == 0)
+            {
+                var index1 = (int)((array.Length / 2.0) - 0.5);
+                var v1 = array[index1];
+
+                var index2 = (int)((array.Length / 2.0) + 0.5);
+                var v2 = array[index2];
+
+                return (v1 + v2) / 2.0;
+            }
+
+            return array[array.Length / 2];
         }
 
         /// <summary>

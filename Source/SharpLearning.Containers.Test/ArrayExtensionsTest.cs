@@ -256,21 +256,29 @@ namespace SharpLearning.Containers.Test
         public void ArrayExtensions_Median()
         {
             var values = new double[] { 0, 10, 20, 30, 40, 50, 60 };
-            var actual = values.Median(Interval1D.Create(0, values.Length));
+            var actual = values.Median();
 
             Assert.AreEqual(30, actual);
         }
 
         [TestMethod]
-        public void ArrayExtensions_Median_Interval()
+        public void ArrayExtensions_Median_Equal_Number_Of_Items()
+        {
+            var values = new double[] { 0, 10, 20, 30, 40, 50, 60, 70 };
+            var actual = values.Median();
+
+            Assert.AreEqual(35, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_Median_Indices()
         {
             var values = new double[] { 0, 10, 20, 30, 40, 50, 60 };
-            var actual = values.Median(Interval1D.Create(0, 3));
+            var actual = values.Median(new int[] { 0, 1, 2 });
 
             Assert.AreEqual(10, actual);
         }
-
-        
+                
         [TestMethod]
         public void ArrayExtensions_Shuffle()
         {

@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using System;
 using System.Collections.Generic;
@@ -80,6 +81,30 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
+        /// Returns the prediction node using a continous node strategy
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        Node PredictNode(Node node, double[] observation)
+        {
+            if (node.FeatureIndex == -1.0)
+            {
+                return node;
+            }
+
+            if (observation[node.FeatureIndex] <= node.Value)
+            {
+                return PredictNode(Nodes[node.LeftIndex], observation);
+            }
+            else
+            {
+                return PredictNode(Nodes[node.RightIndex], observation);
+            }
+
+            throw new InvalidOperationException("The tree is degenerated.");
+        }
+
+        /// <summary>
         /// Predict probabilities using a continous node strategy
         /// </summary>
         /// <param name="observation"></param>
@@ -109,6 +134,33 @@ namespace SharpLearning.DecisionTrees.Nodes
             }
 
             throw new InvalidOperationException("The tree is degenerated.");
+        }
+
+        /// <summary>
+        /// Returns an array of index lists holding the index og which samples
+        /// from observations goes to which leaf. The array uses the Node.ProbabilityIndex
+        /// to index the leafs
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public List<int>[] LeafRegionIndices(F64Matrix observations, int[] indices)
+        {
+            var leafs = Probabilities.Count;
+            var leafIndices = new List<int>[leafs];
+            for (int i = 0; i < leafs; i++)
+            {
+                leafIndices[i] = new List<int>();
+            }
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var index = indices[i];
+                var node = PredictNode(Nodes[0], observations.GetRow(index));
+                leafIndices[node.LeafProbabilityIndex].Add(index);
+            }
+
+            return leafIndices;
         }
     }
 }

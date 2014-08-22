@@ -11,16 +11,16 @@ using System.Linq;
 namespace SharpLearning.GradientBoost.Test.Learners
 {
     [TestClass]
-    public class RegressionGradientBoostLearnerTest
+    public class RegressionLeastAbsoluteDeviationGradientBoostLearnerTest
     {
         [TestMethod]
-        public void RegressionGradientBoostLearner_Learn_AptitudeData()
+        public void RegressionLeastAbsoluteDeviationGradientBoostLearner_Learn_AptitudeData()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var sut = new RegressionGradientBoostLearner();
+            var sut = new RegressionLeastAbsoluteDeviationGradientBoostLearner();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -28,17 +28,17 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var evaluator = new MeanAbsolutErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.052593937296318408, actual);
+            Assert.AreEqual(0.19231280026901687, actual);
         }
 
         [TestMethod]
-        public void RegressionGradientBoostLearner_Learn_Glass()
+        public void RegressionLeastAbsoluteDeviationGradientBoostLearner_Learn_Glass()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new RegressionGradientBoostLearner();
+            var sut = new RegressionLeastAbsoluteDeviationGradientBoostLearner();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -46,17 +46,17 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var evaluator = new MeanAbsolutErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.18457759227201861, actual);
+            Assert.AreEqual(0.42270234412252877, actual);
         }
 
         [TestMethod]
-        public void RegressionGradientBoostLearner_Learn_Glass_Indexed()
+        public void RegressionLeastAbsoluteDeviationGradientBoostLearner_Learn_Glass_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new RegressionGradientBoostLearner();
+            var sut = new RegressionLeastAbsoluteDeviationGradientBoostLearner();
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -71,8 +71,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var evaluator = new MeanAbsolutErrorRegressionMetric();
             var actual = evaluator.Error(indexedTargets, indexedPredictions);
 
-            Assert.AreEqual(0.11971320408918414, actual);
+            Assert.AreEqual(0.36870589694817024, actual);
         }
-
     }
 }

@@ -9,7 +9,9 @@ using SharpLearning.GradientBoost.Models;
 using SharpLearning.Metrics.Regression;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using SharpLearning.Containers;
 
 namespace SharpLearning.GradientBoost.Learners
 {
@@ -25,7 +27,6 @@ namespace SharpLearning.GradientBoost.Learners
         DecisionTreeLearner m_learner;
 
         readonly int m_iterations;
-        readonly double m_learningRate;
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
 
@@ -41,27 +42,25 @@ namespace SharpLearning.GradientBoost.Learners
         ///  Regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
+        /// <param name="lossFunction">The type of loss used calculating residuals</param>
         /// <param name="iterations">The number of iterations or stages</param>
-        /// <param name="learningRate">How much each iteration should contribute with</param>
         /// <param name="maximumTreeDepth">The maximum depth of the tree models</param>
         /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public RegressionGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3, 
-            int maximumLeafCount=2000, int minimumSplitSize = 1, double minimumInformationGain = 0.000001)
+        public RegressionGradientBoostLearner(ILossFunction lossFunction, int iterations, int maximumTreeDepth, 
+            int maximumLeafCount, int minimumSplitSize, double minimumInformationGain)
         {
-            //if (lossFunction == null) { throw new ArgumentNullException("lossFunction"); } // currently only least squares is supported
+            if (lossFunction == null) { throw new ArgumentNullException("lossFunction"); } // currently only least squares is supported
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
-            if (learningRate > 1.0 || learningRate <= 0) { throw new ArgumentException("learningRate must be larger than zero and smaller than 1.0"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (maximumLeafCount <= 1) { throw new ArgumentException("maximum leaf count must be larger than 1"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
 
-            m_lossFunction = new LeastSquaresLossFunction(learningRate); // currently only least squares is supported
+            m_lossFunction = lossFunction;// currently only least squares is supported
             
             m_iterations = iterations;
-            m_learningRate = learningRate;
 
             m_minimumSplitSize = minimumSplitSize;
             m_maximumTreeDepth = maximumTreeDepth;
@@ -109,16 +108,16 @@ namespace SharpLearning.GradientBoost.Learners
             for (int i = 0; i < m_iterations; i++)
             {
                 FitStage(i, observations, targets, indices);
-                
-                //Trace.WriteLine(evaluator.Error(targets.GetIndices(indices), 
+
+                //Trace.WriteLine(evaluator.Error(targets.GetIndices(indices),
                 //    m_predictions.GetIndices(indices)));
             }
 
             var models = m_models.ToArray();
             var variableImportance = VariableImportance(models, observations.GetNumberOfColumns());
 
-            return new RegressionGradientBoostModel(models, variableImportance, 
-                m_learningRate, m_lossFunction.InitialLoss);
+            return new RegressionGradientBoostModel(models, variableImportance,
+                m_lossFunction.LearningRate, m_lossFunction.InitialLoss);
         }
 
         void FitStage(int iteration, F64Matrix observations, double[] targets, int[] indices)
@@ -127,7 +126,7 @@ namespace SharpLearning.GradientBoost.Learners
 
             var model = new RegressionDecisionTreeModel(m_learner.Learn(observations, m_redisuals, indices));
 
-            m_lossFunction.UpdateModel(model.Tree, observations, m_predictions, indices);
+            m_lossFunction.UpdateModel(model.Tree, observations, targets, m_predictions, indices);
 
             m_models.Add(model);
         }

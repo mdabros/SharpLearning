@@ -238,6 +238,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
                 leafIntervals.Add(allInterval);
                 probabilities.Add(m_impurityCalculator.LeafProbabilities());
 
+                nodes.Clear();
                 nodes.Add(leaf);
             }
 
