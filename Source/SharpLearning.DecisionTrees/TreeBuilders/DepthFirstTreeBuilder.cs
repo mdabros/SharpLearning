@@ -115,7 +115,6 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
             var rootImpurity = m_impurityCalculator.NodeImpurity();
 
             var nodes = new List<Node>();
-            var leafIntervals = new List<Interval1D>();
             var probabilities = new List<double[]>();
 
             var stack = new Stack<DecisionNodeCreationItem>(100);
@@ -200,7 +199,6 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
                     var leaf = new Node(-1, value, -1, -1,
                         currentNodeIndex++, currentLeafProbabilityIndex++);
 
-                    leafIntervals.Add(parentInterval);
                     probabilities.Add(m_impurityCalculator.LeafProbabilities());
 
                     nodes.Add(leaf);
@@ -235,15 +233,13 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
                 var leaf = new Node(-1, m_impurityCalculator.LeafValue(), -1, -1,
                     currentNodeIndex++, currentLeafProbabilityIndex++);
 
-                leafIntervals.Add(allInterval);
                 probabilities.Add(m_impurityCalculator.LeafProbabilities());
 
                 nodes.Clear();
                 nodes.Add(leaf);
             }
 
-            return new BinaryTree(nodes, probabilities, leafIntervals,
-                targetNames, m_variableImportance);
+            return new BinaryTree(nodes, probabilities, targetNames, m_variableImportance);
         }
 
         void SetNextFeatures(int totalNumberOfFeature)

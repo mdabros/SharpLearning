@@ -12,7 +12,6 @@ namespace SharpLearning.DecisionTrees.Nodes
     public sealed class BinaryTree
     {
         public readonly List<Node> Nodes;
-        public readonly List<Interval1D> LeafIntervals;
         public readonly List<double[]> Probabilities;
         public readonly double[] TargetNames;
         public readonly double[] VariableImportance;
@@ -21,17 +20,15 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// 
         /// </summary>
         /// <param name="nodes"></param>
-        public BinaryTree(List<Node> nodes, List<double[]> probabilities, List<Interval1D> leafIntervals,
-            double[] targetNames, double[] variableImportance)
+        public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames, 
+            double[] variableImportance)
         {
             if (nodes == null) { throw new ArgumentNullException("nodes"); }
             if (probabilities == null) { throw new ArgumentNullException("probabilities"); }
-            if (leafIntervals == null) { throw new ArgumentNullException("leafIntervals"); }
             if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
             if (variableImportance == null) { throw new ArgumentNullException("variableImportance"); }
             Nodes = nodes;
             Probabilities = probabilities;
-            LeafIntervals = leafIntervals;
             TargetNames = targetNames;
             VariableImportance = variableImportance;
         }
