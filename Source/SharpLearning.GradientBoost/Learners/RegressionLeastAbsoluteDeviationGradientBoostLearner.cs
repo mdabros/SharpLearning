@@ -8,7 +8,7 @@ namespace SharpLearning.GradientBoost.Learners
     /// A series of regression trees are fitted stage wise on the residuals of the previous stage.
     /// The resulting models are ensembled together using addition.
     /// </summary>
-    public class RegressionLeastAbsoluteDeviationGradientBoostLearner : RegressionGradientBoostLearner
+    public sealed class RegressionLeastAbsoluteDeviationGradientBoostLearner : RegressionGradientBoostLearner
     {
         /// <summary>
         ///  Least absolut deviation (LAD) regression gradient boost learner. 
