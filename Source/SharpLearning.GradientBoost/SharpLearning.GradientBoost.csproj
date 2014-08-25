@@ -54,6 +54,7 @@
     <Compile Include="LossFunctions\LeastSquaresLossFunction.cs" />
     <Compile Include="Models\RegressionGradientBoostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomSamplingWithoutReplacement.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
