@@ -2,22 +2,25 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
 using System;
+using System.Linq;
 
 namespace SharpLearning.GradientBoost.LossFunctions
 {
     /// <summary>
-    /// Least absolute deviation (LAD) loss function
+    /// Huber loss function
     /// </summary>
-    public sealed class LeastAbsoluteErrorLossFunction : ILossFunction
+    public sealed class HuberLossFunction : ILossFunction
     {
         readonly double m_learningRate;
+        readonly double m_alpha;
         double m_median;
+        double m_gamma;
 
         /// <summary>
         /// The learning rate of the loss function
         /// </summary>
         public double LearningRate { get { return m_learningRate; } }
-        
+
         /// <summary>
         /// The initial loss (median of the training targets)
         /// </summary>
@@ -27,15 +30,18 @@ namespace SharpLearning.GradientBoost.LossFunctions
         /// 
         /// </summary>
         /// <param name="learningRate"></param>
-        public LeastAbsoluteErrorLossFunction(double learningRate)
+        /// <param name="alpha"></param>
+        public HuberLossFunction(double learningRate, double alpha=0.9)
         {
             if (learningRate <= 0.0) { throw new ArgumentException("Learning rate must larger than 0.0"); }
+            if (alpha <= 0.0 || alpha > 1.0) { throw new ArgumentException("Learning rate must larger than 0.0"); }
             m_learningRate = learningRate;
+            m_alpha = alpha;
         }
 
         /// <summary>
         /// Calculates the initial loss within the provided indices. The loss is stored in predictions.
-        /// The initial loss is the median of the targets for LAD.
+        /// The initial loss is the median of the targets for Huber.
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
@@ -52,9 +58,7 @@ namespace SharpLearning.GradientBoost.LossFunctions
         }
 
         /// <summary>
-        /// Calculates the negative gradient between the targets and the prediction. 
-        /// The gradient is returned in residuals. For LAD the negative gradient is 
-        /// 1.0 if targets[i] - predictions[i] > 0.0 else -1.0
+        /// 
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
@@ -62,25 +66,40 @@ namespace SharpLearning.GradientBoost.LossFunctions
         /// <param name="indices"></param>
         public void NegativeGradient(double[] targets, double[] predictions, double[] residuals, int[] indices)
         {
+            var absDiff = new double[indices.Length];
+            var difference = new double[indices.Length];
+
             for (int i = 0; i < indices.Length; i++)
             {
                 var index = indices[i];
                 var value = targets[index] - predictions[index];
-                if(value > 0.0)
+                difference[i] = value;
+                absDiff[i] = Math.Abs(value);
+            }
+
+            var gamma = absDiff.ScoreAtPercentile(m_alpha);
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var diff = absDiff[i];
+                var index = indices[i];
+
+                if(diff <= gamma)
                 {
-                    residuals[index] = 1.0;
+                    residuals[index] = difference[i];
                 }
                 else
                 {
-                    residuals[index] = -1.0;
+
+                    residuals[index] = gamma * Math.Sign(difference[i]);
                 }
             }
+
+            m_gamma = gamma;
         }
 
         /// <summary>
-        /// Updates the tree model and predictions based on the targets and predictions. 
-        /// LAD updates the value of the tree leafs with the median of (targets - predictions)
-        /// for each leaf region. 
+        /// 
         /// </summary>
         /// <param name="tree"></param>
         /// <param name="observations"></param>
@@ -93,7 +112,7 @@ namespace SharpLearning.GradientBoost.LossFunctions
 
             for (int i = 0; i < tree.Nodes.Count; i++)
             {
-                if(tree.Nodes[i].FeatureIndex == -1)
+                if (tree.Nodes[i].FeatureIndex == -1)
                 {
                     var node = tree.Nodes[i];
                     var nodeRegion = nodeIndices[node.LeafProbabilityIndex];
@@ -105,7 +124,19 @@ namespace SharpLearning.GradientBoost.LossFunctions
                         diff[j] = targets[index] - predictions[index];
                     }
 
-                    var newValue = diff.Median();
+                    var median = diff.Median();
+                    var values = new double[diff.Length];
+
+                    for (int j = 0; j < diff.Length; j++)
+                    {
+                        var index = nodeRegion[j];
+                        var medianDiff = diff[j] - median;
+                        var sign = Math.Sign(medianDiff);
+
+                        values[j] = sign * Math.Min(Math.Abs(medianDiff), m_gamma); 
+                    }
+
+                    var newValue = median + values.Sum() / values.Length;
 
                     tree.Nodes[i] = new Node(node.FeatureIndex, newValue, node.LeftIndex,
                         node.RightIndex, node.NodeIndex, node.LeafProbabilityIndex);

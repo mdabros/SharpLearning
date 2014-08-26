@@ -278,6 +278,90 @@ namespace SharpLearning.Containers.Test
 
             Assert.AreEqual(10, actual);
         }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_100()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var actual = values.ScoreAtPercentile(1.0);
+
+            Assert.AreEqual(10, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_000()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var actual = values.ScoreAtPercentile(0.0);
+
+            Assert.AreEqual(1, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_050()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var actual = values.ScoreAtPercentile(.5);
+
+            Assert.AreEqual(5.5, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_080()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var actual = values.ScoreAtPercentile(.8);
+
+            Assert.AreEqual(8.2, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_090()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var actual = values.ScoreAtPercentile(.9);
+
+            Assert.AreEqual(9.1, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_010()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+            var actual = values.ScoreAtPercentile(.1);
+
+            Assert.AreEqual(2.0, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_010_Indexed()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+            var indices = Enumerable.Range(0, values.Length).ToArray();
+            var actual = values.ScoreAtPercentile(.1, indices);
+
+            Assert.AreEqual(2.0, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_090_Indexed()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            var indices = Enumerable.Range(0, values.Length).ToArray();
+            var actual = values.ScoreAtPercentile(.9, indices);
+
+            Assert.AreEqual(9.1, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_ScoreAtPercentile_090_Indexed_2()
+        {
+            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+            var indices = Enumerable.Range(0, values.Length - 1).ToArray();
+            var actual = values.ScoreAtPercentile(.9, indices);
+
+            Assert.AreEqual(9.1, actual);
+        }
                 
         [TestMethod]
         public void ArrayExtensions_Shuffle()

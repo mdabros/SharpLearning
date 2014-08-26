@@ -321,6 +321,82 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="percentile"></param>
+        /// <returns></returns>
+        public static double ScoreAtPercentile(this double[] values, double percentile)
+        {
+            if (percentile == 1.0)
+                return values.Max();
+
+            if (percentile == 0.0)
+                return values.Min();
+
+            var array = new double[values.Length];
+            Array.Copy(values, array, values.Length);
+            //indices.IndexedCopy(values, array);
+            Array.Sort(array);
+
+            var index = percentile * (values.Length - 1.0);
+            var i = (int)index;
+            var diff = index - i;
+            
+            if(diff != 0.0)
+            {
+                var j = i + 1;
+                var v1 = array[i];
+                var w1 = j - index;
+
+                var v2 = array[j];
+                var w2 = index - i;
+                
+                return (v1 * w1 + v2 * w2) / (w1 + w2);
+            }
+
+            return array[i];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="values"></param>
+        /// <param name="percentile"></param>
+        /// <returns></returns>
+        public static double ScoreAtPercentile(this double[] values, double percentile, int[] indices)
+        {
+            var array = new double[indices.Length];
+            indices.IndexedCopy(values, array);
+
+            if (percentile == 1.0)
+                return array.Max();
+
+            if (percentile == 0.0)
+                return array.Min();
+
+            Array.Sort(array);
+
+            var index = percentile * (array.Length - 1.0);
+            var i = (int)index;
+            var diff = index - i;
+
+            if (diff != 0.0)
+            {
+                var j = i + 1;
+                var v1 = array[i];
+                var w1 = j - index;
+
+                var v2 = array[j];
+                var w2 = index - i;
+
+                return (v1 * w1 + v2 * w2) / (w1 + w2);
+            }
+
+            return array[i];
+        }
+
+        /// <summary>
         /// Calculates the weighted mean from the indices
         /// </summary>
         /// <param name="array"></param>

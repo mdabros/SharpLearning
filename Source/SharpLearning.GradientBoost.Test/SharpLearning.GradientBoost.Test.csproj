@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionLeastSquaresGradientBoostLearnerTest.cs" />
+    <Compile Include="LossFunctions\HuberLossFunctionTest.cs" />
     <Compile Include="LossFunctions\LeastAbsoluteErrorLossFunctionTest.cs" />
     <Compile Include="LossFunctions\LeastSquaresLossFunctionTest.cs" />
     <Compile Include="Models\RegressionGradientBoostModelTest.cs" />

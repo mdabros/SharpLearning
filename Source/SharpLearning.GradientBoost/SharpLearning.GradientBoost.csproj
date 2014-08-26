@@ -49,6 +49,7 @@
     <Compile Include="Learners\RegressionLeastSquaresGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionGradientBoostLearner.cs" />
+    <Compile Include="LossFunctions\HuberLossFunction.cs" />
     <Compile Include="LossFunctions\ILossFunction.cs" />
     <Compile Include="LossFunctions\LeastAbsoluteErrorLossFunction.cs" />
     <Compile Include="LossFunctions\LeastSquaresLossFunction.cs" />
