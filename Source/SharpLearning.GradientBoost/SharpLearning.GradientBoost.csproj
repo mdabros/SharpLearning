@@ -46,6 +46,7 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learners\RegressionHuberGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionLeastSquaresGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionGradientBoostLearner.cs" />
