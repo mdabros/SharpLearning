@@ -46,14 +46,19 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learners\ClassificationGradientBoostLearner.cs" />
+    <Compile Include="Learners\MultinomialDevianceClassificationGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionHuberGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionLeastSquaresGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionGradientBoostLearner.cs" />
     <Compile Include="LossFunctions\HuberLossFunction.cs" />
+    <Compile Include="LossFunctions\IClassificationLossFunction.cs" />
     <Compile Include="LossFunctions\ILossFunction.cs" />
     <Compile Include="LossFunctions\LeastAbsoluteErrorLossFunction.cs" />
     <Compile Include="LossFunctions\LeastSquaresLossFunction.cs" />
+    <Compile Include="LossFunctions\MultinomialDevianceClassificationLossFunction.cs" />
+    <Compile Include="Models\ClassificationGradientBoostModel.cs" />
     <Compile Include="Models\RegressionGradientBoostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSamplingWithoutReplacement.cs" />

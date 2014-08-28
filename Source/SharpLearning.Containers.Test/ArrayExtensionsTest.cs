@@ -2,6 +2,7 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.Containers.Test
@@ -175,6 +176,24 @@ namespace SharpLearning.Containers.Test
             var actual = values.Sum(Interval1D.Create(1, 5));
 
             Assert.AreEqual(100, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_Exp()
+        {
+            var values = new List<double[]> {
+                new double[] { 0, .10, .20, .30, .40, .50 },
+                new double[] { .40, .50, .60, .70, .80, .90 }
+            };
+
+            var actual = values.Exp(2);
+            var expected = new double[] { 1.2214027581601699, 1.8221188003905089 };
+            
+            Assert.AreEqual(expected.Length, actual.Length);
+            for (int i = 0; i < expected.Length; i++)
+            {
+                Assert.AreEqual(expected[i], actual[i], 0.000001);
+            }
         }
 
         [TestMethod]

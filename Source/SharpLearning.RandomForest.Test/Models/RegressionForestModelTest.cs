@@ -90,7 +90,7 @@ namespace SharpLearning.RandomForest.Test.Models
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
             var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 }, 
-                { "AptitudeTestScore", 27.7777777777777 } };
+                { "AptitudeTestScore", 41.8626323997622 } };
 
             Assert.AreEqual(expected.Count, actual.Count);
             var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
@@ -113,7 +113,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();
-            var expected = new double[] { 9.6153846153846132, 34.615384615384649 };
+            var expected = new double[] { 50.73913687047915, 121.20388509244185 };
 
             Assert.AreEqual(expected.Length, actual.Length);
 

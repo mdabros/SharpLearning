@@ -68,7 +68,7 @@ namespace SharpLearning.GradientBoost.Test.Models
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
             var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 }, 
-                { "AptitudeTestScore", 96.3264913389984 } };
+                { "AptitudeTestScore", 8.12093596457876 } };
 
             Assert.AreEqual(expected.Count, actual.Count);
             var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
@@ -91,7 +91,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();
-            var expected = new double[] { 0.0975103688759322, 0.10122902591019059 };
+            var expected = new double[] { 1.4468675712118237, 17.816512499577065 };
 
             Assert.AreEqual(expected.Length, actual.Length);
 

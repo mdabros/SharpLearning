@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace SharpLearning.GradientBoost.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class RegressionGradientBoostModel
     {
         readonly RegressionDecisionTreeModel[] m_models;
@@ -30,7 +33,7 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Predicts a single observations using the mean of all predictors
+        /// Predicts a single observations using the combination of all predictors
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -47,7 +50,7 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the mean of all predictors
+        /// Predicts a set of obervations using the combination of all predictors
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>

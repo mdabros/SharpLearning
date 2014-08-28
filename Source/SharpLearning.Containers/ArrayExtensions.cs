@@ -8,6 +8,31 @@ namespace SharpLearning.Containers
     public static class ArrayExtensions
     {
         /// <summary>
+        /// Converts Nan to 0.0, NegativeInfinity to double.MinValue and PositiveInfinity to double.MaxValue
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static double NanToNum(this double value)
+        {
+            if (double.IsNaN(value))
+            {
+                value = 0.0;
+            }
+
+            if (double.IsNegativeInfinity(value))
+            {
+                value = double.MinValue;
+            }
+
+            if (double.IsPositiveInfinity(value))
+            {
+                value = double.MaxValue;
+            }
+
+            return value;
+        }
+
+        /// <summary>
         /// Gets the values from v based on indices
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -205,6 +230,22 @@ namespace SharpLearning.Containers
                 sum += array[index];
             }
             return sum;
+        }
+
+        /// <summary>
+        /// Returns the exponential indexed value from each array in the list
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public static double[] Exp(this List<double[]> array, int index)
+        {
+            var exp = new double[array.Count];
+            for (int i = 0; i < array.Count; i++)
+            {
+                exp[i] = Math.Exp(array[i][index]);
+            }
+            return exp;
         }
 
         /// <summary>

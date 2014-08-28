@@ -57,12 +57,14 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learners\MultinomialDevianceClassificationGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionHuberGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionLeastSquaresGradientBoostLearnerTest.cs" />
     <Compile Include="LossFunctions\HuberLossFunctionTest.cs" />
     <Compile Include="LossFunctions\LeastAbsoluteErrorLossFunctionTest.cs" />
     <Compile Include="LossFunctions\LeastSquaresLossFunctionTest.cs" />
+    <Compile Include="Models\ClassificationGradientBoostModelTest.cs" />
     <Compile Include="Models\RegressionGradientBoostModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

@@ -239,7 +239,8 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
                 nodes.Add(leaf);
             }
 
-            return new BinaryTree(nodes, probabilities, targetNames, m_variableImportance);
+            return new BinaryTree(nodes, probabilities, targetNames, 
+                m_variableImportance.ToArray());
         }
 
         void SetNextFeatures(int totalNumberOfFeature)
