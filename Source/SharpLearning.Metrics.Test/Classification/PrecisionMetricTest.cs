@@ -66,6 +66,30 @@ namespace SharpLearning.Metrics.Test.Classification
         }
 
         [TestMethod]
+        public void PrecisionMetric_Error_All_Negative()
+        {
+            var targets = new double[] { 0, 0, 0, 0, 0, 0, 0, 1 };
+            var predictions = new double[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+            var sut = new PrecisionMetric<double>(1);
+            var actual = sut.Error(targets, predictions);
+
+            Assert.AreEqual(1.0, actual);
+        }
+
+        [TestMethod]
+        public void PrecisionMetric_Error_All_Positive()
+        {
+            var targets = new double[] { 0, 0, 0, 0, 0, 0, 0, 1 };
+            var predictions = new double[] { 1, 1, 1, 1, 1, 1, 1, 1 };
+
+            var sut = new PrecisionMetric<double>(1);
+            var actual = sut.Error(targets, predictions);
+
+            Assert.AreEqual(0.875, actual);
+        }
+
+        [TestMethod]
         public void PrecisionMetric_ErrorString()
         {
             var targets = new double[] { 0, 1, 0 };

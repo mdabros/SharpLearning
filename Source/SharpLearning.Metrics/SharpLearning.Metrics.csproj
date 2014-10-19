@@ -46,6 +46,7 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Classification\F1ScoreMetric.cs" />
     <Compile Include="Classification\PrecisionMetric.cs" />
     <Compile Include="Classification\RecallMetric.cs" />
     <Compile Include="Classification\RocAucClassificationMetric.cs" />

@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SharpLearning.Metrics.Classification
 {
-    public sealed class RecallMetric<T> : IClassificationMetric<T>
+    public sealed class F1ScoreMetric<T> : IClassificationMetric<T>
     {
         readonly ClassificationMatrixStringConverter<T> m_converter = new ClassificationMatrixStringConverter<T>();
         readonly ClassificationMatrix<T> m_classificationMatrix = new ClassificationMatrix<T>();
 
         readonly T m_positiveTarget;
 
-        public RecallMetric(T positiveTarget)
+        public F1ScoreMetric(T positiveTarget)
         {
             if (positiveTarget == null) { throw new ArgumentNullException("positiveClassLabel"); }
             m_positiveTarget = positiveTarget;
         }
 
         /// <summary>
-        /// Calculates the recall metric (TP/(TP + FN)) on a binary classification problem
+        /// Calculates the F1Score metric 2 * precision * recall / (precision + recall) on a binary classification problem
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
@@ -28,9 +30,47 @@ namespace SharpLearning.Metrics.Classification
             var uniques = UniqueTargets(targets, predictions);
 
             if (uniques.Count > 2)
-            { throw new ArgumentException("RecallMetric only supports binary classification problems"); }
+            { throw new ArgumentException("PrecisionMetric only supports binary classification problems"); }
 
-            return 1.0 - Recall(targets, predictions);
+            var precision = Precision(targets, predictions);
+            var recall = Recall(targets, predictions);
+
+            if (precision + recall == 0.0)
+            {
+                return 1.0 - 0.0;
+            }
+
+            var f1Score = 2 * precision * recall / (precision + recall);
+
+            return 1.0 - f1Score;
+        }
+
+        double Precision(T[] targets, T[] predictions)
+        {
+            if (targets.Length != predictions.Length)
+            { throw new ArgumentException("Predicted length differs from target length"); }
+
+            var truePositives = 0;
+            var falsePositves = 0;
+
+            for (int i = 0; i < targets.Length; i++)
+            {
+                if (targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
+                {
+                    truePositives++;
+                }
+                else if (!targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
+                {
+                    falsePositves++;
+                }
+            }
+
+            if (truePositives + falsePositves == 0)
+            {
+                return 0.0;
+            }
+
+            return (double)truePositives / ((double)truePositives + (double)falsePositves);
         }
 
         double Recall(T[] targets, T[] predictions)
@@ -43,7 +83,7 @@ namespace SharpLearning.Metrics.Classification
 
             for (int i = 0; i < targets.Length; i++)
             {
-                if(targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
+                if (targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
                 {
                     truePositives++;
                 }
@@ -57,7 +97,7 @@ namespace SharpLearning.Metrics.Classification
             {
                 return 0.0;
             }
-            
+
             return (double)truePositives / ((double)truePositives + (double)falseNegatives);
         }
 
@@ -83,9 +123,10 @@ namespace SharpLearning.Metrics.Classification
 
             var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
             var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = 1.0 - Recall(targets, predictions);
+            var error = 1.0 - Precision(targets, predictions);
 
             return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
+
     }
 }

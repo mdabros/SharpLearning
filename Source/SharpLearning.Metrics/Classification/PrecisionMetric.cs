@@ -20,7 +20,7 @@ namespace SharpLearning.Metrics.Classification
         }
 
         /// <summary>
-        /// Calculates the precision metric (TP/(TP + FP)) on a multi label or binary classification problem
+        /// Calculates the precision metric (TP/(TP + FP)) on a binary classification problem
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
@@ -53,6 +53,11 @@ namespace SharpLearning.Metrics.Classification
                 {
                     falsePositves++;
                 }
+            }
+
+            if(truePositives + falsePositves == 0)
+            {
+                return 0.0;
             }
 
             return (double)truePositives / ((double)truePositives + (double)falsePositves);
