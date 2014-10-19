@@ -11,6 +11,14 @@ namespace SharpLearning.Metrics.Classification
         readonly ClassificationMatrixStringConverter<T> m_converter = new ClassificationMatrixStringConverter<T>();
         readonly ClassificationMatrix<T> m_classificationMatrix = new ClassificationMatrix<T>();
 
+        readonly T m_positiveTarget;
+
+        public PrecisionMetric(T positiveTarget)
+        {
+            if (positiveTarget == null) { throw new ArgumentNullException("positiveClassLabel"); }
+            m_positiveTarget = positiveTarget;
+        }
+
         /// <summary>
         /// Calculates the precision metric (TP/(TP + FP)) on a multi label or binary classification problem
         /// </summary>
@@ -21,25 +29,33 @@ namespace SharpLearning.Metrics.Classification
         {
             var uniques = UniqueTargets(targets, predictions);
 
-            var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
+            if (uniques.Count > 2)
+            { throw new ArgumentException("PrecisionMetric only supports binary classification problems"); }
 
-            return 1.0 - Precision(uniques, confusionMatrix);
+            return 1.0 - Precision(targets, predictions);
         }
 
-        double Precision(List<T> uniques, int[][] confusionMatrix)
+        double Precision(T[] targets, T[] predictions)
         {
-            var totalSum = confusionMatrix.SelectMany(v => v).Sum();
-            var falsePositives = totalSum;
+            if (targets.Length != predictions.Length)
+            { throw new ArgumentException("Predicted length differs from target length"); }
 
-            for (int row = 0; row < uniques.Count; ++row)
+            var truePositives = 0;
+            var falsePositves = 0;
+
+            for (int i = 0; i < targets.Length; i++)
             {
-                falsePositives -= confusionMatrix[row][row];
+                if (targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
+                {
+                    truePositives++;
+                }
+                else if (!targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
+                {
+                    falsePositves++;
+                }
             }
 
-            var truePositives = totalSum - falsePositives;
-
-            return (double)truePositives / ((double)truePositives + (double)falsePositives);
+            return (double)truePositives / ((double)truePositives + (double)falsePositves);
         }
 
         List<T> UniqueTargets(T[] targets, T[] predictions)
@@ -64,7 +80,7 @@ namespace SharpLearning.Metrics.Classification
 
             var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
             var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = Precision(uniques, confusionMatrix);
+            var error = 1.0 - Precision(targets, predictions);
 
             return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }

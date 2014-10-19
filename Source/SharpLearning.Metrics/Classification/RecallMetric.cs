@@ -18,7 +18,7 @@ namespace SharpLearning.Metrics.Classification
         }
 
         /// <summary>
-        /// Calculates the precision metric (TP/(TP + FP)) on a multi label or binary classification problem
+        /// Calculates the recall metric (TP/(TP + FN)) on a multi label or binary classification problem
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
@@ -78,10 +78,9 @@ namespace SharpLearning.Metrics.Classification
 
             var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
             var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = Recall(targets, predictions);
+            var error = 1.0 - Recall(targets, predictions);
 
             return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
-
     }
 }

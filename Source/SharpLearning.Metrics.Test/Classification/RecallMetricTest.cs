@@ -64,5 +64,18 @@ namespace SharpLearning.Metrics.Test.Classification
 
             Assert.AreEqual(0.19999999999999996, actual, 0.0001);
         }
+
+        [TestMethod]
+        public void RecallMetric_ErrorString()
+        {
+            var targets = new double[] { 0, 1, 0 };
+            var predictions = new double[] { 1, 0, 1 };
+
+            var sut = new RecallMetric<double>(1);
+            var actual = sut.ErrorString(targets, predictions);
+            var expected = ";0;1;0;1\r\n0;0.00;2.00;0.00;1.00\r\n1;1.00;0.00;1.00;0.00\r\nError: 1.00000\r\n";
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
