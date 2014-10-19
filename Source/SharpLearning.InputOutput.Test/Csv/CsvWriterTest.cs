@@ -18,7 +18,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             var data = parser.EnumerateRows();
 
             var writer = new StringWriter();
-            var sut = new CsvWriter(writer);
+            var sut = new CsvWriter(() => writer);
             sut.Write(data);
 
             var actual = writer.ToString();
@@ -33,7 +33,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             var data = parser.EnumerateRows();
 
             var writer = new StringWriter();
-            var sut = new CsvWriter(writer);
+            var sut = new CsvWriter(() => writer);
             
             sut.Write(data, false);
 

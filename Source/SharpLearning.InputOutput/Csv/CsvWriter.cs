@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace SharpLearning.InputOutput.Csv
 {
-    public class CsvWriter : IDisposable
+    public class CsvWriter
     {
-        TextWriter m_writer;
+        Func<TextWriter> m_writer;
         readonly char m_separator;
 
         /// <summary>
@@ -15,7 +15,7 @@ namespace SharpLearning.InputOutput.Csv
         /// </summary>
         /// <param name="writer"></param>
         /// <param name="separator"></param>
-        public CsvWriter(TextWriter writer, char separator = CsvParser.DefaultDelimiter)
+        public CsvWriter(Func<TextWriter> writer, char separator = CsvParser.DefaultDelimiter)
         {
             if (writer == null) { throw new ArgumentException("writer"); }
             m_writer = writer;
@@ -29,20 +29,23 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
         public void Write(IEnumerable<CsvRow> rows, bool writeHeader=true)
         {
-            if (writeHeader)
+            using(var writer = m_writer())
             {
-                var headerValues = rows.First().ColumnNameToIndex
-                                         .OrderBy(kvp => kvp.Value)
-                                         .Select(kvp => kvp.Key);
+                if (writeHeader)
+                {
+                    var headerValues = rows.First().ColumnNameToIndex
+                                             .OrderBy(kvp => kvp.Value)
+                                             .Select(kvp => kvp.Key);
 
-                var headerLine = CreateHeader(headerValues);
-                m_writer.Write(headerLine);
-            }
+                    var headerLine = CreateHeader(headerValues);
+                    writer.Write(headerLine);
+                }
 
-            foreach (var row in rows)
-            {
-                m_writer.WriteLine();
-                WriteColumns(row.Values, m_writer);
+                foreach (var row in rows)
+                {
+                    writer.WriteLine();
+                    WriteColumns(row.Values, writer);
+                }
             }
         }
 
@@ -84,34 +87,6 @@ namespace SharpLearning.InputOutput.Csv
                     writer.Write(m_separator);
                 }
             }
-        }
-
-        private volatile bool m_disposed = false;
-        private void DisposeManagedResources()
-        {
-            if (m_writer != null)
-            {
-                IDisposable disposable = m_writer;
-                m_writer = null;
-                disposable.Dispose();
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!m_disposed)
-            {
-                if (disposing)
-                {
-                    DisposeManagedResources();
-                }
-            }
-            m_disposed = true;
         }
     }
 }

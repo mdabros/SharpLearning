@@ -88,7 +88,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
 
             var writer = new StringWriter();
-            sut.Write(writer);
+            sut.Write(() => writer);
 
             var actual = writer.ToString();
             Assert.AreEqual(ExpectedWrite, actual);
