@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using System.Linq;
 
@@ -48,6 +46,19 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
+        public void F64MatrixExtensions_CombineVectorAndF64Matrix()
+        {
+            var matrix = new F64Matrix(InputData, 2, 3);
+            var vector = new double[] { 3, 6 };
+
+            var expected = new F64Matrix(new double[] {3, 1, 2, 3,
+                                                       6, 4, 5, 6 }, 2, 4);
+            var actual = vector.CombineCols(matrix);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void F64MatrixExtensions_VectorAndVector()
         {
             var v1 = new double[] { 1, 2, 3, 4 };
@@ -77,6 +88,21 @@ namespace SharpLearning.Containers.Test.Matrices
                                                        4, 5, 6, 
                                                        3, 6, 7}, 3, 3);
             var actual = matrix.CombineRows(vector);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void F64MatrixExtensions_CombineRows_VectorAndF64Matrix()
+        {
+            var matrix = new F64Matrix(InputData, 2, 3);
+            var vector = new double[] { 3, 6, 7 };
+
+            var expected = new F64Matrix(new double[] {3, 6, 7,
+                                                       1, 2, 3, 
+                                                       4, 5, 6 
+                                                       }, 3, 3);
+            var actual = vector.CombineRows(matrix);
 
             Assert.AreEqual(expected, actual);
         }

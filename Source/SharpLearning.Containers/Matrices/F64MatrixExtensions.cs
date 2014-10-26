@@ -83,6 +83,41 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
+        /// Combines vector and matrix columnwise. Matrix is added to the left of the vector 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static F64Matrix CombineCols(this double[] v, F64Matrix m)
+        {
+            if (m.GetNumberOfRows() != v.Length)
+            {
+                throw new ArgumentException("matrix must have same number of rows as vector");
+            }
+
+            var rows = v.Length;
+            var cols = m.GetNumberOfColumns() + 1;
+
+            var features = new double[rows * cols];
+            var matrixArray = m.GetFeatureArray();
+
+            var combineIndex = 0;
+            for (int i = 0; i < rows; i++)
+            {
+                Array.Copy(v, i, features, combineIndex, 1);
+                combineIndex += 1;
+                
+                var matrixIndex = i * m.GetNumberOfColumns();
+                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.GetNumberOfColumns());
+                combineIndex += m.GetNumberOfColumns();
+
+            }
+            
+            return new F64Matrix(features, rows, cols);
+        }
+
+
+        /// <summary>
         /// Combines matrix1 and matrix2 columnwise. Matrix2 is added to the end of matrix1
         /// </summary>
         /// <param name="m1"></param>
@@ -144,6 +179,7 @@ namespace SharpLearning.Containers.Matrices
             return new F64Matrix(features, rows, cols);
         }
 
+
         /// <summary>
         /// Combines matrix and vector row wise. Vector is added to the bottom of the matrix 
         /// </summary>
@@ -168,6 +204,32 @@ namespace SharpLearning.Containers.Matrices
 
             return new F64Matrix(features, rows, cols);
         }
+
+        /// <summary>
+        /// Combines vecor and matrix row wise. Matrix is added to the bottom of the vector
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static F64Matrix CombineRows(this double[] v, F64Matrix m)
+        {
+            if (m.GetNumberOfColumns() != v.Length)
+            {
+                throw new ArgumentException("matrix must have same number of colums as vector");
+            }
+
+            var rows = m.GetNumberOfRows() + 1;
+            var cols = v.Length;
+
+            var features = new double[rows * cols];
+            var matrixArray = m.GetFeatureArray();
+
+            Array.Copy(v, 0, features, 0, v.Length);
+            Array.Copy(matrixArray, 0, features, v.Length, matrixArray.Length);
+
+            return new F64Matrix(features, rows, cols);
+        }
+
 
         /// <summary>
         /// Combines matrix1 and matrix2 row wise. Matrix2 is added to the bottom of matrix1

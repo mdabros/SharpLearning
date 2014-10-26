@@ -37,9 +37,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.GradientBoost
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.GradientBoost.Test", "SharpLearning.GradientBoost.Test\SharpLearning.GradientBoost.Test.csproj", "{8C71C15C-5E86-49A0-9A40-25409E9B9A2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Linear", "SharpLearning.Linear\SharpLearning.Linear.csproj", "{586EFABA-9F39-4927-8953-001E283686D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Linear.Test", "SharpLearning.Linear.Test\SharpLearning.Linear.Test.csproj", "{0CE7A52C-DA3A-4583-BB65-205C03806197}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 19
+		SccNumberOfProjects = 21
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -97,6 +101,12 @@ Global
 		SccProjectUniqueName18 = SharpLearning.GradientBoost.Test\\SharpLearning.GradientBoost.Test.csproj
 		SccProjectName18 = SharpLearning.GradientBoost.Test
 		SccLocalPath18 = SharpLearning.GradientBoost.Test
+		SccProjectUniqueName19 = SharpLearning.Linear\\SharpLearning.Linear.csproj
+		SccProjectName19 = SharpLearning.Linear
+		SccLocalPath19 = SharpLearning.Linear
+		SccProjectUniqueName20 = SharpLearning.Linear.Test\\SharpLearning.Linear.Test.csproj
+		SccProjectName20 = SharpLearning.Linear.Test
+		SccLocalPath20 = SharpLearning.Linear.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -175,6 +185,14 @@ Global
 		{8C71C15C-5E86-49A0-9A40-25409E9B9A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C71C15C-5E86-49A0-9A40-25409E9B9A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C71C15C-5E86-49A0-9A40-25409E9B9A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{586EFABA-9F39-4927-8953-001E283686D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{586EFABA-9F39-4927-8953-001E283686D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{586EFABA-9F39-4927-8953-001E283686D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{586EFABA-9F39-4927-8953-001E283686D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CE7A52C-DA3A-4583-BB65-205C03806197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CE7A52C-DA3A-4583-BB65-205C03806197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CE7A52C-DA3A-4583-BB65-205C03806197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CE7A52C-DA3A-4583-BB65-205C03806197}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
