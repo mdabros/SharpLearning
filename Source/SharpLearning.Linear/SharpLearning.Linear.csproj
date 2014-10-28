@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,6 +56,10 @@
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Threading\SharpLearning.Threading.csproj">
+      <Project>{a2f37b85-ee5b-4e09-9edf-f391dbd53b5f}</Project>
+      <Name>SharpLearning.Threading</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

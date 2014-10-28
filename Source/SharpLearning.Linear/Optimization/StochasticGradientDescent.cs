@@ -3,6 +3,10 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers;
 using System;
 using System.Linq;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using SharpLearning.Threading;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Linear.Optimization
 {
@@ -16,7 +20,7 @@ namespace SharpLearning.Linear.Optimization
     {
         readonly double m_learningRate;
         readonly int m_iterations;
-        readonly int m_observationsInEachBatch;
+        readonly int m_numberOfThreads;
         readonly Random m_random;
 
         /// <summary>
@@ -26,12 +30,30 @@ namespace SharpLearning.Linear.Optimization
         /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
         /// Meaning that the cost end of rising in each iteration</param>
         /// <param name="iterations">The number of gradient iterations</param>
-        public StochasticGradientDescent(double learningRate = 0.001, int iterations = 4000, int observationsInEachBatch=1, int seed=42)
+        /// <param name="seed">Seed for the random number generator</param>
+        /// <param name="numberOfThreads">Number of threads to use for paralization</param>
+        public StochasticGradientDescent(double learningRate, int iterations,
+            int seed, int numberOfThreads)
         {
+            // add constructor checks
             m_learningRate = learningRate;
             m_iterations = iterations;
-            m_observationsInEachBatch = observationsInEachBatch;
+            m_numberOfThreads = numberOfThreads;
             m_random = new Random(seed);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="learningRate">The rate controls the step size at each gradient descent step. 
+        /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
+        /// Meaning that the cost end of rising in each iteration</param>
+        /// <param name="iterations">The number of gradient iterations</param>
+        /// <param name="seed">Seed for the random number generator</param>
+        public StochasticGradientDescent(double learningRate = 0.001, int iterations = 10000,
+            int seed = 42)
+            : this(learningRate, iterations, seed, System.Environment.ProcessorCount)
+        {
         }
 
         /// <summary>
@@ -46,20 +68,83 @@ namespace SharpLearning.Linear.Optimization
                 .Select(v => 1.0).ToArray();
 
             var x = bias.CombineCols(observations);
+
+            var m_numberOfThreads = 4;
+
+            var observationsPrThread = targets.Length / m_numberOfThreads;
+            var results = new ConcurrentBag<double[]>();
+            var workers = new List<Action>();
+            
+            for (int i = 0; i < m_numberOfThreads; i++)
+            {
+                var interval = Interval1D.Create(0 + observationsPrThread * i,
+                        observationsPrThread + (observationsPrThread * i));
+
+                workers.Add(() => Iterate(x, targets, new Random(m_random.Next()),
+                    results, interval));
+            }
+
+            var m_threadedWorker = new WorkerRunner(workers);
+            m_threadedWorker.Run();
+
+            var models = results.ToArray();
+
+            return AverageModels(observations, models);
+        }
+
+        /// <summary>
+        /// Averages the parameters found for the models
+        /// http://www.research.rutgers.edu/~lihong/pub/Zinkevich11Parallelized.pdf
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="models"></param>
+        /// <returns></returns>
+        double[] AverageModels(F64Matrix observations, double[][] models)
+        {
             var theta = new double[observations.GetNumberOfColumns() + 1];
 
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
-
-            for (int i = 0; i < m_iterations; i++)
+            foreach (var model in models)
             {
-                indices.Shuffle(m_random);
-                var currentIndices = indices.Take(m_observationsInEachBatch).ToArray();
-                theta = Gradient(theta, (F64Matrix)x.GetRows(currentIndices), targets.GetIndices(currentIndices));
-                //Console.WriteLine("Cost: " + Cost(theta, x, targets));
+                for (int i = 0; i < model.Length; i++)
+                {
+                    theta[i] += model[i];
+                }
+            }
+
+            for (int i = 0; i < theta.Length; i++)
+            {
+                theta[i] = theta[i] / (double)models.Length;
             }
 
             return theta;
         }
+
+        /// <summary>
+        /// Runs local thread iterations
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="targets"></param>
+        /// <param name="random"></param>
+        /// <param name="models"></param>
+        /// <param name="indices"></param>
+        unsafe void Iterate(F64Matrix x, double[] targets, Random random,
+            ConcurrentBag<double[]> models, Interval1D interval)
+        {
+            var theta = new double[x.GetNumberOfColumns()];
+
+            using (var pinned = x.GetPinnedPointer())
+            {
+                var view = pinned.View();
+                for (int i = 0; i < m_iterations; i++)
+                {
+                    var index = random.Next(interval.FromInclusive, interval.ToExclusive);
+                    theta = Gradient(theta, view[index], targets[index]);
+                }
+            }
+
+            models.Add(theta);
+        }
+
 
         /// <summary>
         /// Temp gradient function for linear regression objective.
@@ -68,46 +153,26 @@ namespace SharpLearning.Linear.Optimization
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[] Gradient(double[] theta, F64Matrix observations, double[] targets)
+        unsafe double[] Gradient(double[] theta, double* observation, double target)
         {
-            //theta = theta - alpha * ((1/m) * ((X * theta) - y)' * X)';
+            // octave batch version
+            // theta = theta - alpha * ((1/m) * ((X * theta) - y)' * X)';
 
-            var m = observations.GetNumberOfRows();
-            var temp1 = (observations.Multiply(theta).Subtract(targets));
-            var temp2 = observations.Transpose().Multiply(temp1);
-            var update = theta.Subtract(temp2.Multiply(m_learningRate / m));
-
-            return update;
-        }
-
-        /// <summary>
-        /// Temp cost function for linear regression objective.
-        /// </summary>
-        /// <param name="theta"></param>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        double Cost(double[] theta, F64Matrix observations, double[] targets)
-        {
-
-            //predictions = X * theta;
-            //sqrError = (predictions - y).^2;
-
-            //m = size(X, 1);
-            //J = 1/(2*m) * sum(sqrError);
-
-            var predictions = observations.Multiply(theta);
-            var errorSum = 0.0;
-            double m = observations.GetNumberOfRows();
-
-            for (int i = 0; i < predictions.Length; i++)
+            var error = 0.0;
+            for (int i = 0; i < theta.Length; i++)
             {
-                var error = predictions[i] - targets[i];
-                errorSum += (error * error);
+                error += (observation[i] * theta[i]);
             }
 
-            var cost = 1.0 / (2.0 * m) * errorSum;
-            return cost;
+            error -= target;
+            
+            for (int i = 0; i < theta.Length; i++)
+            {
+                var regularization = 0.0; // 0.0 means no regularization
+                theta[i] = theta[i] * (1.0 - m_learningRate * regularization) - observation[i] * error * m_learningRate;
+            }
+
+            return theta;
         }
     }
 }

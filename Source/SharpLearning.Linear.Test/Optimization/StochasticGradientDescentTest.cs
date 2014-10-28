@@ -20,7 +20,7 @@ namespace SharpLearning.Linear.Test.Optimization
             var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
             var targets = parser.EnumerateRows("Price").ToF64Vector();
             
-            var sut = new StochasticGradientDescent();
+            var sut = new StochasticGradientDescent(0.001, 5000, 42, 1);
             var theta = sut.Optimize(observations, targets);
 
             var bias = Enumerable.Range(0, targets.Length)
@@ -31,10 +31,10 @@ namespace SharpLearning.Linear.Test.Optimization
             var predictions = observations.Multiply(theta);
             var error = metric.Error(targets, predictions);
 
-            Assert.AreEqual(207378680059.91843, error, 0.001);
-            Assert.AreEqual(335724.3400124929, theta[0], 0.001);
-            Assert.AreEqual(100826.3400268207, theta[1], 0.001);
-            Assert.AreEqual(4206.8294406613268, theta[2], 0.001);
+            Assert.AreEqual(204493879837.0054, error, 0.001);
+            Assert.AreEqual(337238.31457128283, theta[0], 0.001);
+            Assert.AreEqual(92544.075126101961, theta[1], 0.001);
+            Assert.AreEqual(1702.4731410236891, theta[2], 0.001);
         }
     }
 }
