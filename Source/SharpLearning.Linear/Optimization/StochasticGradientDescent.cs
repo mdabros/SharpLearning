@@ -1,12 +1,9 @@
-﻿using SharpLearning.Containers.Arithmetic;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.Containers;
+﻿using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Views;
+using SharpLearning.Threading;
 using System;
-using System.Linq;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using SharpLearning.Threading;
-using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Linear.Optimization
 {
@@ -35,7 +32,10 @@ namespace SharpLearning.Linear.Optimization
         public StochasticGradientDescent(double learningRate, int iterations,
             int seed, int numberOfThreads)
         {
-            // add constructor checks
+            if (learningRate <= 0.0) { throw new ArgumentNullException("Learning rate must be larger than 0.0"); }
+            if (iterations < 1) { throw new ArgumentNullException("Iterations must be at least 1"); }
+            if (numberOfThreads < 1) { throw new ArgumentNullException("Number of threads must be at least 1"); }
+            
             m_learningRate = learningRate;
             m_iterations = iterations;
             m_numberOfThreads = numberOfThreads;
@@ -64,13 +64,6 @@ namespace SharpLearning.Linear.Optimization
         /// <returns></returns>
         public double[] Optimize(F64Matrix observations, double[] targets)
         {
-            var bias = Enumerable.Range(0, targets.Length)
-                .Select(v => 1.0).ToArray();
-
-            var x = bias.CombineCols(observations);
-
-            var m_numberOfThreads = 4;
-
             var observationsPrThread = targets.Length / m_numberOfThreads;
             var results = new ConcurrentBag<double[]>();
             var workers = new List<Action>();
@@ -80,7 +73,7 @@ namespace SharpLearning.Linear.Optimization
                 var interval = Interval1D.Create(0 + observationsPrThread * i,
                         observationsPrThread + (observationsPrThread * i));
 
-                workers.Add(() => Iterate(x, targets, new Random(m_random.Next()),
+                workers.Add(() => Iterate(observations, targets, new Random(m_random.Next()),
                     results, interval));
             }
 
@@ -89,7 +82,7 @@ namespace SharpLearning.Linear.Optimization
 
             var models = results.ToArray();
 
-            return AverageModels(observations, models);
+            return AverageModels(observations.GetNumberOfColumns(), models);
         }
 
         /// <summary>
@@ -99,9 +92,9 @@ namespace SharpLearning.Linear.Optimization
         /// <param name="observations"></param>
         /// <param name="models"></param>
         /// <returns></returns>
-        double[] AverageModels(F64Matrix observations, double[][] models)
+        double[] AverageModels(int numberOfFeatures, double[][] models)
         {
-            var theta = new double[observations.GetNumberOfColumns() + 1];
+            var theta = new double[numberOfFeatures + 1];
 
             foreach (var model in models)
             {
@@ -130,7 +123,8 @@ namespace SharpLearning.Linear.Optimization
         unsafe void Iterate(F64Matrix x, double[] targets, Random random,
             ConcurrentBag<double[]> models, Interval1D interval)
         {
-            var theta = new double[x.GetNumberOfColumns()];
+            // initial theta + bias
+            var theta = new double[x.GetNumberOfColumns() + 1];
 
             using (var pinned = x.GetPinnedPointer())
             {
@@ -158,18 +152,20 @@ namespace SharpLearning.Linear.Optimization
             // octave batch version
             // theta = theta - alpha * ((1/m) * ((X * theta) - y)' * X)';
 
-            var error = 0.0;
-            for (int i = 0; i < theta.Length; i++)
+            var error = (1 * theta[0]); // bias
+            for (int i = 0; i < theta.Length - 1; i++)
             {
-                error += (observation[i] * theta[i]);
+                error += (observation[i] * theta[i + 1]);
             }
 
             error -= target;
-            
-            for (int i = 0; i < theta.Length; i++)
+
+            var regularization = 0.0; // 0.0 means no regularization
+            theta[0] = theta[0] * (1.0 - m_learningRate * regularization) - 1 * error * m_learningRate; // bias
+
+            for (int i = 0; i < theta.Length - 1; i++)
             {
-                var regularization = 0.0; // 0.0 means no regularization
-                theta[i] = theta[i] * (1.0 - m_learningRate * regularization) - observation[i] * error * m_learningRate;
+                theta[i + 1] = theta[i + 1] * (1.0 - m_learningRate * regularization) - observation[i] * error * m_learningRate;
             }
 
             return theta;

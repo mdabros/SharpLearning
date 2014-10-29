@@ -31,10 +31,10 @@ namespace SharpLearning.Linear.Test.Optimization
             var predictions = observations.Multiply(theta);
             var error = metric.Error(targets, predictions);
 
-            Assert.AreEqual(204493879837.0054, error, 0.001);
-            Assert.AreEqual(337238.31457128283, theta[0], 0.001);
-            Assert.AreEqual(92544.075126101961, theta[1], 0.001);
-            Assert.AreEqual(1702.4731410236891, theta[2], 0.001);
+            Assert.AreEqual(210217751930.85477, error, 0.001);
+            Assert.AreEqual(336739.710490569, theta[0], 0.001);
+            Assert.AreEqual(105731.26301175922, theta[1], 0.001);
+            Assert.AreEqual(-4544.3634625597488, theta[2], 0.001);
         }
     }
 }
