@@ -57,6 +57,8 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learning\RegressionStochasticGradientDecentLearnerTest.cs" />
+    <Compile Include="Models\RegressionStochasticGradientDecentModelTest.cs" />
     <Compile Include="Optimization\StochasticGradientDescentTest.cs" />
     <Compile Include="Optimization\GradientDescentTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
