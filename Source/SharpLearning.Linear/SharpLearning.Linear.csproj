@@ -48,7 +48,9 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Learning\ClassificationStochasticGradientDecentLearner.cs" />
     <Compile Include="Learning\RegressionStochasticGradientDecentLearner.cs" />
+    <Compile Include="Models\ClassificationStochasticGradientDecentModel.cs" />
     <Compile Include="Models\RegressionStochasticGradientDecentModel.cs" />
     <Compile Include="Optimization\GradientDescent.cs" />
     <Compile Include="Optimization\StochasticGradientDescent.cs" />
@@ -58,6 +60,10 @@
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
+      <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
+      <Name>SharpLearning.Metrics</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Threading\SharpLearning.Threading.csproj">
       <Project>{a2f37b85-ee5b-4e09-9edf-f391dbd53b5f}</Project>

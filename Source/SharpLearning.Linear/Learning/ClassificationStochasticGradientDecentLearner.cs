@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.Linear.Models;
 using SharpLearning.Linear.Optimization;
+using System;
 
 namespace SharpLearning.Linear.Learning
 {
@@ -9,9 +10,9 @@ namespace SharpLearning.Linear.Learning
     /// Stochastic gradient descent operates best when all features are equally scaled. 
     /// For example between 0.0 and 1.0 
     /// </summary>
-    public sealed class RegressionStochasticGradientDecentLearner
+    public sealed class ClassificationStochasticGradientDecentLearner
     {
-        readonly StochasticGradientDescent m_stochasticGradientDescent;
+        readonly LogisticStochasticGradientDescent m_stochasticGradientDescent;
         // Add loss functions (Huber, EN, squared), regularization parameter and so forth
 
         /// <summary>
@@ -23,11 +24,11 @@ namespace SharpLearning.Linear.Learning
         /// <param name="iterations">The number of gradient iterations</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public RegressionStochasticGradientDecentLearner(double learningRate, int iterations,
+        public ClassificationStochasticGradientDecentLearner(double learningRate, int iterations,
             int seed, int numberOfThreads)
         {
             m_stochasticGradientDescent =
-                new SquareErrorStochasticGradientDescent(learningRate, iterations, seed, numberOfThreads);
+                new LogisticStochasticGradientDescent(learningRate, iterations, seed, numberOfThreads);
         }
 
         /// <summary>
@@ -38,32 +39,32 @@ namespace SharpLearning.Linear.Learning
         /// Meaning that the cost end of rising in each iteration</param>
         /// <param name="iterations">The number of gradient iterations</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public RegressionStochasticGradientDecentLearner(double learningRate = 0.001, int iterations = 10000,
+        public ClassificationStochasticGradientDecentLearner(double learningRate = 0.001, int iterations = 10000,
             int seed = 42)
             : this(learningRate, iterations, seed, System.Environment.ProcessorCount)
         {
         }
 
-        
+
         /// <summary>
-        /// Learns a linear regression model using StochasticGradientDecent
+        /// Learns a logistic regression model using StochasticGradientDecent
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public RegressionStochasticGradientDecentModel Learn(F64Matrix observations, double[] targets)
+        public ClassificationStochasticGradientDecentModel Learn(F64Matrix observations, double[] targets)
         {
             var weights = m_stochasticGradientDescent.Optimize(observations, targets);
-            return new RegressionStochasticGradientDecentModel(weights);
+            return new ClassificationStochasticGradientDecentModel(weights);
         }
 
         /// <summary>
-        /// Gradient Descent optimization for linear regression using square error loss:
+        /// Gradient Descent optimization for logistic regression:
         /// http://en.wikipedia.org/wiki/Gradient_descent
         /// Works best with convex optimization objectives. If the function being minimized is not convex
         /// then there is a change the algorithm will get stuck in a local minima.
         /// </summary>
-        sealed class SquareErrorStochasticGradientDescent : StochasticGradientDescent
+        sealed class LogisticStochasticGradientDescent : StochasticGradientDescent
         {
             /// <summary>
             /// 
@@ -74,9 +75,8 @@ namespace SharpLearning.Linear.Learning
             /// <param name="iterations">The number of gradient iterations</param>
             /// <param name="seed">Seed for the random number generator</param>
             /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-            public SquareErrorStochasticGradientDescent (double learningRate, int iterations,
-                int seed, int numberOfThreads)
-                : base(learningRate, iterations, seed, numberOfThreads)
+            public LogisticStochasticGradientDescent(double learningRate, int iterations,
+                int seed, int numberOfThreads) : base(learningRate, iterations, seed, numberOfThreads)
             {
             }
 
@@ -88,7 +88,7 @@ namespace SharpLearning.Linear.Learning
             /// Meaning that the cost end of rising in each iteration</param>
             /// <param name="iterations">The number of gradient iterations</param>
             /// <param name="seed">Seed for the random number generator</param>
-            public SquareErrorStochasticGradientDescent(double learningRate = 0.001, int iterations = 10000,
+            public LogisticStochasticGradientDescent(double learningRate = 0.001, int iterations = 10000,
                 int seed = 42)
                 : base(learningRate, iterations, seed, System.Environment.ProcessorCount)
             {
@@ -96,7 +96,7 @@ namespace SharpLearning.Linear.Learning
 
 
             /// <summary>
-            /// Gradient function for linear regression objective.
+            /// Gradient function for logistic regression objective.
             /// </summary>
             /// <param name="theta"></param>
             /// <param name="observations"></param>
@@ -104,15 +104,13 @@ namespace SharpLearning.Linear.Learning
             /// <returns></returns>
             protected override unsafe double[] Gradient(double[] theta, double* observation, double target)
             {
-                // octave batch version
-                // theta = theta - alpha * ((1/m) * ((X * theta) - y)' * X)';
-
                 var error = (1 * theta[0]); // bias
                 for (int i = 0; i < theta.Length - 1; i++)
                 {
                     error += (observation[i] * theta[i + 1]);
                 }
 
+                error = Sigmoid(error);
                 error -= target;
 
                 var regularization = 0.0; // 0.0 means no regularization
@@ -124,6 +122,11 @@ namespace SharpLearning.Linear.Learning
                 }
 
                 return theta;
+            }
+
+            double Sigmoid(double z)
+            {
+                return 1.0 / (1.0 + Math.Exp(-z));
             }
         }
     }

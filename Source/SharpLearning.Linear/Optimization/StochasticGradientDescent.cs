@@ -13,9 +13,9 @@ namespace SharpLearning.Linear.Optimization
     /// Works best with convex optimization objectives. If the function being minimized is not convex
     /// then there is a change the algorithm will get stuck in a local minima.
     /// </summary>
-    public sealed class StochasticGradientDescent
+    public abstract class StochasticGradientDescent
     {
-        readonly double m_learningRate;
+        protected readonly double m_learningRate;
         readonly int m_iterations;
         readonly int m_numberOfThreads;
         readonly Random m_random;
@@ -32,9 +32,9 @@ namespace SharpLearning.Linear.Optimization
         public StochasticGradientDescent(double learningRate, int iterations,
             int seed, int numberOfThreads)
         {
-            if (learningRate <= 0.0) { throw new ArgumentNullException("Learning rate must be larger than 0.0"); }
-            if (iterations < 1) { throw new ArgumentNullException("Iterations must be at least 1"); }
-            if (numberOfThreads < 1) { throw new ArgumentNullException("Number of threads must be at least 1"); }
+            if (learningRate <= 0.0) { throw new ArgumentException("Learning rate must be larger than 0.0"); }
+            if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
+            if (numberOfThreads < 1) { throw new ArgumentException("Number of threads must be at least 1"); }
             
             m_learningRate = learningRate;
             m_iterations = iterations;
@@ -139,36 +139,13 @@ namespace SharpLearning.Linear.Optimization
             models.Add(theta);
         }
 
-
         /// <summary>
-        /// Temp gradient function for linear regression objective.
+        /// Abstract Gradient function.
         /// </summary>
         /// <param name="theta"></param>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        unsafe double[] Gradient(double[] theta, double* observation, double target)
-        {
-            // octave batch version
-            // theta = theta - alpha * ((1/m) * ((X * theta) - y)' * X)';
-
-            var error = (1 * theta[0]); // bias
-            for (int i = 0; i < theta.Length - 1; i++)
-            {
-                error += (observation[i] * theta[i + 1]);
-            }
-
-            error -= target;
-
-            var regularization = 0.0; // 0.0 means no regularization
-            theta[0] = theta[0] * (1.0 - m_learningRate * regularization) - 1 * error * m_learningRate; // bias
-
-            for (int i = 0; i < theta.Length - 1; i++)
-            {
-                theta[i + 1] = theta[i + 1] * (1.0 - m_learningRate * regularization) - observation[i] * error * m_learningRate;
-            }
-
-            return theta;
-        }
+        protected abstract unsafe double[] Gradient(double[] theta, double* observation, double target);
     }
 }
