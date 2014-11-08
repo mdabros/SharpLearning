@@ -7,33 +7,44 @@ using System.Linq;
 namespace SharpLearning.Linear.Models
 {
     /// <summary>
-    /// Linear regression model learned using stochastic gradient descent
+    /// Binary classification model
     /// </summary>
-    public sealed class ClassificationStochasticGradientDecentModel
+    public sealed class BinaryClassificationStochasticGradientDecentModel
     {
-        readonly Dictionary<double, BinaryClassificationStochasticGradientDecentModel> m_models;
+        readonly double[] m_weights;
 
         /// <summary>
-        /// 
+        /// Binary classification model.
         /// </summary>
         /// <param name="weights">Weights foreach parameter including bias at index 0</param>
-        public ClassificationStochasticGradientDecentModel(Dictionary<double, BinaryClassificationStochasticGradientDecentModel> models)
+        public BinaryClassificationStochasticGradientDecentModel(double[] weights)
         {
-            if (models == null) { throw new ArgumentNullException("models"); }
-            m_models = models;
+            if (weights == null) { throw new ArgumentNullException("weights"); }
+            m_weights = weights;
         }
 
         /// <summary>
-        /// Predicts a single observation using the linear model
+        /// Predicts a single observation
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            var props = m_models.Select(m => new { Target = m.Key, Probability = m.Value.PredictProbability(observation).Probabilities[1.0] })
-                .OrderByDescending(m => m.Probability).ToArray();
+            var probability = Probability(observation);
+            var prediction = (probability >= 0.5) ? 1.0 : 0.0;
+            return prediction;
+        }
 
-            return props.First().Target;
+        double Probability(double[] observation)
+        {
+            var prediction = 1.0 * m_weights[0]; // bias
+            for (int i = 0; i < observation.Length; i++)
+            {
+                prediction += m_weights[i + 1] * observation[i];
+            }
+
+            var probabilty = Sigmoid(prediction);
+            return probabilty;
         }
 
         double Sigmoid(double z)
@@ -64,12 +75,9 @@ namespace SharpLearning.Linear.Models
         /// <returns></returns>
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
-            var probabilities = m_models.Select(m => new { Target = m.Key, Probability = 
-                m.Value.PredictProbability(observation).Probabilities[1.0] })
-                .ToDictionary(p => p.Target, p => p.Probability);
-
-            var prediction = probabilities.OrderByDescending(p => p.Value)
-                .First().Key;
+            var probability = Probability(observation);
+            var prediction = (probability >= 0.5) ? 1.0 : 0.0; 
+            var probabilities = new Dictionary<double, double> { {0.0, 1.0 - probability}, {1.0, probability} };
 
             return new ProbabilityPrediction(prediction, probabilities);
         }
@@ -93,14 +101,15 @@ namespace SharpLearning.Linear.Models
 
         /// <summary>
         /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name.
-        /// Note that model importances ClassificationStochasticGradientDecentModel are only valid 
+        /// Note that model importances BinaryClassificationStochasticGradientDecentModel are only valid 
         /// if features have been scaled to equal range, like 0-1, before training 
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
-            var importances = GetRawVariableImportance();
+            var importances = m_weights
+                .Select(w => Math.Abs(w)).ToArray();
 
             var max = importances.Max();
 
@@ -115,26 +124,13 @@ namespace SharpLearning.Linear.Models
 
         /// <summary>
         /// Gets the raw unsorted variable importance scores.
-        /// Note that model importances ClassificationStochasticGradientDecentModel are only valid 
+        /// Note that model importances BinaryClassificationStochasticGradientDecentModel are only valid 
         /// if features have been scaled to equal range, like 0-1, before training 
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            var importances = new double[m_models.First().Value.GetRawVariableImportance().Length];
-            foreach (var model in m_models.Values)
-            {
-                var modelImportances = model.GetRawVariableImportance();
-                for (int i = 0; i < importances.Length; i++)
-                {
-                    if(importances[i] < modelImportances[i])
-                    {
-                        importances[i] = modelImportances[i];
-                    }
-                }
-            }
-
-            return importances;
+            return m_weights.Select(w => Math.Abs(w)).ToArray();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 namespace SharpLearning.Linear.Models
 {
     /// <summary>
-    /// Linear regression model learned using stochastic gradient descent
+    /// Regression model learned using stochastic gradient descent
     /// </summary>
     public sealed class RegressionStochasticGradientDecentModel
     {
@@ -23,7 +23,7 @@ namespace SharpLearning.Linear.Models
         }
 
         /// <summary>
-        /// Predicts a single observation using the linear model
+        /// Predicts a single observation
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -39,7 +39,7 @@ namespace SharpLearning.Linear.Models
         }
 
         /// <summary>
-        /// Predicts a set of observations using the linear model
+        /// Predicts a set of observations
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>

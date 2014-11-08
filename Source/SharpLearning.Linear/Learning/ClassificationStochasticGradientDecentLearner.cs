@@ -2,11 +2,13 @@
 using SharpLearning.Linear.Models;
 using SharpLearning.Linear.Optimization;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpLearning.Linear.Learning
 {
     /// <summary>
-    /// Regression learner using stochastic gradient descent for optimizing the model. 
+    /// Classification learner using stochastic gradient descent for optimizing the model. 
     /// Stochastic gradient descent operates best when all features are equally scaled. 
     /// For example between 0.0 and 1.0 
     /// </summary>
@@ -47,15 +49,48 @@ namespace SharpLearning.Linear.Learning
 
 
         /// <summary>
-        /// Learns a logistic regression model using StochasticGradientDecent
+        /// Learns a classification model using StochasticGradientDecent
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
         public ClassificationStochasticGradientDecentModel Learn(F64Matrix observations, double[] targets)
         {
-            var weights = m_stochasticGradientDescent.Optimize(observations, targets);
-            return new ClassificationStochasticGradientDecentModel(weights);
+            var uniqueTargets = targets.Distinct().ToArray();
+            var modelWeights = new Dictionary<double, BinaryClassificationStochasticGradientDecentModel>();
+
+            var currentTargetArray = new double[targets.Length];
+            foreach (var targetName in uniqueTargets)
+            {
+                for (int i = 0; i < targets.Length; i++)
+                {
+                    if(targetName == targets[i])
+                    {
+                        currentTargetArray[i] = 1.0;
+                    }
+                    else
+                    {
+                        currentTargetArray[i] = 0.0;
+                    }
+                }
+
+                modelWeights.Add(targetName, new BinaryClassificationStochasticGradientDecentModel
+                    (m_stochasticGradientDescent.Optimize(observations, currentTargetArray)));
+            }
+
+            return new ClassificationStochasticGradientDecentModel(modelWeights);
+        }
+
+        /// <summary>
+        /// Learns a classification model using StochasticGradientDecent
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public BinaryClassificationStochasticGradientDecentModel LearnBinary(F64Matrix observations, double[] targets)
+        {
+            return new BinaryClassificationStochasticGradientDecentModel
+                (m_stochasticGradientDescent.Optimize(observations, targets));
         }
 
         /// <summary>

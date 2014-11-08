@@ -59,6 +59,7 @@
     </Compile>
     <Compile Include="Learning\ClassificationStochasticGradientDecentLearnerTest.cs" />
     <Compile Include="Learning\RegressionStochasticGradientDecentLearnerTest.cs" />
+    <Compile Include="Models\BinaryClassificationStochasticGradientDecentModelTest.cs" />
     <Compile Include="Models\ClassificationStochasticGradientDecentModelTest.cs" />
     <Compile Include="Models\RegressionStochasticGradientDecentModelTest.cs" />
     <Compile Include="Optimization\GradientDescentTest.cs" />
