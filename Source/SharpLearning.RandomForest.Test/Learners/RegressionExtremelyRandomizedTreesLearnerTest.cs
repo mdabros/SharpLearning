@@ -115,43 +115,5 @@ namespace SharpLearning.RandomForest.Test.Learners
             var error = evaluator.Error(targets, predictions);
             return error;
         }
-
-        [Ignore]
-        [TestMethod]
-        public void RegressionExtremelyRandomizedTreesLearner_Learn_Timing()
-        {
-            var rows = 4000;
-            var cols = 10;
-
-            var random = new Random(42);
-            var observations = new F64Matrix(rows, cols);
-            var targets = new double[rows];
-
-            for (int i = 0; i < targets.Length; i++)
-            {
-                targets[i] = random.Next(5);
-            }
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    observations.SetItemAt(i, j, random.NextDouble());
-                }
-            }
-
-            var sut = new RegressionExtremelyRandomizedTreesLearner();
-            var timer = new Stopwatch();
-            timer.Start();
-            var model = sut.Learn(observations, targets);
-            timer.Stop();
-
-            var predictions = model.Predict(observations);
-
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var error = evaluator.Error(targets, predictions);
-
-            Trace.WriteLine("Error: " + error);
-            Trace.WriteLine("Time: " + timer.ElapsedMilliseconds);
-        }
     }
 }

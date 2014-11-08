@@ -16,7 +16,8 @@ namespace SharpLearning.Linear.Optimization
     public abstract class StochasticGradientDescent
     {
         protected readonly double m_learningRate;
-        readonly int m_iterations;
+        readonly int m_epochs;
+        int m_iterations;
         readonly int m_numberOfThreads;
         readonly Random m_random;
 
@@ -26,18 +27,18 @@ namespace SharpLearning.Linear.Optimization
         /// <param name="learningRate">The rate controls the step size at each gradient descent step. 
         /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
         /// Meaning that the cost end of rising in each iteration</param>
-        /// <param name="iterations">The number of gradient iterations</param>
+        /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public StochasticGradientDescent(double learningRate, int iterations,
+        public StochasticGradientDescent(double learningRate, int epochs,
             int seed, int numberOfThreads)
         {
             if (learningRate <= 0.0) { throw new ArgumentException("Learning rate must be larger than 0.0"); }
-            if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
+            if (epochs < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (numberOfThreads < 1) { throw new ArgumentException("Number of threads must be at least 1"); }
             
             m_learningRate = learningRate;
-            m_iterations = iterations;
+            m_epochs = epochs;
             m_numberOfThreads = numberOfThreads;
             m_random = new Random(seed);
         }
@@ -48,11 +49,11 @@ namespace SharpLearning.Linear.Optimization
         /// <param name="learningRate">The rate controls the step size at each gradient descent step. 
         /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
         /// Meaning that the cost end of rising in each iteration</param>
-        /// <param name="iterations">The number of gradient iterations</param>
+        /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public StochasticGradientDescent(double learningRate = 0.001, int iterations = 10000,
+        public StochasticGradientDescent(double learningRate = 0.001, int epochs = 5,
             int seed = 42)
-            : this(learningRate, iterations, seed, System.Environment.ProcessorCount)
+            : this(learningRate, epochs, seed, System.Environment.ProcessorCount)
         {
         }
 
@@ -68,6 +69,9 @@ namespace SharpLearning.Linear.Optimization
             var results = new ConcurrentBag<double[]>();
             var workers = new List<Action>();
             
+            // sets the number of iterations based on epochs and the number of observations in the data set
+            m_iterations = m_epochs * observations.GetNumberOfRows(); 
+
             for (int i = 0; i < m_numberOfThreads; i++)
             {
                 var interval = Interval1D.Create(0 + observationsPrThread * i,

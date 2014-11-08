@@ -20,14 +20,14 @@ namespace SharpLearning.Linear.Learning
         /// <param name="learningRate">The rate controls the step size at each gradient descent step. 
         /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
         /// Meaning that the cost end of rising in each iteration</param>
-        /// <param name="iterations">The number of gradient iterations</param>
+        /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public RegressionStochasticGradientDecentLearner(double learningRate, int iterations,
+        public RegressionStochasticGradientDecentLearner(double learningRate, int epochs,
             int seed, int numberOfThreads)
         {
             m_stochasticGradientDescent =
-                new SquareErrorStochasticGradientDescent(learningRate, iterations, seed, numberOfThreads);
+                new SquareErrorStochasticGradientDescent(learningRate, epochs, seed, numberOfThreads);
         }
 
         /// <summary>
@@ -36,11 +36,11 @@ namespace SharpLearning.Linear.Learning
         /// <param name="learningRate">The rate controls the step size at each gradient descent step. 
         /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
         /// Meaning that the cost end of rising in each iteration</param>
-        /// <param name="iterations">The number of gradient iterations</param>
+        /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public RegressionStochasticGradientDecentLearner(double learningRate = 0.001, int iterations = 10000,
+        public RegressionStochasticGradientDecentLearner(double learningRate = 0.001, int epochs = 5,
             int seed = 42)
-            : this(learningRate, iterations, seed, System.Environment.ProcessorCount)
+            : this(learningRate, epochs, seed, System.Environment.ProcessorCount)
         {
         }
 
@@ -71,12 +71,12 @@ namespace SharpLearning.Linear.Learning
             /// <param name="learningRate">The rate controls the step size at each gradient descent step. 
             /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
             /// Meaning that the cost end of rising in each iteration</param>
-            /// <param name="iterations">The number of gradient iterations</param>
+            /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
             /// <param name="seed">Seed for the random number generator</param>
             /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-            public SquareErrorStochasticGradientDescent (double learningRate, int iterations,
+            public SquareErrorStochasticGradientDescent (double learningRate, int epochs,
                 int seed, int numberOfThreads)
-                : base(learningRate, iterations, seed, numberOfThreads)
+                : base(learningRate, epochs, seed, numberOfThreads)
             {
             }
 
@@ -86,11 +86,11 @@ namespace SharpLearning.Linear.Learning
             /// <param name="learningRate">The rate controls the step size at each gradient descent step. 
             /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
             /// Meaning that the cost end of rising in each iteration</param>
-            /// <param name="iterations">The number of gradient iterations</param>
+            /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
             /// <param name="seed">Seed for the random number generator</param>
-            public SquareErrorStochasticGradientDescent(double learningRate = 0.001, int iterations = 10000,
+            public SquareErrorStochasticGradientDescent(double learningRate = 0.001, int epochs = 5,
                 int seed = 42)
-                : base(learningRate, iterations, seed, System.Environment.ProcessorCount)
+                : base(learningRate, epochs, seed, System.Environment.ProcessorCount)
             {
             }
 

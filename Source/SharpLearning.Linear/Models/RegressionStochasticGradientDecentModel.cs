@@ -85,7 +85,8 @@ namespace SharpLearning.Linear.Models
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            return m_weights.Select(w => Math.Abs(w)).ToArray();
+            return m_weights.Skip(1)
+                .Select(w => Math.Abs(w)).ToArray();
         }
     }
 }

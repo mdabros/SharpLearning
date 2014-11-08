@@ -204,43 +204,5 @@ namespace SharpLearning.DecisionTrees.Test.Learners
                 return weight;
             return 1.0;
         }
-
-        [Ignore]
-        [TestMethod]
-        public void ClassificationDecisionTreeLearner_Learn_Timing()
-        {
-            var rows = 10000;
-            var cols = 10;
-
-            var random = new Random(42);
-            var observations = new F64Matrix(rows, cols);
-            var targets = new double[rows];
-            
-            for (int i = 0; i < targets.Length; i++)
-            {
-                targets[i] = random.Next(5);
-            }
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    observations.SetItemAt(i, j, random.NextDouble());   
-                }
-            }
-
-            var sut = new ClassificationDecisionTreeLearner(100, 1, cols, 0.000000001, 42);
-            var timer = new Stopwatch();
-            timer.Start();
-            var model = sut.Learn(observations, targets);
-            timer.Stop();
-
-            var predictions = model.Predict(observations);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var error = evaluator.Error(targets, predictions);
-
-            Trace.WriteLine("Error: " + error);
-            Trace.WriteLine("Time: " + timer.ElapsedMilliseconds);
-        }
     }
 }

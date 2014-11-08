@@ -60,9 +60,8 @@ namespace SharpLearning.Linear.Test.Models
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var actual = m_sut.GetRawVariableImportance();
-            Assert.AreEqual(15.934288283579136, actual[0], 0.001);
-            Assert.AreEqual(0.14011316001536858, actual[1], 0.001);
-            Assert.AreEqual(0.13571128043372779, actual[2], 0.001);
+            Assert.AreEqual(0.14011316001536858, actual[0], 0.001);
+            Assert.AreEqual(0.13571128043372779, actual[1], 0.001);
         }
 
         [TestMethod]

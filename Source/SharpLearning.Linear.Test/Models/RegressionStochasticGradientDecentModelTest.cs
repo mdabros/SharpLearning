@@ -19,7 +19,7 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var learner = new RegressionStochasticGradientDecentLearner(0.001, 5000, 42, 1);
+            var learner = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var predictions = new double[targets.Length];
@@ -30,7 +30,7 @@ namespace SharpLearning.Linear.Test.Models
 
             var metric = new RootMeanSquareRegressionMetric();
             var actual = metric.Error(targets, predictions);
-            Assert.AreEqual(64160.5726271859, actual, 0.001);
+            Assert.AreEqual(63952.594022178237, actual, 0.001);
         }
 
         [TestMethod]
@@ -40,14 +40,14 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var sut = new RegressionStochasticGradientDecentLearner(0.001, 5000, 42, 1);
+            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var metric = new RootMeanSquareRegressionMetric();
 
             var predictions = model.Predict(observations);
             var actual = metric.Error(targets, predictions);
-            Assert.AreEqual(64160.5726271859, actual, 0.001);
+            Assert.AreEqual(63952.594022178237, actual, 0.001);
         }
 
         [TestMethod]
@@ -57,13 +57,12 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var sut = new RegressionStochasticGradientDecentLearner(0.001, 5000, 42, 1);
+            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var actual = model.GetRawVariableImportance();
-            Assert.AreEqual(336739.710490569, actual[0], 0.001);
-            Assert.AreEqual(105731.26301175922, actual[1], 0.001);
-            Assert.AreEqual(4544.3634625597488, actual[2], 0.001);
+            Assert.AreEqual(109234.21577282451, actual[0], 0.001);
+            Assert.AreEqual(4436.0076713921026, actual[1], 0.001);
         }
 
         [TestMethod]
@@ -74,11 +73,11 @@ namespace SharpLearning.Linear.Test.Models
             var featureNameToIndex = parser.EnumerateRows("Size", "Rooms").First().ColumnNameToIndex;
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var sut = new RegressionStochasticGradientDecentLearner(0.001, 5000, 42, 1);
+            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var actual = model.GetVariableImportance(featureNameToIndex).ToList();
-            var expected = new Dictionary<string, double> { { "Size", 100.0 }, { "Rooms", 31.3985133674101 } }.ToList();
+            var expected = new Dictionary<string, double> { { "Size", 100.0 }, { "Rooms", 32.1115502727675 } }.ToList();
             
             Assert.AreEqual(expected.Count, actual.Count);
             for (int i = 0; i < expected.Count; i++)
