@@ -24,13 +24,15 @@ namespace SharpLearning.Linear.Learning
         /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
         /// Meaning that the cost end of rising in each iteration</param>
         /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
+        /// <param name="regularization">How much should the model be regularized. 0.0 (default) means no regularization.
+        /// This parameter can be increased to lower the models variance in case of overfitting</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public ClassificationStochasticGradientDecentLearner(double learningRate, int epochs,
+        public ClassificationStochasticGradientDecentLearner(double learningRate, int epochs, double regularization,
             int seed, int numberOfThreads)
         {
             m_stochasticGradientDescent =
-                new LogisticStochasticGradientDescent(learningRate, epochs, seed, numberOfThreads);
+                new LogisticStochasticGradientDescent(learningRate, epochs, regularization, seed, numberOfThreads);
         }
 
         /// <summary>
@@ -40,10 +42,12 @@ namespace SharpLearning.Linear.Learning
         /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
         /// Meaning that the cost end of rising in each iteration</param>
         /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
+        /// <param name="regularization">How much should the model be regularized. 0.0 (default) means no regularization.
+        /// This parameter can be increased to lower the models variance in case of overfitting</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public ClassificationStochasticGradientDecentLearner(double learningRate = 0.001, int epochs = 5,
+        public ClassificationStochasticGradientDecentLearner(double learningRate = 0.001, int epochs = 5, double regularization = 0.0,
             int seed = 42)
-            : this(learningRate, epochs, seed, System.Environment.ProcessorCount)
+            : this(learningRate, epochs, regularization, seed, System.Environment.ProcessorCount)
         {
         }
 
@@ -82,18 +86,6 @@ namespace SharpLearning.Linear.Learning
         }
 
         /// <summary>
-        /// Learns a classification model using StochasticGradientDecent
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        public BinaryClassificationStochasticGradientDecentModel LearnBinary(F64Matrix observations, double[] targets)
-        {
-            return new BinaryClassificationStochasticGradientDecentModel
-                (m_stochasticGradientDescent.Optimize(observations, targets));
-        }
-
-        /// <summary>
         /// Gradient Descent optimization for logistic regression:
         /// http://en.wikipedia.org/wiki/Gradient_descent
         /// Works best with convex optimization objectives. If the function being minimized is not convex
@@ -101,6 +93,8 @@ namespace SharpLearning.Linear.Learning
         /// </summary>
         sealed class LogisticStochasticGradientDescent : StochasticGradientDescent
         {
+            readonly double m_regularization;
+
             /// <summary>
             /// 
             /// </summary>
@@ -108,11 +102,15 @@ namespace SharpLearning.Linear.Learning
             /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
             /// Meaning that the cost end of rising in each iteration</param>
             /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
+            /// <param name="regularization">How much should the model be regularized. 0.0 (default) means no regularization.
+            /// This parameter can be increased to lower the models variance in case of overfitting</param>
             /// <param name="seed">Seed for the random number generator</param>
             /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-            public LogisticStochasticGradientDescent(double learningRate, int epochs,
+            public LogisticStochasticGradientDescent(double learningRate, int epochs, double regularization,
                 int seed, int numberOfThreads) : base(learningRate, epochs, seed, numberOfThreads)
             {
+                if (regularization < 0.0) { throw new ArgumentException("regularization must be at least 0.0"); }
+                m_regularization = regularization;
             }
 
             /// <summary>
@@ -122,11 +120,15 @@ namespace SharpLearning.Linear.Learning
             /// A too small value can make the algorithms slow to converge and a too large values can make the algorithm not converge at all. 
             /// Meaning that the cost end of rising in each iteration</param>
             /// <param name="epochs">The number of parses over the data set (all obsrevations)</param>
+            /// <param name="regularization">How much should the model be regularized. 0.0 (default) means no regularization.
+            /// This parameter can be increased to lower the models variance in case of overfitting</param>
             /// <param name="seed">Seed for the random number generator</param>
-            public LogisticStochasticGradientDescent(double learningRate = 0.001, int epochs = 5,
+            public LogisticStochasticGradientDescent(double learningRate = 0.001, int epochs = 5, double regularization = 0.0,
                 int seed = 42)
                 : base(learningRate, epochs, seed, System.Environment.ProcessorCount)
             {
+                if (regularization < 0.0) { throw new ArgumentException("regularization must be at least 0.0"); }
+                m_regularization = regularization;
             }
 
 
@@ -148,12 +150,11 @@ namespace SharpLearning.Linear.Learning
                 error = Sigmoid(error);
                 error -= target;
 
-                var regularization = 0.0; // 0.0 means no regularization
-                theta[0] = theta[0] * (1.0 - m_learningRate * regularization) - 1 * error * m_learningRate; // bias
+                theta[0] = theta[0] * (1.0 - m_learningRate * m_regularization) - 1 * error * m_learningRate; // bias
 
                 for (int i = 0; i < theta.Length - 1; i++)
                 {
-                    theta[i + 1] = theta[i + 1] * (1.0 - m_learningRate * regularization) - observation[i] * error * m_learningRate;
+                    theta[i + 1] = theta[i + 1] * (1.0 - m_learningRate * m_regularization) - observation[i] * error * m_learningRate;
                 }
 
                 return theta;

@@ -19,7 +19,7 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var learner = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
+            var learner = new RegressionStochasticGradientDecentLearner(0.001, 1000, 0.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var predictions = new double[targets.Length];
@@ -40,7 +40,7 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
+            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 0.0, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var metric = new RootMeanSquareRegressionMetric();
@@ -57,7 +57,7 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
+            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 0.0, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var actual = model.GetRawVariableImportance();
@@ -73,7 +73,7 @@ namespace SharpLearning.Linear.Test.Models
             var featureNameToIndex = parser.EnumerateRows("Size", "Rooms").First().ColumnNameToIndex;
             var targets = parser.EnumerateRows("Price").ToF64Vector();
 
-            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 42, 1);
+            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 0.0, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var actual = model.GetVariableImportance(featureNameToIndex).ToList();

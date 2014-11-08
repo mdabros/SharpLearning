@@ -22,7 +22,7 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var learner = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 42, 1);
+            var learner = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 0.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var predictions = new double[targets.Length];
@@ -43,7 +43,7 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 42, 1);
+            var sut = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 0.0, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var metric = new TotalErrorClassificationMetric<double>();
@@ -60,7 +60,7 @@ namespace SharpLearning.Linear.Test.Models
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 42, 1);
+            var sut = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 0.0, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var actual = model.GetRawVariableImportance();
@@ -76,7 +76,7 @@ namespace SharpLearning.Linear.Test.Models
             var featureNameToIndex = parser.EnumerateRows("F1", "F2").First().ColumnNameToIndex;
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 42, 1);
+            var sut = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 0.0, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var actual = model.GetVariableImportance(featureNameToIndex).ToList();
@@ -99,7 +99,7 @@ namespace SharpLearning.Linear.Test.Models
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 42, 1);
+            var learner = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 0.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var actual = new ProbabilityPrediction[rows];
@@ -125,7 +125,7 @@ namespace SharpLearning.Linear.Test.Models
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 42, 1);
+            var learner = new ClassificationStochasticGradientDecentLearner(0.0001, 100000, 0.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.PredictProbability(observations);
