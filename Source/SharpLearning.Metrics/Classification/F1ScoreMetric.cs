@@ -123,7 +123,7 @@ namespace SharpLearning.Metrics.Classification
 
             var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
             var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = 1.0 - Precision(targets, predictions);
+            var error = Error(targets, predictions);
 
             return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
