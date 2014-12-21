@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpLearning.Containers;
+using System;
 using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
@@ -8,17 +9,16 @@ namespace SharpLearning.Metrics.Classification
     /// http://en.wikipedia.org/wiki/Receiver_operating_characteristic
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class RocAucClassificationMetric<T>
+    public sealed class RocAucClassificationProbabilityMetric : IClassificationProbabilityMetric
     {
-        readonly T m_positiveTarget;
+        readonly double m_positiveTarget;
 
         /// <summary>
         /// The metric needs to know which target value is considered the positive
         /// </summary>
         /// <param name="positiveTarget"></param>
-        public RocAucClassificationMetric(T positiveTarget)
+        public RocAucClassificationProbabilityMetric(double positiveTarget)
         {
-            if (positiveTarget == null) { throw new ArgumentException("positiveClassLabel"); }
             m_positiveTarget = positiveTarget;
         }
 
@@ -26,12 +26,15 @@ namespace SharpLearning.Metrics.Classification
         /// Calculates the roc auc error. That is 1.0 - Auc.
         /// </summary>
         /// <param name="targets">Target values</param>
-        /// <param name="positiveTargetProbabilities">Probability estimates for the positive target value</param>
+        /// <param name="positiveTargetProbabilities">Probability estimates</param>
         /// <returns></returns>
-        public double Error(T[] targets, double[] positiveTargetProbabilities)
+        public double Error(double[] targets, ProbabilityPrediction[] predictions)
         {
             if (targets.Distinct().Count() > 2)
             { throw new ArgumentException("AucClassificationMetric only supports binary classification problems"); }
+
+            var positiveTargetProbabilities = predictions.Select(p => p.Probabilities[m_positiveTarget])
+                .ToArray();
 
             var targetProbabilities = targets.Zip(positiveTargetProbabilities, (l, s) => new { target = l, Probability = s });
             targetProbabilities = targetProbabilities.OrderByDescending(l => l.Probability);

@@ -60,9 +60,10 @@
     <Compile Include="Classification\ClassificationMatrixStringConverterTest.cs" />
     <Compile Include="Classification\ClassificationMatrixTest.cs" />
     <Compile Include="Classification\F1ScoreMetricTest.cs" />
+    <Compile Include="Classification\LogLossClassificationProbabilityMetricTest.cs" />
     <Compile Include="Classification\RecallMetricTest.cs" />
     <Compile Include="Classification\PrecisionMetricTest.cs" />
-    <Compile Include="Classification\RocAucClassificationMetricTest.cs" />
+    <Compile Include="Classification\RocAucClassificationProbabilityMetricTest.cs" />
     <Compile Include="Classification\TotalErrorClassificationMetricTest.cs" />
     <Compile Include="Impurity\GiniImpurityMetricTest.cs" />
     <Compile Include="Impurity\NaiveSinglePassVarianceEntropyMetricTest.cs" />
