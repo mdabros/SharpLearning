@@ -4,6 +4,7 @@ using SharpLearning.Threading;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpLearning.Linear.Optimization
 {
@@ -65,20 +66,34 @@ namespace SharpLearning.Linear.Optimization
         /// <returns></returns>
         public double[] Optimize(F64Matrix observations, double[] targets)
         {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Optimize(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Minimizes the target function using gradint descent.
+        /// Only using the indices provided in indices. 
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public double[] Optimize(F64Matrix observations, double[] targets, int[] indices)
+        {
             var observationsPrThread = targets.Length / m_numberOfThreads;
             var results = new ConcurrentBag<double[]>();
             var workers = new List<Action>();
-            
+
             // sets the number of iterations based on epochs and the number of observations in the data set
-            m_iterations = m_epochs * observations.GetNumberOfRows(); 
+            m_iterations = m_epochs * indices.Length;//* observations.GetNumberOfRows();
 
             for (int i = 0; i < m_numberOfThreads; i++)
             {
                 var interval = Interval1D.Create(0 + observationsPrThread * i,
                         observationsPrThread + (observationsPrThread * i));
 
-                workers.Add(() => Iterate(observations, targets, new Random(m_random.Next()),
-                    results, interval));
+                workers.Add(() => Iterate(observations, targets, indices, 
+                    new Random(m_random.Next()), results, interval));
             }
 
             var m_threadedWorker = new WorkerRunner(workers);
@@ -124,8 +139,8 @@ namespace SharpLearning.Linear.Optimization
         /// <param name="random"></param>
         /// <param name="models"></param>
         /// <param name="indices"></param>
-        unsafe void Iterate(F64Matrix x, double[] targets, Random random,
-            ConcurrentBag<double[]> models, Interval1D interval)
+        unsafe void Iterate(F64Matrix x, double[] targets, int[] indices, 
+            Random random, ConcurrentBag<double[]> models, Interval1D interval)
         {
             // initial theta + bias
             var theta = new double[x.GetNumberOfColumns() + 1];
@@ -135,7 +150,7 @@ namespace SharpLearning.Linear.Optimization
                 var view = pinned.View();
                 for (int i = 0; i < m_iterations; i++)
                 {
-                    var index = random.Next(interval.FromInclusive, interval.ToExclusive);
+                    var index = indices[random.Next(interval.FromInclusive, interval.ToExclusive)];
                     theta = Gradient(theta, view[index], targets[index]);
                 }
             }

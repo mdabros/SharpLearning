@@ -53,7 +53,6 @@
     <Compile Include="Models\BinaryClassificationStochasticGradientDecentModel.cs" />
     <Compile Include="Models\ClassificationStochasticGradientDecentModel.cs" />
     <Compile Include="Models\RegressionStochasticGradientDecentModel.cs" />
-    <Compile Include="Optimization\GradientDescent.cs" />
     <Compile Include="Optimization\StochasticGradientDescent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
