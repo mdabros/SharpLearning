@@ -3,7 +3,7 @@ using SharpLearning.Linear.Models;
 using SharpLearning.Linear.Optimization;
 using System;
 
-namespace SharpLearning.Linear.Learning
+namespace SharpLearning.Linear.Learners
 {
     /// <summary>
     /// Regression learner using stochastic gradient descent for optimizing the model. 

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.Linear.Learning
+namespace SharpLearning.Linear.Learners
 {
     /// <summary>
     /// Classification learner using stochastic gradient descent for optimizing the model. 

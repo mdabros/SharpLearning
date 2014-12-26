@@ -48,8 +48,8 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Learning\ClassificationStochasticGradientDecentLearner.cs" />
-    <Compile Include="Learning\RegressionStochasticGradientDecentLearner.cs" />
+    <Compile Include="Learners\ClassificationStochasticGradientDecentLearner.cs" />
+    <Compile Include="Learners\RegressionStochasticGradientDecentLearner.cs" />
     <Compile Include="Models\BinaryClassificationStochasticGradientDecentModel.cs" />
     <Compile Include="Models\ClassificationStochasticGradientDecentModel.cs" />
     <Compile Include="Models\RegressionStochasticGradientDecentModel.cs" />

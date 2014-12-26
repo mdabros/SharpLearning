@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
-using SharpLearning.Linear.Learning;
+using SharpLearning.Linear.Learners;
 using SharpLearning.Linear.Test.Properties;
 using SharpLearning.Metrics.Regression;
 using System.IO;
 
-namespace SharpLearning.Linear.Test.Learning
+namespace SharpLearning.Linear.Test.Learners
 {
     [TestClass]
     public class RegressionStochasticGradientDecentLearnerTest
