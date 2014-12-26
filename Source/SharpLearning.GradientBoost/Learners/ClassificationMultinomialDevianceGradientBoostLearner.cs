@@ -8,7 +8,7 @@ namespace SharpLearning.GradientBoost.Learners
     /// A series of regression trees are fitted stage wise on the residuals of the previous stage.
     /// The resulting models are ensembled together using addition.
     /// </summary>
-    public sealed class MultinomialDevianceClassificationGradientBoostLearner : ClassificationGradientBoostLearner
+    public sealed class ClassificationMultinomialDevianceGradientBoostLearner : ClassificationGradientBoostLearner
     {
         /// <summary>
         /// Multi-class classification gradient boosting usibg multinomial deviance loss
@@ -21,7 +21,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public MultinomialDevianceClassificationGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
+        public ClassificationMultinomialDevianceGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int maximumLeafCount = 2000, int minimumSplitSize = 1, double minimumInformationGain = 0.000001)
             : base(new MultinomialDevianceClassificationLossFunction(learningRate), iterations, maximumTreeDepth, maximumLeafCount,
                     minimumSplitSize, minimumInformationGain)

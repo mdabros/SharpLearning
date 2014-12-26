@@ -47,7 +47,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Learners\ClassificationGradientBoostLearner.cs" />
-    <Compile Include="Learners\MultinomialDevianceClassificationGradientBoostLearner.cs" />
+    <Compile Include="Learners\ClassificationMultinomialDevianceGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionHuberGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionLeastSquaresGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearner.cs" />
