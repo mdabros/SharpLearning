@@ -80,7 +80,7 @@ namespace SharpLearning.Linear.Optimization
         /// <returns></returns>
         public double[] Optimize(F64Matrix observations, double[] targets, int[] indices)
         {
-            var observationsPrThread = targets.Length / m_numberOfThreads;
+            var observationsPrThread = indices.Length / m_numberOfThreads;
             var results = new ConcurrentBag<double[]>();
             var workers = new List<Action>();
 

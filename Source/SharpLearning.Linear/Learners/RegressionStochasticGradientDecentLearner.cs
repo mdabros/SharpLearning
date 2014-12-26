@@ -51,7 +51,7 @@ namespace SharpLearning.Linear.Learners
 
         
         /// <summary>
-        /// Learns a linear regression model using StochasticGradientDecent
+        /// Learns a linear regression model using StochasticGradientDecent.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -59,6 +59,20 @@ namespace SharpLearning.Linear.Learners
         public RegressionStochasticGradientDecentModel Learn(F64Matrix observations, double[] targets)
         {
             var weights = m_stochasticGradientDescent.Optimize(observations, targets);
+            return new RegressionStochasticGradientDecentModel(weights);
+        }
+
+        /// <summary>
+        /// Learns a linear regression model using StochasticGradientDecent. 
+        /// Only using the indices from indices array.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public RegressionStochasticGradientDecentModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            var weights = m_stochasticGradientDescent.Optimize(observations, targets, indices);
             return new RegressionStochasticGradientDecentModel(weights);
         }
 

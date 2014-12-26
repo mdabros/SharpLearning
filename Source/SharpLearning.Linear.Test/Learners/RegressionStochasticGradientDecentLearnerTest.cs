@@ -4,6 +4,7 @@ using SharpLearning.Linear.Learners;
 using SharpLearning.Linear.Test.Properties;
 using SharpLearning.Metrics.Regression;
 using System.IO;
+using System.Linq;
 
 namespace SharpLearning.Linear.Test.Learners
 {
@@ -28,6 +29,27 @@ namespace SharpLearning.Linear.Test.Learners
             Assert.AreEqual(63952.594022178237, actualError, 0.001);
             Assert.AreEqual(109234.21577282451, actualImportances[0], 0.001);
             Assert.AreEqual(4436.0076713921026, actualImportances[1], 0.001);
+        }
+
+        [TestMethod]
+        public void RegressionStochasticGradientDecentLearner_Learn_Indexed()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Housing));
+            var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
+            var targets = parser.EnumerateRows("Price").ToF64Vector();
+            var indices = Enumerable.Range(0, 25).ToArray();
+
+            var sut = new RegressionStochasticGradientDecentLearner(0.001, 1000, 0.0, 42, 1);
+            var model = sut.Learn(observations, targets, indices);
+
+            var metric = new RootMeanSquareRegressionMetric();
+            var predictions = model.Predict(observations);
+            var actualError = metric.Error(targets, predictions);
+
+            var actualImportances = model.GetRawVariableImportance();
+            Assert.AreEqual(66773.334206959524, actualError, 0.001);
+            Assert.AreEqual(123846.40794694747, actualImportances[0], 0.001);
+            Assert.AreEqual(1320.6041841030851, actualImportances[1], 0.001);
         }
 
         [TestMethod]
