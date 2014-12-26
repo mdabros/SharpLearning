@@ -6,10 +6,9 @@ namespace SharpLearning.CrossValidation
     /// Evaluator delegate for cross validation
     /// </summary>
     /// <typeparam name="T">The prediction type</typeparam>
-    /// <param name="observations"></param>
-    /// <param name="indices">Indices to be used from observations</param>
+    /// <param name="observation">Single observation</param>
     /// <returns></returns>
-    public delegate T[] CrossValidationEvaluator<T>(F64Matrix observations, int[] indices);
+    public delegate T CrossValidationEvaluator<T>(double[] observation);
     
  
     

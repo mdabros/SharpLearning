@@ -57,28 +57,6 @@ namespace SharpLearning.AdaBoost.Test.Models
         }
 
         [TestMethod]
-        public void ClassificationAdaBoostModel_Precit_Multiple_Indexed()
-        {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
-
-            var learner = new ClassificationAdaBoostLearner(10);
-            var sut = learner.Learn(observations, targets);
-            var indices = new int[] { 0, 3, 4, 5, 6, 7, 8, 9, 20, 21 };
-
-            var predictions = sut.Predict(observations, indices);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var indexedTargets = targets.GetIndices(indices);
-            var error = evaluator.Error(indexedTargets, predictions);
-
-            Assert.AreEqual(0.0, error, 0.0000001);
-        }
-
-
-        [TestMethod]
         public void ClassificationAdaBoostModel_PredictProbability_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
@@ -122,30 +100,6 @@ namespace SharpLearning.AdaBoost.Test.Models
             Assert.AreEqual(0.038461538461538464, error, 0.0000001);
 
             var expected = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.553917222019051 }, { 1, 0.446082777980949 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.455270122123639 }, { 1, 0.544729877876361 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.590671208378385 }, { 1, 0.409328791621616 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.564961572849738 }, { 1, 0.435038427150263 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.455270122123639 }, { 1, 0.544729877876361 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.549970403132686 }, { 1, 0.450029596867314 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.417527839140627 }, { 1, 0.582472160859373 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.409988559960094 }, { 1, 0.590011440039906 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.630894242807786 }, { 1, 0.369105757192214 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.436954866525023 }, { 1, 0.563045133474978 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.461264944069783 }, { 1, 0.538735055930217 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.590671208378385 }, { 1, 0.409328791621616 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.549503146925505 }, { 1, 0.450496853074495 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.537653803214063 }, { 1, 0.462346196785938 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.37650723540928 }, { 1, 0.62349276459072 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.573579890413618 }, { 1, 0.426420109586382 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.549970403132686 }, { 1, 0.450029596867314 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.524371409810479 }, { 1, 0.475628590189522 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.436954866525023 }, { 1, 0.563045133474978 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.471117379964633 }, { 1, 0.528882620035367 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.630894242807786 }, { 1, 0.369105757192214 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.436954866525023 }, { 1, 0.563045133474978 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.404976804073458 }, { 1, 0.595023195926542 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.573579890413618 }, { 1, 0.426420109586382 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.549970403132686 }, { 1, 0.450029596867314 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.630894242807786 }, { 1, 0.369105757192214 }, }), };
-            CollectionAssert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void ClassificationAdaBoostModel_PredictProbability_Multiple_Indexed()
-        {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
-
-            var learner = new ClassificationAdaBoostLearner(10, 1, 3);
-            var sut = learner.Learn(observations, targets);
-
-            var indices = new int[] { 0, 3, 4, 5, 6, 7, 8, 9, 20, 21 };
-            var actual = sut.PredictProbability(observations, indices);
-
-            var indexedTargets = targets.GetIndices(indices);
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var error = evaluator.Error(indexedTargets, actual.Select(p => p.Prediction).ToArray());
-
-            Assert.AreEqual(0.0, error, 0.0000001);
-            
-            var expected = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.553917222019051 }, { 1, 0.446082777980949 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.564961572849738 }, { 1, 0.435038427150263 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.455270122123639 }, { 1, 0.544729877876361 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.549970403132686 }, { 1, 0.450029596867314 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.417527839140627 }, { 1, 0.582472160859373 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.409988559960094 }, { 1, 0.590011440039906 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.630894242807786 }, { 1, 0.369105757192214 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.436954866525023 }, { 1, 0.563045133474978 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.630894242807786 }, { 1, 0.369105757192214 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.436954866525023 }, { 1, 0.563045133474978 }, }), };
             CollectionAssert.AreEqual(expected, actual);
         }
 

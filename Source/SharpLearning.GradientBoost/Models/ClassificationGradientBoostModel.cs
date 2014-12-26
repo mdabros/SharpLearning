@@ -112,24 +112,6 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set og probabilties based in the provided indices
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        public ProbabilityPrediction[] PredictProbability(F64Matrix observations, int[] indices)
-        {
-            var rows = observations.GetNumberOfRows();
-            var predictions = new ProbabilityPrediction[indices.Length];
-            for (int i = 0; i < indices.Length; i++)
-            {
-                predictions[i] = PredictProbability(observations.GetRow(indices[i]));
-            }
-
-            return predictions;
-        }
-
-        /// <summary>
         /// Predict a single observation
         /// </summary>
         /// <param name="observation"></param>
@@ -147,18 +129,6 @@ namespace SharpLearning.GradientBoost.Models
         public double[] Predict(F64Matrix observations)
         {
             return PredictProbability(observations).Select(p => p.Prediction)
-                .ToArray();
-        }
-
-        /// <summary>
-        /// Predicts a set of observations based on the provided indices
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        public double[] Predict(F64Matrix observations, int[] indices)
-        {
-            return PredictProbability(observations, indices).Select(p => p.Prediction)
                 .ToArray();
         }
 

@@ -60,23 +60,6 @@ namespace SharpLearning.RandomForest.Models
         }
 
         /// <summary>
-        /// Predicts the observation subset provided by indices
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        public double[] Predict(F64Matrix observations, int[] indices)
-        {
-            var rows = observations.GetNumberOfRows();
-            var predictions = new double[indices.Length];
-            for (int i = 0; i < indices.Length; i++)
-            {
-                predictions[i] = Predict(observations.GetRow(indices[i]));
-            }
-
-            return predictions;
-        }
-
-        /// <summary>
         /// Predicts a single observation using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
         /// Usally this will be a more accurate predictions
@@ -130,23 +113,6 @@ namespace SharpLearning.RandomForest.Models
             for (int i = 0; i < rows; i++)
             {
                 predictions[i] = PredictProbability(observations.GetRow(i));
-            }
-
-            return predictions;
-        }
-
-        /// <summary>
-        /// Predicts the observation subset provided by indices with probabilities
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        public ProbabilityPrediction[] PredictProbability(F64Matrix observations, int[] indices)
-        {
-            var rows = observations.GetNumberOfRows();
-            var predictions = new ProbabilityPrediction[indices.Length];
-            for (int i = 0; i < indices.Length; i++)
-            {
-                predictions[i] = PredictProbability(observations.GetRow(indices[i]));
             }
 
             return predictions;

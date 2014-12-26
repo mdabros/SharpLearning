@@ -71,7 +71,12 @@ namespace SharpLearning.CrossValidation
             {
                 AddCurrentIndices(foldIndices, rows, i);
                 var model = m_modelLearner(observations, targets, m_trainingIndices);
-                var predictions = model(observations, m_holdoutIndices);
+                var predictions = new TOut[m_holdoutIndices.Length];
+
+                for (int l = 0; l < predictions.Length; l++)
+                {
+                    predictions[l] = model(observations.GetRow(l));  
+                }
 
                 for (int j = 0; j < m_holdoutIndices.Length; j++)
                 {

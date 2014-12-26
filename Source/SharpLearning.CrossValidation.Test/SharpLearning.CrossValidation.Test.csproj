@@ -58,6 +58,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="CrossValidationTest.cs" />
+    <Compile Include="CrossValidationTestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomCrossValidationTest.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShufflerTest.cs" />

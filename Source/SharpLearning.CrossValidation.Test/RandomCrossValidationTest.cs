@@ -46,9 +46,12 @@ namespace SharpLearning.CrossValidation.Test
         CrossValidationEvaluator<double> ModelLearner(F64Matrix observations, double[] targets, int[] foldIndices)
         {
             var indices = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var holdOut = indices.Except(foldIndices).ToArray();
+            double[] holdOut = indices.Except(foldIndices)
+                .Select(v => (double)v).ToArray();
 
-            return (o, s) => holdOut.Select(i => (double)i).ToArray();
+            var model = new CrossValidationTestModel(holdOut); 
+
+            return o => model.Predict(o);
         }
     }
 }
