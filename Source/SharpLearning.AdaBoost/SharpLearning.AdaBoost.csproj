@@ -46,8 +46,8 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Learning\RegressionAdaBoostLearner.cs" />
-    <Compile Include="Learning\ClassificationAdaBoostLearner.cs" />
+    <Compile Include="Learners\RegressionAdaBoostLearner.cs" />
+    <Compile Include="Learners\ClassificationAdaBoostLearner.cs" />
     <Compile Include="Models\RegressionAdaBoostModel.cs" />
     <Compile Include="Models\ClassificationAdaBoostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.AdaBoost.Learning
+namespace SharpLearning.AdaBoost.Learners
 {
     public enum AdaBoostRegressionLoss { Linear, Squared, Exponential }
 

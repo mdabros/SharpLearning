@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.AdaBoost.Learning;
+using SharpLearning.AdaBoost.Learners;
 using SharpLearning.AdaBoost.Test.Properties;
 using SharpLearning.Containers;
 using SharpLearning.InputOutput.Csv;
@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace SharpLearning.AdaBoost.Test.Learning
+namespace SharpLearning.AdaBoost.Test.Learners
 {
     [TestClass]
     public class RegressionAdaBoostLearnerTest
