@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.Linear.Models;
 using SharpLearning.Linear.Optimization;
 using System;
@@ -60,7 +61,23 @@ namespace SharpLearning.Linear.Learners
         /// <returns></returns>
         public ClassificationStochasticGradientDecentModel Learn(F64Matrix observations, double[] targets)
         {
-            var uniqueTargets = targets.Distinct().ToArray();
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices);
+        }
+
+
+       /// <summary>
+        /// Learns a classification model using StochasticGradientDecent. 
+        /// Only using the indices provided in indices array.
+       /// </summary>
+       /// <param name="observations"></param>
+       /// <param name="targets"></param>
+       /// <param name="indices"></param>
+       /// <returns></returns>
+       public ClassificationStochasticGradientDecentModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            var indexedTargets = targets.GetIndices(indices);
+            var uniqueTargets = indexedTargets.Distinct().ToArray();
             var modelWeights = new Dictionary<double, BinaryClassificationStochasticGradientDecentModel>();
 
             var currentTargetArray = new double[targets.Length];
@@ -68,7 +85,7 @@ namespace SharpLearning.Linear.Learners
             {
                 for (int i = 0; i < targets.Length; i++)
                 {
-                    if(targetName == targets[i])
+                    if (targetName == targets[i])
                     {
                         currentTargetArray[i] = 1.0;
                     }
@@ -79,7 +96,7 @@ namespace SharpLearning.Linear.Learners
                 }
 
                 modelWeights.Add(targetName, new BinaryClassificationStochasticGradientDecentModel
-                    (m_stochasticGradientDescent.Optimize(observations, currentTargetArray)));
+                    (m_stochasticGradientDescent.Optimize(observations, currentTargetArray, indices)));
             }
 
             return new ClassificationStochasticGradientDecentModel(modelWeights);
