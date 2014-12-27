@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace SharpLearning.AdaBoost.Models
     /// <summary>
     /// AdaBoost classification model. Consist of a series of tree model and corresponding weights
     /// </summary>
-    public sealed class ClassificationAdaBoostModel
+    public sealed class ClassificationAdaBoostModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly double[] m_modelWeights;
         readonly ClassificationDecisionTreeModel[] m_models;
@@ -123,6 +124,16 @@ namespace SharpLearning.AdaBoost.Models
                 .First().Key;
 
             return new ProbabilityPrediction(prediction, probabilities);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
         }
 
         /// <summary>

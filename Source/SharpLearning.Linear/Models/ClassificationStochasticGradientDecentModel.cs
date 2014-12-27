@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SharpLearning.Linear.Models
     /// <summary>
     /// Linear regression model learned using stochastic gradient descent
     /// </summary>
-    public sealed class ClassificationStochasticGradientDecentModel
+    public sealed class ClassificationStochasticGradientDecentModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly Dictionary<double, BinaryClassificationStochasticGradientDecentModel> m_models;
 
@@ -34,6 +35,16 @@ namespace SharpLearning.Linear.Models
                 .OrderByDescending(m => m.Probability).ToArray();
 
             return props.First().Target;
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
         }
 
         double Sigmoid(double z)

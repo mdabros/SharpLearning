@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SharpLearning.DecisionTrees.Models
     /// <summary>
     /// Regression Decision tree model
     /// </summary>
-    public sealed class RegressionDecisionTreeModel
+    public sealed class RegressionDecisionTreeModel : IPredictor<double>
     {
         public readonly BinaryTree Tree;
         readonly double[] m_variableImportance;

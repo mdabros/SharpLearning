@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
@@ -6,6 +7,7 @@ using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
 using SharpLearning.GradientBoost.LossFunctions;
 using SharpLearning.GradientBoost.Models;
+using SharpLearning.Learners.Interfaces;
 using SharpLearning.Metrics.Regression;
 using System;
 using System.Collections.Generic;
@@ -19,7 +21,7 @@ namespace SharpLearning.GradientBoost.Learners
     /// A series of regression trees are fitted stage wise on the probability residuals of the previous stage.
     /// The resulting models are ensembled together using addition.
     /// </summary>
-    public class ClassificationGradientBoostLearner
+    public class ClassificationGradientBoostLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
     {
         readonly IClassificationLossFunction m_lossFunction;
         DecisionTreeLearner m_learner;
@@ -128,6 +130,30 @@ namespace SharpLearning.GradientBoost.Learners
                 m_lossFunction.LearningRate, m_lossFunction.PriorProbabilities, m_targetNames.ToArray());
         }
 
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+        
         void FitStage(int iteration, F64Matrix observations, double[] targets, int[] indices)
         {
             for (int i = 0; i < m_targetNames.Length; i++)

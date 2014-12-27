@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SharpLearning.RandomForest.Models
     /// <summary>
     /// Regression forest model consiting of a series of decision trees
     /// </summary>
-    public sealed class RegressionForestModel
+    public sealed class RegressionForestModel : IPredictor<double>
     {
         readonly RegressionDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SharpLearning.Containers;
+using SharpLearning.Learners.Interfaces;
 
 namespace SharpLearning.GradientBoost.Learners
 {
@@ -21,7 +22,7 @@ namespace SharpLearning.GradientBoost.Learners
     /// A series of regression trees are fitted stage wise on the residuals of the previous stage.
     /// The resulting models are ensembled together using addition.
     /// </summary>
-    public class RegressionGradientBoostLearner
+    public class RegressionGradientBoostLearner : IIndexedLearner<double>
     {
         readonly ILossFunction m_lossFunction;
         DecisionTreeLearner m_learner;
@@ -118,6 +119,18 @@ namespace SharpLearning.GradientBoost.Learners
 
             return new RegressionGradientBoostModel(models, variableImportance,
                 m_lossFunction.LearningRate, m_lossFunction.InitialLoss);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
 
         void FitStage(int iteration, F64Matrix observations, double[] targets, int[] indices)

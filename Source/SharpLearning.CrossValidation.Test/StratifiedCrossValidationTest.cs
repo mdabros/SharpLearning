@@ -1,8 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using System;
 using System.Linq;
 
 namespace SharpLearning.CrossValidation.Test
@@ -42,21 +40,11 @@ namespace SharpLearning.CrossValidation.Test
         {
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
 
-            var sut = new StratifiedCrossValidation<double, double>(ModelLearner, folds, 42);
-            var actual = sut.CrossValidate(observations, targets);
+            var sut = new StratifiedCrossValidation<double>(folds, 42);
+            var actual = sut.CrossValidate(() => new CrossValidationTestLearner(indices), observations, targets);
             return actual;
-        }
-
-        CrossValidationEvaluator<double> ModelLearner(F64Matrix observations, double[] targets, int[] foldIndices)
-        {
-            var indices = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            double[] holdOut = indices.Except(foldIndices)
-                .Select(v => (double)v).ToArray();
-
-            var model = new CrossValidationTestModel(holdOut);
-
-            return o => model.Predict(o);
         }
     }
 }

@@ -46,7 +46,6 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="CrossValidationDelegates.cs" />
     <Compile Include="RandomCrossValidation.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShuffler.cs" />
     <Compile Include="CrossValidation.cs" />
@@ -59,6 +58,10 @@
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Learners.Interfaces\SharpLearning.Learners.Interfaces.csproj">
+      <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
+      <Name>SharpLearning.Learners.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

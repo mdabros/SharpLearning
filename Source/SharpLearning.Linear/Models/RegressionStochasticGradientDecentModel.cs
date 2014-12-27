@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Matrices;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace SharpLearning.Linear.Models
     /// <summary>
     /// Regression model learned using stochastic gradient descent
     /// </summary>
-    public sealed class RegressionStochasticGradientDecentModel
+    public sealed class RegressionStochasticGradientDecentModel : IPredictor<double>
     {
         readonly double[] m_weights;
 

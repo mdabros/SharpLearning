@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace SharpLearning.GradientBoost.Models
     /// <summary>
     /// 
     /// </summary>
-    public sealed class RegressionGradientBoostModel
+    public sealed class RegressionGradientBoostModel : IPredictor<double>
     {
         readonly RegressionDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;

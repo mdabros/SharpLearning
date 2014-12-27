@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SharpLearning.Learners.Interfaces;
+using System;
 
 namespace SharpLearning.CrossValidation.Test
 {
-    internal class CrossValidationTestModel
+
+    internal class CrossValidationTestModel : IPredictor<double>
     {
-        double[] m_data;
+        readonly double[] m_data;
         int m_currentIndex;
 
         public CrossValidationTestModel(double[] data)

@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.Learners.Interfaces;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.Threading;
 using System;
@@ -15,7 +16,7 @@ namespace SharpLearning.RandomForest.Learners
     /// http://en.wikipedia.org/wiki/Random_forest
     /// http://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm
     /// </summary>
-    public sealed class RegressionRandomForestLearner
+    public sealed class RegressionRandomForestLearner : IIndexedLearner<double>
     {
         readonly int m_trees;
         int m_featuresPrSplit;
@@ -121,6 +122,18 @@ namespace SharpLearning.RandomForest.Learners
             var rawVariableImportance = VariableImportance(models, observations.GetNumberOfColumns());
 
             return new RegressionForestModel(models, rawVariableImportance);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
 
         double[] VariableImportance(RegressionDecisionTreeModel[] models, int numberOfFeatures)

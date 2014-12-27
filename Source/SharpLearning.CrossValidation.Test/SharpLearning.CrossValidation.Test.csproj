@@ -58,6 +58,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="CrossValidationTest.cs" />
+    <Compile Include="CrossValidationTestLearner.cs" />
     <Compile Include="CrossValidationTestModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomCrossValidationTest.cs" />
@@ -73,6 +74,10 @@
     <ProjectReference Include="..\SharpLearning.CrossValidation\SharpLearning.CrossValidation.csproj">
       <Project>{86038cef-f3b5-45c5-bbbc-8f700a1cfb86}</Project>
       <Name>SharpLearning.CrossValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Learners.Interfaces\SharpLearning.Learners.Interfaces.csproj">
+      <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
+      <Name>SharpLearning.Learners.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

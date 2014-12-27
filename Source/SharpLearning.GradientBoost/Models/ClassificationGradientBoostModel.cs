@@ -2,6 +2,7 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SharpLearning.GradientBoost.Models
     /// <summary>
     /// Classification gradient boost model
     /// </summary>
-    public sealed class ClassificationGradientBoostModel
+    public sealed class ClassificationGradientBoostModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly RegressionDecisionTreeModel[][] m_models;
         readonly double[] m_rawVariableImportance;
@@ -93,6 +94,17 @@ namespace SharpLearning.GradientBoost.Models
 
             return probability;
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
+        }
+
 
         /// <summary>
         /// Predicts a set of probabilities

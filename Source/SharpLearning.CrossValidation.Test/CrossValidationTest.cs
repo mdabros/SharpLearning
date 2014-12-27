@@ -38,21 +38,11 @@ namespace SharpLearning.CrossValidation.Test
         {
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
 
-            var sut = new CrossValidation<double, double>(ModelLearner, new RandomCrossValidationShuffler<double>(42), folds);
-            var actual = sut.CrossValidate(observations, targets);
+            var sut = new CrossValidation<double>(new RandomCrossValidationShuffler<double>(42), folds);
+            var actual = sut.CrossValidate(() => new CrossValidationTestLearner(indices), observations, targets);
             return actual;
-        }
-
-        CrossValidationEvaluator<double> ModelLearner(F64Matrix observations, double[] targets, int[] foldIndices)
-        {
-            var indices = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            double[] holdOut = indices.Except(foldIndices)
-                .Select(v => (double)v).ToArray();
-
-            var model = new CrossValidationTestModel(holdOut);
-
-            return o => model.Predict(o);
         }
     }
 }

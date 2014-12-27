@@ -41,9 +41,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Linear", "Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Linear.Test", "SharpLearning.Linear.Test\SharpLearning.Linear.Test.csproj", "{0CE7A52C-DA3A-4583-BB65-205C03806197}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Learners.Interfaces", "SharpLearning.Learners.Interfaces\SharpLearning.Learners.Interfaces.csproj", "{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 20
+		SccNumberOfProjects = 22
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -107,6 +109,9 @@ Global
 		SccProjectUniqueName20 = SharpLearning.Linear.Test\\SharpLearning.Linear.Test.csproj
 		SccProjectName20 = SharpLearning.Linear.Test
 		SccLocalPath20 = SharpLearning.Linear.Test
+		SccProjectUniqueName21 = SharpLearning.Learners.Interfaces\\SharpLearning.Learners.Interfaces.csproj
+		SccProjectName21 = SharpLearning.Learners.Interfaces
+		SccLocalPath21 = SharpLearning.Learners.Interfaces
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -193,6 +198,10 @@ Global
 		{0CE7A52C-DA3A-4583-BB65-205C03806197}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CE7A52C-DA3A-4583-BB65-205C03806197}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CE7A52C-DA3A-4583-BB65-205C03806197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

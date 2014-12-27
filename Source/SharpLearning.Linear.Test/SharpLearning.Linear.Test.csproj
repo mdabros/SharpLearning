@@ -78,6 +78,10 @@
       <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
       <Name>SharpLearning.InputOutput</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Learners.Interfaces\SharpLearning.Learners.Interfaces.csproj">
+      <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
+      <Name>SharpLearning.Learners.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Linear\SharpLearning.Linear.csproj">
       <Project>{586efaba-9f39-4927-8953-001e283686d6}</Project>
       <Name>SharpLearning.Linear</Name>

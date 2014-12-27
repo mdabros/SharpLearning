@@ -2,6 +2,7 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SharpLearning.AdaBoost.Models
     /// <summary>
     /// AdaBoost regression model. Consist of a series of tree model and corresponding weights
     /// </summary>
-    public sealed class RegressionAdaBoostModel
+    public sealed class RegressionAdaBoostModel : IPredictor<double>
     {
         readonly double[] m_modelWeights;
         readonly RegressionDecisionTreeModel[] m_models;

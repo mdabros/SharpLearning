@@ -1,9 +1,11 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
+using SharpLearning.Learners.Interfaces;
 
 namespace SharpLearning.DecisionTrees.Learners
 {
@@ -11,7 +13,8 @@ namespace SharpLearning.DecisionTrees.Learners
     /// Trains a Classification Decision tree
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
-    public sealed class ClassificationDecisionTreeLearner : DecisionTreeLearner
+    public sealed class ClassificationDecisionTreeLearner : DecisionTreeLearner, 
+        IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
     {
         /// <summary>
         /// Trains a Classification Decision tree
@@ -103,6 +106,30 @@ namespace SharpLearning.DecisionTrees.Learners
         public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights));
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
     }
 }

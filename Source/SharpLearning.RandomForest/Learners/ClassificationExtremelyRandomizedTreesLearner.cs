@@ -1,9 +1,11 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
+using SharpLearning.Learners.Interfaces;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.Threading;
 using System;
@@ -17,7 +19,7 @@ namespace SharpLearning.RandomForest.Learners
     /// Learns a classification version of Extremely randomized trees
     /// http://www.montefiore.ulg.ac.be/~ernst/uploads/news/id63/extremely-randomized-trees.pdf
     /// </summary>
-    public sealed class ClassificationExtremelyRandomizedTreesLearner
+    public sealed class ClassificationExtremelyRandomizedTreesLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
     {
         readonly int m_trees;
         int m_featuresPrSplit;
@@ -125,6 +127,30 @@ namespace SharpLearning.RandomForest.Learners
             var rawVariableImportance = VariableImportance(models, observations.GetNumberOfColumns());
 
             return new ClassificationForestModel(models, rawVariableImportance);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
 
         double[] VariableImportance(ClassificationDecisionTreeModel[] models, int numberOfFeatures)

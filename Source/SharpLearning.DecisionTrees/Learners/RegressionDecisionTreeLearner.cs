@@ -4,6 +4,7 @@ using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
+using SharpLearning.Learners.Interfaces;
 
 namespace SharpLearning.DecisionTrees.Learners
 {
@@ -11,7 +12,8 @@ namespace SharpLearning.DecisionTrees.Learners
     /// Trains a Regression Decision tree
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
-    public sealed class RegressionDecisionTreeLearner : DecisionTreeLearner
+    public sealed class RegressionDecisionTreeLearner : DecisionTreeLearner,
+        IIndexedLearner<double>
     {
         /// <summary>
         /// 
@@ -47,6 +49,18 @@ namespace SharpLearning.DecisionTrees.Learners
         public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices));
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
 
         /// <summary>

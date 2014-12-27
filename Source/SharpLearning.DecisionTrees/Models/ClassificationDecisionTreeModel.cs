@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace SharpLearning.DecisionTrees.Models
     /// <summary>
     /// Classification Decision tree model
     /// </summary>
-    public sealed class ClassificationDecisionTreeModel
+    public sealed class ClassificationDecisionTreeModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         public readonly BinaryTree Tree;
         readonly double[] m_variableImportance;
@@ -66,6 +67,15 @@ namespace SharpLearning.DecisionTrees.Models
             return predictions;
         }
 
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
+        }
 
         /// <summary>
         /// Predicts a single observation with probabilities

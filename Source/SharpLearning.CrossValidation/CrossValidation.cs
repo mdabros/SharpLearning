@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Shufflers;
+using SharpLearning.Learners.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,11 @@ namespace SharpLearning.CrossValidation
     /// <summary>
     /// Cross validation for evaluating how learning algorithms perform on unseen observations
     /// </summary>
-    /// <typeparam name="TOut"></typeparam>
-    public class CrossValidation<TOut, TTarget>
+    /// <typeparam name="TPrediction"></typeparam>
+    public class CrossValidation<TPrediction>
     {
-        readonly CrossValidationLearner<TOut, TTarget> m_modelLearner;
         readonly int m_crossValidationFolds;
-        readonly ICrossValidationShuffler<TTarget> m_shuffler;
+        readonly ICrossValidationShuffler<double> m_shuffler;
 
         int[] m_workIndices = new int[0];
         int[] m_trainingIndices = new int[0];
@@ -23,19 +23,14 @@ namespace SharpLearning.CrossValidation
         /// <summary>
         /// Cross validation for evaluating how learning algorithms perform on unseen observations
         /// </summary>
-        /// <param name="modelLearner">The func should provide a learning algorithm 
-        /// that returns a model predicting multiple observations</param>
         /// <param name="shuffler">Shuffling strategy for the provided indices 
         /// before they are divided into the provided folds</param>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
-        public CrossValidation(CrossValidationLearner<TOut, TTarget> modelLearner,
-                                    ICrossValidationShuffler<TTarget> shuffler, int crossValidationFolds)
+        public CrossValidation(ICrossValidationShuffler<double> shuffler, int crossValidationFolds)
         {
-            if (modelLearner == null) { throw new ArgumentNullException("trainer"); }
             if (shuffler == null) { throw new ArgumentNullException("shuffler"); }
             if (crossValidationFolds < 1) { throw new ArgumentException("CrossValidationFolds "); }
 
-            m_modelLearner = modelLearner;
             m_shuffler = shuffler;
             m_crossValidationFolds = crossValidationFolds;
         }
@@ -43,10 +38,12 @@ namespace SharpLearning.CrossValidation
         /// <summary>
         /// Returns an array of cross validated predictions
         /// </summary>
+        /// <param name="learnerFactory"></param>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public TOut[] CrossValidate(F64Matrix observations, TTarget[] targets)
+        public TPrediction[] CrossValidate(Func<IIndexedLearner<TPrediction>> learnerFactory, 
+            F64Matrix observations, double[] targets)
         {
             var rows = targets.Length;
             if (m_crossValidationFolds > rows) 
@@ -63,19 +60,19 @@ namespace SharpLearning.CrossValidation
 
             m_shuffler.Shuffle(m_workIndices, targets, m_crossValidationFolds);
 
-            var crossValidatedPredictions = new TOut[rows];
+            var crossValidatedPredictions = new TPrediction[rows];
             var countPrFold = rows / m_crossValidationFolds;
             var foldIndices = CreateIndicedFolds(m_workIndices, countPrFold);
 
             for (int i = 0; i < m_crossValidationFolds; i++)
             {
                 AddCurrentIndices(foldIndices, rows, i);
-                var model = m_modelLearner(observations, targets, m_trainingIndices);
-                var predictions = new TOut[m_holdoutIndices.Length];
+                var model = learnerFactory().Learn(observations, targets, m_trainingIndices);
+                var predictions = new TPrediction[m_holdoutIndices.Length];
 
                 for (int l = 0; l < predictions.Length; l++)
                 {
-                    predictions[l] = model(observations.GetRow(l));  
+                    predictions[l] = model.Predict(observations.GetRow(l));  
                 }
 
                 for (int j = 0; j < m_holdoutIndices.Length; j++)

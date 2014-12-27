@@ -4,6 +4,7 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
+using SharpLearning.Learners.Interfaces;
 using SharpLearning.Metrics.Classification;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace SharpLearning.AdaBoost.Learners
     /// Classification AdaBoost learner using the SAMME algorithm for multi-class support:
     /// http://web.stanford.edu/~hastie/Papers/samme.pdf
     /// </summary>
-    public sealed class ClassificationAdaBoostLearner
+    public sealed class ClassificationAdaBoostLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
     {
         readonly int m_iterations;
         readonly double m_learningRate;
@@ -159,6 +160,29 @@ namespace SharpLearning.AdaBoost.Learners
                 variableImportance);
         }
 
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
 
         bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)
         {

@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Learners.Interfaces;
 using SharpLearning.Linear.Models;
 using SharpLearning.Linear.Optimization;
 using System;
@@ -13,7 +14,7 @@ namespace SharpLearning.Linear.Learners
     /// Stochastic gradient descent operates best when all features are equally scaled. 
     /// For example between 0.0 and 1.0 
     /// </summary>
-    public sealed class ClassificationStochasticGradientDecentLearner
+    public sealed class ClassificationStochasticGradientDecentLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
     {
         readonly LogisticStochasticGradientDescent m_stochasticGradientDescent;
         // Add loss functions (Huber, EN, squared), regularization parameter and so forth
@@ -65,6 +66,29 @@ namespace SharpLearning.Linear.Learners
             return Learn(observations, targets, indices);
         }
 
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
 
        /// <summary>
         /// Learns a classification model using StochasticGradientDecent. 
