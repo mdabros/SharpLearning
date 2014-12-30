@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="IIndexedLearner.cs" />
     <Compile Include="ILearner.cs" />
+    <Compile Include="IMetric.cs" />
     <Compile Include="IPredictor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

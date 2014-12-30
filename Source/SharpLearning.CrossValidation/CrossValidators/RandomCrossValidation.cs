@@ -1,7 +1,7 @@
 ﻿using SharpLearning.CrossValidation.Shufflers;
 using System;
 
-namespace SharpLearning.CrossValidation
+namespace SharpLearning.CrossValidation.CrossValidators
 {
     /// <summary>
     /// Random cross validation uses a random shuffle of the observation indices to avoid any ordering issues.

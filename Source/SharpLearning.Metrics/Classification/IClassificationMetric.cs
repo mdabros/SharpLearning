@@ -1,11 +1,12 @@
 ﻿
+using SharpLearning.Learners.Interfaces;
 namespace SharpLearning.Metrics.Classification
 {
     /// <summary>
     /// Classification metric interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IClassificationMetric<T>
+    public interface IClassificationMetric<T> : IMetric<T>
     {
         /// <summary>
         /// Calculates the classification error
@@ -13,7 +14,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <returns></returns>
-        double Error(T[] targets, T[] predictions);
+        new double Error(T[] targets, T[] predictions);
         
         /// <summary>
         /// Gives a string representation of the classification matrix

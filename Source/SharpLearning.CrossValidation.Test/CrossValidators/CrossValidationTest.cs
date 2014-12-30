@@ -1,10 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Shufflers;
+using SharpLearning.CrossValidation.Test;
 using System;
 using System.Linq;
 
-namespace SharpLearning.CrossValidation.Test
+namespace SharpLearning.CrossValidation.CrossValidators.Test
 {
     [TestClass]
     public class CrossValidationTest

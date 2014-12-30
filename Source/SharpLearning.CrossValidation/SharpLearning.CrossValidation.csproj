@@ -46,13 +46,16 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="RandomCrossValidation.cs" />
+    <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePoint.cs" />
+    <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvesCalculator.cs" />
+    <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointExtensions.cs" />
+    <Compile Include="CrossValidators\RandomCrossValidation.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShuffler.cs" />
-    <Compile Include="CrossValidation.cs" />
+    <Compile Include="CrossValidators\CrossValidation.cs" />
     <Compile Include="Shufflers\ICrossValidationShuffler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shufflers\StratifyCrossValidationShuffler.cs" />
-    <Compile Include="StratifiedCrossValidation.cs" />
+    <Compile Include="CrossValidators\StratifiedCrossValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
@@ -64,6 +67,7 @@
       <Name>SharpLearning.Learners.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

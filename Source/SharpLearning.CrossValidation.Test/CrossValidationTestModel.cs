@@ -17,7 +17,7 @@ namespace SharpLearning.CrossValidation.Test
 
         public double Predict(double[] observation)
         {
-            if (m_currentIndex >= observation.Length)
+            if (m_currentIndex >= m_data.Length)
             {
                 m_currentIndex = 0;
             }

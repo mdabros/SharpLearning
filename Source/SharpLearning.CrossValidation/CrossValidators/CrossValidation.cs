@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.CrossValidation
+namespace SharpLearning.CrossValidation.CrossValidators
 {
     /// <summary>
     /// Cross validation for evaluating how learning algorithms perform on unseen observations

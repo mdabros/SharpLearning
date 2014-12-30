@@ -1,7 +1,7 @@
 ﻿using SharpLearning.CrossValidation.Shufflers;
 using System;
 
-namespace SharpLearning.CrossValidation
+namespace SharpLearning.CrossValidation.CrossValidators
 {
     /// <summary>
     /// Uses stratified sampling to shuffle the indices for cross validation

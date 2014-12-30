@@ -1,11 +1,12 @@
-﻿
+﻿using SharpLearning.Learners.Interfaces;
+
 namespace SharpLearning.Metrics.Ranking
 {
     /// <summary>
     /// Ranking metric interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRankingMetric<T>
+    public interface IRankingMetric<T> : IMetric<T>
     {
         /// <summary>
         /// Calculates the ranking error
@@ -13,6 +14,6 @@ namespace SharpLearning.Metrics.Ranking
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <returns></returns>
-        double Error(T[] targets, T[] predictions);
+        new double Error(T[] targets, T[] predictions);
     }
 }
