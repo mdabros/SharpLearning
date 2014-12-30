@@ -1,12 +1,12 @@
 ﻿using SharpLearning.Containers;
+using SharpLearning.Learners.Interfaces;
 
 namespace SharpLearning.Metrics.Classification
 {
     /// <summary>
     /// Classification probability metric interface
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IClassificationProbabilityMetric
+    public interface IClassificationProbabilityMetric : IMetric<double, ProbabilityPrediction>
     {
         /// <summary>
         /// 
@@ -14,6 +14,6 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <returns></returns>
-        double Error(double[] targets, ProbabilityPrediction[] predictions);
+        new double Error(double[] targets, ProbabilityPrediction[] predictions);
      }
 }

@@ -6,7 +6,7 @@ namespace SharpLearning.Metrics.Classification
     /// Classification metric interface
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IClassificationMetric<T> : IMetric<T>
+    public interface IClassificationMetric<T> : IMetric<T, T>
     {
         /// <summary>
         /// Calculates the classification error

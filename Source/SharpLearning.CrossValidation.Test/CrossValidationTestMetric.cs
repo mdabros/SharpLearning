@@ -3,7 +3,7 @@ using System;
 
 namespace SharpLearning.CrossValidation.Test
 {
-    internal sealed class CrossValidationTestMetric : IMetric<double>
+    internal sealed class CrossValidationTestMetric : IMetric<double, double>
     {
         public double Error(double[] targets, double[] predictions)
         {

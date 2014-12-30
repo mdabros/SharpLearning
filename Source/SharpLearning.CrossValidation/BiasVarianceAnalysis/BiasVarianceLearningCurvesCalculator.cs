@@ -22,10 +22,10 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public sealed class BiasVarianceLearningCurvesCalculator
+    public sealed class BiasVarianceLearningCurvesCalculator<TPrediction>
     {
         readonly double[] m_samplePercentages;
-        readonly IMetric<double> m_metric;
+        readonly IMetric<double, TPrediction> m_metric;
         readonly double m_trainingPercentage;
         readonly Random m_random;
 
@@ -39,7 +39,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="trainingPercentage">The percentage of the data used for training. 
         /// the sample percentage list is sampled from this set while the remaining data is used for validation</param>
         /// <param name="seed"></param>
-        public BiasVarianceLearningCurvesCalculator(IMetric<double> metric, double[] samplePercentages, 
+        public BiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
             double trainingPercentage = 0.8, int seed = 42)
         {
             if (samplePercentages == null) { throw new ArgumentNullException("samplePercentages"); }
@@ -62,7 +62,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public List<BiasVarianceLearningCurvePoint> Calculate(Func<IIndexedLearner<double>> learnerFactory,
+        public List<BiasVarianceLearningCurvePoint> Calculate(Func<IIndexedLearner<TPrediction>> learnerFactory,
             F64Matrix observations, double[] targets)
         {
             var learningCurves = new List<BiasVarianceLearningCurvePoint>();
@@ -90,14 +90,14 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                 var sampleIndices = trainingIndices.Take(sampleSize).ToArray();
 
                 var model = learnerFactory().Learn(observations, targets, sampleIndices);
-                var trainingPredictions = new double[sampleSize];
+                var trainingPredictions = new TPrediction[sampleSize];
                 
                 for (int i = 0; i < trainingPredictions.Length; i++)
                 {
                     trainingPredictions[i] = model.Predict(observations.GetRow(sampleIndices[i]));
                 }
 
-                var validationPredictions = new double[validationIndices.Length];
+                var validationPredictions = new TPrediction[validationIndices.Length];
                 for (int i = 0; i < validationIndices.Length; i++)
                 {
                     validationPredictions[i] = model.Predict(observations.GetRow(validationIndices[i]));

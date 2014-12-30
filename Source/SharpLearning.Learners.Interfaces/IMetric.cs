@@ -4,8 +4,8 @@ namespace SharpLearning.Learners.Interfaces
     /// <summary>
     /// Generel metric interface
     /// </summary>
-    /// <typeparam name="IPrediction"></typeparam>
-    public interface IMetric<IPrediction>
+    /// <typeparam name="TPrediction"></typeparam>
+    public interface IMetric<TTarget, TPrediction>
     {
         /// <summary>
         /// Returns an error metric based on the targets and predictions
@@ -13,6 +13,6 @@ namespace SharpLearning.Learners.Interfaces
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <returns></returns>
-        double Error(IPrediction[] targets, IPrediction[] predictions);
+        double Error(TTarget[] targets, TPrediction[] predictions);
     }
 }
