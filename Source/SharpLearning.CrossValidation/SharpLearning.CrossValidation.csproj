@@ -50,6 +50,7 @@
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvesCalculator.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointExtensions.cs" />
     <Compile Include="CrossValidators\RandomCrossValidation.cs" />
+    <Compile Include="Shufflers\NoShuffleCrossValidationShuffler.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShuffler.cs" />
     <Compile Include="CrossValidators\CrossValidation.cs" />
     <Compile Include="Shufflers\ICrossValidationShuffler.cs" />
