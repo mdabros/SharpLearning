@@ -1,11 +1,9 @@
-﻿using SharpLearning.Containers;
+﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 {
@@ -65,7 +63,6 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         public List<BiasVarianceLearningCurvePoint> Calculate(Func<IIndexedLearner<TPrediction>> learnerFactory,
             F64Matrix observations, double[] targets)
         {
-            var learningCurves = new List<BiasVarianceLearningCurvePoint>();
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(m_random);
 
@@ -77,7 +74,25 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             var validationIndices = indices.Except(trainingIndices)
                 .ToArray();
 
+            return Calculate(learnerFactory, observations, targets,
+                trainingIndices, validationIndices);
+        }
+
+        /// <summary>
+        /// Returns a list of BiasVarianceLearningCurvePoints for constructing learning curves.
+        /// The points contain sample size, training score and validation score. 
+        /// </summary>
+        /// <param name="learnerFactory"></param>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="trainingIndices">Indices that should be used for training</param>
+        /// <param name="validationIndices">Indices that should be used for validation</param>
+        /// <returns></returns>
+        public List<BiasVarianceLearningCurvePoint> Calculate(Func<IIndexedLearner<TPrediction>> learnerFactory,
+            F64Matrix observations, double[] targets, int[] trainingIndices, int[] validationIndices)
+        {
             var validationTargets = targets.GetIndices(validationIndices);
+            var learningCurves = new List<BiasVarianceLearningCurvePoint>();
 
             foreach (var samplePercentage in m_samplePercentages)
             {
@@ -91,7 +106,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 
                 var model = learnerFactory().Learn(observations, targets, sampleIndices);
                 var trainingPredictions = new TPrediction[sampleSize];
-                
+
                 for (int i = 0; i < trainingPredictions.Length; i++)
                 {
                     trainingPredictions[i] = model.Predict(observations.GetRow(sampleIndices[i]));
