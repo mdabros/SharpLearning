@@ -58,6 +58,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointExtensionsTest.cs" />
+    <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointTest.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvesCalculatorTest.cs" />
     <Compile Include="CrossValidationTestMetric.cs" />
     <Compile Include="CrossValidators\CrossValidationTest.cs" />
