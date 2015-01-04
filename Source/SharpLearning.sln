@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Linear", "Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Linear.Test", "SharpLearning.Linear.Test\SharpLearning.Linear.Test.csproj", "{0CE7A52C-DA3A-4583-BB65-205C03806197}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Learners.Interfaces", "SharpLearning.Learners.Interfaces\SharpLearning.Learners.Interfaces.csproj", "{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Common.Interfaces", "SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj", "{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -109,9 +109,9 @@ Global
 		SccProjectUniqueName20 = SharpLearning.Linear.Test\\SharpLearning.Linear.Test.csproj
 		SccProjectName20 = SharpLearning.Linear.Test
 		SccLocalPath20 = SharpLearning.Linear.Test
-		SccProjectUniqueName21 = SharpLearning.Learners.Interfaces\\SharpLearning.Learners.Interfaces.csproj
-		SccProjectName21 = SharpLearning.Learners.Interfaces
-		SccLocalPath21 = SharpLearning.Learners.Interfaces
+		SccProjectUniqueName21 = SharpLearning.Common.Interfaces\\SharpLearning.Common.Interfaces.csproj
+		SccProjectName21 = SharpLearning.Common.Interfaces
+		SccLocalPath21 = SharpLearning.Common.Interfaces
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

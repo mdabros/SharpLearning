@@ -4,7 +4,7 @@ using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.Threading;
 using System;

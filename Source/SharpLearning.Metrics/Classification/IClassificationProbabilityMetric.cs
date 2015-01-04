@@ -1,5 +1,5 @@
 ﻿using SharpLearning.Containers;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 
 namespace SharpLearning.Metrics.Classification
 {

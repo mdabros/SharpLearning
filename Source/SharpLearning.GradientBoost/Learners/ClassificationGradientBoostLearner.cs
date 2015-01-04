@@ -7,7 +7,7 @@ using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
 using SharpLearning.GradientBoost.LossFunctions;
 using SharpLearning.GradientBoost.Models;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Metrics.Regression;
 using System;
 using System.Collections.Generic;

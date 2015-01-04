@@ -1,4 +1,4 @@
-﻿using SharpLearning.Learners.Interfaces;
+﻿using SharpLearning.Common.Interfaces;
 
 namespace SharpLearning.Metrics.Ranking
 {

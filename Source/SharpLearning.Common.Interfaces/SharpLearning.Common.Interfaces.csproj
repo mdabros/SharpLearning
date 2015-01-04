@@ -7,8 +7,8 @@
     <ProjectGuid>{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpLearning.Learners.Interfaces</RootNamespace>
-    <AssemblyName>SharpLearning.Learners.Interfaces</AssemblyName>
+    <RootNamespace>SharpLearning.Common.Interfaces</RootNamespace>
+    <AssemblyName>SharpLearning.Common.Interfaces</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>

@@ -4,7 +4,7 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Metrics.Regression;
 using System;
 using System.Collections.Generic;

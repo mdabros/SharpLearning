@@ -2,7 +2,7 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

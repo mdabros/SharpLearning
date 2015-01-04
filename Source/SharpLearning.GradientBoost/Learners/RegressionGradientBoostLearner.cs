@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using SharpLearning.Containers;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 
 namespace SharpLearning.GradientBoost.Learners
 {

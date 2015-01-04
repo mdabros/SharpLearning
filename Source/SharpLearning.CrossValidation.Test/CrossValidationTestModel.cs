@@ -1,4 +1,4 @@
-﻿using SharpLearning.Learners.Interfaces;
+﻿using SharpLearning.Common.Interfaces;
 using System;
 
 namespace SharpLearning.CrossValidation.Test

@@ -1,5 +1,5 @@
 ﻿
-namespace SharpLearning.Learners.Interfaces
+namespace SharpLearning.Common.Interfaces
 {
     /// <summary>
     /// General interface for predictor. 

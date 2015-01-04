@@ -5,7 +5,7 @@ using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 
 namespace SharpLearning.DecisionTrees.Learners
 {

@@ -1,6 +1,6 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.Learners.Interfaces;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Linear.Models;
 using SharpLearning.Linear.Optimization;
 using System;

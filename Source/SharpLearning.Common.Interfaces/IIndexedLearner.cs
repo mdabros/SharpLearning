@@ -1,6 +1,6 @@
 ﻿using SharpLearning.Containers.Matrices;
 
-namespace SharpLearning.Learners.Interfaces
+namespace SharpLearning.Common.Interfaces
 {
     /// <summary>
     /// Interface for indexed learner. 
