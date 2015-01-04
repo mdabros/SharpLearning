@@ -58,6 +58,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shufflers\StratifyCrossValidationShuffler.cs" />
     <Compile Include="CrossValidators\StratifiedCrossValidation.cs" />
+    <Compile Include="TrainingValidationSplitters\TrainingValidationIndexSplit.cs" />
+    <Compile Include="TrainingValidationSplitters\TrainingValidationIndexSplitter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
