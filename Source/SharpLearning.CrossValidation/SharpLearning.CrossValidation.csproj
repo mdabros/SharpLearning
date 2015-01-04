@@ -49,6 +49,7 @@
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePoint.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvesCalculator.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointExtensions.cs" />
+    <Compile Include="CrossValidators\NoShuffleCrossValidation.cs" />
     <Compile Include="CrossValidators\RandomCrossValidation.cs" />
     <Compile Include="Shufflers\NoShuffleCrossValidationShuffler.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShuffler.cs" />
