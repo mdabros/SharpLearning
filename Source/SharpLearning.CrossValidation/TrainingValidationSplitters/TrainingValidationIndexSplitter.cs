@@ -9,7 +9,7 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
     /// The return values are two arrays of indices which can be used with IIndexedLearners.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class TrainingValidationIndexSplitter<T>
+    public class TrainingValidationIndexSplitter<T>
     {
         readonly ICrossValidationShuffler<T> m_shuffler;
         readonly double m_trainingPercentage;
