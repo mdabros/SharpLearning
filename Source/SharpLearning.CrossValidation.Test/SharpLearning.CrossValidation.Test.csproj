@@ -59,7 +59,10 @@
     </Compile>
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointExtensionsTest.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointTest.cs" />
+    <Compile Include="BiasVarianceAnalysis\RandomBiasVarianceLearningCurvesCalculatorTest.cs" />
+    <Compile Include="BiasVarianceAnalysis\NoShuffleBiasVarianceLearningCurvesCalculatorTest.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvesCalculatorTest.cs" />
+    <Compile Include="BiasVarianceAnalysis\StratifiedBiasVarianceLearningCurvesCalculatorTest.cs" />
     <Compile Include="CrossValidationTestMetric.cs" />
     <Compile Include="CrossValidators\CrossValidationTest.cs" />
     <Compile Include="CrossValidationTestLearner.cs" />

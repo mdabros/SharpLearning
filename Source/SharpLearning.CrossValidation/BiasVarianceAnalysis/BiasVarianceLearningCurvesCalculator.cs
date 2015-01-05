@@ -21,7 +21,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public sealed class BiasVarianceLearningCurvesCalculator<TPrediction>
+    public class BiasVarianceLearningCurvesCalculator<TPrediction>
     {
         readonly ITrainingValidationIndexSplitter<double> m_trainingValidationIndexSplitter;
         readonly double[] m_samplePercentages;
