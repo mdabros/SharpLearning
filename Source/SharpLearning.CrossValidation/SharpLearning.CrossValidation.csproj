@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shufflers\StratifyCrossValidationShuffler.cs" />
     <Compile Include="CrossValidators\StratifiedCrossValidation.cs" />
+    <Compile Include="TrainingValidationSplitters\ITrainingValidationIndexSplitter.cs" />
     <Compile Include="TrainingValidationSplitters\StratifiedTrainingValidationIndexSplitter.cs" />
     <Compile Include="TrainingValidationSplitters\RandomTrainingValidationIndexSplitter.cs" />
     <Compile Include="TrainingValidationSplitters\NoShuffleTrainingValidationIndexSplitter.cs" />

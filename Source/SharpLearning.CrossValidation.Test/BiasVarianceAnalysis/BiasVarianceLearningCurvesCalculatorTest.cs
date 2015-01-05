@@ -2,6 +2,7 @@
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.BiasVarianceAnalysis;
+using SharpLearning.CrossValidation.TrainingValidationSplitters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,8 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         [TestMethod]
         public void BiasVarianceLearningCurvesCalculator_Calculate()
         {
-            var sut = new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 }, 0.8, 42);
+            var sut = new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
+                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 } );
 
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -33,8 +34,8 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         [TestMethod]
         public void BiasVarianceLearningCurvesCalculator_Calculate_Indices_Provided()
         {
-            var sut = new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 }, 0.8, 42);
+            var sut = new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
+                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 } );
 
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -63,48 +64,32 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         [ExpectedException(typeof(ArgumentNullException))]
         public void BiasVarianceLearningCurvesCalculator_Calculate_Metric_Null()
         {
-            new BiasVarianceLearningCurvesCalculator<double>(
-                null, new double[] { 0.2, 0.8 }, 0.8, 42);
+            new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
+                null, new double[] { 0.2, 0.8 } );
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentages_Null()
         {
-            new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), null, 0.8, 42);
+            new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
+                new CrossValidationTestMetric(), null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentages_Empty()
         {
-            new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), new double[] { }, 0.8, 42);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void BiasVarianceLearningCurvesCalculator_Calculate_Training_Percentage_Too_Low()
-        {
-            new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 }, 0.0, 42);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void BiasVarianceLearningCurvesCalculator_Calculate_Training_Percentage_Too_High()
-        {
-            new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 }, 1.0, 42);
+            new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
+                new CrossValidationTestMetric(), new double[] { } );
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentage_Too_Low()
         {
-            var sut = new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), new double[] { 0.0, 0.8 }, 0.8, 42);
+            var sut = new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
+                new CrossValidationTestMetric(), new double[] { 0.0, 0.8 } );
 
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -119,8 +104,8 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         [ExpectedException(typeof(ArgumentException))]
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentage_Too_High()
         {
-            var sut = new BiasVarianceLearningCurvesCalculator<double>(
-                new CrossValidationTestMetric(), new double[] { 1.1, 0.8 }, 0.8, 42);
+            var sut = new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
+                new CrossValidationTestMetric(), new double[] { 1.1, 0.8 });
 
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
