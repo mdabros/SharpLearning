@@ -1,8 +1,10 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Common.Interfaces;
+using SharpLearning.InputOutput.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SharpLearning.RandomForest.Models
@@ -10,6 +12,7 @@ namespace SharpLearning.RandomForest.Models
     /// <summary>
     /// Regression forest model consiting of a series of decision trees
     /// </summary>
+    [Serializable]
     public sealed class RegressionForestModel : IPredictor<double>
     {
         readonly RegressionDecisionTreeModel[] m_models;
@@ -83,6 +86,26 @@ namespace SharpLearning.RandomForest.Models
         public double[] GetRawVariableImportance()
         {
             return m_rawVariableImportance;
+        }
+
+        /// <summary>
+        /// Loads a RegressionForestModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static RegressionForestModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<RegressionForestModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the RegressionForestModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }

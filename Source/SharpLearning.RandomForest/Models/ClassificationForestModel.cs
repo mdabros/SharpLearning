@@ -5,12 +5,15 @@ using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.RandomForest.Models
 {
     /// <summary>
     /// Classification forest model consiting of a series of decision trees
     /// </summary>
+    [Serializable]
     public sealed class ClassificationForestModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly ClassificationDecisionTreeModel[] m_models;
@@ -154,6 +157,26 @@ namespace SharpLearning.RandomForest.Models
         public double[] GetRawVariableImportance()
         {
             return m_rawVariableImportance;
+        }
+
+        /// <summary>
+        /// Loads a ClassificationForestModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static ClassificationForestModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<ClassificationForestModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the ClassificationForestModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }
