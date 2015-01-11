@@ -105,7 +105,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         }
 
         [TestMethod]
-        public void RegressionDecisionTreeModel_Save()
+        public void RegressionAdaBoostModel_Save()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
@@ -122,7 +122,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         }
 
         [TestMethod]
-        public void RegressionDecisionTreeModel_Load()
+        public void RegressionAdaBoostModel_Load()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();

@@ -5,12 +5,15 @@ using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.GradientBoost.Models
 {
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public sealed class RegressionGradientBoostModel : IPredictor<double>
     {
         readonly RegressionDecisionTreeModel[] m_models;
@@ -92,6 +95,26 @@ namespace SharpLearning.GradientBoost.Models
         public double[] GetRawVariableImportance()
         {
             return m_rawVariableImportance;
+        }
+
+        /// <summary>
+        /// Loads a RegressionGradientBoostModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static RegressionGradientBoostModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<RegressionGradientBoostModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the RegressionGradientBoostModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }
