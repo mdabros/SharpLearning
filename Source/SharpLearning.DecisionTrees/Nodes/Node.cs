@@ -6,6 +6,7 @@ namespace SharpLearning.DecisionTrees.Nodes
     /// <summary>
     /// Split node for binary decision tree
     /// </summary>
+    [Serializable]
     public struct Node
     {
         /// <summary>

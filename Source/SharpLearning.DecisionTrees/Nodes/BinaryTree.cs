@@ -9,6 +9,7 @@ namespace SharpLearning.DecisionTrees.Nodes
     /// <summary>
     /// Binary tree 
     /// </summary>
+    [Serializable]
     public sealed class BinaryTree
     {
         public readonly List<Node> Nodes;

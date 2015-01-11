@@ -5,12 +5,15 @@ using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.DecisionTrees.Models
 {
     /// <summary>
     /// Classification Decision tree model
     /// </summary>
+    [Serializable]
     public sealed class ClassificationDecisionTreeModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         public readonly BinaryTree Tree;
@@ -147,6 +150,26 @@ namespace SharpLearning.DecisionTrees.Models
         public double[] GetRawVariableImportance()
         {
             return m_variableImportance;
+        }
+
+        /// <summary>
+        /// Loads a ClassificationDecisionTreeModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static ClassificationDecisionTreeModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<ClassificationDecisionTreeModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the ClassificationDecisionTreeModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }

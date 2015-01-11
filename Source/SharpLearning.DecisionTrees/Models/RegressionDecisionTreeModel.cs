@@ -4,12 +4,15 @@ using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.DecisionTrees.Models
 {
     /// <summary>
     /// Regression Decision tree model
     /// </summary>
+    [Serializable]
     public sealed class RegressionDecisionTreeModel : IPredictor<double>
     {
         public readonly BinaryTree Tree;
@@ -91,6 +94,26 @@ namespace SharpLearning.DecisionTrees.Models
         public double[] GetRawVariableImportance()
         {
             return m_variableImportance;
+        }
+
+        /// <summary>
+        /// Loads a RegressionDecisionTreeModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static RegressionDecisionTreeModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<RegressionDecisionTreeModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the RegressionDecisionTreeModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }
