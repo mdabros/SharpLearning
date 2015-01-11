@@ -3,12 +3,15 @@ using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.Linear.Models
 {
     /// <summary>
     /// Regression model learned using stochastic gradient descent
     /// </summary>
+    [Serializable]
     public sealed class RegressionStochasticGradientDecentModel : IPredictor<double>
     {
         readonly double[] m_weights;
@@ -88,6 +91,26 @@ namespace SharpLearning.Linear.Models
         {
             return m_weights.Skip(1)
                 .Select(w => Math.Abs(w)).ToArray();
+        }
+
+        /// <summary>
+        /// Loads a RegressionStochasticGradientDecentModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static RegressionStochasticGradientDecentModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<RegressionStochasticGradientDecentModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the RegressionStochasticGradientDecentModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }

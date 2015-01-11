@@ -4,12 +4,15 @@ using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.Linear.Models
 {
     /// <summary>
     /// Linear regression model learned using stochastic gradient descent
     /// </summary>
+    [Serializable]
     public sealed class ClassificationStochasticGradientDecentModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly Dictionary<double, BinaryClassificationStochasticGradientDecentModel> m_models;
@@ -146,6 +149,26 @@ namespace SharpLearning.Linear.Models
             }
 
             return importances;
+        }
+
+        /// <summary>
+        /// Loads a ClassificationStochasticGradientDecentModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static ClassificationStochasticGradientDecentModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<ClassificationStochasticGradientDecentModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the ClassificationStochasticGradientDecentModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }

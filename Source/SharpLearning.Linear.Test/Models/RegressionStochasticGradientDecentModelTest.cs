@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Linear.Learners;
+using SharpLearning.Linear.Models;
 using SharpLearning.Linear.Test.Properties;
 using SharpLearning.Metrics.Regression;
 using System.Collections.Generic;
@@ -86,5 +87,42 @@ namespace SharpLearning.Linear.Test.Models
                 Assert.AreEqual(expected[i].Value, actual[i].Value, 0.0001);
             }
         }
+
+        [TestMethod]
+        public void RegressionStochasticGradientDecentLearner_Save()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Housing));
+            var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
+            var targets = parser.EnumerateRows("Price").ToF64Vector();
+
+            var learner = new RegressionStochasticGradientDecentLearner(0.001, 1000, 0.0, 42, 1);
+            var sut = learner.Learn(observations, targets);
+
+            var writer = new StringWriter();
+            sut.Save(() => writer);
+            var actual = writer.ToString();
+            Assert.AreEqual(RegressionStochasticGradientDecentModelString, actual);
+        }
+
+        [TestMethod]
+        public void RegressionStochasticGradientDecentLearner_Load()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Housing));
+            var observations = parser.EnumerateRows("Size", "Rooms").ToF64Matrix();
+            var targets = parser.EnumerateRows("Price").ToF64Vector();
+
+            var reader = new StringReader(RegressionStochasticGradientDecentModelString);
+            var sut = RegressionStochasticGradientDecentModel.Load(() => reader);
+
+            var predictions = sut.Predict(observations);
+
+            var metric = new RootMeanSquareRegressionMetric();
+            var actual = metric.Error(targets, predictions);
+            Assert.AreEqual(63952.594022178237, actual, 0.001);
+        }
+
+        readonly string RegressionStochasticGradientDecentModelString =
+            "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<RegressionStochasticGradientDecentModel xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" z:Id=\"1\" xmlns:z=\"http://schemas.microsoft.com/2003/10/Serialization/\" xmlns=\"http://schemas.datacontract.org/2004/07/SharpLearning.Linear.Models\">\r\n  <m_weights xmlns:d2p1=\"http://schemas.microsoft.com/2003/10/Serialization/Arrays\" z:Id=\"2\" z:Size=\"3\">\r\n    <d2p1:double>340171.1061750318</d2p1:double>\r\n    <d2p1:double>109234.21577282451</d2p1:double>\r\n    <d2p1:double>-4436.0076713921026</d2p1:double>\r\n  </m_weights>\r\n</RegressionStochasticGradientDecentModel>";
+
     }
 }

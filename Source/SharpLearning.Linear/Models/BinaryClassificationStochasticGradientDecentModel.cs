@@ -1,7 +1,9 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SharpLearning.Linear.Models
@@ -9,6 +11,7 @@ namespace SharpLearning.Linear.Models
     /// <summary>
     /// Binary classification model
     /// </summary>
+    [Serializable]
     public sealed class BinaryClassificationStochasticGradientDecentModel
     {
         readonly double[] m_weights;
@@ -132,6 +135,26 @@ namespace SharpLearning.Linear.Models
         {
             return m_weights.Skip(1)
                 .Select(w => Math.Abs(w)).ToArray();
+        }
+
+        /// <summary>
+        /// Loads a BinaryClassificationStochasticGradientDecentModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static BinaryClassificationStochasticGradientDecentModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<BinaryClassificationStochasticGradientDecentModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the BinaryClassificationStochasticGradientDecentModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }
