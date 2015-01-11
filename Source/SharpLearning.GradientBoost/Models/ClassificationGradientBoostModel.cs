@@ -181,7 +181,7 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public static ClassificationGradientBoostModel Load(Func<TextReader> reader)
         {
-            return GenericXmlDataContractSerializer
+            return new GenericXmlDataContractSerializer()
                 .Deserialize<ClassificationGradientBoostModel>(reader);
         }
 
@@ -191,7 +191,8 @@ namespace SharpLearning.GradientBoost.Models
         /// <param name="writer"></param>
         public void Save(Func<TextWriter> writer)
         {
-            GenericXmlDataContractSerializer.Serialize(this, writer);
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
         }
     }
 }

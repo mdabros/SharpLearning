@@ -12,9 +12,9 @@ namespace SharpLearning.InputOutput.Test.Serialization
         public void GenericXmlDataContractSerializer_Serialize()
         {
             var writer = new StringWriter();
-            
-            GenericXmlDataContractSerializer.Serialize(SerializationData,
-                () => writer);
+
+            var sut = new GenericXmlDataContractSerializer();
+            sut.Serialize(SerializationData,() => writer);
 
             Assert.AreEqual(SerializationString, writer.ToString());
         }
@@ -24,8 +24,8 @@ namespace SharpLearning.InputOutput.Test.Serialization
         {
             var reader = new StringReader(SerializationString);
 
-            var actual = GenericXmlDataContractSerializer.Deserialize<Dictionary<string, int>>(
-                () => reader);
+            var sut = new GenericXmlDataContractSerializer();
+            var actual = sut.Deserialize<Dictionary<string, int>>(() => reader);
 
             CollectionAssert.AreEqual(SerializationData, actual);
         }

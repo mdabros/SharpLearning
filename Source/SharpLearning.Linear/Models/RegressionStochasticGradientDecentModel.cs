@@ -100,7 +100,7 @@ namespace SharpLearning.Linear.Models
         /// <returns></returns>
         public static RegressionStochasticGradientDecentModel Load(Func<TextReader> reader)
         {
-            return GenericXmlDataContractSerializer
+            return new GenericXmlDataContractSerializer()
                 .Deserialize<RegressionStochasticGradientDecentModel>(reader);
         }
 
@@ -110,7 +110,8 @@ namespace SharpLearning.Linear.Models
         /// <param name="writer"></param>
         public void Save(Func<TextWriter> writer)
         {
-            GenericXmlDataContractSerializer.Serialize(this, writer);
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
         }
     }
 }

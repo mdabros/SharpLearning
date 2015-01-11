@@ -159,7 +159,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public static ClassificationDecisionTreeModel Load(Func<TextReader> reader)
         {
-            return GenericXmlDataContractSerializer
+            return new GenericXmlDataContractSerializer()
                 .Deserialize<ClassificationDecisionTreeModel>(reader);
         }
 
@@ -169,7 +169,8 @@ namespace SharpLearning.DecisionTrees.Models
         /// <param name="writer"></param>
         public void Save(Func<TextWriter> writer)
         {
-            GenericXmlDataContractSerializer.Serialize(this, writer);
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
         }
     }
 }

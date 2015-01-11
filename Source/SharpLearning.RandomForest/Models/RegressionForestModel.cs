@@ -95,7 +95,7 @@ namespace SharpLearning.RandomForest.Models
         /// <returns></returns>
         public static RegressionForestModel Load(Func<TextReader> reader)
         {
-            return GenericXmlDataContractSerializer
+            return new GenericXmlDataContractSerializer()
                 .Deserialize<RegressionForestModel>(reader);
         }
 
@@ -105,7 +105,8 @@ namespace SharpLearning.RandomForest.Models
         /// <param name="writer"></param>
         public void Save(Func<TextWriter> writer)
         {
-            GenericXmlDataContractSerializer.Serialize(this, writer);
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
         }
     }
 }

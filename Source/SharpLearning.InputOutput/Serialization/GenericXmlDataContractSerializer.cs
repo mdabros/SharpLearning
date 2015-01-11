@@ -11,7 +11,7 @@ namespace SharpLearning.InputOutput.Serialization
     /// <summary>
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
-    public static class GenericXmlDataContractSerializer
+    public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     {
         /// <summary>
         /// Serialize data to the provided writer
@@ -19,7 +19,7 @@ namespace SharpLearning.InputOutput.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="writer"></param>
-        public static void Serialize<T>(T data, Func<TextWriter> writer)
+        public void Serialize<T>(T data, Func<TextWriter> writer)
         {
             var settings = new XmlWriterSettings { Indent = true };
 
@@ -39,7 +39,7 @@ namespace SharpLearning.InputOutput.Serialization
         /// <typeparam name="T"></typeparam>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static T Deserialize<T>(Func<TextReader> reader)
+        public T Deserialize<T>(Func<TextReader> reader)
         {
             using (var stream = reader())
             using (var xmlReader = XmlReader.Create(stream))

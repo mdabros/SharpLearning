@@ -192,7 +192,7 @@ namespace SharpLearning.AdaBoost.Models
         /// <returns></returns>
         public static ClassificationAdaBoostModel Load(Func<TextReader> reader)
         {
-            return GenericXmlDataContractSerializer
+            return new GenericXmlDataContractSerializer()
                 .Deserialize<ClassificationAdaBoostModel>(reader);
         }
 
@@ -202,7 +202,8 @@ namespace SharpLearning.AdaBoost.Models
         /// <param name="writer"></param>
         public void Save(Func<TextWriter> writer)
         {
-            GenericXmlDataContractSerializer.Serialize(this, writer);
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
         }
     }
 }

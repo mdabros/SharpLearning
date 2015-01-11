@@ -144,7 +144,7 @@ namespace SharpLearning.Linear.Models
         /// <returns></returns>
         public static BinaryClassificationStochasticGradientDecentModel Load(Func<TextReader> reader)
         {
-            return GenericXmlDataContractSerializer
+            return new GenericXmlDataContractSerializer()
                 .Deserialize<BinaryClassificationStochasticGradientDecentModel>(reader);
         }
 
@@ -154,7 +154,8 @@ namespace SharpLearning.Linear.Models
         /// <param name="writer"></param>
         public void Save(Func<TextWriter> writer)
         {
-            GenericXmlDataContractSerializer.Serialize(this, writer);
+            new GenericXmlDataContractSerializer()
+                .Serialize<BinaryClassificationStochasticGradientDecentModel>(this, writer);
         }
     }
 }

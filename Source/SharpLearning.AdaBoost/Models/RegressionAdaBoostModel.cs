@@ -114,7 +114,7 @@ namespace SharpLearning.AdaBoost.Models
         /// <returns></returns>
         public static RegressionAdaBoostModel Load(Func<TextReader> reader)
         {
-            return GenericXmlDataContractSerializer
+            return new GenericXmlDataContractSerializer()
                 .Deserialize<RegressionAdaBoostModel>(reader);
         }
 
@@ -124,7 +124,8 @@ namespace SharpLearning.AdaBoost.Models
         /// <param name="writer"></param>
         public void Save(Func<TextWriter> writer)
         {
-            GenericXmlDataContractSerializer.Serialize(this, writer);
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
         }
     }
 }
