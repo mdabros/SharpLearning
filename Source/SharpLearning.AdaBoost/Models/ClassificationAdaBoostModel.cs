@@ -5,12 +5,15 @@ using SharpLearning.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.AdaBoost.Models
 {
     /// <summary>
     /// AdaBoost classification model. Consist of a series of tree model and corresponding weights
     /// </summary>
+    [Serializable]
     public sealed class ClassificationAdaBoostModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly double[] m_modelWeights;
@@ -180,6 +183,26 @@ namespace SharpLearning.AdaBoost.Models
         public double[] GetRawVariableImportance()
         {
             return m_rawVariableImportance;
+        }
+
+        /// <summary>
+        /// Loads a ClassificationAdaBoostModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static ClassificationAdaBoostModel Load(Func<TextReader> reader)
+        {
+            return GenericXmlDataContractSerializer
+                .Deserialize<ClassificationAdaBoostModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the ClassificationAdaBoostModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            GenericXmlDataContractSerializer.Serialize(this, writer);
         }
     }
 }
