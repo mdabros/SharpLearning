@@ -1,6 +1,8 @@
 ﻿using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +35,14 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             }
 
             return matrix;
+        }
+
+        public static void Write(this List<BiasVarianceLearningCurvePoint> points, Func<TextWriter> writer, 
+            char separator = CsvParser.DefaultDelimiter)
+        {
+            points.ToF64Matrix()
+                .EnumerateCsvRows(new Dictionary<string, int> { { "SampleCount", 0 }, { "TrainingError", 1 }, { "TestError", 2 } })
+                .Write(writer, separator);
         }
     }
 }

@@ -23,8 +23,7 @@ namespace SharpLearning.InputOutput.Serialization
         {
             var settings = new XmlWriterSettings { Indent = true };
 
-            using (var stream = writer())
-            using (var xmlWriter = XmlWriter.Create(stream, settings))
+            using (var xmlWriter = XmlWriter.Create(writer(), settings))
             {
                 var serializer = new DataContractSerializer(typeof(T), null, int.MaxValue, 
                     false, true, null, new GenericResolver());
@@ -41,8 +40,7 @@ namespace SharpLearning.InputOutput.Serialization
         /// <returns></returns>
         public T Deserialize<T>(Func<TextReader> reader)
         {
-            using (var stream = reader())
-            using (var xmlReader = XmlReader.Create(stream))
+            using (var xmlReader = XmlReader.Create(reader ()))
             {
                 var serializer = new DataContractSerializer(typeof(T), null, int.MaxValue, 
                     false, true, null, new GenericResolver());
