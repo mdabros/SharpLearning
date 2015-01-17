@@ -37,6 +37,12 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             return matrix;
         }
 
+        /// <summary>
+        /// Writes the list of BiasVarianceLearningCurvePoint as csv to the provided writer
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="writer"></param>
+        /// <param name="separator"></param>
         public static void Write(this List<BiasVarianceLearningCurvePoint> points, Func<TextWriter> writer, 
             char separator = CsvParser.DefaultDelimiter)
         {
