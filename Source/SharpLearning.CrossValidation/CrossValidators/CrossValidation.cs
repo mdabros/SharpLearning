@@ -38,11 +38,11 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <summary>
         /// Returns an array of cross validated predictions
         /// </summary>
-        /// <param name="learnerFactory"></param>
+        /// <param name="learner"></param>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public TPrediction[] CrossValidate(Func<IIndexedLearner<TPrediction>> learnerFactory, 
+        public TPrediction[] CrossValidate(IIndexedLearner<TPrediction> learner, 
             F64Matrix observations, double[] targets)
         {
             var rows = targets.Length;
@@ -67,12 +67,12 @@ namespace SharpLearning.CrossValidation.CrossValidators
             for (int i = 0; i < m_crossValidationFolds; i++)
             {
                 AddCurrentIndices(foldIndices, rows, i);
-                var model = learnerFactory().Learn(observations, targets, m_trainingIndices);
+                var model = learner.Learn(observations, targets, m_trainingIndices);
                 var predictions = new TPrediction[m_holdoutIndices.Length];
 
                 for (int l = 0; l < predictions.Length; l++)
                 {
-                    predictions[l] = model.Predict(observations.GetRow(l));  
+                    predictions[l] = model.Predict(observations.GetRow(m_holdoutIndices[l]));  
                 }
 
                 for (int j = 0; j < m_holdoutIndices.Length; j++)

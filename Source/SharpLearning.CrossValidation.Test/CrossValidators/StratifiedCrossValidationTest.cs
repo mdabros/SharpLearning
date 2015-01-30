@@ -44,7 +44,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var indices = Enumerable.Range(0, targets.Length).ToArray();
 
             var sut = new StratifiedCrossValidation<double>(folds, 42);
-            var actual = sut.CrossValidate(() => new CrossValidationTestLearner(indices), observations, targets);
+            var actual = sut.CrossValidate(new CrossValidationTestLearner(indices), observations, targets);
             return actual;
         }
     }

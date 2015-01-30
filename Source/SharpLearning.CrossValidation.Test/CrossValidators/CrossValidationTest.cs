@@ -42,7 +42,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var indices = Enumerable.Range(0, targets.Length).ToArray();
 
             var sut = new CrossValidation<double>(new RandomCrossValidationShuffler<double>(42), folds);
-            var actual = sut.CrossValidate(() => new CrossValidationTestLearner(indices), observations, targets);
+            var actual = sut.CrossValidate(new CrossValidationTestLearner(indices), observations, targets);
             return actual;
         }
     }
