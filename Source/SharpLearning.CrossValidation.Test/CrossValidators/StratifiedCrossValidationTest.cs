@@ -1,7 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Test;
+using SharpLearning.CrossValidation.Test.Properties;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Classification;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace SharpLearning.CrossValidation.CrossValidators.Test
@@ -15,37 +20,36 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
         [TestMethod]
         public void StratisfiedCrossValidation_CrossValidate_Folds_2()
         {
-            var actual = AssertCrossValidation(2);
-            var expected = new double[] { 5, 8, 3, 6, 7, 4, 2, 9, 1, 0 };
-
-            CollectionAssert.AreEqual(expected, actual);
+            var actual = CrossValidate(2);
+            Assert.AreEqual(0.346153846153846, actual, 0.001);
         }
 
         [TestMethod]
-        public void StratisfiedCrossValidation_CrossValidate_Folds_4()
+        public void StratisfiedCrossValidation_CrossValidate_Folds_5()
         {
-            var actual = AssertCrossValidation(4);
-            var expected = new double[] { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
-
-            CollectionAssert.AreEqual(expected, actual);
+            var actual = CrossValidate(5);
+            Assert.AreEqual(0.307692307692308, actual, 0.001);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void StratisfiedCrossValidation_CrossValidate_Too_Many_Folds()
         {
-            AssertCrossValidation(20);
+            CrossValidate(200);
         }
 
-        double[] AssertCrossValidation(int folds)
+        double CrossValidate(int folds)
         {
-            var observations = new F64Matrix(10, 10);
-            var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            var targetName = "Pass";
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
+            var targets = parser.EnumerateRows(targetName).ToF64Vector();
 
             var sut = new StratifiedCrossValidation<double>(folds, 42);
-            var actual = sut.CrossValidate(new CrossValidationTestLearner(indices), observations, targets);
-            return actual;
+            var predictions = sut.CrossValidate(new ClassificationDecisionTreeLearner(), observations, targets);
+            var metric = new TotalErrorClassificationMetric<double>();
+
+            return metric.Error(targets, predictions);
         }
     }
 }
