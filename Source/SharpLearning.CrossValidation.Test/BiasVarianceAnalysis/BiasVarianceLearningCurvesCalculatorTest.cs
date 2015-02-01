@@ -28,7 +28,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
             var targets = parser.EnumerateRows(targetName).ToF64Vector();
 
-            var actual = sut.Calculate(() => new RegressionDecisionTreeLearner(),
+            var actual = sut.Calculate(new RegressionDecisionTreeLearner(),
                 observations, targets);
 
             var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(32, 0, 0.22543776658935008), 
@@ -51,7 +51,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var targets = parser.EnumerateRows(targetName).ToF64Vector();
             var indexSplits = splitter.Split(targets);
 
-            var actual = sut.Calculate(() => new RegressionDecisionTreeLearner(),
+            var actual = sut.Calculate(new RegressionDecisionTreeLearner(),
                 observations, targets, indexSplits.TrainingIndices, indexSplits.ValidationIndices);
 
             var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(32, 0, 0.22543776658935008), 
@@ -94,7 +94,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-            sut.Calculate(() => new RegressionDecisionTreeLearner(),
+            sut.Calculate(new RegressionDecisionTreeLearner(),
                 observations, targets);
 
         }
@@ -109,7 +109,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-            sut.Calculate(() => new RegressionDecisionTreeLearner(),
+            sut.Calculate(new RegressionDecisionTreeLearner(),
                 observations, targets);
         } 
     }

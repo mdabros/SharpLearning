@@ -56,7 +56,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public List<BiasVarianceLearningCurvePoint> Calculate(Func<IIndexedLearner<TPrediction>> learnerFactory,
+        public List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learnerFactory,
             F64Matrix observations, double[] targets)
         {
             var trainingValidationIndices = m_trainingValidationIndexSplitter.Split(targets);
@@ -76,7 +76,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="trainingIndices">Indices that should be used for training</param>
         /// <param name="validationIndices">Indices that should be used for validation</param>
         /// <returns></returns>
-        public List<BiasVarianceLearningCurvePoint> Calculate(Func<IIndexedLearner<TPrediction>> learnerFactory,
+        public List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learnerFactory,
             F64Matrix observations, double[] targets, int[] trainingIndices, int[] validationIndices)
         {
             var validationTargets = targets.GetIndices(validationIndices);
@@ -92,7 +92,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 
                 var sampleIndices = trainingIndices.Take(sampleSize).ToArray();
 
-                var model = learnerFactory().Learn(observations, targets, sampleIndices);
+                var model = learnerFactory.Learn(observations, targets, sampleIndices);
                 var trainingPredictions = new TPrediction[sampleSize];
 
                 for (int i = 0; i < trainingPredictions.Length; i++)

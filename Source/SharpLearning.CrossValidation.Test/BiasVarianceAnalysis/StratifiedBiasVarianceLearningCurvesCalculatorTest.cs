@@ -24,7 +24,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
             var targets = parser.EnumerateRows(targetName).ToF64Vector();
 
-            var actual = sut.Calculate(() => new ClassificationDecisionTreeLearner(),
+            var actual = sut.Calculate(new ClassificationDecisionTreeLearner(),
                 observations, targets);
 
             var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(4, 0, 0.5), 
