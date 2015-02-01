@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.CrossValidation.Shufflers;
 using SharpLearning.CrossValidation.TrainingValidationSplitters;
 
 namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
@@ -32,7 +33,8 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// training data used in each point of the learning curve</param>
         public RandomBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
             double trainingPercentage)
-            : base(new RandomTrainingValidationIndexSplitter<double>(trainingPercentage), metric, samplePercentages)
+            : base(new RandomTrainingValidationIndexSplitter<double>(trainingPercentage), 
+                   new RandomCrossValidationShuffler<double>(),  metric, samplePercentages)
         {
         }
 
@@ -48,7 +50,8 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="seed"></param>
         public RandomBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
             double trainingPercentage, int seed)
-            : base(new RandomTrainingValidationIndexSplitter<double>(trainingPercentage, seed), metric, samplePercentages)
+            : base(new RandomTrainingValidationIndexSplitter<double>(trainingPercentage, seed), 
+            new RandomCrossValidationShuffler<double>(seed), metric, samplePercentages)
         {
         }
     }

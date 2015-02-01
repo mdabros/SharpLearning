@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.CrossValidation.Shufflers;
 using SharpLearning.CrossValidation.TrainingValidationSplitters;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         readonly ITrainingValidationIndexSplitter<double> m_trainingValidationIndexSplitter;
         readonly double[] m_samplePercentages;
         readonly IMetric<double, TPrediction> m_metric;
+        readonly ICrossValidationShuffler<double> m_shuffler;
 
         /// <summary>
         /// Bias variance analysis calculator for constructing learning curves.
@@ -35,15 +37,17 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
-        public BiasVarianceLearningCurvesCalculator(ITrainingValidationIndexSplitter<double> trainingValidationIndexSplitter, 
-            IMetric<double, TPrediction> metric, double[] samplePercentages)
+        public BiasVarianceLearningCurvesCalculator(ITrainingValidationIndexSplitter<double> trainingValidationIndexSplitter,
+            ICrossValidationShuffler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages)
         {
             if (trainingValidationIndexSplitter == null) { throw new ArgumentException("trainingValidationIndexSplitter"); }
+            if (shuffler == null) { throw new ArgumentException("shuffler"); }
             if (samplePercentages == null) { throw new ArgumentNullException("samplePercentages"); }
             if (samplePercentages.Length < 1) { throw new ArgumentException("SamplePercentages length must be at least 1"); }
             if (metric == null) { throw new ArgumentNullException("metric");}
 
             m_trainingValidationIndexSplitter = trainingValidationIndexSplitter;
+            m_shuffler = shuffler;
             m_samplePercentages = samplePercentages;
             m_metric = metric;
         }
@@ -70,13 +74,13 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// Returns a list of BiasVarianceLearningCurvePoints for constructing learning curves.
         /// The points contain sample size, training score and validation score. 
         /// </summary>
-        /// <param name="learnerFactory"></param>
+        /// <param name="learner"></param>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="trainingIndices">Indices that should be used for training</param>
         /// <param name="validationIndices">Indices that should be used for validation</param>
         /// <returns></returns>
-        public List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learnerFactory,
+        public List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learner,
             F64Matrix observations, double[] targets, int[] trainingIndices, int[] validationIndices)
         {
             var validationTargets = targets.GetIndices(validationIndices);
@@ -90,26 +94,41 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                 var sampleSize = (int)(samplePercentage * trainingIndices.Length);
                 sampleSize = sampleSize > 0 ? sampleSize : 1;
 
-                var sampleIndices = trainingIndices.Take(sampleSize).ToArray();
+                var shuffles = 5.0; // add as constructor parameter
+                var trainError = 0.0;
+                var validationError = 0.0;
 
-                var model = learnerFactory.Learn(observations, targets, sampleIndices);
-                var trainingPredictions = new TPrediction[sampleSize];
-
-                for (int i = 0; i < trainingPredictions.Length; i++)
+                for (int j = 0; j < shuffles; j++)
                 {
-                    trainingPredictions[i] = model.Predict(observations.GetRow(sampleIndices[i]));
+                    var folds = (int)Math.Round(1.0 / (samplePercentage));
+                    m_shuffler.Shuffle(trainingIndices, targets, folds);
+
+                    var sampleIndices = trainingIndices.Take(sampleSize).ToArray();
+                    
+                    var model = learner.Learn(observations, targets, sampleIndices);
+                    var trainingPredictions = new TPrediction[sampleSize];
+
+                    for (int i = 0; i < trainingPredictions.Length; i++)
+                    {
+                        trainingPredictions[i] = model.Predict(observations.GetRow(sampleIndices[i]));
+                    }
+
+                    var validationPredictions = new TPrediction[validationIndices.Length];
+                    for (int i = 0; i < validationIndices.Length; i++)
+                    {
+                        validationPredictions[i] = model.Predict(observations.GetRow(validationIndices[i]));
+                    }
+
+                    var trainingTargets = targets.GetIndices(sampleIndices);
+                    trainError += m_metric.Error(trainingTargets, trainingPredictions);
+                    validationError += m_metric.Error(validationTargets, validationPredictions);
                 }
 
-                var validationPredictions = new TPrediction[validationIndices.Length];
-                for (int i = 0; i < validationIndices.Length; i++)
-                {
-                    validationPredictions[i] = model.Predict(observations.GetRow(validationIndices[i]));
-                }
-
-                var trainingTargets = targets.GetIndices(sampleIndices);
+                trainError = trainError / shuffles;
+                validationError = validationError / shuffles;
+                
                 learningCurves.Add(new BiasVarianceLearningCurvePoint(sampleSize,
-                    m_metric.Error(trainingTargets, trainingPredictions),
-                    m_metric.Error(validationTargets, validationPredictions)));
+                    trainError , validationError));
             }
 
             return learningCurves;

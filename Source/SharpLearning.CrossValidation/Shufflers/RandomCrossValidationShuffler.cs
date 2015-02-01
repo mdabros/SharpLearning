@@ -10,6 +10,11 @@ namespace SharpLearning.CrossValidation.Shufflers
     {
         readonly Random m_random;
 
+        public RandomCrossValidationShuffler()
+            : this(42)
+        {
+        }
+
         public RandomCrossValidationShuffler(int seed)
         {
             m_random = new Random(seed);

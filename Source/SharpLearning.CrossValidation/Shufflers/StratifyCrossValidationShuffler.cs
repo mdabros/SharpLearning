@@ -11,7 +11,12 @@ namespace SharpLearning.CrossValidation.Shufflers
     public sealed class StratifyCrossValidationShuffler<T> : ICrossValidationShuffler<T>
     {
         readonly Random m_random;
-        
+
+        public StratifyCrossValidationShuffler()
+            : this(42)
+        {
+        }
+
         public StratifyCrossValidationShuffler(int seed)
         {
             m_random = new Random(seed);
