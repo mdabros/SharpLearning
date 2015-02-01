@@ -1,7 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.BiasVarianceAnalysis;
+using SharpLearning.CrossValidation.Test.Properties;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Classification;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
 {
@@ -11,18 +16,19 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         [TestMethod]
         public void StratifiedBiasVarianceLearningCurvesCalculator_Calculate()
         {
-            var sut = new StratifiedBiasVarianceLearningCurvesCalculator<double>(new CrossValidationTestMetric(),
+            var sut = new StratifiedBiasVarianceLearningCurvesCalculator<double>(new TotalErrorClassificationMetric<double>(),
                 new double[] { 0.2, 0.8 }, 0.8, 42);
 
-            var observations = new F64Matrix(10, 10);
-            var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
-            var indices = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var targetName = "Pass";
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
+            var targets = parser.EnumerateRows(targetName).ToF64Vector();
 
-            var actual = sut.Calculate(() => new CrossValidationTestLearner(indices),
+            var actual = sut.Calculate(() => new ClassificationDecisionTreeLearner(),
                 observations, targets);
 
-            var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(1, 4, 1), 
-                new BiasVarianceLearningCurvePoint(6, 12.5, 32.5)};
+            var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(4, 0, 0.5), 
+                new BiasVarianceLearningCurvePoint(16, 0.0625, 0.33333333333333331)};
 
             CollectionAssert.AreEqual(expected, actual);
         }
