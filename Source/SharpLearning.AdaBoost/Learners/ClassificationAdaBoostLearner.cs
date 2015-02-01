@@ -89,7 +89,7 @@ namespace SharpLearning.AdaBoost.Learners
 
             for (int i = 0; i < indices.Length; i++)
             {
-                var value = targets[i];
+                var value = targets[indices[i]];
                 if (!uniques.Contains(value))
                 {
                     uniques.Add(value);
