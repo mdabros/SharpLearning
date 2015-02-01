@@ -70,6 +70,11 @@
     <Compile Include="CrossValidators\NoShuffleCrossValidationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CrossValidators\RandomCrossValidationTest.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Shufflers\NoShuffleCrossValidationShufflerTest.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShufflerTest.cs" />
     <Compile Include="Shufflers\StratifyCrossValidationShufflerTest.cs" />
@@ -93,6 +98,30 @@
       <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
       <Name>SharpLearning.Learners.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj">
+      <Project>{8efe2f3f-779d-46d3-bea4-6f04a52f52e1}</Project>
+      <Name>SharpLearning.DecisionTrees</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
+      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
+      <Name>SharpLearning.InputOutput</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
+      <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
+      <Name>SharpLearning.Metrics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AptitudeData.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DecisionTreeData.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
