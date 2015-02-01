@@ -102,8 +102,17 @@ namespace SharpLearning.GradientBoost.Learners
             m_redisuals.Clear();
             m_predictions.Clear();
 
-            m_targetNames = targets.Distinct().OrderBy(n => n)
-                .ToArray();
+            var uniqueTargetNames = new HashSet<double>();
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var value = targets[indices[i]];
+                if (!uniqueTargetNames.Contains(value))
+                {
+                    uniqueTargetNames.Add(value);
+                }
+            }
+
+            m_targetNames = uniqueTargetNames.ToArray();
 
             for (int i = 0; i < m_targetNames.Length; i++)
             {
