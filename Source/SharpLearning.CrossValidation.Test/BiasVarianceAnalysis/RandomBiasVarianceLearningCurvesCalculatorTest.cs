@@ -3,6 +3,7 @@ using SharpLearning.CrossValidation.BiasVarianceAnalysis;
 using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Regression;
 using System.Collections.Generic;
 using System.IO;
 
@@ -14,7 +15,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         [TestMethod]
         public void RandomBiasVarianceLearningCurvesCalculator_Calculate()
         {
-            var sut = new RandomBiasVarianceLearningCurvesCalculator<double>(new CrossValidationTestMetric(), 
+            var sut = new RandomBiasVarianceLearningCurvesCalculator<double>(new MeanSquaredErrorRegressionMetric(), 
                 new double[] { 0.2, 0.8 }, 0.8, 42);
 
             var targetName = "T";

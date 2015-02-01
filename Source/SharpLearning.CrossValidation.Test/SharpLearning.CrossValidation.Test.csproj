@@ -63,10 +63,7 @@
     <Compile Include="BiasVarianceAnalysis\NoShuffleBiasVarianceLearningCurvesCalculatorTest.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvesCalculatorTest.cs" />
     <Compile Include="BiasVarianceAnalysis\StratifiedBiasVarianceLearningCurvesCalculatorTest.cs" />
-    <Compile Include="CrossValidationTestMetric.cs" />
     <Compile Include="CrossValidators\CrossValidationTest.cs" />
-    <Compile Include="CrossValidationTestLearner.cs" />
-    <Compile Include="CrossValidationTestModel.cs" />
     <Compile Include="CrossValidators\NoShuffleCrossValidationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CrossValidators\RandomCrossValidationTest.cs" />

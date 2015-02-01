@@ -6,6 +6,7 @@ using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.CrossValidation.TrainingValidationSplitters;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Regression;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void BiasVarianceLearningCurvesCalculator_Calculate()
         {
             var sut = new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
-                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 } );
+                new MeanSquaredErrorRegressionMetric(), new double[] { 0.2, 0.8 });
 
             var targetName = "T";
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
@@ -42,7 +43,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var splitter = new RandomTrainingValidationIndexSplitter<double>(0.8, 42);
             
             var sut = new BiasVarianceLearningCurvesCalculator<double>(splitter,
-                new CrossValidationTestMetric(), new double[] { 0.2, 0.8 } );
+                new MeanSquaredErrorRegressionMetric(), new double[] { 0.2, 0.8 });
 
             var targetName = "T";
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
@@ -72,7 +73,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentages_Null()
         {
             new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
-                new CrossValidationTestMetric(), null);
+                new MeanSquaredErrorRegressionMetric(), null);
         }
 
         [TestMethod]
@@ -80,7 +81,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentages_Empty()
         {
             new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
-                new CrossValidationTestMetric(), new double[] { } );
+                new MeanSquaredErrorRegressionMetric(), new double[] { });
         }
 
         [TestMethod]
@@ -88,13 +89,12 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentage_Too_Low()
         {
             var sut = new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
-                new CrossValidationTestMetric(), new double[] { 0.0, 0.8 } );
+                new MeanSquaredErrorRegressionMetric(), new double[] { 0.0, 0.8 });
 
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var indices = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-            sut.Calculate(() => new CrossValidationTestLearner(indices),
+            sut.Calculate(() => new RegressionDecisionTreeLearner(),
                 observations, targets);
 
         }
@@ -104,13 +104,12 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void BiasVarianceLearningCurvesCalculator_Calculate_Sample_Percentage_Too_High()
         {
             var sut = new BiasVarianceLearningCurvesCalculator<double>(new RandomTrainingValidationIndexSplitter<double>(0.8, 42),
-                new CrossValidationTestMetric(), new double[] { 1.1, 0.8 });
+                new MeanSquaredErrorRegressionMetric(), new double[] { 1.1, 0.8 });
 
             var observations = new F64Matrix(10, 10);
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var indices = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-            sut.Calculate(() => new CrossValidationTestLearner(indices),
+            sut.Calculate(() => new RegressionDecisionTreeLearner(),
                 observations, targets);
         } 
     }
