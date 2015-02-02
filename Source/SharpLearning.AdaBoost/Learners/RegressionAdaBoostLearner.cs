@@ -20,7 +20,7 @@ namespace SharpLearning.AdaBoost.Learners
     /// using weighted sampling to target the observations with largest error and
     /// weighted median to ensemble the models.
     /// </summary>
-    public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>
+    public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearner<double>
     {
         readonly int m_iterations;
         readonly double m_learningRate;
@@ -171,6 +171,17 @@ namespace SharpLearning.AdaBoost.Learners
         IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)

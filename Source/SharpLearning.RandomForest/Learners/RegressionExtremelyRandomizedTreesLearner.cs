@@ -18,7 +18,7 @@ namespace SharpLearning.RandomForest.Learners
     /// Learns a regression version of Extremely randomized trees
     /// http://www.montefiore.ulg.ac.be/~ernst/uploads/news/id63/extremely-randomized-trees.pdf
     /// </summary>
-    public sealed class RegressionExtremelyRandomizedTreesLearner : IIndexedLearner<double>
+    public sealed class RegressionExtremelyRandomizedTreesLearner : IIndexedLearner<double>, ILearner<double>
     {
         readonly int m_trees;
         int m_featuresPrSplit;
@@ -138,6 +138,17 @@ namespace SharpLearning.RandomForest.Learners
         IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         double[] VariableImportance(RegressionDecisionTreeModel[] models, int numberOfFeatures)

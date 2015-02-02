@@ -22,7 +22,7 @@ namespace SharpLearning.GradientBoost.Learners
     /// A series of regression trees are fitted stage wise on the residuals of the previous stage.
     /// The resulting models are ensembled together using addition.
     /// </summary>
-    public class RegressionGradientBoostLearner : IIndexedLearner<double>
+    public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<double>
     {
         readonly ILossFunction m_lossFunction;
         DecisionTreeLearner m_learner;
@@ -131,6 +131,17 @@ namespace SharpLearning.GradientBoost.Learners
         IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         void FitStage(int iteration, F64Matrix observations, double[] targets, int[] indices)

@@ -11,7 +11,7 @@ namespace SharpLearning.Linear.Learners
     /// Stochastic gradient descent operates best when all features are equally scaled. 
     /// For example between 0.0 and 1.0 
     /// </summary>
-    public sealed class RegressionStochasticGradientDecentLearner : IIndexedLearner<double>
+    public sealed class RegressionStochasticGradientDecentLearner : IIndexedLearner<double>, ILearner<double>
     {
         readonly StochasticGradientDescent m_stochasticGradientDescent;
         // Add loss functions (Huber, EN, squared), regularization parameter and so forth
@@ -87,6 +87,17 @@ namespace SharpLearning.Linear.Learners
         IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         /// <summary>

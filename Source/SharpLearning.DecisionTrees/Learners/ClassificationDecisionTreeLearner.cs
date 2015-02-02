@@ -14,7 +14,7 @@ namespace SharpLearning.DecisionTrees.Learners
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
     public sealed class ClassificationDecisionTreeLearner : DecisionTreeLearner, 
-        IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
+        IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>, ILearner<double>, ILearner<ProbabilityPrediction>
     {
         /// <summary>
         /// Trains a Classification Decision tree
@@ -130,6 +130,28 @@ namespace SharpLearning.DecisionTrees.Learners
         IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
     }
 }

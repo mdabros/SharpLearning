@@ -13,7 +13,7 @@ namespace SharpLearning.DecisionTrees.Learners
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
     public sealed class RegressionDecisionTreeLearner : DecisionTreeLearner,
-        IIndexedLearner<double>
+        IIndexedLearner<double>, ILearner<double>
     {
         /// <summary>
         /// 
@@ -61,6 +61,17 @@ namespace SharpLearning.DecisionTrees.Learners
         IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         /// <summary>

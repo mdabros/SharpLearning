@@ -17,7 +17,8 @@ namespace SharpLearning.AdaBoost.Learners
     /// Classification AdaBoost learner using the SAMME algorithm for multi-class support:
     /// http://web.stanford.edu/~hastie/Papers/samme.pdf
     /// </summary>
-    public sealed class ClassificationAdaBoostLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
+    public sealed class ClassificationAdaBoostLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
+        ILearner<double>, ILearner<ProbabilityPrediction>
     {
         readonly int m_iterations;
         readonly double m_learningRate;
@@ -183,6 +184,28 @@ namespace SharpLearning.AdaBoost.Learners
         IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)

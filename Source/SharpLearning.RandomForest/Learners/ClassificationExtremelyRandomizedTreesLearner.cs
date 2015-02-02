@@ -19,7 +19,8 @@ namespace SharpLearning.RandomForest.Learners
     /// Learns a classification version of Extremely randomized trees
     /// http://www.montefiore.ulg.ac.be/~ernst/uploads/news/id63/extremely-randomized-trees.pdf
     /// </summary>
-    public sealed class ClassificationExtremelyRandomizedTreesLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>
+    public sealed class ClassificationExtremelyRandomizedTreesLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
+        ILearner<double>, ILearner<ProbabilityPrediction>
     {
         readonly int m_trees;
         int m_featuresPrSplit;
@@ -151,6 +152,28 @@ namespace SharpLearning.RandomForest.Learners
         IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         double[] VariableImportance(ClassificationDecisionTreeModel[] models, int numberOfFeatures)

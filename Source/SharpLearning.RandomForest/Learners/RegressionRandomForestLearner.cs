@@ -16,7 +16,7 @@ namespace SharpLearning.RandomForest.Learners
     /// http://en.wikipedia.org/wiki/Random_forest
     /// http://www.stat.berkeley.edu/~breiman/RandomForests/cc_home.htm
     /// </summary>
-    public sealed class RegressionRandomForestLearner : IIndexedLearner<double>
+    public sealed class RegressionRandomForestLearner : IIndexedLearner<double>, ILearner<double>
     {
         readonly int m_trees;
         int m_featuresPrSplit;
@@ -134,6 +134,17 @@ namespace SharpLearning.RandomForest.Learners
         IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         double[] VariableImportance(RegressionDecisionTreeModel[] models, int numberOfFeatures)
