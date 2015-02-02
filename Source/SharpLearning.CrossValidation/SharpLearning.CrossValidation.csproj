@@ -49,6 +49,7 @@
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePoint.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvesCalculator.cs" />
     <Compile Include="BiasVarianceAnalysis\BiasVarianceLearningCurvePointExtensions.cs" />
+    <Compile Include="BiasVarianceAnalysis\IBiasVarianceLearningCurveCalculator.cs" />
     <Compile Include="BiasVarianceAnalysis\StratifiedBiasVarianceLearningCurvesCalculator.cs" />
     <Compile Include="BiasVarianceAnalysis\RandomBiasVarianceLearningCurvesCalculator.cs" />
     <Compile Include="BiasVarianceAnalysis\NoShuffleBiasVarianceLearningCurvesCalculator.cs" />

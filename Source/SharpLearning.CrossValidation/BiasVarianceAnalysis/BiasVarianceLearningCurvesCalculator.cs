@@ -1,7 +1,6 @@
 ﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Shufflers;
 using SharpLearning.CrossValidation.TrainingValidationSplitters;
 using System;
@@ -23,7 +22,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public class BiasVarianceLearningCurvesCalculator<TPrediction>
+    public class BiasVarianceLearningCurvesCalculator<TPrediction> : IBiasVarianceLearningCurveCalculator<TPrediction>
     {
         readonly ITrainingValidationIndexSplitter<double> m_trainingValidationIndexSplitter;
         readonly double[] m_samplePercentages;
