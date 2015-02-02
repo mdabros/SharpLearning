@@ -11,7 +11,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
     /// Cross validation for evaluating how learning algorithms perform on unseen observations
     /// </summary>
     /// <typeparam name="TPrediction"></typeparam>
-    public class CrossValidation<TPrediction>
+    public class CrossValidation<TPrediction> : ICrossValidation<TPrediction>
     {
         readonly int m_crossValidationFolds;
         readonly ICrossValidationShuffler<double> m_shuffler;
