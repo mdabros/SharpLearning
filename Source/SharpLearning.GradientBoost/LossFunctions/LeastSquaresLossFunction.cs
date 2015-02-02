@@ -1,4 +1,4 @@
-﻿using SharpLearning.Containers;
+﻿using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
 using System;

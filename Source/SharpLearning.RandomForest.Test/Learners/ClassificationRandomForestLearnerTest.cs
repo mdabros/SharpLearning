@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;

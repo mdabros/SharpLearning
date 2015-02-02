@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.Test.Properties;

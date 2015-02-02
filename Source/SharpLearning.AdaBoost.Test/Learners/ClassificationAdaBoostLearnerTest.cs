@@ -4,6 +4,7 @@ using SharpLearning.AdaBoost.Test.Properties;
 using SharpLearning.Containers;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
+using SharpLearning.Containers.Extensions;
 using System;
 using System.IO;
 using System.Linq;

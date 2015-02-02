@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.Learners;
 using SharpLearning.GradientBoost.Test.Properties;
 using SharpLearning.InputOutput.Csv;

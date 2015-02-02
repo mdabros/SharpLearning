@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
+using SharpLearning.Containers.Extensions;
 using System;
 
 namespace SharpLearning.GradientBoost.LossFunctions

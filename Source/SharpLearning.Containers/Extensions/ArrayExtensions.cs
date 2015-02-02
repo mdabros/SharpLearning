@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.Containers
+namespace SharpLearning.Containers.Extensions
 {
     public static class ArrayExtensions
     {

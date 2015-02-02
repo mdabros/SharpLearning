@@ -1,6 +1,7 @@
 ﻿using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.CrossValidation.Shufflers;
 using SharpLearning.CrossValidation.TrainingValidationSplitters;
 using System;

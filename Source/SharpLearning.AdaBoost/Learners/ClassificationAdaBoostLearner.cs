@@ -1,6 +1,7 @@
 ﻿using SharpLearning.AdaBoost.Models;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;

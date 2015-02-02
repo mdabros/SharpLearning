@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers;
 using SharpLearning.Containers.Views;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.DecisionTrees.SplitSearchers;

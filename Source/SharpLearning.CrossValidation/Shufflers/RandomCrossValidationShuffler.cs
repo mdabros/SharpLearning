@@ -1,5 +1,5 @@
-﻿using System;
-using SharpLearning.Containers;
+﻿using SharpLearning.Containers.Extensions;
+using System;
 
 namespace SharpLearning.CrossValidation.Shufflers
 {
