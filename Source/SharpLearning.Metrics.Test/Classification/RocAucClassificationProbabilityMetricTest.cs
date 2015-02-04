@@ -102,5 +102,18 @@ namespace SharpLearning.Metrics.Test.Classification
 
             Assert.AreEqual(0.5, actual, 0.0001);
         }
+
+        [TestMethod]
+        public void RocAucClassificationMetric_ErrorString()
+        {
+            var targets = new double[] { 0, 1 };
+            var probabilities = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
+            var sut = new RocAucClassificationProbabilityMetric(1);
+            var actual = sut.ErrorString(targets, probabilities);
+
+            var expected = ";0;1;0;1\r\n0;1.00;0.00;1.00;0.00\r\n1;0.00;1.00;0.00;1.00\r\nError: 0.00000\r\n";
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

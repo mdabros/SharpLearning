@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
@@ -12,6 +13,8 @@ namespace SharpLearning.Metrics.Classification
     public sealed class RocAucClassificationProbabilityMetric : IClassificationProbabilityMetric
     {
         readonly double m_positiveTarget;
+        readonly ClassificationMatrixStringConverter<double> m_converter = new ClassificationMatrixStringConverter<double>();
+        readonly ClassificationMatrix<double> m_classificationMatrix = new ClassificationMatrix<double>();
 
         /// <summary>
         /// The metric needs to know which target value is considered the positive
@@ -87,6 +90,34 @@ namespace SharpLearning.Metrics.Classification
             double b = Math.Abs(X1 - X2);
             double height = (Y1 + Y2) / 2.0;
             return (b * height);
+        }
+
+        List<double> UniqueTargets(double[] targets, double[] predictions)
+        {
+            var uniquePredictions = predictions.Distinct();
+            var uniqueTargets = targets.Distinct();
+            var uniques = uniqueTargets.Union(uniquePredictions).ToList();
+
+            uniques.Sort();
+            return uniques;
+        }
+
+        /// <summary>
+        /// Creates an error matrix based on the provided confusion matrix
+        /// </summary>
+        /// <param name="targets"></param>
+        /// <param name="predictions"></param>
+        /// <returns></returns>
+        public string ErrorString(double[] targets, ProbabilityPrediction[] predictions)
+        {
+            var classPredictions = predictions.Select(p => p.Prediction).ToArray();
+            var uniques = UniqueTargets(targets, classPredictions);
+
+            var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, classPredictions);
+            var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
+            var error = Error(targets, predictions);
+
+            return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
     }
 }
