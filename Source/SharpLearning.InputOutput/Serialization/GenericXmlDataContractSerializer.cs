@@ -43,12 +43,16 @@ namespace SharpLearning.InputOutput.Serialization
         {
             var settings = new XmlWriterSettings { Indent = true };
 
-            using (var xmlWriter = XmlWriter.Create(writer(), settings))
+            using (var texWriter = writer())
             {
-                var serializer = new DataContractSerializer(typeof(T), m_knownTypes, int.MaxValue, 
-                    false, true, null, new GenericResolver());
-                
-                serializer.WriteObject(xmlWriter, data);
+                using (var xmlWriter = XmlWriter.Create(texWriter, settings))
+                {
+                    var serializer = new DataContractSerializer(typeof(T), m_knownTypes, int.MaxValue,
+                        false, true, null, new GenericResolver());
+
+                    serializer.WriteObject(xmlWriter, data);
+                }
+
             }
         }
 
@@ -60,12 +64,15 @@ namespace SharpLearning.InputOutput.Serialization
         /// <returns></returns>
         public T Deserialize<T>(Func<TextReader> reader)
         {
-            using (var xmlReader = XmlReader.Create(reader ()))
+            using(var textReader = reader())
             {
-                var serializer = new DataContractSerializer(typeof(T), m_knownTypes, int.MaxValue, 
-                    false, true, null, new GenericResolver());
-                
-                return (T)serializer.ReadObject(xmlReader);
+                using (var xmlReader = XmlReader.Create(textReader))
+                {
+                    var serializer = new DataContractSerializer(typeof(T), m_knownTypes, int.MaxValue,
+                        false, true, null, new GenericResolver());
+
+                    return (T)serializer.ReadObject(xmlReader);
+                }
             }
         }
 
