@@ -13,6 +13,26 @@ namespace SharpLearning.InputOutput.Serialization
     /// </summary>
     public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     {
+        readonly Type[] m_knownTypes;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="knownTypes"></param>
+        public GenericXmlDataContractSerializer(Type[] knownTypes)
+        {
+            if (knownTypes == null) { throw new ArgumentNullException("knownTypes"); }
+            m_knownTypes = knownTypes;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public GenericXmlDataContractSerializer()
+           : this(new Type[0])
+        {
+        }
+
         /// <summary>
         /// Serialize data to the provided writer
         /// </summary>
@@ -25,7 +45,7 @@ namespace SharpLearning.InputOutput.Serialization
 
             using (var xmlWriter = XmlWriter.Create(writer(), settings))
             {
-                var serializer = new DataContractSerializer(typeof(T), null, int.MaxValue, 
+                var serializer = new DataContractSerializer(typeof(T), m_knownTypes, int.MaxValue, 
                     false, true, null, new GenericResolver());
                 
                 serializer.WriteObject(xmlWriter, data);
@@ -42,7 +62,7 @@ namespace SharpLearning.InputOutput.Serialization
         {
             using (var xmlReader = XmlReader.Create(reader ()))
             {
-                var serializer = new DataContractSerializer(typeof(T), null, int.MaxValue, 
+                var serializer = new DataContractSerializer(typeof(T), m_knownTypes, int.MaxValue, 
                     false, true, null, new GenericResolver());
                 
                 return (T)serializer.ReadObject(xmlReader);
