@@ -111,7 +111,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var sut = new RocAucClassificationProbabilityMetric(1);
             var actual = sut.ErrorString(targets, probabilities);
 
-            var expected = ";0;1;0;1\r\n0;1.00;0.00;1.00;0.00\r\n1;0.00;1.00;0.00;1.00\r\nError: 0.00000\r\n";
+            var expected = ";0;1;0;1\r\n0;100.000;0.000;100.000;0.000\r\n1;0.000;100.000;0.000;100.000\r\nError: 0.000\r\n";
 
             Assert.AreEqual(expected, actual);
         }

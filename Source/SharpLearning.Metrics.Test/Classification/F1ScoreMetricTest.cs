@@ -97,7 +97,7 @@ namespace SharpLearning.Metrics.Test.Classification
 
             var sut = new F1ScoreMetric<double>(1);
             var actual = sut.ErrorString(targets, predictions);
-            var expected = ";0;1;0;1\r\n0;0.00;2.00;0.00;1.00\r\n1;1.00;0.00;1.00;0.00\r\nError: 1.00000\r\n";
+            var expected = ";0;1;0;1\r\n0;0.000;200.000;0.000;100.000\r\n1;100.000;0.000;100.000;0.000\r\nError: 100.000\r\n";
 
             Assert.AreEqual(expected, actual);
         }

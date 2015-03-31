@@ -54,7 +54,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var targets = new double[] { 0, 1, 2 };
 
             var actual = sut.ErrorString(targets, predictions);
-            var expected = ";0;1;2;0;1;2\r\n0;1.00;0.00;0.00;1.00;0.00;0.00\r\n1;0.00;1.00;0.00;0.00;1.00;0.00\r\n2;0.00;0.00;1.00;0.00;0.00;1.00\r\nError: 0.36620\r\n";
+            var expected = ";0;1;2;0;1;2\r\n0;100.000;0.000;0.000;100.000;0.000;0.000\r\n1;0.000;100.000;0.000;0.000;100.000;0.000\r\n2;0.000;0.000;100.000;0.000;0.000;100.000\r\nError: 36.620\r\n";
             
             Assert.AreEqual(expected, actual);
         }

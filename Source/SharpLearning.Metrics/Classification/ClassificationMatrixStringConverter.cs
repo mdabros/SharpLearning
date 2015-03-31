@@ -37,12 +37,12 @@ namespace SharpLearning.Metrics.Classification
                 var row = string.Format("{0}", uniqueTargets[x]);
                 for (int y = 0; y < numberofCols; y++)
                 {
-                    row += string.Format(";{0:0.00}", combinedMatrix[x][y]);
+                    row += string.Format(";{0:0.000}", 100.0 * combinedMatrix[x][y]);
                 }
                 builder.AppendLine(row);
             }
 
-            builder.AppendLine(string.Format("Error: {0:0.00000}", error));
+            builder.AppendLine(string.Format("Error: {0:0.000}", 100.0 * error));
 
             return builder.ToString();
         }
