@@ -17,7 +17,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var sut = new ClassificationMatrixStringConverter<double>();
             var actual = sut.Convert(uniqueTargets, confusionMatrix, errorMatrix, 0.0);
 
-            var expected = ";1;2;1;2\r\n1;1000.000;0.000;100.000;0.000\r\n2;0.000;1000.000;100.000;0.000\r\nError: 0.000\r\n";
+            var expected = ";1;2;1;2\r\n1;10.000;0.000;100.000;0.000\r\n2;0.000;10.000;100.000;0.000\r\nError: 0.000\r\n";
             Assert.AreEqual(expected, actual);
         }
     }

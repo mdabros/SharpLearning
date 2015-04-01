@@ -37,7 +37,7 @@ namespace SharpLearning.Metrics.Classification
                 var row = string.Format("{0}", uniqueTargets[x]);
                 for (int y = 0; y < numberofCols; y++)
                 {
-                    row += string.Format(";{0:0.000}", 100.0 * combinedMatrix[x][y]);
+                    row += string.Format(";{0:0.000}", combinedMatrix[x][y]);
                 }
                 builder.AppendLine(row);
             }
@@ -61,7 +61,7 @@ namespace SharpLearning.Metrics.Classification
 
                 for (int j = 0; j < numberOfCols; j++)
                 {
-                    combinedMatrix[i][j + numberOfCols] = classErrorMatrix[i][j];
+                    combinedMatrix[i][j + numberOfCols] = classErrorMatrix[i][j] * 100.0; // convert to percentage
                 }
             }
             return combinedMatrix;
