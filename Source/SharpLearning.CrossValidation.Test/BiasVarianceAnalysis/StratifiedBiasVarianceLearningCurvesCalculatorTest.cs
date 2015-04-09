@@ -17,7 +17,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void StratifiedBiasVarianceLearningCurvesCalculator_Calculate()
         {
             var sut = new StratifiedBiasVarianceLearningCurvesCalculator<double>(new TotalErrorClassificationMetric<double>(),
-                new double[] { 0.2, 0.8 }, 0.8, 42);
+                new double[] { 0.2, 0.8 }, 0.8, 42, 5);
 
             var targetName = "Pass";
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));

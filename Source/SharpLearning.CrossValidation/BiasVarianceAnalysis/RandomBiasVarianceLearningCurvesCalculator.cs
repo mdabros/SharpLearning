@@ -31,10 +31,11 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
+        /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
         public RandomBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
-            double trainingPercentage)
-            : base(new RandomTrainingValidationIndexSplitter<double>(trainingPercentage), 
-                   new RandomCrossValidationShuffler<double>(),  metric, samplePercentages)
+            double trainingPercentage, int numberOfShufflesPrSample = 5)
+            : base(new RandomTrainingValidationIndexSplitter<double>(trainingPercentage),
+                   new RandomCrossValidationShuffler<double>(), metric, samplePercentages, numberOfShufflesPrSample)
         {
         }
 
@@ -48,8 +49,9 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// <param name="trainingPercentage"></param>
         /// <param name="seed"></param>
-        public RandomBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
-            double trainingPercentage, int seed)
+        /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
+        public RandomBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
+            double trainingPercentage, int seed, int numberOfShufflesPrSample = 5)
             : base(new RandomTrainingValidationIndexSplitter<double>(trainingPercentage, seed), 
             new RandomCrossValidationShuffler<double>(seed), metric, samplePercentages)
         {

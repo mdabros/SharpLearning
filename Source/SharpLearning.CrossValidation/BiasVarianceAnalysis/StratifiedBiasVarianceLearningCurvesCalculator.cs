@@ -31,10 +31,11 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
-        public StratifiedBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
-            double trainingPercentage)
+        /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
+        public StratifiedBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
+            double trainingPercentage, int numberOfShufflesPrSample = 5)
             : base(new StratifiedTrainingValidationIndexSplitter<double>(trainingPercentage),
-                   new StratifyCrossValidationShuffler<double>(), metric, samplePercentages)
+                   new StratifyCrossValidationShuffler<double>(), metric, samplePercentages, numberOfShufflesPrSample)
         {
         }
 
@@ -48,10 +49,11 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// <param name="trainingPercentage"></param>
         /// <param name="seed"></param>
-        public StratifiedBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
-            double trainingPercentage, int seed)
+        /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
+        public StratifiedBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
+            double trainingPercentage, int seed, int numberOfShufflesPrSample = 5)
             : base(new StratifiedTrainingValidationIndexSplitter<double>(trainingPercentage, seed),
-                   new StratifyCrossValidationShuffler<double>(seed), metric, samplePercentages)
+                   new StratifyCrossValidationShuffler<double>(seed), metric, samplePercentages, numberOfShufflesPrSample)
         {
         }
     }

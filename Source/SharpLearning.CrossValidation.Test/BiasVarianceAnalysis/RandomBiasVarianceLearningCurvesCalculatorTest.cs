@@ -16,7 +16,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void RandomBiasVarianceLearningCurvesCalculator_Calculate()
         {
             var sut = new RandomBiasVarianceLearningCurvesCalculator<double>(new MeanSquaredErrorRegressionMetric(), 
-                new double[] { 0.2, 0.8 }, 0.8, 42);
+                new double[] { 0.2, 0.8 }, 0.8, 42, 5);
 
             var targetName = "T";
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));

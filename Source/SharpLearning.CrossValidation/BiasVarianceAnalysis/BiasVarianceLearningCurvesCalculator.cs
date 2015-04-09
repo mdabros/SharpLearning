@@ -28,6 +28,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         readonly double[] m_samplePercentages;
         readonly IMetric<double, TPrediction> m_metric;
         readonly ICrossValidationShuffler<double> m_shuffler;
+        readonly int m_numberOfShufflesPrSample;
 
         /// <summary>
         /// Bias variance analysis calculator for constructing learning curves.
@@ -38,18 +39,20 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
         public BiasVarianceLearningCurvesCalculator(ITrainingValidationIndexSplitter<double> trainingValidationIndexSplitter,
-            ICrossValidationShuffler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages)
+            ICrossValidationShuffler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
         {
             if (trainingValidationIndexSplitter == null) { throw new ArgumentException("trainingValidationIndexSplitter"); }
             if (shuffler == null) { throw new ArgumentException("shuffler"); }
             if (samplePercentages == null) { throw new ArgumentNullException("samplePercentages"); }
             if (samplePercentages.Length < 1) { throw new ArgumentException("SamplePercentages length must be at least 1"); }
             if (metric == null) { throw new ArgumentNullException("metric");}
-
+            if (numberOfShufflesPrSample < 1) { throw new ArgumentNullException("numberOfShufflesPrSample must be at least 1"); }
+            
             m_trainingValidationIndexSplitter = trainingValidationIndexSplitter;
             m_shuffler = shuffler;
             m_samplePercentages = samplePercentages;
             m_metric = metric;
+            m_numberOfShufflesPrSample = numberOfShufflesPrSample;
         }
 
         /// <summary>
@@ -94,11 +97,10 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                 var sampleSize = (int)(samplePercentage * trainingIndices.Length);
                 sampleSize = sampleSize > 0 ? sampleSize : 1;
 
-                var shuffles = 5.0; // add as constructor parameter
                 var trainError = 0.0;
                 var validationError = 0.0;
 
-                for (int j = 0; j < shuffles; j++)
+                for (int j = 0; j < m_numberOfShufflesPrSample; j++)
                 {
                     var folds = (int)Math.Round(1.0 / (samplePercentage));
                     m_shuffler.Shuffle(trainingIndices, targets, folds);
@@ -124,8 +126,8 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                     validationError += m_metric.Error(validationTargets, validationPredictions);
                 }
 
-                trainError = trainError / shuffles;
-                validationError = validationError / shuffles;
+                trainError = trainError / m_numberOfShufflesPrSample;
+                validationError = validationError / m_numberOfShufflesPrSample;
                 
                 learningCurves.Add(new BiasVarianceLearningCurvePoint(sampleSize,
                     trainError , validationError));

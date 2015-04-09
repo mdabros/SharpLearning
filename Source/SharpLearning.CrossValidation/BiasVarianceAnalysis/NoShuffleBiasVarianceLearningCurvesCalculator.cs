@@ -33,7 +33,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// training data used in each point of the learning curve</param>
         public NoShuffleBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, double trainingPercentage)
             : base(new NoShuffleTrainingValidationIndexSplitter<double>(trainingPercentage),
-                   new NoShuffleCrossValidationShuffler<double>(), metric, samplePercentages)
+                   new NoShuffleCrossValidationShuffler<double>(), metric, samplePercentages, 1)
         {
         }
     }
