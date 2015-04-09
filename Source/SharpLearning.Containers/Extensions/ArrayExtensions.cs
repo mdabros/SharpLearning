@@ -489,17 +489,23 @@ namespace SharpLearning.Containers.Extensions
         /// <param name="values"></param>
         /// <param name="rng"></param>
         /// <param name="folds"></param>
-        public static void Stratify<TIndex, TValues>(this TIndex[] indices, IReadOnlyList<TValues> values, Random rng, int folds)
+        public static void Stratify<TValues>(this int[] indices, IReadOnlyList<TValues> values, Random rng, int folds)
         {
+            if (indices.Length != values.Count)
+            {
+                throw new ArgumentException("Indices length: " + indices.Length + " differs from values length: " + values.Count);
+            }
+
             var zipped = indices.Zip(values, (i, v) => new { Index = i, Value = v }).ToList();
             zipped.Shuffle(rng);
 
             var grps = zipped.GroupBy(v => v.Value);
+            var counts2 = grps.ToDictionary(g => g.Key, g => g.Count());
             var countsPrFold = grps.Select(g => new { Key = g.Key, CountPrFold = g.Count() / folds }).ToDictionary(v => v.Key, v => v.CountPrFold);
 
             foreach (var kvp in countsPrFold)
             {
-                if (kvp.Value == 0) { throw new ArgumentException("Class: " + kvp.Key + " is too small for " + folds + "-fold statification "); }
+                if (kvp.Value == 0) { throw new ArgumentException("Class: " + kvp.Key + " Count: " + kvp.Value + " is too small for " + folds + "-fold statification "); }
             }
 
             Array.Clear(indices, 0, indices.Length);

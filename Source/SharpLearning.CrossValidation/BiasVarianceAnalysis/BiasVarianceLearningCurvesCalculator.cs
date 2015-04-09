@@ -88,6 +88,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         {
             var validationTargets = targets.GetIndices(validationIndices);
             var learningCurves = new List<BiasVarianceLearningCurvePoint>();
+            var trainingTargets = targets.GetIndices(trainingIndices);
 
             foreach (var samplePercentage in m_samplePercentages)
             {
@@ -103,7 +104,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                 for (int j = 0; j < m_numberOfShufflesPrSample; j++)
                 {
                     var folds = (int)Math.Round(1.0 / (samplePercentage));
-                    m_shuffler.Shuffle(trainingIndices, targets, folds);
+                    m_shuffler.Shuffle(trainingIndices, trainingTargets, folds);
 
                     var sampleIndices = trainingIndices.Take(sampleSize).ToArray();
                     
@@ -121,8 +122,8 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                         validationPredictions[i] = model.Predict(observations.GetRow(validationIndices[i]));
                     }
 
-                    var trainingTargets = targets.GetIndices(sampleIndices);
-                    trainError += m_metric.Error(trainingTargets, trainingPredictions);
+                    var sampleTargets = targets.GetIndices(sampleIndices);
+                    trainError += m_metric.Error(sampleTargets, trainingPredictions);
                     validationError += m_metric.Error(validationTargets, validationPredictions);
                 }
 

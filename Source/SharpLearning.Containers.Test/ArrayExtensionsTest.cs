@@ -423,5 +423,14 @@ namespace SharpLearning.Containers.Test
             var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, };
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_Stratify_IndicesLength_And_valuesLength_Differs()
+        {
+            var indices = new int[] { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            indices.Stratify(values, new Random(42), 10);
+        }
     }
 }
