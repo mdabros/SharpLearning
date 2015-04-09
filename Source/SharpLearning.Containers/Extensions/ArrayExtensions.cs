@@ -500,7 +500,6 @@ namespace SharpLearning.Containers.Extensions
             zipped.Shuffle(rng);
 
             var grps = zipped.GroupBy(v => v.Value);
-            var counts2 = grps.ToDictionary(g => g.Key, g => g.Count());
             var countsPrFold = grps.Select(g => new { Key = g.Key, CountPrFold = g.Count() / folds }).ToDictionary(v => v.Key, v => v.CountPrFold);
 
             foreach (var kvp in countsPrFold)
