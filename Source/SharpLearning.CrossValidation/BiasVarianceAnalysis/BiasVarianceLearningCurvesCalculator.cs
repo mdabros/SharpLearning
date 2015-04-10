@@ -86,9 +86,11 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         public List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learner,
             F64Matrix observations, double[] targets, int[] trainingIndices, int[] validationIndices)
         {
-            var validationTargets = targets.GetIndices(validationIndices);
             var learningCurves = new List<BiasVarianceLearningCurvePoint>();
             var trainingTargets = targets.GetIndices(trainingIndices);
+
+            var validationTargets = targets.GetIndices(validationIndices);
+            var validationPredictions = new TPrediction[validationTargets.Length];
 
             foreach (var samplePercentage in m_samplePercentages)
             {
@@ -101,22 +103,21 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                 var trainError = 0.0;
                 var validationError = 0.0;
 
+                var trainingPredictions = new TPrediction[sampleSize];
+
                 for (int j = 0; j < m_numberOfShufflesPrSample; j++)
                 {
                     var folds = (int)Math.Round(1.0 / (samplePercentage));
                     m_shuffler.Shuffle(trainingIndices, trainingTargets, folds);
 
                     var sampleIndices = trainingIndices.Take(sampleSize).ToArray();
-                    
                     var model = learner.Learn(observations, targets, sampleIndices);
-                    var trainingPredictions = new TPrediction[sampleSize];
 
                     for (int i = 0; i < trainingPredictions.Length; i++)
                     {
                         trainingPredictions[i] = model.Predict(observations.GetRow(sampleIndices[i]));
                     }
 
-                    var validationPredictions = new TPrediction[validationIndices.Length];
                     for (int i = 0; i < validationIndices.Length; i++)
                     {
                         validationPredictions[i] = model.Predict(observations.GetRow(validationIndices[i]));
