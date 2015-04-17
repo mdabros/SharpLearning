@@ -58,6 +58,13 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GridSearchOptimizationTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Optimization\SharpLearning.Optimization.csproj">
+      <Project>{b8fcec40-0d0d-457b-93eb-572ee1f621bf}</Project>
+      <Name>SharpLearning.Optimization</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
