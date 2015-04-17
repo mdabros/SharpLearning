@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput", "SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput.Test", "SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
@@ -43,9 +45,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Linear.Test",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Common.Interfaces", "SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj", "{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Optimization", "SharpLearning.Optimization\SharpLearning.Optimization.csproj", "{B8FCEC40-0D0D-457B-93EB-572EE1F621BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Optimization.Test", "SharpLearning.Optimization.Test\SharpLearning.Optimization.Test.csproj", "{2CBF54DE-577B-461E-9069-329EC82D3FC0}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 22
+		SccNumberOfProjects = 24
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -112,6 +118,12 @@ Global
 		SccProjectUniqueName21 = SharpLearning.Common.Interfaces\\SharpLearning.Common.Interfaces.csproj
 		SccProjectName21 = SharpLearning.Common.Interfaces
 		SccLocalPath21 = SharpLearning.Common.Interfaces
+		SccProjectUniqueName22 = SharpLearning.Optimization\\SharpLearning.Optimization.csproj
+		SccProjectName22 = SharpLearning.Optimization
+		SccLocalPath22 = SharpLearning.Optimization
+		SccProjectUniqueName23 = SharpLearning.Optimization.Test\\SharpLearning.Optimization.Test.csproj
+		SccProjectName23 = SharpLearning.Optimization.Test
+		SccLocalPath23 = SharpLearning.Optimization.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -202,6 +214,14 @@ Global
 		{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8FCEC40-0D0D-457B-93EB-572EE1F621BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8FCEC40-0D0D-457B-93EB-572EE1F621BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8FCEC40-0D0D-457B-93EB-572EE1F621BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8FCEC40-0D0D-457B-93EB-572EE1F621BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CBF54DE-577B-461E-9069-329EC82D3FC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CBF54DE-577B-461E-9069-329EC82D3FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CBF54DE-577B-461E-9069-329EC82D3FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CBF54DE-577B-461E-9069-329EC82D3FC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
