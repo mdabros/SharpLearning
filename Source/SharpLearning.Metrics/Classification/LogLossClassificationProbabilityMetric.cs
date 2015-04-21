@@ -24,7 +24,7 @@ namespace SharpLearning.Metrics.Classification
         /// 
         /// </summary>
         /// <param name="epsilon"></param>
-        public LogLossClassificationProbabilityMetric(double epsilon)
+        public LogLossClassificationProbabilityMetric(double epsilon = 1e-15)
         {
             m_epsilon = epsilon;
         }

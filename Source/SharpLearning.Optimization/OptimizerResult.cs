@@ -5,6 +5,7 @@ namespace SharpLearning.Optimization
     /// <summary>
     /// Optimization result
     /// </summary>
+    [Serializable]
     public sealed class OptimizerResult
     {
         /// <summary>
