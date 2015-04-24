@@ -534,5 +534,40 @@ namespace SharpLearning.Containers.Extensions
                 }
             }
         }
+
+        /// <summary>
+        /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
+        /// Returns a set of indices corresponding to the samples chosen. 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="sampleSize"></param>
+        /// <returns></returns>
+        public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize)
+        {
+            var RequiredSamples = data.GroupBy(d => d)
+                .ToDictionary(d => d.Key, d => Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
+
+            foreach (var kvp in RequiredSamples)
+            {
+                if (kvp.Value == 0) { throw new ArgumentException("Sample size is too small for value: " + kvp.Key + " to be included."); }
+            }
+
+            var currentSampleCount = RequiredSamples.ToDictionary(k => k.Key, k => 0);
+            var sampleIndices = new int[sampleSize];
+            var sampleIndex = 0;
+                        
+            for (int i = 0; i < data.Length; i++)
+            {
+                var value = data[i];
+                if(currentSampleCount[value] != RequiredSamples[value])
+                {
+                    sampleIndices[sampleIndex++] = i;
+                    currentSampleCount[value]++;
+                }
+            }
+
+            return sampleIndices;
+        }
     }
 }

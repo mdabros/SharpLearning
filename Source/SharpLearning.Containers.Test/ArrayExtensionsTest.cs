@@ -432,5 +432,27 @@ namespace SharpLearning.Containers.Test
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             indices.Stratify(values, new Random(42), 10);
         }
+
+        [TestMethod]
+        public void ArrayExtensions_StratifiedIndexSampling_50_Percent_Sample()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var sampleSize = values.Length / 2;
+            var indices = values.StratifiedIndexSampling(sampleSize);
+
+            var actual = values.GetIndices(indices);
+            var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3 };
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_StratifiedIndexSampling_SampleSize_Too_Small()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var sampleSize = values.Length / 10;
+            values.StratifiedIndexSampling(sampleSize);
+        }
     }
 }
