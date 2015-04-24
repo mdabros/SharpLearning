@@ -1,5 +1,4 @@
 ﻿using SharpLearning.CrossValidation.Samplers;
-using SharpLearning.CrossValidation.Shufflers;
 
 namespace SharpLearning.CrossValidation.CrossValidators
 {

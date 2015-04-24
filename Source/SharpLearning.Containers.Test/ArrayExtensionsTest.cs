@@ -394,46 +394,6 @@ namespace SharpLearning.Containers.Test
         }
 
         [TestMethod]
-        public void ArrayExtensions_Stratify_Even()
-        {
-            var actual = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
-            actual.Stratify(actual, new Random(42), 2);
-
-            var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, };
-            CollectionAssert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        public void ArrayExtensions_Stratify_Uneven()
-        {
-            var actual = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
-            actual.Stratify(actual, new Random(42), 3);
-
-            var expected = new int[] { 1, 1, 1, 2, 2, 3, 1, 1, 1, 2, 2, 3, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3 };
-            CollectionAssert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ArrayExtensions_Stratify_Too_Many_Folds()
-        {
-            var actual = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
-            actual.Stratify(actual, new Random(42), 10);
-
-            var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, };
-            CollectionAssert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ArrayExtensions_Stratify_IndicesLength_And_valuesLength_Differs()
-        {
-            var indices = new int[] { 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
-            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
-            indices.Stratify(values, new Random(42), 10);
-        }
-
-        [TestMethod]
         public void ArrayExtensions_StratifiedIndexSampling_50_Percent_Sample()
         {
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };

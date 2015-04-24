@@ -481,61 +481,6 @@ namespace SharpLearning.Containers.Extensions
         }
 
         /// <summary>
-        /// Shuffles the indices then orders them inorder to get the same distribution in each fold. 
-        /// </summary>
-        /// <typeparam name="TIndex"></typeparam>
-        /// <typeparam name="TValues"></typeparam>
-        /// <param name="indices"></param>
-        /// <param name="values"></param>
-        /// <param name="rng"></param>
-        /// <param name="folds"></param>
-        public static void Stratify<TValues>(this int[] indices, IReadOnlyList<TValues> values, Random rng, int folds)
-        {
-            if (indices.Length != values.Count)
-            {
-                throw new ArgumentException("Indices length: " + indices.Length + " differs from values length: " + values.Count);
-            }
-
-            var zipped = indices.Zip(values, (i, v) => new { Index = i, Value = v }).ToList();
-            zipped.Shuffle(rng);
-
-            var grps = zipped.GroupBy(v => v.Value);
-            var countsPrFold = grps.Select(g => new { Key = g.Key, CountPrFold = g.Count() / folds }).ToDictionary(v => v.Key, v => v.CountPrFold);
-
-            foreach (var kvp in countsPrFold)
-            {
-                if (kvp.Value == 0) { throw new ArgumentException("Class: " + kvp.Key + " Count: " + kvp.Value + " is too small for " + folds + "-fold statification "); }
-            }
-
-            Array.Clear(indices, 0, indices.Length);
-
-            var index = 0;
-            for (int i = 0; i < folds; i++)
-            {
-                foreach (var grp in grps)
-                {
-                    var counts = countsPrFold[grp.Key];
-                    if (i == folds - 1)
-                    {
-                        var currentIndices = grp.Skip(i * counts).Take(grp.Count()).Select(v => v.Index);
-                        foreach (var item in currentIndices)
-                        {
-                            indices[index++] = item; 
-                        }
-                    }
-                    else
-                    {
-                        var currentIndices = grp.Skip(i * counts).Take(counts).Select(v => v.Index);
-                        foreach (var item in currentIndices)
-                        {
-                            indices[index++] = item;
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
         /// http://en.wikipedia.org/wiki/Stratified_sampling
         /// Returns a set of indices corresponding to the samples chosen. 

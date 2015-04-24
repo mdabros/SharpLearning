@@ -75,9 +75,6 @@
     <Compile Include="Samplers\NoShuffleIndexSamplerTest.cs" />
     <Compile Include="Samplers\RandomIndexSamplerTest.cs" />
     <Compile Include="Samplers\StratifiedIndexSamplerTest.cs" />
-    <Compile Include="Shufflers\NoShuffleCrossValidationShufflerTest.cs" />
-    <Compile Include="Shufflers\RandomCrossValidationShufflerTest.cs" />
-    <Compile Include="Shufflers\StratifyCrossValidationShufflerTest.cs" />
     <Compile Include="CrossValidators\StratifiedCrossValidationTest.cs" />
     <Compile Include="TrainingValidationSplitters\StratifiedTrainingValidationIndexSplitterTest.cs" />
     <Compile Include="TrainingValidationSplitters\RandomTrainingValidationIndexSplitterTest.cs" />

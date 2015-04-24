@@ -1,15 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Samplers;
-using SharpLearning.CrossValidation.Shufflers;
-using SharpLearning.CrossValidation.Test;
 using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace SharpLearning.CrossValidation.CrossValidators.Test
 {

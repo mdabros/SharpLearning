@@ -1,10 +1,8 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.CrossValidation.Shufflers;
-using SharpLearning.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Samplers;
+using System;
+using System.Linq;
 
 namespace SharpLearning.CrossValidation.CrossValidators
 {

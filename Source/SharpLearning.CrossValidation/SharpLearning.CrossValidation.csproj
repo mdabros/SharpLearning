@@ -60,12 +60,8 @@
     <Compile Include="Samplers\NoShuffleIndexSampler.cs" />
     <Compile Include="Samplers\RandomIndexSampler.cs" />
     <Compile Include="Samplers\StratifiedIndexSampler.cs" />
-    <Compile Include="Shufflers\NoShuffleCrossValidationShuffler.cs" />
-    <Compile Include="Shufflers\RandomCrossValidationShuffler.cs" />
     <Compile Include="CrossValidators\CrossValidation.cs" />
-    <Compile Include="Shufflers\ICrossValidationShuffler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shufflers\StratifyCrossValidationShuffler.cs" />
     <Compile Include="CrossValidators\StratifiedCrossValidation.cs" />
     <Compile Include="TrainingValidationSplitters\ITrainingValidationIndexSplitter.cs" />
     <Compile Include="TrainingValidationSplitters\StratifiedTrainingValidationIndexSplitter.cs" />
