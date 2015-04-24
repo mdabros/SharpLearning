@@ -545,6 +545,9 @@ namespace SharpLearning.Containers.Extensions
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize)
         {
+            if (data.Length < sampleSize)
+            { throw new ArgumentException("SampleSize " + sampleSize + " is larger than data size " + data.Length); }
+
             var RequiredSamples = data.GroupBy(d => d)
                 .ToDictionary(d => d.Key, d => Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
 
@@ -569,5 +572,49 @@ namespace SharpLearning.Containers.Extensions
 
             return sampleIndices;
         }
+
+        /// <summary>
+        /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
+        /// Returns a set of indices corresponding to the samples chosen. 
+        /// Only samples within the indies provided in dataIndices
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="sampleSize"></param>
+        /// <param name="dataIndices"></param>
+        /// <returns></returns>
+        public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices)
+        {
+            if (dataIndices.Length < sampleSize) 
+            { throw new ArgumentException("SampleSize " + sampleSize + " is larger than dataIndices size " + dataIndices.Length); }
+            if (data.Length < dataIndices.Length) 
+            { throw new ArgumentException("dataIndices " + dataIndices.Length + " is larger than data size " + data.Length); }
+
+            var RequiredSamples = data.GroupBy(d => d)
+                .ToDictionary(d => d.Key, d => Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
+
+            foreach (var kvp in RequiredSamples)
+            {
+                if (kvp.Value == 0) { throw new ArgumentException("Sample size is too small for value: " + kvp.Key + " to be included."); }
+            }
+
+            var currentSampleCount = RequiredSamples.ToDictionary(k => k.Key, k => 0);
+            var sampleIndices = new int[sampleSize];
+            var sampleIndex = 0;
+
+            for (int i = 0; i < dataIndices.Length; i++)
+            {
+                var dataIndex = dataIndices[i];
+                var value = data[dataIndex];
+                if (currentSampleCount[value] != RequiredSamples[value])
+                {
+                    sampleIndices[sampleIndex++] = dataIndex;
+                    currentSampleCount[value]++;
+                }
+            }
+
+            return sampleIndices;
+        }
+
     }
 }

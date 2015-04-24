@@ -438,13 +438,23 @@ namespace SharpLearning.Containers.Test
         {
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampleSize = values.Length / 2;
-            var indices = values.StratifiedIndexSampling(sampleSize);
+            var sampleIndices = values.StratifiedIndexSampling(sampleSize);
 
-            var actual = values.GetIndices(indices);
+            var actual = values.GetIndices(sampleIndices);
             var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3 };
 
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_StratifiedIndexSampling_SampleSize_Too_large()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var sampleSize = 100;
+            values.StratifiedIndexSampling(sampleSize);
+        }
+
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
@@ -453,6 +463,49 @@ namespace SharpLearning.Containers.Test
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampleSize = values.Length / 10;
             values.StratifiedIndexSampling(sampleSize);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_StratifiedIndexSampling_Indexed()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var indices = new int[] { 0, 1, 2, 3, 10, 11, 12, 13, 18, 19, 20 };
+            var sampleSize = 6;
+            var sampleIndices = values.StratifiedIndexSampling(sampleSize, indices);
+
+            var actual = values.GetIndices(sampleIndices);
+            var expected = new int[] { 1, 1, 1, 2, 2, 3 };
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_StratifiedIndexSampling_Indexed_SampleSize_Too_large()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var sampleSize = 100;
+            values.StratifiedIndexSampling(sampleSize, Enumerable.Range(0, values.Length).ToArray());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_StratifiedIndexSampling_Indexed_SampleSize_Too_Small()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var sampleSize = values.Length / 10;
+            values.StratifiedIndexSampling(sampleSize, Enumerable.Range(0, values.Length).ToArray());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_StratifiedIndexSampling_Indexed_Indices_Larger_Than_Data()
+        {
+            var values = new int[] { 1, 1 };
+            var indices = new int[] { 1, 2, 3 };
+
+            var sampleSize = values.Length / 10;
+            values.StratifiedIndexSampling(sampleSize, indices);
         }
     }
 }
