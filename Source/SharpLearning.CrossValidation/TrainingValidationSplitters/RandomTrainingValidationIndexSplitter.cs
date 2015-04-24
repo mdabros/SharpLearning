@@ -1,4 +1,4 @@
-﻿using SharpLearning.CrossValidation.Shufflers;
+﻿using SharpLearning.CrossValidation.Samplers;
 using System;
 
 namespace SharpLearning.CrossValidation.TrainingValidationSplitters
@@ -27,7 +27,7 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         /// <param name="trainingPercentage"></param>
         /// <param name="seed"></param>
         public RandomTrainingValidationIndexSplitter(double trainingPercentage, int seed)
-            : base(new RandomCrossValidationShuffler<T>(seed), trainingPercentage)
+            : base(new RandomIndexSampler<T>(seed), trainingPercentage)
         {
         }
     }

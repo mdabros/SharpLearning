@@ -1,4 +1,4 @@
-﻿using SharpLearning.CrossValidation.Shufflers;
+﻿using SharpLearning.CrossValidation.Samplers;
 using System;
 using System.Linq;
 
@@ -11,7 +11,7 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
     /// <typeparam name="T"></typeparam>
     public class TrainingValidationIndexSplitter<T> : ITrainingValidationIndexSplitter<T>
     {
-        readonly ICrossValidationShuffler<T> m_shuffler;
+        readonly IIndexSampler<T> m_indexSampler;
         readonly double m_trainingPercentage;
 
         /// <summary>
@@ -19,12 +19,12 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         /// </summary>
         /// <param name="shuffler">the type of shuffler provided</param>
         /// <param name="trainingPercentage">What percentage of the indices should go to the training set</param>
-        public TrainingValidationIndexSplitter(ICrossValidationShuffler<T> shuffler, double trainingPercentage)
+        public TrainingValidationIndexSplitter(IIndexSampler<T> shuffler, double trainingPercentage)
         {
             if (shuffler == null) { throw new ArgumentNullException("shuffler"); }
             if (trainingPercentage <= 0.0 || trainingPercentage >= 1.0)
             { throw new ArgumentException("Training percentage must be larger than 0.0 and smaller than 1.0"); }
-            m_shuffler = shuffler;
+            m_indexSampler = shuffler;
             m_trainingPercentage = trainingPercentage; 
         }
 
@@ -35,15 +35,11 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         /// <returns></returns>
         public TrainingValidationIndexSplit Split(T[] targets)
         {
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
-            var folds = (int)Math.Round(1.0 / (1.0 - m_trainingPercentage));
-            m_shuffler.Shuffle(indices, targets, folds);
-
-            var trainingSampleSize = (int)(m_trainingPercentage * (double)indices.Length);
+            var trainingSampleSize = (int)(m_trainingPercentage * (double)targets.Length);
             trainingSampleSize = trainingSampleSize > 0 ? trainingSampleSize : 1;
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
 
-            var trainingIndices = indices.Take(trainingSampleSize)
-                .ToArray();
+            var trainingIndices = m_indexSampler.Sample(targets, trainingSampleSize, indices);
             var validationIndices = indices.Except(trainingIndices)
                 .ToArray();
 

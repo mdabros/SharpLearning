@@ -1,4 +1,4 @@
-﻿using SharpLearning.CrossValidation.Shufflers;
+﻿using SharpLearning.CrossValidation.Samplers;
 using System;
 
 namespace SharpLearning.CrossValidation.TrainingValidationSplitters
@@ -17,18 +17,7 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         /// </summary>
         /// <param name="trainingPercentage"></param>
         public StratifiedTrainingValidationIndexSplitter(double trainingPercentage)
-            : this(trainingPercentage, DateTime.Now.Millisecond)
-        {
-        }
-
-        /// <summary>
-        /// The indices are stratified before the split. This ensure that the distributions of training set and 
-        /// validation set are equal or at least very similar. 
-        /// </summary>
-        /// <param name="trainingPercentage"></param>
-        /// <param name="seed"></param>
-        public StratifiedTrainingValidationIndexSplitter(double trainingPercentage, int seed)
-            : base(new StratifyCrossValidationShuffler<T>(seed), trainingPercentage)
+            : base(new StratifiedIndexSampler<T>(), trainingPercentage)
         {
         }
     }

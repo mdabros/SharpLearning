@@ -52,7 +52,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
         public StratifiedBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
             double trainingPercentage, int seed, int numberOfShufflesPrSample = 5)
-            : base(new StratifiedTrainingValidationIndexSplitter<double>(trainingPercentage, seed),
+            : base(new StratifiedTrainingValidationIndexSplitter<double>(trainingPercentage),
                    new StratifyCrossValidationShuffler<double>(seed), metric, samplePercentages, numberOfShufflesPrSample)
         {
         }

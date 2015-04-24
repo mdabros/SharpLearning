@@ -10,13 +10,13 @@ namespace SharpLearning.CrossValidation.Test.TrainingValidationSplitters
         [TestMethod]
         public void StratifiedTrainingValidationIndexSplitter_Split()
         {
-            var sut = new StratifiedTrainingValidationIndexSplitter<double>(0.8, 42);
+            var sut = new StratifiedTrainingValidationIndexSplitter<double>(0.8);
 
             var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
 
             var actual = sut.Split(targets);
-            var expected = new TrainingValidationIndexSplit(new int[] { 9, 0, 5, 4, 7, 2, 8, 3 },
-                new int[] { 6, 1 });
+            var expected = new TrainingValidationIndexSplit(new int[] { 0, 1, 2, 3, 5, 6, 7, 8 },
+                new int[] { 4, 9 });
 
             Assert.AreEqual(expected, actual);
         }
