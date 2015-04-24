@@ -1,11 +1,10 @@
 ﻿using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.CrossValidation.Shufflers;
+using SharpLearning.CrossValidation.Samplers;
 using SharpLearning.CrossValidation.TrainingValidationSplitters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 {
@@ -27,9 +26,10 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         readonly ITrainingValidationIndexSplitter<double> m_trainingValidationIndexSplitter;
         readonly double[] m_samplePercentages;
         readonly IMetric<double, TPrediction> m_metric;
-        readonly ICrossValidationShuffler<double> m_shuffler;
+        readonly IIndexSampler<double> m_indexedSampler;
         readonly int m_numberOfShufflesPrSample;
-
+        readonly Random m_random;
+        
         /// <summary>
         /// Bias variance analysis calculator for constructing learning curves.
         /// Learning curves can be used to determine if a model has high bias or high variance.
@@ -39,7 +39,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
         public BiasVarianceLearningCurvesCalculator(ITrainingValidationIndexSplitter<double> trainingValidationIndexSplitter,
-            ICrossValidationShuffler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
+            IIndexSampler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
         {
             if (trainingValidationIndexSplitter == null) { throw new ArgumentException("trainingValidationIndexSplitter"); }
             if (shuffler == null) { throw new ArgumentException("shuffler"); }
@@ -49,10 +49,11 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             if (numberOfShufflesPrSample < 1) { throw new ArgumentNullException("numberOfShufflesPrSample must be at least 1"); }
             
             m_trainingValidationIndexSplitter = trainingValidationIndexSplitter;
-            m_shuffler = shuffler;
+            m_indexedSampler = shuffler;
             m_samplePercentages = samplePercentages;
             m_metric = metric;
             m_numberOfShufflesPrSample = numberOfShufflesPrSample;
+            m_random = new Random(42);
         }
 
         /// <summary>
@@ -87,7 +88,6 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             F64Matrix observations, double[] targets, int[] trainingIndices, int[] validationIndices)
         {
             var learningCurves = new List<BiasVarianceLearningCurvePoint>();
-            var trainingTargets = targets.GetIndices(trainingIndices);
 
             var validationTargets = targets.GetIndices(validationIndices);
             var validationPredictions = new TPrediction[validationTargets.Length];
@@ -107,10 +107,8 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 
                 for (int j = 0; j < m_numberOfShufflesPrSample; j++)
                 {
-                    var folds = (int)Math.Round(1.0 / (samplePercentage));
-                    m_shuffler.Shuffle(trainingIndices, trainingTargets, folds);
-
-                    var sampleIndices = trainingIndices.Take(sampleSize).ToArray();
+                    trainingIndices.Shuffle(m_random);
+                    var sampleIndices = m_indexedSampler.Sample(targets, sampleSize, trainingIndices);
                     var model = learner.Learn(observations, targets, sampleIndices);
 
                     for (int i = 0; i < trainingPredictions.Length; i++)

@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.BiasVarianceAnalysis;
 using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.DecisionTrees.Learners;
@@ -17,7 +16,7 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
         public void StratifiedBiasVarianceLearningCurvesCalculator_Calculate()
         {
             var sut = new StratifiedBiasVarianceLearningCurvesCalculator<double>(new TotalErrorClassificationMetric<double>(),
-                new double[] { 0.2, 0.8 }, 0.8, 42, 5);
+                new double[] { 0.2, 0.8 }, 0.8, 5);
 
             var targetName = "Pass";
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
@@ -27,8 +26,8 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var actual = sut.Calculate(new ClassificationDecisionTreeLearner(),
                 observations, targets);
 
-            var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(4, 0, 0.56666666666666665), 
-                new BiasVarianceLearningCurvePoint(16, 0.0625, 0.33333333333333337)};
+            var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(4, 0, 0.33333333333333331), 
+                new BiasVarianceLearningCurvePoint(16, 0.05, 0.23333333333333331)};
 
             CollectionAssert.AreEqual(expected, actual);
         }
