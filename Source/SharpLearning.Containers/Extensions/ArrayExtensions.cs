@@ -537,6 +537,7 @@ namespace SharpLearning.Containers.Extensions
 
         /// <summary>
         /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
+        /// http://en.wikipedia.org/wiki/Stratified_sampling
         /// Returns a set of indices corresponding to the samples chosen. 
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -575,6 +576,7 @@ namespace SharpLearning.Containers.Extensions
 
         /// <summary>
         /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
+        /// http://en.wikipedia.org/wiki/Stratified_sampling
         /// Returns a set of indices corresponding to the samples chosen. 
         /// Only samples within the indies provided in dataIndices
         /// </summary>

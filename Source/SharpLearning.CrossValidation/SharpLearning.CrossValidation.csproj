@@ -56,6 +56,8 @@
     <Compile Include="CrossValidators\ICrossValidation.cs" />
     <Compile Include="CrossValidators\NoShuffleCrossValidation.cs" />
     <Compile Include="CrossValidators\RandomCrossValidation.cs" />
+    <Compile Include="Samplers\IIndexSampler.cs" />
+    <Compile Include="Samplers\StratifiedIndexSampler.cs" />
     <Compile Include="Shufflers\NoShuffleCrossValidationShuffler.cs" />
     <Compile Include="Shufflers\RandomCrossValidationShuffler.cs" />
     <Compile Include="CrossValidators\CrossValidation.cs" />
