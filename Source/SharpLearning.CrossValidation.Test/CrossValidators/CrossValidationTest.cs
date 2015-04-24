@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.CrossValidation.Samplers;
 using SharpLearning.CrossValidation.Shufflers;
 using SharpLearning.CrossValidation.Test;
 using SharpLearning.CrossValidation.Test.Properties;
@@ -26,7 +27,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
         public void CrossValidation_CrossValidate_Folds_10()
         {
             var actual = CrossValidate(10);
-            Assert.AreEqual(0.07200934424307, actual, 0.001);
+            Assert.AreEqual(0.068002901204319982, actual, 0.001);
         }
 
         [TestMethod]
@@ -43,7 +44,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
             var targets = parser.EnumerateRows(targetName).ToF64Vector();
 
-            var sut = new CrossValidation<double>(new RandomCrossValidationShuffler<double>(42), folds);
+            var sut = new CrossValidation<double>(new RandomIndexSampler<double>(42), folds);
             var predictions = sut.CrossValidate(new RegressionDecisionTreeLearner(), observations, targets);
             var metric = new MeanSquaredErrorRegressionMetric();
 

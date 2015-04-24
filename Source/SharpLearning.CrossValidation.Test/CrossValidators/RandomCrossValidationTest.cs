@@ -25,7 +25,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
         public void RandomCrossValidation_CrossValidate_Folds_10()
         {
             var actual = CrossValidate(10);
-            Assert.AreEqual(0.07200934424307, actual, 0.001);
+            Assert.AreEqual(0.068002901204319982, actual, 0.001);
         }
 
         [TestMethod]

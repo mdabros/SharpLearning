@@ -1,4 +1,5 @@
-﻿using SharpLearning.CrossValidation.Shufflers;
+﻿using SharpLearning.CrossValidation.Samplers;
+using SharpLearning.CrossValidation.Shufflers;
 using System;
 
 namespace SharpLearning.CrossValidation.CrossValidators
@@ -15,17 +16,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// </summary>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
         public StratifiedCrossValidation(int crossValidationFolds)
-            : base(new StratifyCrossValidationShuffler<double>(DateTime.Now.Millisecond), crossValidationFolds)
-        {
-        }
-
-        /// <summary>
-        /// Cross validation for evaluating how learning algorithms generalise on new data
-        /// </summary>
-        /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
-        /// <param name="seed"></param>
-        public StratifiedCrossValidation(int crossValidationFolds, int seed)
-            : base(new StratifyCrossValidationShuffler<double>(seed), crossValidationFolds)
+            : base(new StratifiedIndexSampler<double>(), crossValidationFolds)
         {
         }
     }
