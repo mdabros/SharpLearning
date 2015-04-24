@@ -27,7 +27,7 @@ namespace SharpLearning.CrossValidation.Samplers
         /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
         /// http://en.wikipedia.org/wiki/Stratified_sampling
         /// Returns a set of indices corresponding to the samples chosen. 
-        /// Only samples within the indies provided in dataIndices
+        /// Only samples within the indices provided in dataIndices
         /// </summary>
         /// <param name="data"></param>
         /// <param name="sampleSize"></param>
