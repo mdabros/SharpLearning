@@ -2,6 +2,7 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Samplers;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.CrossValidation.CrossValidators
@@ -50,11 +51,20 @@ namespace SharpLearning.CrossValidation.CrossValidators
             var holdOutSamples = new int[m_crossValidationFolds][];
             var samplesPrFold = rows / m_crossValidationFolds;
             var indices = Enumerable.Range(0, targets.Length).ToArray();
+
             for (int i = 0; i < m_crossValidationFolds; i++)
             {
-                var holdoutSample = m_indexedSampler.Sample(targets, samplesPrFold, indices);
-                holdOutSamples[i] = holdoutSample;
-                indices = indices.Except(holdoutSample).ToArray();
+                if(i == m_crossValidationFolds - 1)
+                {
+                    // last fold. Add remaining indices.  
+                    holdOutSamples[i] = indices.ToArray();
+                }
+                else
+                {
+                    var holdoutSample = m_indexedSampler.Sample(targets, samplesPrFold, indices);
+                    holdOutSamples[i] = holdoutSample;
+                    indices = indices.Except(holdoutSample).ToArray();
+                }
             }
          
             var crossValidatedPredictions = new TPrediction[rows];

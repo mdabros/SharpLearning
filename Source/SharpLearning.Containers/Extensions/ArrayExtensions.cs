@@ -514,6 +514,11 @@ namespace SharpLearning.Containers.Extensions
                     sampleIndices[sampleIndex++] = i;
                     currentSampleCount[value]++;
                 }
+
+                if (sampleIndex == sampleSize)
+                {
+                    break;
+                }
             }
 
             return sampleIndices;
@@ -548,7 +553,7 @@ namespace SharpLearning.Containers.Extensions
             var currentSampleCount = RequiredSamples.ToDictionary(k => k.Key, k => 0);
             var sampleIndices = new int[sampleSize];
             var sampleIndex = 0;
-
+                        
             for (int i = 0; i < dataIndices.Length; i++)
             {
                 var dataIndex = dataIndices[i];
@@ -557,6 +562,11 @@ namespace SharpLearning.Containers.Extensions
                 {
                     sampleIndices[sampleIndex++] = dataIndex;
                     currentSampleCount[value]++;
+                }
+
+                if(sampleIndex == sampleSize)
+                {
+                    break;
                 }
             }
 
