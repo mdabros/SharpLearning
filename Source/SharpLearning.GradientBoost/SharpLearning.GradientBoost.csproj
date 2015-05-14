@@ -69,6 +69,10 @@
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.CrossValidation\SharpLearning.CrossValidation.csproj">
+      <Project>{86038cef-f3b5-45c5-bbbc-8f700a1cfb86}</Project>
+      <Name>SharpLearning.CrossValidation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj">
       <Project>{8efe2f3f-779d-46d3-bea4-6f04a52f52e1}</Project>
       <Name>SharpLearning.DecisionTrees</Name>

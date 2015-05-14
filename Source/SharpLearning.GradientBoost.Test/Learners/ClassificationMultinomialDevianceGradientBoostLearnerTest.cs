@@ -33,6 +33,24 @@ namespace SharpLearning.GradientBoost.Test.Learners
         }
 
         [TestMethod]
+        public void MultinomialDevianceClassificationGradientBoostLearner_Stochastic_Learn_AptitudeData()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+
+            var sut = new ClassificationMultinomialDevianceGradientBoostLearner(100, 0.1, 3, 2000, 1, 0.000001, 0.5);
+
+            var model = sut.Learn(observations, targets);
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.26923076923076922, actual);
+        }
+
+        [TestMethod]
         public void MultinomialDevianceClassificationGradientBoostLearner_Learn_Glass()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
