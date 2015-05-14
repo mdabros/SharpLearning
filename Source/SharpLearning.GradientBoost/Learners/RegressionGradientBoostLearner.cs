@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using SharpLearning.Containers;
 using SharpLearning.Common.Interfaces;
+using SharpLearning.CrossValidation.Samplers;
 
 namespace SharpLearning.GradientBoost.Learners
 {
@@ -26,10 +27,14 @@ namespace SharpLearning.GradientBoost.Learners
     {
         readonly ILossFunction m_lossFunction;
         DecisionTreeLearner m_learner;
+        readonly RandomIndexSampler<double> m_sampler = new RandomIndexSampler<double>(43);
 
         readonly int m_iterations;
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
+
+        readonly double m_subSampleRatio;
+        readonly int m_numberOfFeaturesPrSplit;
 
         int m_maximumTreeDepth;
         int m_maximumLeafCount;
@@ -49,8 +54,12 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public RegressionGradientBoostLearner(ILossFunction lossFunction, int iterations, int maximumTreeDepth, 
-            int maximumLeafCount, int minimumSplitSize, double minimumInformationGain)
+        /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
+        /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
+        /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// <param name="featuresPrSplit">Number of features used at each split in each tree. 0 means Sqrt(of availible features)</param>
+        public RegressionGradientBoostLearner(ILossFunction lossFunction, int iterations, int maximumTreeDepth,
+            int maximumLeafCount, int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int numberOfFeaturesPrSplit)
         {
             if (lossFunction == null) { throw new ArgumentNullException("lossFunction"); } // currently only least squares is supported
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -58,6 +67,7 @@ namespace SharpLearning.GradientBoost.Learners
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (maximumLeafCount <= 1) { throw new ArgumentException("maximum leaf count must be larger than 1"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
+            if (subSampleRatio <= 0.0 || subSampleRatio > 1.0) { throw new ArgumentException("subSampleRatio must be larger than 0.0 and at max 1.0"); }
 
             m_lossFunction = lossFunction;// currently only least squares is supported
             
@@ -67,6 +77,9 @@ namespace SharpLearning.GradientBoost.Learners
             m_maximumTreeDepth = maximumTreeDepth;
             m_maximumLeafCount = maximumLeafCount;
             m_minimumInformationGain = minimumInformationGain;
+
+            m_subSampleRatio = subSampleRatio;
+            m_numberOfFeaturesPrSplit = numberOfFeaturesPrSplit;
         }
 
         /// <summary>
@@ -105,13 +118,21 @@ namespace SharpLearning.GradientBoost.Learners
             Array.Resize(ref m_predictions, targets.Length);
 
             m_lossFunction.InitializeLoss(targets, m_predictions, indices);
-            var evaluator = new MeanAbsolutErrorRegressionMetric();
+
+            var sampleSize = (int)Math.Round(m_subSampleRatio * (double)indices.Length);
+
+
             for (int i = 0; i < m_iterations; i++)
             {
-                FitStage(i, observations, targets, indices);
-
-                //Trace.WriteLine(evaluator.Error(targets.GetIndices(indices),
-                //    m_predictions.GetIndices(indices)));
+                if (m_subSampleRatio != 1.0)
+                {
+                    var trainingIndices = m_sampler.Sample(targets, sampleSize, indices);
+                    FitStage(i, observations, targets, trainingIndices);
+                }
+                else
+                {
+                    FitStage(i, observations, targets, indices);
+                }
             }
 
             var models = m_models.ToArray();

@@ -20,10 +20,14 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public RegressionLeastAbsoluteDeviationGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3, 
-            int maximumLeafCount=2000, int minimumSplitSize = 1, double minimumInformationGain = 0.000001)
+        /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
+        /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
+        /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// <param name="numberOfFeaturesPrSplit">Number of features used at each split in each tree. 0 means Sqrt(of availible features)</param>
+        public RegressionLeastAbsoluteDeviationGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
+            int maximumLeafCount = 2000, int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0, int numberOfFeaturesPrSplit = 0)
             : base(new LeastAbsoluteErrorLossFunction(learningRate), iterations, maximumTreeDepth,maximumLeafCount, 
-                    minimumSplitSize,minimumInformationGain)
+                    minimumSplitSize, minimumInformationGain, subSampleRatio, numberOfFeaturesPrSplit)
         {
         }
     }
