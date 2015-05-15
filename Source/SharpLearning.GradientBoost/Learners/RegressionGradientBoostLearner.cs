@@ -105,7 +105,7 @@ namespace SharpLearning.GradientBoost.Learners
         {
             m_learner = new DecisionTreeLearner(
                 new BestFirstTreeBuilder(m_maximumTreeDepth, m_maximumLeafCount,
-                    observations.GetNumberOfColumns(), m_minimumInformationGain, 42,
+                    m_numberOfFeaturesPrSplit, m_minimumInformationGain, 42,
                     new OnlyUniqueThresholdsSplitSearcher(m_minimumSplitSize),
                     new RegressionImpurityCalculator()));
 
