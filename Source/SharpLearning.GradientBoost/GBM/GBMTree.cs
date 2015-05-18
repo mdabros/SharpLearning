@@ -1,0 +1,121 @@
+﻿using SharpLearning.Containers.Matrices;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SharpLearning.GradientBoost.GBM
+{
+    /// <summary>
+    /// Binary decision tree based on GBMNodes.
+    /// </summary>
+    public class GBMTree
+    {
+        readonly List<GBMNode> m_nodes;
+
+        public GBMTree(List<GBMNode> nodes)
+        {
+            if (nodes == null) { throw new ArgumentNullException("nodes"); }
+            m_nodes = nodes;
+        }
+
+        /// <summary>
+        /// Predicts a series of observations
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        public double[] Predict(F64Matrix observations)
+        {
+            var rows = observations.GetNumberOfRows();
+            var predictions = new double[rows];
+
+            for (int i = 0; i < rows; i++)
+            {
+                predictions[i] = Predict(observations.GetRow(i));
+            }
+
+            return predictions;
+        }
+
+        /// <summary>
+        /// Predicts a single observation
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public double Predict(double[] observation)
+        {
+            if (m_nodes.Count == 1) //only root
+            {
+                return m_nodes[0].LeftConstant; // left right are equal
+            }
+
+            var leaf = Predict(m_nodes[1], 1, observation);
+
+            if (observation[leaf.FeatureIndex] < leaf.SplitValue)
+            {
+                return leaf.LeftConstant;
+            }
+            else
+            {
+                return leaf.RightConstant;
+            }
+        }
+
+        GBMNode Predict(GBMNode parent, int nodeIndex, double[] observation)
+        {
+            if (nodeIndex == -1)
+            {
+                return parent;
+            }
+
+            var node = m_nodes[nodeIndex];
+
+            if (observation[node.FeatureIndex] < node.SplitValue)
+            {
+                return Predict(node, node.LeftIndex, observation); // left
+            }
+            else
+            {
+                return Predict(node, node.RightIndex, observation); // right
+            }
+        }
+
+        /// <summary>
+        /// Traces the nodes in indexed order
+        /// </summary>
+        public void TraceNodesIndexed()
+        {
+            for (int i = 0; i < m_nodes.Count; i++)
+            {
+                var node = m_nodes[i];
+                System.Diagnostics.Trace.WriteLine("Index: " + i + " SplitValue: " + m_nodes[i].SplitValue +
+                    " left: " + node.LeftConstant + " right: " + node.RightConstant);
+            }
+        }
+
+        /// <summary>
+        /// Traces the nodes sorted by depth
+        /// </summary>
+        public void TraceNodesDepth()
+        {
+            var depths = m_nodes.Select(n => n.Depth)
+                .OrderBy(d => d).Distinct();
+
+            foreach (var depth in depths)
+            {
+                var index = 0;
+                var nodes = m_nodes.Select(n => new { Node = n, Index = index++ }).Where(n => n.Node.Depth == depth);
+                var text = string.Empty;
+
+                foreach (var node in nodes)
+                {
+                    text += string.Format("{0:0.000} (L:{1:0.000} R:{2:0.000} I:{3}) ",
+                        node.Node.SplitValue, node.Node.LeftConstant, node.Node.RightConstant, node.Node.FeatureIndex);
+                }
+                Trace.WriteLine(text);
+            }
+        }
+    }
+}

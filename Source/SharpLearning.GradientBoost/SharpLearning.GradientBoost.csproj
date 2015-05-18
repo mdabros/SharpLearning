@@ -46,6 +46,15 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="GBM\GBMGradientBoostRegressorLearner.cs" />
+    <Compile Include="GBM\GBMGradientBoostRegressorModel.cs" />
+    <Compile Include="GBM\GBMNode.cs" />
+    <Compile Include="GBM\GBMRegressionTreeLearnerPar.cs" />
+    <Compile Include="GBM\GBMSplitInfo.cs" />
+    <Compile Include="GBM\GBMRegressionTreeLearner.cs" />
+    <Compile Include="GBM\GBMSplit.cs" />
+    <Compile Include="GBM\GBMTree.cs" />
+    <Compile Include="GBM\GBMTreeCreationItem.cs" />
     <Compile Include="Learners\ClassificationGradientBoostLearner.cs" />
     <Compile Include="Learners\ClassificationMultinomialDevianceGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionHuberGradientBoostLearner.cs" />
@@ -88,6 +97,10 @@
     <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
       <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
       <Name>SharpLearning.Metrics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Threading\SharpLearning.Threading.csproj">
+      <Project>{a2f37b85-ee5b-4e09-9edf-f391dbd53b5f}</Project>
+      <Name>SharpLearning.Threading</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
