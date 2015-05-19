@@ -23,6 +23,7 @@ namespace SharpLearning.GradientBoost.GBM
         readonly int m_iterations;
         readonly double m_subSampleRatio;
         readonly Random m_random = new Random(42);
+        readonly IGBMLoss m_loss;
 
         /// <summary>
         /// <summary>
@@ -38,20 +39,23 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
         public GBMGradientBoostRegressorLearner(int iterations, double learningRate, int maximumTreeDepth,
-            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int numberOfThreads)
+            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGBMLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (subSampleRatio <= 0.0 || subSampleRatio > 1.0) { throw new ArgumentException("subSampleRatio must be larger than 0.0 and at max 1.0"); }
+            if (loss == null) { throw new ArgumentException("loss"); }
 
             m_iterations = iterations;
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
-            m_learner = new GBMRegressionTreeLearnerPar(maximumTreeDepth, minimumSplitSize, minimumInformationGain);
+            m_loss = loss;
+            m_learner = new GBMRegressionTreeLearnerPar(maximumTreeDepth, minimumSplitSize, minimumInformationGain, m_loss, numberOfThreads);
         }
 
         /// <summary>
@@ -71,7 +75,7 @@ namespace SharpLearning.GradientBoost.GBM
         public GBMGradientBoostRegressorLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
-                subSampleRatio, Environment.ProcessorCount)
+                subSampleRatio, new GBMSquaredLoss(), Environment.ProcessorCount)
         {
         }
 

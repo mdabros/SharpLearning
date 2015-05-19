@@ -18,7 +18,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, 1.0, 1);
+            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GBMSquaredLoss(), 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -36,7 +36,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, 1);
+            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, new GBMSquaredLoss(), 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);

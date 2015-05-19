@@ -51,10 +51,10 @@
     <Compile Include="GBM\GBMNode.cs" />
     <Compile Include="GBM\GBMRegressionTreeLearnerPar.cs" />
     <Compile Include="GBM\GBMSplitInfo.cs" />
-    <Compile Include="GBM\GBMRegressionTreeLearner.cs" />
     <Compile Include="GBM\GBMSplit.cs" />
     <Compile Include="GBM\GBMTree.cs" />
     <Compile Include="GBM\GBMTreeCreationItem.cs" />
+    <Compile Include="GBM\IGBMLoss.cs" />
     <Compile Include="Learners\ClassificationGradientBoostLearner.cs" />
     <Compile Include="Learners\ClassificationMultinomialDevianceGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionHuberGradientBoostLearner.cs" />
