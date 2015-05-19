@@ -18,7 +18,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// </summary>
     public class GBMGradientBoostRegressorLearner
     {
-        readonly GBMRegressionTreeLearnerPar m_learner;
+        readonly GBMDecisionTreeLearner m_learner;
         readonly double m_learningRate;
         readonly int m_iterations;
         readonly double m_subSampleRatio;
@@ -55,7 +55,7 @@ namespace SharpLearning.GradientBoost.GBM
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
             m_loss = loss;
-            m_learner = new GBMRegressionTreeLearnerPar(maximumTreeDepth, minimumSplitSize, minimumInformationGain, m_loss, numberOfThreads);
+            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, m_loss, numberOfThreads);
         }
 
         /// <summary>

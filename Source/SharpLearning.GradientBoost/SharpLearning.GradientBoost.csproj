@@ -49,7 +49,7 @@
     <Compile Include="GBM\GBMGradientBoostRegressorLearner.cs" />
     <Compile Include="GBM\GBMGradientBoostRegressorModel.cs" />
     <Compile Include="GBM\GBMNode.cs" />
-    <Compile Include="GBM\GBMRegressionTreeLearnerPar.cs" />
+    <Compile Include="GBM\GBMDecisionTreeLearner.cs" />
     <Compile Include="GBM\GBMSplitInfo.cs" />
     <Compile Include="GBM\GBMSplit.cs" />
     <Compile Include="GBM\GBMTree.cs" />

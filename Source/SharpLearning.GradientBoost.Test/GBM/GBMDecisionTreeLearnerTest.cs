@@ -10,10 +10,10 @@ using System.Linq;
 namespace SharpLearning.GradientBoost.Test.GBM
 {
     [TestClass]
-    public class GBMRegressionTreeLearnerParTest
+    public class GBMDecisionTreeLearnerTest
     {
         [TestMethod]
-        public void GBMRegressionTreeLearnerPar_Learn()
+        public void GBMDecisionTreeLearner_Learn()
         {
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
@@ -34,7 +34,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var sum = targets.Sum();
             var sumSquare = targets.Select(t => t * t).Sum();
 
-            var sut = new GBMRegressionTreeLearnerPar(10);
+            var sut = new GBMDecisionTreeLearner(10);
 
             var tree = sut.Learn(observations, targets, orderedElements, inSample, sum, sumSquare, targets.Length);
             tree.TraceNodesDepth();

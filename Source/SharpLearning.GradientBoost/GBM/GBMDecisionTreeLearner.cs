@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace SharpLearning.GradientBoost.GBM
 {
-    public sealed class GBMRegressionTreeLearnerPar
+    public sealed class GBMDecisionTreeLearner
     {
         /// <summary>
         // x the dataset
@@ -40,7 +40,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public GBMRegressionTreeLearnerPar(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, IGBMLoss loss, int numberOfThreads)
+        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, IGBMLoss loss, int numberOfThreads)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
@@ -61,7 +61,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="minimumSplitSize">The minimum size </param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public GBMRegressionTreeLearnerPar(int maximumTreeDepth = 2000, int minimumSplitSize = 1, double minimumInformationGain = 1E-6)
+        public GBMDecisionTreeLearner(int maximumTreeDepth = 2000, int minimumSplitSize = 1, double minimumInformationGain = 1E-6)
             : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, new GBMSquaredLoss(), Environment.ProcessorCount)
         {
         }
@@ -245,20 +245,8 @@ namespace SharpLearning.GradientBoost.GBM
                 if (parentInSample[index])
                 {
                     var target = y[index];
+
                     m_loss.UpdateSplitConstants(left, right, target, target); // switch y to residuals / targets
-                    //var y2 = y[index] * y[index];
-
-                    //left.Samples++;
-                    //left.Sum += y[index];
-                    //left.SumOfSquares += y2;
-                    //left.Cost = left.SumOfSquares - (left.Sum * left.Sum / (double)left.Samples);
-                    //left.BestConstant = left.Sum / (double)left.Samples;
-
-                    //right.Samples--;
-                    //right.Sum -= y[index];
-                    //right.SumOfSquares -= y2;
-                    //right.Cost = right.SumOfSquares - (right.Sum * right.Sum / (double)right.Samples);
-                    //right.BestConstant = right.Sum / (double)right.Samples;
 
                     if (Math.Min(left.Samples, right.Samples) >= m_minimumSplitSize)
                     {
