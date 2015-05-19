@@ -123,6 +123,13 @@ namespace SharpLearning.GradientBoost.GBM
                 
                 var splitResults = new ConcurrentBag<SplitResult>();
 
+                //for (int i = 0; i < featureCount; i++)
+                //{
+                //    FindBestSplit(observations, residuals, targets, orderedElements,
+                //        parentItem, parentInSample, n, i, splitResults);
+
+                //}
+
                 var workItems = new ConcurrentQueue<int>();
                 for (int i = 0; i < featureCount; i++)
                 {
@@ -132,17 +139,18 @@ namespace SharpLearning.GradientBoost.GBM
                 var workers = new List<Action>();
                 for (int i = 0; i < m_numberOfThreads; i++)
                 {
-                    workers.Add(() => SplitWorker(observations, residuals, targets, orderedElements, parentItem, 
+                    workers.Add(() => SplitWorker(observations, residuals, targets, orderedElements, parentItem,
                         parentInSample, workItems, splitResults));
                 }
 
                 m_threadedWorker = new WorkerRunner(workers);
                 m_threadedWorker.Run();
 
-                bestSplitResult = splitResults.OrderBy(r => r.BestSplit.Cost).First();
-
-                if (bestSplitResult.BestSplit.FeatureIndex != -1)
+                
+                if (splitResults.Count != 0)
                 {
+                    bestSplitResult = splitResults.OrderBy(r => r.BestSplit.Cost).First();
+
                     var node = bestSplitResult.BestSplit.GetNode();
                     nodeIndex++;
                     nodes.Add(node);
@@ -198,7 +206,8 @@ namespace SharpLearning.GradientBoost.GBM
             int featureIndex = -1;
             while (featureIndices.TryDequeue(out featureIndex))
             {
-                FindBestSplit(observations, residuals, targets, orderedElements, parentItem, parentInSample, featureIndex, results);
+                FindBestSplit(observations, residuals, targets, orderedElements, 
+                    parentItem, parentInSample, featureIndex, results);
             }
         }
 
@@ -231,60 +240,63 @@ namespace SharpLearning.GradientBoost.GBM
             };
 
             var orderedIndices = orderedElements[featureIndex];
+            var j = NextAllowedIndex(0, orderedIndices, parentInSample);
+            var currentIndex = orderedIndices[j];
+      
+            m_loss.UpdateSplitConstants(left, right, targets[currentIndex], residuals[currentIndex]);
 
-            for (int j = 0; j < orderedIndices.Length - 1; j++)
+            var previousValue = observations.GetItemAt(currentIndex, featureIndex);
+                      
+            while(right.Samples > 0)
             {
-                var index = orderedIndices[j];
+                j = NextAllowedIndex(j + 1, orderedIndices, parentInSample);
+                currentIndex = orderedIndices[j];
+                var currentValue = observations.GetItemAt(currentIndex, featureIndex);
 
-                if (parentInSample[index])
+                if (Math.Min(left.Samples, right.Samples) >= m_minimumSplitSize)
                 {
-                    var residual = residuals[index];
-                    var target = targets[index];
-
-                    m_loss.UpdateSplitConstants(left, right, target, residual);
-
-                    if (Math.Min(left.Samples, right.Samples) >= m_minimumSplitSize)
+                    if (previousValue != currentValue)
                     {
-                        var nextIndex = NextIndexInSample(residuals, parentInSample, orderedIndices, j);
-
-                        if (observations.GetItemAt(index, featureIndex) != observations.GetItemAt(nextIndex, featureIndex))
+                        var cost = left.Cost + right.Cost;
+                        if (cost < bestSplit.Cost)
                         {
-                            var cost = left.Cost + right.Cost;
-                            if (cost < bestSplit.Cost)
-                            {
-                                bestSplit.FeatureIndex = featureIndex;
-                                bestSplit.SplitIndex = j + 1;
-                                bestSplit.SplitValue = (observations.GetItemAt(index, featureIndex) + observations.GetItemAt(nextIndex, featureIndex)) * .5;
-                                bestSplit.LeftError = left.Cost;
-                                bestSplit.RightError = right.Cost;
-                                bestSplit.Cost = cost;
-                                bestSplit.CostImprovement = parentItem.Values.Cost - cost;
-                                bestSplit.LeftConstant = left.BestConstant;
-                                bestSplit.RightConstant = right.BestConstant;
+                            bestSplit.FeatureIndex = featureIndex;
+                            bestSplit.SplitIndex = j;
+                            bestSplit.SplitValue = (previousValue + currentValue) * .5;
+                            bestSplit.LeftError = left.Cost;
+                            bestSplit.RightError = right.Cost;
+                            bestSplit.Cost = cost;
+                            bestSplit.CostImprovement = parentItem.Values.Cost - cost;
+                            bestSplit.LeftConstant = left.BestConstant;
+                            bestSplit.RightConstant = right.BestConstant;
 
-                                bestLeft = left.Copy();
-                                bestRight = right.Copy();
-                            }
+                            bestLeft = left.Copy();
+                            bestRight = right.Copy();
                         }
                     }
                 }
+
+                m_loss.UpdateSplitConstants(left, right, targets[currentIndex], residuals[currentIndex]);
+                previousValue = currentValue;
             }
 
-            results.Add(new SplitResult { BestSplit = bestSplit, Left = bestLeft, Right = bestRight });
+            if(bestSplit.FeatureIndex != -1)
+            {
+                results.Add(new SplitResult { BestSplit = bestSplit, Left = bestLeft, Right = bestRight });
+            }
         }
 
-        int NextIndexInSample(double[] y, bool[] parentInSample, int[] orderedIndices, int currentIndex)
+        int NextAllowedIndex(int start, int[] orderedIndexes, bool[] inSample)
         {
-            var nextIndex = orderedIndices[currentIndex + 1];
-            for (int i = currentIndex + 1; i < y.Length; i++)
+
+            for (int i = start; i < orderedIndexes.Length; i++)
             {
-                if (parentInSample[orderedIndices[i]])
+                if (inSample[orderedIndexes[i]])
                 {
-                    nextIndex = orderedIndices[i];
-                    break;
+                    return i;
                 }
             }
-            return nextIndex;
+            return (orderedIndexes.Length + 1);
         }
 
         void SetParentLeafIndex(int nodeIndex, GBMTreeCreationItem parentItem)
