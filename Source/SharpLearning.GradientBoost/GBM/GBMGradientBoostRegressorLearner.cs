@@ -99,15 +99,16 @@ namespace SharpLearning.GradientBoost.GBM
                 orderedElements[i] = indices;
             }
 
+            var inSample = targets.Select(t => true).ToArray();
+
             var trees = new GBMTree[m_iterations];
-            trees[0] = FitInitial(targets);
+            trees[0] = FitInitial(targets, inSample);
 
             var predictions = trees[0].Predict(observations);
             var residuals = new double[targets.Length];
 
             var allIndices = Enumerable.Range(0, targets.Length).ToArray();
 
-            var inSample = targets.Select(t => true).ToArray();
             
             for (int iteration = 1; iteration < m_iterations; iteration++)
             {
@@ -171,22 +172,16 @@ namespace SharpLearning.GradientBoost.GBM
         /// </summary>
         /// <param name="targets"></param>
         /// <returns></returns>
-        GBMTree FitInitial(double[] targets)
+        GBMTree FitInitial(double[] targets, bool[] inSample)
         {
-            var n = targets.Length;
-            var s = targets.Sum();
-            var s2 = targets.Select(t => t * t).Sum();
+            var initialLoss = m_loss.InitialLoss(targets, inSample);
 
-            var rootBestConstant = s / (double)n;
-            var rootCost = s2 - s * s / (double)n;
             var root = new GBMNode()
             {
                 FeatureIndex = -1,
                 SplitValue = -1,
-                LeftError = rootCost,
-                RightError = rootCost,
-                LeftConstant = rootBestConstant,
-                RightConstant = rootBestConstant
+                LeftConstant = initialLoss,
+                RightConstant = initialLoss
             };
 
             var nodes = new List<GBMNode> { root };

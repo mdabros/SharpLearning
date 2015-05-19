@@ -9,6 +9,8 @@ namespace SharpLearning.GradientBoost.GBM
 {
     public interface IGBMLoss
     {
+        double InitialLoss(double[] targets, bool[] inSample);
+
         GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample);
 
         double NegativeGradient(double target, double prediction);
@@ -19,6 +21,22 @@ namespace SharpLearning.GradientBoost.GBM
 
     public sealed class GBMSquaredLoss : IGBMLoss
     {
+        public double InitialLoss(double[] targets, bool[] inSample)
+        {
+            var inSampleSum = 0.0;
+            var sampleCount = 0.0;
+            for (int i = 0; i < inSample.Length; i++)
+            {
+                if (inSample[i])
+                {
+                    inSampleSum += targets[i];
+                    sampleCount++;
+                }
+            }
+
+            return inSampleSum = inSampleSum / sampleCount;
+        }
+
         public GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample)
         {
             var splitInfo = GBMSplitInfo.NewEmpty();
@@ -67,6 +85,22 @@ namespace SharpLearning.GradientBoost.GBM
 
     public sealed class GBMBinomialLoss : IGBMLoss
     {
+        public double InitialLoss(double[] targets, bool[] inSample)
+        {
+            var inSampleSum = 0.0;
+            var sampleCount = 0.0;
+            for (int i = 0; i < inSample.Length; i++)
+            {
+                if (inSample[i])
+                {
+                    inSampleSum += targets[i];
+                    sampleCount++;
+                }
+            }
+
+            return Math.Log(inSampleSum / (sampleCount - inSampleSum)).NanToNum();
+        }
+
         public GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample)
         {
             var splitInfo = GBMSplitInfo.NewEmpty();
