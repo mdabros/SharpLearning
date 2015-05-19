@@ -31,15 +31,10 @@ namespace SharpLearning.GradientBoost.Test.GBM
                 orderedElements[i] = indices;
 			}
 
-            var sum = targets.Sum();
-            var sumSquare = targets.Select(t => t * t).Sum();
-
             var sut = new GBMDecisionTreeLearner(10);
-
-            var tree = sut.Learn(observations, targets, targets, orderedElements, inSample, sum, sumSquare, targets.Length);
+            var tree = sut.Learn(observations, targets, targets, orderedElements, inSample, targets.Length);
             
             var predictions = tree.Predict(observations);
-
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 

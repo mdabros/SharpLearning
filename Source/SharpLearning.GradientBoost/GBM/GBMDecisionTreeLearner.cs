@@ -79,8 +79,10 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="n">number of samples</param>
         /// <returns></returns>
         public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, 
-            int[][] orderedElements, bool[] inSample, double s, double s2, int n)
+            int[][] orderedElements, bool[] inSample, int n)
         {
+            var s = residuals.Sum();
+            var s2 = residuals.Select(r => r * r).Sum();
 
             var rootBestConstant = s / (double)n;
             var rootCost = s2 - s * s / (double)n;

@@ -104,7 +104,6 @@ namespace SharpLearning.GradientBoost.GBM
 
             var predictions = trees[0].Predict(observations);
             var residuals = new double[targets.Length];
-            var residuals2 = new double[targets.Length];
 
             var allIndices = Enumerable.Range(0, targets.Length).ToArray();
 
@@ -114,14 +113,8 @@ namespace SharpLearning.GradientBoost.GBM
             {
                 for (int j = 0; j < targets.Length; j++)
                 {
-                    var residual = NegativeGradient(targets[j], predictions[j]);
-                    var residual2 = residual * residual;
-
-                    residuals[j] = residual;
-                    residuals2[j] = residual2;
+                    residuals[j] = NegativeGradient(targets[j], predictions[j]);
                 }
-                var s = residuals.Sum();
-                var s2 = residuals2.Sum();
 
                 var sampleSize = targets.Length;
                 if(m_subSampleRatio != 1.0)
@@ -130,12 +123,10 @@ namespace SharpLearning.GradientBoost.GBM
                     inSample = Sample(sampleSize, allIndices);
                 }
 
-                var tree = m_learner.Learn(observations, targets, residuals, orderedElements, inSample, s, s2, sampleSize);
-
+                var tree = m_learner.Learn(observations, targets, residuals, orderedElements, inSample, sampleSize);
                 trees[iteration] = tree;
 
                 var predict = tree.Predict(observations);
-
                 for (int i = 0; i < predict.Length; i++)
                 {
                     predictions[i] += m_learningRate * predict[i];
