@@ -9,6 +9,7 @@ namespace SharpLearning.GradientBoost.GBM
         public double SumOfSquares;
         public double Cost;
         public double BestConstant;
+        public double BinomialSum;
         public NodePositionType Position;
 
         public static GBMSplitInfo NewEmpty()
@@ -19,7 +20,8 @@ namespace SharpLearning.GradientBoost.GBM
                 Sum = 0,
                 SumOfSquares = 0,
                 Cost = 0,
-                BestConstant = 0
+                BestConstant = 0,
+                BinomialSum = 0
             };
         }
 
@@ -37,7 +39,8 @@ namespace SharpLearning.GradientBoost.GBM
                 SumOfSquares = SumOfSquares,
                 Cost = Cost,
                 BestConstant = BestConstant,
-                Position = Position
+                Position = Position,
+                BinomialSum = BinomialSum
             };
         }
     }

@@ -81,18 +81,19 @@ namespace SharpLearning.GradientBoost.GBM
         public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, 
             int[][] orderedElements, bool[] inSample, int n)
         {
-            var s = residuals.Sum();
-            var s2 = residuals.Select(r => r * r).Sum();
+            var rootValues = m_loss.InitSplit(targets, residuals, inSample);
 
-            var rootBestConstant = s / (double)n;
-            var rootCost = s2 - s * s / (double)n;
-            var root = new GBMNode() { FeatureIndex = -1, SplitValue = -1, LeftError = rootCost, RightError = rootCost, 
-                LeftConstant = rootBestConstant, RightConstant = rootBestConstant };
+            var root = new GBMNode()
+            {
+                FeatureIndex = -1,
+                SplitValue = -1,
+                LeftError = rootValues.Cost,
+                RightError = rootValues.Cost,
+                LeftConstant = rootValues.BestConstant,
+                RightConstant = rootValues.BestConstant
+            };
             
             var nodes = new List<GBMNode> { root };
-
-            var rootValues = new GBMSplitInfo { Samples = n, Sum = s, SumOfSquares = s2, 
-                Cost = rootCost, BestConstant = rootBestConstant  };
 
             var stack = new Queue<GBMTreeCreationItem>(100);
             stack.Enqueue(new GBMTreeCreationItem { Values = rootValues, InSample = inSample, Depth = 1 });

@@ -44,7 +44,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.038289922749043533, actual);
+            Assert.AreEqual(0.02553149201144593, actual);
         }
     }
 }
