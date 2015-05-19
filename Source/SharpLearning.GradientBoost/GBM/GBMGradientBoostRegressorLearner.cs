@@ -130,8 +130,7 @@ namespace SharpLearning.GradientBoost.GBM
                     inSample = Sample(sampleSize, allIndices);
                 }
 
-                var tree = m_learner.Learn(observations, residuals, orderedElements,
-                    inSample, s, s2, sampleSize);
+                var tree = m_learner.Learn(observations, targets, residuals, orderedElements, inSample, s, s2, sampleSize);
 
                 trees[iteration] = tree;
 

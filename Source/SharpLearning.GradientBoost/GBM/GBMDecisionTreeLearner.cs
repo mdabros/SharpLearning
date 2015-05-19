@@ -70,15 +70,16 @@ namespace SharpLearning.GradientBoost.GBM
         /// Fites a regression decision tree using a set presorted indices for each feature.
         /// </summary>
         /// <param name="observations"></param>
-        /// <param name="targets"></param>
+        /// <param name="targets">the original targets</param>
+        /// <param name="residuals">the residuals for each boosting iteration</param>
         /// <param name="orderedElements">jagged array of sorted indices corresponding to each features</param>
         /// <param name="inSample">bool array containing the samples to use</param>
         /// <param name="s">sum</param>
         /// <param name="s2">sum of squares</param>
         /// <param name="n">number of samples</param>
         /// <returns></returns>
-        public GBMTree Learn(F64Matrix observations, double[] targets, int[][] orderedElements, bool[] inSample, 
-            double s, double s2, int n)
+        public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, 
+            int[][] orderedElements, bool[] inSample, double s, double s2, int n)
         {
 
             var rootBestConstant = s / (double)n;
@@ -129,21 +130,12 @@ namespace SharpLearning.GradientBoost.GBM
                 var workers = new List<Action>();
                 for (int i = 0; i < m_numberOfThreads; i++)
                 {
-                    workers.Add(() => SplitWorker(observations, targets, orderedElements, parentItem, parentInSample, workItems, splitResults));
+                    workers.Add(() => SplitWorker(observations, residuals, targets, orderedElements, parentItem, 
+                        parentInSample, workItems, splitResults));
                 }
 
                 m_threadedWorker = new WorkerRunner(workers);
                 m_threadedWorker.Run();
-
-                //Parallel.For(0, featureCount, (i) =>
-                //{
-                //    FindBestSplit(x, y, orderedElements, parentItem, parentInSample, i, splitResults);
-                //});
-
-                //for (int i = 0; i < featureCount; i++)
-                //{
-                //    FindBestSplit(x, y, orderedElements, parentItem, parentInSample, i, splitResults);
-                //}
 
                 bestSplitResult = splitResults.OrderBy(r => r.BestSplit.Cost).First();
 
@@ -198,17 +190,17 @@ namespace SharpLearning.GradientBoost.GBM
             return new GBMTree(nodes);
         }
 
-        void SplitWorker(F64Matrix x, double[] y, int[][] orderedElements, 
+        void SplitWorker(F64Matrix observations, double[] residuals, double[] targets, int[][] orderedElements, 
             GBMTreeCreationItem parentItem, bool[] parentInSample, ConcurrentQueue<int> featureIndices, ConcurrentBag<SplitResult> results)
         {
             int featureIndex = -1;
             while (featureIndices.TryDequeue(out featureIndex))
             {
-                FindBestSplit(x, y, orderedElements, parentItem, parentInSample, featureIndex, results);
+                FindBestSplit(observations, residuals, targets, orderedElements, parentItem, parentInSample, featureIndex, results);
             }
         }
 
-        void FindBestSplit(F64Matrix x, double[] y, int[][] orderedElements, 
+        void FindBestSplit(F64Matrix observations, double[] residuals, double[] targets, int[][] orderedElements, 
             GBMTreeCreationItem parentItem, bool[] parentInSample, int featureIndex, ConcurrentBag<SplitResult> results)
         {
             var bestSplit = new GBMSplit
@@ -236,7 +228,7 @@ namespace SharpLearning.GradientBoost.GBM
                 BestConstant = parentItem.Values.BestConstant
             };
 
-            var orderedIndices = orderedElements[featureIndex];//.Where(oI => parentInSample[oI]).ToArray();
+            var orderedIndices = orderedElements[featureIndex];
 
             for (int j = 0; j < orderedIndices.Length - 1; j++)
             {
@@ -244,22 +236,23 @@ namespace SharpLearning.GradientBoost.GBM
 
                 if (parentInSample[index])
                 {
-                    var target = y[index];
+                    var residual = residuals[index];
+                    var target = targets[index];
 
-                    m_loss.UpdateSplitConstants(left, right, target, target); // switch y to residuals / targets
+                    m_loss.UpdateSplitConstants(left, right, target, residual);
 
                     if (Math.Min(left.Samples, right.Samples) >= m_minimumSplitSize)
                     {
-                        var nextIndex = NextIndexInSample(y, parentInSample, orderedIndices, j);
+                        var nextIndex = NextIndexInSample(residuals, parentInSample, orderedIndices, j);
 
-                        if (x.GetItemAt(index, featureIndex) != x.GetItemAt(nextIndex, featureIndex))
+                        if (observations.GetItemAt(index, featureIndex) != observations.GetItemAt(nextIndex, featureIndex))
                         {
                             var cost = left.Cost + right.Cost;
                             if (cost < bestSplit.Cost)
                             {
                                 bestSplit.FeatureIndex = featureIndex;
                                 bestSplit.SplitIndex = j + 1;
-                                bestSplit.SplitValue = (x.GetItemAt(index, featureIndex) + x.GetItemAt(nextIndex, featureIndex)) * .5;
+                                bestSplit.SplitValue = (observations.GetItemAt(index, featureIndex) + observations.GetItemAt(nextIndex, featureIndex)) * .5;
                                 bestSplit.LeftError = left.Cost;
                                 bestSplit.RightError = right.Cost;
                                 bestSplit.Cost = cost;

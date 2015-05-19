@@ -36,8 +36,8 @@ namespace SharpLearning.GradientBoost.Test.GBM
 
             var sut = new GBMDecisionTreeLearner(10);
 
-            var tree = sut.Learn(observations, targets, orderedElements, inSample, sum, sumSquare, targets.Length);
-            tree.TraceNodesDepth();
+            var tree = sut.Learn(observations, targets, targets, orderedElements, inSample, sum, sumSquare, targets.Length);
+            
             var predictions = tree.Predict(observations);
 
             var evaluator = new MeanSquaredErrorRegressionMetric();
