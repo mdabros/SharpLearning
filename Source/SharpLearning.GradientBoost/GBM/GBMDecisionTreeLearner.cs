@@ -127,7 +127,7 @@ namespace SharpLearning.GradientBoost.GBM
                 //for (int i = 0; i < featureCount; i++)
                 //{
                 //    FindBestSplit(observations, residuals, targets, orderedElements,
-                //        parentItem, parentInSample, n, i, splitResults);
+                //        parentItem, parentInSample, i, splitResults);
 
                 //}
 
@@ -224,21 +224,13 @@ namespace SharpLearning.GradientBoost.GBM
                 Cost = double.MaxValue,
                 LeftConstant = -1,
                 RightConstant = -1
-
             };
 
             var bestLeft = GBMSplitInfo.NewEmpty();
             var bestRight = GBMSplitInfo.NewEmpty();
 
             var left = GBMSplitInfo.NewEmpty();
-            var right = new GBMSplitInfo
-            {
-                Samples = parentItem.Values.Samples,
-                Sum = parentItem.Values.Sum,
-                SumOfSquares = parentItem.Values.SumOfSquares,
-                Cost = parentItem.Values.Cost,
-                BestConstant = parentItem.Values.BestConstant
-            };
+            var right = parentItem.Values.Copy(NodePositionType.Right);
 
             var orderedIndices = orderedElements[featureIndex];
             var j = NextAllowedIndex(0, orderedIndices, parentInSample);

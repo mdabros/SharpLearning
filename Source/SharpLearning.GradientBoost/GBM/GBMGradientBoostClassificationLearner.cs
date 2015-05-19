@@ -1,22 +1,24 @@
-﻿using SharpLearning.Containers.Extensions;
+﻿using SharpLearning.Containers;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Metrics.Classification;
 using SharpLearning.Metrics.Regression;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.GradientBoost.GBM
 {
     /// <summary>
-    /// <summary>
-    /// Regression gradient boost learner based on 
+    /// Classificaion gradient boost learner based on 
     /// http://statweb.stanford.edu/~jhf/ftp/trebst.pdf
     /// A series of regression trees are fitted stage wise on the residuals of the previous stage.
     /// The resulting models are ensembled together using addition. Implementation based on:
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
     /// </summary>
-    public class GBMGradientBoostRegressorLearner
+    public class GBMGradientBoostClassificationLearner
     {
         readonly GBMDecisionTreeLearner m_learner;
         readonly double m_learningRate;
@@ -26,8 +28,7 @@ namespace SharpLearning.GradientBoost.GBM
         readonly IGBMLoss m_loss;
 
         /// <summary>
-        /// <summary>
-        ///  Least squares (LS) regression gradient boost learner. 
+        ///  Binomial deviance classification gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -41,7 +42,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public GBMGradientBoostRegressorLearner(int iterations, double learningRate, int maximumTreeDepth,
+        public GBMGradientBoostClassificationLearner(int iterations, double learningRate, int maximumTreeDepth,
             int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGBMLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -59,8 +60,7 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         /// <summary>
-        /// <summary>
-        ///  Least squares (LS) regression gradient boost learner. 
+        ///  Binomial deviance classification gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -72,21 +72,21 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
-        public GBMGradientBoostRegressorLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
+        public GBMGradientBoostClassificationLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
-                subSampleRatio, new GBMSquaredLoss(), Environment.ProcessorCount)
+                subSampleRatio, new GBMBinomialLoss(), Environment.ProcessorCount)
         {
         }
 
         /// <summary>
-        ///  Least squares (LS) regression gradient boost learner. 
-        ///  A series of regression trees are fitted stage wise on the residuals of the previous tree
+        ///  Binomial deviance classification gradient boost learner. 
+        ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public GBMGradientBoostRegressorModel Learn(F64Matrix observations, double[] targets)
+        public GBMGradientBoostClassificationModel Learn(F64Matrix observations, double[] targets)
         {
             var orderedElements = new int[observations.GetNumberOfColumns()][];
             var rows = observations.GetNumberOfRows();
@@ -108,6 +108,7 @@ namespace SharpLearning.GradientBoost.GBM
             var residuals = new double[targets.Length];
 
             var allIndices = Enumerable.Range(0, targets.Length).ToArray();
+
             
             for (int iteration = 1; iteration < m_iterations; iteration++)
             {
@@ -133,7 +134,12 @@ namespace SharpLearning.GradientBoost.GBM
                 }
             }
 
-            return new GBMGradientBoostRegressorModel(trees, m_learningRate);
+            return new GBMGradientBoostClassificationModel(trees, m_learningRate);
+        }
+
+        double Sigmoid(double z)
+        {
+            return 1.0 / (1.0 + Math.Exp(-z));
         }
 
         /// <summary>

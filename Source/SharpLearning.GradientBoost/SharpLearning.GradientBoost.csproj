@@ -46,7 +46,9 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="GBM\GBMGradientBoostClassificationLearner.cs" />
     <Compile Include="GBM\GBMGradientBoostRegressorLearner.cs" />
+    <Compile Include="GBM\GBMGradientBoostClassificationModel.cs" />
     <Compile Include="GBM\GBMGradientBoostRegressorModel.cs" />
     <Compile Include="GBM\GBMNode.cs" />
     <Compile Include="GBM\GBMDecisionTreeLearner.cs" />
