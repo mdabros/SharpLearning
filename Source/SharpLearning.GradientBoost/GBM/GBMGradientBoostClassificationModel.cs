@@ -134,7 +134,7 @@ namespace SharpLearning.GradientBoost.GBM
         {
             var probability = Probability(observation, 0);
             var prediction = (probability >= 0.5) ? m_targetNames[0] : m_targetNames[1];
-            var probabilities = new Dictionary<double, double> { { m_targetNames[0], 1.0 - probability }, { m_targetNames[1], probability } };
+            var probabilities = new Dictionary<double, double> { { m_targetNames[1], 1.0 - probability }, { m_targetNames[0], probability } };
 
             return new ProbabilityPrediction(prediction, probabilities);
         }
