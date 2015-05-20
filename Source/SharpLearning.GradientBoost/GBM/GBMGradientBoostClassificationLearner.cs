@@ -1,11 +1,6 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.Containers.Extensions;
+﻿using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.Metrics.Classification;
-using SharpLearning.Metrics.Regression;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.GradientBoost.GBM
@@ -94,37 +89,70 @@ namespace SharpLearning.GradientBoost.GBM
             var allIndices = Enumerable.Range(0, targets.Length).ToArray();
             var inSample = targets.Select(t => true).ToArray();
 
-            var trees = new GBMTree[m_iterations];
-
+            var uniqueTargets = targets.Distinct().OrderBy(v => v).ToArray();
             var initialLoss = m_loss.InitialLoss(targets, inSample);
-            var predictions = targets.Select(t => initialLoss).ToArray();
-            var residuals = new double[targets.Length];
+
+            double[][] oneVsAllTargets = null;
+            double[][] predictions = null;
+            double[][] residuals = null;
+            GBMTree[][] trees = null;
+
+            if(uniqueTargets.Length == 2) // Binary case - only need to fit to one class and use (1.0 - probability)
+            {
+                trees = new GBMTree[][] { new GBMTree[m_iterations] };
+                predictions = new double[][] { targets.Select(_ => initialLoss).ToArray() };
+                residuals = new double[][] { new double[targets.Length] };
+
+                oneVsAllTargets = new double[1][];
+                var target = uniqueTargets[0];
+                oneVsAllTargets[0] = targets.Select(t => t == target ? 1.0 : 0.0).ToArray();
+
+            }
+            else // multiclass case - use oneVsAll strategy and fit probability for each class
+            {
+                trees = new GBMTree[uniqueTargets.Length][];
+                predictions = uniqueTargets.Select(_ => targets.Select(t => initialLoss).ToArray())
+                    .ToArray();
+                residuals = uniqueTargets.Select(_ => new double[targets.Length])
+                    .ToArray();
+
+                oneVsAllTargets = new double[uniqueTargets.Length][];
+                for (int i = 0; i < uniqueTargets.Length; i++)
+                {
+                    var target = uniqueTargets[i];
+                    oneVsAllTargets[i] = targets.Select(t => t == target ? 1.0 : 0.0).ToArray();
+                    trees[i] = new GBMTree[m_iterations];
+                }
+            }
             
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
-                for (int j = 0; j < targets.Length; j++)
+                for (int itarget = 0; itarget < trees.Length; itarget++)
                 {
-                    residuals[j] = m_loss.NegativeGradient(targets[j], predictions[j]);
-                }
+                    for (int j = 0; j < targets.Length; j++)
+                    {
+                        residuals[itarget][j] = m_loss.NegativeGradient(oneVsAllTargets[itarget][j], predictions[itarget][j]);
+                    }
 
-                var sampleSize = targets.Length;
-                if(m_subSampleRatio != 1.0)
-                {
-                    sampleSize = (int)Math.Round(m_subSampleRatio * targets.Length);
-                    inSample = Sample(sampleSize, allIndices);
-                }
+                    var sampleSize = targets.Length;
+                    if (m_subSampleRatio != 1.0)
+                    {
+                        sampleSize = (int)Math.Round(m_subSampleRatio * targets.Length);
+                        inSample = Sample(sampleSize, allIndices);
+                    }
 
-                var tree = m_learner.Learn(observations, targets, residuals, orderedElements, inSample, sampleSize);
-                trees[iteration] = tree;
+                    var tree = m_learner.Learn(observations, oneVsAllTargets[itarget], residuals[itarget], orderedElements, inSample, sampleSize);
+                    trees[itarget][iteration] = tree;
 
-                var predict = tree.Predict(observations);
-                for (int i = 0; i < predict.Length; i++)
-                {
-                    predictions[i] += m_learningRate * predict[i];
+                    var predict = tree.Predict(observations);
+                    for (int i = 0; i < predict.Length; i++)
+                    {
+                        predictions[itarget][i] += m_learningRate * predict[i];
+                    }
                 }
             }
 
-            return new GBMGradientBoostClassificationModel(trees, m_learningRate, initialLoss);
+            return new GBMGradientBoostClassificationModel(trees, uniqueTargets, m_learningRate, initialLoss);
         }
 
         /// <summary>
