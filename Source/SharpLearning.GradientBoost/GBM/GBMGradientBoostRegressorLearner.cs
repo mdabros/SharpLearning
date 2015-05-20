@@ -88,28 +88,19 @@ namespace SharpLearning.GradientBoost.GBM
         /// <returns></returns>
         public GBMGradientBoostRegressorModel Learn(F64Matrix observations, double[] targets)
         {
-            var orderedElements = new int[observations.GetNumberOfColumns()][];
             var rows = observations.GetNumberOfRows();
+            var orderedElements = CreateOrderedElements(observations, rows);
 
-            for (int i = 0; i < observations.GetNumberOfColumns(); i++)
-            {
-                var feature = observations.GetColumn(i);
-                var indices = Enumerable.Range(0, rows).ToArray();
-                feature.SortWith(indices);
-                orderedElements[i] = indices;
-            }
-
+            var allIndices = Enumerable.Range(0, targets.Length).ToArray();
             var inSample = targets.Select(t => true).ToArray();
 
             var trees = new GBMTree[m_iterations];
-            trees[0] = FitInitial(targets, inSample);
 
-            var predictions = trees[0].Predict(observations);
+            var initialLoss = m_loss.InitialLoss(targets, inSample);
+            var predictions = targets.Select(t => initialLoss).ToArray();
             var residuals = new double[targets.Length];
 
-            var allIndices = Enumerable.Range(0, targets.Length).ToArray();
-            
-            for (int iteration = 1; iteration < m_iterations; iteration++)
+            for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 for (int j = 0; j < targets.Length; j++)
                 {
@@ -117,7 +108,7 @@ namespace SharpLearning.GradientBoost.GBM
                 }
 
                 var sampleSize = targets.Length;
-                if(m_subSampleRatio != 1.0)
+                if (m_subSampleRatio != 1.0)
                 {
                     sampleSize = (int)Math.Round(m_subSampleRatio * targets.Length);
                     inSample = Sample(sampleSize, allIndices);
@@ -133,7 +124,27 @@ namespace SharpLearning.GradientBoost.GBM
                 }
             }
 
-            return new GBMGradientBoostRegressorModel(trees, m_learningRate);
+            return new GBMGradientBoostRegressorModel(trees, m_learningRate, initialLoss);
+        }
+
+        /// <summary>
+        /// Creates a matrix of ordered indices. Each row is ordered after the corresponding feature column.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="rows"></param>
+        /// <returns></returns>
+        int[][] CreateOrderedElements(F64Matrix observations, int rows)
+        {
+            var orderedElements = new int[observations.GetNumberOfColumns()][];
+
+            for (int i = 0; i < observations.GetNumberOfColumns(); i++)
+            {
+                var feature = observations.GetColumn(i);
+                var indices = Enumerable.Range(0, rows).ToArray();
+                feature.SortWith(indices);
+                orderedElements[i] = indices;
+            }
+            return orderedElements;
         }
 
         /// <summary>
@@ -151,29 +162,8 @@ namespace SharpLearning.GradientBoost.GBM
             {
                 inSample[indices[i]] = true;
             }
-            
+
             return inSample;
-        }
-
-        /// <summary>
-        /// Fits the initial best constant (least squares)
-        /// </summary>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        GBMTree FitInitial(double[] targets, bool[] inSample)
-        {
-            var initialLoss = m_loss.InitialLoss(targets, inSample);
-
-            var root = new GBMNode()
-            {
-                FeatureIndex = -1,
-                SplitValue = -1,
-                LeftConstant = initialLoss,
-                RightConstant = initialLoss
-            };
-
-            var nodes = new List<GBMNode> { root };
-            return new GBMTree(nodes);
         }
     }
 }
