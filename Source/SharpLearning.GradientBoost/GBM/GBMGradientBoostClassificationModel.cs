@@ -12,12 +12,14 @@ namespace SharpLearning.GradientBoost.GBM
     {
         readonly GBMTree[] m_trees;
         readonly double m_learningRate;
+        readonly double m_initialLoss;
 
-        public GBMGradientBoostClassificationModel(GBMTree[] trees, double learningRate)
+        public GBMGradientBoostClassificationModel(GBMTree[] trees, double learningRate, double initialLoss)
         {
             if (trees == null) { throw new ArgumentNullException("trees"); }
             m_trees = trees;
             m_learningRate = learningRate;
+            m_initialLoss = initialLoss;
         }
 
         /// <summary>
@@ -34,8 +36,8 @@ namespace SharpLearning.GradientBoost.GBM
 
         double Probability(double[] observation)
         {
-            var prediction = m_trees[0].Predict(observation);
-            for (int i = 1; i < m_trees.Length; i++)
+            var prediction = m_initialLoss;
+            for (int i = 0; i < m_trees.Length; i++)
             {
                 prediction += m_learningRate * m_trees[i].Predict(observation);
             }
