@@ -54,6 +54,7 @@
     <Compile Include="GBM\GBMDecisionTreeLearner.cs" />
     <Compile Include="GBM\GBMSplitInfo.cs" />
     <Compile Include="GBM\GBMSplit.cs" />
+    <Compile Include="GBM\GBMSplitResult.cs" />
     <Compile Include="GBM\GBMTree.cs" />
     <Compile Include="GBM\GBMTreeCreationItem.cs" />
     <Compile Include="GBM\IGBMLoss.cs" />

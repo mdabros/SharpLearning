@@ -124,7 +124,7 @@ namespace SharpLearning.GradientBoost.GBM
                 }
             }
 
-            return new GBMGradientBoostRegressorModel(trees, m_learningRate, initialLoss);
+            return new GBMGradientBoostRegressorModel(trees, m_learningRate, initialLoss, observations.GetNumberOfColumns());
         }
 
         /// <summary>

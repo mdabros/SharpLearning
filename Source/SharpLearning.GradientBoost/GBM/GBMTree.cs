@@ -83,6 +83,42 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         /// <summary>
+        // Variable importances are based on the work each variable does (error reduction).
+        // the scores at each split are scaled by the amount of data the node splits
+        // if a node splits on 30% of the total data it will add
+        // errorReduction * 0.3 to its importance score.
+        // Based on this explanation:
+        // http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
+        /// </summary>
+        /// <param name="rawVariableImportances"></param>
+        public void AddRawVariableImportances(double[] rawVariableImportances)
+        {
+            if(m_nodes.Count == 1) { return; } // no splits no importance
+
+            var rootError = m_nodes[0].LeftError;
+            var totalSampleCount = m_nodes[0].SampleCount;
+            AddRecursive(rawVariableImportances, m_nodes[1], rootError, totalSampleCount);
+        }
+
+        void AddRecursive(double[] rawFeatureImportances, GBMNode node, double previousError, int totalSampleCount)
+        {
+            var error = node.LeftError + node.RightError;
+            var reduction = previousError - error;
+            rawFeatureImportances[node.FeatureIndex] += reduction * reduction *
+                (double)node.SampleCount / (double)totalSampleCount;
+            
+            if(node.LeftIndex != -1)
+            {
+                AddRecursive(rawFeatureImportances, m_nodes[node.LeftIndex], error, totalSampleCount);
+            }
+
+            if (node.RightIndex != -1)
+            {
+                AddRecursive(rawFeatureImportances, m_nodes[node.RightIndex], error, totalSampleCount);
+            }
+        }
+
+        /// <summary>
         /// Traces the nodes in indexed order
         /// </summary>
         public void TraceNodesIndexed()

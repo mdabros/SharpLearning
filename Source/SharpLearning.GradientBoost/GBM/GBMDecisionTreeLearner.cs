@@ -90,20 +90,21 @@ namespace SharpLearning.GradientBoost.GBM
                 LeftError = rootValues.Cost,
                 RightError = rootValues.Cost,
                 LeftConstant = rootValues.BestConstant,
-                RightConstant = rootValues.BestConstant
+                RightConstant = rootValues.BestConstant,
+                SampleCount = rootValues.Samples
             };
             
             var nodes = new List<GBMNode> { root };
 
-            var stack = new Queue<GBMTreeCreationItem>(100);
-            stack.Enqueue(new GBMTreeCreationItem { Values = rootValues, InSample = inSample, Depth = 1 });
+            var queue = new Queue<GBMTreeCreationItem>(100);
+            queue.Enqueue(new GBMTreeCreationItem { Values = rootValues, InSample = inSample, Depth = 1 });
 
             var featureCount = observations.GetNumberOfColumns();
             var nodeIndex = 0;
 
-            while (stack.Count > 0)
+            while (queue.Count > 0)
             {
-                var parentItem = stack.Dequeue();
+                var parentItem = queue.Dequeue();
                 var parentInSample = parentItem.InSample;
 
                 var isLeaf = (parentItem.Depth >= m_maximumTreeDepth);
@@ -120,9 +121,9 @@ namespace SharpLearning.GradientBoost.GBM
                     
                 };
 
-                var bestSplitResult = new SplitResult { BestSplit = initBestSplit, Left = GBMSplitInfo.NewEmpty(), Right = GBMSplitInfo.NewEmpty() };
+                var bestSplitResult = new GBMSplitResult { BestSplit = initBestSplit, Left = GBMSplitInfo.NewEmpty(), Right = GBMSplitInfo.NewEmpty() };
                 
-                var splitResults = new ConcurrentBag<SplitResult>();
+                var splitResults = new ConcurrentBag<GBMSplitResult>();
 
                 //for (int i = 0; i < featureCount; i++)
                 //{
@@ -179,7 +180,7 @@ namespace SharpLearning.GradientBoost.GBM
 
                         var depth = parentItem.Depth + 1;
 
-                        stack.Enqueue(new GBMTreeCreationItem
+                        queue.Enqueue(new GBMTreeCreationItem
                         {
                             Values = bestSplitResult.Left.Copy(NodePositionType.Left),
                             InSample = leftInSample,
@@ -187,7 +188,7 @@ namespace SharpLearning.GradientBoost.GBM
                             Parent = node
                         });
 
-                        stack.Enqueue(new GBMTreeCreationItem
+                        queue.Enqueue(new GBMTreeCreationItem
                         {
                             Values = bestSplitResult.Right.Copy(NodePositionType.Right),
                             InSample = rightInSample,
@@ -202,7 +203,7 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         void SplitWorker(F64Matrix observations, double[] residuals, double[] targets, int[][] orderedElements, 
-            GBMTreeCreationItem parentItem, bool[] parentInSample, ConcurrentQueue<int> featureIndices, ConcurrentBag<SplitResult> results)
+            GBMTreeCreationItem parentItem, bool[] parentInSample, ConcurrentQueue<int> featureIndices, ConcurrentBag<GBMSplitResult> results)
         {
             int featureIndex = -1;
             while (featureIndices.TryDequeue(out featureIndex))
@@ -213,7 +214,7 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         void FindBestSplit(F64Matrix observations, double[] residuals, double[] targets, int[][] orderedElements, 
-            GBMTreeCreationItem parentItem, bool[] parentInSample, int featureIndex, ConcurrentBag<SplitResult> results)
+            GBMTreeCreationItem parentItem, bool[] parentInSample, int featureIndex, ConcurrentBag<GBMSplitResult> results)
         {
             var bestSplit = new GBMSplit
             {
@@ -223,7 +224,8 @@ namespace SharpLearning.GradientBoost.GBM
                 SplitValue = -1,
                 Cost = double.MaxValue,
                 LeftConstant = -1,
-                RightConstant = -1
+                RightConstant = -1,
+                SampleCount = parentItem.Values.Samples
             };
 
             var bestLeft = GBMSplitInfo.NewEmpty();
@@ -275,7 +277,7 @@ namespace SharpLearning.GradientBoost.GBM
 
             if(bestSplit.FeatureIndex != -1)
             {
-                results.Add(new SplitResult { BestSplit = bestSplit, Left = bestLeft, Right = bestRight });
+                results.Add(new GBMSplitResult { BestSplit = bestSplit, Left = bestLeft, Right = bestRight });
             }
         }
 
@@ -303,14 +305,5 @@ namespace SharpLearning.GradientBoost.GBM
                 parentItem.Parent.RightIndex = nodeIndex;
             }
         }
-    }
-
-
-
-    public class SplitResult
-    {
-        public GBMSplit BestSplit;
-        public GBMSplitInfo Left;
-        public GBMSplitInfo Right;
     }
 }

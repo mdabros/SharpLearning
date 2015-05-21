@@ -21,5 +21,6 @@ namespace SharpLearning.GradientBoost.GBM
         public int Depth;
         public int LeftIndex = -1;
         public int RightIndex = -1;
+        public int SampleCount;
     }
 }

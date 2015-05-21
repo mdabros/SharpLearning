@@ -58,8 +58,11 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="GBM\GBMGradientBoostClassificationLearnerTest.cs" />
+    <Compile Include="GBM\GBMGradientBoostClassificationModelTest.cs" />
     <Compile Include="GBM\GBMGradientBoostRegressorLearnerTest.cs" />
     <Compile Include="GBM\GBMDecisionTreeLearnerTest.cs" />
+    <Compile Include="GBM\GBMGradientBoostRegressorModelTest.cs" />
+    <Compile Include="GBM\GBMTreeTest.cs" />
     <Compile Include="Learners\ClassificationMultinomialDevianceGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionHuberGradientBoostLearnerTest.cs" />

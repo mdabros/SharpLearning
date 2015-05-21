@@ -13,6 +13,7 @@ namespace SharpLearning.GradientBoost.GBM
         public double RightConstant;
         public double Cost;
         public double CostImprovement;
+        public int SampleCount;
 
         public GBMNode GetNode()
         {
@@ -25,6 +26,7 @@ namespace SharpLearning.GradientBoost.GBM
                 LeftConstant = LeftConstant,
                 RightConstant = RightConstant,
                 Depth = Depth,
+                SampleCount = SampleCount
             };
         }
     }
