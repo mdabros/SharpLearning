@@ -1,4 +1,5 @@
 ﻿
+using System;
 namespace SharpLearning.GradientBoost.GBM
 {
     /// <summary>
@@ -10,6 +11,7 @@ namespace SharpLearning.GradientBoost.GBM
     //6. The constant c2 that best ts the right region
     /// </summary>
     /// 
+    [Serializable]
     public class GBMNode
     {
         public int FeatureIndex;

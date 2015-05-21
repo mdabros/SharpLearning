@@ -1,8 +1,10 @@
 ﻿using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace SharpLearning.GradientBoost.GBM
@@ -10,6 +12,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public sealed class GBMGradientBoostClassificationModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly GBMTree[][] m_trees;
@@ -143,6 +146,28 @@ namespace SharpLearning.GradientBoost.GBM
 
             return rawVariableImportance;
         }
+
+        /// <summary>
+        /// Loads a GBMGradientBoostClassificationModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static GBMGradientBoostClassificationModel Load(Func<TextReader> reader)
+        {
+            return new GenericXmlDataContractSerializer()
+                .Deserialize<GBMGradientBoostClassificationModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the GBMGradientBoostClassificationModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
+        }
+
 
         double BinaryPredict(double[] observation)
         {

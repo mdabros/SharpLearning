@@ -3,12 +3,15 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using SharpLearning.Common.Interfaces;
+using SharpLearning.InputOutput.Serialization;
+using System.IO;
 
 namespace SharpLearning.GradientBoost.GBM
 {
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     public sealed class GBMGradientBoostRegressorModel : IPredictor<double>
     {
         readonly GBMTree[] m_trees;
@@ -90,6 +93,27 @@ namespace SharpLearning.GradientBoost.GBM
             }
 
             return rawVariableImportance;
+        }
+
+        /// <summary>
+        /// Loads a GBMGradientBoostRegressorModel.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns></returns>
+        public static GBMGradientBoostRegressorModel Load(Func<TextReader> reader)
+        {
+            return new GenericXmlDataContractSerializer()
+                .Deserialize<GBMGradientBoostRegressorModel>(reader);
+        }
+
+        /// <summary>
+        /// Saves the GBMGradientBoostRegressorModel.
+        /// </summary>
+        /// <param name="writer"></param>
+        public void Save(Func<TextWriter> writer)
+        {
+            new GenericXmlDataContractSerializer()
+                .Serialize(this, writer);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// <summary>
     /// Binary decision tree based on GBMNodes.
     /// </summary>
+    [Serializable]
     public class GBMTree
     {
         readonly List<GBMNode> m_nodes;
