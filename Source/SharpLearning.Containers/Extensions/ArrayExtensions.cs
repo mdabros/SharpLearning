@@ -8,6 +8,20 @@ namespace SharpLearning.Containers.Extensions
     public static class ArrayExtensions
     {
         /// <summary>
+        /// Iterates over an array and perform the action at each element
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="a"></param>
+        public static void ForEach<T>(this T[] array, Action<T> a)
+        {
+            foreach (var value in array)
+            {
+                a(value);
+            }
+        }
+
+        /// <summary>
         /// Converts Nan to 0.0, NegativeInfinity to double.MinValue and PositiveInfinity to double.MaxValue
         /// </summary>
         /// <param name="value"></param>

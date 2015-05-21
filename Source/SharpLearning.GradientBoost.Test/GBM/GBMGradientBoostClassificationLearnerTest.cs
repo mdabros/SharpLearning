@@ -8,6 +8,7 @@ using SharpLearning.Metrics.Regression;
 using SharpLearning.Metrics.Classification;
 using System.Diagnostics;
 using System.Linq;
+using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.GradientBoost.Test.GBM
 {
@@ -33,6 +34,31 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
+        public void GBMGradientBoostClassificationLearner_Learn_Indexed()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+
+            var sut = new GBMGradientBoostClassificationLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GBMBinomialLoss(), 1);
+
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            indices.Shuffle(new Random(42));
+            indices = indices.Take((int)(targets.Length * 0.7))
+                .ToArray();
+
+            var model = sut.Learn(observations, targets, indices);
+            var predictions = model.Predict(observations);
+            var indexedPredictions = predictions.GetIndices(indices);
+            var indexedTargets = targets.GetIndices(indices);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(indexedTargets, indexedPredictions);
+
+            Assert.AreEqual(0.055555555555555552, actual);
+        }
+
+        [TestMethod]
         public void GBMGradientBoostClassificationLearner_Stochastic_Learn()
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
@@ -48,6 +74,31 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var actual = evaluator.Error(targets, predictions);
 
             Assert.AreEqual(0.076923076923076927, actual);
+        }
+
+        [TestMethod]
+        public void GBMGradientBoostClassificationLearner_Stochastic_Learn_Indexed()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+
+            var sut = new GBMGradientBoostClassificationLearner(30, 0.1, 3, 1, 1e-6, .5, new GBMBinomialLoss(), 1);
+
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            indices.Shuffle(new Random(42));
+            indices = indices.Take((int)(targets.Length * 0.7))
+                .ToArray();
+
+            var model = sut.Learn(observations, targets, indices);
+            var predictions = model.Predict(observations);
+            var indexedPredictions = predictions.GetIndices(indices);
+            var indexedTargets = targets.GetIndices(indices);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(indexedTargets, indexedPredictions);
+
+            Assert.AreEqual(0.055555555555555552, actual);
         }
 
         [TestMethod]
@@ -68,6 +119,32 @@ namespace SharpLearning.GradientBoost.Test.GBM
             Assert.AreEqual(0.018691588785046728, actual);
         }
 
+
+        [TestMethod]
+        public void GBMGradientBoostClassificationLearner_MultiClass_Learn_Indexed()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new GBMGradientBoostClassificationLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GBMBinomialLoss(), 1);
+
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            indices.Shuffle(new Random(42));
+            indices = indices.Take((int)(targets.Length * 0.7))
+                .ToArray();
+
+            var model = sut.Learn(observations, targets, indices);
+            var predictions = model.Predict(observations);
+            var indexedPredictions = predictions.GetIndices(indices);
+            var indexedTargets = targets.GetIndices(indices);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(indexedTargets, indexedPredictions);
+
+            Assert.AreEqual(0.0, actual);
+        }
+
         [TestMethod]
         public void GBMGradientBoostClassificationLearner_MultiClass_Stochastic_Learn()
         {
@@ -84,6 +161,31 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var actual = evaluator.Error(targets, predictions);
 
             Assert.AreEqual(0.046728971962616821, actual);
+        }
+
+        [TestMethod]
+        public void GBMGradientBoostClassificationLearner_MultiClass_Stochastic_Learn_Indexed()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new GBMGradientBoostClassificationLearner(30, 0.1, 3, 1, 1e-6, 0.5, new GBMBinomialLoss(), 1);
+
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            indices.Shuffle(new Random(42));
+            indices = indices.Take((int)(targets.Length * 0.7))
+                .ToArray();
+
+            var model = sut.Learn(observations, targets, indices);
+            var predictions = model.Predict(observations);
+            var indexedPredictions = predictions.GetIndices(indices);
+            var indexedTargets = targets.GetIndices(indices);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(indexedTargets, indexedPredictions);
+
+            Assert.AreEqual(0.013422818791946308, actual);
         }
     }
 }

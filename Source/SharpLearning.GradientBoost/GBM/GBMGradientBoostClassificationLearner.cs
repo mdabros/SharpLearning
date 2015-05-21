@@ -83,11 +83,25 @@ namespace SharpLearning.GradientBoost.GBM
         /// <returns></returns>
         public GBMGradientBoostClassificationModel Learn(F64Matrix observations, double[] targets)
         {
+            var allIndices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, allIndices);
+        }
+
+        /// <summary>
+        ///  Binomial deviance classification gradient boost learner. 
+        ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public GBMGradientBoostClassificationModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
             var rows = observations.GetNumberOfRows();
             var orderedElements = CreateOrderedElements(observations, rows);
 
-            var allIndices = Enumerable.Range(0, targets.Length).ToArray();
-            var inSample = targets.Select(t => true).ToArray();
+            var inSample = targets.Select(t => false).ToArray();
+            indices.ForEach(i => inSample[i] = true);
+            var workIndices = indices.ToArray();
 
             var uniqueTargets = targets.Distinct().OrderBy(v => v).ToArray();
             var initialLoss = m_loss.InitialLoss(targets, inSample);
@@ -137,8 +151,8 @@ namespace SharpLearning.GradientBoost.GBM
                     var sampleSize = targets.Length;
                     if (m_subSampleRatio != 1.0)
                     {
-                        sampleSize = (int)Math.Round(m_subSampleRatio * targets.Length);
-                        inSample = Sample(sampleSize, allIndices);
+                        sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
+                        inSample = Sample(sampleSize, workIndices, targets.Length);
                     }
 
                     var tree = m_learner.Learn(observations, oneVsAllTargets[itarget], residuals[itarget], orderedElements, inSample);
@@ -181,16 +195,16 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="sampleSize"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        bool[] Sample(int sampleSize, int[] indices)
+        bool[] Sample(int sampleSize, int[] indices, int allObservationCount)
         {
-            var inSample = new bool[indices.Length];
+            var inSample = new bool[allObservationCount];
             indices.Shuffle(m_random);
 
             for (int i = 0; i < sampleSize; i++)
             {
                 inSample[indices[i]] = true;
             }
-            
+
             return inSample;
         }
     }
