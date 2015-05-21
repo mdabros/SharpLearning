@@ -147,7 +147,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
 
             for (int i = 0; i < expected.Length; i++)
             {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);
+                Assert.AreEqual(expected[i], actual[i], 0.001);
             }
         }
 

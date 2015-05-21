@@ -76,10 +76,9 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="inSample">bool array containing the samples to use</param>
         /// <param name="s">sum</param>
         /// <param name="s2">sum of squares</param>
-        /// <param name="n">number of samples</param>
         /// <returns></returns>
         public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, 
-            int[][] orderedElements, bool[] inSample, int n)
+            int[][] orderedElements, bool[] inSample)
         {
             var rootValues = m_loss.InitSplit(targets, residuals, inSample);
 
