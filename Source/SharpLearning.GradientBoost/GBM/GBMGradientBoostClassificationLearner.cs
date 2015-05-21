@@ -1,4 +1,6 @@
-﻿using SharpLearning.Containers.Extensions;
+﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using System;
 using System.Linq;
@@ -13,7 +15,8 @@ namespace SharpLearning.GradientBoost.GBM
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
     /// </summary>
-    public class GBMGradientBoostClassificationLearner
+    public class GBMGradientBoostClassificationLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
+        ILearner<double>, ILearner<ProbabilityPrediction>
     {
         readonly GBMDecisionTreeLearner m_learner;
         readonly double m_learningRate;
@@ -167,6 +170,52 @@ namespace SharpLearning.GradientBoost.GBM
             }
 
             return new GBMGradientBoostClassificationModel(trees, uniqueTargets, m_learningRate, initialLoss, observations.GetNumberOfColumns());
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictor<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers;
+﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GBMGradientBoostClassificationModel
+    public sealed class GBMGradientBoostClassificationModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly GBMTree[][] m_trees;
         readonly double m_learningRate;
@@ -43,6 +44,16 @@ namespace SharpLearning.GradientBoost.GBM
             {
                 return MultiClassPredict(observation);
             }
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
         }
 
         /// <summary>

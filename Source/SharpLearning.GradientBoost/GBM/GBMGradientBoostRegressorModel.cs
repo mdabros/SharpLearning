@@ -2,13 +2,14 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using SharpLearning.Common.Interfaces;
 
 namespace SharpLearning.GradientBoost.GBM
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class GBMGradientBoostRegressorModel
+    public sealed class GBMGradientBoostRegressorModel : IPredictor<double>
     {
         readonly GBMTree[] m_trees;
         readonly double m_learningRate;
