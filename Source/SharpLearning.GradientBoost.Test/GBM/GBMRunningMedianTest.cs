@@ -20,6 +20,17 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
+        public void GBMMedianEstimator_Median_Reset_SingleSample()
+        {
+            var data = new double[] { 1.231 };
+
+            var sut = new GBMRunningMedian();
+
+            data.ForEach(v => sut.AddSample(v));
+            Assert.AreEqual(1.231, sut.Median(), 0.001);
+        }
+
+        [TestMethod]
         public void GBMMedianEstimator_Median_Reset_MediumSample()
         {
             var data = new double[] { 1.231, 4.123, 2.232, 232.45, 0.23, 23.423, 2355.12, 2.231, 324.2 };

@@ -36,55 +36,66 @@ namespace SharpLearning.GradientBoost.GBM
         {
             if(m_initialize)
             {
-                if(m_minHeap.Count == 0 && m_maxHeap.Count == 0)
-                {
-                    m_minHeap.Insert(sample);
-                }
-                else
-                {
-                    var minRoot = m_minHeap.Peek();
-                    if(minRoot < sample)
-                    {
-                        m_minHeap.RemoveRoot();
-                        m_minHeap.Insert(sample);
-                        m_maxHeap.Insert(minRoot);
-                    }
-                    else
-                    {
-                        m_maxHeap.Insert(sample);
-                    }
-                    m_initialize = false;
-                }
+                Initialize(sample);
             }
             else
             {
-                if(sample < m_maxHeap.Peek())
-                {
-                    m_maxHeap.Insert(sample);
-                }
-                else
-                {
-                    m_minHeap.Insert(sample);
-                }
-
-                var diff = Math.Abs(m_maxHeap.Count - m_minHeap.Count);
-
-                if(diff > 1)
-                {
-                    if(m_maxHeap.Count > m_minHeap.Count)
-                    {
-                        var root = m_maxHeap.RemoveRoot();
-                        m_minHeap.Insert(root);
-                    }
-                    else
-                    {
-                        var root = m_minHeap.RemoveRoot();
-                        m_maxHeap.Insert(root);
-                    }
-                }
+                AddNextSample(sample);
             }
 
         }
+
+        void Initialize(double sample)
+        {
+            if (m_minHeap.Count == 0 && m_maxHeap.Count == 0)
+            {
+                m_minHeap.Insert(sample);
+            }
+            else
+            {
+                var minRoot = m_minHeap.Peek();
+                if (minRoot < sample)
+                {
+                    m_minHeap.RemoveRoot();
+                    m_minHeap.Insert(sample);
+                    m_maxHeap.Insert(minRoot);
+                }
+                else
+                {
+                    m_maxHeap.Insert(sample);
+                }
+                m_initialize = false;
+            }
+        }
+
+        void AddNextSample(double sample)
+        {
+            if (sample < m_maxHeap.Peek())
+            {
+                m_maxHeap.Insert(sample);
+            }
+            else
+            {
+                m_minHeap.Insert(sample);
+            }
+
+            var diff = Math.Abs(m_maxHeap.Count - m_minHeap.Count);
+
+            if (diff > 1)
+            {
+                if (m_maxHeap.Count > m_minHeap.Count)
+                {
+                    var root = m_maxHeap.RemoveRoot();
+                    m_minHeap.Insert(root);
+                }
+                else
+                {
+                    var root = m_minHeap.RemoveRoot();
+                    m_maxHeap.Insert(root);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Return the current median
