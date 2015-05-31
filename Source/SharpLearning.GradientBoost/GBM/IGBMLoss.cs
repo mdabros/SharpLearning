@@ -25,6 +25,110 @@ namespace SharpLearning.GradientBoost.GBM
         double UpdatedLeafValue(double currentLeafValue, double[] targets, double[] predictions, bool[] inSample);
     }
 
+    public sealed class GBMQuantileLoss : IGBMLoss
+    {
+        readonly double m_alpha;
+
+        public GBMQuantileLoss(double alpha)
+        {
+            if (alpha <= 0.0 || alpha > 1.0) { throw new ArgumentException("Alpha must larger than 0.0 and at most 1.0"); }
+            m_alpha = alpha;
+        }
+
+        public double InitialLoss(double[] targets, bool[] inSample)
+        {
+            var values = new List<double>();
+            for (int i = 0; i < inSample.Length; i++)
+            {
+                if (inSample[i])
+                {
+                    values.Add(targets[i]);
+                }
+            }
+
+            return values.ToArray().ScoreAtPercentile(m_alpha);
+        }
+
+        public GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample)
+        {
+            var splitInfo = GBMSplitInfo.NewEmpty();
+
+            for (int i = 0; i < inSample.Length; i++)
+            {
+                if (inSample[i])
+                {
+                    var residual = residuals[i];
+                    var residual2 = residual * residual;
+
+                    splitInfo.Samples++;
+                    splitInfo.Sum += residual;
+                    splitInfo.SumOfSquares += residual2;
+                }
+            }
+
+            splitInfo.Cost = splitInfo.SumOfSquares - (splitInfo.Sum * splitInfo.Sum / (double)splitInfo.Samples);
+
+            return splitInfo;
+        }
+
+        public double NegativeGradient(double target, double prediction)
+        {
+            if (target > prediction)
+            {
+                return m_alpha;
+            }
+            else
+            {
+                return -(1.0 - m_alpha);
+            }
+
+        }
+
+        public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals)
+        {
+            for (int i = 0; i < residuals.Length; i++)
+            {
+                residuals[i] = NegativeGradient(targets[i], predictions[i]);
+            }
+        }
+
+        public void UpdateSplitConstants(GBMSplitInfo left, GBMSplitInfo right, double target, double residual)
+        {
+            var residual2 = residual * residual;
+
+            left.Samples++;
+            left.Sum += residual;
+            left.SumOfSquares += residual2;
+            left.Cost = left.SumOfSquares - (left.Sum * left.Sum / (double)left.Samples);
+
+            right.Samples--;
+            right.Sum -= residual;
+            right.SumOfSquares -= residual2;
+            right.Cost = right.SumOfSquares - (right.Sum * right.Sum / (double)right.Samples);
+        }
+
+        public bool UpdateLeafValues()
+        {
+            return true;
+        }
+
+        public double UpdatedLeafValue(double currentLeafValue, double[] targets, double[] predictions, bool[] inSample)
+        {
+            var values = new List<double>();
+
+            for (int i = 0; i < inSample.Length; i++)
+            {
+                if (inSample[i])
+                {
+                    values.Add(targets[i] - predictions[i]);
+                }
+            }
+
+            return values.ToArray().ScoreAtPercentile(m_alpha);
+        }
+    }
+
+
     public sealed class GBMAbsoluteLoss : IGBMLoss
     {
         public double InitialLoss(double[] targets, bool[] inSample)
