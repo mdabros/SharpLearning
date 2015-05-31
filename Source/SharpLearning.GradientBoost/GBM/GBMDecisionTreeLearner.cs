@@ -77,7 +77,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="s">sum</param>
         /// <param name="s2">sum of squares</param>
         /// <returns></returns>
-        public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, 
+        public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, double[] predictions,
             int[][] orderedElements, bool[] inSample)
         {
             var rootValues = m_loss.InitSplit(targets, residuals, inSample);
@@ -124,29 +124,33 @@ namespace SharpLearning.GradientBoost.GBM
                 
                 var splitResults = new ConcurrentBag<GBMSplitResult>();
 
-                //for (int i = 0; i < featureCount; i++)
-                //{
-                //    FindBestSplit(observations, residuals, targets, orderedElements,
-                //        parentItem, parentInSample, i, splitResults);
-
-                //}
-
-                var workItems = new ConcurrentQueue<int>();
-                for (int i = 0; i < featureCount; i++)
+                if(m_numberOfThreads == 1)
                 {
-                    workItems.Enqueue(i);
-                }
+                    for (int i = 0; i < featureCount; i++)
+                    {
+                        FindBestSplit(observations, residuals, targets, predictions, orderedElements,
+                            parentItem, parentInSample, i, splitResults);
 
-                var workers = new List<Action>();
-                for (int i = 0; i < m_numberOfThreads; i++)
+                    }
+                }
+                else
                 {
-                    workers.Add(() => SplitWorker(observations, residuals, targets, orderedElements, parentItem,
-                        parentInSample, workItems, splitResults));
+                    var workItems = new ConcurrentQueue<int>();
+                    for (int i = 0; i < featureCount; i++)
+                    {
+                        workItems.Enqueue(i);
+                    }
+
+                    var workers = new List<Action>();
+                    for (int i = 0; i < m_numberOfThreads; i++)
+                    {
+                        workers.Add(() => SplitWorker(observations, residuals, targets, predictions, orderedElements, parentItem,
+                            parentInSample, workItems, splitResults));
+                    }
+
+                    m_threadedWorker = new WorkerRunner(workers);
+                    m_threadedWorker.Run();
                 }
-
-                m_threadedWorker = new WorkerRunner(workers);
-                m_threadedWorker.Run();
-
                 
                 if (splitResults.Count != 0)
                 {
@@ -195,24 +199,57 @@ namespace SharpLearning.GradientBoost.GBM
                             Parent = node
                         });
                     }
+                    else
+                    {
+                        if(m_loss.UpdateLeafValues())
+                        {
+                            var leftInSample = new bool[parentInSample.Length];
+                            var rightInSample = new bool[parentInSample.Length];
+                            var featureIndices = orderedElements[bestSplitResult.BestSplit.FeatureIndex];
+
+                            for (int i = 0; i < parentInSample.Length; i++)
+                            {
+                                if (i < bestSplitResult.BestSplit.SplitIndex)
+                                {
+                                    leftInSample[featureIndices[i]] = parentInSample[featureIndices[i]];
+                                }
+                                else
+                                {
+                                    rightInSample[featureIndices[i]] = parentInSample[featureIndices[i]];
+                                }
+                            }
+
+                            if (node.LeftIndex == -1)
+                            {
+                                node.LeftConstant = m_loss.UpdatedLeafValue(node.LeftConstant,
+                                    targets, predictions, leftInSample);
+                            }
+
+                            if (node.RightIndex == -1)
+                            {
+                                node.RightConstant = m_loss.UpdatedLeafValue(node.RightConstant,
+                                    targets, predictions, rightInSample);
+                            }
+                        }
+                    }
                 }
             }
 
             return new GBMTree(nodes);
         }
 
-        void SplitWorker(F64Matrix observations, double[] residuals, double[] targets, int[][] orderedElements, 
+        void SplitWorker(F64Matrix observations, double[] residuals, double[] targets, double[] predictions, int[][] orderedElements, 
             GBMTreeCreationItem parentItem, bool[] parentInSample, ConcurrentQueue<int> featureIndices, ConcurrentBag<GBMSplitResult> results)
         {
             int featureIndex = -1;
             while (featureIndices.TryDequeue(out featureIndex))
             {
-                FindBestSplit(observations, residuals, targets, orderedElements, 
+                FindBestSplit(observations, residuals, targets, predictions, orderedElements, 
                     parentItem, parentInSample, featureIndex, results);
             }
         }
 
-        void FindBestSplit(F64Matrix observations, double[] residuals, double[] targets, int[][] orderedElements, 
+        void FindBestSplit(F64Matrix observations, double[] residuals, double[] targets, double[] predictions, int[][] orderedElements, 
             GBMTreeCreationItem parentItem, bool[] parentInSample, int featureIndex, ConcurrentBag<GBMSplitResult> results)
         {
             var bestSplit = new GBMSplit

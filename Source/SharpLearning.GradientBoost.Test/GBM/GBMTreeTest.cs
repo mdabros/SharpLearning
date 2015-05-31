@@ -32,7 +32,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             }
 
             var sut = new GBMDecisionTreeLearner(10);
-            var tree = sut.Learn(observations, targets, targets, orderedElements, inSample);
+            var tree = sut.Learn(observations, targets, targets, targets, orderedElements, inSample);
 
             var actual = new double[observations.GetNumberOfColumns()];
             tree.AddRawVariableImportances(actual);
