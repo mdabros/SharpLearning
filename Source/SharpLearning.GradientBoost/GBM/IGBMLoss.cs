@@ -14,7 +14,9 @@ namespace SharpLearning.GradientBoost.GBM
         GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample);
 
         double NegativeGradient(double target, double prediction);
-        
+
+        void UpdateResiduals(double[] targets, double[] predictions, double[] residuals);
+
         void UpdateSplitConstants(GBMSplitInfo left, GBMSplitInfo right, 
             double target, double residual);
 
@@ -71,6 +73,14 @@ namespace SharpLearning.GradientBoost.GBM
             else
             {
                 return -1.0;
+            }
+        }
+
+        public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals)
+        {
+            for (int i = 0; i < residuals.Length; i++)
+            {
+                residuals[i] = NegativeGradient(targets[i], predictions[i]);
             }
         }
 
@@ -157,6 +167,14 @@ namespace SharpLearning.GradientBoost.GBM
             return target - prediction;
         }
 
+        public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals)
+        {
+            for (int i = 0; i < residuals.Length; i++)
+            {
+                residuals[i] = NegativeGradient(targets[i], predictions[i]);
+            }
+        }
+
         public void UpdateSplitConstants(GBMSplitInfo left, GBMSplitInfo right, double target, double residual)
         {
             var residual2 = residual * residual;
@@ -233,6 +251,14 @@ namespace SharpLearning.GradientBoost.GBM
         public double NegativeGradient(double target, double prediction)
         {
             return (target - 1.0 / (1.0 + Math.Exp(-prediction))).NanToNum();
+        }
+
+        public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals)
+        {
+            for (int i = 0; i < residuals.Length; i++)
+            {
+                residuals[i] = NegativeGradient(targets[i], predictions[i]);
+            }
         }
 
         public void UpdateSplitConstants(GBMSplitInfo left, GBMSplitInfo right, double target, double residual)

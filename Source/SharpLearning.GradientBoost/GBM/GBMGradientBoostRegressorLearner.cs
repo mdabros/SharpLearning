@@ -118,10 +118,7 @@ namespace SharpLearning.GradientBoost.GBM
 
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
-                for (int j = 0; j < targets.Length; j++)
-                {
-                    residuals[j] = m_loss.NegativeGradient(targets[j], predictions[j]);
-                }
+                m_loss.UpdateResiduals(targets, predictions, residuals);
 
                 var sampleSize = targets.Length;
                 if (m_subSampleRatio != 1.0)
