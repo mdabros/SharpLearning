@@ -57,7 +57,11 @@
     <Compile Include="GBM\GBMSplitResult.cs" />
     <Compile Include="GBM\GBMTree.cs" />
     <Compile Include="GBM\GBMTreeCreationItem.cs" />
-    <Compile Include="GBM\IGBMLoss.cs" />
+    <Compile Include="GBM\LossFunctions\GBMAbsoluteLoss.cs" />
+    <Compile Include="GBM\LossFunctions\GBMBinomialLoss.cs" />
+    <Compile Include="GBM\LossFunctions\GBMQuantileLoss.cs" />
+    <Compile Include="GBM\LossFunctions\GBMSquaredLoss.cs" />
+    <Compile Include="GBM\LossFunctions\IGBMLoss.cs" />
     <Compile Include="Learners\ClassificationGradientBoostLearner.cs" />
     <Compile Include="Learners\ClassificationMultinomialDevianceGradientBoostLearner.cs" />
     <Compile Include="Learners\RegressionHuberGradientBoostLearner.cs" />
