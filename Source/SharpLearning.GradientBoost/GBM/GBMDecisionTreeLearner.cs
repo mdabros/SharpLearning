@@ -81,6 +81,13 @@ namespace SharpLearning.GradientBoost.GBM
             int[][] orderedElements, bool[] inSample)
         {
             var rootValues = m_loss.InitSplit(targets, residuals, inSample);
+            var bestConstant = rootValues.BestConstant;
+
+            if(m_loss.UpdateLeafValues())
+            {
+                bestConstant = m_loss.UpdatedLeafValue(bestConstant,
+                                    targets, predictions, inSample);
+            }
 
             var root = new GBMNode()
             {
@@ -88,8 +95,8 @@ namespace SharpLearning.GradientBoost.GBM
                 SplitValue = -1,
                 LeftError = rootValues.Cost,
                 RightError = rootValues.Cost,
-                LeftConstant = rootValues.BestConstant,
-                RightConstant = rootValues.BestConstant,
+                LeftConstant = bestConstant,
+                RightConstant = bestConstant,
                 SampleCount = rootValues.Samples
             };
             
@@ -181,6 +188,15 @@ namespace SharpLearning.GradientBoost.GBM
                             }
                         }
 
+                        if (m_loss.UpdateLeafValues())
+                        {
+                            node.LeftConstant = m_loss.UpdatedLeafValue(node.LeftConstant,
+                                targets, predictions, leftInSample);
+
+                            node.RightConstant = m_loss.UpdatedLeafValue(node.RightConstant,
+                                targets, predictions, rightInSample);
+                        }
+
                         var depth = parentItem.Depth + 1;
 
                         queue.Enqueue(new GBMTreeCreationItem
@@ -201,11 +217,12 @@ namespace SharpLearning.GradientBoost.GBM
                     }
                     else
                     {
-                        if(m_loss.UpdateLeafValues())
+                        if (m_loss.UpdateLeafValues())
                         {
                             var leftInSample = new bool[parentInSample.Length];
                             var rightInSample = new bool[parentInSample.Length];
                             var featureIndices = orderedElements[bestSplitResult.BestSplit.FeatureIndex];
+
 
                             for (int i = 0; i < parentInSample.Length; i++)
                             {
@@ -219,17 +236,11 @@ namespace SharpLearning.GradientBoost.GBM
                                 }
                             }
 
-                            if (node.LeftIndex == -1)
-                            {
                                 node.LeftConstant = m_loss.UpdatedLeafValue(node.LeftConstant,
                                     targets, predictions, leftInSample);
-                            }
 
-                            if (node.RightIndex == -1)
-                            {
                                 node.RightConstant = m_loss.UpdatedLeafValue(node.RightConstant,
                                     targets, predictions, rightInSample);
-                            }
                         }
                     }
                 }

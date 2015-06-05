@@ -146,7 +146,7 @@ namespace SharpLearning.GradientBoost.GBM
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
                 {
-                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget], residuals[itarget]);
+                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget], residuals[itarget], inSample);
 
                     var sampleSize = targets.Length;
                     if (m_subSampleRatio != 1.0)

@@ -1,9 +1,7 @@
 ﻿using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.Metrics.Regression;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.GradientBoost.GBM
@@ -118,7 +116,7 @@ namespace SharpLearning.GradientBoost.GBM
 
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
-                m_loss.UpdateResiduals(targets, predictions, residuals);
+                m_loss.UpdateResiduals(targets, predictions, residuals, inSample);
 
                 var sampleSize = targets.Length;
                 if (m_subSampleRatio != 1.0)

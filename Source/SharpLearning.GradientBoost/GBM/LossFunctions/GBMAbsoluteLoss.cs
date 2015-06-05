@@ -9,7 +9,7 @@ namespace SharpLearning.GradientBoost.GBM
 {
     /// <summary>
     /// Least absolute deviation (LAD) loss function. LAD gives equal equal emphasis to all observations. 
-    /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression. 
+    /// This makes LAD robust against outliers.
     /// http://en.wikipedia.org/wiki/Least_absolute_deviations
     /// </summary>
     public sealed class GBMAbsoluteLoss : IGBMLoss
@@ -97,7 +97,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
-        public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals)
+        public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals, bool[] inSample)
         {
             for (int i = 0; i < residuals.Length; i++)
             {

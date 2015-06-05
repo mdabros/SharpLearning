@@ -28,7 +28,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.18552905669232231, actual);
+            Assert.AreEqual(0.18540395091912656, actual);
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var evaluator = new MeanAbsolutErrorRegressionMetric();
             var actual = evaluator.Error(indexedTargets, indexedPredictions);
 
-            Assert.AreEqual(1.1444476695382022, actual, 0.0001);
+            Assert.AreEqual(1.1345507481360888, actual, 0.0001);
         }
 
         [TestMethod]
@@ -96,7 +96,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.10767306776591587, actual, 0.0001);
+            Assert.AreEqual(0.10430373107075828, actual, 0.0001);
         }
 
         [TestMethod]
@@ -121,7 +121,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var evaluator = new MeanAbsolutErrorRegressionMetric();
             var actual = evaluator.Error(indexedTargets, indexedPredictions);
 
-            Assert.AreEqual(1.1444476695382022, actual, 0.0001);
+            Assert.AreEqual(1.1345507481360888, actual, 0.0001);
         }
     }
 }

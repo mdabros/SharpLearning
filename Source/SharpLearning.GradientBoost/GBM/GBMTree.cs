@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.GradientBoost.GBM
 {
@@ -148,8 +146,21 @@ namespace SharpLearning.GradientBoost.GBM
 
                 foreach (var node in nodes)
                 {
-                    text += string.Format("{0:0.000} (L:{1:0.000} R:{2:0.000} I:{3}) ",
-                        node.Node.SplitValue, node.Node.LeftConstant, node.Node.RightConstant, node.Node.FeatureIndex);
+                    text += "(";
+                    text += string.Format("{0:0.000} I:{1} ",
+                        node.Node.SplitValue, node.Node.FeatureIndex);
+
+                    if(node.Node.LeftIndex == -1)
+                    {
+                        text += string.Format("L: {0:0.000} ", node.Node.LeftConstant);
+                    }
+
+                    if (node.Node.RightIndex == -1)
+                    {
+                        text += string.Format("R: {0:0.000} ", node.Node.RightConstant);
+                    }
+
+                    text += ")";
                 }
                 Trace.WriteLine(text);
             }

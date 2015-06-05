@@ -59,6 +59,7 @@
     <Compile Include="GBM\GBMTreeCreationItem.cs" />
     <Compile Include="GBM\LossFunctions\GBMAbsoluteLoss.cs" />
     <Compile Include="GBM\LossFunctions\GBMBinomialLoss.cs" />
+    <Compile Include="GBM\LossFunctions\GBMHuberLoss.cs" />
     <Compile Include="GBM\LossFunctions\GBMQuantileLoss.cs" />
     <Compile Include="GBM\LossFunctions\GBMSquaredLoss.cs" />
     <Compile Include="GBM\LossFunctions\IGBMLoss.cs" />

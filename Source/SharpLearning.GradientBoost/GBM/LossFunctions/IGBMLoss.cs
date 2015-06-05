@@ -37,7 +37,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
-        void UpdateResiduals(double[] targets, double[] predictions, double[] residuals);
+        void UpdateResiduals(double[] targets, double[] predictions, double[] residuals, bool[] inSample);
 
         /// <summary>
         /// Update left and right split values based on the target and residual
