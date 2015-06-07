@@ -66,6 +66,7 @@
     <Compile Include="GBM\GBMDecisionTreeLearnerTest.cs" />
     <Compile Include="GBM\GBMGradientBoostRegressorModelTest.cs" />
     <Compile Include="GBM\GBMTreeTest.cs" />
+    <Compile Include="GBM\LossFunctions\GBMAbsoluteLossTest.cs" />
     <Compile Include="GBM\LossFunctions\GBMHuberLossTest.cs" />
     <Compile Include="Learners\ClassificationMultinomialDevianceGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearnerTest.cs" />
