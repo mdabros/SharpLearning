@@ -10,7 +10,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
     /// </summary>
-    public class ClassificationBinomialGradientBoostLearner : GBMGradientBoostClassificationLearner
+    public class ClassificationBinomialGradientBoostLearner : ClassificationGradientBoostLearner
     {
       
         /// <summary>

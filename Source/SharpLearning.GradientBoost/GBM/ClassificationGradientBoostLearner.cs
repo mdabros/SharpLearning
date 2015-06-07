@@ -15,7 +15,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
     /// </summary>
-    public class GBMGradientBoostClassificationLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
+    public class ClassificationGradientBoostLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
         ILearner<double>, ILearner<ProbabilityPrediction>
     {
         readonly GBMDecisionTreeLearner m_learner;
@@ -40,7 +40,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public GBMGradientBoostClassificationLearner(int iterations, double learningRate, int maximumTreeDepth,
+        public ClassificationGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
             int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGBMLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -70,7 +70,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
-        public GBMGradientBoostClassificationLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
+        public ClassificationGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
                 subSampleRatio, new GBMBinomialLoss(), Environment.ProcessorCount)

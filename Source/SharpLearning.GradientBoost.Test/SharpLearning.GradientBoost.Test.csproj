@@ -58,7 +58,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="GBM\ClassificationBinomialGradientBoostLearnerTest.cs" />
-    <Compile Include="GBM\GBMGradientBoostClassificationLearnerTest.cs" />
+    <Compile Include="GBM\ClassificationGradientBoostLearnerTest.cs" />
     <Compile Include="GBM\GBMGradientBoostClassificationModelTest.cs" />
     <Compile Include="GBM\GBMHuberGradientBoostRegressorLearnerTest.cs" />
     <Compile Include="GBM\GBMQuantileGradientBoostRegressorLearnerTest.cs" />
