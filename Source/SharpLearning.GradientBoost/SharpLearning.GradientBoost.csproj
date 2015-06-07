@@ -52,7 +52,7 @@
     <Compile Include="GBM\RegressionHuberLossGradientBoostLearner.cs" />
     <Compile Include="GBM\RegressionAbsoluteLossGradientBoostLearner.cs" />
     <Compile Include="GBM\RegressionSquareLossGradientBoostLearner.cs" />
-    <Compile Include="GBM\GBMGradientBoostRegressorLearner.cs" />
+    <Compile Include="GBM\RegressionGradientBoostLearner.cs" />
     <Compile Include="GBM\ClassificationGradientBoostModel.cs" />
     <Compile Include="GBM\GBMGradientBoostRegressorModel.cs" />
     <Compile Include="GBM\GBMTree\GBMNode.cs" />

@@ -22,7 +22,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new GBMGradientBoostRegressorLearner();
+            var learner = new RegressionGradientBoostLearner();
             var sut = learner.Learn(observations, targets);
 
             var predictions = new double[rows];
@@ -45,7 +45,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new GBMGradientBoostRegressorLearner();
+            var learner = new RegressionGradientBoostLearner();
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -65,7 +65,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
-            var learner = new GBMGradientBoostRegressorLearner();
+            var learner = new RegressionGradientBoostLearner();
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
@@ -89,7 +89,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var learner = new GBMGradientBoostRegressorLearner();
+            var learner = new RegressionGradientBoostLearner();
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();
@@ -110,7 +110,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var learner = new GBMGradientBoostRegressorLearner(2);
+            var learner = new RegressionGradientBoostLearner(2);
             var sut = learner.Learn(observations, targets);
 
             var writer = new StringWriter();

@@ -11,7 +11,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
     /// </summary>
-    public class RegressionQuantileLossGradientBoostLearner : GBMGradientBoostRegressorLearner
+    public class RegressionQuantileLossGradientBoostLearner : RegressionGradientBoostLearner
     {
         /// <summary>
         /// <summary>

@@ -78,7 +78,6 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         /// <summary>
-        ///  Binomial deviance classification gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="observations"></param>
@@ -91,7 +90,6 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         /// <summary>
-        ///  Binomial deviance classification gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="observations"></param>

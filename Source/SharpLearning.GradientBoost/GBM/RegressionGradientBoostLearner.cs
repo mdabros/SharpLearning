@@ -15,7 +15,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
     /// </summary>
-    public class GBMGradientBoostRegressorLearner : IIndexedLearner<double>, ILearner<double>
+    public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<double>
     {
         readonly GBMDecisionTreeLearner m_learner;
         readonly double m_learningRate;
@@ -26,7 +26,7 @@ namespace SharpLearning.GradientBoost.GBM
 
         /// <summary>
         /// <summary>
-        ///  Least squares (LS) regression gradient boost learner. 
+        ///  Base regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -40,7 +40,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public GBMGradientBoostRegressorLearner(int iterations, double learningRate, int maximumTreeDepth,
+        public RegressionGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
             int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGBMLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -59,7 +59,7 @@ namespace SharpLearning.GradientBoost.GBM
 
         /// <summary>
         /// <summary>
-        ///  Least squares (LS) regression gradient boost learner. 
+        ///  Base regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -71,7 +71,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
-        public GBMGradientBoostRegressorLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
+        public RegressionGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
                 subSampleRatio, new GBMSquaredLoss(), Environment.ProcessorCount)
@@ -79,7 +79,6 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         /// <summary>
-        ///  Least squares (LS) regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous tree
         /// </summary>
         /// <param name="observations"></param>
@@ -93,7 +92,6 @@ namespace SharpLearning.GradientBoost.GBM
 
 
         /// <summary>
-        ///  Least squares (LS) regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous tree
         /// </summary>
         /// <param name="observations"></param>
