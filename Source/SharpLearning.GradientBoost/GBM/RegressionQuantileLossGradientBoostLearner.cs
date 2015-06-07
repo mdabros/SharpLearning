@@ -15,7 +15,7 @@ namespace SharpLearning.GradientBoost.GBM
     {
         /// <summary>
         /// <summary>
-        ///  Least absolute deviation (LAD) regression gradient boost learner. 
+        ///  Quantile regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -40,7 +40,7 @@ namespace SharpLearning.GradientBoost.GBM
 
         /// <summary>
         /// <summary>
-        ///  Least absolute deviation (LAD) regression gradient boost learner.
+        ///  Quantile regression gradient boost learner.
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
