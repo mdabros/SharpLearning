@@ -26,7 +26,7 @@ namespace SharpLearning.GradientBoost.GBM
         readonly IGBMLoss m_loss;
 
         /// <summary>
-        ///  Binomial deviance classification gradient boost learner. 
+        ///  Base classification gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -58,7 +58,7 @@ namespace SharpLearning.GradientBoost.GBM
         }
 
         /// <summary>
-        ///  Binomial deviance classification gradient boost learner. 
+        ///  Base classification gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
