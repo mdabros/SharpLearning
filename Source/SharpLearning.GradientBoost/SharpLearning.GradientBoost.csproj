@@ -68,24 +68,14 @@
     <Compile Include="GBM\LossFunctions\GBMQuantileLoss.cs" />
     <Compile Include="GBM\LossFunctions\GBMSquaredLoss.cs" />
     <Compile Include="GBM\LossFunctions\IGBMLoss.cs" />
-    <Compile Include="Learners\ClassificationGradientBoostLearner.cs" />
-    <Compile Include="Learners\ClassificationMultinomialDevianceGradientBoostLearner.cs" />
-    <Compile Include="Learners\RegressionHuberGradientBoostLearner.cs" />
-    <Compile Include="Learners\RegressionLeastSquaresGradientBoostLearner.cs" />
-    <Compile Include="Learners\RegressionLeastAbsoluteDeviationGradientBoostLearner.cs" />
-    <Compile Include="Learners\RegressionGradientBoostLearner.cs" />
-    <Compile Include="LossFunctions\HuberLossFunction.cs" />
-    <Compile Include="LossFunctions\IClassificationLossFunction.cs" />
-    <Compile Include="LossFunctions\ILossFunction.cs" />
-    <Compile Include="LossFunctions\LeastAbsoluteErrorLossFunction.cs" />
-    <Compile Include="LossFunctions\LeastSquaresLossFunction.cs" />
-    <Compile Include="LossFunctions\MultinomialDevianceClassificationLossFunction.cs" />
-    <Compile Include="Models\ClassificationGradientBoostModel.cs" />
-    <Compile Include="Models\RegressionGradientBoostModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSamplingWithoutReplacement.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Learners\" />
+    <Folder Include="LossFunctions\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>

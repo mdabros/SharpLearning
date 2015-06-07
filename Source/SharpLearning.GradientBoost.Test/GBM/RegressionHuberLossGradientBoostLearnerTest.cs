@@ -8,7 +8,6 @@ using SharpLearning.Metrics.Regression;
 using System.Linq;
 using SharpLearning.Containers.Extensions;
 using System.Diagnostics;
-using SharpLearning.GradientBoost.Learners;
 
 namespace SharpLearning.GradientBoost.Test.GBM
 {
