@@ -124,15 +124,19 @@ namespace SharpLearning.GradientBoost.Learners
                 if (m_subSampleRatio != 1.0)
                 {
                     sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
-                    inSample = Sample(sampleSize, workIndices, targets.Length);
+                    var currentInSample = Sample(sampleSize, workIndices, targets.Length);
+                    
+                    trees[iteration] = m_learner.Learn(observations, targets, residuals,
+                        predictions, orderedElements, currentInSample);
+
+                }
+                else
+                {
+                    trees[iteration] = m_learner.Learn(observations, targets, residuals,
+                        predictions, orderedElements, inSample);
                 }
 
-                var tree = m_learner.Learn(observations, targets, residuals, 
-                    predictions, orderedElements, inSample);
-                
-                trees[iteration] = tree;
-
-                var predict = tree.Predict(observations);
+                var predict = trees[iteration].Predict(observations);
                 for (int i = 0; i < predict.Length; i++)
                 {
                     predictions[i] += m_learningRate * predict[i];
