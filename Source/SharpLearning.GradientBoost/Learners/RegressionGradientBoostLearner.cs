@@ -47,11 +47,12 @@ namespace SharpLearning.GradientBoost.Learners
             int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGradientBoostLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
+            if (learningRate <= 0.0) { throw new ArgumentException("learning rate must be larger than 0"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (subSampleRatio <= 0.0 || subSampleRatio > 1.0) { throw new ArgumentException("subSampleRatio must be larger than 0.0 and at max 1.0"); }
-            if (loss == null) { throw new ArgumentException("loss"); }
+            if (loss == null) { throw new ArgumentNullException("loss"); }
 
             m_iterations = iterations;
             m_learningRate = learningRate;

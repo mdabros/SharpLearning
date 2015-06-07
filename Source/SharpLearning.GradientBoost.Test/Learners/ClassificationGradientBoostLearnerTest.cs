@@ -17,176 +17,66 @@ namespace SharpLearning.GradientBoost.Test.Learners
     public class ClassificationGradientBoostLearnerTest
     {
         [TestMethod]
-        public void ClassificationGradientBoostLearner_Learn()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_Iterations()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-
-            var sut = new ClassificationGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
-            var model = sut.Learn(observations, targets);
-
-            var predictions = model.Predict(observations);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(targets, predictions);
-
-            Assert.AreEqual(0.038461538461538464, actual);
+            new ClassificationGradientBoostLearner(0);
         }
 
         [TestMethod]
-        public void ClassificationGradientBoostLearner_Learn_Indexed()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_LearningRate()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
-
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
-            indices.Shuffle(new Random(42));
-            indices = indices.Take((int)(targets.Length * 0.7))
-                .ToArray();
-
-            var model = sut.Learn(observations, targets, indices);
-            var predictions = model.Predict(observations);
-            var indexedPredictions = predictions.GetIndices(indices);
-            var indexedTargets = targets.GetIndices(indices);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(indexedTargets, indexedPredictions);
-
-            Assert.AreEqual(0.055555555555555552, actual);
+            new ClassificationGradientBoostLearner(1, 0);
         }
 
         [TestMethod]
-        public void ClassificationGradientBoostLearner_Stochastic_Learn()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_MaximumTreeDepth()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-
-            var sut = new ClassificationGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .3, new GradientBoostBinomialLoss(), 1);
-            var model = sut.Learn(observations, targets);
-
-            var predictions = model.Predict(observations);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(targets, predictions);
-
-            Assert.AreEqual(0.076923076923076927, actual);
+            new ClassificationGradientBoostLearner(1, 1, -1);
         }
 
         [TestMethod]
-        public void ClassificationGradientBoostLearner_Stochastic_Learn_Indexed()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_MinimumSplitSize()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, .5, new GradientBoostBinomialLoss(), 1);
-
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
-            indices.Shuffle(new Random(42));
-            indices = indices.Take((int)(targets.Length * 0.7))
-                .ToArray();
-
-            var model = sut.Learn(observations, targets, indices);
-            var predictions = model.Predict(observations);
-            var indexedPredictions = predictions.GetIndices(indices);
-            var indexedTargets = targets.GetIndices(indices);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(indexedTargets, indexedPredictions);
-
-            Assert.AreEqual(0.055555555555555552, actual);
+            new ClassificationGradientBoostLearner(1, 1, 1, 0);
         }
 
         [TestMethod]
-        public void ClassificationGradientBoostLearner_MultiClass_Learn()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_MinimumInformationGain()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
-            var model = sut.Learn(observations, targets);
-
-            var predictions = model.Predict(observations);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(targets, predictions);
-
-            Assert.AreEqual(0.018691588785046728, actual);
-        }
-
-
-        [TestMethod]
-        public void ClassificationGradientBoostLearner_MultiClass_Learn_Indexed()
-        {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
-
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
-            indices.Shuffle(new Random(42));
-            indices = indices.Take((int)(targets.Length * 0.7))
-                .ToArray();
-
-            var model = sut.Learn(observations, targets, indices);
-            var predictions = model.Predict(observations);
-            var indexedPredictions = predictions.GetIndices(indices);
-            var indexedTargets = targets.GetIndices(indices);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(indexedTargets, indexedPredictions);
-
-            Assert.AreEqual(0.0, actual);
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 0);
         }
 
         [TestMethod]
-        public void ClassificationGradientBoostLearner_MultiClass_Stochastic_Learn()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_SubSampleRatio_TooLow()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 0.5, new GradientBoostBinomialLoss(), 1);
-            var model = sut.Learn(observations, targets);
-
-            var predictions = model.Predict(observations);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(targets, predictions);
-
-            Assert.AreEqual(0.046728971962616821, actual);
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 0.0);
         }
 
         [TestMethod]
-        public void ClassificationGradientBoostLearner_MultiClass_Stochastic_Learn_Indexed()
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_SubSampleRatio_TooHigh()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.1);
+        }
 
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 0.5, new GradientBoostBinomialLoss(), 1);
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ClassificationGradientBoostLearner_Constructor_Loss()
+        {
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, null, 1);
+        }
 
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
-            indices.Shuffle(new Random(42));
-            indices = indices.Take((int)(targets.Length * 0.7))
-                .ToArray();
-
-            var model = sut.Learn(observations, targets, indices);
-            var predictions = model.Predict(observations);
-            var indexedPredictions = predictions.GetIndices(indices);
-            var indexedTargets = targets.GetIndices(indices);
-
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(indexedTargets, indexedPredictions);
-
-            Assert.AreEqual(0.013422818791946308, actual);
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_SubSampleRatio_NumberOfThreads()
+        {
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, new GradientBoostSquaredLoss(), 0);
         }
     }
 }
