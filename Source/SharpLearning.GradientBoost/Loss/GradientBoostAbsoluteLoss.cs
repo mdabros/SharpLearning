@@ -102,7 +102,10 @@ namespace SharpLearning.GradientBoost.Loss
         {
             for (int i = 0; i < residuals.Length; i++)
             {
-                residuals[i] = NegativeGradient(targets[i], predictions[i]);
+                if(inSample[i])
+                {
+                    residuals[i] = NegativeGradient(targets[i], predictions[i]);
+                }
             }
         }
 

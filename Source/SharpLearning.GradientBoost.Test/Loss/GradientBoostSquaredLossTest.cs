@@ -44,7 +44,7 @@ namespace SharpLearning.GradientBoost.Test.Loss
 
             sut.UpdateResiduals(targets, predictions, actual, inSample);
 
-            var expected = new double[] { -4, -3, -2, -1, 0, 1, 2, 3, 4 };
+            var expected = new double[] { -4, 0.0, -2, 0.0, 0, 0.0, 2, 0.0, 4 };
             CollectionAssert.AreEqual(expected, actual);
         }
 

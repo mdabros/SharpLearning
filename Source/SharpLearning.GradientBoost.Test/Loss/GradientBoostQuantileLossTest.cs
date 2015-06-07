@@ -49,7 +49,7 @@ namespace SharpLearning.GradientBoost.Test.Loss
 
             sut.UpdateResiduals(targets, predictions, actual, inSample);
 
-            var expected = new double[] { -0.1, -0.1, -0.1, -0.1, -0.1, 0.9, 0.9, 0.9, 0.9 };
+            var expected = new double[] { -0.1, 0.0, -0.1, 0.0, -0.1, 0.0, 0.9, 0.0, 0.9 };
 
             Assert.AreEqual(expected.Length, actual.Length);
             for (int i = 0; i < expected.Length; i++)
