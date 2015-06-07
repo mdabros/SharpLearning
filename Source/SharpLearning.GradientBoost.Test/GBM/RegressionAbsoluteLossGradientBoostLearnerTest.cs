@@ -11,16 +11,16 @@ using SharpLearning.Containers.Extensions;
 namespace SharpLearning.GradientBoost.Test.GBM
 {
     [TestClass]
-    public class GBMLeastAbsoluteDeviationGradientBoostRegressorLearnerTest
+    public class RegressionAbsoluteLossGradientBoostLearnerTest
     {
         [TestMethod]
-        public void GBMLeastAbsoluteDeviationGradientBoostRegressorLearner_Learn()
+        public void RegressionAbsoluteLossGradientBoostLearner_Learn()
         {
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GBMAbsoluteLoss(), 1);
+            var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -32,13 +32,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMLeastAbsoluteDeviationGradientBoostRegressorLearner_Learn_Glass_Indexed()
+        public void RegressionAbsoluteLossGradientBoostLearner_Learn_Glass_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, new GBMAbsoluteLoss(), 1);
+            var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -57,13 +57,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMLeastAbsoluteDeviationGradientBoostRegressorLearner_Learn_Indexed()
+        public void RegressionAbsoluteLossGradientBoostLearner_Learn_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GBMAbsoluteLoss(), 1);
+            var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -82,13 +82,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMLeastAbsoluteDeviationGradientBoostRegressorLearner_Stochastic_Learn()
+        public void RegressionAbsoluteLossGradientBoostLearner_Stochastic_Learn()
         {
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, new GBMAbsoluteLoss(), 1);
+            var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -100,13 +100,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMLeastAbsoluteDeviationGradientBoostRegressorLearner_Stochastic_Learn_Indexed()
+        public void RegressionAbsoluteLossGradientBoostLearner_Stochastic_Learn_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, new GBMAbsoluteLoss(), 1);
+            var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
