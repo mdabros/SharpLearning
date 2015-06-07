@@ -46,35 +46,33 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="GBM\ClassificationBinomialGradientBoostLearner.cs" />
-    <Compile Include="GBM\ClassificationGradientBoostLearner.cs" />
-    <Compile Include="GBM\RegressionQuantileLossGradientBoostLearner.cs" />
-    <Compile Include="GBM\RegressionHuberLossGradientBoostLearner.cs" />
-    <Compile Include="GBM\RegressionAbsoluteLossGradientBoostLearner.cs" />
-    <Compile Include="GBM\RegressionSquareLossGradientBoostLearner.cs" />
-    <Compile Include="GBM\RegressionGradientBoostLearner.cs" />
-    <Compile Include="GBM\ClassificationGradientBoostModel.cs" />
-    <Compile Include="GBM\RegressionGradientBoostModel.cs" />
-    <Compile Include="GBM\GBMTree\GBMNode.cs" />
-    <Compile Include="GBM\GBMTree\GBMDecisionTreeLearner.cs" />
-    <Compile Include="GBM\GBMTree\GBMSplitInfo.cs" />
-    <Compile Include="GBM\GBMTree\GBMSplit.cs" />
-    <Compile Include="GBM\GBMTree\GBMSplitResult.cs" />
-    <Compile Include="GBM\GBMTree\GBMTree.cs" />
-    <Compile Include="GBM\GBMTree\GBMTreeCreationItem.cs" />
-    <Compile Include="GBM\LossFunctions\GBMAbsoluteLoss.cs" />
-    <Compile Include="GBM\LossFunctions\GBMBinomialLoss.cs" />
-    <Compile Include="GBM\LossFunctions\GBMHuberLoss.cs" />
-    <Compile Include="GBM\LossFunctions\GBMQuantileLoss.cs" />
-    <Compile Include="GBM\LossFunctions\GBMSquaredLoss.cs" />
-    <Compile Include="GBM\LossFunctions\IGBMLoss.cs" />
+    <Compile Include="Learners\ClassificationBinomialGradientBoostLearner.cs" />
+    <Compile Include="Learners\ClassificationGradientBoostLearner.cs" />
+    <Compile Include="Learners\RegressionQuantileLossGradientBoostLearner.cs" />
+    <Compile Include="Learners\RegressionHuberLossGradientBoostLearner.cs" />
+    <Compile Include="Learners\RegressionAbsoluteLossGradientBoostLearner.cs" />
+    <Compile Include="Learners\RegressionSquareLossGradientBoostLearner.cs" />
+    <Compile Include="Learners\RegressionGradientBoostLearner.cs" />
+    <Compile Include="Models\ClassificationGradientBoostModel.cs" />
+    <Compile Include="Models\RegressionGradientBoostModel.cs" />
+    <Compile Include="GBMTree\GBMNode.cs" />
+    <Compile Include="GBMTree\GBMDecisionTreeLearner.cs" />
+    <Compile Include="GBMTree\GBMSplitInfo.cs" />
+    <Compile Include="GBMTree\GBMSplit.cs" />
+    <Compile Include="GBMTree\GBMSplitResult.cs" />
+    <Compile Include="GBMTree\GBMTree.cs" />
+    <Compile Include="GBMTree\GBMTreeCreationItem.cs" />
+    <Compile Include="LossFunctions\GBMAbsoluteLoss.cs" />
+    <Compile Include="LossFunctions\GBMBinomialLoss.cs" />
+    <Compile Include="LossFunctions\GBMHuberLoss.cs" />
+    <Compile Include="LossFunctions\GBMQuantileLoss.cs" />
+    <Compile Include="LossFunctions\GBMSquaredLoss.cs" />
+    <Compile Include="LossFunctions\IGBMLoss.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSamplingWithoutReplacement.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Learners\" />
-    <Folder Include="LossFunctions\" />
-    <Folder Include="Models\" />
+    <Folder Include="GBM\LossFunctions\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
