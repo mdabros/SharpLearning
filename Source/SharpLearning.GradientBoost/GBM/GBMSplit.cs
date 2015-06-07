@@ -1,20 +1,75 @@
 ﻿
 namespace SharpLearning.GradientBoost.GBM
 {
+    /// <summary>
+    /// Represents the a split when learning a gradient boost decision tree
+    /// </summary>
     public class GBMSplit
     {
-        public int Depth;
+        /// <summary>
+        /// Index of the feature that the node splits on
+        /// </summary>
         public int FeatureIndex;
-        public int SplitIndex;
+
+        /// <summary>
+        /// Value of the feature that the node splits on
+        /// </summary>
         public double SplitValue;
+
+        /// <summary>
+        /// The error on the left side of the split
+        /// </summary>
         public double LeftError;
+
+        /// <summary>
+        /// The error on the right side of the split
+        /// </summary>
         public double RightError;
+
+        /// <summary>
+        /// Left constant (fitted value) of the split
+        /// </summary>
         public double LeftConstant;
+
+        /// <summary>
+        /// Right constant (fitted value) of the split
+        /// </summary>
         public double RightConstant;
-        public double Cost;
-        public double CostImprovement;
+
+        /// <summary>
+        /// Depth of the node in the decision tree
+        /// </summary>
+        public int Depth;
+
+        /// <summary>
+        /// Index of the left child node the node in the decision tree array
+        /// </summary>
+        public int LeftIndex = -1;
+
+        /// <summary>
+        /// Index of the left child node the node in the decision tree array
+        /// </summary>
+        public int RightIndex = -1;
+
+        /// <summary>
+        /// The number of observations in the node
+        /// </summary>
         public int SampleCount;
 
+        /// <summary>
+        /// Cost of the split
+        /// </summary>
+        public double Cost;
+
+        /// <summary>
+        /// Cost improvement of the split compared to parent split
+        /// </summary>
+        public double CostImprovement;
+
+        /// <summary>
+        /// Creates a GBMNode from the split
+        /// </summary>
+        /// <returns></returns>
         public GBMNode GetNode()
         {
             return new GBMNode

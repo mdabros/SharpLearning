@@ -2,16 +2,50 @@
 
 namespace SharpLearning.GradientBoost.GBM
 {
+    /// <summary>
+    /// Contains information about the current split values
+    /// </summary>
     public class GBMSplitInfo
     {
+        /// <summary>
+        /// Number of samples in the split
+        /// </summary>
         public int Samples;
+
+        /// <summary>
+        /// Current sum of the split
+        /// </summary>
         public double Sum;
+
+        /// <summary>
+        /// Current sum of squares of the split
+        /// </summary>
         public double SumOfSquares;
+        
+        /// <summary>
+        /// Current cost of the split
+        /// </summary>
         public double Cost;
+
+        /// <summary>
+        /// Current best constant (fitted value) of the split
+        /// </summary>
         public double BestConstant;
+
+        /// <summary>
+        /// Binomial sum of the split
+        /// </summary>
         public double BinomialSum;
+
+        /// <summary>
+        /// The node position of the split
+        /// </summary>
         public NodePositionType Position;
 
+        /// <summary>
+        /// Creates a new empty split info with initial default values
+        /// </summary>
+        /// <returns></returns>
         public static GBMSplitInfo NewEmpty()
         {
             return new GBMSplitInfo
@@ -25,11 +59,20 @@ namespace SharpLearning.GradientBoost.GBM
             };
         }
 
+        /// <summary>
+        /// Creates a copy of the split info
+        /// </summary>
+        /// <returns></returns>
         public GBMSplitInfo Copy()
         {
             return Copy(NodePositionType.Root);
         }
 
+        /// <summary>
+        /// Creates a copy of the split info
+        /// </summary>
+        /// <param name="Position"></param>
+        /// <returns></returns>
         public GBMSplitInfo Copy(NodePositionType Position)
         {
             return new GBMSplitInfo
