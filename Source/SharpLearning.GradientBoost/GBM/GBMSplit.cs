@@ -12,6 +12,11 @@ namespace SharpLearning.GradientBoost.GBM
         public int FeatureIndex;
 
         /// <summary>
+        /// Index of the split value
+        /// </summary>
+        public int SplitIndex;
+
+        /// <summary>
         /// Value of the feature that the node splits on
         /// </summary>
         public double SplitValue;
