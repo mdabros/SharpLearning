@@ -13,16 +13,16 @@ using SharpLearning.GradientBoost.Learners;
 namespace SharpLearning.GradientBoost.Test.GBM
 {
     [TestClass]
-    public class GBMHuberGradientBoostRegressorLearnerTest
+    public class RegressionHuberLossGradientBoostLearnerTest
     {
         [TestMethod]
-        public void GBMHuberGradientBoostRegressorLearner_Learn()
+        public void RegressionHuberLossGradientBoostLearner_Learn()
         {
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GBMHuberLoss(), 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0.9, 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -34,13 +34,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMHuberGradientBoostRegressorLearner_Learn_Glass_Indexed()
+        public void RegressionHuberLossGradientBoostLearner_Learn_Glass_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, new GBMHuberLoss(), 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0.9, 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -59,13 +59,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMHuberGradientBoostRegressorLearner_Learn_Indexed()
+        public void RegressionHuberLossGradientBoostLearner_Learn_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GBMHuberLoss(), 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0.9, 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -84,13 +84,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMHuberGradientBoostRegressorLearner_Stochastic_Learn()
+        public void RegressionHuberLossGradientBoostLearner_Stochastic_Learn()
         {
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, new GBMHuberLoss(), 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0.9, 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -102,13 +102,13 @@ namespace SharpLearning.GradientBoost.Test.GBM
         }
 
         [TestMethod]
-        public void GBMHuberGradientBoostRegressorLearner_Stochastic_Learn_Indexed()
+        public void RegressionHuberLossGradientBoostLearner_Stochastic_Learn_Indexed()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new GBMGradientBoostRegressorLearner(50, 0.1, 3, 1, 1e-6, .5, new GBMHuberLoss(), 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0.9, 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));

@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="GBM\ClassificationBinomialGradientBoostLearner.cs" />
     <Compile Include="GBM\ClassificationGradientBoostLearner.cs" />
+    <Compile Include="GBM\RegressionHuberLossGradientBoostLearner.cs" />
     <Compile Include="GBM\RegressionAbsoluteLossGradientBoostLearner.cs" />
     <Compile Include="GBM\RegressionSquareLossGradientBoostLearner.cs" />
     <Compile Include="GBM\GBMGradientBoostRegressorLearner.cs" />

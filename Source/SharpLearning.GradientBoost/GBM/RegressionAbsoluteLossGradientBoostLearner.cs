@@ -27,12 +27,11 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
-        /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
         public RegressionAbsoluteLossGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
             int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int numberOfThreads)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
-                subSampleRatio, new GBMAbsoluteLoss(), Environment.ProcessorCount)
+                subSampleRatio, new GBMAbsoluteLoss(), numberOfThreads)
 
         {
         }

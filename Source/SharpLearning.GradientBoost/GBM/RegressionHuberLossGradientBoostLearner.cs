@@ -11,11 +11,11 @@ namespace SharpLearning.GradientBoost.GBM
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
     /// </summary>
-    public class RegressionSquareLossGradientBoostLearner : GBMGradientBoostRegressorLearner
+    public class RegressionHuberLossGradientBoostLearner : GBMGradientBoostRegressorLearner
     {
         /// <summary>
         /// <summary>
-        ///  Square loss/Least squares (LS) regression gradient boost learner. 
+        ///  Huber loss regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -27,18 +27,19 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// <param name="huberQuantile">The quantile used for deciding when to switch between square and absolute loss</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public RegressionSquareLossGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
-            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int numberOfThreads)
+        public RegressionHuberLossGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
+            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, double huberQuantile, int numberOfThreads)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
-                subSampleRatio, new GBMSquaredLoss(), numberOfThreads)
+                subSampleRatio, new GBMHuberLoss(huberQuantile), numberOfThreads)
 
         {
         }
 
         /// <summary>
         /// <summary>
-        ///  Square loss/Least squares (LS) regression gradient boost learner. 
+        ///  Huber loss regression gradient boost learner.
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
         /// <param name="iterations">The number of iterations or stages</param>
@@ -50,10 +51,11 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
-        public RegressionSquareLossGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0)
-            : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
-                subSampleRatio, new GBMSquaredLoss(), Environment.ProcessorCount)
+        /// <param name="huberQuantile">The quantile used for deciding when to switch between square and absolute loss</param>
+        public RegressionHuberLossGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
+            int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0, double huberQuantile = 0.9)
+            : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
+                subSampleRatio, new GBMHuberLoss(huberQuantile), Environment.ProcessorCount)
         {
         }
     }
