@@ -2,18 +2,18 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Diagnostics;
-using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.GradientBoost.Loss;
 
-namespace SharpLearning.GradientBoost.Test.LossFunctions
+namespace SharpLearning.GradientBoost.Test.Loss
 {
     [TestClass]
-    public class GBMBinomialLossTest
+    public class GradientBoostBinomialLossTest
     {
         [TestMethod]
         public void GBMBinomialLoss_InitializeLoss()
         {
             var targets = new double[] { 1, 1, 1, 1, 0, 0, 0, 0, 0 };
-            var sut = new GBMBinomialLoss();
+            var sut = new GradientBoostBinomialLoss();
 
             var actual = sut.InitialLoss(targets, targets.Select(t => true).ToArray());
             Assert.AreEqual(-0.22314355131420971, actual, 0.001);
@@ -25,7 +25,7 @@ namespace SharpLearning.GradientBoost.Test.LossFunctions
             var targets = new double[] { 1, 1, 1, 1, 0, 0, 0, 0, 0 };
             var predictions = new double[] { 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
             var actual = new double[targets.Length];
-            var sut = new GBMBinomialLoss();
+            var sut = new GradientBoostBinomialLoss();
 
             sut.UpdateResiduals(targets, predictions, actual, targets.Select(t => true).ToArray());
 
@@ -45,7 +45,7 @@ namespace SharpLearning.GradientBoost.Test.LossFunctions
             var predictions = new double[] { 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 }; 
             var actual = new double[targets.Length];
             var inSample = new bool[] { true, false, true, false, true, false, true, false, true };
-            var sut = new GBMBinomialLoss();
+            var sut = new GradientBoostBinomialLoss();
 
             sut.UpdateResiduals(targets, predictions, actual, inSample);
 
@@ -64,7 +64,7 @@ namespace SharpLearning.GradientBoost.Test.LossFunctions
             var targets = new double[] { 1, 1, 1, 1, 0, 0, 0, 0, 0 };
             var predictions = new double[] { 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 }; 
             var inSample = new bool[] { true, true, true, true, true, true, true, true, true };
-            var sut = new GBMBinomialLoss();
+            var sut = new GradientBoostBinomialLoss();
 
             var actual = sut.UpdatedLeafValue(0.0, targets, predictions, inSample);
             Assert.AreEqual(0.0, actual, 0.001);
@@ -76,7 +76,7 @@ namespace SharpLearning.GradientBoost.Test.LossFunctions
             var targets = new double[] { 1, 1, 1, 1, 0, 0, 0, 0, 0 };
             var predictions = new double[] { 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0 }; 
             var inSample = new bool[] { true, false, true, false, true, false, true, false, true };
-            var sut = new GBMBinomialLoss();
+            var sut = new GradientBoostBinomialLoss();
 
             var actual = sut.UpdatedLeafValue(0.0, targets, predictions, inSample);
             Assert.AreEqual(0.0, actual, 0.001);
@@ -85,7 +85,7 @@ namespace SharpLearning.GradientBoost.Test.LossFunctions
         [TestMethod]
         public void GBMBinomialLoss_UpdateLeafValues()
         {
-            var sut = new GBMBinomialLoss();
+            var sut = new GradientBoostBinomialLoss();
             Assert.IsFalse(sut.UpdateLeafValues());
         }
     }

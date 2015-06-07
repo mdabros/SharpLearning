@@ -62,12 +62,12 @@
     <Compile Include="GBMDecisionTree\GBMSplitResult.cs" />
     <Compile Include="GBMDecisionTree\GBMTree.cs" />
     <Compile Include="GBMDecisionTree\GBMTreeCreationItem.cs" />
-    <Compile Include="LossFunctions\GBMAbsoluteLoss.cs" />
-    <Compile Include="LossFunctions\GBMBinomialLoss.cs" />
-    <Compile Include="LossFunctions\GBMHuberLoss.cs" />
-    <Compile Include="LossFunctions\GBMQuantileLoss.cs" />
-    <Compile Include="LossFunctions\GBMSquaredLoss.cs" />
-    <Compile Include="LossFunctions\IGBMLoss.cs" />
+    <Compile Include="Loss\GradientBoostAbsoluteLoss.cs" />
+    <Compile Include="Loss\GradientBoostBinomialLoss.cs" />
+    <Compile Include="Loss\GradientBoostHuberLoss.cs" />
+    <Compile Include="Loss\GradientBoostQuantileLoss.cs" />
+    <Compile Include="Loss\GradientBoostSquaredLoss.cs" />
+    <Compile Include="Loss\IGradientBoostLoss.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSamplingWithoutReplacement.cs" />
   </ItemGroup>

@@ -2,32 +2,35 @@
 using SharpLearning.GradientBoost.GBMDecisionTree;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace SharpLearning.GradientBoost.LossFunctions
+namespace SharpLearning.GradientBoost.Loss
 {
     /// <summary>
-    /// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable 
-    /// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median 
-    /// or other quantiles of the response variable. Using the median results in Least absolute deviation or LAD loss.
+    /// Huber loss is a combination of Squared loss and least absolute deviation (LAD). 
+    /// For small residuals (below quantile defined by alpha) squared loss is used. 
+    /// For large residuals (above quantile defined by alpha) LAD loss is used. 
+    /// This makes Huber loss robust against outliers while still having much of the sensitivity of squared loss.
+    /// http://en.wikipedia.org/wiki/Huber_loss
     /// </summary>
-    public sealed class GBMQuantileLoss : IGBMLoss
+    public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     {
+        double m_gamma;
         readonly double m_alpha;
 
-        /// <summary>
-        /// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable 
-        /// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median 
-        /// or other quantiles of the response variable. Using the median results in Least absolute deviation or LAD loss.
-        /// </summary>
-        /// <param name="alpha"></param>
-        public GBMQuantileLoss(double alpha)
+        /// Huber loss is a combination of Squared loss and least absolute deviation (LAD). 
+        /// For small residuals (below quantile defined by alpha) squared loss is used. 
+        /// For large residuals (above quantile defined by alpha) LAD loss is used. 
+        /// This makes Huber loss robust against outliers while still having much of the sensitivity of squared loss.
+        /// http://en.wikipedia.org/wiki/Huber_loss
+        public GradientBoostHuberLoss(double alpha = 0.9)
         {
-            if (alpha <= 0.0 || alpha > 1.0) { throw new ArgumentException("Alpha must larger than 0.0 and at most 1.0"); }
+            if (alpha <= 0.0 || alpha > 1.0) { throw new ArgumentException("Alpha must be larger than 0.0 and no more than 1.0"); }
             m_alpha = alpha;
         }
 
         /// <summary>
-        /// The specified quantile of the targets.
+        /// Initial loss is the median
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="inSample"></param>
@@ -43,7 +46,7 @@ namespace SharpLearning.GradientBoost.LossFunctions
                 }
             }
 
-            return values.ToArray().ScoreAtPercentile(m_alpha);
+            return values.ToArray().Median();
         }
 
         /// <summary>
@@ -76,36 +79,58 @@ namespace SharpLearning.GradientBoost.LossFunctions
         }
 
         /// <summary>
-        /// Negative gradient is the quantile or -(1.0 - quantile) depending on which is larger. Prediction or target.
+        /// Undefined for Huber
         /// </summary>
         /// <param name="target"></param>
         /// <param name="prediction"></param>
         /// <returns></returns>
         public double NegativeGradient(double target, double prediction)
         {
-            if (target > prediction)
-            {
-                return m_alpha;
-            }
-            else
-            {
-                return -(1.0 - m_alpha);
-            }
-
+            throw new NotImplementedException();
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
+        /// <param name="inSample"></param>
         public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals, bool[] inSample)
         {
-            for (int i = 0; i < residuals.Length; i++)
+            var absDiff = new double[inSample.Length];
+            var difference = new double[inSample.Length];
+
+            for (int i = 0; i < inSample.Length; i++)
             {
-                residuals[i] = NegativeGradient(targets[i], predictions[i]);
+                if(inSample[i])
+                {
+                    var value = targets[i] - predictions[i];
+                    difference[i] = value;
+                    absDiff[i] = Math.Abs(value);
+                }
             }
+
+            var gamma = absDiff.ToArray().ScoreAtPercentile(m_alpha);
+
+            for (int i = 0; i < inSample.Length; i++)
+            {
+                if(inSample[i])
+                {
+                    var diff = absDiff[i];
+
+                    if (diff <= gamma)
+                    {
+                        residuals[i] = difference[i];
+                    }
+                    else
+                    {
+                        residuals[i] = gamma * Math.Sign(difference[i]);
+                    }
+                }
+            }
+
+            m_gamma = gamma;
         }
 
         /// <summary>
@@ -140,7 +165,7 @@ namespace SharpLearning.GradientBoost.LossFunctions
         }
 
         /// <summary>
-        /// Updates the leaf values based on the quantile of the difference between target and prediction
+        /// 
         /// </summary>
         /// <param name="currentLeafValue"></param>
         /// <param name="targets"></param>
@@ -149,18 +174,29 @@ namespace SharpLearning.GradientBoost.LossFunctions
         /// <returns></returns>
         public double UpdatedLeafValue(double currentLeafValue, double[] targets, double[] predictions, bool[] inSample)
         {
-            var values = new List<double>();
-
-            for (int i = 0; i < inSample.Length; i++)
+            var diff = new List<double>();
+            for (int j = 0; j < inSample.Length; j++)
             {
-                if (inSample[i])
+                if(inSample[j])
                 {
-                    values.Add(targets[i] - predictions[i]);
+                    diff.Add(targets[j] - predictions[j]);
                 }
             }
 
-            return values.ToArray().ScoreAtPercentile(m_alpha);
+            var median = diff.ToArray().Median();
+            var values = new double[diff.Count];
+
+            for (int j = 0; j < diff.Count; j++)
+            {
+                var medianDiff = diff[j] - median;
+                var sign = Math.Sign(medianDiff);
+
+                values[j] = sign * Math.Min(Math.Abs(medianDiff), m_gamma); 
+            }
+
+            var newValue = median + values.Sum() / (double)values.Length;
+
+            return newValue;
         }
     }
-
 }

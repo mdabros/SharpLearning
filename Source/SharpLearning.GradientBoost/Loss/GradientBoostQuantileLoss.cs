@@ -1,45 +1,49 @@
 ﻿using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.GBMDecisionTree;
 using System;
+using System.Collections.Generic;
 
-namespace SharpLearning.GradientBoost.LossFunctions
+namespace SharpLearning.GradientBoost.Loss
 {
     /// <summary>
-    /// Binomial deviation is used for binary classification. It penalizes a misclassification more heavily than a correct classification
-    /// which makes it possible to reduce the misclassification rate during a learning process.
-    /// Its penalty increases linearly with f which makes it more robust to outliers
-    /// than other loss functions for which the penalty increases at a higher rate
+    /// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable 
+    /// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median 
+    /// or other quantiles of the response variable. Using the median results in Least absolute deviation or LAD loss.
     /// </summary>
-    public sealed class GBMBinomialLoss : IGBMLoss
+    public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
     {
-        /// Binomial deviation is used for binary classification. It penalizes a misclassification more heavily than a correct classification
-        /// which makes it possible to reduce the misclassification rate during a learning process.
-        /// Its penalty increases linearly with f which makes it more robust to outliers
-        /// than other loss functions for which the penalty increases at a higher rate
-        public GBMBinomialLoss()
+        readonly double m_alpha;
+
+        /// <summary>
+        /// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable 
+        /// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median 
+        /// or other quantiles of the response variable. Using the median results in Least absolute deviation or LAD loss.
+        /// </summary>
+        /// <param name="alpha"></param>
+        public GradientBoostQuantileLoss(double alpha)
         {
+            if (alpha <= 0.0 || alpha > 1.0) { throw new ArgumentException("Alpha must larger than 0.0 and at most 1.0"); }
+            m_alpha = alpha;
         }
 
         /// <summary>
-        /// initial loss is the class prior probability
+        /// The specified quantile of the targets.
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="inSample"></param>
         /// <returns></returns>
         public double InitialLoss(double[] targets, bool[] inSample)
         {
-            var inSampleSum = 0.0;
-            var sampleCount = 0.0;
+            var values = new List<double>();
             for (int i = 0; i < inSample.Length; i++)
             {
                 if (inSample[i])
                 {
-                    inSampleSum += targets[i];
-                    sampleCount++;
+                    values.Add(targets[i]);
                 }
             }
 
-            return Math.Log(inSampleSum / (sampleCount - inSampleSum)).NanToNum();
+            return values.ToArray().ScoreAtPercentile(m_alpha);
         }
 
         /// <summary>
@@ -57,35 +61,39 @@ namespace SharpLearning.GradientBoost.LossFunctions
             {
                 if (inSample[i])
                 {
-                    var target = targets[i];
                     var residual = residuals[i];
                     var residual2 = residual * residual;
-                    var binomial = (target - residual) * (1.0 - target + residual);
 
                     splitInfo.Samples++;
                     splitInfo.Sum += residual;
                     splitInfo.SumOfSquares += residual2;
-                    splitInfo.BinomialSum += binomial;
                 }
             }
 
             splitInfo.Cost = splitInfo.SumOfSquares - (splitInfo.Sum * splitInfo.Sum / (double)splitInfo.Samples);
-            splitInfo.BestConstant = BinomialBestConstant(splitInfo.Sum, splitInfo.BinomialSum);
 
             return splitInfo;
         }
 
         /// <summary>
-        /// 
+        /// Negative gradient is the quantile or -(1.0 - quantile) depending on which is larger. Prediction or target.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="prediction"></param>
         /// <returns></returns>
         public double NegativeGradient(double target, double prediction)
         {
-            return (target - 1.0 / (1.0 + Math.Exp(-prediction))).NanToNum();
-        }
+            if (target > prediction)
+            {
+                return m_alpha;
+            }
+            else
+            {
+                return -(1.0 - m_alpha);
+            }
 
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -110,37 +118,29 @@ namespace SharpLearning.GradientBoost.LossFunctions
         public void UpdateSplitConstants(GBMSplitInfo left, GBMSplitInfo right, double target, double residual)
         {
             var residual2 = residual * residual;
-            var binomial = (target - residual) * (1.0 - target + residual);
 
             left.Samples++;
             left.Sum += residual;
             left.SumOfSquares += residual2;
-            left.BinomialSum += binomial;
             left.Cost = left.SumOfSquares - (left.Sum * left.Sum / (double)left.Samples);
-            left.BestConstant = BinomialBestConstant(left.Sum, left.BinomialSum);
 
             right.Samples--;
             right.Sum -= residual;
             right.SumOfSquares -= residual2;
-            right.BinomialSum -= binomial;
             right.Cost = right.SumOfSquares - (right.Sum * right.Sum / (double)right.Samples);
-            right.BestConstant = BinomialBestConstant(right.Sum, right.BinomialSum);
-        }
-
-        double BinomialBestConstant(double sum, double binomialSum)
-        {
-            if (binomialSum != 0.0)
-            {
-                return sum / binomialSum;
-            }
-            else
-            {
-                return 0.0;
-            }
         }
 
         /// <summary>
-        /// Binomial loss does not require leaf value updates
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool UpdateLeafValues()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Updates the leaf values based on the quantile of the difference between target and prediction
         /// </summary>
         /// <param name="currentLeafValue"></param>
         /// <param name="targets"></param>
@@ -149,17 +149,18 @@ namespace SharpLearning.GradientBoost.LossFunctions
         /// <returns></returns>
         public double UpdatedLeafValue(double currentLeafValue, double[] targets, double[] predictions, bool[] inSample)
         {
-            // no update needed for binomial loss
-            return currentLeafValue;
-        }
+            var values = new List<double>();
 
-        /// <summary>
-        /// Binomial loss does not require leaf value updates
-        /// </summary>
-        /// <returns></returns>
-        public bool UpdateLeafValues()
-        {
-            return false;
+            for (int i = 0; i < inSample.Length; i++)
+            {
+                if (inSample[i])
+                {
+                    values.Add(targets[i] - predictions[i]);
+                }
+            }
+
+            return values.ToArray().ScoreAtPercentile(m_alpha);
         }
     }
+
 }

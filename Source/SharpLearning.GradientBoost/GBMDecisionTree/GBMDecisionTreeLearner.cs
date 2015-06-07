@@ -1,6 +1,6 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
-using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.GradientBoost.Loss;
 using SharpLearning.Threading;
 using System;
 using System.Collections.Concurrent;
@@ -31,7 +31,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         readonly int m_maximumTreeDepth;
         readonly int m_numberOfThreads;
         WorkerRunner m_threadedWorker;
-        readonly IGBMLoss m_loss;
+        readonly IGradientBoostLoss m_loss;
 
         /// <summary>
         /// Fites a regression decision tree using a set presorted indices for each feature.
@@ -41,7 +41,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, IGBMLoss loss, int numberOfThreads)
+        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, IGradientBoostLoss loss, int numberOfThreads)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
@@ -63,7 +63,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="minimumSplitSize">The minimum size </param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         public GBMDecisionTreeLearner(int maximumTreeDepth = 2000, int minimumSplitSize = 1, double minimumInformationGain = 1E-6)
-            : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, new GBMSquaredLoss(), Environment.ProcessorCount)
+            : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, new GradientBoostSquaredLoss(), Environment.ProcessorCount)
         {
         }
 

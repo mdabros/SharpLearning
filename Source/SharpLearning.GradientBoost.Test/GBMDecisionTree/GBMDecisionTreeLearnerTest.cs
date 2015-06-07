@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.GBMDecisionTree;
-using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.GradientBoost.Loss;
 using SharpLearning.GradientBoost.Test.Properties;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
@@ -46,7 +46,7 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
         [TestMethod]
         public void GBMDecisionTreeLearner_Constructor_NumberOfThreads()
         {
-            new GBMDecisionTreeLearner(1, 1, 0.0, new GBMSquaredLoss(), 0);
+            new GBMDecisionTreeLearner(1, 1, 0.0, new GradientBoostSquaredLoss(), 0);
         }
         
         [TestMethod]

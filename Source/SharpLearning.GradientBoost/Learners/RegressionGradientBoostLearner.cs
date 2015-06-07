@@ -2,7 +2,7 @@
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.GradientBoost.GBMDecisionTree;
-using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.GradientBoost.Loss;
 using SharpLearning.GradientBoost.Models;
 using System;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace SharpLearning.GradientBoost.Learners
         readonly int m_iterations;
         readonly double m_subSampleRatio;
         readonly Random m_random = new Random(42);
-        readonly IGBMLoss m_loss;
+        readonly IGradientBoostLoss m_loss;
 
         /// <summary>
         /// <summary>
@@ -44,7 +44,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
         public RegressionGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
-            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGBMLoss loss, int numberOfThreads)
+            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGradientBoostLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
@@ -77,7 +77,7 @@ namespace SharpLearning.GradientBoost.Learners
         public RegressionGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
-                subSampleRatio, new GBMSquaredLoss(), Environment.ProcessorCount)
+                subSampleRatio, new GradientBoostSquaredLoss(), Environment.ProcessorCount)
         {
         }
 

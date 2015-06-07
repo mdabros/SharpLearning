@@ -1,11 +1,11 @@
 ﻿using SharpLearning.GradientBoost.GBMDecisionTree;
 
-namespace SharpLearning.GradientBoost.LossFunctions
+namespace SharpLearning.GradientBoost.Loss
 {
     /// <summary>
     /// Interface for gradient boost loss functions
     /// </summary>
-    public interface IGBMLoss
+    public interface IGradientBoostLoss
     {
         /// <summary>
         /// Calculate the initial, constant, loss based on the targets and the samples used 

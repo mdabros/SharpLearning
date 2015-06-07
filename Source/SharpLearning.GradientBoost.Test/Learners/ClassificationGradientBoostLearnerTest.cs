@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.Learners;
-using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.GradientBoost.Loss;
 
 namespace SharpLearning.GradientBoost.Test.Learners
 {
@@ -23,7 +23,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -41,7 +41,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -66,7 +66,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .3, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .3, new GradientBoostBinomialLoss(), 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -84,7 +84,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows("AptitudeTestScore", "PreviousExperience_month").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, .5, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, .5, new GradientBoostBinomialLoss(), 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -109,7 +109,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -128,7 +128,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 1.0, new GradientBoostBinomialLoss(), 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -153,7 +153,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 0.5, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 0.5, new GradientBoostBinomialLoss(), 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -171,7 +171,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 0.5, new GBMBinomialLoss(), 1);
+            var sut = new ClassificationGradientBoostLearner(30, 0.1, 3, 1, 1e-6, 0.5, new GradientBoostBinomialLoss(), 1);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));

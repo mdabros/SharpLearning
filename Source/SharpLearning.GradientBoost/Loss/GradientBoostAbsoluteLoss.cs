@@ -1,32 +1,27 @@
-﻿using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.GBMDecisionTree;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 
-namespace SharpLearning.GradientBoost.LossFunctions
+namespace SharpLearning.GradientBoost.Loss
 {
     /// <summary>
-    /// Huber loss is a combination of Squared loss and least absolute deviation (LAD). 
-    /// For small residuals (below quantile defined by alpha) squared loss is used. 
-    /// For large residuals (above quantile defined by alpha) LAD loss is used. 
-    /// This makes Huber loss robust against outliers while still having much of the sensitivity of squared loss.
-    /// http://en.wikipedia.org/wiki/Huber_loss
+    /// Least absolute deviation (LAD) loss function. LAD gives equal equal emphasis to all observations. 
+    /// This makes LAD robust against outliers.
+    /// http://en.wikipedia.org/wiki/Least_absolute_deviations
     /// </summary>
-    public sealed class GBMHuberLoss : IGBMLoss
+    public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     {
-        double m_gamma;
-        readonly double m_alpha;
-
-        /// Huber loss is a combination of Squared loss and least absolute deviation (LAD). 
-        /// For small residuals (below quantile defined by alpha) squared loss is used. 
-        /// For large residuals (above quantile defined by alpha) LAD loss is used. 
-        /// This makes Huber loss robust against outliers while still having much of the sensitivity of squared loss.
-        /// http://en.wikipedia.org/wiki/Huber_loss
-        public GBMHuberLoss(double alpha = 0.9)
+        /// <summary>
+        /// Least absolute deviation (LAD) loss function. LAD gives equal equal emphasis to all observations. 
+        /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression. 
+        /// http://en.wikipedia.org/wiki/Least_absolute_deviations
+        /// </summary>
+        public GradientBoostAbsoluteLoss()
         {
-            if (alpha <= 0.0 || alpha > 1.0) { throw new ArgumentException("Alpha must be larger than 0.0 and no more than 1.0"); }
-            m_alpha = alpha;
         }
 
         /// <summary>
@@ -79,14 +74,22 @@ namespace SharpLearning.GradientBoost.LossFunctions
         }
 
         /// <summary>
-        /// Undefined for Huber
+        /// Negative gradient is either 1 or -1 depending on the sign of target minus prediction
         /// </summary>
         /// <param name="target"></param>
         /// <param name="prediction"></param>
         /// <returns></returns>
         public double NegativeGradient(double target, double prediction)
         {
-            throw new NotImplementedException();
+            var value = target - prediction;
+            if (value > 0.0)
+            {
+                return 1.0;
+            }
+            else
+            {
+                return -1.0;
+            }
         }
 
         /// <summary>
@@ -95,42 +98,12 @@ namespace SharpLearning.GradientBoost.LossFunctions
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
-        /// <param name="inSample"></param>
         public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals, bool[] inSample)
         {
-            var absDiff = new double[inSample.Length];
-            var difference = new double[inSample.Length];
-
-            for (int i = 0; i < inSample.Length; i++)
+            for (int i = 0; i < residuals.Length; i++)
             {
-                if(inSample[i])
-                {
-                    var value = targets[i] - predictions[i];
-                    difference[i] = value;
-                    absDiff[i] = Math.Abs(value);
-                }
+                residuals[i] = NegativeGradient(targets[i], predictions[i]);
             }
-
-            var gamma = absDiff.ToArray().ScoreAtPercentile(m_alpha);
-
-            for (int i = 0; i < inSample.Length; i++)
-            {
-                if(inSample[i])
-                {
-                    var diff = absDiff[i];
-
-                    if (diff <= gamma)
-                    {
-                        residuals[i] = difference[i];
-                    }
-                    else
-                    {
-                        residuals[i] = gamma * Math.Sign(difference[i]);
-                    }
-                }
-            }
-
-            m_gamma = gamma;
         }
 
         /// <summary>
@@ -156,16 +129,7 @@ namespace SharpLearning.GradientBoost.LossFunctions
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool UpdateLeafValues()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// 
+        /// Leaf values are updated using the median of the difference between target and prediction
         /// </summary>
         /// <param name="currentLeafValue"></param>
         /// <param name="targets"></param>
@@ -174,29 +138,22 @@ namespace SharpLearning.GradientBoost.LossFunctions
         /// <returns></returns>
         public double UpdatedLeafValue(double currentLeafValue, double[] targets, double[] predictions, bool[] inSample)
         {
-            var diff = new List<double>();
-            for (int j = 0; j < inSample.Length; j++)
+            var values = new List<double>();
+
+            for (int i = 0; i < inSample.Length; i++)
             {
-                if(inSample[j])
+                if (inSample[i])
                 {
-                    diff.Add(targets[j] - predictions[j]);
+                    values.Add(targets[i] - predictions[i]);
                 }
             }
 
-            var median = diff.ToArray().Median();
-            var values = new double[diff.Count];
+            return values.ToArray().Median();
+        }
 
-            for (int j = 0; j < diff.Count; j++)
-            {
-                var medianDiff = diff[j] - median;
-                var sign = Math.Sign(medianDiff);
-
-                values[j] = sign * Math.Min(Math.Abs(medianDiff), m_gamma); 
-            }
-
-            var newValue = median + values.Sum() / (double)values.Length;
-
-            return newValue;
+        public bool UpdateLeafValues()
+        {
+            return true;
         }
     }
 }

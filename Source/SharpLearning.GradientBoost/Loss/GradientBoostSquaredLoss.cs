@@ -5,21 +5,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLearning.GradientBoost.LossFunctions
+namespace SharpLearning.GradientBoost.Loss
 {
     /// <summary>
     /// The square loss function is the standard method of fitting regression models.
     /// The square loss is however sensitive to outliers since it weighs larger errors more heavily than small ones.
     /// In case of many outliers Least absolute deviation (LAD) is a better alternative.
     /// </summary>
-    public sealed class GBMSquaredLoss : IGBMLoss
+    public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     {
         /// <summary>
         /// The square loss function is the standard method of fitting regression models.
         /// The square loss is however sensitive to outliers since it weighs larger errors more heavily than small ones.
         /// In case of many outliers Least absolute deviation (LAD) is a better alternative.
         /// </summary>
-        public GBMSquaredLoss()
+        public GradientBoostSquaredLoss()
         {
 
         }

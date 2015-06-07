@@ -1,4 +1,4 @@
-﻿using SharpLearning.GradientBoost.LossFunctions;
+﻿using SharpLearning.GradientBoost.Loss;
 using System;
 
 namespace SharpLearning.GradientBoost.Learners
@@ -34,7 +34,7 @@ namespace SharpLearning.GradientBoost.Learners
         public RegressionQuantileLossGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
             int minimumSplitSize, double minimumInformationGain, double subSampleRatio, double quantile, int numberOfThreads)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
-                subSampleRatio, new GBMQuantileLoss(quantile), numberOfThreads)
+                subSampleRatio, new GradientBoostQuantileLoss(quantile), numberOfThreads)
 
         {
         }
@@ -58,7 +58,7 @@ namespace SharpLearning.GradientBoost.Learners
         public RegressionQuantileLossGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0, double quantile = 0.9)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
-                subSampleRatio, new GBMQuantileLoss(quantile), Environment.ProcessorCount)
+                subSampleRatio, new GradientBoostQuantileLoss(quantile), Environment.ProcessorCount)
         {
         }
     }
