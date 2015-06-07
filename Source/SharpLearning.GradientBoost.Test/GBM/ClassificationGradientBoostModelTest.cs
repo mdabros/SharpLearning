@@ -13,7 +13,7 @@ using System.Diagnostics;
 namespace SharpLearning.GradientBoost.Test.GBM
 {
     [TestClass]
-    public class GBMGradientBoostClassificationModelTest
+    public class ClassificationGradientBoostModelTest
     {
         [TestMethod]
         public void ClassificationGradientBoostModel_Predict_Single()
@@ -176,7 +176,7 @@ namespace SharpLearning.GradientBoost.Test.GBM
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
             var reader = new StringReader(ClassificationGradientBoostModelString);
-            var sut = GBMGradientBoostClassificationModel.Load(() => reader);
+            var sut = ClassificationGradientBoostModel.Load(() => reader);
 
             var predictions = sut.Predict(observations);
 

@@ -13,7 +13,7 @@ namespace SharpLearning.GradientBoost.GBM
     /// 
     /// </summary>
     [Serializable]
-    public sealed class GBMGradientBoostClassificationModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
+    public sealed class ClassificationGradientBoostModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
         readonly GBMTree[][] m_trees;
         readonly double m_learningRate;
@@ -21,7 +21,7 @@ namespace SharpLearning.GradientBoost.GBM
         readonly double[] m_targetNames;
         readonly int m_featureCount;
 
-        public GBMGradientBoostClassificationModel(GBMTree[][] trees, double[] targetNames, double learningRate, double initialLoss, int featureCount)
+        public ClassificationGradientBoostModel(GBMTree[][] trees, double[] targetNames, double learningRate, double initialLoss, int featureCount)
         {
             if (trees == null) { throw new ArgumentNullException("trees"); }
             if (targetNames == null) { throw new ArgumentException("targetNames"); }
@@ -152,10 +152,10 @@ namespace SharpLearning.GradientBoost.GBM
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static GBMGradientBoostClassificationModel Load(Func<TextReader> reader)
+        public static ClassificationGradientBoostModel Load(Func<TextReader> reader)
         {
             return new GenericXmlDataContractSerializer()
-                .Deserialize<GBMGradientBoostClassificationModel>(reader);
+                .Deserialize<ClassificationGradientBoostModel>(reader);
         }
 
         /// <summary>

@@ -84,7 +84,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public GBMGradientBoostClassificationModel Learn(F64Matrix observations, double[] targets)
+        public ClassificationGradientBoostModel Learn(F64Matrix observations, double[] targets)
         {
             var allIndices = Enumerable.Range(0, targets.Length).ToArray();
             return Learn(observations, targets, allIndices);
@@ -97,7 +97,7 @@ namespace SharpLearning.GradientBoost.GBM
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public GBMGradientBoostClassificationModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public ClassificationGradientBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             var rows = observations.GetNumberOfRows();
             var orderedElements = CreateOrderedElements(observations, rows);
@@ -168,7 +168,7 @@ namespace SharpLearning.GradientBoost.GBM
                 }
             }
 
-            return new GBMGradientBoostClassificationModel(trees, uniqueTargets, m_learningRate, initialLoss, observations.GetNumberOfColumns());
+            return new ClassificationGradientBoostModel(trees, uniqueTargets, m_learningRate, initialLoss, observations.GetNumberOfColumns());
         }
 
         /// <summary>
