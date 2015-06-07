@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.InputOutput.Serialization;
 using System.IO;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.Models
 {
     /// <summary>
     /// 

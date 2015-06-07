@@ -2,12 +2,13 @@
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Serialization;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.Models
 {
     /// <summary>
     /// 

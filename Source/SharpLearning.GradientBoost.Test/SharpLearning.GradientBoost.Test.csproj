@@ -64,9 +64,9 @@
     <Compile Include="Learners\RegressionQuantileLossGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionAbsoluteLossGradientBoostLearnerTest.cs" />
     <Compile Include="Learners\RegressionSquareLossGradientBoostLearnerTest.cs" />
-    <Compile Include="GBMTree\GBMDecisionTreeLearnerTest.cs" />
+    <Compile Include="GBMDecisionTree\GBMDecisionTreeLearnerTest.cs" />
     <Compile Include="Models\RegressionGradientBoostModelTest.cs" />
-    <Compile Include="GBMTree\GBMTreeTest.cs" />
+    <Compile Include="GBMDecisionTree\GBMTreeTest.cs" />
     <Compile Include="LossFunctions\GBMSquaredLossTest.cs" />
     <Compile Include="LossFunctions\GBMQuantileLossTest.cs" />
     <Compile Include="LossFunctions\GBMBinomialLossTest.cs" />
@@ -80,9 +80,7 @@
     </Compile>
     <Compile Include="RandomSamplingWithoutReplacementTest.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GBM\LossFunctions\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>

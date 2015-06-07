@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SharpLearning.GradientBoost.GBMDecisionTree;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.LossFunctions
 {
     /// <summary>
     /// The square loss function is the standard method of fitting regression models.

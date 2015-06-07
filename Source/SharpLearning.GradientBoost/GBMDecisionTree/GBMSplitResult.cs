@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
     /// <summary>
     /// Split Results. Contains the best split 

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.LossFunctions
 {
     /// <summary>
     /// Least absolute deviation (LAD) loss function. LAD gives equal equal emphasis to all observations. 

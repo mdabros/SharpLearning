@@ -1,5 +1,6 @@
-﻿
-namespace SharpLearning.GradientBoost.GBM
+﻿using SharpLearning.GradientBoost.GBMDecisionTree;
+
+namespace SharpLearning.GradientBoost.LossFunctions
 {
     /// <summary>
     /// Interface for gradient boost loss functions

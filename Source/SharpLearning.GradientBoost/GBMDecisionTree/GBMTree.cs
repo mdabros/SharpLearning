@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
     /// <summary>
     /// Binary decision tree based on GBMNodes.

@@ -1,12 +1,13 @@
 ﻿using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
+using SharpLearning.GradientBoost.LossFunctions;
 using SharpLearning.Threading;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
     public sealed class GBMDecisionTreeLearner
     {

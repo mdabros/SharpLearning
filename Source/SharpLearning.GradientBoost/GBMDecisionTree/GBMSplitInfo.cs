@@ -1,6 +1,6 @@
 ﻿using SharpLearning.DecisionTrees.Nodes;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
     /// <summary>
     /// Contains information about the current split values

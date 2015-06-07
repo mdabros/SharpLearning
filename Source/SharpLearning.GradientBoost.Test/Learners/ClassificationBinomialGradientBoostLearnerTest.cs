@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.GBM;
+using SharpLearning.GradientBoost.Learners;
 using SharpLearning.GradientBoost.Test.Properties;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace SharpLearning.GradientBoost.Test.GBM
+namespace SharpLearning.GradientBoost.Test.Learners
 {
     [TestClass]
     public class ClassificationBinomialGradientBoostLearnerTest

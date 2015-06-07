@@ -1,5 +1,5 @@
 ﻿
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
     /// <summary>
     /// Represents the a split when learning a gradient boost decision tree

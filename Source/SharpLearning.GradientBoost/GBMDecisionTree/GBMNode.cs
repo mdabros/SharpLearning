@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
 
     /// <summary>

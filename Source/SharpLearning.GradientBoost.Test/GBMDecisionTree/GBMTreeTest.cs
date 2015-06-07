@@ -5,9 +5,9 @@ using SharpLearning.GradientBoost.Test.Properties;
 using SharpLearning.InputOutput.Csv;
 using System.Linq;
 using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.GBM;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 
-namespace SharpLearning.GradientBoost.Test.GBM
+namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
 {
     [TestClass]
     public class GBMTreeTest

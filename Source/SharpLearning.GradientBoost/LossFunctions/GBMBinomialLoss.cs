@@ -1,7 +1,8 @@
 ﻿using SharpLearning.Containers.Extensions;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 using System;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.LossFunctions
 {
     /// <summary>
     /// Binomial deviation is used for binary classification. It penalizes a misclassification more heavily than a correct classification

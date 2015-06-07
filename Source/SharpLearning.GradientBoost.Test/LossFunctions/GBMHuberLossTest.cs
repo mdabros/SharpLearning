@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
-using SharpLearning.GradientBoost.GBM;
+using SharpLearning.GradientBoost.LossFunctions;
 
-namespace SharpLearning.GradientBoost.Test.GBM.LossFunctions
+namespace SharpLearning.GradientBoost.Test.LossFunctions
 {
     [TestClass]
     public class GBMHuberLossTest

@@ -1,8 +1,9 @@
 ﻿using SharpLearning.Containers.Extensions;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 using System;
 using System.Collections.Generic;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.LossFunctions
 {
     /// <summary>
     /// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable 

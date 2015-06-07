@@ -1,5 +1,5 @@
 ﻿
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
     /// <summary>
     /// Tree creation item for learning GradientBoost regression tree

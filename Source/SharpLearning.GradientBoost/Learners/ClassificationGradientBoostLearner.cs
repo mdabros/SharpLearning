@@ -2,10 +2,13 @@
 using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.GradientBoost.GBMDecisionTree;
+using SharpLearning.GradientBoost.LossFunctions;
+using SharpLearning.GradientBoost.Models;
 using System;
 using System.Linq;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.Learners
 {
     /// <summary>
     /// Classificaion gradient boost learner based on 

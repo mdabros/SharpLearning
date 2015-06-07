@@ -1,6 +1,7 @@
-﻿using System;
+﻿using SharpLearning.GradientBoost.LossFunctions;
+using System;
 
-namespace SharpLearning.GradientBoost.GBM
+namespace SharpLearning.GradientBoost.Learners
 {
     /// <summary>
     /// <summary>

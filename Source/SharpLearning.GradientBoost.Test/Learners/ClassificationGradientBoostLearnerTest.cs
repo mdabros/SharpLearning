@@ -3,14 +3,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using System.IO;
 using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.GradientBoost.GBM;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.Metrics.Classification;
 using System.Diagnostics;
 using System.Linq;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.GradientBoost.Learners;
+using SharpLearning.GradientBoost.LossFunctions;
 
-namespace SharpLearning.GradientBoost.Test.GBM
+namespace SharpLearning.GradientBoost.Test.Learners
 {
     [TestClass]
     public class ClassificationGradientBoostLearnerTest
