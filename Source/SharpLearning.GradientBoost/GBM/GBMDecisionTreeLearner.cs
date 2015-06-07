@@ -45,7 +45,7 @@ namespace SharpLearning.GradientBoost.GBM
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
-            if (loss == null) { throw new ArgumentException("loss"); }
+            if (loss == null) { throw new ArgumentNullException("loss"); }
             if (numberOfThreads < 1) { throw new ArgumentException("Number of threads must be at least 1"); }
 
             m_maximumTreeDepth = maximumTreeDepth;

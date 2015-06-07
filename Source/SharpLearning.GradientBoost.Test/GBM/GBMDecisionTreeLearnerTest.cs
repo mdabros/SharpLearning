@@ -4,6 +4,7 @@ using SharpLearning.GradientBoost.GBM;
 using SharpLearning.GradientBoost.Test.Properties;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -12,6 +13,41 @@ namespace SharpLearning.GradientBoost.Test.GBM
     [TestClass]
     public class GBMDecisionTreeLearnerTest
     {
+        [ExpectedException(typeof(ArgumentException))]
+        [TestMethod]
+        public void GBMDecisionTreeLearner_Constructor_MaximumTreeDepth()
+        {
+            new GBMDecisionTreeLearner(0);
+        }
+
+        [ExpectedException(typeof(ArgumentException))]
+        [TestMethod]
+        public void GBMDecisionTreeLearner_Constructor_MinimumSplitSize()
+        {
+            new GBMDecisionTreeLearner(1, 0);
+        }
+
+        [ExpectedException(typeof(ArgumentException))]
+        [TestMethod]
+        public void GBMDecisionTreeLearner_Constructor_MinimumInformationGain()
+        {
+            new GBMDecisionTreeLearner(1, 1, 0.0);
+        }
+
+        [ExpectedException(typeof(ArgumentNullException))]
+        [TestMethod]
+        public void GBMDecisionTreeLearner_Constructor_Loss_Null()
+        {
+            new GBMDecisionTreeLearner(1, 1, 1.0, null, 1);
+        }
+
+        [ExpectedException(typeof(ArgumentException))]
+        [TestMethod]
+        public void GBMDecisionTreeLearner_Constructor_NumberOfThreads()
+        {
+            new GBMDecisionTreeLearner(1, 1, 0.0, new GBMSquaredLoss(), 0);
+        }
+        
         [TestMethod]
         public void GBMDecisionTreeLearner_Learn()
         {
