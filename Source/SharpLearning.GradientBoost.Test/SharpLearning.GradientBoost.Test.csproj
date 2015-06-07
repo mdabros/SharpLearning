@@ -65,7 +65,7 @@
     <Compile Include="GBM\RegressionAbsoluteLossGradientBoostLearnerTest.cs" />
     <Compile Include="GBM\RegressionSquareLossGradientBoostLearnerTest.cs" />
     <Compile Include="GBM\GBMDecisionTreeLearnerTest.cs" />
-    <Compile Include="GBM\GBMGradientBoostRegressorModelTest.cs" />
+    <Compile Include="GBM\RegressionGradientBoostModelTest.cs" />
     <Compile Include="GBM\GBMTreeTest.cs" />
     <Compile Include="GBM\LossFunctions\GBMSquaredLossTest.cs" />
     <Compile Include="GBM\LossFunctions\GBMQuantileLossTest.cs" />

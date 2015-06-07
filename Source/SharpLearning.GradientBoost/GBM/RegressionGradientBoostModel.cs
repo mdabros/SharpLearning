@@ -12,14 +12,14 @@ namespace SharpLearning.GradientBoost.GBM
     /// 
     /// </summary>
     [Serializable]
-    public sealed class GBMGradientBoostRegressorModel : IPredictor<double>
+    public sealed class RegressionGradientBoostModel : IPredictor<double>
     {
         readonly GBMTree[] m_trees;
         readonly double m_learningRate;
         readonly double m_initialLoss;
         readonly int m_featureCount;
 
-        public GBMGradientBoostRegressorModel(GBMTree[] trees, double learningRate, double initialLoss, int featureCount)
+        public RegressionGradientBoostModel(GBMTree[] trees, double learningRate, double initialLoss, int featureCount)
         {
             if (trees == null) { throw new ArgumentNullException("trees"); }
             m_trees = trees;
@@ -100,10 +100,10 @@ namespace SharpLearning.GradientBoost.GBM
         /// </summary>
         /// <param name="reader"></param>
         /// <returns></returns>
-        public static GBMGradientBoostRegressorModel Load(Func<TextReader> reader)
+        public static RegressionGradientBoostModel Load(Func<TextReader> reader)
         {
             return new GenericXmlDataContractSerializer()
-                .Deserialize<GBMGradientBoostRegressorModel>(reader);
+                .Deserialize<RegressionGradientBoostModel>(reader);
         }
 
         /// <summary>
