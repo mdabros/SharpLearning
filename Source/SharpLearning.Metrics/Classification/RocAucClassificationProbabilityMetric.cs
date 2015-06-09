@@ -13,8 +13,6 @@ namespace SharpLearning.Metrics.Classification
     public sealed class RocAucClassificationProbabilityMetric : IClassificationProbabilityMetric
     {
         readonly double m_positiveTarget;
-        readonly ClassificationMatrixStringConverter<double> m_converter = new ClassificationMatrixStringConverter<double>();
-        readonly ClassificationMatrix<double> m_classificationMatrix = new ClassificationMatrix<double>();
 
         /// <summary>
         /// The metric needs to know which target value is considered the positive
@@ -113,11 +111,11 @@ namespace SharpLearning.Metrics.Classification
             var classPredictions = predictions.Select(p => p.Prediction).ToArray();
             var uniques = UniqueTargets(targets, classPredictions);
 
-            var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, classPredictions);
-            var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
+            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, classPredictions);
+            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
             var error = Error(targets, predictions);
 
-            return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
 {
-    public sealed class ClassificationMatrix<T>
+    public static class ClassificationMatrix
     {
         /// <summary>
         /// Creates a confusion matrix from the provided targets and predicitons
@@ -12,7 +12,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <returns></returns>
-        public int[][] ConfusionMatrix(List<T> uniqueTargets, T[] targets, T[] predictions)
+        public static int[][] ConfusionMatrix<T>(List<T> uniqueTargets, T[] targets, T[] predictions)
         {
             var index = 0;
             var targetIndices = uniqueTargets.ToDictionary(t => t, t => index++);
@@ -34,7 +34,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="uniqueTargets"></param>
         /// <param name="confusionMatrix"></param>
         /// <returns></returns>
-        public double[][] ErrorMatrix(List<T> uniqueTargets, int[][] confusionMatrix)
+        public static double[][] ErrorMatrix<T>(List<T> uniqueTargets, int[][] confusionMatrix)
         {
             var errorMatrix = new double[uniqueTargets.Count][].Select(s => new double[uniqueTargets.Count]).ToArray();
             for (int row = 0; row < uniqueTargets.Count; ++row)

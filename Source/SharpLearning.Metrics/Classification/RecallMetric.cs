@@ -6,9 +6,6 @@ namespace SharpLearning.Metrics.Classification
 {
     public sealed class RecallMetric<T> : IClassificationMetric<T>
     {
-        readonly ClassificationMatrixStringConverter<T> m_converter = new ClassificationMatrixStringConverter<T>();
-        readonly ClassificationMatrix<T> m_classificationMatrix = new ClassificationMatrix<T>();
-
         readonly T m_positiveTarget;
 
         public RecallMetric(T positiveTarget)
@@ -81,11 +78,11 @@ namespace SharpLearning.Metrics.Classification
         {
             var uniques = UniqueTargets(targets, predictions);
 
-            var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
+            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
+            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
             var error = 1.0 - Recall(targets, predictions);
 
-            return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
     }
 }

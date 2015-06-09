@@ -15,8 +15,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var targets = new double[] { 0, 1, 1 };
             var uniqueTargets = predictions.Distinct().ToList();
 
-            var sut = new ClassificationMatrix<double>();
-            var actual = sut.ConfusionMatrix(uniqueTargets, targets, predictions);
+            var actual = ClassificationMatrix.ConfusionMatrix(uniqueTargets, targets, predictions);
 
             var expected = new int[][] { new int[] { 1, 0, 0 }, new int[] { 0, 1, 1 }, new int[] { 0, 0, 0 } };
 
@@ -33,8 +32,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var uniqueTargets = new List<double> {0, 1, 2};
             var confusionmatrix = new int[][] { new int[] { 1, 0, 0 }, new int[] { 0, 1, 1 }, new int[] { 0, 0, 0 } };
 
-            var sut = new ClassificationMatrix<double>();
-            var actual = sut.ErrorMatrix(uniqueTargets, confusionmatrix);
+            var actual = ClassificationMatrix.ErrorMatrix(uniqueTargets, confusionmatrix);
 
             var expected = new double[][] { new double[] { 1, 0, 0 }, new double[] { 0, .5, .5 }, new double[] { 0, 0, 0 } };
 

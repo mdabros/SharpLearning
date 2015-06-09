@@ -9,8 +9,8 @@ namespace SharpLearning.Metrics.Classification
     /// <typeparam name="T"></typeparam>
     public sealed class TotalErrorClassificationMetric<T> : IClassificationMetric<T>
     {
-        readonly ClassificationMatrixStringConverter<T> m_converter = new ClassificationMatrixStringConverter<T>();
-        readonly ClassificationMatrix<T> m_classificationMatrix = new ClassificationMatrix<T>();
+        //readonly ClassificationMatrixStringConverter m_converter = new ClassificationMatrixStringConverter();
+        //readonly ClassificationMatrix m_classificationMatrix = new ClassificationMatrix();
 
         /// <summary>
         /// Calculates the total error metric on a multi label or binary classification problem
@@ -22,8 +22,8 @@ namespace SharpLearning.Metrics.Classification
         {
             var uniques = UniqueTargets(targets, predictions);
 
-            var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
+            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
+            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
 
             return TotalError(uniques, confusionMatrix);
         }
@@ -61,11 +61,11 @@ namespace SharpLearning.Metrics.Classification
         {
             var uniques = UniqueTargets(targets, predictions);
 
-            var confusionMatrix = m_classificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = m_classificationMatrix.ErrorMatrix(uniques, confusionMatrix);
+            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
+            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
             var error = TotalError(uniques, confusionMatrix);
 
-            return m_converter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
     }
 }
