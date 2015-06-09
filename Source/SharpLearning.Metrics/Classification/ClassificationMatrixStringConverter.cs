@@ -6,6 +6,23 @@ namespace SharpLearning.Metrics.Classification
 {
     public static class ClassificationMatrixStringConverter
     {
+        
+        /// <summary>
+        /// Creates a string representation of the classification matrix consisting of the provided confusion matrix and error matrix.
+        /// Using the target naming provided in targetStringMapping.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="uniqueTargets"></param>
+        /// <param name="confusionMatrix"></param>
+        /// <param name="errorMatrix"></param>
+        /// <param name="error"></param>
+        /// <returns></returns>
+        public static string Convert<T>(List<T> uniqueTargets, Dictionary<T, string> targetStringMapping, int[][] confusionMatrix, double[][] errorMatrix, double error)
+        {
+            var uniqueStringTargets = uniqueTargets.Select(t => targetStringMapping[t]).ToList();
+            return Convert(uniqueStringTargets, confusionMatrix, errorMatrix, error);
+        }
+        
         /// <summary>
         /// Creates a string representation of the classification matrix consisting of the provided confusion matrix and error matrix
         /// </summary>
