@@ -21,7 +21,7 @@ namespace SharpLearning.Metrics.Test.Classification
         }
 
         [TestMethod]
-        public void ClassificationMatrixStringConverter_Convert_StringMappedTargets()
+        public void ClassificationMatrixStringConverter_Convert_TargetStringMapping()
         {
             var confusionMatrix = new int[][] { new int[] { 10, 0 }, new int[] { 0, 10 } };
             var errorMatrix = new double[][] { new double[] { 1.0, 0.0 }, new double[] { 1.0, 0.0 } };

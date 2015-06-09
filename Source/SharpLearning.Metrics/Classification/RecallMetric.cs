@@ -84,5 +84,24 @@ namespace SharpLearning.Metrics.Classification
 
             return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
         }
+
+        /// <summary>
+        /// Gets a string representation of the classification matrix with counts and percentages
+        /// Using the target names provided in the targetStringMapping
+        /// </summary>
+        /// <param name="targets"></param>
+        /// <param name="predictions"></param>
+        /// <param name="targetStringMapping"></param>
+        /// <returns></returns>
+        public string ErrorString(T[] targets, T[] predictions, Dictionary<T, string> targetStringMapping)
+        {
+            var uniques = UniqueTargets(targets, predictions);
+
+            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
+            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
+            var error = Error(targets, predictions);
+
+            return ClassificationMatrixStringConverter.Convert(uniques, targetStringMapping, confusionMatrix, errorMatrix, error);
+        }
     }
 }

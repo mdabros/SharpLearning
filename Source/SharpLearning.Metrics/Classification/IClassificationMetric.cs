@@ -1,5 +1,6 @@
 ﻿
 using SharpLearning.Common.Interfaces;
+using System.Collections.Generic;
 namespace SharpLearning.Metrics.Classification
 {
     /// <summary>
@@ -23,5 +24,14 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="predictions"></param>
         /// <returns></returns>
         string ErrorString(T[] targets, T[] predictions);
+
+        /// <summary>
+        /// Gives a string representation of the classification matrix.
+        /// Using the target names provided in the targetStringMapping
+        /// </summary>
+        /// <param name="targets"></param>
+        /// <param name="predictions"></param>
+        /// <returns></returns>
+        string ErrorString(T[] targets, T[] predictions, Dictionary<T, string> targetStringMapping);
     }
 }

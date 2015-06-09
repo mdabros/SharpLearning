@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Metrics.Classification;
 using System;
+using System.Collections.Generic;
 
 namespace SharpLearning.Metrics.Test.Classification
 {
@@ -98,6 +99,20 @@ namespace SharpLearning.Metrics.Test.Classification
             var sut = new F1ScoreMetric<double>(1);
             var actual = sut.ErrorString(targets, predictions);
             var expected = ";0;1;0;1\r\n0;0.000;2.000;0.000;100.000\r\n1;1.000;0.000;100.000;0.000\r\nError: 100.000\r\n";
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void F1ScoreMetric_ErrorString_TargetStringMapping()
+        {
+            var targets = new double[] { 0, 1, 0 };
+            var predictions = new double[] { 1, 0, 1 };
+            var targetStringMapping = new Dictionary<double, string> { { 0, "Negative" }, { 1, "Positive" } };
+
+            var sut = new F1ScoreMetric<double>(1);
+            var actual = sut.ErrorString(targets, predictions, targetStringMapping);
+            var expected = ";Negative;Positive;Negative;Positive\r\nNegative;0.000;2.000;0.000;100.000\r\nPositive;1.000;0.000;100.000;0.000\r\nError: 100.000\r\n";
 
             Assert.AreEqual(expected, actual);
         }

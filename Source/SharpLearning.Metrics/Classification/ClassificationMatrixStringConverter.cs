@@ -17,7 +17,8 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="errorMatrix"></param>
         /// <param name="error"></param>
         /// <returns></returns>
-        public static string Convert<T>(List<T> uniqueTargets, Dictionary<T, string> targetStringMapping, int[][] confusionMatrix, double[][] errorMatrix, double error)
+        public static string Convert<T>(List<T> uniqueTargets, Dictionary<T, string> targetStringMapping, 
+            int[][] confusionMatrix, double[][] errorMatrix, double error)
         {
             var uniqueStringTargets = uniqueTargets.Select(t => targetStringMapping[t]).ToList();
             return Convert(uniqueStringTargets, confusionMatrix, errorMatrix, error);
