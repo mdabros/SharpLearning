@@ -71,6 +71,7 @@
     <Compile Include="Ranking\AveragePrecisionRankingMetricTest.cs" />
     <Compile Include="Regression\MeanAbsolutErrorRegressionMetricTest.cs" />
     <Compile Include="Regression\MeanSquaredErrorRegressionMetricTest.cs" />
+    <Compile Include="Regression\NormalizedGiniCoefficientRegressionMetricTest.cs" />
     <Compile Include="Regression\RootMeanLogRegressionMetricTest.cs" />
     <Compile Include="Regression\RootMeanSquareRegressionMetricTest.cs" />
   </ItemGroup>
