@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.Metrics.Regression
@@ -29,41 +30,32 @@ namespace SharpLearning.Metrics.Regression
         /// <returns></returns>
         double GiniCoefficient(double[] target, double[] predicted)
         {
-            var df = predicted.Zip(target, (p, t) => new { Prediction = p, Target = t }).ToArray();
-            df = df.OrderByDescending(p => p.Prediction).ToArray();
-            
-            var orderedPredicted = df.Select(p => p.Prediction).ToArray();
-            var orderedTargets = df.Select(p => p.Target).ToArray();
+                if (target.Length != predicted.Length) 
+                { throw new ArgumentException(); }
+ 
+             var all =
+                 predicted.Zip(target, (pred, actual) => new { actualValue = actual, predictedValue = pred }) // (actual, prediction)
+                     .Zip(Enumerable.Range(1, target.Length), (ap, i) => new { ap.actualValue, ap.predictedValue, originalIndex = i })
+                     .OrderByDescending(ap => ap.predictedValue) // important to sort descending by prediction
+                     .ThenBy(ap => ap.originalIndex); // secondary sorts to ensure unambigious orders
+ 
+             var totalActualLosses = target.Sum();
 
-            var rand = new List<double>();
-            for (int i = 0; i < df.Length; i++)
-            {
-                rand.Add(((double)i + 1.0) / (double)df.Length);
-            }
-
-            var totalPos = orderedTargets.Sum();
-            var comPos = new List<double> { orderedTargets.First() };
-
-            for (int i = 1; i < df.Length; i++)
-            {
-                comPos.Add(comPos[i - 1] + orderedTargets[i]);
-            }
-
-            var lorentz = new List<double>();
-            foreach (var value in comPos)
-            {
-                lorentz.Add(value / totalPos);
-            }
-
-            var gini = new List<double>();
-            for (int i = 0; i < df.Length; i++)
-            {
-                gini.Add(lorentz[i] - rand[i]);
-            }
-
-            var giniCoef = gini.Sum();
-
-            return giniCoef;
+             double populationDelta = 1.0 / (double)target.Length;
+             double accumulatedPopulationPercentageSum = 0;
+             double accumulatedLossPercentageSum = 0;
+ 
+             double giniSum = 0.0;
+ 
+             foreach (var currentPair in all) 
+             {
+                 accumulatedLossPercentageSum += (currentPair.actualValue / totalActualLosses);
+                 accumulatedPopulationPercentageSum += populationDelta;
+                 giniSum += accumulatedLossPercentageSum - accumulatedPopulationPercentageSum;
+             }
+ 
+             var gini = giniSum / (double)target.Length;
+             return gini;
         }
     }
 }
