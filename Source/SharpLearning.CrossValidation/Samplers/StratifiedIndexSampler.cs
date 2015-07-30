@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Extensions;
+using System;
 
 namespace SharpLearning.CrossValidation.Samplers
 {
@@ -11,6 +12,13 @@ namespace SharpLearning.CrossValidation.Samplers
     /// <typeparam name="T">Returns a set of indices corresponding to the samples chosen. </typeparam>
     public sealed class StratifiedIndexSampler<T> : IIndexSampler<T>
     {
+        readonly Random m_random;
+
+        public StratifiedIndexSampler(int seed)
+        {
+            m_random = new Random(seed);
+        }
+
         /// <summary>
         /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
         /// Returns a set of indices corresponding to the samples chosen. 
@@ -20,7 +28,7 @@ namespace SharpLearning.CrossValidation.Samplers
         /// <returns></returns>
         public int[] Sample(T[] data, int sampleSize)
         {
-            return data.StratifiedIndexSampling(sampleSize);
+            return data.StratifiedIndexSampling(sampleSize, m_random);
         }
 
         /// <summary>
@@ -35,7 +43,7 @@ namespace SharpLearning.CrossValidation.Samplers
         /// <returns></returns>
         public int[] Sample(T[] data, int sampleSize, int[] dataIndices)
         {
-            return data.StratifiedIndexSampling(sampleSize, dataIndices);
+            return data.StratifiedIndexSampling(sampleSize, dataIndices, m_random);
         }
     }
 }

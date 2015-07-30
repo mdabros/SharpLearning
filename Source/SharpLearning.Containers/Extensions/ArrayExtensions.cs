@@ -480,14 +480,14 @@ namespace SharpLearning.Containers.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
-        /// <param name="rng"></param>
-        public static void Shuffle<T>(this IList<T> list, Random rng)
+        /// <param name="random"></param>
+        public static void Shuffle<T>(this IList<T> list, Random random)
         {
             int n = list.Count;
             while (n > 1)
             {
                 n--;
-                int k = rng.Next(n + 1);
+                int k = random.Next(n + 1);
                 T value = list[k];
                 list[k] = list[n];
                 list[n] = value;
@@ -503,7 +503,7 @@ namespace SharpLearning.Containers.Extensions
         /// <param name="data"></param>
         /// <param name="sampleSize"></param>
         /// <returns></returns>
-        public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize)
+        public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, Random random)
         {
             if (data.Length < sampleSize)
             { throw new ArgumentException("SampleSize " + sampleSize + " is larger than data size " + data.Length); }
@@ -516,16 +516,21 @@ namespace SharpLearning.Containers.Extensions
                 if (kvp.Value == 0) { throw new ArgumentException("Sample size is too small for value: " + kvp.Key + " to be included."); }
             }
 
+            // Shuffle the indices to avoid sampling the data in original order.
+            var indices = Enumerable.Range(0, data.Length).ToArray();
+            indices.Shuffle(random);
+
             var currentSampleCount = RequiredSamples.ToDictionary(k => k.Key, k => 0);
             var sampleIndices = new int[sampleSize];
             var sampleIndex = 0;
                         
             for (int i = 0; i < data.Length; i++)
             {
-                var value = data[i];
+                var index = indices[i];
+                var value = data[index];
                 if(currentSampleCount[value] != RequiredSamples[value])
                 {
-                    sampleIndices[sampleIndex++] = i;
+                    sampleIndices[sampleIndex++] = index;
                     currentSampleCount[value]++;
                 }
 
@@ -549,7 +554,7 @@ namespace SharpLearning.Containers.Extensions
         /// <param name="sampleSize"></param>
         /// <param name="dataIndices"></param>
         /// <returns></returns>
-        public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices)
+        public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices, Random random)
         {
             if (dataIndices.Length < sampleSize) 
             { throw new ArgumentException("SampleSize " + sampleSize + " is larger than dataIndices size " + dataIndices.Length); }
@@ -567,10 +572,14 @@ namespace SharpLearning.Containers.Extensions
             var currentSampleCount = RequiredSamples.ToDictionary(k => k.Key, k => 0);
             var sampleIndices = new int[sampleSize];
             var sampleIndex = 0;
-                        
-            for (int i = 0; i < dataIndices.Length; i++)
+
+            // Shuffle the indices to avoid sampling the data in original order.
+            var indices = dataIndices.ToArray();
+            indices.Shuffle(random);
+
+            for (int i = 0; i < indices.Length; i++)
             {
-                var dataIndex = dataIndices[i];
+                var dataIndex = indices[i];
                 var value = data[dataIndex];
                 if (currentSampleCount[value] != RequiredSamples[value])
                 {
@@ -586,6 +595,5 @@ namespace SharpLearning.Containers.Extensions
 
             return sampleIndices;
         }
-
     }
 }

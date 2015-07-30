@@ -21,7 +21,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
         public void StratisfiedCrossValidation_CrossValidate_Folds_2()
         {
             var actual = CrossValidate(2);
-            Assert.AreEqual(0.38461538461538464, actual, 0.001);
+            Assert.AreEqual(0.34615384615384615, actual, 0.001);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
             var targets = parser.EnumerateRows(targetName).ToF64Vector();
 
-            var sut = new StratifiedCrossValidation<double>(folds);
+            var sut = new StratifiedCrossValidation<double>(folds, 42);
             var predictions = sut.CrossValidate(new ClassificationDecisionTreeLearner(), observations, targets);
             var metric = new TotalErrorClassificationMetric<double>();
 

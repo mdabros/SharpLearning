@@ -13,8 +13,8 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// Cross validation for evaluating how learning algorithms generalise on new data
         /// </summary>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
-        public StratifiedCrossValidation(int crossValidationFolds)
-            : base(new StratifiedIndexSampler<double>(), crossValidationFolds)
+        public StratifiedCrossValidation(int crossValidationFolds, int seed = 42)
+            : base(new StratifiedIndexSampler<double>(seed), crossValidationFolds)
         {
         }
     }

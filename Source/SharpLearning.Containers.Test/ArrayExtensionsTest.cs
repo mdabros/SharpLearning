@@ -398,10 +398,10 @@ namespace SharpLearning.Containers.Test
         {
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampleSize = values.Length / 2;
-            var sampleIndices = values.StratifiedIndexSampling(sampleSize);
+            var sampleIndices = values.StratifiedIndexSampling(sampleSize, new Random(42));
 
             var actual = values.GetIndices(sampleIndices);
-            var expected = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3 };
+            var expected = new int[] { 1, 2, 1, 2, 1, 3, 1, 2, 2, 1, 3 };
 
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -412,7 +412,7 @@ namespace SharpLearning.Containers.Test
         {
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampleSize = 100;
-            values.StratifiedIndexSampling(sampleSize);
+            values.StratifiedIndexSampling(sampleSize, new Random(42));
         }
 
 
@@ -422,7 +422,7 @@ namespace SharpLearning.Containers.Test
         {
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampleSize = values.Length / 10;
-            values.StratifiedIndexSampling(sampleSize);
+            values.StratifiedIndexSampling(sampleSize, new Random(42));
         }
 
         [TestMethod]
@@ -431,10 +431,10 @@ namespace SharpLearning.Containers.Test
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var indices = new int[] { 0, 1, 2, 3, 10, 11, 12, 13, 18, 19, 20 };
             var sampleSize = 6;
-            var sampleIndices = values.StratifiedIndexSampling(sampleSize, indices);
+            var sampleIndices = values.StratifiedIndexSampling(sampleSize, indices, new Random(42));
 
             var actual = values.GetIndices(sampleIndices);
-            var expected = new int[] { 1, 1, 1, 2, 2, 3 };
+            var expected = new int[] { 3, 2, 1, 1, 1, 2 };
 
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -445,7 +445,7 @@ namespace SharpLearning.Containers.Test
         {
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampleSize = 100;
-            values.StratifiedIndexSampling(sampleSize, Enumerable.Range(0, values.Length).ToArray());
+            values.StratifiedIndexSampling(sampleSize, Enumerable.Range(0, values.Length).ToArray(), new Random(42));
         }
 
         [TestMethod]
@@ -454,7 +454,7 @@ namespace SharpLearning.Containers.Test
         {
             var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampleSize = values.Length / 10;
-            values.StratifiedIndexSampling(sampleSize, Enumerable.Range(0, values.Length).ToArray());
+            values.StratifiedIndexSampling(sampleSize, Enumerable.Range(0, values.Length).ToArray(), new Random(42));
         }
 
         [TestMethod]
@@ -465,7 +465,7 @@ namespace SharpLearning.Containers.Test
             var indices = new int[] { 1, 2, 3 };
 
             var sampleSize = values.Length / 10;
-            values.StratifiedIndexSampling(sampleSize, indices);
+            values.StratifiedIndexSampling(sampleSize, indices, new Random(42));
         }
     }
 }

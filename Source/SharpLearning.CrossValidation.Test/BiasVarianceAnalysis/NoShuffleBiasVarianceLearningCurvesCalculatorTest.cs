@@ -27,8 +27,8 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var actual = sut.Calculate(new RegressionDecisionTreeLearner(),
                 observations, targets);
 
-            var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(32, 0, 0.12821063570710003), 
-                new BiasVarianceLearningCurvePoint(128, 0.0, 0.056881585044549987)};
+            var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(32, 0, 0.12874833873980004), 
+                new BiasVarianceLearningCurvePoint(128, 0.0, 0.067720786718774989)};
             
             CollectionAssert.AreEqual(expected, actual);
         }

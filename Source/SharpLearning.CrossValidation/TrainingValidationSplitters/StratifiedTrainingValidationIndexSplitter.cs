@@ -16,8 +16,8 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         /// validation set are equal or at least very similar. 
         /// </summary>
         /// <param name="trainingPercentage"></param>
-        public StratifiedTrainingValidationIndexSplitter(double trainingPercentage)
-            : base(new StratifiedIndexSampler<T>(), trainingPercentage)
+        public StratifiedTrainingValidationIndexSplitter(double trainingPercentage, int seed = 42)
+            : base(new StratifiedIndexSampler<T>(seed), trainingPercentage)
         {
         }
     }

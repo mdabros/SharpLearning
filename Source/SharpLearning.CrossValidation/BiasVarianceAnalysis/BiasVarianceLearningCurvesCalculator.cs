@@ -95,10 +95,16 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             foreach (var samplePercentage in m_samplePercentages)
             {
                 if (samplePercentage <= 0.0 || samplePercentage > 1.0)
-                { throw new ArgumentException("Sample percentage must be larger than 0.0 and smaller than or equal to 1.0"); }
+                { 
+                    throw new ArgumentException("Sample percentage must be larger than 0.0 and smaller than or equal to 1.0"); 
+                }
 
-                var sampleSize = (int)(samplePercentage * trainingIndices.Length);
-                sampleSize = sampleSize > 0 ? sampleSize : 1;
+                var sampleSize = (int)Math.Round(samplePercentage * (double)trainingIndices.Length);
+                if (sampleSize <= 0)
+                { 
+                    throw new ArgumentException("Sample percentage " + samplePercentage + 
+                        " too small for training set size " +trainingIndices.Length); 
+                }
 
                 var trainError = 0.0;
                 var validationError = 0.0;
@@ -107,7 +113,6 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 
                 for (int j = 0; j < m_numberOfShufflesPrSample; j++)
                 {
-                    trainingIndices.Shuffle(m_random);
                     var sampleIndices = m_indexedSampler.Sample(targets, sampleSize, trainingIndices);
                     var model = learner.Learn(observations, targets, sampleIndices);
 

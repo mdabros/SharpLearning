@@ -33,9 +33,9 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// training data used in each point of the learning curve</param>
         /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
         public StratifiedBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
-            double trainingPercentage, int numberOfShufflesPrSample = 5)
-            : base(new StratifiedTrainingValidationIndexSplitter<double>(trainingPercentage),
-                   new StratifiedIndexSampler<double>(), metric, samplePercentages, numberOfShufflesPrSample)
+            double trainingPercentage, int numberOfShufflesPrSample = 5, int seed = 42)
+            : base(new StratifiedTrainingValidationIndexSplitter<double>(trainingPercentage, seed),
+                   new StratifiedIndexSampler<double>(seed), metric, samplePercentages, numberOfShufflesPrSample)
         {
         }
     }

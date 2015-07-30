@@ -15,8 +15,8 @@ namespace SharpLearning.CrossValidation.Test.TrainingValidationSplitters
             var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
 
             var actual = sut.Split(targets);
-            var expected = new TrainingValidationIndexSplit(new int[] { 0, 1, 2, 3, 5, 6, 7, 8 },
-                new int[] { 4, 9 });
+            var expected = new TrainingValidationIndexSplit(new int[] { 9, 0, 4, 2, 5, 7, 3, 8 },
+                new int[] { 1, 6 });
 
             Assert.AreEqual(expected, actual);
         }
