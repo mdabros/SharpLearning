@@ -79,7 +79,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RandomSamplingWithoutReplacementTest.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
