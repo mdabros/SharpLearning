@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.CrossValidation.BiasVarianceAnalysis;
+using SharpLearning.CrossValidation.LearningCurves;
 
-namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
+namespace SharpLearning.CrossValidation.Test.LearningCurves
 {
     [TestClass]
     public class LearningCurvePointTest

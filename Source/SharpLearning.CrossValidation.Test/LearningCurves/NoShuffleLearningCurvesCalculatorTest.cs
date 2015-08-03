@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.CrossValidation.BiasVarianceAnalysis;
+using SharpLearning.CrossValidation.LearningCurves;
 using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.InputOutput.Csv;
@@ -8,7 +8,7 @@ using SharpLearning.Metrics.Regression;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
+namespace SharpLearning.CrossValidation.Test.LearningCurves
 {
     [TestClass]
     public class NoShuffleLearningCurvesCalculatorTest

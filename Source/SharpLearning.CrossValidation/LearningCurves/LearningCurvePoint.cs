@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
+namespace SharpLearning.CrossValidation.LearningCurves
 {
     /// <summary>
     /// Container for learning curve data point

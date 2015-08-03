@@ -2,7 +2,7 @@
 using SharpLearning.CrossValidation.Samplers;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
 
-namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
+namespace SharpLearning.CrossValidation.LearningCurves
 {
     /// <summary>
     /// Bias variance analysis calculator for constructing learning curves.

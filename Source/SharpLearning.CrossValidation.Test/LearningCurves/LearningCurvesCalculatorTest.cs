@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.CrossValidation.BiasVarianceAnalysis;
+using SharpLearning.CrossValidation.LearningCurves;
 using SharpLearning.CrossValidation.Samplers;
 using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
+namespace SharpLearning.CrossValidation.Test.LearningCurves
 {
     [TestClass]
     public class LearningCurvesCalculatorTest
