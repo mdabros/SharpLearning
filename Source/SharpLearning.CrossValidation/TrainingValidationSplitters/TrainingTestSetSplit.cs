@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLearning.CrossValidation
+namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {
     /// <summary>
     /// Container for storing training set/test set split

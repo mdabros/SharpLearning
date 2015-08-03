@@ -63,7 +63,7 @@
     <Compile Include="CrossValidators\CrossValidation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CrossValidators\StratifiedCrossValidation.cs" />
-    <Compile Include="TrainingTestSetSplit.cs" />
+    <Compile Include="TrainingValidationSplitters\TrainingTestSetSplit.cs" />
     <Compile Include="TrainingValidationSplitters\ITrainingTestIndexSplitter.cs" />
     <Compile Include="TrainingValidationSplitters\RandomTrainingTestIndexSplitter.cs" />
     <Compile Include="TrainingValidationSplitters\StratifiedTrainingTestIndexSplitter.cs" />

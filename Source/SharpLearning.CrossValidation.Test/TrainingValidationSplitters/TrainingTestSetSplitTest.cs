@@ -2,8 +2,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers;
+using SharpLearning.CrossValidation.TrainingTestSplitters;
 
-namespace SharpLearning.CrossValidation.Test
+namespace SharpLearning.CrossValidation.Test.TrainingTestSplitters
 {
     [TestClass]
     public class TrainingTestSetSplitTest
