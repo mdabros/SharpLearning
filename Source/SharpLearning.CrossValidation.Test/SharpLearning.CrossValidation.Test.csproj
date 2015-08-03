@@ -77,12 +77,12 @@
     <Compile Include="Samplers\StratifiedIndexSamplerTest.cs" />
     <Compile Include="CrossValidators\StratifiedCrossValidationTest.cs" />
     <Compile Include="TrainingTestSetSplitTest.cs" />
-    <Compile Include="TrainingValidationSplitters\StratifiedTrainingValidationIndexSplitterTest.cs" />
-    <Compile Include="TrainingValidationSplitters\RandomTrainingValidationIndexSplitterTest.cs" />
-    <Compile Include="TrainingValidationSplitters\TrainingValidationIndexSplitterExtensionsTest.cs" />
-    <Compile Include="TrainingValidationSplitters\TrainingValidationIndexSplitterTest.cs" />
-    <Compile Include="TrainingValidationSplitters\TrainingValidationIndexSplitTest.cs" />
-    <Compile Include="TrainingValidationSplitters\NoShuffleTrainingValidationIndexSplitterTest.cs" />
+    <Compile Include="TrainingValidationSplitters\NoShuffleTrainingTestIndexSplitterTest.cs" />
+    <Compile Include="TrainingValidationSplitters\StratifiedTrainingTestndexSplitterTest.cs" />
+    <Compile Include="TrainingValidationSplitters\RandomTrainingTestIndexSplitterTest.cs" />
+    <Compile Include="TrainingValidationSplitters\TrainingTestIndexSplitterExtensionsTest.cs" />
+    <Compile Include="TrainingValidationSplitters\TrainingTestIndexSplitterTest.cs" />
+    <Compile Include="TrainingValidationSplitters\TrainingTestIndexSplitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">

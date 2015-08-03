@@ -1,17 +1,17 @@
 ﻿
-namespace SharpLearning.CrossValidation.TrainingValidationSplitters
+namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {
     /// <summary>
-    /// Interface for training validation index splitters
+    /// Interface for training test index splitters
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface ITrainingValidationIndexSplitter<T>
+    public interface ITrainingTestIndexSplitter<T>
     {
         /// <summary>
         /// 
         /// </summary>
         /// <param name="targets"></param>
         /// <returns></returns>
-        TrainingValidationIndexSplit Split(T[] targets);
+        TrainingTestIndexSplit Split(T[] targets);
     }
 }

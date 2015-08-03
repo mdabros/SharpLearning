@@ -3,12 +3,12 @@ using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using System;
 
-namespace SharpLearning.CrossValidation.TrainingValidationSplitters
+namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {
     /// <summary>
-    /// Extension methods for ITrainingValidationIndexSplitters
+    /// Extension methods for ITrainingTestIndexSplitters
     /// </summary>
-    public static class TrainingValidationIndexSplitterExtensions
+    public static class TrainingTestIndexSplitterExtensions
     {
         /// <summary>
         /// Splits the observations and targets into a training and a test set.
@@ -17,7 +17,7 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         /// <param name="observations">The observations for the problem</param>
         /// <param name="targets">The targets for the problem</param>
         /// <returns></returns>
-        public static TrainingTestSetSplit SplitSet(this ITrainingValidationIndexSplitter<double> splitter, 
+        public static TrainingTestSetSplit SplitSet(this ITrainingTestIndexSplitter<double> splitter, 
             F64Matrix observations, double[] targets)
         {
             if (observations.GetNumberOfRows() != targets.Length)
@@ -27,8 +27,8 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
             var trainingSet = new ObservationTargetSet((F64Matrix)observations.GetRows(indexSplit.TrainingIndices),
                 targets.GetIndices(indexSplit.TrainingIndices));
 
-            var testSet = new ObservationTargetSet((F64Matrix)observations.GetRows(indexSplit.ValidationIndices),
-                targets.GetIndices(indexSplit.ValidationIndices));
+            var testSet = new ObservationTargetSet((F64Matrix)observations.GetRows(indexSplit.TestIndices),
+                targets.GetIndices(indexSplit.TestIndices));
 
             return new TrainingTestSetSplit(trainingSet, testSet);
         }

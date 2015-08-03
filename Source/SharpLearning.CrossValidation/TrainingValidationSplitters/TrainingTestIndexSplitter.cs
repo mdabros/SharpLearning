@@ -2,14 +2,14 @@
 using System;
 using System.Linq;
 
-namespace SharpLearning.CrossValidation.TrainingValidationSplitters
+namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {
     /// <summary>
-    /// Creates a set of training and validation indices based on the provided targets.
+    /// Creates a set of training and test indices based on the provided targets.
     /// The return values are two arrays of indices which can be used with IIndexedLearners.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class TrainingValidationIndexSplitter<T> : ITrainingValidationIndexSplitter<T>
+    public class TrainingTestIndexSplitter<T> : ITrainingTestIndexSplitter<T>
     {
         readonly IIndexSampler<T> m_indexSampler;
         readonly double m_trainingPercentage;
@@ -19,7 +19,7 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         /// </summary>
         /// <param name="shuffler">the type of shuffler provided</param>
         /// <param name="trainingPercentage">What percentage of the indices should go to the training set</param>
-        public TrainingValidationIndexSplitter(IIndexSampler<T> shuffler, double trainingPercentage)
+        public TrainingTestIndexSplitter(IIndexSampler<T> shuffler, double trainingPercentage)
         {
             if (shuffler == null) { throw new ArgumentNullException("shuffler"); }
             if (trainingPercentage <= 0.0 || trainingPercentage >= 1.0)
@@ -29,22 +29,22 @@ namespace SharpLearning.CrossValidation.TrainingValidationSplitters
         }
 
         /// <summary>
-        /// Creates a set of training and validation indices based on the provided targets
+        /// Creates a set of training and test indices based on the provided targets
         /// </summary>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public TrainingValidationIndexSplit Split(T[] targets)
+        public TrainingTestIndexSplit Split(T[] targets)
         {
             var trainingSampleSize = (int)(m_trainingPercentage * (double)targets.Length);
             trainingSampleSize = trainingSampleSize > 0 ? trainingSampleSize : 1;
             var indices = Enumerable.Range(0, targets.Length).ToArray();
 
             var trainingIndices = m_indexSampler.Sample(targets, trainingSampleSize, indices);
-            var validationIndices = indices.Except(trainingIndices)
+            var testIndices = indices.Except(trainingIndices)
                 .ToArray();
 
-            return new TrainingValidationIndexSplit(trainingIndices, 
-                validationIndices);
+            return new TrainingTestIndexSplit(trainingIndices, 
+                testIndices);
         }
     }
 }

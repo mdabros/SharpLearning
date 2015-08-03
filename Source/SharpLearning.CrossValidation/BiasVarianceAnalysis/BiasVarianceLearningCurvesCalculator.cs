@@ -2,7 +2,7 @@
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Samplers;
-using SharpLearning.CrossValidation.TrainingValidationSplitters;
+using SharpLearning.CrossValidation.TrainingTestSplitters;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +23,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
     /// </summary>
     public class BiasVarianceLearningCurvesCalculator<TPrediction> : IBiasVarianceLearningCurveCalculator<TPrediction>
     {
-        readonly ITrainingValidationIndexSplitter<double> m_trainingValidationIndexSplitter;
+        readonly ITrainingTestIndexSplitter<double> m_trainingValidationIndexSplitter;
         readonly double[] m_samplePercentages;
         readonly IMetric<double, TPrediction> m_metric;
         readonly IIndexSampler<double> m_indexedSampler;
@@ -38,7 +38,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
-        public BiasVarianceLearningCurvesCalculator(ITrainingValidationIndexSplitter<double> trainingValidationIndexSplitter,
+        public BiasVarianceLearningCurvesCalculator(ITrainingTestIndexSplitter<double> trainingValidationIndexSplitter,
             IIndexSampler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
         {
             if (trainingValidationIndexSplitter == null) { throw new ArgumentException("trainingValidationIndexSplitter"); }
@@ -71,7 +71,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             
             return Calculate(learnerFactory, observations, targets,
                 trainingValidationIndices.TrainingIndices,
-                trainingValidationIndices.ValidationIndices);
+                trainingValidationIndices.TestIndices);
         }
 
         /// <summary>

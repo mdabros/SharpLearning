@@ -1,6 +1,6 @@
 ﻿using SharpLearning.Common.Interfaces;
 using SharpLearning.CrossValidation.Samplers;
-using SharpLearning.CrossValidation.TrainingValidationSplitters;
+using SharpLearning.CrossValidation.TrainingTestSplitters;
 
 namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 {
@@ -34,7 +34,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
         public StratifiedBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
             double trainingPercentage, int numberOfShufflesPrSample = 5, int seed = 42)
-            : base(new StratifiedTrainingValidationIndexSplitter<double>(trainingPercentage, seed),
+            : base(new StratifiedTrainingTestIndexSplitter<double>(trainingPercentage, seed),
                    new StratifiedIndexSampler<double>(seed), metric, samplePercentages, numberOfShufflesPrSample)
         {
         }
