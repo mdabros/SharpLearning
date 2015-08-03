@@ -57,12 +57,12 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="BiasVarianceAnalysis\LearningCurvePointExtensionsTest.cs" />
-    <Compile Include="BiasVarianceAnalysis\LearningCurvePointTest.cs" />
-    <Compile Include="BiasVarianceAnalysis\RandomLearningCurvesCalculatorTest.cs" />
-    <Compile Include="BiasVarianceAnalysis\NoShuffleLearningCurvesCalculatorTest.cs" />
-    <Compile Include="BiasVarianceAnalysis\LearningCurvesCalculatorTest.cs" />
-    <Compile Include="BiasVarianceAnalysis\StratifiedLearningCurvesCalculatorTest.cs" />
+    <Compile Include="LearningCurves\LearningCurvePointExtensionsTest.cs" />
+    <Compile Include="LearningCurves\LearningCurvePointTest.cs" />
+    <Compile Include="LearningCurves\RandomLearningCurvesCalculatorTest.cs" />
+    <Compile Include="LearningCurves\NoShuffleLearningCurvesCalculatorTest.cs" />
+    <Compile Include="LearningCurves\LearningCurvesCalculatorTest.cs" />
+    <Compile Include="LearningCurves\StratifiedLearningCurvesCalculatorTest.cs" />
     <Compile Include="CrossValidators\CrossValidationTest.cs" />
     <Compile Include="CrossValidators\NoShuffleCrossValidationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
