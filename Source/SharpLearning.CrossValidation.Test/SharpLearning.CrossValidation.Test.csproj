@@ -76,13 +76,13 @@
     <Compile Include="Samplers\RandomIndexSamplerTest.cs" />
     <Compile Include="Samplers\StratifiedIndexSamplerTest.cs" />
     <Compile Include="CrossValidators\StratifiedCrossValidationTest.cs" />
-    <Compile Include="TrainingValidationSplitters\TrainingTestSetSplitTest.cs" />
-    <Compile Include="TrainingValidationSplitters\NoShuffleTrainingTestIndexSplitterTest.cs" />
-    <Compile Include="TrainingValidationSplitters\StratifiedTrainingTestndexSplitterTest.cs" />
-    <Compile Include="TrainingValidationSplitters\RandomTrainingTestIndexSplitterTest.cs" />
-    <Compile Include="TrainingValidationSplitters\TrainingTestIndexSplitterExtensionsTest.cs" />
-    <Compile Include="TrainingValidationSplitters\TrainingTestIndexSplitterTest.cs" />
-    <Compile Include="TrainingValidationSplitters\TrainingTestIndexSplitTest.cs" />
+    <Compile Include="TrainingTestSplitters\TrainingTestSetSplitTest.cs" />
+    <Compile Include="TrainingTestSplitters\NoShuffleTrainingTestIndexSplitterTest.cs" />
+    <Compile Include="TrainingTestSplitters\StratifiedTrainingTestndexSplitterTest.cs" />
+    <Compile Include="TrainingTestSplitters\RandomTrainingTestIndexSplitterTest.cs" />
+    <Compile Include="TrainingTestSplitters\TrainingTestIndexSplitterExtensionsTest.cs" />
+    <Compile Include="TrainingTestSplitters\TrainingTestIndexSplitterTest.cs" />
+    <Compile Include="TrainingTestSplitters\TrainingTestIndexSplitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
