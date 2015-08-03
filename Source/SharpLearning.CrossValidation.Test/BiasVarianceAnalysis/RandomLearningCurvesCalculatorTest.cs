@@ -10,12 +10,12 @@ using System.IO;
 namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
 {
     [TestClass]
-    public class RandomBiasVarianceLearningCurvesCalculatorTest
+    public class RandomLearningCurvesCalculatorTest
     {
         [TestMethod]
-        public void RandomBiasVarianceLearningCurvesCalculator_Calculate()
+        public void RandomLearningCurvesCalculator_Calculate()
         {
-            var sut = new RandomBiasVarianceLearningCurvesCalculator<double>(new MeanSquaredErrorRegressionMetric(), 
+            var sut = new RandomShuffleLearningCurvesCalculator<double>(new MeanSquaredErrorRegressionMetric(), 
                 new double[] { 0.2, 0.8 }, 0.8, 42, 5);
 
             var targetName = "T";
@@ -26,8 +26,8 @@ namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
             var actual = sut.Calculate(new RegressionDecisionTreeLearner(),
                 observations, targets);
 
-            var expected = new List<BiasVarianceLearningCurvePoint>() { new BiasVarianceLearningCurvePoint(32, 0, 0.141565953928265), 
-                new BiasVarianceLearningCurvePoint(128, 0.0, 0.068970597423950036)};
+            var expected = new List<LearningCurvePoint>() { new LearningCurvePoint(32, 0, 0.141565953928265), 
+                new LearningCurvePoint(128, 0.0, 0.068970597423950036)};
 
             CollectionAssert.AreEqual(expected, actual);
         }

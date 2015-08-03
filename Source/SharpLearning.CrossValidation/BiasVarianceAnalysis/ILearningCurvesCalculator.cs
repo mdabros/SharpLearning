@@ -17,7 +17,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public interface IBiasVarianceLearningCurveCalculator<TPrediction>
+    public interface ILearningCurvesCalculator<TPrediction>
     {
         /// <summary>
         /// Returns a list of BiasVarianceLearningCurvePoints for constructing learning curves.
@@ -27,7 +27,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learnerFactory,
+        List<LearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learnerFactory,
             F64Matrix observations, double[] targets);
     }
 }

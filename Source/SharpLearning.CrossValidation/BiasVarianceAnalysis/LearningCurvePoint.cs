@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 {
     /// <summary>
-    /// Container for bias variance analysis data point
+    /// Container for learning curve data point
     /// </summary>
-    public struct BiasVarianceLearningCurvePoint : IEquatable<BiasVarianceLearningCurvePoint>
+    public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     {
         public readonly int SampleSize;
         public readonly double TrainingScore;
         public readonly double ValidationScore;
 
         /// <summary>
-        /// Container for bias variance analysis data point
+        /// Container for learning curve data point
         /// </summary>
         /// <param name="sampleSize"></param>
         /// <param name="trainingScore"></param>
         /// <param name="validationScore"></param>
-        public BiasVarianceLearningCurvePoint(int sampleSize, double trainingScore, double validationScore)
+        public LearningCurvePoint(int sampleSize, double trainingScore, double validationScore)
         {
             SampleSize = sampleSize;
             TrainingScore = trainingScore;
             ValidationScore = validationScore;
         }
 
-        public bool Equals(BiasVarianceLearningCurvePoint other)
+        public bool Equals(LearningCurvePoint other)
         {
             if (this.SampleSize != other.SampleSize) { return false; }
             if (this.TrainingScore != other.TrainingScore) { return false; }
@@ -37,12 +37,12 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
             return true;
         }
 
-        public static bool operator !=(BiasVarianceLearningCurvePoint x, BiasVarianceLearningCurvePoint y)
+        public static bool operator !=(LearningCurvePoint x, LearningCurvePoint y)
         {
             return !(x == y);
         }
 
-        public static bool operator ==(BiasVarianceLearningCurvePoint x, BiasVarianceLearningCurvePoint y)
+        public static bool operator ==(LearningCurvePoint x, LearningCurvePoint y)
         {
             return (x.SampleSize == y.SampleSize) &&
                    (x.TrainingScore == y.TrainingScore) &&
@@ -51,8 +51,8 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 
         public override bool Equals(object obj)
         {
-            if (obj is BiasVarianceLearningCurvePoint)
-                return this.Equals((BiasVarianceLearningCurvePoint)obj);
+            if (obj is LearningCurvePoint)
+                return this.Equals((LearningCurvePoint)obj);
             else
                 return false;
         }

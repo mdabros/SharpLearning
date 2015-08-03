@@ -19,8 +19,8 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public sealed class NoShuffleBiasVarianceLearningCurvesCalculator<TPrediction> : 
-        BiasVarianceLearningCurvesCalculator<TPrediction>
+    public sealed class NoShuffleLearningCurvesCalculator<TPrediction> : 
+        LearningCurvesCalculator<TPrediction>
     {
         /// <summary>
         /// Bias variance analysis calculator for constructing learning curves.
@@ -31,7 +31,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
-        public NoShuffleBiasVarianceLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, double trainingPercentage)
+        public NoShuffleLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, double trainingPercentage)
             : base(new NoShuffleTrainingTestIndexSplitter<double>(trainingPercentage),
                    new NoShuffleIndexSampler<double>(), metric, samplePercentages, 1)
         {

@@ -21,7 +21,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public class BiasVarianceLearningCurvesCalculator<TPrediction> : IBiasVarianceLearningCurveCalculator<TPrediction>
+    public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<TPrediction>
     {
         readonly ITrainingTestIndexSplitter<double> m_trainingValidationIndexSplitter;
         readonly double[] m_samplePercentages;
@@ -38,7 +38,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
-        public BiasVarianceLearningCurvesCalculator(ITrainingTestIndexSplitter<double> trainingValidationIndexSplitter,
+        public LearningCurvesCalculator(ITrainingTestIndexSplitter<double> trainingValidationIndexSplitter,
             IIndexSampler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
         {
             if (trainingValidationIndexSplitter == null) { throw new ArgumentException("trainingValidationIndexSplitter"); }
@@ -64,7 +64,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learnerFactory,
+        public List<LearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learnerFactory,
             F64Matrix observations, double[] targets)
         {
             var trainingValidationIndices = m_trainingValidationIndexSplitter.Split(targets);
@@ -84,10 +84,10 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="trainingIndices">Indices that should be used for training</param>
         /// <param name="validationIndices">Indices that should be used for validation</param>
         /// <returns></returns>
-        public List<BiasVarianceLearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learner,
+        public List<LearningCurvePoint> Calculate(IIndexedLearner<TPrediction> learner,
             F64Matrix observations, double[] targets, int[] trainingIndices, int[] validationIndices)
         {
-            var learningCurves = new List<BiasVarianceLearningCurvePoint>();
+            var learningCurves = new List<LearningCurvePoint>();
 
             var validationTargets = targets.GetIndices(validationIndices);
             var validationPredictions = new TPrediction[validationTargets.Length];
@@ -134,7 +134,7 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
                 trainError = trainError / m_numberOfShufflesPrSample;
                 validationError = validationError / m_numberOfShufflesPrSample;
                 
-                learningCurves.Add(new BiasVarianceLearningCurvePoint(sampleSize,
+                learningCurves.Add(new LearningCurvePoint(sampleSize,
                     trainError , validationError));
             }
 

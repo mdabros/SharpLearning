@@ -5,17 +5,17 @@ using SharpLearning.CrossValidation.BiasVarianceAnalysis;
 namespace SharpLearning.CrossValidation.Test.BiasVarianceAnalysis
 {
     [TestClass]
-    public class BiasVarianceLearningCurvePointTest
+    public class LearningCurvePointTest
     {
         [TestMethod]
         public void BiasVarianceLearningCurvePoint_Equals()
         {
-            var sut = new BiasVarianceLearningCurvePoint(10, 1.0, 2.0);
-            var equal = new BiasVarianceLearningCurvePoint(10, 1.0, 2.0);
+            var sut = new LearningCurvePoint(10, 1.0, 2.0);
+            var equal = new LearningCurvePoint(10, 1.0, 2.0);
 
-            var notEqual1 = new BiasVarianceLearningCurvePoint(11, 1.0, 2.0);
-            var notEqual2 = new BiasVarianceLearningCurvePoint(10, 1.2, 2.0);
-            var notEqual3 = new BiasVarianceLearningCurvePoint(10, 1.0, 2.1);
+            var notEqual1 = new LearningCurvePoint(11, 1.0, 2.0);
+            var notEqual2 = new LearningCurvePoint(10, 1.2, 2.0);
+            var notEqual3 = new LearningCurvePoint(10, 1.0, 2.1);
 
             Assert.IsTrue(sut.Equals(equal));
             Assert.IsTrue(sut == equal);

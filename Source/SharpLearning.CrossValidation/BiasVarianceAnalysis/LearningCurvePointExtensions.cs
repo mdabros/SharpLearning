@@ -10,17 +10,17 @@ using System.Threading.Tasks;
 namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
 {
     /// <summary>
-    /// Extension methods for BiasVarianceLearningCurvePoint
+    /// Extension methods for LearningCurvePoint
     /// </summary>
-    public static class BiasVarianceLearningCurvePointExtensions
+    public static class LearningCurvePointExtensions
     {
         /// <summary>
-        /// Converts a list of n BiasVarianceLearningCurvePoint to a n by 3 matrix
+        /// Converts a list of n LearningCurvePoint to a n by 3 matrix
         /// with columns SampleSize, TrainingScore and ValidationScore.
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public static F64Matrix ToF64Matrix(this List<BiasVarianceLearningCurvePoint> points)
+        public static F64Matrix ToF64Matrix(this List<LearningCurvePoint> points)
         {
             if (points.Count == 0)
             { throw new ArgumentException("There must be at least one element in the list to convert to a matrix"); };
@@ -43,11 +43,11 @@ namespace SharpLearning.CrossValidation.BiasVarianceAnalysis
         /// <param name="points"></param>
         /// <param name="writer"></param>
         /// <param name="separator"></param>
-        public static void Write(this List<BiasVarianceLearningCurvePoint> points, Func<TextWriter> writer, 
+        public static void Write(this List<LearningCurvePoint> points, Func<TextWriter> writer, 
             char separator = CsvParser.DefaultDelimiter)
         {
             points.ToF64Matrix()
-                .EnumerateCsvRows(new Dictionary<string, int> { { "SampleCount", 0 }, { "TrainingError", 1 }, { "TestError", 2 } })
+                .EnumerateCsvRows(new Dictionary<string, int> { { "SampleCount", 0 }, { "TrainingError", 1 }, { "ValidationError", 2 } })
                 .Write(writer, separator);
         }
     }
