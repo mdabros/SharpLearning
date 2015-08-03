@@ -49,6 +49,7 @@
     <Compile Include="Arithmetic\MatrixSubtraction.cs" />
     <Compile Include="Arithmetic\MatrixTranspose.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
+    <Compile Include="ObservationTargetSet.cs" />
     <Compile Include="ProbabilityPrediction.cs" />
     <Compile Include="Properties\AssemblyVersion.cs" />
     <Compile Include="FloatingPointConversion.cs" />
