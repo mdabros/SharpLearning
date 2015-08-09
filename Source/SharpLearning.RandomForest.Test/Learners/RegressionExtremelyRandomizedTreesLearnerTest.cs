@@ -36,6 +36,13 @@ namespace SharpLearning.RandomForest.Test.Learners
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(100);
             Assert.AreEqual(0.079629411481205281, error, 0.0000001);
         }
+        
+        [TestMethod]
+        public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_100_SubSample()
+        {
+            var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(100, 0.5);
+            Assert.AreEqual(0.11459688611647814, error, 0.0000001);
+        }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_1()
@@ -59,6 +66,13 @@ namespace SharpLearning.RandomForest.Test.Learners
         }
 
         [TestMethod]
+        public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_100_SubSample()
+        {
+            var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(100, 0.5);
+            Assert.AreEqual(0.58293009065656265, error, 0.0000001);
+        }
+
+        [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_100_Indices()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
@@ -66,7 +80,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(100, 1, 100, 1, 0.0001, 42, 1);
+            var sut = new RegressionExtremelyRandomizedTreesLearner(100, 1, 100, 1, 0.0001, 1.0, 42, 1);
             
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -83,14 +97,14 @@ namespace SharpLearning.RandomForest.Test.Learners
             Assert.AreEqual(0.63876128131525645, error, 0.0000001);
         }
 
-        double RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(int trees)
+        double RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(int trees, double subSampleRatio = 1.0)
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, 42, 1);
+            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -100,14 +114,14 @@ namespace SharpLearning.RandomForest.Test.Learners
             return error;
         }
 
-        double RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(int trees)
+        double RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
         {
             var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 5, 100, 1, 0.0001, 42, 1);
+            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 5, 100, 1, 0.0001, subSampleRatio, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);

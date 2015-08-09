@@ -25,7 +25,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 42, 1);
+            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var predictions = new double[rows];
@@ -48,7 +48,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 42, 1);
+            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -67,7 +67,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 42, 1);
+            var learner = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var actual = new ProbabilityPrediction[rows];
@@ -93,7 +93,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 42, 1);
+            var learner = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.PredictProbability(observations);
@@ -115,7 +115,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
-            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 42, 1);
+            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
@@ -139,7 +139,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 42, 1);
+            var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();
@@ -160,7 +160,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var learner = new ClassificationRandomForestLearner(2, 5, 100, 1, 0.0001, 42, 1);
+            var learner = new ClassificationRandomForestLearner(2, 5, 100, 1, 0.0001, 1.0, 42, 1);
             var sut = learner.Learn(observations, targets);
 
             var writer = new StringWriter();

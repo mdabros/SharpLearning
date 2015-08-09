@@ -22,6 +22,7 @@ namespace SharpLearning.RandomForest.Learners
         int m_featuresPrSplit;
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
+        readonly double m_subSampleRatio;
         readonly int m_maximumTreeDepth;
         readonly Random m_random;
         readonly int m_numberOfThreads;
@@ -36,10 +37,13 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">Number of features used at each split in each tree. 0 means (availible features) / 3.0</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
+        /// <param name="subSampleRatio">The ratio of observations sampled with replacement for each tree. 
+        /// Default is 1.0 sampling the same count as the number of observations in the input. 
+        /// If below 1.0 the algorithm changes to random patches</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
         public RegressionRandomForestLearner(int trees, int minimumSplitSize, int maximumTreeDepth,
-            int featuresPrSplit, double minimumInformationGain, int seed, int numberOfThreads)
+            int featuresPrSplit, double minimumInformationGain, double subSampleRatio, int seed, int numberOfThreads)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 1"); }
@@ -53,6 +57,7 @@ namespace SharpLearning.RandomForest.Learners
             m_maximumTreeDepth = maximumTreeDepth;
             m_featuresPrSplit = featuresPrSplit;
             m_minimumInformationGain = minimumInformationGain;
+            m_subSampleRatio = subSampleRatio;
             m_numberOfThreads = numberOfThreads;
 
             m_random = new Random(seed);
@@ -66,11 +71,14 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
+        /// <param name="subSampleRatio">The ratio of observations sampled with replacement for each tree. 
+        /// Default is 1.0 sampling the same count as the number of observations in the input. 
+        /// If below 1.0 the algorithm changes to random patches</param>
         /// <param name="seed">Seed for the random number generator</param>
-        public RegressionRandomForestLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000, 
-            int featuresPrSplit = 0, double minimumInformationGain = .000001, int seed = 42)
-          : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain, 
-            seed, Environment.ProcessorCount)
+        public RegressionRandomForestLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000,
+            int featuresPrSplit = 0, double minimumInformationGain = .000001, double subSampleRatio = 1.0, int seed = 42)
+          : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain,
+            subSampleRatio, seed, Environment.ProcessorCount)
         {
         }
 
@@ -169,14 +177,15 @@ namespace SharpLearning.RandomForest.Learners
             var learner = new RegressionDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, m_featuresPrSplit,
                 m_minimumInformationGain, random.Next());
 
-            var treeIndices = new int[indices.Length];
+            var treeIndicesLength = (int)Math.Round(m_subSampleRatio * (double)indices.Length);
+            var treeIndices = new int[treeIndicesLength];
 
             int task = -1;
             while (workItems.TryDequeue(out task))
             {
-                for (int j = 0; j < indices.Length; j++)
+                for (int j = 0; j < treeIndicesLength; j++)
                 {
-                    treeIndices[j] = indices[random.Next(treeIndices.Length)];
+                    treeIndices[j] = indices[random.Next(indices.Length)];
                 }
 
                 var model = learner.Learn(observations, targets, treeIndices);
