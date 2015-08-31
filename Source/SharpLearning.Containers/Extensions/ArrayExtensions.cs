@@ -501,17 +501,18 @@ namespace SharpLearning.Containers.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        /// <param name="sampleSize"></param>
+        /// <param name="sampleSize">Depending on the data distribution the returned sample size might be sligtly smaller 
+        /// than the specified</param>
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, Random random)
         {
             if (data.Length < sampleSize)
             { throw new ArgumentException("SampleSize " + sampleSize + " is larger than data size " + data.Length); }
 
-            var RequiredSamples = data.GroupBy(d => d)
-                .ToDictionary(d => d.Key, d => Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
+            var requiredSamples = data.GroupBy(d => d)
+                .ToDictionary(d => d.Key, d => (int)Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
 
-            foreach (var kvp in RequiredSamples)
+            foreach (var kvp in requiredSamples)
             {
                 if (kvp.Value == 0) { throw new ArgumentException("Sample size is too small for value: " + kvp.Key + " to be included."); }
             }
@@ -520,21 +521,24 @@ namespace SharpLearning.Containers.Extensions
             var indices = Enumerable.Range(0, data.Length).ToArray();
             indices.Shuffle(random);
 
-            var currentSampleCount = RequiredSamples.ToDictionary(k => k.Key, k => 0);
-            var sampleIndices = new int[sampleSize];
+            var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
+            
+            // might be slightly different than the specified depending on data destribution
+            var requiredSampleSize = requiredSamples.Select(s => s.Value).Sum(); 
+            var sampleIndices = new int[requiredSampleSize];
             var sampleIndex = 0;
                         
             for (int i = 0; i < data.Length; i++)
             {
                 var index = indices[i];
                 var value = data[index];
-                if(currentSampleCount[value] != RequiredSamples[value])
+                if(currentSampleCount[value] != requiredSamples[value])
                 {
                     sampleIndices[sampleIndex++] = index;
                     currentSampleCount[value]++;
                 }
 
-                if (sampleIndex == sampleSize)
+                if (sampleIndex == requiredSampleSize)
                 {
                     break;
                 }
@@ -551,7 +555,8 @@ namespace SharpLearning.Containers.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        /// <param name="sampleSize"></param>
+        /// <param name="sampleSize">Depending on the data distribution the returned sample size might be sligtly smaller 
+        /// than the specified</param>
         /// <param name="dataIndices"></param>
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices, Random random)
@@ -561,16 +566,18 @@ namespace SharpLearning.Containers.Extensions
             if (data.Length < dataIndices.Length) 
             { throw new ArgumentException("dataIndices " + dataIndices.Length + " is larger than data size " + data.Length); }
 
-            var RequiredSamples = data.GroupBy(d => d)
-                .ToDictionary(d => d.Key, d => Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
+            var requiredSamples = data.GroupBy(d => d)
+                .ToDictionary(d => d.Key, d => (int)Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
 
-            foreach (var kvp in RequiredSamples)
+            foreach (var kvp in requiredSamples)
             {
                 if (kvp.Value == 0) { throw new ArgumentException("Sample size is too small for value: " + kvp.Key + " to be included."); }
             }
 
-            var currentSampleCount = RequiredSamples.ToDictionary(k => k.Key, k => 0);
-            var sampleIndices = new int[sampleSize];
+            var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
+            // might be slightly different than the specified depending on data destribution
+            var requiredSampleSize = requiredSamples.Select(s => s.Value).Sum();
+            var sampleIndices = new int[requiredSampleSize];
             var sampleIndex = 0;
 
             // Shuffle the indices to avoid sampling the data in original order.
@@ -581,7 +588,7 @@ namespace SharpLearning.Containers.Extensions
             {
                 var dataIndex = indices[i];
                 var value = data[dataIndex];
-                if (currentSampleCount[value] != RequiredSamples[value])
+                if (currentSampleCount[value] != requiredSamples[value])
                 {
                     sampleIndices[sampleIndex++] = dataIndex;
                     currentSampleCount[value]++;
