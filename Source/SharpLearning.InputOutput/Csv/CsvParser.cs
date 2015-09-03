@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace SharpLearning.InputOutput.Csv
 {
@@ -14,17 +15,19 @@ namespace SharpLearning.InputOutput.Csv
 
         readonly Func<TextReader> m_getReader;
         readonly char m_separator;
+        readonly bool m_quoteInclosedColumns;
 
         /// <summary>
         /// Creates an instance of the CsvParser
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="separator"></param>
-        public CsvParser(Func<TextReader> reader, char separator = DefaultDelimiter)
+        public CsvParser(Func<TextReader> reader, char separator = DefaultDelimiter, bool quoteInclosedColumns = false)
         {
             if (reader == null) { throw new ArgumentException("reader"); }
             m_getReader = reader;
             m_separator = separator;
+            m_quoteInclosedColumns = quoteInclosedColumns;
         }
 
         /// <summary>
@@ -110,7 +113,17 @@ namespace SharpLearning.InputOutput.Csv
 
         string[] Split(string line)
         {
-            var split = line.Split(m_separator);
+            string[] split = null;
+
+            if (m_quoteInclosedColumns)
+            {
+                split = SplitText(line, m_separator);
+            }
+            else
+            {
+                split = line.Split(m_separator);
+            }
+
             for (int i = 0; i < split.Length; i++)
             {
                 split[i] = split[i].Trim('"');
@@ -120,7 +133,17 @@ namespace SharpLearning.InputOutput.Csv
 
         string[] Split(string line, int[] indices)
         {
-            var splitAll = line.Split(m_separator);
+            string[] splitAll = null;
+
+            if(m_quoteInclosedColumns)
+            {
+                splitAll = SplitText(line, m_separator);
+            }
+            else
+            {
+                splitAll = line.Split(m_separator);
+            }
+            
             var split = new string[indices.Length];
 
             for (int i = 0; i < indices.Length; i++)
@@ -130,6 +153,42 @@ namespace SharpLearning.InputOutput.Csv
             }
 
             return split;
+        }
+
+        public string[] SplitText(string csvText, char separator)
+        {
+            List<string> tokens = new List<string>();
+
+            int last = -1;
+            int current = 0;
+            bool inText = false;
+
+            while (current < csvText.Length)
+            {
+                var token = csvText[current]; 
+                
+                if(token == '"')
+                {
+                    inText = !inText;
+                }
+                else if(token == separator)
+                {
+                    if (!inText)
+                    {
+                        tokens.Add(csvText.Substring(last + 1, (current - last)).Trim(' ', separator));
+                        last = current;
+                    }
+                }
+
+                current++;
+            }
+
+            if (last != csvText.Length - 1)
+            {
+                tokens.Add(csvText.Substring(last + 1).Trim());
+            }
+
+            return tokens.ToArray();
         }
     }
 }

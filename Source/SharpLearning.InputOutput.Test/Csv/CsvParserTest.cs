@@ -72,7 +72,8 @@ namespace SharpLearning.InputOutput.Test.Csv
             CollectionAssert.AreEqual(Expected_Select_ColumnNames(), actual);
         }
 
-        public void DemilitedCsvParser_EnumerateRows_Quote_Inclosed_Columns()
+        [TestMethod]
+        public void CsvParser_EnumerateRows_Quote_Inclosed_Columns()
         {
             var data = "\"c1\";\"c2\";\"c3\"" + Environment.NewLine +
                        "\"1\";\"2\";\"3\"" + Environment.NewLine +
@@ -84,6 +85,21 @@ namespace SharpLearning.InputOutput.Test.Csv
                             .ToList();
 
             CollectionAssert.AreEqual(Expected_Quote_Inclosed_Columns(), actual);
+        }
+
+        [TestMethod]
+        public void CsvParser_EnumerateRows_Quote_Inclosed_Columns_With_Separator_In_Text()
+        {
+            var data = "\"c1\";\"c2\";\"c3\"" + Environment.NewLine +
+                       "\"1\";\"the following dates;1. jan, 1. april\";\"3\"" + Environment.NewLine +
+                       "\"10\";\"20\";\"30\"" + Environment.NewLine;
+
+            var sut = new CsvParser(() => new StringReader(data), ';', true);
+
+            var actual = sut.EnumerateRows()
+                            .ToList();
+
+            CollectionAssert.AreEqual(Expected_Quote_Inclosed_Columns_Separator_In_Text(), actual);
         }
 
         List<CsvRow> Expected()
@@ -124,6 +140,16 @@ namespace SharpLearning.InputOutput.Test.Csv
             var columnNameToIndex = new Dictionary<string, int> { { "c1", 0 }, { "c2", 1 }, { "c3", 2 } };
 
             var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "1", "2", "3"}),
+                                                       new CsvRow(columnNameToIndex, new string[] { "10", "20", "30"}) };
+
+            return expected;
+        }
+
+        List<CsvRow> Expected_Quote_Inclosed_Columns_Separator_In_Text()
+        {
+            var columnNameToIndex = new Dictionary<string, int> { { "c1", 0 }, { "c2", 1 }, { "c3", 2 } };
+
+            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "1", "the following dates;1. jan, 1. april", "3"}),
                                                        new CsvRow(columnNameToIndex, new string[] { "10", "20", "30"}) };
 
             return expected;
