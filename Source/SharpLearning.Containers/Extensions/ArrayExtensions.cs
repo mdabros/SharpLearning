@@ -501,8 +501,7 @@ namespace SharpLearning.Containers.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        /// <param name="sampleSize">Depending on the data distribution the returned sample size might be sligtly smaller 
-        /// than the specified</param>
+        /// <param name="sampleSize"></param>
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, Random random)
         {
@@ -570,8 +569,7 @@ namespace SharpLearning.Containers.Extensions
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        /// <param name="sampleSize">Depending on the data distribution the returned sample size might be sligtly smaller 
-        /// than the specified</param>
+        /// <param name="sampleSize"></param>
         /// <param name="dataIndices"></param>
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices, Random random)
@@ -624,7 +622,7 @@ namespace SharpLearning.Containers.Extensions
                 }
             }
 
-            if (actualSampleSize != sampleSize)
+            if (requiredSamples.Select(s => s.Value).Sum() != sampleSize)
             {
                 throw new ArgumentException("Actual sample size: " + actualSampleSize +
                     " is different than specified sample size: " + sampleSize);
