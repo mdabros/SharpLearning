@@ -524,8 +524,17 @@ namespace SharpLearning.Containers.Extensions
             var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
             
             // might be slightly different than the specified depending on data destribution
-            var requiredSampleSize = requiredSamples.Select(s => s.Value).Sum(); 
-            var sampleIndices = new int[requiredSampleSize];
+            var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
+            
+            // if actual sample size is different from specified add/subtract diff from largest class
+            if(actualSampleSize != sampleSize)
+            {
+                var diff = sampleSize - actualSampleSize;
+                var largestClassKey = requiredSamples.OrderByDescending(s => s.Value).First().Key;
+                requiredSamples[largestClassKey] += diff;
+            }
+
+            var sampleIndices = new int[sampleSize];
             var sampleIndex = 0;
                         
             for (int i = 0; i < data.Length; i++)
@@ -538,10 +547,16 @@ namespace SharpLearning.Containers.Extensions
                     currentSampleCount[value]++;
                 }
 
-                if (sampleIndex == requiredSampleSize)
+                if (sampleIndex == sampleSize)
                 {
                     break;
                 }
+            }
+
+            if (requiredSamples.Select(s => s.Value).Sum() != sampleSize)
+            {
+                throw new ArgumentException("Actual sample size: " + actualSampleSize +
+                    " is different than specified sample size: " + sampleSize);
             }
 
             return sampleIndices;
@@ -576,8 +591,17 @@ namespace SharpLearning.Containers.Extensions
 
             var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
             // might be slightly different than the specified depending on data destribution
-            var requiredSampleSize = requiredSamples.Select(s => s.Value).Sum();
-            var sampleIndices = new int[requiredSampleSize];
+            var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
+            
+            // if actual sample size is different from specified add/subtract diff from largest class
+            if (actualSampleSize != sampleSize)
+            {
+                var diff = sampleSize - actualSampleSize;
+                var largestClassKey = requiredSamples.OrderByDescending(s => s.Value).First().Key;
+                requiredSamples[largestClassKey] += diff;
+            }
+
+            var sampleIndices = new int[sampleSize];
             var sampleIndex = 0;
 
             // Shuffle the indices to avoid sampling the data in original order.
@@ -598,6 +622,12 @@ namespace SharpLearning.Containers.Extensions
                 {
                     break;
                 }
+            }
+
+            if (actualSampleSize != sampleSize)
+            {
+                throw new ArgumentException("Actual sample size: " + actualSampleSize +
+                    " is different than specified sample size: " + sampleSize);
             }
 
             return sampleIndices;
