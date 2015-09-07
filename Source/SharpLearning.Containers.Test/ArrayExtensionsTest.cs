@@ -4,6 +4,7 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.Containers.Test
@@ -402,6 +403,32 @@ namespace SharpLearning.Containers.Test
 
             var actual = values.GetIndices(sampleIndices);
             var expected = new int[] { 1, 2, 1, 2, 1, 3, 1, 2, 2, 1, 3 };
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_StratifiedIndexSampling_Equal_Class_Size_50_Percent_Sample()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
+            var sampleSize = values.Length / 2;
+            var sampleIndices = values.StratifiedIndexSampling(sampleSize, new Random(42));
+
+            var actual = values.GetIndices(sampleIndices);
+            var expected = new int[] { 2, 1, 1, 2, 3, 1, 3 };
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_StratifiedIndexSampling_Unequal_Class_Size_50_Percent_Sample()
+        {
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1,  2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
+            var sampleSize = values.Length / 2;
+            var sampleIndices = values.StratifiedIndexSampling(sampleSize, new Random(42));
+
+            var actual = values.GetIndices(sampleIndices);
+            var expected = new int[] { 1, 1, 3, 2, 3, 2, 1, 1 };
 
             CollectionAssert.AreEqual(expected, actual);
         }
