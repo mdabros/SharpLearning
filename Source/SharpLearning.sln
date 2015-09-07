@@ -49,11 +49,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Optimization"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Optimization.Test", "SharpLearning.Optimization.Test\SharpLearning.Optimization.Test.csproj", "{2CBF54DE-577B-461E-9069-329EC82D3FC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Runner", "Runner\Runner.csproj", "{84B58C59-2F51-4CE7-9836-E005A6EBC5C5}"
-EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 25
+		SccNumberOfProjects = 24
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -126,9 +124,6 @@ Global
 		SccProjectUniqueName23 = SharpLearning.Optimization.Test\\SharpLearning.Optimization.Test.csproj
 		SccProjectName23 = SharpLearning.Optimization.Test
 		SccLocalPath23 = SharpLearning.Optimization.Test
-		SccProjectUniqueName24 = Runner\\Runner.csproj
-		SccProjectName24 = Runner
-		SccLocalPath24 = Runner
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -227,10 +222,6 @@ Global
 		{2CBF54DE-577B-461E-9069-329EC82D3FC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CBF54DE-577B-461E-9069-329EC82D3FC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CBF54DE-577B-461E-9069-329EC82D3FC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84B58C59-2F51-4CE7-9836-E005A6EBC5C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84B58C59-2F51-4CE7-9836-E005A6EBC5C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84B58C59-2F51-4CE7-9836-E005A6EBC5C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84B58C59-2F51-4CE7-9836-E005A6EBC5C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
