@@ -47,7 +47,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void F64Matrix_GetRows()
         {
             var sut = CreateFeatures();
-            var subMatrix = sut.GetRows(new int[2] { 0, 2 });
+            var subMatrix = sut.GetRows(0, 2);
             var expected = GetExpectedRowSubMatrix();
 
             Assert.IsTrue(expected.Equals(subMatrix));
@@ -57,7 +57,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void F64Matrix_GetColumns()
         {
             var sut = CreateFeatures();
-            var subMatrix = sut.GetColumns(new int[2] { 0, 2 });
+            var subMatrix = sut.GetColumns(0, 2);
             var expected = GetExpectedColSubMatrix();
 
             Assert.IsTrue(expected.Equals(subMatrix));

@@ -109,7 +109,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public IMatrix<string> GetRows(int[] indices)
+        public IMatrix<string> GetRows(params int[] indices)
         {
             var rowCount = indices.Length;
             var subFeatureArray = new string[rowCount * m_cols];
@@ -132,7 +132,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public IMatrix<string> GetColumns(int[] indices)
+        public IMatrix<string> GetColumns(params int[] indices)
         {
             var subFeatureCount = indices.Length;
             var subFeatureArray = new string[m_rows * subFeatureCount];
