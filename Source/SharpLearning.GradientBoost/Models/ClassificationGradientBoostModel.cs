@@ -16,21 +16,29 @@ namespace SharpLearning.GradientBoost.Models
     [Serializable]
     public sealed class ClassificationGradientBoostModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
     {
-        readonly GBMTree[][] m_trees;
-        readonly double m_learningRate;
-        readonly double m_initialLoss;
-        readonly double[] m_targetNames;
-        readonly int m_featureCount;
+        public readonly GBMTree[][] Trees;
+        public readonly double LearningRate;
+        public readonly double InitialLoss;
+        public readonly double[] TargetNames;
+        public readonly int FeatureCount;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trees"></param>
+        /// <param name="targetNames"></param>
+        /// <param name="learningRate"></param>
+        /// <param name="initialLoss"></param>
+        /// <param name="featureCount"></param>
         public ClassificationGradientBoostModel(GBMTree[][] trees, double[] targetNames, double learningRate, double initialLoss, int featureCount)
         {
             if (trees == null) { throw new ArgumentNullException("trees"); }
             if (targetNames == null) { throw new ArgumentException("targetNames"); }
-            m_trees = trees;
-            m_learningRate = learningRate;
-            m_initialLoss = initialLoss;
-            m_targetNames = targetNames;
-            m_featureCount = featureCount;
+            Trees = trees;
+            LearningRate = learningRate;
+            InitialLoss = initialLoss;
+            TargetNames = targetNames;
+            FeatureCount = featureCount;
         }
 
         /// <summary>
@@ -40,7 +48,7 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            if(m_targetNames.Length == 2)
+            if(TargetNames.Length == 2)
             {
                 return BinaryPredict(observation);
             }
@@ -67,7 +75,7 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
-            if (m_targetNames.Length == 2)
+            if (TargetNames.Length == 2)
             {
                 return BinaryProbabilityPredict(observation);
             }
@@ -136,8 +144,8 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            var rawVariableImportance = new double[m_featureCount];
-            foreach (var treeIterations in m_trees)
+            var rawVariableImportance = new double[FeatureCount];
+            foreach (var treeIterations in Trees)
             {
                 foreach (var tree in treeIterations)
                 {
@@ -173,7 +181,7 @@ namespace SharpLearning.GradientBoost.Models
         double BinaryPredict(double[] observation)
         {
             var probability = Probability(observation, 0);
-            var prediction = (probability >= 0.5) ? m_targetNames[0] : m_targetNames[1];
+            var prediction = (probability >= 0.5) ? TargetNames[0] : TargetNames[1];
             return prediction;
         }
 
@@ -182,12 +190,12 @@ namespace SharpLearning.GradientBoost.Models
             var probability = 0.0;
             var prediction = 0.0;
 
-            for (int i = 0; i < m_targetNames.Length; i++)
+            for (int i = 0; i < TargetNames.Length; i++)
             {
                 var currentProp = Probability(observation, i);
                 if (currentProp > probability)
                 {
-                    prediction = m_targetNames[i];
+                    prediction = TargetNames[i];
                     probability = currentProp;
                 }
             }
@@ -197,9 +205,9 @@ namespace SharpLearning.GradientBoost.Models
         ProbabilityPrediction MultiClassProbabilityPredict(double[] observation)
         {
             var probabilities = new Dictionary<double, double>();
-            for (int i = 0; i < m_targetNames.Length; i++)
+            for (int i = 0; i < TargetNames.Length; i++)
             {
-                probabilities.Add(m_targetNames[i], Probability(observation, i));
+                probabilities.Add(TargetNames[i], Probability(observation, i));
             }
 
             var prediction = probabilities.OrderBy(v => v.Value).Last().Key;
@@ -209,20 +217,20 @@ namespace SharpLearning.GradientBoost.Models
         ProbabilityPrediction BinaryProbabilityPredict(double[] observation)
         {
             var probability = Probability(observation, 0);
-            var prediction = (probability >= 0.5) ? m_targetNames[0] : m_targetNames[1];
-            var probabilities = new Dictionary<double, double> { { m_targetNames[1], 1.0 - probability }, { m_targetNames[0], probability } };
+            var prediction = (probability >= 0.5) ? TargetNames[0] : TargetNames[1];
+            var probabilities = new Dictionary<double, double> { { TargetNames[1], 1.0 - probability }, { TargetNames[0], probability } };
 
             return new ProbabilityPrediction(prediction, probabilities);
         }
 
         double Probability(double[] observation, int targetIndex)
         {
-            var iterations = m_trees[targetIndex].Length;
+            var iterations = Trees[targetIndex].Length;
 
-            var prediction = m_initialLoss;
+            var prediction = InitialLoss;
             for (int i = 0; i < iterations; i++)
             {
-                prediction += m_learningRate * m_trees[targetIndex][i].Predict(observation);
+                prediction += LearningRate * Trees[targetIndex][i].Predict(observation);
             }
 
             return Sigmoid(prediction);

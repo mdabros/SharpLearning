@@ -12,12 +12,16 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
     [Serializable]
     public class GBMTree
     {
-        readonly List<GBMNode> m_nodes;
-
+        public readonly List<GBMNode> Nodes;
+                
+        /// <summary>
+        /// Creates a GBMTree from the provided nodes
+        /// </summary>
+        /// <param name="nodes"></param>
         public GBMTree(List<GBMNode> nodes)
         {
             if (nodes == null) { throw new ArgumentNullException("nodes"); }
-            m_nodes = nodes;
+            Nodes = nodes;
         }
 
         /// <summary>
@@ -45,12 +49,12 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            if (m_nodes.Count == 1) //only root
+            if (Nodes.Count == 1) //only root
             {
-                return m_nodes[0].LeftConstant; // left right are equal
+                return Nodes[0].LeftConstant; // left right are equal
             }
 
-            var leaf = Predict(m_nodes[1], 1, observation);
+            var leaf = Predict(Nodes[1], 1, observation);
 
             if (observation[leaf.FeatureIndex] < leaf.SplitValue)
             {
@@ -69,7 +73,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                 return parent;
             }
 
-            var node = m_nodes[nodeIndex];
+            var node = Nodes[nodeIndex];
 
             if (observation[node.FeatureIndex] < node.SplitValue)
             {
@@ -92,11 +96,11 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="rawVariableImportances"></param>
         public void AddRawVariableImportances(double[] rawVariableImportances)
         {
-            if(m_nodes.Count == 1) { return; } // no splits no importance
+            if(Nodes.Count == 1) { return; } // no splits no importance
 
-            var rootError = m_nodes[0].LeftError;
-            var totalSampleCount = m_nodes[0].SampleCount;
-            AddRecursive(rawVariableImportances, m_nodes[1], rootError, totalSampleCount);
+            var rootError = Nodes[0].LeftError;
+            var totalSampleCount = Nodes[0].SampleCount;
+            AddRecursive(rawVariableImportances, Nodes[1], rootError, totalSampleCount);
         }
 
         void AddRecursive(double[] rawFeatureImportances, GBMNode node, double previousError, int totalSampleCount)
@@ -108,12 +112,12 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             
             if(node.LeftIndex != -1)
             {
-                AddRecursive(rawFeatureImportances, m_nodes[node.LeftIndex], error, totalSampleCount);
+                AddRecursive(rawFeatureImportances, Nodes[node.LeftIndex], error, totalSampleCount);
             }
 
             if (node.RightIndex != -1)
             {
-                AddRecursive(rawFeatureImportances, m_nodes[node.RightIndex], error, totalSampleCount);
+                AddRecursive(rawFeatureImportances, Nodes[node.RightIndex], error, totalSampleCount);
             }
         }
 
@@ -122,10 +126,10 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// </summary>
         public void TraceNodesIndexed()
         {
-            for (int i = 0; i < m_nodes.Count; i++)
+            for (int i = 0; i < Nodes.Count; i++)
             {
-                var node = m_nodes[i];
-                System.Diagnostics.Trace.WriteLine("Index: " + i + " SplitValue: " + m_nodes[i].SplitValue +
+                var node = Nodes[i];
+                System.Diagnostics.Trace.WriteLine("Index: " + i + " SplitValue: " + Nodes[i].SplitValue +
                     " left: " + node.LeftConstant + " right: " + node.RightConstant);
             }
         }
@@ -135,13 +139,13 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// </summary>
         public void TraceNodesDepth()
         {
-            var depths = m_nodes.Select(n => n.Depth)
+            var depths = Nodes.Select(n => n.Depth)
                 .OrderBy(d => d).Distinct();
 
             foreach (var depth in depths)
             {
                 var index = 0;
-                var nodes = m_nodes.Select(n => new { Node = n, Index = index++ }).Where(n => n.Node.Depth == depth);
+                var nodes = Nodes.Select(n => new { Node = n, Index = index++ }).Where(n => n.Node.Depth == depth);
                 var text = string.Empty;
 
                 foreach (var node in nodes)

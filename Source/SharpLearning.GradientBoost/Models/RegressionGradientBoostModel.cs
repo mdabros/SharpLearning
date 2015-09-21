@@ -15,18 +15,25 @@ namespace SharpLearning.GradientBoost.Models
     [Serializable]
     public sealed class RegressionGradientBoostModel : IPredictor<double>
     {
-        readonly GBMTree[] m_trees;
-        readonly double m_learningRate;
-        readonly double m_initialLoss;
-        readonly int m_featureCount;
+        public readonly GBMTree[] Trees;
+        public readonly double LearningRate;
+        public readonly double InitialLoss;
+        public readonly int FeatureCount;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trees"></param>
+        /// <param name="learningRate"></param>
+        /// <param name="initialLoss"></param>
+        /// <param name="featureCount"></param>
         public RegressionGradientBoostModel(GBMTree[] trees, double learningRate, double initialLoss, int featureCount)
         {
             if (trees == null) { throw new ArgumentNullException("trees"); }
-            m_trees = trees;
-            m_learningRate = learningRate;
-            m_initialLoss = initialLoss;
-            m_featureCount = featureCount;
+            Trees = trees;
+            LearningRate = learningRate;
+            InitialLoss = initialLoss;
+            FeatureCount = featureCount;
         }
 
         /// <summary>
@@ -36,10 +43,10 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            var prediction = m_initialLoss;
-            for (int i = 0; i < m_trees.Length; i++)
+            var prediction = InitialLoss;
+            for (int i = 0; i < Trees.Length; i++)
             {
-                prediction += m_learningRate * m_trees[i].Predict(observation);
+                prediction += LearningRate * Trees[i].Predict(observation);
             }
 
             return prediction;
@@ -87,8 +94,8 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            var rawVariableImportance = new double[m_featureCount];
-            foreach (var tree in m_trees)
+            var rawVariableImportance = new double[FeatureCount];
+            foreach (var tree in Trees)
             {
                 tree.AddRawVariableImportances(rawVariableImportance);
             }
