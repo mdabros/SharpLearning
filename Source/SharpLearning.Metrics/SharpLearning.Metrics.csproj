@@ -68,6 +68,7 @@
     <Compile Include="Regression\MeanAbsolutErrorRegressionMetric.cs" />
     <Compile Include="Regression\MeanSquaredErrorRegressionMetric.cs" />
     <Compile Include="Regression\NormalizedGiniCoefficientRegressionMetric.cs" />
+    <Compile Include="Regression\RocAucRegressionMetric.cs" />
     <Compile Include="Regression\RootMeanLogRegressionMetric.cs" />
     <Compile Include="Regression\RootMeanSquareRegressionMetric.cs" />
   </ItemGroup>
