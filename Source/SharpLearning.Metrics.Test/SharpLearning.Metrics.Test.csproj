@@ -69,6 +69,7 @@
     <Compile Include="Impurity\NaiveSinglePassVarianceEntropyMetricTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ranking\AveragePrecisionRankingMetricTest.cs" />
+    <Compile Include="Regression\DiscreteTargetMeanErrorRegressionMetricTest.cs" />
     <Compile Include="Regression\MeanAbsolutErrorRegressionMetricTest.cs" />
     <Compile Include="Regression\MeanSquaredErrorRegressionMetricTest.cs" />
     <Compile Include="Regression\NormalizedGiniCoefficientRegressionMetricTest.cs" />
