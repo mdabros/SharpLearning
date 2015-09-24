@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.Metrics.Regression
@@ -6,6 +7,7 @@ namespace SharpLearning.Metrics.Regression
     public sealed class RocAucRegressionMetric : IRegressionMetric
     {
         readonly double m_positiveTarget;
+        Dictionary<double, double> m_targetsToBinaryMapping;
 
         /// <summary>
         /// The metric needs to know which target value is considered the positive
@@ -18,6 +20,20 @@ namespace SharpLearning.Metrics.Regression
         }
 
         /// <summary>
+        /// The metric needs to know which target value is considered the positive.
+        /// If targets are not already binary a mapping must be provided.
+        /// </summary>
+        /// <param name="positiveTarget"></param>
+        /// <param name="targetsToBinaryMapping"></param>
+        public RocAucRegressionMetric(double positiveTarget, Dictionary<double, double> targetsToBinaryMapping)
+            : this(positiveTarget)
+        {
+            if(targetsToBinaryMapping.Values.Distinct().Count() != 2)
+            { throw new ArgumentException("targetsToBinaryMapping must only map targets to two distinct values"); }
+            m_targetsToBinaryMapping = targetsToBinaryMapping;
+        }
+
+        /// <summary>
         /// Calculates the roc auc error. That is 1.0 - Auc.
         /// </summary>
         /// <param name="targets">Target values</param>
@@ -25,11 +41,16 @@ namespace SharpLearning.Metrics.Regression
         /// <returns></returns>
         public double Error(double[] targets, double[] positiveTargetProbabilities)
         {
-            if (targets.Distinct().Count() > 2)
+            if (targets.Distinct().Count() > 2 && m_targetsToBinaryMapping == null)
             { throw new ArgumentException("AucRegressionMetric only supports binary targets problems"); }
 
-            var targetProbabilities = targets.Zip(positiveTargetProbabilities, (l, s) => new { target = l, Probability = s });
-            targetProbabilities = targetProbabilities.OrderByDescending(l => l.Probability);
+            if(m_targetsToBinaryMapping == null)
+            {
+                m_targetsToBinaryMapping = targets.Distinct().ToDictionary(t => t, t => t);
+            }
+
+            var targetProbabilities = targets.Zip(positiveTargetProbabilities, (t, p) => new { target = m_targetsToBinaryMapping[t], Probability = p });
+            targetProbabilities = targetProbabilities.OrderByDescending(tp => tp.Probability);
 
             var counts = targetProbabilities.GroupBy(l => l.target).Select(l => new { Label = l.Key, Count = l.Count() });
                 

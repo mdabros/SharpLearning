@@ -25,6 +25,31 @@ namespace SharpLearning.Metrics.Test.Regression
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RocAucRegressionMetric_Error_TargetToBinaryMapping_Has_More_Than_Two_Values()
+        {
+            new RocAucRegressionMetric(1, new Dictionary<double, double> { { 0.0, 0.0 }, { 1.0, 1.0 }, { 2.0, 2.0 }, { 3.0, 3.0 } });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RocAucRegressionMetric_Error_TargetToBinaryMapping_Has_Less_Than_Two_Values()
+        {
+            new RocAucRegressionMetric(1, new Dictionary<double, double> { { 0.0, 0.0 }, { 1.0, 0.0 } });
+        }
+
+        [TestMethod]
+        public void RocAucRegressionMetric_Error_Using_Mapping()
+        {
+            var targets = new double[] { 1, 0, 1, 0, 0, 0, 1, 3, 0, 0, 1, 1, 3, 0, 1, 1, 3, 2, 0, 0, 2, 1 };
+            var probabilities = new double[] { 0.052380952, 0.020725389, 0.993377483, 0.020725389, 0.020725389, 0.111111111, 0.193377483, 0.793377483, 0.020725389, 0.012345679, 0.885860173, 0.714285714, 0.985860173, 0.020725389, 0.985860173, 0.993377483, 0.993377483, 0.954545455, 0.020725389, 0.020725389, 0.985860173, 0.985860173 };
+
+            var sut = new RocAucRegressionMetric(1, new Dictionary<double, double> { { 0.0, 0.0 }, { 1.0, 1.0 }, { 2.0, 1.0 }, { 3.0, 1.0 } });
+            var actual = sut.Error(targets, probabilities);
+            Assert.AreEqual(0.0085470085470086277, actual, 0.00001);
+        }
+
+        [TestMethod]
         public void RocAucRegressionMetric_Error_No_Error()
         {
             var targets = new double[] { 0, 1 };
