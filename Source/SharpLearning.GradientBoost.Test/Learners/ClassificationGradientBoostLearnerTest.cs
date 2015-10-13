@@ -10,6 +10,7 @@ using System.Linq;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.Learners;
 using SharpLearning.GradientBoost.Loss;
+using SharpLearning.CrossValidation.TrainingTestSplitters;
 
 namespace SharpLearning.GradientBoost.Test.Learners
 {
@@ -77,6 +78,29 @@ namespace SharpLearning.GradientBoost.Test.Learners
         public void ClassificationGradientBoostLearner_Constructor_SubSampleRatio_NumberOfThreads()
         {
             new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, new GradientBoostSquaredLoss(), 0);
+        }
+
+        [TestMethod]
+        public void ClassificationGradientBoostLearner_LearnWithEarlyStopping()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var splitter = new StratifiedTrainingTestIndexSplitter<double>(0.6, 1234);
+            var split = splitter.SplitSet(observations, targets);
+
+            var sut = new ClassificationBinomialGradientBoostLearner(1000, 0.01, 9, 1, 1e-6, .5, 1);
+            var evaluator = new TotalErrorClassificationMetric<double>();
+
+            var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,
+                split.TestSet.Observations, split.TestSet.Targets, evaluator, 10);
+
+            var predictions = model.Predict(split.TestSet.Observations);
+            var actual = evaluator.Error(split.TestSet.Targets, predictions);
+
+            Assert.AreEqual(0.1744186046511628, actual, 0.000001);
+            Assert.AreEqual(50, model.Trees.First().ToArray().Length);
         }
     }
 }
