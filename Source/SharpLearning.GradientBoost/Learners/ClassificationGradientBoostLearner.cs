@@ -180,8 +180,10 @@ namespace SharpLearning.GradientBoost.Learners
         /// <summary>
         /// Learns a ClassificationGradientBoostModel with early stopping.
         /// The parameter earlyStoppingRounds controls how often the validation error is measured.
-        /// If the validation error has increased, stop the learning and return the model with the best number of iterations (trees).
+        /// If the validation error has increased, the learning is stopped and the model with the best number of iterations (trees) is returned.
         /// The number of iterations used is equal to the number of trees in the resulting model.
+        /// The method used for early stopping is based on the article:
+        /// http://page.mi.fu-berlin.de/prechelt/Biblio/stop_tricks1997.pdf
         /// </summary>
         /// <param name="trainingObservations"></param>
         /// <param name="trainingTargets"></param>

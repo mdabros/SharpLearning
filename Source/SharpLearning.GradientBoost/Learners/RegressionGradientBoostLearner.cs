@@ -5,6 +5,7 @@ using SharpLearning.GradientBoost.GBMDecisionTree;
 using SharpLearning.GradientBoost.Loss;
 using SharpLearning.GradientBoost.Models;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.GradientBoost.Learners
@@ -94,95 +95,6 @@ namespace SharpLearning.GradientBoost.Learners
             return Learn(observations, targets, allIndices);
         }
 
-
-        /// <summary>
-        /// Learns a RegressionGradientBoostModel with early stopping.
-        /// In each iteration, the error on the validation set is measured.
-        /// The number of times the error fails to decline is counted and if this exeeds the number specified in earlyStoppingRounds
-        /// The learner will stop and return the model with the lowest error. 
-        /// The number of iterations used is equal to the number of trees in the resulting model.
-        /// </summary>
-        /// <param name="trainingObservations"></param>
-        /// <param name="trainingTargets"></param>
-        /// <param name="validationObservations"></param>
-        /// <param name="validationTargets"></param>
-        /// <param name="metric">The metric to use for early stopping</param>
-        /// <param name="earlyStoppingRounds">The number of rounds the error is allowed not to decline before early stopping. 
-        /// The resulting model and iteration will be the last with the error declining</param>
-        /// <returns>RegressionGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
-        public RegressionGradientBoostModel LearnWithEarlyStopping(F64Matrix trainingObservations, double[] trainingTargets,
-            F64Matrix validationObservations, double[] validationTargets,
-            IMetric<double, double> metric, int earlyStoppingRounds)
-        {
-            var rows = trainingObservations.GetNumberOfRows();
-            var orderedElements = CreateOrderedElements(trainingObservations, rows);
-
-            var inSample = trainingTargets.Select(t => false).ToArray();
-            var indices = Enumerable.Range(0, trainingTargets.Length).ToArray();
-            indices.ForEach(i => inSample[i] = true);
-            var workIndices = indices.ToArray();
-
-            var trees = new GBMTree[m_iterations];
-
-            var initialLoss = m_loss.InitialLoss(trainingTargets, inSample);
-            var predictions = trainingTargets.Select(t => initialLoss).ToArray();
-            var residuals = new double[trainingTargets.Length];
-
-            var errorNotImprovedCount = 0;
-            var bestIterationCount = 0;
-            var currentBedstError = double.MaxValue;
-
-            for (int iteration = 0; iteration < m_iterations; iteration++)
-            {
-                m_loss.UpdateResiduals(trainingTargets, predictions, residuals, inSample);
-
-                var sampleSize = trainingTargets.Length;
-                if (m_subSampleRatio != 1.0)
-                {
-                    sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
-                    var currentInSample = Sample(sampleSize, workIndices, trainingTargets.Length);
-
-                    trees[iteration] = m_learner.Learn(trainingObservations, trainingTargets, residuals,
-                        predictions, orderedElements, currentInSample);
-
-                }
-                else
-                {
-                    trees[iteration] = m_learner.Learn(trainingObservations, trainingTargets, residuals,
-                        predictions, orderedElements, inSample);
-                }
-
-                var predict = trees[iteration].Predict(trainingObservations);
-                for (int i = 0; i < predict.Length; i++)
-                {
-                    predictions[i] += m_learningRate * predict[i];
-                }
-
-                var model = new RegressionGradientBoostModel(trees.Take(iteration).ToArray(), m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
-                var validPredictions = model.Predict(validationObservations);
-                var error = metric.Error(validationTargets, validPredictions);
-
-                if (currentBedstError > error)
-                {
-                    currentBedstError = error;
-                    bestIterationCount = iteration;
-                    errorNotImprovedCount = 0;
-                }
-                else
-                {
-                    errorNotImprovedCount++;
-                    if (errorNotImprovedCount > earlyStoppingRounds)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            return new RegressionGradientBoostModel(trees.Take(bestIterationCount).ToArray(), 
-                m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
-        }
-
-
         /// <summary>
         ///  A series of regression trees are fitted stage wise on the residuals of the previous tree
         /// </summary>
@@ -232,6 +144,93 @@ namespace SharpLearning.GradientBoost.Learners
             }
 
             return new RegressionGradientBoostModel(trees, m_learningRate, initialLoss, observations.GetNumberOfColumns());
+        }
+
+        /// <summary>
+        /// Learns a RegressionGradientBoostModel with early stopping.
+        /// The parameter earlyStoppingRounds controls how often the validation error is measured.
+        /// If the validation error has increased, the learning is stopped and the model with the best number of iterations (trees) is returned.
+        /// The number of iterations used is equal to the number of trees in the resulting model.
+        /// The method used for early stopping is based on the article:
+        /// http://page.mi.fu-berlin.de/prechelt/Biblio/stop_tricks1997.pdf
+        /// </summary>
+        /// <param name="trainingObservations"></param>
+        /// <param name="trainingTargets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <param name="metric">The metric to use for early stopping</param>
+        /// <param name="earlyStoppingRounds">The number of rounds the error is allowed not to decline before early stopping. 
+        /// The resulting model and iteration will be the last with the error declining</param>
+        /// <returns>RegressionGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
+        public RegressionGradientBoostModel LearnWithEarlyStopping(F64Matrix trainingObservations, double[] trainingTargets,
+            F64Matrix validationObservations, double[] validationTargets,
+            IMetric<double, double> metric, int earlyStoppingRounds)
+        {
+            var rows = trainingObservations.GetNumberOfRows();
+            var orderedElements = CreateOrderedElements(trainingObservations, rows);
+
+            var inSample = trainingTargets.Select(t => false).ToArray();
+            var indices = Enumerable.Range(0, trainingTargets.Length).ToArray();
+            indices.ForEach(i => inSample[i] = true);
+            var workIndices = indices.ToArray();
+
+            var trees = new GBMTree[m_iterations];
+
+            var initialLoss = m_loss.InitialLoss(trainingTargets, inSample);
+            var predictions = trainingTargets.Select(t => initialLoss).ToArray();
+            var residuals = new double[trainingTargets.Length];
+
+            var bestIterationCount = 0;
+            var currentBedstError = double.MaxValue;
+
+            for (int iteration = 0; iteration < m_iterations; iteration++)
+            {
+                m_loss.UpdateResiduals(trainingTargets, predictions, residuals, inSample);
+
+                var sampleSize = trainingTargets.Length;
+                if (m_subSampleRatio != 1.0)
+                {
+                    sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
+                    var currentInSample = Sample(sampleSize, workIndices, trainingTargets.Length);
+
+                    trees[iteration] = m_learner.Learn(trainingObservations, trainingTargets, residuals,
+                        predictions, orderedElements, currentInSample);
+
+                }
+                else
+                {
+                    trees[iteration] = m_learner.Learn(trainingObservations, trainingTargets, residuals,
+                        predictions, orderedElements, inSample);
+                }
+
+                var predict = trees[iteration].Predict(trainingObservations);
+                for (int i = 0; i < predict.Length; i++)
+                {
+                    predictions[i] += m_learningRate * predict[i];
+                }
+
+                // When using early stopping, Check that the validation error is not increasing between earlyStoppingRounds
+                // If the validation error has increased, stop the learning and return the model with the best number of iterations (trees).
+                if (iteration % earlyStoppingRounds == 0)
+                {
+                    var model = new RegressionGradientBoostModel(trees.Take(iteration).ToArray(), m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
+                    var validPredictions = model.Predict(validationObservations);
+                    var error = metric.Error(validationTargets, validPredictions);
+
+                    if (currentBedstError > error)
+                    {
+                        currentBedstError = error;
+                        bestIterationCount = iteration;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return new RegressionGradientBoostModel(trees.Take(bestIterationCount).ToArray(),
+                m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
         }
 
         /// <summary>

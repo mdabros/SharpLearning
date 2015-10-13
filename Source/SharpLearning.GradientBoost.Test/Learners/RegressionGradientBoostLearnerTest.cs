@@ -90,7 +90,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var splitter = new RandomTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);
 
-            var sut = new RegressionSquareLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 1);
+            var sut = new RegressionSquareLossGradientBoostLearner(1000, 0.1, 3, 1, 1e-6, 1.0, 1);
             var evaluator = new MeanSquaredErrorRegressionMetric();
 
             var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,
@@ -99,8 +99,8 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var predictions = model.Predict(split.TestSet.Observations);
             var actual = evaluator.Error(split.TestSet.Targets, predictions);
 
-            Assert.AreEqual(0.060940743547481857, actual);
-            Assert.AreEqual(43, model.Trees.Length);
+            Assert.AreEqual(0.061035472792879512, actual, 0.000001);
+            Assert.AreEqual(40, model.Trees.Length);
         }
     }
 }
