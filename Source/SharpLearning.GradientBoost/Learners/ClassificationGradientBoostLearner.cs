@@ -197,6 +197,11 @@ namespace SharpLearning.GradientBoost.Learners
             F64Matrix validationObservations, double[] validationTargets,
             IMetric<double, double> metric, int earlyStoppingRounds)
         {
+            if (earlyStoppingRounds >= m_iterations)
+            {
+                throw new ArgumentException("Number of iterations " + m_iterations + " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
+            }
+
             var rows = trainingObservations.GetNumberOfRows();
             var orderedElements = CreateOrderedElements(trainingObservations, rows);
 

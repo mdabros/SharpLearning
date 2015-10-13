@@ -81,6 +81,24 @@ namespace SharpLearning.GradientBoost.Test.Learners
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_LearnWithEarlyStopping_ToFewIterations()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var splitter = new StratifiedTrainingTestIndexSplitter<double>(0.6, 1234);
+            var split = splitter.SplitSet(observations, targets);
+
+            var sut = new ClassificationBinomialGradientBoostLearner(10, 0.01, 9, 1, 1e-6, .5, 1);
+            var evaluator = new TotalErrorClassificationMetric<double>();
+
+            var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,
+                split.TestSet.Observations, split.TestSet.Targets, evaluator, 10);
+        }
+
+        [TestMethod]
         public void ClassificationGradientBoostLearner_LearnWithEarlyStopping()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
