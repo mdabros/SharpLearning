@@ -304,6 +304,132 @@ namespace SharpLearning.GradientBoost.Learners
         }
 
         /// <summary>
+        /// Learns a ClassificationGradientBoostModel with early stopping.
+        /// The parameter earlyStoppingRounds controls how often the validation error is measured.
+        /// If the validation error has increased, the learning is stopped and the model with the best number of iterations (trees) is returned.
+        /// The number of iterations used is equal to the number of trees in the resulting model.
+        /// The method used for early stopping is based on the article:
+        /// http://page.mi.fu-berlin.de/prechelt/Biblio/stop_tricks1997.pdf
+        /// </summary>
+        /// <param name="trainingObservations"></param>
+        /// <param name="trainingTargets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <param name="metric">The metric to use for early stopping</param>
+        /// <param name="earlyStoppingRounds">The number of rounds the error is allowed not to decline before early stopping. 
+        /// The resulting model and iteration will be the last with the error declining</param>
+        /// <returns>ClassificationGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
+        public ClassificationGradientBoostModel LearnWithEarlyStopping(F64Matrix trainingObservations, double[] trainingTargets,
+            F64Matrix validationObservations, double[] validationTargets,
+            IMetric<double, ProbabilityPrediction> metric, int earlyStoppingRounds)
+        {
+            if (earlyStoppingRounds >= m_iterations)
+            {
+                throw new ArgumentException("Number of iterations " + m_iterations + " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
+            }
+
+            var rows = trainingObservations.GetNumberOfRows();
+            var orderedElements = CreateOrderedElements(trainingObservations, rows);
+
+            var inSample = trainingTargets.Select(t => false).ToArray();
+            var indices = Enumerable.Range(0, trainingTargets.Length).ToArray();
+            indices.ForEach(i => inSample[i] = true);
+            var workIndices = indices.ToArray();
+
+            var uniqueTargets = trainingTargets.Distinct().OrderBy(v => v).ToArray();
+            var initialLoss = m_loss.InitialLoss(trainingTargets, inSample);
+
+            double[][] oneVsAllTargets = null;
+            double[][] predictions = null;
+            double[][] residuals = null;
+            GBMTree[][] trees = null;
+
+            if (uniqueTargets.Length == 2) // Binary case - only need to fit to one class and use (1.0 - probability)
+            {
+                trees = new GBMTree[][] { new GBMTree[m_iterations] };
+                predictions = new double[][] { trainingTargets.Select(_ => initialLoss).ToArray() };
+                residuals = new double[][] { new double[trainingTargets.Length] };
+
+                oneVsAllTargets = new double[1][];
+                var target = uniqueTargets[0];
+                oneVsAllTargets[0] = trainingTargets.Select(t => t == target ? 1.0 : 0.0).ToArray();
+
+            }
+            else // multiclass case - use oneVsAll strategy and fit probability for each class
+            {
+                trees = new GBMTree[uniqueTargets.Length][];
+                predictions = uniqueTargets.Select(_ => trainingTargets.Select(t => initialLoss).ToArray())
+                    .ToArray();
+                residuals = uniqueTargets.Select(_ => new double[trainingTargets.Length])
+                    .ToArray();
+
+                oneVsAllTargets = new double[uniqueTargets.Length][];
+                for (int i = 0; i < uniqueTargets.Length; i++)
+                {
+                    var target = uniqueTargets[i];
+                    oneVsAllTargets[i] = trainingTargets.Select(t => t == target ? 1.0 : 0.0).ToArray();
+                    trees[i] = new GBMTree[m_iterations];
+                }
+            }
+
+            var bestIterationCount = 0;
+            var currentBedstError = double.MaxValue;
+
+            for (int iteration = 0; iteration < m_iterations; iteration++)
+            {
+                for (int itarget = 0; itarget < trees.Length; itarget++)
+                {
+                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget], residuals[itarget], inSample);
+
+                    var sampleSize = trainingTargets.Length;
+                    if (m_subSampleRatio != 1.0)
+                    {
+                        sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
+                        var currentInSample = Sample(sampleSize, workIndices, trainingTargets.Length);
+
+                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget], residuals[itarget],
+                            predictions[itarget], orderedElements, currentInSample);
+                    }
+                    else
+                    {
+                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget], residuals[itarget],
+                            predictions[itarget], orderedElements, inSample);
+                    }
+
+                    var predict = trees[itarget][iteration].Predict(trainingObservations);
+                    for (int i = 0; i < predict.Length; i++)
+                    {
+                        predictions[itarget][i] += m_learningRate * predict[i];
+                    }
+                }
+
+                // When using early stopping, Check that the validation error is not increasing between earlyStoppingRounds
+                // If the validation error has increased, stop the learning and return the model with the best number of iterations (trees).
+                if (iteration % earlyStoppingRounds == 0)
+                {
+                    var model = new ClassificationGradientBoostModel(trees.Select(t => t.Take(iteration).ToArray()).ToArray(),
+                        uniqueTargets, m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
+
+                    var validPredictions = model.PredictProbability(validationObservations);
+                    var error = metric.Error(validationTargets, validPredictions);
+
+                    if (currentBedstError >= error)
+                    {
+                        currentBedstError = error;
+                        bestIterationCount = iteration;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return new ClassificationGradientBoostModel(trees.Select(t => t.Take(bestIterationCount).ToArray()).ToArray(),
+                uniqueTargets, m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
+        }
+
+        /// <summary>
         /// Private explicit interface implementation for indexed learning.
         /// </summary>
         /// <param name="observations"></param>
