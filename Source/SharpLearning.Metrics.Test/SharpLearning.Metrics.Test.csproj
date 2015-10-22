@@ -76,6 +76,7 @@
     <Compile Include="Regression\NormalizedGiniCoefficientRegressionMetricTest.cs" />
     <Compile Include="Regression\RocAucRegressionMetricTest.cs" />
     <Compile Include="Regression\RootMeanLogRegressionMetricTest.cs" />
+    <Compile Include="Regression\RootMeanSquarePercentageRegressionMetricTest.cs" />
     <Compile Include="Regression\RootMeanSquareRegressionMetricTest.cs" />
   </ItemGroup>
   <ItemGroup>
