@@ -61,6 +61,7 @@
     <Compile Include="Impurity\IImpurityMetric.cs" />
     <Compile Include="Impurity\InCustomDictionary.cs" />
     <Compile Include="Impurity\NaiveSinglePassVarianceImpurityMetric.cs" />
+    <Compile Include="ModelComparison\McNemarModelComparison.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ranking\AveragePrecisionRankingMetric.cs" />
     <Compile Include="Ranking\IRankingMetric.cs" />
