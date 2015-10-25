@@ -40,13 +40,14 @@ namespace SharpLearning.InputOutput.Csv
                 {
                     var thisValues = thisRow.Values;
                     var otherValues = otherRow.Values;
-                    var newValues = new string[thisValues.Length + otherValues.Length];
-                    
-                    thisValues.CopyTo(newValues, 0);
-                    otherValues.CopyTo(newValues, thisValues.Length);
 
                     if(rowMatcher(thisRow, otherRow))
                     {
+                        var newValues = new string[thisValues.Length + otherValues.Length];
+
+                        thisValues.CopyTo(newValues, 0);
+                        otherValues.CopyTo(newValues, thisValues.Length);
+
                         yield return new CsvRow(newColumnNameToIndex, newValues);
                         break;
                     }
