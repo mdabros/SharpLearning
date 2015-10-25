@@ -77,11 +77,23 @@ namespace SharpLearning.InputOutput.Csv
         /// Gets the CsvRow value based on the supplied column name
         /// </summary>
         /// <param name="row"></param>
-        /// <param name="columnNames"></param>
+        /// <param name="columnName"></param>
         /// <returns></returns>
         public static string GetValue(this CsvRow row, string columnName)
         {
             return row.Values[(row.ColumnNameToIndex[columnName])];
+        }
+
+        /// <summary>
+        /// Sets the CsvRow value based on the supplied column name
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        public static void SetValue(this CsvRow row, string columnName, string value)
+        {
+            var index = row.ColumnNameToIndex[columnName];
+            row.Values[index] = value;
         }
 
 

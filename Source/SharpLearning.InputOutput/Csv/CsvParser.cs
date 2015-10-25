@@ -11,6 +11,9 @@ namespace SharpLearning.InputOutput.Csv
     /// </summary>
     public sealed class CsvParser
     {
+        /// <summary>
+        /// Default delimiter
+        /// </summary>
         public const char DefaultDelimiter = ';';
 
         readonly Func<TextReader> m_getReader;
@@ -22,6 +25,7 @@ namespace SharpLearning.InputOutput.Csv
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="separator"></param>
+        /// <param name="quoteInclosedColumns"></param>
         public CsvParser(Func<TextReader> reader, char separator = DefaultDelimiter, bool quoteInclosedColumns = false)
         {
             if (reader == null) { throw new ArgumentException("reader"); }
@@ -155,7 +159,7 @@ namespace SharpLearning.InputOutput.Csv
             return split;
         }
 
-        public string[] SplitText(string csvText, char separator)
+        string[] SplitText(string csvText, char separator)
         {
             List<string> tokens = new List<string>();
 

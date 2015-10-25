@@ -27,7 +27,17 @@ namespace SharpLearning.InputOutput.Test.Csv
             var expected = new string[] { "1", "3" };
             CollectionAssert.AreEqual(expected, actual);
         }
-        
+
+        [TestMethod]
+        public void CsvRowExtensions_SetValue()
+        {
+            var sut = new CsvRow(ColumnNameToIndex, Data.ToArray());
+            sut.SetValue("3", "33");
+            
+            var actual = sut.GetValue("3");
+            Assert.AreEqual("33", actual);
+        }
+
         [TestMethod]
         public void CsvRowExtensions_GetValue()
         {
