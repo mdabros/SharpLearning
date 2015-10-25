@@ -50,5 +50,17 @@ namespace SharpLearning.CrossValidation.LearningCurves
                 .EnumerateCsvRows(new Dictionary<string, int> { { "SampleCount", 0 }, { "TrainingError", 1 }, { "ValidationError", 2 } })
                 .Write(writer, separator);
         }
+
+        /// <summary>
+        /// Writes the list of BiasVarianceLearningCurvePoint as csv to file path
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="filePath"></param>
+        /// <param name="separator"></param>
+        public static void WriteFile(this List<LearningCurvePoint> points, string filePath,
+            char separator = CsvParser.DefaultDelimiter)
+        {
+            Write(points, () => new StreamWriter(filePath), separator);
+        }
     }
 }
