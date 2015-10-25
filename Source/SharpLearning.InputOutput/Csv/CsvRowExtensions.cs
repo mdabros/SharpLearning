@@ -230,7 +230,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="filePath"></param>
         /// <param name="separator"></param>
         /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
-        public static void WriteFIle(this IEnumerable<CsvRow> dataRows, string filePath, char separator = CsvParser.DefaultDelimiter, bool writeHeader = true)
+        public static void WriteFile(this IEnumerable<CsvRow> dataRows, string filePath, char separator = CsvParser.DefaultDelimiter, bool writeHeader = true)
         {
             Write(dataRows, () => new StreamWriter(filePath), separator, writeHeader);
         }
