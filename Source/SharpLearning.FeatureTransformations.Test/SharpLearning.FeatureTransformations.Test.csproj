@@ -57,7 +57,20 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="DateTimeFeatureTransformerTest.cs" />
+    <Compile Include="MapCategoricalFeaturesTransformerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReplaceMissingValuesTransformerTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.FeatureTransformations\SharpLearning.FeatureTransformations.csproj">
+      <Project>{72d0249c-2896-4263-8f6f-d7b413404408}</Project>
+      <Name>SharpLearning.FeatureTransformations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
+      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
+      <Name>SharpLearning.InputOutput</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

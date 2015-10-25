@@ -46,7 +46,21 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="DateTimeFeatureTransformer.cs" />
+    <Compile Include="FeatureTransformationExtensions.cs" />
+    <Compile Include="MapCategoricalFeaturesTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReplaceMissingValuesTransformer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
+      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
+      <Name>SharpLearning.InputOutput</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
