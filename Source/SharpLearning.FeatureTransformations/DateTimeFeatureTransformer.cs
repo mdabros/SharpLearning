@@ -2,6 +2,7 @@
 using SharpLearning.InputOutput.Csv;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace SharpLearning.FeatureTransformations
@@ -20,7 +21,7 @@ namespace SharpLearning.FeatureTransformations
         public string[] FeatureNames { get { return m_featureNames; } }
 
         readonly DateTime m_startDate;               
-        readonly string[] m_featureNames = new string[] { "Year", "Month", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
+        readonly string[] m_featureNames = new string[] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
 
         /// <summary>
         /// Transform a data string into numerical features that can be presented to a machine learning algorithm.
@@ -78,15 +79,21 @@ namespace SharpLearning.FeatureTransformations
                 var totalDays = Math.Round(dateTime.Subtract(m_startDate).TotalDays, 1);
                 var totalhours = Math.Round(dateTime.Subtract(m_startDate).TotalHours, 1);
 
+                var dfi = DateTimeFormatInfo.CurrentInfo;
+                var cal = dfi.Calendar;
+                var weekOfYear = cal.GetWeekOfYear(dateTime, dfi.CalendarWeekRule, dfi.FirstDayOfWeek);
+
                 var timeValues = new string[] 
                 {
                     FloatingPointConversion.ToString(year),
                     FloatingPointConversion.ToString(month),
+                    FloatingPointConversion.ToString(weekOfYear),
                     FloatingPointConversion.ToString(dayOfMonth),
                     FloatingPointConversion.ToString(dayOfWeek),
                     FloatingPointConversion.ToString(hours),
                     FloatingPointConversion.ToString(totalDays),
                     FloatingPointConversion.ToString(totalhours),
+                    
                 };
                 var newValues = new string[row.Values.Length + timeValues.Length];
 
