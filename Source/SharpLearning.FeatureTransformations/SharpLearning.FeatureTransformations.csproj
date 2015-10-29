@@ -49,6 +49,7 @@
     <Compile Include="DateTimeFeatureTransformer.cs" />
     <Compile Include="FeatureTransformationExtensions.cs" />
     <Compile Include="MapCategoricalFeaturesTransformer.cs" />
+    <Compile Include="OneHotTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplaceMissingValuesTransformer.cs" />
   </ItemGroup>
