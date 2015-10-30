@@ -37,6 +37,11 @@ namespace SharpLearning.Optimization
             m_maxDegreeOfParallelism = maxDegreeOfParallelism;
         }
 
+        /// <summary>
+        /// Simple grid search that tries all combinations of the provided parameters
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <returns></returns>
         public OptimizerResult Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
@@ -56,7 +61,7 @@ namespace SharpLearning.Optimization
             });
 
             // Return the best model found.
-            return results.OrderBy(r => r.Error).First();
+            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
         }
 
         static T[][] CartesianProduct<T>(T[][] sequences)
