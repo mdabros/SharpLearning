@@ -75,14 +75,24 @@ namespace SharpLearning.Containers.Matrices
         public double[] GetRow(int index)
         {
             var row = new double[m_cols];
+            GetRow(index, row);
+            return row;
+        }
+
+        /// <summary>
+        /// gets the specified row. 
+        /// The values are copied to the provided row array.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="row"></param>
+        public void GetRow(int index, double[] row)
+        {
             var rowOffSet = index * m_cols;
 
             for (int i = 0; i < m_cols; i++)
             {
                 row[i] = m_featureArray[rowOffSet + i];
             }
-
-            return row;
         }
 
 
@@ -101,6 +111,20 @@ namespace SharpLearning.Containers.Matrices
             }
 
             return col;
+        }
+
+        /// <summary>
+        /// Gets the specified column.
+        /// The values are copied to the provided column array.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="col"></param>
+        public void GetColumn(int index, double[] col)
+        {
+            for (int i = 0; i < m_rows; i++)
+            {
+                col[i] = m_featureArray[m_cols * i + index];
+            }
         }
 
         /// <summary>

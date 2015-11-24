@@ -5,7 +5,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
     /// <summary>
     /// Contains information about the current split values
     /// </summary>
-    public class GBMSplitInfo
+    public struct GBMSplitInfo
     {
         /// <summary>
         /// Number of samples in the split

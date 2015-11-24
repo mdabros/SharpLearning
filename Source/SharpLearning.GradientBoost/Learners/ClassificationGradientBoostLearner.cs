@@ -144,7 +144,8 @@ namespace SharpLearning.GradientBoost.Learners
                     trees[i] = new GBMTree[m_iterations];
                 }
             }
-            
+
+            var predictWork = new double[observations.GetNumberOfRows()];
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
@@ -166,10 +167,10 @@ namespace SharpLearning.GradientBoost.Learners
                             predictions[itarget], orderedElements, inSample);
                     }
 
-                    var predict = trees[itarget][iteration].Predict(observations);
-                    for (int i = 0; i < predict.Length; i++)
+                    trees[itarget][iteration].Predict(observations, predictWork);
+                    for (int i = 0; i < predictWork.Length; i++)
                     {
-                        predictions[itarget][i] += m_learningRate * predict[i];
+                        predictions[itarget][i] += m_learningRate * predictWork[i];
                     }
                 }
             }
@@ -249,6 +250,7 @@ namespace SharpLearning.GradientBoost.Learners
             var bestIterationCount = 0;
             var currentBedstError = double.MaxValue;
 
+            var predictWork = new double[trainingObservations.GetNumberOfRows()];
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
@@ -270,10 +272,10 @@ namespace SharpLearning.GradientBoost.Learners
                             predictions[itarget], orderedElements, inSample);
                     }
 
-                    var predict = trees[itarget][iteration].Predict(trainingObservations);
-                    for (int i = 0; i < predict.Length; i++)
+                    trees[itarget][iteration].Predict(trainingObservations, predictWork);
+                    for (int i = 0; i < predictWork.Length; i++)
                     {
-                        predictions[itarget][i] += m_learningRate * predict[i];
+                        predictions[itarget][i] += m_learningRate * predictWork[i];
                     }
                 }
                 

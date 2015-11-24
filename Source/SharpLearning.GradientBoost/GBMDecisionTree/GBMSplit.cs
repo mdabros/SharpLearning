@@ -4,7 +4,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
     /// <summary>
     /// Represents the a split when learning a gradient boost decision tree
     /// </summary>
-    public class GBMSplit
+    public struct GBMSplit
     {
         /// <summary>
         /// Index of the feature that the node splits on
@@ -45,16 +45,6 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// Depth of the node in the decision tree
         /// </summary>
         public int Depth;
-
-        /// <summary>
-        /// Index of the left child node the node in the decision tree array
-        /// </summary>
-        public int LeftIndex = -1;
-
-        /// <summary>
-        /// Index of the left child node the node in the decision tree array
-        /// </summary>
-        public int RightIndex = -1;
 
         /// <summary>
         /// The number of observations in the node

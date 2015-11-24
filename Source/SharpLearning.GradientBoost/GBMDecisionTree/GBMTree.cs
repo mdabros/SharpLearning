@@ -34,12 +34,26 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             var rows = observations.GetNumberOfRows();
             var predictions = new double[rows];
 
-            for (int i = 0; i < rows; i++)
-            {
-                predictions[i] = Predict(observations.GetRow(i));
-            }
+            Predict(observations, predictions);
 
             return predictions;
+        }
+
+        /// <summary>
+        /// Predicts a series of observations.
+        /// can reuse predictions array if several predictions are made.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="predictions"></param>
+        public void Predict(F64Matrix observations, double[] predictions)
+        {
+            var rows = observations.GetNumberOfRows();
+            var features = new double[observations.GetNumberOfColumns()];
+            for (int i = 0; i < rows; i++)
+            {
+                observations.GetRow(i, features);
+                predictions[i] = Predict(features);
+            }
         }
 
         /// <summary>

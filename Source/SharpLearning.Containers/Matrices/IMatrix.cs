@@ -9,6 +9,9 @@ namespace SharpLearning.Containers.Matrices
         T[] GetRow(int index);
         T[] GetColumn(int index);
 
+        void GetRow(int index, T[] row);
+        void GetColumn(int index, T[] col);
+
         IMatrix<T> GetRows(params int[] indices);
         IMatrix<T> GetColumns(params int[] indices);
 

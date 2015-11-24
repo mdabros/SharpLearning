@@ -39,10 +39,29 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
+        public void StringMatrix_GetRow_Predefined()
+        {
+            var sut = CreateFeatures();
+            var row = new string[sut.GetNumberOfColumns()];
+            sut.GetRow(1, row);
+            CollectionAssert.AreEqual(GetExpectedRow(), row);
+        }
+
+        [TestMethod]
         public void StringMatrix_GetColumn()
         {
             var sut = CreateFeatures();
             var col = sut.GetColumn(1);
+
+            CollectionAssert.AreEqual(GetExpectedColumn(), col);
+        }
+
+        [TestMethod]
+        public void StringMatrix_GetColumn_Predefined()
+        {
+            var sut = CreateFeatures();
+            var col = new string[sut.GetNumberOfRows()];
+            sut.GetColumn(1, col);
 
             CollectionAssert.AreEqual(GetExpectedColumn(), col);
         }

@@ -118,7 +118,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="right"></param>
         /// <param name="target"></param>
         /// <param name="residual"></param>
-        public void UpdateSplitConstants(GBMSplitInfo left, GBMSplitInfo right, double target, double residual)
+        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, double target, double residual)
         {
             var residual2 = residual * residual;
 

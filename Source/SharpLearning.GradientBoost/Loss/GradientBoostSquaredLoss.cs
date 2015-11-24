@@ -111,7 +111,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="right"></param>
         /// <param name="target"></param>
         /// <param name="residual"></param>
-        public void UpdateSplitConstants(GBMSplitInfo left, GBMSplitInfo right, double target, double residual)
+        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, double target, double residual)
         {
             var residual2 = residual * residual;
 
@@ -120,12 +120,29 @@ namespace SharpLearning.GradientBoost.Loss
             left.SumOfSquares += residual2;
             left.Cost = left.SumOfSquares - (left.Sum * left.Sum / (double)left.Samples);
             left.BestConstant = left.Sum / (double)left.Samples;
+            
+            // Alternative update but gives slightly different results
+            //var leftSamplesInv =  1.0 / left.Samples;
+            //var leftAverage = left.Sum * leftSamplesInv;
+            //left.BestConstant = leftAverage;
+            //left.Cost = left.SumOfSquares - (left.Sum * leftAverage);
+            //left.Cost = left.SumOfSquares - (left.Sum * left.Sum * leftSamplesInv);
+            //left.BestConstant = left.Sum  * leftSamplesInv;
+           
 
             right.Samples--;
             right.Sum -= residual;
             right.SumOfSquares -= residual2;
             right.Cost = right.SumOfSquares - (right.Sum * right.Sum / (double)right.Samples);
             right.BestConstant = right.Sum / (double)right.Samples;
+
+            // Alternative update but gives slightly different results
+            //var rightSamplesInv = 1.0 / right.Samples;
+            //var rightAverage = right.Sum * rightSamplesInv;
+            //right.BestConstant = rightAverage;
+            //right.Cost = right.SumOfSquares - (right.Sum * rightAverage);
+            //right.Cost = right.SumOfSquares - (right.Sum * right.Sum * rightSamplesInv);
+            //right.BestConstant = right.Sum  * rightSamplesInv;
         }
 
         /// <summary>

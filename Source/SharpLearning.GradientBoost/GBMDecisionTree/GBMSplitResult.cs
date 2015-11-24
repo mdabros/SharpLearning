@@ -10,7 +10,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
     /// Split Results. Contains the best split 
     /// and the left and right split information
     /// </summary>
-    public class GBMSplitResult
+    public struct GBMSplitResult
     {
         /// <summary>
         /// Best split found

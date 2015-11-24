@@ -116,6 +116,7 @@ namespace SharpLearning.GradientBoost.Learners
             var predictions = targets.Select(t => initialLoss).ToArray();
             var residuals = new double[targets.Length];
 
+            var predictWork = new double[observations.GetNumberOfRows()];
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 m_loss.UpdateResiduals(targets, predictions, residuals, inSample);
@@ -136,10 +137,10 @@ namespace SharpLearning.GradientBoost.Learners
                         predictions, orderedElements, inSample);
                 }
 
-                var predict = trees[iteration].Predict(observations);
-                for (int i = 0; i < predict.Length; i++)
+                trees[iteration].Predict(observations, predictWork);
+                for (int i = 0; i < predictWork.Length; i++)
                 {
-                    predictions[i] += m_learningRate * predict[i];
+                    predictions[i] += m_learningRate * predictWork[i];
                 }
             }
 
@@ -188,6 +189,8 @@ namespace SharpLearning.GradientBoost.Learners
             var bestIterationCount = 0;
             var currentBedstError = double.MaxValue;
 
+            var predictWork = new double[trainingObservations.GetNumberOfRows()];
+
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 m_loss.UpdateResiduals(trainingTargets, predictions, residuals, inSample);
@@ -208,10 +211,10 @@ namespace SharpLearning.GradientBoost.Learners
                         predictions, orderedElements, inSample);
                 }
 
-                var predict = trees[iteration].Predict(trainingObservations);
-                for (int i = 0; i < predict.Length; i++)
+                trees[iteration].Predict(trainingObservations, predictWork);
+                for (int i = 0; i < predictWork.Length; i++)
                 {
-                    predictions[i] += m_learningRate * predict[i];
+                    predictions[i] += m_learningRate * predictWork[i];
                 }
 
                 // When using early stopping, Check that the validation error is not increasing between earlyStoppingRounds
