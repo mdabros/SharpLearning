@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Matrices;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace SharpLearning.Containers.Arithmetic
@@ -54,6 +55,31 @@ namespace SharpLearning.Containers.Arithmetic
                 }
             }
         }
+
+        /// <summary>
+        /// Multiply vector v with transposed matrix a. 
+        /// The matrix is traversed like it was transposed.
+        /// Copies output to provided array.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="v"></param>
+        /// <param name="output"></param>
+        public static void MultiplyTransposeVectorF64(F64Matrix a, double[] v, double[] output)
+        {
+            var aRows = a.GetNumberOfRows();
+            var aCols = a.GetNumberOfColumns();
+
+            var aData = a.GetFeatureArray();
+
+            for (int i = 0; i < aCols; i++)
+            {
+                for (int j = 0; j < aRows; ++j)
+                {
+                    output[i] += v[j] * a.GetItemAt(j, i);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Multiply vector v with scalar a
