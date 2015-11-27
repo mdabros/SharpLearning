@@ -49,10 +49,12 @@ namespace SharpLearning.Containers.Arithmetic
 
             for (int i = 0; i < aRows; ++i)
             {
+                var sum = 0.0;
                 for (int j = 0; j < aCols; ++j)
                 {
-                    output[i] += v[j] * aData[i * aCols + j];
+                    sum += v[j] * aData[i * aCols + j];
                 }
+                output[i] = sum;
             }
         }
 
@@ -73,10 +75,12 @@ namespace SharpLearning.Containers.Arithmetic
 
             for (int i = 0; i < aCols; i++)
             {
+                var sum = 0.0;
                 for (int j = 0; j < aRows; ++j)
                 {
-                    output[i] += v[j] * a.GetItemAt(j, i);
+                    sum += v[j] * a.GetItemAt(j, i);
                 }
+                output[i] = sum;
             }
         }
 
