@@ -190,6 +190,38 @@ namespace SharpLearning.Containers.Arithmetic
             });
         }
 
+        /// <summary>
+        /// Multiply matrix a with matrix b
+        /// Matrix b is traversed like it was transposed.
+        /// Copies output to provided matrix.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b">is traversed like it was transposed</param>
+        /// <param name="output"></param>
+        public static void MultiplyTransposeF64(F64Matrix a, F64Matrix b, F64Matrix output)
+        {
+            var aData = a.GetFeatureArray();
+            var aRows = a.GetNumberOfRows();
+            var aCols = a.GetNumberOfColumns();
+
+            var bData = b.GetFeatureArray();
+            var bRows = b.GetNumberOfRows();
+            var bCols = b.GetNumberOfColumns();
+
+            var outputArray = output.GetFeatureArray();
+
+            Parallel.For(0, aRows, i =>
+            {
+                for (int k = 0; k < aCols; k++)
+                {
+                    for (int j = 0; j < aRows; j++)
+                    {
+                        outputArray[i * aRows + j] += aData[i * aCols + k] * b.GetItemAt(j, k);
+                    }
+                }
+            });
+        }
+
 
         /// <summary>
         /// Multiply matrix a with matrix b
