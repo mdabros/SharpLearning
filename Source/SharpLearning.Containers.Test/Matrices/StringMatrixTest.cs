@@ -20,11 +20,31 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
+        public void StringMatrix_GetItemAt_Indexer()
+        {
+            var sut = CreateFeatures();
+            var item = sut[1, 1];
+            Assert.AreEqual("20", item);
+        }
+
+
+        [TestMethod]
         public void StringMatrix_SetItemAt()
         {
             var sut = CreateFeatures();
             var item = "123.0";
             sut.SetItemAt(1, 1, item);
+
+            var value = sut.GetItemAt(1, 1);
+            Assert.AreEqual(item, value);
+        }
+
+        [TestMethod]
+        public void StringMatrix_SetItemAt_Indexer()
+        {
+            var sut = CreateFeatures();
+            var item = "123.0";
+            sut[1, 1]= item;
 
             var value = sut.GetItemAt(1, 1);
             Assert.AreEqual(item, value);

@@ -16,6 +16,15 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
+        public void F64Matrix_GetItemAt_Indexer()
+        {
+            var sut = CreateFeatures();
+            var item = sut[1, 1];
+            Assert.AreEqual(20, item);
+        }
+
+
+        [TestMethod]
         public void F64Matrix_SetItemAt()
         {
             var sut = CreateFeatures();
@@ -25,6 +34,18 @@ namespace SharpLearning.Containers.Test.Matrices
             var value = sut.GetItemAt(1, 1);
             Assert.AreEqual(item, value);
         }
+
+        [TestMethod]
+        public void F64Matrix_SetItemAt_Indexer()
+        {
+            var sut = CreateFeatures();
+            var item = 123.0;
+            sut[1, 1] = item;
+
+            var value = sut.GetItemAt(1, 1);
+            Assert.AreEqual(item, value);
+        }
+
 
         [TestMethod]
         public void F64Matrix_GetRow()

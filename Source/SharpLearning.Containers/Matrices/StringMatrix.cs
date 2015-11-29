@@ -70,6 +70,18 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
+        /// Access the matrix like a 2D array
+        /// </summary>
+        /// <param name="col"></param>
+        /// <param name="row"></param>
+        /// <returns></returns>
+        public string this[int col, int row]
+        {
+            get { return m_featureArray[row * m_cols + col]; }
+            set { m_featureArray[row * m_cols + col] = value; }
+        }
+
+        /// <summary>
         /// Gets the specified row
         /// </summary>
         /// <param name="index"></param>
