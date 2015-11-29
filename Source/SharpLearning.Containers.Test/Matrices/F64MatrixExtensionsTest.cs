@@ -12,6 +12,26 @@ namespace SharpLearning.Containers.Test.Matrices
         readonly double[] CombineDataRows = new double[] { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6 };
 
         [TestMethod]
+        public void F64MatrixExtensions_Clear()
+        {
+            var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
+            matrix.Clear();
+
+            CollectionAssert.AreEqual(new double[2 * 3], matrix.GetFeatureArray());
+        }
+
+        [TestMethod]
+        public void F64MatrixExtensions_Initialize()
+        {
+            var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
+            matrix.Initialize(() => 10);
+
+            var expected = Enumerable.Range(0, matrix.GetFeatureArray().Length).Select(v => 10.0).ToArray();
+            CollectionAssert.AreEqual(expected, matrix.GetFeatureArray());
+        }
+
+
+        [TestMethod]
         public void F64MatrixExtensions_ToStringMatrix()
         {
             var matrix = new F64Matrix(InputData, 2, 3);

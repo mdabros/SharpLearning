@@ -2,8 +2,38 @@
 
 namespace SharpLearning.Containers.Matrices
 {
+    /// <summary>
+    /// Extensions for F64Matrix
+    /// </summary>
     public static class F64MatrixExtensions
     {
+        /// <summary>
+        /// Clears the matrix by setting all elements to 0.0
+        /// </summary>
+        /// <param name="matrix"></param>
+        public static void Clear(this F64Matrix matrix)
+        {
+            var data = matrix.GetFeatureArray();
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = 0.0;
+            }
+        }
+
+        /// <summary>
+        /// Sets the elements in the matrix according to the initfunc
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="initFunc"></param>
+        public static void Initialize(this F64Matrix matrix, Func<double> initFunc)
+        {
+            var data = matrix.GetFeatureArray();
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = initFunc();
+            }
+        }
+
         /// <summary>
         /// Converts F64Matrix to StringMatrix
         /// </summary>
