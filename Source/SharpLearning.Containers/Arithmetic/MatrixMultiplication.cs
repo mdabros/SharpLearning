@@ -210,7 +210,7 @@ namespace SharpLearning.Containers.Arithmetic
 
             var outputArray = output.GetFeatureArray();
 
-            Parallel.For(0, bCols, i =>
+            Parallel.For(0, aCols, i =>
             {
                 for (int k = 0; k < bRows; k++)
                 {
