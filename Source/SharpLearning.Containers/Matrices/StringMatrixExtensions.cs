@@ -82,6 +82,39 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
+        /// Combines vector and and matrix  columnwise. Vector is added to the front of the matrix 
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static StringMatrix CombineCols(this string[] v, StringMatrix m)
+        {
+            if (m.GetNumberOfRows() != v.Length)
+            {
+                throw new ArgumentException("matrix must have same number of rows as vector");
+            }
+
+            var rows = v.Length;
+            var cols = m.GetNumberOfColumns() + 1;
+
+            var features = new string[rows * cols];
+            var matrixArray = m.GetFeatureArray();
+
+            var combineIndex = 0;
+            for (int i = 0; i < rows; i++)
+            {
+                Array.Copy(v, i, features, combineIndex, 1);
+                combineIndex += 1;
+
+                var matrixIndex = i * m.GetNumberOfColumns();
+                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.GetNumberOfColumns());
+                combineIndex += m.GetNumberOfColumns();
+            }
+
+            return new StringMatrix(features, rows, cols);
+        }
+
+        /// <summary>
         /// Combines matrix1 and matrix2 columnwise. Matrix2 is added to the end of matrix1 
         /// </summary>
         /// <param name="m1"></param>

@@ -58,6 +58,19 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
+        public void StringMatrixExtensions_CombineStringVectorAndMatrixAnd()
+        {
+            var matrix = new StringMatrix(InputData, 2, 3);
+            var vector = new string[] { "3", "6" };
+
+            var expected = new StringMatrix(new string[] {"3", "1", "2", "3",
+                                                          "6", "4", "5", "6", }, 2, 4);
+            var actual = vector.CombineCols(matrix);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void StringMatrixExtensions_VectorAndVector()
         {
             var v1 = new string[] { "1", "2", "3", "4" };
