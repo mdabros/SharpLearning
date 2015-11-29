@@ -191,22 +191,55 @@ namespace SharpLearning.Containers.Arithmetic
         }
 
         /// <summary>
+        /// Multiply matrix aT with matrix b
+        /// Matrix aT is traversed like it was transposed.
+        /// Copies output to provided matrix.
+        /// </summary>
+        /// <param name="aT"></param>
+        /// <param name="b"></param>
+        /// <param name="output"></param>
+        public static void MultiplyTransposeFirstF64(F64Matrix aT, F64Matrix b, F64Matrix output)
+        {
+            var aData = aT.GetFeatureArray();
+            var aRows = aT.GetNumberOfRows();
+            var aCols = aT.GetNumberOfColumns();
+
+            var bData = b.GetFeatureArray();
+            var bRows = b.GetNumberOfRows();
+            var bCols = b.GetNumberOfColumns();
+
+            var outputArray = output.GetFeatureArray();
+
+            Parallel.For(0, bCols, i =>
+            {
+                for (int k = 0; k < bRows; k++)
+                {
+                    for (int j = 0; j < bCols; j++)
+                    {
+                        outputArray[i * bCols + j] += aT.GetItemAt(k, i) * bData[k * bCols + j];
+                    }
+                }
+            });
+        }
+
+
+        /// <summary>
         /// Multiply matrix a with matrix b
-        /// Matrix b is traversed like it was transposed.
+        /// Matrix bT is traversed like it was transposed.
         /// Copies output to provided matrix.
         /// </summary>
         /// <param name="a"></param>
-        /// <param name="b">is traversed like it was transposed</param>
+        /// <param name="bT">is traversed like it was transposed</param>
         /// <param name="output"></param>
-        public static void MultiplyTransposeF64(F64Matrix a, F64Matrix b, F64Matrix output)
+        public static void MultiplyTransposeSecondF64(F64Matrix a, F64Matrix bT, F64Matrix output)
         {
             var aData = a.GetFeatureArray();
             var aRows = a.GetNumberOfRows();
             var aCols = a.GetNumberOfColumns();
 
-            var bData = b.GetFeatureArray();
-            var bRows = b.GetNumberOfRows();
-            var bCols = b.GetNumberOfColumns();
+            var bData = bT.GetFeatureArray();
+            var bRows = bT.GetNumberOfRows();
+            var bCols = bT.GetNumberOfColumns();
 
             var outputArray = output.GetFeatureArray();
 
@@ -216,7 +249,7 @@ namespace SharpLearning.Containers.Arithmetic
                 {
                     for (int j = 0; j < aRows; j++)
                     {
-                        outputArray[i * aRows + j] += aData[i * aCols + k] * b.GetItemAt(j, k);
+                        outputArray[i * aRows + j] += aData[i * aCols + k] * bT.GetItemAt(j, k);
                     }
                 }
             });
