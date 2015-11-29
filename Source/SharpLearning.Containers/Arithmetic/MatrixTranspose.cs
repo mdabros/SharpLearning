@@ -15,7 +15,7 @@ namespace SharpLearning.Containers.Arithmetic
         public static F64Matrix TransposeF64(F64Matrix matrix)
         {
             var transpose = new F64Matrix(matrix.GetNumberOfColumns(), matrix.GetNumberOfRows());
-            TransposeF64Cache(matrix, transpose);
+            TransposeF64(matrix, transpose);
 
             return transpose;
         }
@@ -26,7 +26,7 @@ namespace SharpLearning.Containers.Arithmetic
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
-        public static void TransposeF64Cache(F64Matrix matrix, F64Matrix transposed)
+        public static void TransposeF64(F64Matrix matrix, F64Matrix transposed)
         {
             cachetranpose(0, matrix.GetNumberOfRows(), 0, matrix.GetNumberOfColumns(), 
                 matrix.GetFeatureArray(), transposed.GetFeatureArray());
