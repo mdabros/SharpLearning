@@ -23,8 +23,12 @@ namespace SharpLearning.Containers.Test.Matrices
         public void StringMatrix_GetItemAt_Indexer()
         {
             var sut = CreateFeatures();
-            var item = sut[1, 1];
-            Assert.AreEqual("20", item);
+            Assert.AreEqual("1", sut[0, 0]);
+            Assert.AreEqual("100", sut[2, 0]);
+            Assert.AreEqual("2", sut[0, 1]);
+            Assert.AreEqual("200", sut[2, 1]);
+            Assert.AreEqual("3", sut[0, 2]);
+            Assert.AreEqual("300", sut[2, 2]);
         }
 
 

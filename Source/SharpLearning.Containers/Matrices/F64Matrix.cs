@@ -73,7 +73,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="col"></param>
         /// <param name="row"></param>
         /// <returns></returns>
-        public double this[int col, int row]
+        public double this[int row, int col]
         {
             get { return m_featureArray[row * m_cols + col]; }
             set { m_featureArray[row * m_cols + col] = value; }
