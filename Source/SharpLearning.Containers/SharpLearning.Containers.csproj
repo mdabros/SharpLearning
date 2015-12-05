@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arithmetic\MatrixAdd.cs" />
     <Compile Include="Arithmetic\MatrixMultiplication.cs" />
     <Compile Include="Arithmetic\MatrixSubtraction.cs" />
     <Compile Include="Arithmetic\MatrixTranspose.cs" />
