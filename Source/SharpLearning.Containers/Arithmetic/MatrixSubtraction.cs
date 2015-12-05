@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpLearning.Containers.Matrices;
+using System;
 
 namespace SharpLearning.Containers.Arithmetic
 {
@@ -29,6 +30,26 @@ namespace SharpLearning.Containers.Arithmetic
             }
 
             return v3;
+        }
+
+        /// <summary>
+        /// Subtracts matrix m2 from m1. Result is stored in m1.
+        /// </summary>
+        /// <param name="m1"></param>
+        /// <param name="m2"></param>
+        /// <returns></returns>
+        public static void SubtractF64MatrixInPlace(F64Matrix m1, F64Matrix m2)
+        {
+            var cols = m1.GetNumberOfColumns();
+            var rows = m1.GetNumberOfRows();
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    m1[i, j] = m1[i, j] - m2[i, j];
+                }
+            }
         }
 
         /// <summary>

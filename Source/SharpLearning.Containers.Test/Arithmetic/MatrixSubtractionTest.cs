@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Arithmetic;
+using SharpLearning.Containers.Matrices;
 using System;
 
 namespace SharpLearning.Containers.Test.Arithmetic
@@ -16,6 +17,20 @@ namespace SharpLearning.Containers.Test.Arithmetic
             var actual = v1.Subtract(v2);
             var expected = new double[] { -4, -2, 0, 2, 4 };
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void MatrixSubtraction_SubtractF64MatrixInPlace()
+        {
+            var m1 = new F64Matrix(4, 3);
+            var m2 = new F64Matrix(4, 3);
+            m2.Initialize(() => 1.0);
+
+            MatrixSubtraction.SubtractF64MatrixInPlace(m1, m2);
+
+            var expected = new F64Matrix(4, 3);
+            expected.Initialize(() => -1.0);
+            Assert.AreEqual(expected, m1);
         }
 
         [TestMethod]
