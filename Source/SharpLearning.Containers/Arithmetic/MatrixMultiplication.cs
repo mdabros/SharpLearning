@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Matrices;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -17,20 +18,23 @@ namespace SharpLearning.Containers.Arithmetic
         /// <returns></returns>
         public static double[] MultiplyVectorF64(F64Matrix a, double[] v)
         {
-            var aRows = a.GetNumberOfRows();
-            var aCols = a.GetNumberOfColumns();
+            var rows = a.GetNumberOfRows();
+            var cols = a.GetNumberOfColumns();
             
-            var aData = a.GetFeatureArray();
-            var cData = new double[aRows];
+            var data = a.GetFeatureArray();
+            var output = new double[rows];
 
-            for (int i = 0; i < aRows; ++i)
+            if (cols != v.Length) 
+            { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Length); }
+
+            for (int i = 0; i < rows; ++i)
             {
-                for (int j = 0; j < aCols; ++j)
+                for (int j = 0; j < cols; ++j)
                 {
-                    cData[i] += v[j] * aData[i * aCols + j];
+                    output[i] += v[j] * data[i * cols + j];
                 }
             }
-            return cData;
+            return output;
         }
 
         /// <summary>
@@ -42,48 +46,25 @@ namespace SharpLearning.Containers.Arithmetic
         /// <param name="output"></param>
         public static void MultiplyVectorF64(F64Matrix a, double[] v, double[] output)
         {
-            var aRows = a.GetNumberOfRows();
-            var aCols = a.GetNumberOfColumns();
+            var rows = a.GetNumberOfRows();
+            var cols = a.GetNumberOfColumns();
 
-            var aData = a.GetFeatureArray();
+            var data = a.GetFeatureArray();
 
-            for (int i = 0; i < aRows; ++i)
+            if (cols != v.Length)
+            { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Length); }
+
+
+            for (int i = 0; i < rows; ++i)
             {
                 var sum = 0.0;
-                for (int j = 0; j < aCols; ++j)
+                for (int j = 0; j < cols; ++j)
                 {
-                    sum += v[j] * aData[i * aCols + j];
+                    sum += v[j] * data[i * cols + j];
                 }
                 output[i] = sum;
             }
         }
-
-        /// <summary>
-        /// Multiply vector v with transposed matrix a. 
-        /// The matrix is traversed like it was transposed.
-        /// Copies output to provided array.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="v"></param>
-        /// <param name="output"></param>
-        public static void MultiplyTransposeVectorF64(F64Matrix a, double[] v, double[] output)
-        {
-            var aRows = a.GetNumberOfRows();
-            var aCols = a.GetNumberOfColumns();
-
-            var aData = a.GetFeatureArray();
-
-            for (int i = 0; i < aCols; i++)
-            {
-                var sum = 0.0;
-                for (int j = 0; j < aRows; ++j)
-                {
-                    sum += v[j] * a.GetItemAt(j, i);
-                }
-                output[i] = sum;
-            }
-        }
-
 
         /// <summary>
         /// Multiply vector v with scalar a
@@ -145,6 +126,9 @@ namespace SharpLearning.Containers.Arithmetic
             var cCols = bCols;
             var cData = new double[cRows * cCols];
 
+            if (aCols != bRows)
+            { throw new ArgumentException("matrix a cols: " + aCols + " differs from matrix b rows: " + bRows); }
+
             Parallel.For(0, cRows, i =>
             {
                 for (int k = 0; k < bRows; k++)
@@ -178,6 +162,20 @@ namespace SharpLearning.Containers.Arithmetic
 
             var outputArray = output.GetFeatureArray();
 
+            if (aCols != bRows)
+            { throw new ArgumentException("matrix a cols: " + aCols + " differs from matrix b rows: " + bRows); }
+
+
+            if (output.GetNumberOfRows() != aRows)
+            { throw new ArgumentException("output matrix rows: " + output.GetNumberOfRows() 
+                + " differs from matrix a rows: " + aRows); }
+
+            if (output.GetNumberOfColumns() != bCols)
+            {
+                throw new ArgumentException("output matrix rows: " + output.GetNumberOfColumns()
+                  + " differs from matrix b cols: " + bCols);
+            }
+
             Parallel.For(0, aRows, i =>
             {
                 for (int k = 0; k < bRows; k++)
@@ -190,72 +188,7 @@ namespace SharpLearning.Containers.Arithmetic
             });
         }
 
-        /// <summary>
-        /// Multiply matrix aT with matrix b
-        /// Matrix aT is traversed like it was transposed.
-        /// Copies output to provided matrix.
-        /// </summary>
-        /// <param name="aT"></param>
-        /// <param name="b"></param>
-        /// <param name="output"></param>
-        public static void MultiplyTransposeFirstF64(F64Matrix aT, F64Matrix b, F64Matrix output)
-        {
-            var aData = aT.GetFeatureArray();
-            var aRows = aT.GetNumberOfRows();
-            var aCols = aT.GetNumberOfColumns();
-
-            var bData = b.GetFeatureArray();
-            var bRows = b.GetNumberOfRows();
-            var bCols = b.GetNumberOfColumns();
-
-            var outputArray = output.GetFeatureArray();
-
-            Parallel.For(0, aCols, i =>
-            {
-                for (int k = 0; k < bRows; k++)
-                {
-                    for (int j = 0; j < bCols; j++)
-                    {
-                        outputArray[i * bCols + j] += aT.GetItemAt(k, i) * bData[k * bCols + j];
-                    }
-                }
-            });
-        }
-
-
-        /// <summary>
-        /// Multiply matrix a with matrix b
-        /// Matrix bT is traversed like it was transposed.
-        /// Copies output to provided matrix.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="bT">is traversed like it was transposed</param>
-        /// <param name="output"></param>
-        public static void MultiplyTransposeSecondF64(F64Matrix a, F64Matrix bT, F64Matrix output)
-        {
-            var aData = a.GetFeatureArray();
-            var aRows = a.GetNumberOfRows();
-            var aCols = a.GetNumberOfColumns();
-
-            var bData = bT.GetFeatureArray();
-            var bRows = bT.GetNumberOfRows();
-            var bCols = bT.GetNumberOfColumns();
-
-            var outputArray = output.GetFeatureArray();
-
-            Parallel.For(0, aRows, i =>
-            {
-                for (int k = 0; k < aCols; k++)
-                {
-                    for (int j = 0; j < aRows; j++)
-                    {
-                        outputArray[i * aRows + j] += aData[i * aCols + k] * bT.GetItemAt(j, k);
-                    }
-                }
-            });
-        }
-
-
+        
         /// <summary>
         /// Multiply matrix a with matrix b
         /// </summary>

@@ -40,12 +40,31 @@ namespace SharpLearning.Containers.Arithmetic
         /// <returns></returns>
         public static void SubtractF64(F64Matrix m1, F64Matrix m2, F64Matrix output)
         {
-            var cols = m1.GetNumberOfColumns();
-            var rows = m1.GetNumberOfRows();
+            var m1Cols = m1.GetNumberOfColumns();
+            var m1Rows = m1.GetNumberOfRows();
 
-            for (int i = 0; i < rows; i++)
+            var m2Cols = m2.GetNumberOfColumns();
+            var m2Rows = m2.GetNumberOfRows();
+
+            var outputCols = output.GetNumberOfColumns();
+            var outputRows = output.GetNumberOfRows();
+
+            if (m1Cols != m2Cols)
+            { throw new ArgumentException("matrix m1 cols: " + m1Cols + " differs from matrix m2 cols: " + m2Cols); }
+
+            if (m1Rows != m2Rows)
+            { throw new ArgumentException("matrix m1 rows: " + m1Rows + " differs from matrix m2 rows: " + m2Rows); }
+
+            if (m1Cols != outputCols)
+            { throw new ArgumentException("matrix m1 cols: " + m1Cols + " differs from matrix output cols: " + outputCols); }
+
+            if (m1Rows != outputRows)
+            { throw new ArgumentException("matrix m1 rows: " + m1Rows + " differs from matrix output rows: " + outputRows); }
+
+
+            for (int i = 0; i < m1Rows; i++)
             {
-                for (int j = 0; j < cols; j++)
+                for (int j = 0; j < m1Cols; j++)
                 {
                     output[i, j] = m1[i, j] - m2[i, j];
                 }
