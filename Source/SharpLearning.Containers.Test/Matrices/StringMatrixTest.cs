@@ -101,6 +101,17 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
+        public void StringMatrix_GetRows_Predefined()
+        {
+            var sut = CreateFeatures();
+            var actual = new StringMatrix(2, 3);
+            sut.GetRows(new int[] { 0, 2 }, actual);
+            var expected = GetExpectedRowSubMatrix();
+
+            Assert.IsTrue(expected.Equals(actual));
+        }
+
+        [TestMethod]
         public void StringMatrix_GetColumns()
         {
             var sut = CreateFeatures();
@@ -108,6 +119,17 @@ namespace SharpLearning.Containers.Test.Matrices
             var expected = GetExpectedColSubMatrix();
 
             Assert.IsTrue(expected.Equals(subMatrix));
+        }
+
+        [TestMethod]
+        public void StringMatrix_GetColumns_Predefined()
+        {
+            var sut = CreateFeatures();
+            var actual = new StringMatrix(3, 2);
+            sut.GetColumns(new int [] { 0, 2 }, actual);
+            var expected = GetExpectedColSubMatrix();
+
+            Assert.IsTrue(expected.Equals(actual));
         }
 
         string[] GetExpectedColumn()

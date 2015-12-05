@@ -170,6 +170,29 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
+        /// Gets the specified rows as a matrix. 
+        /// Output is copied to the provided matrix
+        /// </summary>
+        /// <param name="indices"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        public void GetRows(int[] indices, StringMatrix output)
+        {
+            var rowCount = indices.Length;
+            var subFeatureArray = output.GetFeatureArray();
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var rowOffSet = m_cols * indices[i];
+                var subRowOffSet = m_cols * i;
+                for (int j = 0; j < m_cols; j++)
+                {
+                    subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + j];
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the specified columns as a matrix
         /// </summary>
         /// <param name="indices"></param>
@@ -189,6 +212,28 @@ namespace SharpLearning.Containers.Matrices
             }
 
             return new StringMatrix(subFeatureArray, m_rows, indices.Length);
+        }
+
+        /// <summary>
+        /// Gets the specified columns as a matrix
+        /// Output is copied to the provided matrix
+        /// </summary>
+        /// <param name="indices"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        public void GetColumns(int[] indices, StringMatrix output)
+        {
+            var subFeatureCount = indices.Length;
+            var subFeatureArray = output.GetFeatureArray();
+            for (int i = 0; i < m_rows; i++)
+            {
+                var rowOffSet = m_cols * i;
+                var subRowOffSet = subFeatureCount * i;
+                for (int j = 0; j < indices.Length; j++)
+                {
+                    subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + indices[j]];
+                }
+            }
         }
 
         /// <summary>
