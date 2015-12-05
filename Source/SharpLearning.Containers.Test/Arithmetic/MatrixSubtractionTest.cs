@@ -20,17 +20,35 @@ namespace SharpLearning.Containers.Test.Arithmetic
         }
 
         [TestMethod]
-        public void MatrixSubtraction_SubtractF64MatrixInPlace()
+        public void MatrixSubtraction_SubtractF64Matrix_1()
         {
             var m1 = new F64Matrix(4, 3);
             var m2 = new F64Matrix(4, 3);
             m2.Initialize(() => 1.0);
 
-            MatrixSubtraction.SubtractF64MatrixInPlace(m1, m2);
+            var actual = new F64Matrix(4, 3);
+            MatrixSubtraction.SubtractF64(m1, m2, actual);
 
             var expected = new F64Matrix(4, 3);
             expected.Initialize(() => -1.0);
-            Assert.AreEqual(expected, m1);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void MatrixSubtraction_SubtractF64Matrix_2()
+        {
+            var m1 = new F64Matrix(4, 3);
+            m1.Initialize(() => 5);
+
+            var m2 = new F64Matrix(4, 3);
+            m2.Initialize(() => 1.0);
+
+            var actual = new F64Matrix(4, 3);
+            MatrixSubtraction.SubtractF64(m1, m2, actual);
+
+            var expected = new F64Matrix(4, 3);
+            expected.Initialize(() => 4.0);
+            Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]

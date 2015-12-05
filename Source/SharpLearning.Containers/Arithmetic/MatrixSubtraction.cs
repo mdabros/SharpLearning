@@ -38,7 +38,7 @@ namespace SharpLearning.Containers.Arithmetic
         /// <param name="m1"></param>
         /// <param name="m2"></param>
         /// <returns></returns>
-        public static void SubtractF64MatrixInPlace(F64Matrix m1, F64Matrix m2)
+        public static void SubtractF64(F64Matrix m1, F64Matrix m2, F64Matrix output)
         {
             var cols = m1.GetNumberOfColumns();
             var rows = m1.GetNumberOfRows();
@@ -47,7 +47,7 @@ namespace SharpLearning.Containers.Arithmetic
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    m1[i, j] = m1[i, j] - m2[i, j];
+                    output[i, j] = m1[i, j] - m2[i, j];
                 }
             }
         }

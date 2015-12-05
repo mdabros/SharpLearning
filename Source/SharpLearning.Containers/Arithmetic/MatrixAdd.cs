@@ -10,11 +10,11 @@ namespace SharpLearning.Containers.Arithmetic
     public static class MatrixAdd
     {
         /// <summary>
-        /// Adds a matrix and vector
+        /// Adds a matrix and vector and stores the result in output
         /// </summary>
         /// <param name="m"></param>
         /// <param name="v"></param>
-        public static void AddInPlace(F64Matrix m, double[] v)
+        public static void AddF64(F64Matrix m, double[] v, F64Matrix output)
         {
             var rows = m.GetNumberOfRows();
             var cols = m.GetNumberOfColumns();
@@ -23,7 +23,7 @@ namespace SharpLearning.Containers.Arithmetic
             {
                 for (int j = 0; j < rows; j++)
                 {
-                    m[j, i] = v[j];
+                    output[j, i] = m[j, i] + v[j];
                 }
             }
         }
