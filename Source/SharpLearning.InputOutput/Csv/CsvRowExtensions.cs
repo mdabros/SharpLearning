@@ -111,6 +111,22 @@ namespace SharpLearning.InputOutput.Csv
         }
 
         /// <summary>
+        /// Reduces the csv rows to the provided columnNames
+        /// </summary>
+        /// <param name="columnNames"></param>
+        /// <returns></returns>
+        public static IEnumerable<CsvRow> Reduce(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
+        {
+            var index = 0;
+            var reducedColumnNameToIndex = columnNames.ToDictionary(n => n, n => index++);
+
+            foreach (var row in dataRows)
+            {
+                yield return new CsvRow(reducedColumnNameToIndex, row.GetValues(columnNames));
+            }
+        }
+
+        /// <summary>
         /// Parses the CsvRows to a double array. Only CsvRows with a single column can be used
         /// </summary>
         /// <param name="dataRows"></param>

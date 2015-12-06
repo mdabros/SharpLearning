@@ -48,6 +48,17 @@ namespace SharpLearning.InputOutput.Test.Csv
         }
 
         [TestMethod]
+        public void CsvRowExtensions_Reduce()
+        {
+            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
+
+            var actual = sut.Reduce("1", "2").ToList().First();
+            var expected = new CsvRow(new Dictionary<string, int> { { "1", 0 }, { "2", 1 } }, new string[] { "1", "2" });
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void CsvRowExtensions_ToF64Matrix()
         {
             var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
