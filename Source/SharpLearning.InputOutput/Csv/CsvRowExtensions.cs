@@ -20,7 +20,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, Func<CsvRow, CsvRow, bool> rowMatcher)
         {
-            var newColumnNameToIndex = thisRows.First().ColumnNameToIndex;
+            var newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
             var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
             foreach (var kvp in otherColumnNameToIndex)
             {
