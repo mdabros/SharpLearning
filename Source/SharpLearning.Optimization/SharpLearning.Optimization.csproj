@@ -48,8 +48,10 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="GridSearchOptimizer.cs" />
+    <Compile Include="IOptimizer.cs" />
     <Compile Include="OptimizerResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandomSearchOptimizer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
