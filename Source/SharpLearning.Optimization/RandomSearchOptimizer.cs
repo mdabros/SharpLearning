@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 namespace SharpLearning.Optimization
 {
     /// <summary>
-    /// Random search optimizer initializes random parameters between min and max of the provided
+    /// Random search optimizer initializes random parameters between min and max of the provided.
+    /// Roughly based on: http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf
     /// parameters.
     /// </summary>
     public sealed class RandomSearchOptimizer : IOptimizer
@@ -21,8 +22,9 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>
         /// <param name="iterations">The number of iterations to perform</param>
-        public RandomSearchOptimizer(double[][] parameterRanges, int iterations)
-            : this(parameterRanges, iterations, int.MaxValue)
+        /// <param name="seed"></param>
+        public RandomSearchOptimizer(double[][] parameterRanges, int iterations, int seed=42)
+            : this(parameterRanges, iterations, seed, int.MaxValue)
         {
         }
 
@@ -33,13 +35,13 @@ namespace SharpLearning.Optimization
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="maxDegreeOfParallelism">How many cores must be used for the optimization. 
         /// The function to minimize must be thread safe to use multi threading</param>
-        public RandomSearchOptimizer(double[][] parameterRanges, int iterations, int maxDegreeOfParallelism)
+        public RandomSearchOptimizer(double[][] parameterRanges, int iterations, int seed, int maxDegreeOfParallelism)
         {
             if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
             if (maxDegreeOfParallelism < 1) { throw new ArgumentException("maxDegreeOfParallelism must be at least 1"); }
             m_parameters = parameterRanges;
             m_maxDegreeOfParallelism = maxDegreeOfParallelism;
-            m_random = new Random(42);
+            m_random = new Random(seed);
             m_iterations = iterations;
         }
 
@@ -62,7 +64,6 @@ namespace SharpLearning.Optimization
             {
                 // Get the current parameters for the current point
                 var result = functionToMinimize(param);
-                //Console.WriteLine("Error: " + result.Error);//
                 results.Add(result);
             });
 

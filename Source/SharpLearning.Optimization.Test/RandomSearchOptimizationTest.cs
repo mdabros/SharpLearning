@@ -23,7 +23,7 @@ namespace SharpLearning.Optimization.Test
         public void RandomSearchOptimizer_ArgumentCheck_MaxDegreeOfParallelism()
         {
             var parameters = new double[][] { new double[] { 10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0 } };
-            var sut = new RandomSearchOptimizer(parameters, 10, 0);
+            var sut = new RandomSearchOptimizer(parameters, 10, 42, 0);
         }
 
         [TestMethod]
