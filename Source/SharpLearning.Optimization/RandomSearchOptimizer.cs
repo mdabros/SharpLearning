@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpLearning.Optimization
@@ -53,7 +51,7 @@ namespace SharpLearning.Optimization
         public OptimizerResult Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
-            double[][] grid = CartesianProduct(CreateNewSearchSpace(m_parameters));
+            var grid = CreateNewSearchSpace(m_parameters);
 
             // Initialize the search
             var results = new ConcurrentBag<OptimizerResult>();
@@ -64,7 +62,7 @@ namespace SharpLearning.Optimization
             {
                 // Get the current parameters for the current point
                 var result = functionToMinimize(param);
-                //Trace.WriteLine("Error: " + result.Error);//
+                //Console.WriteLine("Error: " + result.Error);//
                 results.Add(result);
             });
 
@@ -74,43 +72,25 @@ namespace SharpLearning.Optimization
 
         double[][] CreateNewSearchSpace(double[][] parameters)
         {
-            var newSearchSpace = new double[parameters.Length][];
-            var parameterCount = m_iterations / parameters.Length;
-            for (int i = 0; i < parameters.Length; i++)
+            var newSearchSpace = new double[m_iterations][];
+            for (int i = 0; i < newSearchSpace.Length; i++)
 			{
-                var inputParams = parameters[i];
-                newSearchSpace[i] = Boundaries(inputParams.Min(), inputParams.Max(), parameterCount);
+                var newParameters = new double[parameters.Length];
+                var index = 0;
+                foreach (var param in parameters)
+                {
+                    newParameters[index] = NewParameter(param.Min(), param.Max());
+                    index++;
+                }
+                newSearchSpace[i] = newParameters;
 			}
 
             return newSearchSpace;
         }
 
-        double[] Boundaries(double min, double max, int parameterCounts)
+        double NewParameter(double min, double max)
         {
-            var parameters = new double[parameterCounts];
-            for (int i = 0; i < parameterCounts; i++)
-            {
-                parameters[i] = m_random.NextDouble() * (max - min) + min;
-            }
-
-            return parameters;
-        }
-
-        static T[][] CartesianProduct<T>(T[][] sequences)
-        {
-            var cartesian = CartesianProductEnumerable(sequences);
-            return cartesian.Select(row => row.ToArray()).ToArray();
-        }
-
-        static IEnumerable<IEnumerable<T>> CartesianProductEnumerable<T>(IEnumerable<IEnumerable<T>> sequences)
-        {
-            IEnumerable<IEnumerable<T>> emptyProduct = new[] { Enumerable.Empty<T>() };
-            return sequences.Aggregate(
-                emptyProduct,
-                (accumulator, sequence) =>
-                    from accseq in accumulator
-                    from item in sequence
-                    select accseq.Concat(new[] { item }));
+            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }
