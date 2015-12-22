@@ -67,17 +67,24 @@ namespace SharpLearning.GradientBoost.Test.Learners
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ClassificationGradientBoostLearner_Constructor_FeaturePrSplit()
+        {
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, -1);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void ClassificationGradientBoostLearner_Constructor_Loss()
         {
-            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, null, 1);
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, 1, null, 1);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ClassificationGradientBoostLearner_Constructor_SubSampleRatio_NumberOfThreads()
         {
-            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, new GradientBoostSquaredLoss(), 0);
+            new ClassificationGradientBoostLearner(1, 1, 1, 1, 1, 1.0, 1, new GradientBoostSquaredLoss(), 0);
         }
 
         [TestMethod]
@@ -108,7 +115,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var splitter = new StratifiedTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);
 
-            var sut = new ClassificationBinomialGradientBoostLearner(1000, 0.01, 9, 1, 1e-6, .5, 1);
+            var sut = new ClassificationBinomialGradientBoostLearner(1000, 0.01, 9, 1, 1e-6, .5, 0, 1);
             var evaluator = new TotalErrorClassificationMetric<double>();
 
             var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,

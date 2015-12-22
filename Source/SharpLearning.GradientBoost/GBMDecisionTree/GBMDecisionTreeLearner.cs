@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.GradientBoost.Loss;
 using SharpLearning.Threading;
@@ -32,6 +33,8 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         readonly int m_numberOfThreads;
         WorkerRunner m_threadedWorker;
         readonly IGradientBoostLoss m_loss;
+        int m_featuresPrSplit;
+        readonly Random m_random = new Random(234);
 
         /// <summary>
         /// Fites a regression decision tree using a set presorted indices for each feature.
@@ -39,19 +42,22 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="minimumSplitSize">The minimum size </param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
+        /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, IGradientBoostLoss loss, int numberOfThreads)
+        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, int featuresPrSplit, IGradientBoostLoss loss, int numberOfThreads)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
+            if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
             if (loss == null) { throw new ArgumentNullException("loss"); }
             if (numberOfThreads < 1) { throw new ArgumentException("Number of threads must be at least 1"); }
 
             m_maximumTreeDepth = maximumTreeDepth;
             m_minimumSplitSize = minimumSplitSize;
             m_minimumInformationGain = minimumInformationGain;
+            m_featuresPrSplit = featuresPrSplit;
             m_numberOfThreads = numberOfThreads;
             m_loss = loss;
         }
@@ -62,8 +68,9 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="minimumSplitSize">The minimum size </param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public GBMDecisionTreeLearner(int maximumTreeDepth = 2000, int minimumSplitSize = 1, double minimumInformationGain = 1E-6)
-            : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, new GradientBoostSquaredLoss(), Environment.ProcessorCount)
+        /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
+        public GBMDecisionTreeLearner(int maximumTreeDepth = 2000, int minimumSplitSize = 1, double minimumInformationGain = 1E-6, int featuresPrSplit = 0)
+            : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, new GradientBoostSquaredLoss(), Environment.ProcessorCount)
         {
         }
 
@@ -107,6 +114,16 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             queue.Enqueue(new GBMTreeCreationItem { Values = rootValues, InSample = inSample, Depth = 1 });
 
             var featureCount = observations.GetNumberOfColumns();
+            var allFeatureIndices = Enumerable.Range(0, featureCount).ToArray();
+
+            if (m_featuresPrSplit == 0)
+            {
+                m_featuresPrSplit = featureCount;
+            }
+
+            var featuresPrSplit = new int[m_featuresPrSplit];
+            Array.Copy(allFeatureIndices, featuresPrSplit, featuresPrSplit.Length);
+
             var nodeIndex = 0;
 
             var splitResults = new ConcurrentBag<GBMSplitResult>();
@@ -131,11 +148,15 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
 
                 };
 
-
-
+                if (allFeatureIndices.Length != featuresPrSplit.Length)
+                {
+                    allFeatureIndices.Shuffle(m_random);
+                    Array.Copy(allFeatureIndices, featuresPrSplit, featuresPrSplit.Length);
+                }
+                
                 if (m_numberOfThreads == 1)
                 {
-                    for (int i = 0; i < featureCount; i++)
+                    foreach (var i in featuresPrSplit)
                     {
                         FindBestSplit(observations, residuals, targets, predictions, orderedElements,
                             parentItem, parentInSample, i, splitResults);
@@ -145,7 +166,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                 else
                 {
                     var workItems = new ConcurrentQueue<int>();
-                    for (int i = 0; i < featureCount; i++)
+                    foreach (var i in featuresPrSplit)
                     {
                         workItems.Enqueue(i);
                     }

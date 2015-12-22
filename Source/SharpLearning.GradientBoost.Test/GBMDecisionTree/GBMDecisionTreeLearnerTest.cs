@@ -35,18 +35,25 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
             new GBMDecisionTreeLearner(1, 1, 0.0);
         }
 
+        [ExpectedException(typeof(ArgumentException))]
+        [TestMethod]
+        public void GBMDecisionTreeLearner_Constructor_FeaturePrSplit()
+        {
+            new GBMDecisionTreeLearner(1, 1, 0.1, -1);
+        }
+
         [ExpectedException(typeof(ArgumentNullException))]
         [TestMethod]
         public void GBMDecisionTreeLearner_Constructor_Loss_Null()
         {
-            new GBMDecisionTreeLearner(1, 1, 1.0, null, 1);
+            new GBMDecisionTreeLearner(1, 1, 1.0, 1, null, 1);
         }
 
         [ExpectedException(typeof(ArgumentException))]
         [TestMethod]
         public void GBMDecisionTreeLearner_Constructor_NumberOfThreads()
         {
-            new GBMDecisionTreeLearner(1, 1, 0.0, new GradientBoostSquaredLoss(), 0);
+            new GBMDecisionTreeLearner(1, 1, 0.0, 1, new GradientBoostSquaredLoss(), 0);
         }
         
         [TestMethod]

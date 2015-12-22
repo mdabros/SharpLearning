@@ -29,7 +29,6 @@ namespace SharpLearning.GradientBoost.Learners
         readonly IGradientBoostLoss m_loss;
 
         /// <summary>
-        /// <summary>
         ///  Base regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
@@ -42,10 +41,11 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
         public RegressionGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
-            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, IGradientBoostLoss loss, int numberOfThreads)
+            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int featuresPrSplit, IGradientBoostLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (learningRate <= 0.0) { throw new ArgumentException("learning rate must be larger than 0"); }
@@ -53,16 +53,16 @@ namespace SharpLearning.GradientBoost.Learners
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (subSampleRatio <= 0.0 || subSampleRatio > 1.0) { throw new ArgumentException("subSampleRatio must be larger than 0.0 and at max 1.0"); }
+            if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
             if (loss == null) { throw new ArgumentNullException("loss"); }
 
             m_iterations = iterations;
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
             m_loss = loss;
-            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, m_loss, numberOfThreads);
+            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, m_loss, numberOfThreads);
         }
 
-        /// <summary>
         /// <summary>
         ///  Base regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
@@ -76,10 +76,11 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         public RegressionGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0)
+            int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0, int featuresPrSplit = 0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
-                subSampleRatio, new GradientBoostSquaredLoss(), Environment.ProcessorCount)
+                subSampleRatio, featuresPrSplit, new GradientBoostSquaredLoss(), Environment.ProcessorCount)
         {
         }
 
