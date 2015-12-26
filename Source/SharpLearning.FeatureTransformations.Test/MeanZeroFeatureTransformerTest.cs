@@ -4,15 +4,15 @@ using SharpLearning.FeatureTransformations.Normalization;
 using System.IO;
 using SharpLearning.InputOutput.Csv;
 
-namespace SharpLearning.FeatureTransformations.Test.Normalization
+namespace SharpLearning.FeatureTransformations.Test
 {
     [TestClass]
-    public class FeatureNormalizationTransformerTest
+    public class MeanZeroFeatureTransformerTest
     {
         [TestMethod]
         public void FeatureNormalizationTransformer_Transform()
         {
-            var sut = new FeatureNormalizationTransformer(-1.0, 1.0);
+            var sut = new MeanZeroFeatureTransformer();
 
             var writer = new StringWriter();
 
@@ -28,17 +28,17 @@ namespace SharpLearning.FeatureTransformations.Test.Normalization
 
         string Expected =
 @"Sales;Day;Counts
-0.9837398373983739;Monday;-1
--0.34959349593495936;Monday;0.9285714285714286
-1;Monday;0.96428571428571419
--0.18699186991869921;Monday;-0.8392857142857143
--0.82113821138211385;Monday;0.5535714285714286
--0.82113821138211385;Monday;-0.60714285714285721
--0.78861788617886175;Monday;-0.60714285714285721
--0.93495934959349591;Monday;-0.2142857142857143
--1;Monday;-0.8035714285714286
--0.91869918699186992;Monday;1
-0.2357723577235773;Monday;-0.8392857142857143";
+80.636363636363626;Monday;-48.545454545454547
+-1.3636363636363669;Monday;59.454545454545453
+81.636363636363626;Monday;61.454545454545453
+8.6363636363636331;Monday;-39.545454545454547
+-30.363636363636367;Monday;38.454545454545453
+-30.363636363636367;Monday;-26.545454545454547
+-28.363636363636367;Monday;-26.545454545454547
+-37.363636363636367;Monday;-4.5454545454545467
+-41.363636363636367;Monday;-37.545454545454547
+-36.363636363636367;Monday;63.454545454545453
+34.636363636363633;Monday;-39.545454545454547";
 
         string Input =
 @"Sales;Day;Counts

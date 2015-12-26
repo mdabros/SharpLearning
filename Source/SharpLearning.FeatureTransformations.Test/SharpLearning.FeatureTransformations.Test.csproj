@@ -58,8 +58,9 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="DateTimeFeatureTransformerTest.cs" />
+    <Compile Include="MeanZeroFeatureTransformerTest.cs" />
     <Compile Include="MapCategoricalFeaturesTransformerTest.cs" />
-    <Compile Include="Normalization\FeatureNormalizationTransformerTest.cs" />
+    <Compile Include="FeatureNormalizationTransformerTest.cs" />
     <Compile Include="Normalization\LinearNormalizerTest.cs" />
     <Compile Include="OneHotTransformerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

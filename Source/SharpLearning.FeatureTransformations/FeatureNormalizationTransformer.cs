@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers;
+using SharpLearning.FeatureTransformations.Normalization;
 using SharpLearning.InputOutput.Csv;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLearning.FeatureTransformations.Normalization
+namespace SharpLearning.FeatureTransformations
 {
     /// <summary>
     /// Normalizes features within the specified range (min, max)
