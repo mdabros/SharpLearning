@@ -111,11 +111,11 @@ namespace SharpLearning.InputOutput.Csv
         }
 
         /// <summary>
-        /// Reduces the csv rows to the provided columnNames
+        /// Keeps only the csv columns provided in columnNames
         /// </summary>
         /// <param name="columnNames"></param>
         /// <returns></returns>
-        public static IEnumerable<CsvRow> Reduce(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
+        public static IEnumerable<CsvRow> Keep(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
         {
             var index = 0;
             var reducedColumnNameToIndex = columnNames.ToDictionary(n => n, n => index++);
@@ -123,6 +123,23 @@ namespace SharpLearning.InputOutput.Csv
             foreach (var row in dataRows)
             {
                 yield return new CsvRow(reducedColumnNameToIndex, row.GetValues(columnNames));
+            }
+        }
+
+        /// <summary>
+        /// Removes the csv columns provided in columnNames
+        /// </summary>
+        /// <param name="columnNames"></param>
+        /// <returns></returns>
+        public static IEnumerable<CsvRow> Remove(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
+        {
+            var columnsToKeep = dataRows.First().ColumnNameToIndex.Keys.Except(columnNames).ToArray();
+            var index = 0;
+            var reducedColumnNameToIndex = columnsToKeep.ToDictionary(n => n, n => index++);
+
+            foreach (var row in dataRows)
+            {
+                yield return new CsvRow(reducedColumnNameToIndex, row.GetValues(columnsToKeep));
             }
         }
 

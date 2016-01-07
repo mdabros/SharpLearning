@@ -48,12 +48,23 @@ namespace SharpLearning.InputOutput.Test.Csv
         }
 
         [TestMethod]
-        public void CsvRowExtensions_Reduce()
+        public void CsvRowExtensions_Keep()
         {
             var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
 
-            var actual = sut.Reduce("1", "2").ToList().First();
+            var actual = sut.Keep("1", "2").ToList().First();
             var expected = new CsvRow(new Dictionary<string, int> { { "1", 0 }, { "2", 1 } }, new string[] { "1", "2" });
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void CsvRowExtensions_Remove()
+        {
+            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
+
+            var actual = sut.Remove("3").ToList().First();
+            var expected = new CsvRow(new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "4", 2 } }, new string[] { "1", "2", "4" });
 
             Assert.AreEqual(expected, actual);
         }
