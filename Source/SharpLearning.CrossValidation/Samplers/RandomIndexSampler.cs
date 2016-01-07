@@ -12,11 +12,18 @@ namespace SharpLearning.CrossValidation.Samplers
     {
         readonly Random m_random;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="seed"></param>
         public RandomIndexSampler(int seed)
         {
             m_random = new Random(seed);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public RandomIndexSampler()
             : this(42)
         {

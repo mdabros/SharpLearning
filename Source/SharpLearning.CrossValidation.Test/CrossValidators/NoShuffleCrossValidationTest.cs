@@ -29,6 +29,20 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
         }
 
         [TestMethod]
+        public void NoShuffleCrossValidation_CrossValidate_Provide_Indices_Folds_2()
+        {
+            var actual = CrossValidate_Provide_Indices(2);
+            Assert.AreEqual(0.10219923025847003, actual, 0.001);
+        }
+
+        [TestMethod]
+        public void NoShuffleCrossValidation_CrossValidate_Provide_Indices_Folds_10()
+        {
+            var actual = CrossValidate_Provide_Indices(10);
+            Assert.AreEqual(0.10969696400057005, actual, 0.001);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void NoShuffleCrossValidation_CrossValidate_Too_Many_Folds()
         {
@@ -47,6 +61,25 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var metric = new MeanSquaredErrorRegressionMetric();
 
             return metric.Error(targets, predictions);
+        }
+
+        double CrossValidate_Provide_Indices(int folds)
+        {
+            var targetName = "T";
+            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
+            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
+            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+
+            var sut = new NoShuffleCrossValidation<double>(folds);
+
+            var rowsToCrossvalidate = targets.Length / 2;
+            var indices = Enumerable.Range(0, rowsToCrossvalidate).ToArray();
+            var predictions = new double[rowsToCrossvalidate];
+            
+            sut.CrossValidate(new RegressionDecisionTreeLearner(), observations, targets, indices, predictions);
+            var metric = new MeanSquaredErrorRegressionMetric();
+
+            return metric.Error(targets.Take(rowsToCrossvalidate).ToArray(), predictions);
         }
     }
 }

@@ -41,20 +41,47 @@ namespace SharpLearning.CrossValidation.CrossValidators
         public TPrediction[] CrossValidate(IIndexedLearner<TPrediction> learner, 
             F64Matrix observations, double[] targets)
         {
-            var rows = targets.Length;
-            if (m_crossValidationFolds > rows) 
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            var cvPredictions = new TPrediction[indices.Length];
+
+            CrossValidate(learner, observations, targets, indices, cvPredictions);
+
+            return cvPredictions;
+        }
+
+        /// <summary>
+        /// Cross validated predictions. 
+        /// Only crossValidates within the provided indices.
+        /// The predictions are returned in the predictions array.
+        /// </summary>
+        /// <param name="learner"></param>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="crossValidationIndices"></param>
+        /// <param name="crossValidatedPredictions"></param>
+        public void CrossValidate(IIndexedLearner<TPrediction> learner, F64Matrix observations, double[] targets, int[] crossValidationIndices, TPrediction[] crossValidatedPredictions)
+        {
+            var rows = crossValidatedPredictions.Length;
+            if (m_crossValidationFolds > rows)
             {
-                throw new ArgumentException("Too few observations: " + rows + 
-                " for number of cross validation folds: " + m_crossValidationFolds); 
+                throw new ArgumentException("Too few observations: " + rows +
+                " for number of cross validation folds: " + m_crossValidationFolds);
             }
 
             var holdOutSamples = new int[m_crossValidationFolds][];
             var samplesPrFold = rows / m_crossValidationFolds;
-            var indices = Enumerable.Range(0, targets.Length).ToArray();
+
+            var indices = crossValidationIndices.ToArray();
+
+            // Map the provided crossValidationIndices to crossValidatedPredictions
+            // Indices from crossValidationIndices can be larger than crossValidatedPredictions length
+            // since crossValidatedPredictions might be a subset of the provided observations and targets
+            var cvPredictionIndiceMap = Enumerable.Range(0, crossValidatedPredictions.Length)
+                .ToDictionary(i => indices[i], i => i);
 
             for (int i = 0; i < m_crossValidationFolds; i++)
             {
-                if(i == m_crossValidationFolds - 1)
+                if (i == m_crossValidationFolds - 1)
                 {
                     // last fold. Add remaining indices.  
                     holdOutSamples[i] = indices.ToArray();
@@ -66,29 +93,24 @@ namespace SharpLearning.CrossValidation.CrossValidators
                     indices = indices.Except(holdoutSample).ToArray();
                 }
             }
-         
-            var crossValidatedPredictions = new TPrediction[rows];
-            var allIndices = Enumerable.Range(0, targets.Length).ToArray();
-            
+
             for (int i = 0; i < m_crossValidationFolds; i++)
             {
                 var holdoutIndices = holdOutSamples[i];
-                var trainingIndices = allIndices.Except(holdoutIndices).ToArray();
+                var trainingIndices = crossValidationIndices.Except(holdoutIndices).ToArray();
                 var model = learner.Learn(observations, targets, trainingIndices);
                 var predictions = new TPrediction[holdoutIndices.Length];
 
                 for (int l = 0; l < predictions.Length; l++)
                 {
-                    predictions[l] = model.Predict(observations.GetRow(holdoutIndices[l]));  
+                    predictions[l] = model.Predict(observations.GetRow(holdoutIndices[l]));
                 }
 
                 for (int j = 0; j < holdoutIndices.Length; j++)
                 {
-                    crossValidatedPredictions[holdoutIndices[j]] = predictions[j];
+                    crossValidatedPredictions[cvPredictionIndiceMap[holdoutIndices[j]]] = predictions[j];
                 }
             }
-
-            return crossValidatedPredictions;
         }
     }
 }
