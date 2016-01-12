@@ -324,6 +324,13 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
 
             var orderedIndices = orderedElements[featureIndex];
             var j = NextAllowedIndex(0, orderedIndices, parentInSample);
+
+            // no allowed sample left
+            if (j >= orderedIndices.Length)
+            {
+                return;
+            }
+
             var currentIndex = orderedIndices[j];
       
             m_loss.UpdateSplitConstants(ref left, ref right, targets[currentIndex], residuals[currentIndex]);
