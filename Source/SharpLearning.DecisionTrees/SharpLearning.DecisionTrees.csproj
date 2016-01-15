@@ -66,6 +66,7 @@
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Nodes\NodeExtensions.cs" />
     <Compile Include="Nodes\BinaryTree.cs" />
+    <Compile Include="Nodes\NodePositionType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SplitSearchers\OnlyUniqueThresholdsSplitSearcher.cs" />
     <Compile Include="SplitSearchers\RandomSplitSearcher.cs" />
