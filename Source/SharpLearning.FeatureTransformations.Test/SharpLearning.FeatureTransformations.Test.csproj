@@ -57,6 +57,7 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="SumColumnValueByColumnValueTransformerTest.cs" />
     <Compile Include="DateTimeFeatureTransformerTest.cs" />
     <Compile Include="MeanZeroFeatureTransformerTest.cs" />
     <Compile Include="MapCategoricalFeaturesTransformerTest.cs" />

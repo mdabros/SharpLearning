@@ -58,7 +58,7 @@ namespace SharpLearning.FeatureTransformations
         /// <returns></returns>
         public IEnumerable<CsvRow> Transform(IEnumerable<CsvRow> rows, string dateTimeColumn)
         {
-            var newColumnNameToIndex = rows.First().ColumnNameToIndex;
+            var newColumnNameToIndex = rows.First().ColumnNameToIndex.ToDictionary(v => v.Key, v => v.Value);
             var index = newColumnNameToIndex.Count;
 
             foreach (var name in FeatureNames)

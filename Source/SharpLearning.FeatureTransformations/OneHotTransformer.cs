@@ -75,7 +75,7 @@ namespace SharpLearning.FeatureTransformations
 
         Dictionary<string, int> NewColumnNameToIndex(IEnumerable<CsvRow> rows)
         {
-            var newColumnNameToIndex = rows.First().ColumnNameToIndex;
+            var newColumnNameToIndex = rows.First().ColumnNameToIndex.ToDictionary(v => v.Key, v => v.Value);
             var index = newColumnNameToIndex.Count;
 
             foreach (var columnSet in m_featureMap)
