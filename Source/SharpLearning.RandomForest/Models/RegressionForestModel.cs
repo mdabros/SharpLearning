@@ -13,7 +13,7 @@ namespace SharpLearning.RandomForest.Models
     /// Regression forest model consiting of a series of decision trees
     /// </summary>
     [Serializable]
-    public sealed class RegressionForestModel : IPredictor<double>
+    public sealed class RegressionForestModel : IPredictorModel<double>
     {
         readonly RegressionDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;

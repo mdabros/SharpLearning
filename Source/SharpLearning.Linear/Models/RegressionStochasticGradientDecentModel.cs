@@ -12,7 +12,7 @@ namespace SharpLearning.Linear.Models
     /// Regression model learned using stochastic gradient descent
     /// </summary>
     [Serializable]
-    public sealed class RegressionStochasticGradientDecentModel : IPredictor<double>
+    public sealed class RegressionStochasticGradientDecentModel : IPredictorModel<double>
     {
         readonly double[] m_weights;
 

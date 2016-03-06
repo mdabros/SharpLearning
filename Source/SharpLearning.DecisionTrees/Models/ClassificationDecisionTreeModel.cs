@@ -14,7 +14,7 @@ namespace SharpLearning.DecisionTrees.Models
     /// Classification Decision tree model
     /// </summary>
     [Serializable]
-    public sealed class ClassificationDecisionTreeModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
+    public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
     {
         public readonly BinaryTree Tree;
         readonly double[] m_variableImportance;

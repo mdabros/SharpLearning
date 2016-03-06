@@ -4,6 +4,7 @@ namespace SharpLearning.Common.Interfaces
     /// <summary>
     /// Generel metric interface
     /// </summary>
+    /// <typeparam name="TTarget"></typeparam>
     /// <typeparam name="TPrediction"></typeparam>
     public interface IMetric<TTarget, TPrediction>
     {

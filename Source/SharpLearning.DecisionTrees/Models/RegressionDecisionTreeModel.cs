@@ -13,7 +13,7 @@ namespace SharpLearning.DecisionTrees.Models
     /// Regression Decision tree model
     /// </summary>
     [Serializable]
-    public sealed class RegressionDecisionTreeModel : IPredictor<double>
+    public sealed class RegressionDecisionTreeModel : IPredictorModel<double>
     {
         public readonly BinaryTree Tree;
         readonly double[] m_variableImportance;

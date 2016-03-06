@@ -51,6 +51,8 @@
     <Compile Include="ILearner.cs" />
     <Compile Include="IMetric.cs" />
     <Compile Include="IPredictor.cs" />
+    <Compile Include="IPredictorModel.cs" />
+    <Compile Include="IModelVariableImportance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,11 +13,26 @@ namespace SharpLearning.GradientBoost.Models
     /// 
     /// </summary>
     [Serializable]
-    public sealed class RegressionGradientBoostModel : IPredictor<double>
+    public sealed class RegressionGradientBoostModel : IPredictorModel<double>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly GBMTree[] Trees;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly double LearningRate;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly double InitialLoss;
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly int FeatureCount;
 
         /// <summary>

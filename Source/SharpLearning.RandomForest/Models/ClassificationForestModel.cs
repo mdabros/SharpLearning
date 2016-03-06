@@ -14,7 +14,7 @@ namespace SharpLearning.RandomForest.Models
     /// Classification forest model consiting of a series of decision trees
     /// </summary>
     [Serializable]
-    public sealed class ClassificationForestModel : IPredictor<double>, IPredictor<ProbabilityPrediction>
+    public sealed class ClassificationForestModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
     {
         readonly ClassificationDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;

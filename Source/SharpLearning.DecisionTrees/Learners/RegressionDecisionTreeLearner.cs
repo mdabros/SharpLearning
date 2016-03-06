@@ -58,7 +58,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictor<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
         }
@@ -69,7 +69,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictor<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
         {
             return Learn(observations, targets);
         }

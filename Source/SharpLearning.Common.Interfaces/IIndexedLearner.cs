@@ -16,6 +16,6 @@ namespace SharpLearning.Common.Interfaces
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictor<TPrediction> Learn(F64Matrix observations, double[] targets, int[] indices);
+        IPredictorModel<TPrediction> Learn(F64Matrix observations, double[] targets, int[] indices);
     }
 }

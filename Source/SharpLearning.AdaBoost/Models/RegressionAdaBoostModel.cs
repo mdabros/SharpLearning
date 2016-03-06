@@ -16,7 +16,7 @@ namespace SharpLearning.AdaBoost.Models
     /// AdaBoost regression model. Consist of a series of tree model and corresponding weights
     /// </summary>
     [Serializable]
-    public sealed class RegressionAdaBoostModel : IPredictor<double>
+    public sealed class RegressionAdaBoostModel : IPredictorModel<double>
     {
         readonly double[] m_modelWeights;
         readonly RegressionDecisionTreeModel[] m_models;
