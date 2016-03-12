@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Linq;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -7,14 +8,34 @@ namespace SharpLearning.Optimization.Test
     public class GridSearchOptimizerTest
     {
         [TestMethod]
-        public void GridSearchOptimizer_Optimize()
+        public void GridSearchOptimizer_OptimizeBest()
         {
             var parameters = new double[][] { new double[]{ 10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0 } };
             var sut = new GridSearchOptimizer(parameters);
-            var actual = sut.Optimize(Minimize);
+            var actual = sut.OptimizeBest(Minimize);
 
             Assert.AreEqual(111.20889999999987, actual.Error, 0.00001);
             CollectionAssert.AreEqual(new double[] { 37.5 }, actual.ParameterSet);
+        }
+
+        [TestMethod]
+        public void GridSearchOptimizer_Optimize()
+        {
+            var parameters = new double[][] { new double[] { 10.0, 37.5 } };
+            var sut = new GridSearchOptimizer(parameters);
+            var actual = sut.Optimize(Minimize);
+
+            var expected = new OptimizerResult[] 
+            { 
+              new OptimizerResult(new double[] { 37.5 }, 111.20889999999987),
+              new OptimizerResult(new double[] { 10 }, 31638.9579) 
+            };
+
+            Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);
+            Assert.AreEqual(expected.First().ParameterSet.First(), actual.First().ParameterSet.First(), 0.0001);
+
+            Assert.AreEqual(expected.Last().Error, actual.Last().Error, 0.0001);
+            Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), 0.0001);
         }
 
         [TestMethod]

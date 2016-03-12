@@ -8,14 +8,34 @@ namespace SharpLearning.Optimization.Test
     public class RandomSearchOptimizerTest
     {
         [TestMethod]
-        public void RandomSearchOptimizer_Optimize()
+        public void RandomSearchOptimizer_OptimizeBest()
         {
             var parameters = new double[][] { new double[]{ 0.0, 100.0 } };
             var sut = new RandomSearchOptimizer(parameters, 100);
-            var actual = sut.Optimize(Minimize);
+            var actual = sut.OptimizeBest(Minimize);
 
             Assert.AreEqual(110.67173923600831, actual.Error, 0.00001);
             Assert.AreEqual(37.533294194160632, actual.ParameterSet.Single(), 0.00001);
+        }
+
+        [TestMethod]
+        public void RandomSearchOptimizer_Optimize()
+        {
+            var parameters = new double[][] { new double[] { 10.0, 37.5 } };
+            var sut = new RandomSearchOptimizer(parameters, 2);
+            var actual = sut.Optimize(Minimize);
+
+            var expected = new OptimizerResult[] 
+            { 
+              new OptimizerResult(new double[] { 28.372927812567415 }, 3690.8111981874217),
+              new OptimizerResult(new double[] { 13.874950705270725 }, 23438.215764163542) 
+            };
+
+            Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);
+            Assert.AreEqual(expected.First().ParameterSet.First(), actual.First().ParameterSet.First(), 0.0001);
+
+            Assert.AreEqual(expected.Last().Error, actual.Last().Error, 0.0001);
+            Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), 0.0001);
         }
 
         [TestMethod]

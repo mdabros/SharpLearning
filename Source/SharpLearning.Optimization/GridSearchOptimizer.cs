@@ -38,11 +38,24 @@ namespace SharpLearning.Optimization
         }
 
         /// <summary>
-        /// Simple grid search that tries all combinations of the provided parameters
+        /// Simple grid search that tries all combinations of the provided parameters.
+        /// Returns the result which best minimises the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult Optimize(Func<double[], OptimizerResult> functionToMinimize)
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
+        {
+            // Return the best model found.
+            return Optimize(functionToMinimize).First();
+        }
+
+        /// <summary>
+        /// Simple grid search that tries all combinations of the provided parameters.
+        /// Returns all results ordered from best to worst (minimized).
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <returns></returns>
+        public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
             double[][] grid = CartesianProduct(m_parameters);
@@ -60,8 +73,8 @@ namespace SharpLearning.Optimization
                 results.Add(result);
             });
 
-            // Return the best model found.
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
+            // return all results ordered
+            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
         }
 
         static T[][] CartesianProduct<T>(T[][] sequences)

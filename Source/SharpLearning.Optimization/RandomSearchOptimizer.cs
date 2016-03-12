@@ -31,8 +31,9 @@ namespace SharpLearning.Optimization
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>        
         /// <param name="iterations">The number of iterations to perform</param>
+        /// <param name="seed"></param>
         /// <param name="maxDegreeOfParallelism">How many cores must be used for the optimization. 
         /// The function to minimize must be thread safe to use multi threading</param>
         public RandomSearchOptimizer(double[][] parameterRanges, int iterations, int seed, int maxDegreeOfParallelism)
@@ -46,11 +47,24 @@ namespace SharpLearning.Optimization
         }
 
         /// <summary>
-        /// Random search optimizer initializes random parameters between min and max of the provided
+        /// Random search optimizer initializes random parameters between min and max of the provided.
+        /// Returns the result which best minimises the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult Optimize(Func<double[], OptimizerResult> functionToMinimize)
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
+        {
+            // Return the best model found.
+            return Optimize(functionToMinimize).First();
+        }
+
+        /// <summary>
+        /// Random search optimizer initializes random parameters between min and max of the provided
+        /// Returns all results ordered from best to worst (minimized).
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <returns></returns>
+        public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
             var grid = CreateNewSearchSpace(m_parameters);
@@ -67,9 +81,10 @@ namespace SharpLearning.Optimization
                 results.Add(result);
             });
 
-            // Return the best model found.
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
+            // return all results ordered
+            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
         }
+
 
         double[][] CreateNewSearchSpace(double[][] parameters)
         {
