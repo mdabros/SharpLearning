@@ -53,9 +53,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.FeatureTransf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.FeatureTransformations.Test", "SharpLearning.FeatureTransformations.Test\SharpLearning.FeatureTransformations.Test.csproj", "{0BA3CC0B-CC4A-4B17-9C89-F60582E0087B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Ensemble", "SharpLearning.Ensemble\SharpLearning.Ensemble.csproj", "{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Ensemble.Test", "SharpLearning.Ensemble.Test\SharpLearning.Ensemble.Test.csproj", "{2837DF0A-49F0-4EE8-BE39-96489E639ACC}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 26
+		SccNumberOfProjects = 28
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -134,6 +138,12 @@ Global
 		SccProjectUniqueName25 = SharpLearning.FeatureTransformations.Test\\SharpLearning.FeatureTransformations.Test.csproj
 		SccProjectName25 = SharpLearning.FeatureTransformations.Test
 		SccLocalPath25 = SharpLearning.FeatureTransformations.Test
+		SccProjectUniqueName26 = SharpLearning.Ensemble\\SharpLearning.Ensemble.csproj
+		SccProjectName26 = SharpLearning.Ensemble
+		SccLocalPath26 = SharpLearning.Ensemble
+		SccProjectUniqueName27 = SharpLearning.Ensemble.Test\\SharpLearning.Ensemble.Test.csproj
+		SccProjectName27 = SharpLearning.Ensemble.Test
+		SccLocalPath27 = SharpLearning.Ensemble.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -240,6 +250,14 @@ Global
 		{0BA3CC0B-CC4A-4B17-9C89-F60582E0087B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BA3CC0B-CC4A-4B17-9C89-F60582E0087B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BA3CC0B-CC4A-4B17-9C89-F60582E0087B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2837DF0A-49F0-4EE8-BE39-96489E639ACC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2837DF0A-49F0-4EE8-BE39-96489E639ACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2837DF0A-49F0-4EE8-BE39-96489E639ACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2837DF0A-49F0-4EE8-BE39-96489E639ACC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
