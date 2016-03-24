@@ -96,12 +96,7 @@ namespace SharpLearning.Ensemble.Learners
             return new RegressionEnsembleModel(ensembleModels, m_ensembleStrategy());
         }
 
-        /// <summary>
-        /// Random sampling 
-        /// </summary>
-        /// <param name="sampleSize"></param>
-        /// <param name="allIndices"></param>
-        /// <returns></returns>
+
         void Sample(int[] inSample, int[] allIndices)
         {
             for (int i = 0; i < inSample.Length; i++)

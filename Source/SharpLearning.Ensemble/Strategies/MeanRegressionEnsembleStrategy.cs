@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace SharpLearning.Ensemble.Strategies
 {
     /// <summary>
     /// Mean regression ensemble strategy. Models are combined using standard mean.
     /// </summary>
+    [Serializable]
     public sealed class MeanRegressionEnsembleStrategy : IRegressionEnsembleStrategy
     {
         /// <summary>

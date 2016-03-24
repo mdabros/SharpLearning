@@ -67,6 +67,10 @@
       <Project>{86038cef-f3b5-45c5-bbbc-8f700a1cfb86}</Project>
       <Name>SharpLearning.CrossValidation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
+      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
+      <Name>SharpLearning.InputOutput</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
