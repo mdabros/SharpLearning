@@ -3,9 +3,6 @@ using SharpLearning.Ensemble.Strategies;
 
 namespace SharpLearning.Ensemble.Test.Strategies
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [TestClass]
     public class MeanRegressionEnsembleStrategyTest
     {

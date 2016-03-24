@@ -1,16 +1,14 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Ensemble.Test.Properties;
-using System.IO;
-using SharpLearning.InputOutput.Csv;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
+using SharpLearning.Ensemble.Test.Properties;
+using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using SharpLearning.Ensemble.Models;
 
 namespace SharpLearning.Ensemble.Test.Models
 {
@@ -69,10 +67,10 @@ namespace SharpLearning.Ensemble.Test.Models
 
             var predictions = sut.Predict(observations);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var error = evaluator.Error(targets, predictions);
+            var metric = new MeanSquaredErrorRegressionMetric();
+            var actual = metric.Error(targets, predictions);
 
-            Assert.AreEqual(0.033195970695970689, error, 0.0000001);
+            Assert.AreEqual(0.033195970695970689, actual, 0.0000001);
         }
 
         [TestMethod]
