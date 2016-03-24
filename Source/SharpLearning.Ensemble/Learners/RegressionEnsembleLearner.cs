@@ -9,6 +9,7 @@ namespace SharpLearning.Ensemble.Learners
 {
     /// <summary>
     /// Regression ensemble learner.
+    /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
     public class RegressionEnsembleLearner : ILearner<double>, IIndexedLearner<double>
     {

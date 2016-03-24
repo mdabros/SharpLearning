@@ -10,6 +10,7 @@ namespace SharpLearning.Ensemble.Learners
 {
     /// <summary>
     /// Classification ensemble learner.
+    /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
     public class ClassificationEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>,
         ILearner<double>, IIndexedLearner<double>
