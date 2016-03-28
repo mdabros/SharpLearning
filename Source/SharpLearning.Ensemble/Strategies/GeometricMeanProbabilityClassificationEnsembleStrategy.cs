@@ -18,6 +18,9 @@ namespace SharpLearning.Ensemble.Strategies
                          .GroupBy(kvp => kvp.Key)
                          .ToDictionary(g => g.Key, g => GeometricMean(g.Select(p => p.Value).ToArray()));
 
+            var sum = averageProbabilities.Values.Sum();
+            averageProbabilities = averageProbabilities.ToDictionary(p => p.Key, p => p.Value / sum);
+            
             var prediction = averageProbabilities.OrderByDescending(d => d.Value).First().Key;
 
             return new ProbabilityPrediction(prediction, averageProbabilities);

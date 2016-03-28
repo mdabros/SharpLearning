@@ -21,7 +21,7 @@ namespace SharpLearning.Ensemble.Test.Strategies
             var sut = new GeometricMeanProbabilityClassificationEnsembleStrategy();
             var actual = sut.Combine(values);
 
-            var expected = new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 0.0, 0.125570723564389 }, { 1.0, 0.66 } });
+            var expected = new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 0.0, 0.159846490962181 }, { 1.0, 0.840153509037819 } });
             Assert.AreEqual(expected, actual);
         }
     }
