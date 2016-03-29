@@ -12,7 +12,7 @@ namespace SharpLearning.InputOutput.Test.Csv
     public class CsvParserTest
     {
         [TestMethod]
-        public void CsvParser_MergeFilesUsingKey()
+        public void CsvParser_MergeFilesUsingKey_KeepRepeatedColumns()
         {          
             var keyName = "Date";
             
@@ -20,7 +20,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             var parser2 = new CsvParser(() => new StringReader(Resources.TimeData2));
 
             var rows = parser1.EnumerateRows()
-                              .KeyCombine(parser2.EnumerateRows(), (r1, r2) => r1.GetValue(keyName) == r2.GetValue(keyName));
+                              .KeyCombine(parser2.EnumerateRows(), (r1, r2) => r1.GetValue(keyName) == r2.GetValue(keyName), false) ;
 
             var writer = new StringWriter();
             rows.Write(() => writer);
@@ -35,6 +35,32 @@ namespace SharpLearning.InputOutput.Test.Csv
 
             CollectionAssert.AreEqual(expectedColumnNameToIndex, actualColumnNameToIndex);
         }
+
+        [TestMethod]
+        public void CsvParser_MergeFilesUsingKey()
+        {
+            var keyName = "Date";
+
+            var parser1 = new CsvParser(() => new StringReader(Resources.TimeData1));
+            var parser2 = new CsvParser(() => new StringReader(Resources.TimeData21));
+
+            var rows = parser1.EnumerateRows()
+                              .KeyCombine(parser2.EnumerateRows(), (r1, r2) => r1.GetValue(keyName) == r2.GetValue(keyName));
+
+            var writer = new StringWriter();
+            rows.Write(() => writer);
+            var actual = writer.ToString();
+            var expected = "Date;Open;High;Low;Close;Volume;Adj Close;OpenOther;CloseOther\r\n2014-04-29;38.01;39.68;36.80;38.00;294200;38.00;22.05;21.78\r\n2014-04-28;38.26;39.36;37.30;37.83;361900;37.83;21.79;21.90\r\n2014-04-25;38.33;39.04;37.88;38.00;342900;38.00;22.10;21.78\r\n2014-04-24;39.33;39.59;37.91;38.82;362200;38.82;22.61;22.23\r\n2014-04-23;38.98;39.58;38.50;38.88;245800;38.88;22.26;22.60\r\n2014-04-22;38.43;39.79;38.31;38.99;358000;38.99;22.19;22.48\r\n2014-04-21;38.05;38.74;37.77;38.41;316800;38.41;22.28;22.24\r\n2014-04-17;37.25;38.24;36.92;38.05;233700;38.05;22.30;22.26\r\n2014-04-16;36.37;37.27;36.17;37.26;144800;37.26;22.59;22.35\r\n2014-04-15;36.08;36.74;35.09;36.05;223100;36.05;22.46;22.35\r\n2014-04-14;36.55;36.90;35.33;36.02;296100;36.02;22.65;22.45\r\n2014-04-11;36.26;37.09;36.08;36.13;282700;36.13;22.31;22.43\r\n2014-04-10;37.06;37.16;36.13;36.46;309800;36.46;23.11;22.56\r\n2014-04-09;36.08;37.26;35.66;37.13;209400;37.13;23.15;23.18\r\n2014-04-08;35.50;36.16;35.28;35.85;215700;35.85;23.04;23.11\r\n2014-04-07;36.49;37.30;35.27;35.48;312400;35.48;23.41;23.09\r\n2014-04-04;38.39;38.90;36.60;36.93;306500;36.93;24.00;23.44\r\n2014-04-03;38.62;39.78;37.90;38.14;269800;38.14;23.97;23.90\r\n2014-04-02;38.66;38.84;38.04;38.56;398200;38.56;23.70;23.88\r\n2014-04-01;37.21;38.65;36.58;38.49;410900;38.49;23.34;23.75";
+            Assert.AreEqual(expected, actual);
+
+
+            var actualColumnNameToIndex = rows.First().ColumnNameToIndex;
+            var expectedColumnNameToIndex = new Dictionary<string, int> { {"Date", 0}, {"Open", 1}, {"High", 2}, {"Low", 3}, {"Close", 4}, {"Volume", 5}, {"Adj Close", 6},
+                                                                          {"OpenOther", 7}, {"CloseOther", 8} };
+
+            CollectionAssert.AreEqual(expectedColumnNameToIndex, actualColumnNameToIndex);
+        }
+
 
         [TestMethod]
         public void CsvParser_EnumerateRows()

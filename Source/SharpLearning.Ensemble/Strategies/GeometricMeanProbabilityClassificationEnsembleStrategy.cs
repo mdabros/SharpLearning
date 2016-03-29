@@ -6,7 +6,7 @@ using System.Linq;
 namespace SharpLearning.Ensemble.Strategies
 {
     /// <summary>
-    /// Geometrix mean probability classification ensemble strategy. Class probabilities are combined using the geometric mean across all models.
+    /// Geometric mean probability classification ensemble strategy. Class probabilities are combined using the geometric mean across all models.
     /// https://en.wikipedia.org/wiki/Geometric_mean
     /// </summary>
     [Serializable]

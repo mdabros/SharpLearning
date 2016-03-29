@@ -95,6 +95,9 @@
   <ItemGroup>
     <None Include="Resources\TimeData2.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TimeData21.txt" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

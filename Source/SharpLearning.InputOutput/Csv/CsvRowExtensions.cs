@@ -18,21 +18,33 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="otherRows"></param>
         /// <param name="rowMatcher"></param>
         /// <returns></returns>
-        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, Func<CsvRow, CsvRow, bool> rowMatcher)
+        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, Func<CsvRow, CsvRow, bool> rowMatcher, bool removeRepeatedColumns=true)
         {
             var newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
             var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
+            var columnIndicesToRemove = new List<int>();
+           
             foreach (var kvp in otherColumnNameToIndex)
             {
-                if(newColumnNameToIndex.ContainsKey(kvp.Key))
+                if (newColumnNameToIndex.ContainsKey(kvp.Key))
                 {
-                    newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
+                    if (!removeRepeatedColumns)
+                    {
+                        newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
+                    }
+                    else
+                    {
+                        columnIndicesToRemove.Add(kvp.Value);
+                    }
                 }
                 else
                 {
                     newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
                 }
             }
+
+            var columnIndicesToKeep = otherColumnNameToIndex.Values
+                .Except(columnIndicesToRemove).ToArray();
 
             foreach (var thisRow in thisRows)
             {
@@ -43,13 +55,27 @@ namespace SharpLearning.InputOutput.Csv
 
                     if(rowMatcher(thisRow, otherRow))
                     {
-                        var newValues = new string[thisValues.Length + otherValues.Length];
+                        if(!removeRepeatedColumns)
+                        {
+                            var newValues = new string[thisValues.Length + otherValues.Length];
 
-                        thisValues.CopyTo(newValues, 0);
-                        otherValues.CopyTo(newValues, thisValues.Length);
+                            thisValues.CopyTo(newValues, 0);
+                            otherValues.CopyTo(newValues, thisValues.Length);
 
-                        yield return new CsvRow(newColumnNameToIndex, newValues);
-                        break;
+                            yield return new CsvRow(newColumnNameToIndex, newValues);
+                            break;
+                        }
+                        else
+                        {
+                            var newValues = new string[newColumnNameToIndex.Count];
+                            var reducedOtherValues = otherValues.GetIndices(columnIndicesToKeep);
+                            
+                            thisValues.CopyTo(newValues, 0);
+                            reducedOtherValues.CopyTo(newValues, thisValues.Length);
+
+                            yield return new CsvRow(newColumnNameToIndex, newValues);
+                            break;
+                        }
                     }
                 }
             }
