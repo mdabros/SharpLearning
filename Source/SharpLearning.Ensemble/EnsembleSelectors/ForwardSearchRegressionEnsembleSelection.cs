@@ -3,7 +3,6 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Ensemble.Strategies;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
@@ -11,7 +10,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
     /// <summary>
     /// Greedy forward selection of ensemble models.
     /// </summary>
-    public sealed class ForwardSearchEnsembleSelection : IRegressionEnsembleSelection
+    public sealed class ForwardSearchRegressionEnsembleSelection : IRegressionEnsembleSelection
     {
         readonly IMetric<double, double> m_metric;
         readonly IRegressionEnsembleStrategy m_ensembleStrategy;
@@ -31,7 +30,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// The top n models will be selected based in their solo performance</param>
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
-        public ForwardSearchEnsembleSelection(IMetric<double, double> metric, IRegressionEnsembleStrategy ensembleStrategy,
+        public ForwardSearchRegressionEnsembleSelection(IMetric<double, double> metric, IRegressionEnsembleStrategy ensembleStrategy,
             int numberOfModelsToSelect, int numberOfModelsFromStart, bool selectWithReplacement)
         {
             if (metric == null) { throw new ArgumentNullException("metric"); }

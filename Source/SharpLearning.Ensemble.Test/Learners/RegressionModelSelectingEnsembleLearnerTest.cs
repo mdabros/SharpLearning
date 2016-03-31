@@ -18,7 +18,7 @@ namespace SharpLearning.Ensemble.Test.Learners
         {
             var metric = new MeanSquaredErrorRegressionMetric();
             var ensembleStrategy = new MeanRegressionEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchRegressionEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
             var crossValidation = new RandomCrossValidation<double>(5);
 
             var sut = new RegressionModelSelectingEnsembleLearner(null, crossValidation, ensembleStrategy, ensembleSelection);
@@ -31,7 +31,7 @@ namespace SharpLearning.Ensemble.Test.Learners
             var learners = new IIndexedLearner <double>[4];
             var metric = new MeanSquaredErrorRegressionMetric();
             var ensembleStrategy = new MeanRegressionEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchRegressionEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
 
             var sut = new RegressionModelSelectingEnsembleLearner(learners, null, ensembleStrategy, ensembleSelection);
         }

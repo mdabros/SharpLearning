@@ -1,5 +1,5 @@
-﻿
-using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Containers.Matrices;
+
 namespace SharpLearning.Ensemble.Strategies
 {
     /// <summary>

@@ -18,7 +18,7 @@ namespace SharpLearning.Ensemble.Learners
         /// Regression model selecting EnsembleLearner. 
         /// Trains several models and selects the best subset of models for the ensemble using greedy forward selection.
         /// The selection of the best set of models is based on cross validation. 
-        /// Default is random crossvalidation and minimization of mean square error and mean is used to combine the models.
+        /// Default is 5-fold RandomCrossValidation and minimization of mean square error and mean is used to combine the models.
         /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
@@ -46,7 +46,7 @@ namespace SharpLearning.Ensemble.Learners
         /// This will correspond to weighting the models. If false each model can only be selected once. Default is true</param>
         public RegressionForwardSearchModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
             IRegressionEnsembleStrategy ensembleStrategy, IMetric<double, double> metric, int numberOfModelsToSelect, int numberOfModelsFromStart = 1, bool selectWithReplacement = true)
-            : base(learners, crossValidation, ensembleStrategy, new ForwardSearchEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect, numberOfModelsFromStart, selectWithReplacement))
+            : base(learners, crossValidation, ensembleStrategy, new ForwardSearchRegressionEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect, numberOfModelsFromStart, selectWithReplacement))
         {
         }
     }

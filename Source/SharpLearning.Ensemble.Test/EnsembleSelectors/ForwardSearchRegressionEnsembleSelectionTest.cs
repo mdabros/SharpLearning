@@ -9,51 +9,51 @@ using System.Linq;
 namespace SharpLearning.Ensemble.Test.EnsembleSelectors
 {
     [TestClass]
-    public class ForwardSearchEnsembleSelectionTest
+    public class ForwardSearchRegressionEnsembleSelectionTest
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ForwardSearchEnsembleSelection_Constructor_Metric_Null()
+        public void ForwardSearchRegressionEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new ForwardSearchEnsembleSelection(null, new MeanRegressionEnsembleStrategy(), 5, 1, true);
+            var sut = new ForwardSearchRegressionEnsembleSelection(null, new MeanRegressionEnsembleStrategy(), 5, 1, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void ForwardSearchEnsembleSelection_Constructor_EnsembleStratey_Null()
+        public void ForwardSearchRegressionEnsembleSelection_Constructor_EnsembleStratey_Null()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(), null, 5, 1, true);
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(), null, 5, 1, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void ForwardSearchEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
+        public void ForwardSearchRegressionEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(), 
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(), 
                 new MeanRegressionEnsembleStrategy(), 0, 1, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void ForwardSearchEnsembleSelection_Constructor_Number_Of_Models_From_Start_Too_Low()
+        public void ForwardSearchRegressionEnsembleSelection_Constructor_Number_Of_Models_From_Start_Too_Low()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 5, 0, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void ForwardSearchEnsembleSelection_Constructor_Number_Of_Models_From_Start_Larger_Than_Number_Of_Models_To_Select()
+        public void ForwardSearchRegressionEnsembleSelection_Constructor_Number_Of_Models_From_Start_Larger_Than_Number_Of_Models_To_Select()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 3, 5, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void ForwardSearchEnsembleSelection_Constructor_Number_Of_Availible_Models_Lower_Than_Number_Of_Models_To_Select()
+        public void ForwardSearchRegressionEnsembleSelection_Constructor_Number_Of_Availible_Models_Lower_Than_Number_Of_Models_To_Select()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 5, 1, true);
 
             var observations = new F64Matrix(10, 3);
@@ -63,9 +63,9 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         }
 
         [TestMethod]
-        public void ForwardSearchEnsembleSelection_Select()
+        public void ForwardSearchRegressionEnsembleSelection_Select()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 3, 1, true);
 
             var random = new Random(42);
@@ -81,9 +81,9 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         }
 
         [TestMethod]
-        public void ForwardSearchEnsembleSelection_Select_Start_With_2_Models()
+        public void ForwardSearchRegressionEnsembleSelection_Select_Start_With_2_Models()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 3, 2, true);
 
             var random = new Random(42);
@@ -99,9 +99,9 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         }
 
         [TestMethod]
-        public void ForwardSearchEnsembleSelection_Select_No_Replacements()
+        public void ForwardSearchRegressionEnsembleSelection_Select_No_Replacements()
         {
-            var sut = new ForwardSearchEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
+            var sut = new ForwardSearchRegressionEnsembleSelection(new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 3, 1, false);
 
             var random = new Random(42);

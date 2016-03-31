@@ -1,9 +1,4 @@
 ﻿using SharpLearning.Containers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Ensemble.Strategies
 {
@@ -18,5 +13,13 @@ namespace SharpLearning.Ensemble.Strategies
         /// <param name="ensemblePredictions"></param>
         /// <returns></returns>
         ProbabilityPrediction Combine(ProbabilityPrediction[] ensemblePredictions);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ensemblePredictions"></param>
+        /// <param name="predictions"></param>
+        void Combine(ProbabilityPrediction[][] ensemblePredictions, ProbabilityPrediction[] predictions);
+
     }
 }
