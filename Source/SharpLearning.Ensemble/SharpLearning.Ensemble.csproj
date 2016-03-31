@@ -48,15 +48,18 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="EnsembleSelectors\IRegressionEnsembleSelection.cs" />
     <Compile Include="Learners\ClassificationEnsembleLearner.cs" />
     <Compile Include="Learners\ClassificationStackingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionStackingEnsembleLearner.cs" />
     <Compile Include="Models\ClassificationEnsembleModel.cs" />
     <Compile Include="Models\ClassificationStackingEnsembleModel.cs" />
     <Compile Include="Models\RegressionEnsembleModel.cs" />
     <Compile Include="Models\RegressionStackingEnsembleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EnsembleSelectors\ForwardSearchEnsembleSelection.cs" />
     <Compile Include="Strategies\GeometricMeanProbabilityClassificationEnsembleStrategy.cs" />
     <Compile Include="Strategies\IClassificationEnsembleStrategy.cs" />
     <Compile Include="Strategies\MeanProbabilityClassificationEnsembleStrategy.cs" />

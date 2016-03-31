@@ -53,7 +53,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -61,8 +63,10 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="EnsembleSelectors\ForwardSearchEnsembleSelectionTest.cs" />
     <Compile Include="Learners\ClassificationEnsembleLearnerTest.cs" />
     <Compile Include="Learners\ClassificationStackingEnsembleLearnerTest.cs" />
+    <Compile Include="Learners\RegressionModelSelectingEnsembleLearnerTest.cs" />
     <Compile Include="Learners\RegressionEnsembleLearnerTest.cs" />
     <Compile Include="Learners\RegressionStackingEnsembleLearnerTest.cs" />
     <Compile Include="Models\ClassificationEnsembleModelTest.cs" />
