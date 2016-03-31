@@ -55,6 +55,7 @@
     <Compile Include="Learners\ClassificationModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\ClassificationStackingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionEnsembleLearner.cs" />
+    <Compile Include="Learners\ClassificationForwardSearchModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionForwardSearchModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionStackingEnsembleLearner.cs" />

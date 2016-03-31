@@ -15,7 +15,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Classification model selecting EnsembleLearner.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
-    public sealed class ClassificationModelSelectingEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>,
+    public class ClassificationModelSelectingEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>,
         ILearner<double>, IIndexedLearner<double>
     {
         readonly IIndexedLearner<ProbabilityPrediction>[] m_learners;
