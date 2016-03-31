@@ -66,6 +66,7 @@
     <Compile Include="EnsembleSelectors\ForwardSearchEnsembleSelectionTest.cs" />
     <Compile Include="Learners\ClassificationEnsembleLearnerTest.cs" />
     <Compile Include="Learners\ClassificationStackingEnsembleLearnerTest.cs" />
+    <Compile Include="Learners\RegressionForwardSearchModelSelectingEnsembleLearnerTest.cs" />
     <Compile Include="Learners\RegressionModelSelectingEnsembleLearnerTest.cs" />
     <Compile Include="Learners\RegressionEnsembleLearnerTest.cs" />
     <Compile Include="Learners\RegressionStackingEnsembleLearnerTest.cs" />

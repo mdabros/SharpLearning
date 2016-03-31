@@ -12,6 +12,11 @@ namespace SharpLearning.Ensemble.Strategies
     [Serializable]
     public sealed class GeometricMeanProbabilityClassificationEnsembleStrategy : IClassificationEnsembleStrategy
     {
+        /// <summary>
+        /// Geometric mean probability classification ensemble strategy. Class probabilities are combined using the geometric mean across all models.
+        /// </summary>
+        /// <param name="ensemblePredictions"></param>
+        /// <returns></returns>
         public ProbabilityPrediction Combine(ProbabilityPrediction[] ensemblePredictions)
         {
             var averageProbabilities = ensemblePredictions.Select(p => p.Probabilities).SelectMany(d => d)

@@ -12,7 +12,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Classification ensemble learner.
     /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
-    public class ClassificationEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>,
+    public sealed class ClassificationEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>,
         ILearner<double>, IIndexedLearner<double>
     {
         readonly Func<F64Matrix, double[], int[], IPredictorModel<ProbabilityPrediction>>[] m_learners;
@@ -100,11 +100,10 @@ namespace SharpLearning.Ensemble.Learners
         }
 
         /// <summary>
-        /// Random sampling 
+        /// Random sampling
         /// </summary>
-        /// <param name="sampleSize"></param>
+        /// <param name="inSample"></param>
         /// <param name="allIndices"></param>
-        /// <returns></returns>
         void Sample(int[] inSample, int[] allIndices)
         {
             for (int i = 0; i < inSample.Length; i++)

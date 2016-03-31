@@ -13,7 +13,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Stacking Classification Ensemble Learner.
     /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
-    public class ClassificationStackingEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>, 
+    public sealed class ClassificationStackingEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>, 
         ILearner<double>, IIndexedLearner<double>
     {
         readonly IIndexedLearner<ProbabilityPrediction>[] m_learners;

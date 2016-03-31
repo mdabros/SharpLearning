@@ -51,10 +51,10 @@ namespace SharpLearning.Ensemble.Learners
         public RegressionModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
             Func<IRegressionEnsembleStrategy> ensembleStrategy, IRegressionEnsembleSelection ensembleSelection)
         {
-            if (learners == null) { throw new ArgumentException("learners"); }
-            if (crossValidation == null) { throw new ArgumentException("crossValidation"); }
-            if (ensembleStrategy == null) { throw new ArgumentException("ensembleStrategy"); }
-            if (ensembleSelection == null) { throw new ArgumentException("ensembleSelection"); }
+            if (learners == null) { throw new ArgumentNullException("learners"); }
+            if (crossValidation == null) { throw new ArgumentNullException("crossValidation"); }
+            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            if (ensembleSelection == null) { throw new ArgumentNullException("ensembleSelection"); }
             m_learners = learners;
             m_crossValidation = crossValidation;
             m_ensembleStrategy = ensembleStrategy;

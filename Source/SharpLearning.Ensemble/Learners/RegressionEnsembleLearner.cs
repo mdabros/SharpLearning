@@ -11,7 +11,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Regression ensemble learner.
     /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
-    public class RegressionEnsembleLearner : ILearner<double>, IIndexedLearner<double>
+    public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearner<double>
     {
         readonly Func<F64Matrix, double[], int[], IPredictorModel<double>>[] m_learners;
         readonly Func<IRegressionEnsembleStrategy> m_ensembleStrategy;

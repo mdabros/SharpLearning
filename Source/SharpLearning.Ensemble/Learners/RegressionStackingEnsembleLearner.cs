@@ -12,7 +12,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Stacking Regression Ensemble Learner.
     /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
-    public class RegressionStackingEnsembleLearner : ILearner<double>, IIndexedLearner<double>
+    public sealed class RegressionStackingEnsembleLearner : ILearner<double>, IIndexedLearner<double>
     {
         readonly IIndexedLearner<double>[] m_learners;
         readonly ICrossValidation<double> m_crossValidation;

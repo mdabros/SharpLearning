@@ -111,7 +111,7 @@ namespace SharpLearning.Ensemble.Models
         /// <summary>
         /// Predicts a set of observations using the ensembled probabilities
         /// </summary>
-        /// <param name="observation"></param>
+        /// <param name="observations"></param>
         /// <returns></returns>
         public ProbabilityPrediction[] PredictProbability(F64Matrix observations)
         {

@@ -11,6 +11,11 @@ namespace SharpLearning.Ensemble.Strategies
     [Serializable]
     public sealed class MeanProbabilityClassificationEnsembleStrategy : IClassificationEnsembleStrategy
     {
+        /// <summary>
+        /// Mean probability classification ensemble strategy. Class probabilities are combined using the mean across all models.
+        /// </summary>
+        /// <param name="ensemblePredictions"></param>
+        /// <returns></returns>
         public ProbabilityPrediction Combine(ProbabilityPrediction[] ensemblePredictions)
         {
             var averageProbabilities = ensemblePredictions.Select(p => p.Probabilities).SelectMany(d => d)

@@ -15,7 +15,6 @@ namespace SharpLearning.Metrics.Regression
         /// <param name="positiveTarget"></param>
         public RocAucRegressionMetric(double positiveTarget)
         {
-            if (positiveTarget == null) { throw new ArgumentException("positiveClassLabel"); }
             m_positiveTarget = positiveTarget;
         }
 
