@@ -49,6 +49,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="EnsembleSelectors\ForwardSearchClassificationEnsembleSelection.cs" />
+    <Compile Include="EnsembleSelectors\BackwardEliminationRegressionEnsembleSelection.cs" />
     <Compile Include="EnsembleSelectors\IClassificationEnsembleSelection.cs" />
     <Compile Include="EnsembleSelectors\IRegressionEnsembleSelection.cs" />
     <Compile Include="Learners\ClassificationEnsembleLearner.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="Learners\ClassificationStackingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionEnsembleLearner.cs" />
     <Compile Include="Learners\ClassificationForwardSearchModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionBackwardEliminationModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionForwardSearchModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionModelSelectingEnsembleLearner.cs" />
     <Compile Include="Learners\RegressionStackingEnsembleLearner.cs" />
