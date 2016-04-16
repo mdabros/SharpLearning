@@ -20,9 +20,23 @@ namespace SharpLearning.Ensemble.Learners
 
         /// <summary>
         /// Regression ensemble learner. Combines several models into a single ensemble model.
+        /// Default combination method is the mean of all model outputs.
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
-        /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
+        /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
+        /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
+        /// <param name="seed">Seed for the bagging when used</param>
+        public RegressionEnsembleLearner(IIndexedLearner<double>[] learners, double subSampleRatio = 1.0, int seed = 24)
+            : this(learners.Select(l => new Func<F64Matrix, double[], int[], IPredictorModel<double>>((o, t, i) => l.Learn(o, t, i))).ToArray(),
+            () => new MeanRegressionEnsembleStrategy(), subSampleRatio, seed)
+        {
+        }
+
+        /// <summary>
+        /// Regression ensemble learner. Combines several models into a single ensemble model.
+        /// </summary>
+        /// <param name="learners">Learners in the ensemble</param>
+        /// <param name="ensembleStrategy">Strategy on how to combine the models. Default is mean of all models in the ensmble</param>
         /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
         /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
         /// <param name="seed">Seed for the bagging when used</param>

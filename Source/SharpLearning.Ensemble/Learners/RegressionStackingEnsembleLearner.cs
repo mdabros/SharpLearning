@@ -22,14 +22,30 @@ namespace SharpLearning.Ensemble.Learners
         /// <summary>
         /// Stacking Regression Ensemble Learner. 
         /// Combines several models into a single ensemble model using a top or meta level model to combine the models.
+        /// The bottom level models generates output for the top level model using cross validation.
+        /// Default is 5-fold RandomCrossValidation.
+        /// </summary>
+        /// <param name="learners">Learners in the ensemble</param>
+        /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
+        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
+        /// False; the meta learner only recieves the output of the ensemble models as features. Default is true</param>
+        public RegressionStackingEnsembleLearner(IIndexedLearner<double>[] learners, ILearner<double> metaLearner, bool includeOriginalFeaturesForMetaLearner = true)
+            : this(learners, new RandomCrossValidation<double>(5, 42), (obs, targets) => metaLearner.Learn(obs, targets), includeOriginalFeaturesForMetaLearner)
+        {
+        }
+
+        /// <summary>
+        /// Stacking Regression Ensemble Learner. 
+        /// Combines several models into a single ensemble model using a top or meta level model to combine the models.
+        /// The bottom level models generates output for the top level model using cross validation.
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
         /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
-        /// False; the meta learner only recieves the output of the ensemble models as features</param>
+        /// False; the meta learner only recieves the output of the ensemble models as features. Default is true</param>
         public RegressionStackingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
-            ILearner<double> metaLearner, bool includeOriginalFeaturesForMetaLearner)
+            ILearner<double> metaLearner, bool includeOriginalFeaturesForMetaLearner = true)
             : this(learners, crossValidation, (obs, targets) => metaLearner.Learn(obs, targets), includeOriginalFeaturesForMetaLearner)
         {
         }
@@ -37,6 +53,7 @@ namespace SharpLearning.Ensemble.Learners
         /// <summary>
         /// Stacking Regression Ensemble Learner. 
         /// Combines several models into a single ensemble model using a top or meta level model to combine the models.
+        /// The bottom level models generates output for the top level model using cross validation.
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="crossValidation">Cross validation method</param>
@@ -44,7 +61,7 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
         /// False; the meta learner only recieves the output of the ensemble models as features</param>
         public RegressionStackingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
-            Func<F64Matrix, double[], IPredictorModel<double>> metaLearner, bool includeOriginalFeaturesForMetaLearner)
+            Func<F64Matrix, double[], IPredictorModel<double>> metaLearner, bool includeOriginalFeaturesForMetaLearner = true)
         {
             if (learners == null) { throw new ArgumentException("learners"); }
             if (crossValidation == null) { throw new ArgumentException("crossValidation"); }
