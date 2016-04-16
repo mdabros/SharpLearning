@@ -64,12 +64,14 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="EnsembleSelectors\BackwardEliminationClassificationEnsembleSelectionTest.cs" />
+    <Compile Include="EnsembleSelectors\RandomClassificationEnsembleSelectionTest.cs" />
     <Compile Include="EnsembleSelectors\ForwardSearchClassificationEnsembleSelectionTest.cs" />
     <Compile Include="EnsembleSelectors\BackwardEliminationRegressionEnsembleSelectionTest.cs" />
     <Compile Include="EnsembleSelectors\RandomRegressionEnsembleSelectionTest.cs" />
     <Compile Include="EnsembleSelectors\ForwardSearchRegressionEnsembleSelectionTest.cs" />
     <Compile Include="Learners\ClassificationEnsembleLearnerTest.cs" />
     <Compile Include="Learners\ClassificationBackwardEliminationModelSelectingEnsembleLearnerTest.cs" />
+    <Compile Include="Learners\ClassificationRandomModelSelectingEnsembleLearnerTest.cs" />
     <Compile Include="Learners\ClassificationForwardSearchModelSelectingEnsembleLearnerTest.cs" />
     <Compile Include="Learners\ClassificationModelSelectingEnsembleLearnerTest.cs" />
     <Compile Include="Learners\ClassificationStackingEnsembleLearnerTest.cs" />
