@@ -84,6 +84,10 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                     currentError = error;
                     //Trace.WriteLine(error);
                 }
+                else
+                {
+                    break; // break when error does not improve
+                }
             }
 
             //Trace.WriteLine(string.Join(", ", m_selectedModelIndices.ToArray()));
