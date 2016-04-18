@@ -200,5 +200,4 @@ namespace SharpLearning.Containers.Arithmetic
             return MultiplyF64(a, b);
         }
     }
-
 }

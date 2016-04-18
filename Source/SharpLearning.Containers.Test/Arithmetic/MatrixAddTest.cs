@@ -38,5 +38,33 @@ namespace SharpLearning.Containers.Test.Matrices
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void MatrixAdd_Add_Vectors()
+        {
+            var v1 = new double[] { 2, 3, 5, 10 };
+            var v2 = new double[] { 1, 1, 1, 1 };
+
+            var actual = v1.Add(v2);
+            var expected = new double[] { 3, 4, 6, 11 };
+
+            Assert.AreEqual(expected.Length, actual.Length);
+
+            for (int i = 0; i < actual.Length; i++)
+            {
+                Assert.AreEqual(expected[i], actual[i], 0.1);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void MatrixAdd_Add_Vectors_Different_Lengths()
+        {
+            var v1 = new double[] { 2, 3, 5, 10 };
+            var v2 = new double[] { 1, 1  };
+
+            v1.Add(v2);
+        }
+
     }
 }

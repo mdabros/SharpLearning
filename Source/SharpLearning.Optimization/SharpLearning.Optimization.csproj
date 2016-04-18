@@ -49,9 +49,16 @@
     </Compile>
     <Compile Include="GridSearchOptimizer.cs" />
     <Compile Include="IOptimizer.cs" />
+    <Compile Include="NelderMeadOptimizer.cs" />
     <Compile Include="OptimizerResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSearchOptimizer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
