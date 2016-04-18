@@ -19,7 +19,7 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>
         public GridSearchOptimizer(double[][] parameterRanges)
-            : this(parameterRanges, int.MaxValue)
+            : this(parameterRanges, Environment.ProcessorCount)
         {
         }
 

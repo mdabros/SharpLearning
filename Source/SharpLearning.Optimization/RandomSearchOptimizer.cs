@@ -24,7 +24,7 @@ namespace SharpLearning.Optimization
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         public RandomSearchOptimizer(double[][] parameterRanges, int iterations, int seed=42)
-            : this(parameterRanges, iterations, seed, int.MaxValue)
+            : this(parameterRanges, iterations, seed, Environment.ProcessorCount)
         {
         }
 
