@@ -42,15 +42,15 @@ namespace SharpLearning.Optimization
         /// http://www.emse.fr/~leriche/GBNM_SMO_1026_final.pdf
         /// </summary>
         /// <param name="parameters">Each row is a series of values for a specific parameter</param>
-        /// <param name="maxRestarts">Maximun number of restart (default is 5)</param>
-        /// <param name="noImprovementThreshold">Minimum value of improvement before the improvement is accepted as an actual improvement (default is 10e-6)</param>
+        /// <param name="maxRestarts">Maximun number of restart (default is 8</param>
+        /// <param name="noImprovementThreshold">Minimum value of improvement before the improvement is accepted as an actual improvement (default is 0.001)</param>
         /// <param name="maxIterationsWithoutImprovement">Maximum number of iterations without an improvement (default is 5)</param>
         /// <param name="maxIterationsPrRestart">Maximum iterations pr. restart. 0 is no limit and will run to convergens (default is 0)</param>
         /// <param name="alpha">Coefficient for reflection part of the algorithm (default is 1)</param>
         /// <param name="gamma">Coefficient for expansion part of the algorithm (default is 2)</param>
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
-        public GlobalizedBoundedNelderMeadOptimizer(double[][] parameters, int maxRestarts=5, double noImprovementThreshold = 10e-6, 
+        public GlobalizedBoundedNelderMeadOptimizer(double[][] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, 
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5)
         {

@@ -58,7 +58,6 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="GlobalizedBoundedNelderMeadOptimizerTest.cs" />
-    <Compile Include="NelderMeadOptimizerTest.cs" />
     <Compile Include="RandomSearchOptimizationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GridSearchOptimizationTest.cs" />
