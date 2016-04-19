@@ -47,6 +47,7 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="GlobalizedBoundedNelderMeadOptimizer.cs" />
     <Compile Include="GridSearchOptimizer.cs" />
     <Compile Include="IOptimizer.cs" />
     <Compile Include="NelderMeadOptimizer.cs" />
