@@ -17,22 +17,22 @@ namespace SharpLearning.Optimization.Test
                 new double[] { -10.0, 10.0 },
                 new double[] { -10.0, 10.0 }
             };
-            var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5);
+            var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.99999704108905985, 0.0000001);
+            Assert.AreEqual(actual.Error, -0.99994579068533251, 0.0000001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], 1.5719701315593944, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[1], 3.1426999688242629, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[2], -1.6569340800924716E-06, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[0], -1.5674665655168316, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[1], 6.273371320712446, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[2], -5.0918060053651561E-07, 0.0000001);
         }
 
         [TestMethod]
         public void GlobalizedBoundedNelderMeadOptimizer_Optimize()
         {
             var parameters = new double[][] { new double[] { 0.0, 100.0 } };
-            var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters);
+            var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
             var results = sut.Optimize(Minimize2);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 

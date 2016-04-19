@@ -44,14 +44,14 @@ namespace SharpLearning.Optimization
         /// <param name="parameters">Each row is a series of values for a specific parameter</param>
         /// <param name="maxRestarts">Maximun number of restart (default is 5)</param>
         /// <param name="noImprovementThreshold">Minimum value of improvement before the improvement is accepted as an actual improvement (default is 10e-6)</param>
-        /// <param name="maxIterationsWithoutImprovement">Maximum number of iterations without an improvement (default is 10)</param>
+        /// <param name="maxIterationsWithoutImprovement">Maximum number of iterations without an improvement (default is 5)</param>
         /// <param name="maxIterationsPrRestart">Maximum iterations pr. restart. 0 is no limit and will run to convergens (default is 0)</param>
         /// <param name="alpha">Coefficient for reflection part of the algorithm (default is 1)</param>
         /// <param name="gamma">Coefficient for expansion part of the algorithm (default is 2)</param>
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         public GlobalizedBoundedNelderMeadOptimizer(double[][] parameters, int maxRestarts=5, double noImprovementThreshold = 10e-6, 
-            int maxIterationsWithoutImprovement = 10, int maxIterationsPrRestart = 0, 
+            int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, 
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5)
         {
             if (parameters == null) { throw new ArgumentNullException("x_start"); }
@@ -88,7 +88,6 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            var parameterRange = m_parameters.Select(p => p.Max() - p.Min()).ToArray();
             var dim = m_parameters.Length;
             var initialPoint = new double[dim];
 
@@ -97,10 +96,6 @@ namespace SharpLearning.Optimization
             for (int restarts = 0; restarts < m_maxRestarts; restarts++)
             {
                 RandomRestartPoint(initialPoint);
-                var a = (0.02 + 0.08 * m_random.NextDouble()) * parameterRange.Min(); // % simplex size between 2%-8% of min(xrange)
-
-                var p = a * (Math.Sqrt(dim + 1) + dim - 1) / (dim * Math.Sqrt(2));
-                var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
 
                 var prevBest = functionToMinimize(initialPoint);
                 var iterationsWithoutImprovement = 0;
@@ -108,6 +103,11 @@ namespace SharpLearning.Optimization
 
                 for (int i = 0; i < dim; i++)
                 {
+                    var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max() - m_parameters[i].Min()); // % simplex size between 2%-8% of min(xrange)
+
+                    var p = a * (Math.Sqrt(dim + 1) + dim - 1) / (dim * Math.Sqrt(2));
+                    var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
+
                     var x = initialPoint.ToArray();
                     x[i] = x[i] + p;
                     for (int j = 0; j < dim; j++)
@@ -121,7 +121,11 @@ namespace SharpLearning.Optimization
                     BoundCheck(x);
                     var score = functionToMinimize(x);
                     results.Add(score);
+
+                    //Console.WriteLine("Intials: " + score.Error + " " + string.Join(", ", score.ParameterSet));
                 }
+
+                //Console.WriteLine(restarts);
 
                 // simplex iter
                 var iterations = 0;
@@ -141,7 +145,7 @@ namespace SharpLearning.Optimization
                     iterations++;
 
                     // break after no_improv_break iterations with no improvement
-                    Trace.WriteLine("Current best:" + best.Error);
+                    //Console.WriteLine("Current best:" + best.Error + " " + string.Join(", ", best.ParameterSet));
 
                     if (best.Error < (prevBest.Error - m_noImprovementThreshold))
                     {
