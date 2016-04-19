@@ -83,9 +83,13 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
             var currentFeature = double.MinValue;
 
             for (int i = parentInterval.FromInclusive; i < parentInterval.ToExclusive; i++)
-            {      
+            {
+                var leftSize = (double)(i - parentInterval.FromInclusive);
+                var rightSize = (double)(parentInterval.ToExclusive - i);
+
                 currentFeature = feature[i];
-                if(currentFeature > threshold)
+
+                if (currentFeature > threshold && Math.Min(leftSize, rightSize) >= m_minimumSplitSize)
                 {
                     splitIndex = i;
                     

@@ -106,17 +106,18 @@ namespace SharpLearning.Optimization
                     var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max() - m_parameters[i].Min()); // % simplex size between 2%-8% of min(xrange)
 
                     var p = a * (Math.Sqrt(dim + 1) + dim - 1) / (dim * Math.Sqrt(2));
-                    var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
-
                     var x = initialPoint.ToArray();
                     x[i] = x[i] + p;
-                    for (int j = 0; j < dim; j++)
-                    {
-                        if(j != i)
-                        {
-                            x[j] = x[j] + q;
-                        }
-                    }
+
+                    // adding q seems to reduce the exploration of the algorithm
+                    //var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
+                    //for (int j = 0; j < dim; j++)
+                    //{
+                    //    if(j != i)
+                    //    {
+                    //        x[j] = x[j] + q;
+                    //    }
+                    //}
 
                     BoundCheck(x);
                     var score = functionToMinimize(x);
@@ -125,7 +126,7 @@ namespace SharpLearning.Optimization
                     //Console.WriteLine("Intials: " + score.Error + " " + string.Join(", ", score.ParameterSet));
                 }
 
-                //Console.WriteLine(restarts);
+               // Console.WriteLine(restarts);
 
                 // simplex iter
                 var iterations = 0;

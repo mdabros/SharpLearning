@@ -122,7 +122,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationExtremelyRandomizedTreesLearner(trees, 5, 100, 1, 0.0001, subSampleRatio, 42, 1);
+            var sut = new ClassificationExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, 1);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
