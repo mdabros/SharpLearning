@@ -30,7 +30,9 @@ namespace SharpLearning.Optimization
         readonly double m_noImprovementThreshold;
         readonly double[][] m_parameters;
         readonly Random m_random;
-
+        readonly int m_maxFunctionEvaluations;
+        int m_totalFunctionEvaluations;
+        
         /// <summary>
         /// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization 
         /// avoids some of the shortcommings the standard implementation. 
@@ -46,16 +48,18 @@ namespace SharpLearning.Optimization
         /// <param name="noImprovementThreshold">Minimum value of improvement before the improvement is accepted as an actual improvement (default is 0.001)</param>
         /// <param name="maxIterationsWithoutImprovement">Maximum number of iterations without an improvement (default is 5)</param>
         /// <param name="maxIterationsPrRestart">Maximum iterations pr. restart. 0 is no limit and will run to convergens (default is 0)</param>
+        /// <param name="maxFunctionEvaluations">Maximum function evaluations. 0 is no limit and will run to convergens (default is 0)</param>
         /// <param name="alpha">Coefficient for reflection part of the algorithm (default is 1)</param>
         /// <param name="gamma">Coefficient for expansion part of the algorithm (default is 2)</param>
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         public GlobalizedBoundedNelderMeadOptimizer(double[][] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
-            int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, 
+            int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5)
         {
             if (parameters == null) { throw new ArgumentNullException("x_start"); }
             if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentNullException("maxIterationsWithoutImprovement must be at least 1"); }
+            if (maxFunctionEvaluations < 0) { throw new ArgumentNullException("maxFunctionEvaluations must be at least 1"); }
 
             m_maxRestarts = maxRestarts;
             m_maxIterationsPrRestart = maxIterationsPrRestart;
@@ -66,6 +70,7 @@ namespace SharpLearning.Optimization
             m_parameters = parameters;
             m_noImprovementThreshold = noImprovementThreshold;
             m_maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
+            m_maxFunctionEvaluations = maxFunctionEvaluations;
 
             m_random = new Random(324);
         }
@@ -93,11 +98,13 @@ namespace SharpLearning.Optimization
 
             var allResults = new List<OptimizerResult>();
 
+            m_totalFunctionEvaluations = 0;
+
             for (int restarts = 0; restarts < m_maxRestarts; restarts++)
             {
                 RandomRestartPoint(initialPoint);
 
-                var prevBest = functionToMinimize(initialPoint);
+                var prevBest = EvaluateFunction(functionToMinimize, initialPoint);
                 var iterationsWithoutImprovement = 0;
                 var results = new List<OptimizerResult> { new OptimizerResult(prevBest.ParameterSet, prevBest.Error) };
 
@@ -106,27 +113,27 @@ namespace SharpLearning.Optimization
                     var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max() - m_parameters[i].Min()); // % simplex size between 2%-8% of min(xrange)
 
                     var p = a * (Math.Sqrt(dim + 1) + dim - 1) / (dim * Math.Sqrt(2));
+                    var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
+
                     var x = initialPoint.ToArray();
                     x[i] = x[i] + p;
 
-                    // adding q seems to reduce the exploration of the algorithm
-                    //var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
-                    //for (int j = 0; j < dim; j++)
-                    //{
-                    //    if(j != i)
-                    //    {
-                    //        x[j] = x[j] + q;
-                    //    }
-                    //}
+                    for (int j = 0; j < dim; j++)
+                    {
+                        if (j != i)
+                        {
+                            x[j] = x[j] + q;
+                        }
+                    }
 
                     BoundCheck(x);
-                    var score = functionToMinimize(x);
+                    var score = EvaluateFunction(functionToMinimize, x);
                     results.Add(score);
 
                     //Console.WriteLine("Intials: " + score.Error + " " + string.Join(", ", score.ParameterSet));
                 }
 
-               // Console.WriteLine(restarts);
+                // Console.WriteLine(restarts);
 
                 // simplex iter
                 var iterations = 0;
@@ -135,18 +142,15 @@ namespace SharpLearning.Optimization
                     results = results.OrderBy(r => r.Error).ToList();
                     var best = results.First();
 
-                    // break after max_iter
+                    // break after m_maxIterationsPrRestart
                     if (iterations >= m_maxIterationsPrRestart && m_maxIterationsPrRestart != 0)
                     {
                         allResults.AddRange(results);
                         break;
-                        //return results.ToArray();
                     }
 
                     iterations++;
-
-                    // break after no_improv_break iterations with no improvement
-                    //Console.WriteLine("Current best:" + best.Error + " " + string.Join(", ", best.ParameterSet));
+                    // Console.WriteLine("Current best:" + best.Error + " " + string.Join(", ", best.ParameterSet));
 
                     if (best.Error < (prevBest.Error - m_noImprovementThreshold))
                     {
@@ -158,7 +162,15 @@ namespace SharpLearning.Optimization
                         iterationsWithoutImprovement++;
                     }
 
+                    // break after no_improv_break iterations with no improvement
                     if (iterationsWithoutImprovement >= m_maxIterationsWithoutImprovement)
+                    {
+                        allResults.AddRange(results);
+                        break;
+                    }
+
+                    // check if m_maxFunctionEvaluations is reached
+                    if (m_totalFunctionEvaluations >= m_maxFunctionEvaluations && m_maxFunctionEvaluations != 0)
                     {
                         allResults.AddRange(results);
                         break;
@@ -182,7 +194,7 @@ namespace SharpLearning.Optimization
                     var last = results.Last();
                     var xr = x0.Add(x0.Subtract(last.ParameterSet).Multiply(m_alpha));
                     BoundCheck(xr);
-                    var refelctionScore = functionToMinimize(xr);
+                    var refelctionScore = EvaluateFunction(functionToMinimize, xr);
 
                     var first = results.First().Error;
                     if (first <= refelctionScore.Error && refelctionScore.Error < results[results.Count - 2].Error)
@@ -197,7 +209,7 @@ namespace SharpLearning.Optimization
                     {
                         var xe = x0.Add(x0.Subtract(last.ParameterSet).Multiply(m_gamma));
                         BoundCheck(xe);
-                        var expansionScore = functionToMinimize(xe);
+                        var expansionScore = EvaluateFunction(functionToMinimize, xe);
                         if (expansionScore.Error < refelctionScore.Error)
                         {
                             results.RemoveAt(results.Count - 1);
@@ -215,7 +227,7 @@ namespace SharpLearning.Optimization
                     // contraction
                     var xc = x0.Add(x0.Subtract(last.ParameterSet).Multiply(m_rho));
                     BoundCheck(xc);
-                    var contractionScore = functionToMinimize(xc);
+                    var contractionScore = EvaluateFunction(functionToMinimize, xc);
                     if (contractionScore.Error < last.Error)
                     {
                         results.RemoveAt(results.Count - 1);
@@ -230,15 +242,28 @@ namespace SharpLearning.Optimization
                     {
                         var xs = x1.Add(x1.Subtract(tup.ParameterSet).Multiply(m_sigma));
                         BoundCheck(xs);
-                        var score = functionToMinimize(xs);
+                        var score = EvaluateFunction(functionToMinimize, xs);
                         nres.Add(score);
                     }
 
                     results = nres.ToList();
                 }
+
+                // check if m_maxFunctionEvaluations is reached
+                if (m_totalFunctionEvaluations >= m_maxFunctionEvaluations && m_maxFunctionEvaluations != 0)
+                {
+                    allResults.AddRange(results);
+                    break;
+                }
             }
 
             return allResults.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+        }
+
+        OptimizerResult EvaluateFunction(Func<double[], OptimizerResult> functionToMinimize, double[] parameters)
+        {
+            m_totalFunctionEvaluations++;
+            return functionToMinimize(parameters);
         }
 
         /// <summary>
