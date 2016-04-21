@@ -51,6 +51,7 @@
     <Compile Include="GridSearchOptimizer.cs" />
     <Compile Include="IOptimizer.cs" />
     <Compile Include="OptimizerResult.cs" />
+    <Compile Include="ParticleSwarmOptimizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSearchOptimizer.cs" />
   </ItemGroup>
