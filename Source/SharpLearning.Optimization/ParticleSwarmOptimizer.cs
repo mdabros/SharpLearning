@@ -29,14 +29,18 @@ namespace SharpLearning.Optimization
         /// The first one is the best solution found by the specific particle so far. 
         /// The other "best" value is the global best value obtained by any particle in the population so far.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="maxIterations"></param>
-        /// <param name="numberOfParticles"></param>
-        /// <param name="c1"></param>
-        /// <param name="c2"></param>
-        /// <param name="seed"></param>
+        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
+        /// <param name="numberOfParticles">The number of particles to use (default is 10). MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
+        /// <param name="c1">Learning factor weigting local particle best solution. (default is 2)</param>
+        /// <param name="c2">Learning factor weigting global best solution. (default is 2)</param>
+        /// <param name="seed">Seed for the random initialization and velocity corrections</param>
         public ParticleSwarmOptimizer(double[][] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
         {
+            if (parameters == null) { throw new ArgumentNullException("parameters"); }
+            if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
+            if (numberOfParticles < 1) { throw new ArgumentNullException("numberOfParticles must be at least 1"); }
+
             m_parameters = parameters;
             m_maxIterations = maxIterations;
             m_numberOfParticles = numberOfParticles;
@@ -120,7 +124,7 @@ namespace SharpLearning.Optimization
                     if(result.Error < gBest.Error)
                     {
                         gBest = new OptimizerResult(result.ParameterSet.ToArray(), result.Error);
-                        Trace.WriteLine(gBest.Error);
+                        //Trace.WriteLine(gBest.Error);
                     }
                 }
 
