@@ -1,7 +1,6 @@
 ﻿using SharpLearning.Containers.Arithmetic;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.Optimization
@@ -144,8 +143,6 @@ namespace SharpLearning.Optimization
             }
 
             var results = new List<OptimizerResult>();
-            results.Add(gBest);
-
             for (int i = 0; i < m_numberOfParticles; i++)
             {
                 results.Add(new OptimizerResult(pBest[i], pBestScores[i]));

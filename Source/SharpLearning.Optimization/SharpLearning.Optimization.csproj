@@ -54,11 +54,16 @@
     <Compile Include="ParticleSwarmOptimizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomSearchOptimizer.cs" />
+    <Compile Include="SequentialModelBasedOptimizer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.RandomForest\SharpLearning.RandomForest.csproj">
+      <Project>{f7a2f7be-4418-40c8-a058-9fc8c6aecee3}</Project>
+      <Name>SharpLearning.RandomForest</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

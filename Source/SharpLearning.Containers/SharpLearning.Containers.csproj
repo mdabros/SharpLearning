@@ -50,6 +50,7 @@
     <Compile Include="Arithmetic\MatrixMultiplication.cs" />
     <Compile Include="Arithmetic\MatrixSubtraction.cs" />
     <Compile Include="Arithmetic\MatrixTranspose.cs" />
+    <Compile Include="CertaintyPrediction.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="ObservationTargetSet.cs" />
     <Compile Include="ProbabilityPrediction.cs" />

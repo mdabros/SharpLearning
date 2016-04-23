@@ -1,10 +1,7 @@
-﻿using System;
+﻿using SharpLearning.Containers.Arithmetic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using SharpLearning.Containers.Arithmetic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace SharpLearning.Optimization
 {

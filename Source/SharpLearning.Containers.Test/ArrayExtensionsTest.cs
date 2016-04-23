@@ -494,5 +494,33 @@ namespace SharpLearning.Containers.Test
             var sampleSize = values.Length / 10;
             values.StratifiedIndexSampling(sampleSize, indices, new Random(42));
         }
+
+        [TestMethod] 
+        public void ArrayExtensions_List_ToF64Matrix()
+        {
+            var sut = new List<double[]>
+            {
+                new double[] { 1, 2, 3, 4 },
+                new double[] { 4, 3, 2, 1 },
+            };
+
+            var actual = sut.ToF64Matrix();
+            var expected = new F64Matrix(new double[] { 1, 2, 3, 4, 4, 3, 2, 1 }, 2, 4);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ArrayExtensions_List_ToF64Matrix_Rows_Different_Lengths()
+        {
+            var sut = new List<double[]>
+            {
+                new double[] { 1, 2, 3, 4 },
+                new double[] { 4, 3, 2, 1, 0, -1 },
+            };
+
+            var actual = sut.ToF64Matrix();
+        }
     }
 }

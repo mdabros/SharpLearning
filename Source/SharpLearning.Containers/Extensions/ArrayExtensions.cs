@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Views;
+﻿using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -449,6 +450,34 @@ namespace SharpLearning.Containers.Extensions
             }
 
             return array[i];
+        }
+
+        /// <summary>
+        /// Converts a list of arrays to an F64Matrix
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static F64Matrix ToF64Matrix(this List<double[]> m)
+        {
+            var rows = m.Count;
+            var cols = m.First().Length;
+
+            var matrix = new F64Matrix(rows, cols);
+            for (int i = 0; i < rows; i++)
+            {
+                var row = m[i];
+                if (row.Length != cols)
+                {
+                    throw new ArgumentException("Conversion to F64Matrix requires all row to be equal length");
+                }
+
+                for (int j = 0; j < cols; j++)
+                {
+                    matrix[i, j] = row[j];
+                }
+            }
+
+            return matrix;
         }
 
         /// <summary>

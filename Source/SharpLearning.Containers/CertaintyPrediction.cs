@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace SharpLearning.Containers
 {
     /// <summary>
-    /// Probability prediction for classification learners with probability estimates
+    /// Certainty prediction for regression learners with certainty estimate
     /// </summary>
-    public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
+    public struct CertaintyPrediction
     {
         /// <summary>
         /// 
@@ -17,17 +19,16 @@ namespace SharpLearning.Containers
         /// <summary>
         /// 
         /// </summary>
-        public readonly Dictionary<double, double> Probabilities;
+        public readonly double Variance;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="prediction"></param>
-        /// <param name="probabilities">Dictionary containing the class name to class probability</param>
-        public ProbabilityPrediction(double prediction, Dictionary<double, double> probabilities)
+        /// <param name="variance"></param>
+        public CertaintyPrediction(double prediction, double variance)
         {
-            if (probabilities == null) { throw new ArgumentNullException("probabilities"); }
-            Probabilities = probabilities;
+            Variance = variance;
             Prediction = prediction;
         }
 
@@ -36,19 +37,10 @@ namespace SharpLearning.Containers
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(ProbabilityPrediction other)
+        public bool Equals(CertaintyPrediction other)
         {
-            if(!Equal(this.Prediction, other.Prediction)) { return false; }
-            if (this.Probabilities.Count != other.Probabilities.Count) { return false; }
-            
-            var zip = this.Probabilities.Zip(other.Probabilities, (t, o) => new {This = t, Other = o});
-            foreach (var item in zip)
-            {
-                if (item.This.Key != item.Other.Key)
-                    return false;
-                if (!Equal(item.This.Value, item.Other.Value))
-                    return false;
-            }
+            if (!Equal(this.Prediction, other.Prediction)) { return false; }
+            if (!Equal(this.Variance, other.Variance)) { return false; }
 
             return true;
         }
@@ -60,8 +52,8 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if(obj is ProbabilityPrediction)
-                return Equals((ProbabilityPrediction)obj);
+            if (obj is CertaintyPrediction)
+                return Equals((CertaintyPrediction)obj);
             return false;
         }
 
@@ -71,7 +63,7 @@ namespace SharpLearning.Containers
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        public static bool operator ==(ProbabilityPrediction p1, ProbabilityPrediction p2)
+        public static bool operator ==(CertaintyPrediction p1, CertaintyPrediction p2)
         {
             return p1.Equals(p2);
         }
@@ -82,7 +74,7 @@ namespace SharpLearning.Containers
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        public static bool operator !=(ProbabilityPrediction p1, ProbabilityPrediction p2)
+        public static bool operator !=(CertaintyPrediction p1, CertaintyPrediction p2)
         {
             return !p1.Equals(p2);
         }
@@ -93,7 +85,7 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public override int GetHashCode()
         {
-            return Prediction.GetHashCode() ^ Probabilities.GetHashCode();
+            return Prediction.GetHashCode() ^ Variance.GetHashCode();
         }
 
         const double m_tolerence = 0.00001;
@@ -101,7 +93,7 @@ namespace SharpLearning.Containers
         bool Equal(double a, double b)
         {
             var diff = Math.Abs(a * m_tolerence);
-            if(Math.Abs(a - b) <= diff)
+            if (Math.Abs(a - b) <= diff)
             {
                 return true;
             }

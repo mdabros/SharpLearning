@@ -6,6 +6,7 @@ using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.RandomForest.Test.Properties;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -54,6 +55,55 @@ namespace SharpLearning.RandomForest.Test.Models
             var error = evaluator.Error(targets, predictions);
 
             Assert.AreEqual(0.15392316626859898, error, 0.0000001);
+        }
+
+        [TestMethod]
+        public void RegressionForestModel_PredictCertainty_Single()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var rows = targets.Length;
+
+            var learner = new RegressionRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, 1);
+            var sut = learner.Learn(observations, targets);
+
+            var actual = new CertaintyPrediction[rows];
+            for (int i = 0; i < rows; i++)
+            {
+                actual[i] = sut.PredictCertainty(observations.GetRow(i));
+            }
+
+            var evaluator = new MeanSquaredErrorRegressionMetric();
+            var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
+
+            Assert.AreEqual(0.15392316626859898, error, 0.0000001);
+
+            var expected = new CertaintyPrediction[] { new CertaintyPrediction(0.392351481851482, 0.0438279118815934), new CertaintyPrediction(0.386089490574785, 0.0667804041796964), new CertaintyPrediction(0.243836965322259, 0.0425186414889028), new CertaintyPrediction(0.329400543900544, 0.0573826198539963), new CertaintyPrediction(0.386089490574785, 0.0667804041796964), new CertaintyPrediction(0.200186171671466, 0.0375041708478056), new CertaintyPrediction(0.583565046065046, 0.0595672285510552), new CertaintyPrediction(0.248448797934092, 0.0449797371029248), new CertaintyPrediction(0.182894685379979, 0.0315534346029886), new CertaintyPrediction(0.682394411144411, 0.0615061393123617), new CertaintyPrediction(0.44569671994672, 0.0445745111801124), new CertaintyPrediction(0.243836965322259, 0.0425186414889028), new CertaintyPrediction(0.468528163013457, 0.0726477666545773), new CertaintyPrediction(0.211520587255881, 0.0551497857873964), new CertaintyPrediction(0.592137109622404, 0.0794360199970154), new CertaintyPrediction(0.153096705582, 0.0304859048440341), new CertaintyPrediction(0.162090933576228, 0.0341737062001491), new CertaintyPrediction(0.599291236541237, 0.0531997732586624), new CertaintyPrediction(0.680394411144411, 0.0606317169569394), new CertaintyPrediction(0.44569671994672, 0.0445745111801124), new CertaintyPrediction(0.300534743034743, 0.0603082500896416), new CertaintyPrediction(0.682394411144411, 0.0615061393123617), new CertaintyPrediction(0.5059524054377, 0.0653003480131079), new CertaintyPrediction(0.186691943677238, 0.0343771214986317), new CertaintyPrediction(0.166090933576228, 0.0344609787315392), new CertaintyPrediction(0.35805710955711, 0.0525006655402324), };
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RegressionForestModel_PredictProbability_Multiple()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var rows = targets.Length;
+
+            var learner = new RegressionRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, 1);
+            var sut = learner.Learn(observations, targets);
+            var actual = sut.PredictCertainty(observations);
+
+            var evaluator = new MeanSquaredErrorRegressionMetric();
+            var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
+
+            Assert.AreEqual(0.15392316626859898, error, 0.0000001);
+
+            Write(actual);
+
+            var expected = new CertaintyPrediction[] { new CertaintyPrediction(0.392351481851482, 0.0438279118815934), new CertaintyPrediction(0.386089490574785, 0.0667804041796964), new CertaintyPrediction(0.243836965322259, 0.0425186414889028), new CertaintyPrediction(0.329400543900544, 0.0573826198539963), new CertaintyPrediction(0.386089490574785, 0.0667804041796964), new CertaintyPrediction(0.200186171671466, 0.0375041708478056), new CertaintyPrediction(0.583565046065046, 0.0595672285510552), new CertaintyPrediction(0.248448797934092, 0.0449797371029248), new CertaintyPrediction(0.182894685379979, 0.0315534346029886), new CertaintyPrediction(0.682394411144411, 0.0615061393123617), new CertaintyPrediction(0.44569671994672, 0.0445745111801124), new CertaintyPrediction(0.243836965322259, 0.0425186414889028), new CertaintyPrediction(0.468528163013457, 0.0726477666545773), new CertaintyPrediction(0.211520587255881, 0.0551497857873964), new CertaintyPrediction(0.592137109622404, 0.0794360199970154), new CertaintyPrediction(0.153096705582, 0.0304859048440341), new CertaintyPrediction(0.162090933576228, 0.0341737062001491), new CertaintyPrediction(0.599291236541237, 0.0531997732586624), new CertaintyPrediction(0.680394411144411, 0.0606317169569394), new CertaintyPrediction(0.44569671994672, 0.0445745111801124), new CertaintyPrediction(0.300534743034743, 0.0603082500896416), new CertaintyPrediction(0.682394411144411, 0.0615061393123617), new CertaintyPrediction(0.5059524054377, 0.0653003480131079), new CertaintyPrediction(0.186691943677238, 0.0343771214986317), new CertaintyPrediction(0.166090933576228, 0.0344609787315392), new CertaintyPrediction(0.35805710955711, 0.0525006655402324), };
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -136,6 +186,19 @@ namespace SharpLearning.RandomForest.Test.Models
             var error = evaluator.Error(targets, predictions);
 
             Assert.AreEqual(0.19015066282923429, error, 0.0000001);
+        }
+
+        void Write(CertaintyPrediction[] predictions)
+        {
+            var value = "new CertaintyPrediction[] {";
+            foreach (var item in predictions)
+            {
+                value += "new CertaintyPrediction(" + item.Prediction + ", " + item.Variance + "), ";
+            }
+
+            value += "};";
+
+            Trace.WriteLine(value);
         }
 
         readonly string ClassificationForestModelString =

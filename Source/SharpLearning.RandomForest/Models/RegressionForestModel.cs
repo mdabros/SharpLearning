@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.InputOutput.Serialization;
@@ -56,6 +57,44 @@ namespace SharpLearning.RandomForest.Models
             for (int i = 0; i < rows; i++)
             {
                 predictions[i] = Predict(observations.GetRow(i));
+            }
+
+            return predictions;
+        }
+
+        /// <summary>
+        /// Predicts a single observation and provides a certainty measure on the prediction
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public CertaintyPrediction PredictCertainty(double[] observation)
+        {
+            var prediction = Predict(observation);
+            var variance = 0.0;
+            for (int i = 0; i < m_models.Length; i++)
+            {
+                var temp = m_models[i].Predict(observation) - prediction;
+                variance += temp * temp;
+            }
+
+            variance = variance / (double)m_models.Length;
+
+            return new CertaintyPrediction(prediction, variance);
+        }
+
+        /// <summary>
+        /// Predicts a set of obervations with certainty predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        public CertaintyPrediction[] PredictCertainty(F64Matrix observations)
+        {
+            var rows = observations.GetNumberOfRows();
+            var predictions = new CertaintyPrediction[rows];
+
+            for (int i = 0; i < rows; i++)
+            {
+                predictions[i] = PredictCertainty(observations.GetRow(i));
             }
 
             return predictions;
