@@ -57,6 +57,10 @@
     <Compile Include="SequentialModelBasedOptimizer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj">
+      <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
+      <Name>SharpLearning.Common.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
