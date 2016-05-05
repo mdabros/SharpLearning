@@ -68,6 +68,10 @@
     <Compile Include="ReplaceMissingValuesTransformerTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpLearning.FeatureTransformations\SharpLearning.FeatureTransformations.csproj">
       <Project>{72d0249c-2896-4263-8f6f-d7b413404408}</Project>
       <Name>SharpLearning.FeatureTransformations</Name>

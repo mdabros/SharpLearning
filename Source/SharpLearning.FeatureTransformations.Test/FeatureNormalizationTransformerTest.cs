@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.FeatureTransformations.Normalization;
 using System.IO;
 using SharpLearning.InputOutput.Csv;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.FeatureTransformations.Test
 {
@@ -24,6 +25,22 @@ namespace SharpLearning.FeatureTransformations.Test
             var actual = writer.ToString();
 
             Assert.AreEqual(Expected, actual);
+        }
+
+        [TestMethod]
+        public void FeatureNormalizationTransformer_Transform_Matrix()
+        {
+            var sut = new FeatureNormalizationTransformer(-1.0, 1.0);
+            var matrix = new F64Matrix(new double[] { -10, 0, 10,
+                                                       10, 0, -10,
+                                                      -10, 0, 10}, 3, 3);
+            var actual = sut.Transform(matrix);
+
+            var expected = new F64Matrix(new double[] { -1, -1, 1,
+                                                         1, -1, -1,
+                                                        -1, -1, 1}, 3, 3);
+
+            Assert.AreEqual(expected, actual);
         }
 
         string Expected =
