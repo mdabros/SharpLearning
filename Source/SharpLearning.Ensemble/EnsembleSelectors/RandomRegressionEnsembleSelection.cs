@@ -85,8 +85,11 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 {
                     bestError = error;
                     candidateModelIndices.CopyTo(bestModelIndices, 0);
+                    Trace.WriteLine("Models selected: " + bestModelIndices.Length + ": " + error);
                 }
             }
+
+            Trace.WriteLine("Selected model indices: " + string.Join(", ", bestModelIndices.ToArray()));
 
             return bestModelIndices;
         }

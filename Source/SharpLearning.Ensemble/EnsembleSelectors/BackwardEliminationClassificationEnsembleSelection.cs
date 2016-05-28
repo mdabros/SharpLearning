@@ -37,7 +37,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         }
 
         /// <summary>
-        /// Greedy forward selection of ensemble models.
+        /// Greedy backwards elimination of ensemble models.
         /// </summary>
         /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
         /// Each row in the matrix corresponds to predictions from a separate model</param>
@@ -59,16 +59,16 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             for (int i = 0; i < modelsToRemove; i++)
             {
                 var error = SelectNextModelToRemove(crossValidatedModelPredictions, targets, currentError);
-                Trace.WriteLine(error);
+
                 if (error < currentError && m_remainingModelIndices.Count <= m_numberOfModelsToSelect)
                 {
                     currentError = error;
                     m_bestModelIndices = m_remainingModelIndices.ToList();
-                    Trace.WriteLine("Updated: " + error);
+                    Trace.WriteLine("Models selected: " + m_bestModelIndices.Count + ": " + error);
                 }
             }
 
-            Trace.WriteLine(string.Join(", ", m_bestModelIndices.ToArray()));
+            Trace.WriteLine("Selected model indices: " + string.Join(", ", m_bestModelIndices.ToArray()));
 
             return m_bestModelIndices.ToArray();
         }

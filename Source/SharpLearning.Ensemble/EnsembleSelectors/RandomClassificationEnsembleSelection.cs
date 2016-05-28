@@ -4,6 +4,7 @@ using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Views;
 using SharpLearning.Ensemble.Strategies;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
@@ -88,8 +89,11 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 {
                     bestError = error;
                     candidateModelIndices.CopyTo(bestModelIndices, 0);
+                    Trace.WriteLine("Models selected: " + bestModelIndices.Length+ ": " + error);
                 }
             }
+
+            Trace.WriteLine("Selected model indices: " + string.Join(", ", bestModelIndices.ToArray()));
 
             return bestModelIndices;
         }

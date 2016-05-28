@@ -92,7 +92,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 }
             }
 
-            //Trace.WriteLine(string.Join(", ", m_selectedModelIndices.ToArray()));
+            Trace.WriteLine("Selected model indices: " + string.Join(", ", m_selectedModelIndices.ToArray()));
 
             return m_selectedModelIndices.ToArray();
         }
