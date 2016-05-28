@@ -6,6 +6,7 @@ using SharpLearning.Ensemble.EnsembleSelectors;
 using SharpLearning.Ensemble.Models;
 using SharpLearning.Ensemble.Strategies;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.Ensemble.Learners
@@ -147,6 +148,7 @@ namespace SharpLearning.Ensemble.Learners
             var modelPredictions = new double[cvRows];
             for (int i = 0; i < m_learners.Length; i++)
             {
+                Trace.WriteLine("Training model: " + (i + 1));
                 var learner = m_learners[i];
                 m_crossValidation.CrossValidate(learner, observations, targets, indices, modelPredictions);
                 for (int j = 0; j < modelPredictions.Length; j++)

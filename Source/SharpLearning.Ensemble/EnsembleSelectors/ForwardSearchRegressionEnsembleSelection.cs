@@ -3,6 +3,7 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Ensemble.Strategies;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
@@ -82,10 +83,11 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 if(error < currentError)
                 {
                     currentError = error;
-                    //Trace.WriteLine(error);
+                    Trace.WriteLine("Models Selected: " + i + " Error: " + error);
                 }
                 else
                 {
+                    Trace.WriteLine("No error improvement. Stopping search");
                     break; // break when error does not improve
                 }
             }
