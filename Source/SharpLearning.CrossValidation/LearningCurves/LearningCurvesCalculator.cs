@@ -29,15 +29,17 @@ namespace SharpLearning.CrossValidation.LearningCurves
         readonly IIndexSampler<double> m_indexedSampler;
         readonly int m_numberOfShufflesPrSample;
         readonly Random m_random;
-        
+
         /// <summary>
         /// Bias variance analysis calculator for constructing learning curves.
         /// Learning curves can be used to determine if a model has high bias or high variance.
         /// </summary>
         /// <param name="trainingValidationIndexSplitter"></param>
+        /// <param name="shuffler">Type of shuffler to use when splitting data</param>
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
+        /// <param name="numberOfShufflesPrSample">How many times should the data be shuffled pr. calculated point</param>
         public LearningCurvesCalculator(ITrainingTestIndexSplitter<double> trainingValidationIndexSplitter,
             IIndexSampler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
         {

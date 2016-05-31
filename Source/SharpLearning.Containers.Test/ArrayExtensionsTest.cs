@@ -181,34 +181,6 @@ namespace SharpLearning.Containers.Test
         }
 
         [TestMethod]
-        public void ArrayExtensions_Exp()
-        {
-            var values = new List<double[]> {
-                new double[] { 0, .10, .20, .30, .40, .50 },
-                new double[] { .40, .50, .60, .70, .80, .90 }
-            };
-
-            var actual = values.Exp(2);
-            var expected = new double[] { 1.2214027581601699, 1.8221188003905089 };
-            
-            Assert.AreEqual(expected.Length, actual.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);
-            }
-        }
-
-        [TestMethod]
-        public void ArrayExtensions_CumSum()
-        {
-            var values = new double[] { 0, 10, 20, 30, 40, 50 };
-            var actual = values.CumSum();
-
-            var expected = new double[] { 0, 10, 30, 60, 100, 150 };
-            CollectionAssert.AreEqual(expected, actual);
-        }
-
-        [TestMethod]
         public void ArrayExtensions_Sum_Indexed()
         {
             var values = new double[] { 0, 10, 20, 30, 40, 50 };
@@ -216,16 +188,6 @@ namespace SharpLearning.Containers.Test
             var actual = values.Sum(indices);
 
             Assert.AreEqual(50, actual);
-        }
-
-        [TestMethod]
-        public void ArrayExtensions_WeightedMean()
-        {
-            var values = new double[] { 0, 10, 20, 30, 40, 50 };
-            var weights = new double[] { 1.0, 1.5, 0.1, 3, 0.2, 0.1 };
-            var actual = values.WeightedMean(weights);
-
-            Assert.AreEqual(20.33898305084746, actual, 0.0001);
         }
 
         [TestMethod]
@@ -292,15 +254,6 @@ namespace SharpLearning.Containers.Test
         }
 
         [TestMethod]
-        public void ArrayExtensions_Median_Indices()
-        {
-            var values = new double[] { 0, 10, 20, 30, 40, 50, 60 };
-            var actual = values.Median(new int[] { 0, 1, 2 });
-
-            Assert.AreEqual(10, actual);
-        }
-
-        [TestMethod]
         public void ArrayExtensions_ScoreAtPercentile_100()
         {
             var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
@@ -353,37 +306,7 @@ namespace SharpLearning.Containers.Test
 
             Assert.AreEqual(2.0, actual);
         }
-
-        [TestMethod]
-        public void ArrayExtensions_ScoreAtPercentile_010_Indexed()
-        {
-            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-            var indices = Enumerable.Range(0, values.Length).ToArray();
-            var actual = values.ScoreAtPercentile(.1, indices);
-
-            Assert.AreEqual(2.0, actual);
-        }
-
-        [TestMethod]
-        public void ArrayExtensions_ScoreAtPercentile_090_Indexed()
-        {
-            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            var indices = Enumerable.Range(0, values.Length).ToArray();
-            var actual = values.ScoreAtPercentile(.9, indices);
-
-            Assert.AreEqual(9.1, actual);
-        }
-
-        [TestMethod]
-        public void ArrayExtensions_ScoreAtPercentile_090_Indexed_2()
-        {
-            var values = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-            var indices = Enumerable.Range(0, values.Length - 1).ToArray();
-            var actual = values.ScoreAtPercentile(.9, indices);
-
-            Assert.AreEqual(9.1, actual);
-        }
-                
+               
         [TestMethod]
         public void ArrayExtensions_Shuffle()
         {

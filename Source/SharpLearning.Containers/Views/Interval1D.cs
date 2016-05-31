@@ -3,11 +3,25 @@ using System.Runtime.InteropServices;
 
 namespace SharpLearning.Containers.Views
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Interval1D : IEquatable<Interval1D>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly int FromInclusive;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly int ToExclusive;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly int Length;
 
         /// <summary>
@@ -33,17 +47,34 @@ namespace SharpLearning.Containers.Views
             return new Interval1D(fromInclusive, toExclusive);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool operator !=(Interval1D x, Interval1D y)
         {
             return !(x == y);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool operator ==(Interval1D x, Interval1D y)
         {
             return (x.FromInclusive == y.FromInclusive) &&
                    (x.ToExclusive == y.ToExclusive);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Interval1D other)
         {
             return (this.FromInclusive == other.FromInclusive) && 
@@ -51,6 +82,11 @@ namespace SharpLearning.Containers.Views
                    (this.Length == other.Length);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public override bool Equals(object other)
         {
             if (other is Interval1D)
@@ -59,6 +95,10 @@ namespace SharpLearning.Containers.Views
                 return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.FromInclusive.GetHashCode() ^ this.ToExclusive.GetHashCode() ^ this.Length.GetHashCode();

@@ -9,7 +9,6 @@ namespace SharpLearning.Metrics.Classification
     /// Calculates the roc auc metric
     /// http://en.wikipedia.org/wiki/Receiver_operating_characteristic
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public sealed class RocAucClassificationProbabilityMetric : IClassificationProbabilityMetric
     {
         readonly double m_positiveTarget;
@@ -24,10 +23,10 @@ namespace SharpLearning.Metrics.Classification
         }
 
         /// <summary>
-        /// Calculates the roc auc error. That is 1.0 - Auc.
+        /// Calculates the roc auc error.That is 1.0 - Auc.
         /// </summary>
-        /// <param name="targets">Target values</param>
-        /// <param name="positiveTargetProbabilities">Probability estimates</param>
+        /// <param name="targets"></param>
+        /// <param name="predictions">probability predictions</param>
         /// <returns></returns>
         public double Error(double[] targets, ProbabilityPrediction[] predictions)
         {

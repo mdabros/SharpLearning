@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace SharpLearning.Metrics.Classification
 {
+    /// <summary>
+    /// Calculates the F1Score metric 2 * precision * recall / (precision + recall) on a binary classification problem
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public sealed class F1ScoreMetric<T> : IClassificationMetric<T>
     {
         readonly T m_positiveTarget;
 
+        /// <summary>
+        /// Calculates the F1Score metric 2 * precision * recall / (precision + recall) on a binary classification problem
+        /// </summary>
+        /// <param name="positiveTarget"></param>
         public F1ScoreMetric(T positiveTarget)
         {
             if (positiveTarget == null) { throw new ArgumentNullException("positiveClassLabel"); }

@@ -13,8 +13,6 @@ using System.Linq;
 
 namespace SharpLearning.AdaBoost.Learners
 {
-    public enum AdaBoostRegressionLoss { Linear, Squared, Exponential }
-
     /// <summary>
     /// Regression AdaBoost learner using the R2 algorithm 
     /// using weighted sampling to target the observations with largest error and
@@ -95,6 +93,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
         public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {

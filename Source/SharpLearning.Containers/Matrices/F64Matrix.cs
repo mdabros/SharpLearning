@@ -264,6 +264,11 @@ namespace SharpLearning.Containers.Matrices
             return new F64MatrixPinnedPtr(this);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(F64Matrix other)
         {
             if (this.GetNumberOfRows() != other.GetNumberOfRows()) { return false; }
@@ -273,6 +278,11 @@ namespace SharpLearning.Containers.Matrices
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             F64Matrix other = obj as F64Matrix;
@@ -284,6 +294,10 @@ namespace SharpLearning.Containers.Matrices
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked // Overflow is fine, just wrap

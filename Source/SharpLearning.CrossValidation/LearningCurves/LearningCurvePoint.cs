@@ -11,8 +11,19 @@ namespace SharpLearning.CrossValidation.LearningCurves
     /// </summary>
     public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly int SampleSize;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly double TrainingScore;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly double ValidationScore;
 
         /// <summary>
@@ -28,6 +39,11 @@ namespace SharpLearning.CrossValidation.LearningCurves
             ValidationScore = validationScore;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(LearningCurvePoint other)
         {
             if (this.SampleSize != other.SampleSize) { return false; }
@@ -37,11 +53,23 @@ namespace SharpLearning.CrossValidation.LearningCurves
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool operator !=(LearningCurvePoint x, LearningCurvePoint y)
         {
             return !(x == y);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool operator ==(LearningCurvePoint x, LearningCurvePoint y)
         {
             return (x.SampleSize == y.SampleSize) &&
@@ -49,6 +77,11 @@ namespace SharpLearning.CrossValidation.LearningCurves
                    (x.ValidationScore == y.ValidationScore);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is LearningCurvePoint)
@@ -57,6 +90,10 @@ namespace SharpLearning.CrossValidation.LearningCurves
                 return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked // Overflow is fine, just wrap

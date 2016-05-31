@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace SharpLearning.Containers.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ArrayExtensions
     {
         /// <summary>
@@ -110,7 +113,6 @@ namespace SharpLearning.Containers.Extensions
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValues"></typeparam>
         /// <param name="keys"></param>
-        /// <param name="interval"></param>
         /// <param name="values"></param>
         public static void SortWith<TKey, TValues>(this TKey[] keys, TValues[] values)
         {
@@ -148,6 +150,7 @@ namespace SharpLearning.Containers.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="indices"></param>
         /// <param name="source"></param>
+        /// <param name="interval"></param>
         /// <param name="destination"></param>
         public static void IndexedCopy<T>(this int[] indices, T[] source, Interval1D interval, T[] destination)
         {
@@ -161,7 +164,6 @@ namespace SharpLearning.Containers.Extensions
         /// <summary>
         /// Copies the provided indices from source to destination within the provided interval
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <param name="indices"></param>
         /// <param name="source"></param>
         /// <param name="interval"></param>
@@ -181,7 +183,6 @@ namespace SharpLearning.Containers.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="indices"></param>
         /// <param name="source"></param>
-        /// <param name="interval"></param>
         /// <param name="destination"></param>
         public static void IndexedCopy<T>(this int[] indices, T[] source, T[] destination)
         {
@@ -190,28 +191,6 @@ namespace SharpLearning.Containers.Extensions
                 var index = indices[i];
                 destination[i] = source[index];
             }
-        }
-
-        /// <summary>
-        /// Checks if a value is contained in the provided interval of an array 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <param name="interval"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static bool Contains<T>(this T[] array, Interval1D interval, T value)
-        {
-            var contained = false;
-            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
-            {
-                if(array[i].Equals(value))
-                {
-                    contained = true;
-                    break;
-                }
-            }
-            return contained;
         }
 
         /// <summary>
@@ -248,64 +227,10 @@ namespace SharpLearning.Containers.Extensions
         }
 
         /// <summary>
-        /// Returns the exponential indexed value from each array in the list
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="interval"></param>
-        /// <returns></returns>
-        public static double[] Exp(this List<double[]> array, int index)
-        {
-            var exp = new double[array.Count];
-            for (int i = 0; i < array.Count; i++)
-            {
-                exp[i] = Math.Exp(array[i][index]);
-            }
-            return exp;
-        }
-
-        /// <summary>
-        /// Returns the cummulative sum of an array
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        public static double[] CumSum(this double[] array)
-        {
-            var sum = 0.0;
-            var cumsum = new double[array.Length];
-            for (int i = 0; i < array.Length; i++)
-            {
-                sum += array[i];
-                cumsum[i] = sum;
-            }
-
-            return cumsum;
-        }
-
-        /// <summary>
-        /// Calculates the weighted mean
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="weights"></param>
-        /// <returns></returns>
-        public static double WeightedMean(this double[] array, double[] weights)
-        {
-            var mean = 0.0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                mean += array[i] * weights[i];
-            }
-
-            mean = mean / weights.Sum();
-
-            return mean;
-        }
-
-        /// <summary>
         /// Calculates the weighted median. Expects values and weights to be sorted according to values
         /// http://stackoverflow.com/questions/9794558/weighted-median-computation
         /// </summary>
-        /// <param name="array"></param>
+        /// <param name="values"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
         public static double WeightedMedian(this double[] values, double[] weights)
@@ -325,36 +250,9 @@ namespace SharpLearning.Containers.Extensions
         }
 
         /// <summary>
-        /// Calculates the median from the provided indices.
-        /// </summary>
-        /// <param name="values"></param>
-        /// <param name="weights"></param>
-        /// <returns></returns>
-        public static double Median(this double[] values, int[] indices)
-        {
-            var array = new double[indices.Length];
-            indices.IndexedCopy(values, array);
-            Array.Sort(array);
-
-            if (indices.Length % 2 == 0)
-            {
-                var index1 = (int)((indices.Length / 2.0) - 0.5);
-                var v1 = array[index1];
-
-                var index2 = (int)((indices.Length / 2.0) + 0.5);
-                var v2 = array[index2];
-
-                return (v1 + v2) / 2.0;
-            }
-
-            return array[indices.Length / 2];
-        }
-
-        /// <summary>
         /// Calculates the median
         /// </summary>
         /// <param name="values"></param>
-        /// <param name="weights"></param>
         /// <returns></returns>
         public static double Median(this double[] values)
         {
@@ -415,44 +313,6 @@ namespace SharpLearning.Containers.Extensions
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="values"></param>
-        /// <param name="percentile"></param>
-        /// <returns></returns>
-        public static double ScoreAtPercentile(this double[] values, double percentile, int[] indices)
-        {
-            var array = new double[indices.Length];
-            indices.IndexedCopy(values, array);
-
-            if (percentile == 1.0)
-                return array.Max();
-
-            if (percentile == 0.0)
-                return array.Min();
-
-            Array.Sort(array);
-
-            var index = percentile * (array.Length - 1.0);
-            var i = (int)index;
-            var diff = index - i;
-
-            if (diff != 0.0)
-            {
-                var j = i + 1;
-                var v1 = array[i];
-                var w1 = j - index;
-
-                var v2 = array[j];
-                var w2 = index - i;
-
-                return (v1 * w1 + v2 * w2) / (w1 + w2);
-            }
-
-            return array[i];
-        }
-
-        /// <summary>
         /// Converts a list of arrays to an F64Matrix
         /// </summary>
         /// <param name="m"></param>
@@ -485,6 +345,7 @@ namespace SharpLearning.Containers.Extensions
         /// </summary>
         /// <param name="array"></param>
         /// <param name="weights"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
         public static double WeightedMean(this double[] array, double[] weights, int[] indices)
         {
@@ -531,6 +392,7 @@ namespace SharpLearning.Containers.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <param name="sampleSize"></param>
+        /// <param name="random"></param>
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, Random random)
         {
@@ -600,6 +462,7 @@ namespace SharpLearning.Containers.Extensions
         /// <param name="data"></param>
         /// <param name="sampleSize"></param>
         /// <param name="dataIndices"></param>
+        /// <param name="random"></param>
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices, Random random)
         {

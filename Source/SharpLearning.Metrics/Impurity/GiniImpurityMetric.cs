@@ -6,6 +6,10 @@ using System.Diagnostics;
 
 namespace SharpLearning.Metrics.Impurity
 {
+    /// <summary>
+    /// Calculates the Gini impurity of a sample. Main use is for decision tree classification
+    /// http://en.wikipedia.org/wiki/Decision_tree_learning
+    /// </summary>
     public sealed class GiniImpurityMetric : IImpurityMetric
     {
         readonly IntCustomDictionary m_dict = new IntCustomDictionary();

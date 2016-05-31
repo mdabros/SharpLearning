@@ -2,6 +2,9 @@
 
 namespace SharpLearning.Containers.Matrices
 {
+    /// <summary>
+    /// Extension methods for StringMatrix
+    /// </summary>
     public static class StringMatrixExtensions
     {
         /// <summary>

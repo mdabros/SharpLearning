@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SharpLearning.Containers.Arithmetic
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class MatrixAdd
     {
         /// <summary>
@@ -37,7 +40,6 @@ namespace SharpLearning.Containers.Arithmetic
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
-        /// <param name="output"></param>
         public static double[] AddF64(double[] v1, double[] v2)
         {
             if (v1.Length != v2.Length)

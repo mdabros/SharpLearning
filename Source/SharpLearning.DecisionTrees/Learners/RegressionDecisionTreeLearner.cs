@@ -30,6 +30,12 @@ namespace SharpLearning.DecisionTrees.Learners
         {
         }
 
+        /// <summary>
+        /// Learns a regression tree from the provided observations and targets
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
         public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets));
@@ -40,12 +46,20 @@ namespace SharpLearning.DecisionTrees.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
         public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, double[] weights)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets, weights));
         }
 
+        /// <summary>
+        /// Learns a regression tree from the provided observations and targets
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
         public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices));
@@ -81,12 +95,21 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
         public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices, weights));
         }
 
+        /// <summary>
+        /// Learns a regression tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
         public new RegressionDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices));
@@ -99,6 +122,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
         public new RegressionDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
         {

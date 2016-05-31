@@ -2,6 +2,9 @@
 
 namespace SharpLearning.Metrics.Regression
 {
+    /// <summary>
+    /// Calculates the meansquared error between the targets and predictions e = sum((t - p)^2)/length(t) 
+    /// </summary>
     public sealed class MeanSquaredErrorRegressionMetric : IRegressionMetric
     {
         /// <summary>

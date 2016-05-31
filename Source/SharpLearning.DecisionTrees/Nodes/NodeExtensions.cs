@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace SharpLearning.DecisionTrees.Nodes
 {
+    /// <summary>
+    /// Extension methods for node
+    /// </summary>
     public static class NodeExtensions
     {
         /// <summary>

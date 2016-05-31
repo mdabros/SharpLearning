@@ -2,6 +2,9 @@
 
 namespace SharpLearning.Containers.Views
 {
+    /// <summary>
+    /// F64Matrix column view using pointers
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct F64MatrixColumnView
     {

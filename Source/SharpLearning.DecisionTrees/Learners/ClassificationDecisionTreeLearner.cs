@@ -76,6 +76,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
         {
@@ -102,6 +103,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
         public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
         {

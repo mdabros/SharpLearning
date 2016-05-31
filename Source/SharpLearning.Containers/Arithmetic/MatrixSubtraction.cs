@@ -37,6 +37,7 @@ namespace SharpLearning.Containers.Arithmetic
         /// </summary>
         /// <param name="m1"></param>
         /// <param name="m2"></param>
+        /// <param name="output"></param>
         /// <returns></returns>
         public static void SubtractF64(F64Matrix m1, F64Matrix m2, F64Matrix output)
         {

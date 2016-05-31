@@ -93,13 +93,14 @@ namespace SharpLearning.GradientBoost.Loss
             }
 
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
+        /// <param name="inSample"></param>
         public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals, bool[] inSample)
         {
             for (int i = 0; i < residuals.Length; i++)

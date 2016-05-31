@@ -5,22 +5,38 @@ using System.Linq;
 
 namespace SharpLearning.AdaBoost
 {
+    /// <summary>
+    /// Weighted sampling with replacement based on:
+    /// http://stackoverflow.com/questions/2140787/select-random-k-elements-from-a-list-whose-elements-have-weights/2149533#2149533
+    /// The algorithm should be O(n+m) where m are the number of items and n is the number of samples.
+    /// </summary>
     public sealed class WeightedRandomSampler
     {
         readonly Random m_random;
 
+        /// <summary>
+        /// Weighted sampling with replacement based on:
+        /// http://stackoverflow.com/questions/2140787/select-random-k-elements-from-a-list-whose-elements-have-weights/2149533#2149533
+        /// The algorithm should be O(n+m) where m are the number of items and n is the number of samples.
+        /// </summary>
         public WeightedRandomSampler()
             : this(42)
         {
         }
 
+        /// <summary>
+        /// Weighted sampling with replacement based on:
+        /// http://stackoverflow.com/questions/2140787/select-random-k-elements-from-a-list-whose-elements-have-weights/2149533#2149533
+        /// The algorithm should be O(n+m) where m are the number of items and n is the number of samples.
+        /// </summary>
+        /// <param name="seed"></param>
         public WeightedRandomSampler(int seed)
         {
             m_random = new Random(seed);
         }
 
         /// <summary>
-        /// Weighred sampling with replacement based on:
+        /// Weighted sampling with replacement based on:
         /// http://stackoverflow.com/questions/2140787/select-random-k-elements-from-a-list-whose-elements-have-weights/2149533#2149533
         /// The algorithm should be O(n+m) where m are the number of items and n is the number of samples.
         /// </summary>

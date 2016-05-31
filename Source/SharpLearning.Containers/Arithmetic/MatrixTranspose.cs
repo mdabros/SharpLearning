@@ -25,6 +25,7 @@ namespace SharpLearning.Containers.Arithmetic
         /// Output is saved in the provided matrix transposed.
         /// </summary>
         /// <param name="matrix"></param>
+        /// <param name="transposed"></param>
         /// <returns></returns>
         public static void TransposeF64(F64Matrix matrix, F64Matrix transposed)
         {

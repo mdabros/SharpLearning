@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace SharpLearning.InputOutput.Csv
 {
+    /// <summary>
+    /// Extension methods for dictionary
+    /// </summary>
     public static class DictionaryExtensions
     {
         /// <summary>

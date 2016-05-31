@@ -103,6 +103,7 @@ namespace SharpLearning.RandomForest.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
         public RegressionForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {

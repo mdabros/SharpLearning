@@ -4,15 +4,19 @@ using System.Text;
 
 namespace SharpLearning.Metrics.Classification
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ClassificationMatrixStringConverter
     {
-        
+
         /// <summary>
         /// Creates a string representation of the classification matrix consisting of the provided confusion matrix and error matrix.
         /// Using the target naming provided in targetStringMapping.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="uniqueTargets"></param>
+        /// <param name="targetStringMapping"></param>
         /// <param name="confusionMatrix"></param>
         /// <param name="errorMatrix"></param>
         /// <param name="error"></param>

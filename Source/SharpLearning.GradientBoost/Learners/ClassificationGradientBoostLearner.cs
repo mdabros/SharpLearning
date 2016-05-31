@@ -18,7 +18,6 @@ namespace SharpLearning.GradientBoost.Learners
     /// The resulting models are ensembled together using addition. Implementation based on:
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
-    /// </summary>
     public class ClassificationGradientBoostLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
         ILearner<double>, ILearner<ProbabilityPrediction>
     {
@@ -36,7 +35,6 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="iterations">The number of iterations or stages</param>
         /// <param name="learningRate">How much each iteration should contribute with</param>
         /// <param name="maximumTreeDepth">The maximum depth of the tree models</param>
-        /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
@@ -46,7 +44,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="loss">loss function used</param>
         /// <param name="numberOfThreads">Number of threads to use for paralization</param>
         public ClassificationGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
-            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int featurePrSplit, IGradientBoostLoss loss, int numberOfThreads)
+            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int featuresPrSplit, IGradientBoostLoss loss, int numberOfThreads)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (learningRate <= 0.0) { throw new ArgumentException("learning rate must be larger than 0"); }
@@ -54,14 +52,14 @@ namespace SharpLearning.GradientBoost.Learners
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (subSampleRatio <= 0.0 || subSampleRatio > 1.0) { throw new ArgumentException("subSampleRatio must be larger than 0.0 and at max 1.0"); }
-            if (featurePrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
+            if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
             if (loss == null) { throw new ArgumentNullException("loss"); }
 
             m_iterations = iterations;
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
             m_loss = loss;
-            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featurePrSplit, m_loss, numberOfThreads);
+            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, m_loss, numberOfThreads);
         }
 
         /// <summary>
@@ -101,6 +99,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
         public ClassificationGradientBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
@@ -504,6 +503,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// </summary>
         /// <param name="sampleSize"></param>
         /// <param name="indices"></param>
+        /// <param name="allObservationCount"></param>
         /// <returns></returns>
         bool[] Sample(int sampleSize, int[] indices, int allObservationCount)
         {

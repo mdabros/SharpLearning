@@ -3,6 +3,9 @@ using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Metrics.Impurity
 {
+    /// <summary>
+    /// Interface for impurity metrics
+    /// </summary>
     public interface IImpurityMetric
     {
         /// <summary>

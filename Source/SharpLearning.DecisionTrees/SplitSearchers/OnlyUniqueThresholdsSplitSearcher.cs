@@ -5,6 +5,11 @@ using System;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
+    /// <summary>
+    /// Searches for the best split using a brute force approach on all unique threshold values. 
+    /// The implementation assumes that the features and targets have been sorted
+    /// together using the features as sort criteria
+    /// </summary>
     public sealed class OnlyUniqueThresholdsSplitSearcher : ISplitSearcher
     {
         readonly int m_minimumSplitSize;
@@ -27,6 +32,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// together using the features as sort criteria
         /// </summary>
         /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
+        /// <param name="minimumLeafWeight">Minimum leaf weight when splitting</param>
         public OnlyUniqueThresholdsSplitSearcher(int minimumSplitSize, double minimumLeafWeight)
         {
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
@@ -40,12 +46,11 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// The implementation assumes that the features and targets have been sorted
         /// together using the features as sort criteria
         /// </summary>
-        /// <param name="currentBestSplitResult"></param>
+        /// <param name="impurityCalculator"></param>
         /// <param name="feature"></param>
         /// <param name="targets"></param>
         /// <param name="parentInterval"></param>
         /// <param name="parentImpurity"></param>
-        /// <param name="featureIndex"></param>
         /// <returns></returns>
         public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets, 
             Interval1D parentInterval, double parentImpurity)

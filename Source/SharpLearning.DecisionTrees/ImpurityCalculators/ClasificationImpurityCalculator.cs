@@ -10,27 +10,73 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// </summary>
     public abstract class ClasificationImpurityCalculator
     {
+        /// <summary>
+        /// 
+        /// </summary>
         protected Interval1D m_interval;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected int m_currentPosition;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected double m_weightedTotal = 0.0;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected double m_weightedLeft = 0.0;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected double m_weightedRight = 0.0;
 
         internal TargetCounts m_weightedTargetCount = new TargetCounts();
         internal TargetCounts m_weightedTargetCountLeft = new TargetCounts();
         internal TargetCounts m_weightedTargetCountRight = new TargetCounts();
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected double[] m_targets;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected double[] m_weights;
 
+        /// <summary>
+        /// 
+        /// </summary>
         protected double[] m_targetNames;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected int m_maxTargetNameIndex;
+
+        /// <summary>
+        /// 
+        /// </summary>
         protected int m_targetIndexOffSet;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double WeightedLeft { get { return m_weightedLeft; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public double WeightedRight { get { return m_weightedRight; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public ClasificationImpurityCalculator()
         {
         }

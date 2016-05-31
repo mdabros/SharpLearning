@@ -1,5 +1,4 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.Containers.Extensions;
+﻿using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,9 @@ using System.Linq;
 
 namespace SharpLearning.InputOutput.Csv
 {
+    /// <summary>
+    /// Extension methods for CsvRow
+    /// </summary>
     public static class CsvRowExtensions
     {
 
@@ -17,6 +19,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="thisRows"></param>
         /// <param name="otherRows"></param>
         /// <param name="rowMatcher"></param>
+        /// <param name="removeRepeatedColumns">Should repeated columns be removed</param>
         /// <returns></returns>
         public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, Func<CsvRow, CsvRow, bool> rowMatcher, bool removeRepeatedColumns=true)
         {
@@ -116,6 +119,7 @@ namespace SharpLearning.InputOutput.Csv
         /// </summary>
         /// <param name="row"></param>
         /// <param name="columnName"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
         public static void SetValue(this CsvRow row, string columnName, string value)
         {
@@ -139,6 +143,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <summary>
         /// Keeps only the csv columns provided in columnNames
         /// </summary>
+        /// <param name="dataRows"></param>
         /// <param name="columnNames"></param>
         /// <returns></returns>
         public static IEnumerable<CsvRow> Keep(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
@@ -155,6 +160,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <summary>
         /// Removes the csv columns provided in columnNames
         /// </summary>
+        /// <param name="dataRows"></param>
         /// <param name="columnNames"></param>
         /// <returns></returns>
         public static IEnumerable<CsvRow> Remove(this IEnumerable<CsvRow> dataRows, params string[] columnNames)

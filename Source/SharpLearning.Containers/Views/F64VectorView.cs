@@ -34,18 +34,21 @@ namespace SharpLearning.Containers.Views
             set { m_ptr[index] = value; }
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
         public int Length { get { return m_length; } }
 
         /// <summary>
         /// Gets a subview over the specified interval
         /// </summary>
-        /// <param name="subView"></param>
+        /// <param name="interval"></param>
         /// <returns></returns>
         public F64VectorView View(Interval1D interval)
         {
             return new F64VectorView(GetSubViewDataPointer(interval), interval.Length);
         }
-
+        
         double* GetSubViewDataPointer(Interval1D interval)
         {
             return m_ptr + interval.FromInclusive;

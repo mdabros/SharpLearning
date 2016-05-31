@@ -6,10 +6,18 @@ using System.Threading.Tasks;
 
 namespace SharpLearning.Metrics.Classification
 {
+    /// <summary>
+    /// Calculates the precision metric (TP/(TP + FP)) on a binary classification problem
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public sealed class PrecisionMetric<T> : IClassificationMetric<T>
     {
         readonly T m_positiveTarget;
 
+        /// <summary>
+        /// Calculates the precision metric (TP/(TP + FP)) on a binary classification problem
+        /// </summary>
+        /// <param name="positiveTarget"></param>
         public PrecisionMetric(T positiveTarget)
         {
             if (positiveTarget == null) { throw new ArgumentNullException("positiveClassLabel"); }

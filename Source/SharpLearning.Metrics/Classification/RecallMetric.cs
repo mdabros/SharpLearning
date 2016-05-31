@@ -4,10 +4,18 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
 {
+    /// <summary>
+    /// Calculates the recall metric (TP/(TP + FN)) on a binary classification problem
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public sealed class RecallMetric<T> : IClassificationMetric<T>
     {
         readonly T m_positiveTarget;
 
+        /// <summary>
+        /// Calculates the recall metric (TP/(TP + FN)) on a binary classification problem
+        /// </summary>
+        /// <param name="positiveTarget"></param>
         public RecallMetric(T positiveTarget)
         {
             if (positiveTarget == null) { throw new ArgumentNullException("positiveClassLabel"); }

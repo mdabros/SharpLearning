@@ -14,6 +14,13 @@ namespace SharpLearning.CrossValidation.Samplers
     {
         readonly Random m_random;
 
+        /// <summary>
+        /// Stratified index sampler. Samples. 
+        /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
+        /// http://en.wikipedia.org/wiki/Stratified_sampling
+        /// Returns a set of indices corresponding to the samples chosen. 
+        /// </summary>
+        /// <param name="seed"></param>
         public StratifiedIndexSampler(int seed)
         {
             m_random = new Random(seed);

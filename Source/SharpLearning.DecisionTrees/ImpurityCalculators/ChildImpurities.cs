@@ -7,15 +7,32 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// </summary>
     public struct ChildImpurities : IEquatable<ChildImpurities>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly double Left;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly double Right;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         public ChildImpurities(double left, double right)
         {
             Left = left;
             Right = right;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(ChildImpurities other)
         {
             if (!Equal(Left, other.Left)) { return false; }
@@ -24,6 +41,11 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is ChildImpurities)
@@ -31,17 +53,32 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             return false;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
         public static bool operator ==(ChildImpurities p1, ChildImpurities p2)
         {
             return p1.Equals(p2);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
         public static bool operator !=(ChildImpurities p1, ChildImpurities p2)
         {
             return !p1.Equals(p2);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return Left.GetHashCode() ^ Right.GetHashCode();

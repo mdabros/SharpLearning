@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Regression
 {
+    /// <summary>
+    /// The metric needs to know which target value is considered the positive
+    /// </summary>
     public sealed class RocAucRegressionMetric : IRegressionMetric
     {
         readonly double m_positiveTarget;

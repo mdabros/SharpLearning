@@ -15,7 +15,6 @@ namespace SharpLearning.GradientBoost.Learners
     public class RegressionAbsoluteLossGradientBoostLearner : RegressionGradientBoostLearner
     {
         /// <summary>
-        /// <summary>
         ///  Least absolute deviation (LAD) regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
@@ -37,7 +36,6 @@ namespace SharpLearning.GradientBoost.Learners
         {
         }
 
-        /// <summary>
         /// <summary>
         ///  Least absolute deviation (LAD) regression gradient boost learner.
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage

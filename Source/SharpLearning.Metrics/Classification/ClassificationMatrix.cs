@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ClassificationMatrix
     {
         /// <summary>

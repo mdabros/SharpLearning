@@ -263,6 +263,11 @@ namespace SharpLearning.Containers.Matrices
             return m_rows;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(StringMatrix other)
         {
             if (this.GetNumberOfRows() != other.GetNumberOfRows()) { return false; }
@@ -272,6 +277,11 @@ namespace SharpLearning.Containers.Matrices
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             StringMatrix other = obj as StringMatrix;
@@ -283,6 +293,10 @@ namespace SharpLearning.Containers.Matrices
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked // Overflow is fine, just wrap

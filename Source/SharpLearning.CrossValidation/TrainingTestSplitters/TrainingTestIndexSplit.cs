@@ -8,7 +8,14 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
     /// </summary>
     public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly int[] TrainingIndices;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly int[] TestIndices;
 
         /// <summary>
@@ -24,6 +31,11 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
             TestIndices = testIndices;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(TrainingTestIndexSplit other)
         {
             if (!this.TrainingIndices.SequenceEqual(other.TrainingIndices)) { return false; }
@@ -32,6 +44,11 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             TrainingTestIndexSplit other = obj as TrainingTestIndexSplit;
@@ -43,6 +60,10 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked // Overflow is fine, just wrap

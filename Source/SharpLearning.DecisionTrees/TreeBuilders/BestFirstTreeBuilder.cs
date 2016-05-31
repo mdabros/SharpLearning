@@ -49,6 +49,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
         /// 
         /// </summary>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
+        /// <param name="maximumLeafCount">The maximal allowed leaf nodes in the tree</param>
         /// <param name="featuresPrSplit">The number of features to be selected between at each split. 
         /// 0 means use all availible features</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
@@ -76,6 +77,14 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
             m_random = new Random(seed);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
         public BinaryTree Build(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
         {
             Array.Clear(m_variableImportance, 0, m_variableImportance.Length);

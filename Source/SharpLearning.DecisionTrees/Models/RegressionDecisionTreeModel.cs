@@ -15,9 +15,16 @@ namespace SharpLearning.DecisionTrees.Models
     [Serializable]
     public sealed class RegressionDecisionTreeModel : IPredictorModel<double>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly BinaryTree Tree;
         readonly double[] m_variableImportance;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tree"></param>
         public RegressionDecisionTreeModel(BinaryTree tree)
         {
             if (tree == null) { throw new ArgumentNullException("root"); }
@@ -56,6 +63,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// Predicts the observation subset provided by indices
         /// </summary>
         /// <param name="observations"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
         public double[] Predict(F64Matrix observations, int[] indices)
         {

@@ -42,6 +42,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
         public BinaryTree Learn(F64Matrix observations, double[] targets, double[] weights)
         {

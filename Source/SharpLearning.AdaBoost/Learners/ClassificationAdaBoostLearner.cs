@@ -84,6 +84,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
         public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {

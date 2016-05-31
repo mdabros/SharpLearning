@@ -31,6 +31,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
+        /// <param name="trainingPercentage">Total percentage of data used for training</param>
         public NoShuffleLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, double trainingPercentage)
             : base(new NoShuffleTrainingTestIndexSplitter<double>(trainingPercentage),
                    new NoShuffleIndexSampler<double>(), metric, samplePercentages, 1)

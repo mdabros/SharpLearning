@@ -201,8 +201,8 @@ namespace SharpLearning.Linear.Learners
             /// Gradient function for logistic regression objective.
             /// </summary>
             /// <param name="theta"></param>
-            /// <param name="observations"></param>
-            /// <param name="targets"></param>
+            /// <param name="observation"></param>
+            /// <param name="target"></param>
             /// <returns></returns>
             protected override unsafe double[] Gradient(double[] theta, double* observation, double target)
             {

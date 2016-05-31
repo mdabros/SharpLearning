@@ -16,7 +16,11 @@ namespace SharpLearning.Linear.Optimization
     /// </summary>
     public abstract class StochasticGradientDescent
     {
+        /// <summary>
+        /// Learning rate
+        /// </summary>
         protected readonly double m_learningRate;
+
         readonly int m_epochs;
         int m_iterations;
         readonly int m_numberOfThreads;
@@ -108,7 +112,7 @@ namespace SharpLearning.Linear.Optimization
         /// Averages the parameters found for the models
         /// http://www.research.rutgers.edu/~lihong/pub/Zinkevich11Parallelized.pdf
         /// </summary>
-        /// <param name="observations"></param>
+        /// <param name="numberOfFeatures"></param>
         /// <param name="models"></param>
         /// <returns></returns>
         double[] AverageModels(int numberOfFeatures, double[][] models)
@@ -136,9 +140,10 @@ namespace SharpLearning.Linear.Optimization
         /// </summary>
         /// <param name="x"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <param name="random"></param>
         /// <param name="models"></param>
-        /// <param name="indices"></param>
+        /// <param name="interval"></param>
         unsafe void Iterate(F64Matrix x, double[] targets, int[] indices, 
             Random random, ConcurrentBag<double[]> models, Interval1D interval)
         {
@@ -162,8 +167,8 @@ namespace SharpLearning.Linear.Optimization
         /// Abstract Gradient function.
         /// </summary>
         /// <param name="theta"></param>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
+        /// <param name="observation"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
         protected abstract unsafe double[] Gradient(double[] theta, double* observation, double target);
     }

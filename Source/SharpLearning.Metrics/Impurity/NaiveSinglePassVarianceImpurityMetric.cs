@@ -3,6 +3,10 @@ using SharpLearning.Containers;
 
 namespace SharpLearning.Metrics.Impurity
 {
+    /// <summary>
+    /// Calculates the variance of a sample. Main use is for decision tree regression
+    /// http://en.wikipedia.org/wiki/Decision_tree_learning
+    /// </summary>
     public sealed class NaiveSinglePassVarianceImpurityMetric : IImpurityMetric
     {
         /// <summary>
@@ -36,6 +40,7 @@ namespace SharpLearning.Metrics.Impurity
         /// http://en.wikipedia.org/wiki/Decision_tree_learning
         /// </summary>
         /// <param name="values"></param>
+        /// <param name="interval"></param>
         /// <returns></returns>
         public double Impurity(double[] values, Interval1D interval)
         {

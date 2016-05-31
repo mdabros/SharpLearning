@@ -16,6 +16,9 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             get { return m_targetNames; }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public GiniClasificationImpurityCalculator()
         {
         }

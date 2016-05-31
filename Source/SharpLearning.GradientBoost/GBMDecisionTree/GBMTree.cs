@@ -12,6 +12,9 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
     [Serializable]
     public class GBMTree
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly List<GBMNode> Nodes;
                 
         /// <summary>
@@ -100,12 +103,12 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         }
 
         /// <summary>
-        // Variable importances are based on the work each variable does (error reduction).
-        // the scores at each split are scaled by the amount of data the node splits
-        // if a node splits on 30% of the total data it will add
-        // errorReduction * 0.3 to its importance score.
-        // Based on this explanation:
-        // http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
+        /// Variable importances are based on the work each variable does (error reduction).
+        /// the scores at each split are scaled by the amount of data the node splits
+        /// if a node splits on 30% of the total data it will add
+        /// errorReduction * 0.3 to its importance score.
+        /// Based on this explanation:
+        /// http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
         /// </summary>
         /// <param name="rawVariableImportances"></param>
         public void AddRawVariableImportances(double[] rawVariableImportances)

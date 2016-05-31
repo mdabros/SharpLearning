@@ -15,7 +15,6 @@ namespace SharpLearning.GradientBoost.Learners
     public class RegressionHuberLossGradientBoostLearner : RegressionGradientBoostLearner
     {
         /// <summary>
-        /// <summary>
         ///  Huber loss regression gradient boost learner. 
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
         /// </summary>
@@ -38,7 +37,6 @@ namespace SharpLearning.GradientBoost.Learners
         {
         }
 
-        /// <summary>
         /// <summary>
         ///  Huber loss regression gradient boost learner.
         ///  A series of regression trees are fitted stage wise on the residuals of the previous stage

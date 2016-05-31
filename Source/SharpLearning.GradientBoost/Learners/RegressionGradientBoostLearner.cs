@@ -35,7 +35,6 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="iterations">The number of iterations or stages</param>
         /// <param name="learningRate">How much each iteration should contribute with</param>
         /// <param name="maximumTreeDepth">The maximum depth of the tree models</param>
-        /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
@@ -70,7 +69,6 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="iterations">The number of iterations or stages</param>
         /// <param name="learningRate">How much each iteration should contribute with</param>
         /// <param name="maximumTreeDepth">The maximum depth of the tree models</param>
-        /// <param name="maximumLeafCount">The maximum leaf count of the tree models</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
@@ -101,6 +99,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
         public RegressionGradientBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
@@ -291,6 +290,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// </summary>
         /// <param name="sampleSize"></param>
         /// <param name="indices"></param>
+        /// <param name="allObservationCount"></param>
         /// <returns></returns>
         bool[] Sample(int sampleSize, int[] indices, int allObservationCount)
         {

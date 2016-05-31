@@ -17,10 +17,11 @@ namespace SharpLearning.Linear.Models
     {
         readonly Dictionary<double, BinaryClassificationStochasticGradientDecentModel> m_models;
 
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="weights">Weights foreach parameter including bias at index 0</param>
+        /// <param name="models">Class name to model</param>
         public ClassificationStochasticGradientDecentModel(Dictionary<double, BinaryClassificationStochasticGradientDecentModel> models)
         {
             if (models == null) { throw new ArgumentNullException("models"); }

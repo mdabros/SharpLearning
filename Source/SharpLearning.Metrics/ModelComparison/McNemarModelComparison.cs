@@ -65,7 +65,6 @@ namespace SharpLearning.Metrics
         /// Model2Wrong     x            y
         /// Model2Right     z            j
         /// </summary>
-        /// </summary>
         /// <param name="model1Predictions"></param>
         /// <param name="model2Predictions"></param>
         /// <param name="targets"></param>

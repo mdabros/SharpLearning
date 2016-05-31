@@ -31,6 +31,7 @@ namespace SharpLearning.Metrics.Classification
         /// </summary>
         /// <param name="targets"></param>
         /// <param name="predictions"></param>
+        /// <param name="targetStringMapping"></param>
         /// <returns></returns>
         string ErrorString(T[] targets, T[] predictions, Dictionary<T, string> targetStringMapping);
     }

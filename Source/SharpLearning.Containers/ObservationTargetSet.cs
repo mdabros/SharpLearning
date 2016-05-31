@@ -12,7 +12,14 @@ namespace SharpLearning.Containers
     /// </summary>
     public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly F64Matrix Observations;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly double[] Targets;
 
         /// <summary>
@@ -28,6 +35,11 @@ namespace SharpLearning.Containers
             Targets = targets;
 	    }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(ObservationTargetSet other)
         {
             if (!this.Observations.Equals(other.Observations)) { return false; }
@@ -36,6 +48,11 @@ namespace SharpLearning.Containers
             return true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             ObservationTargetSet other = obj as ObservationTargetSet;
@@ -47,6 +64,10 @@ namespace SharpLearning.Containers
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked // Overflow is fine, just wrap

@@ -38,9 +38,19 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         double[] m_targets;
         double[] m_weights;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double WeightedLeft { get { return m_weightedLeft; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public double WeightedRight { get { return m_weightedRight; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public RegressionImpurityCalculator()
         {
         }

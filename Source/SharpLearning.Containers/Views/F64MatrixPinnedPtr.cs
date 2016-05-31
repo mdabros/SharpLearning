@@ -44,6 +44,9 @@ namespace SharpLearning.Containers.Views
             return new F64MatrixView(m_ptr, m_rows, m_cols); 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             if (m_ptr != null)

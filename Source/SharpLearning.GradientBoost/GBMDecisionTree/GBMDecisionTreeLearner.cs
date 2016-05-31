@@ -10,23 +10,11 @@ using System.Linq;
 
 namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class GBMDecisionTreeLearner
     {
-        /// <summary>
-        // x the dataset
-        // y the values we t the tree on
-        // orderedElements the ordered indexes according to each feature
-        // inSample a binary vector to indicate if x[i] is in the subsample
-        
-        // P the number of features
-        // N the number of examples in the subsample
-        // S the total sum
-        // S2 the total sum of squares
-        // depth the remaining depth levels
-        // result the resulting tree
-        // k the node number
-        /// </summary>
-
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
         readonly int m_maximumTreeDepth;
@@ -80,10 +68,9 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="observations"></param>
         /// <param name="targets">the original targets</param>
         /// <param name="residuals">the residuals for each boosting iteration</param>
+        /// <param name="predictions">the current predictions</param>
         /// <param name="orderedElements">jagged array of sorted indices corresponding to each features</param>
         /// <param name="inSample">bool array containing the samples to use</param>
-        /// <param name="s">sum</param>
-        /// <param name="s2">sum of squares</param>
         /// <returns></returns>
         public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, double[] predictions,
             int[][] orderedElements, bool[] inSample)

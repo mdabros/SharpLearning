@@ -4,10 +4,14 @@ using System;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
+    /// <summary>
+    /// Select a random split between the min and max range of the feature within the parent interval.
+    /// The implementation assumes that the features and targets have been sorted
+    /// together using the features as sort criteria
+    /// </summary>
     public sealed class RandomSplitSearcher : ISplitSearcher
     {
         readonly int m_minimumSplitSize;
-        readonly double m_minimumLeafWeight;
         readonly Random m_random;
 
         /// <summary>
@@ -16,22 +20,11 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// together using the features as sort criteria
         /// </summary>
         /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
+        /// <param name="seed">The minimum size for a node to be split</param>
         public RandomSplitSearcher(int minimumSplitSize, int seed)
-            : this(minimumSplitSize, 0.0, seed)
-        {
-        }
-
-        /// <summary>
-        /// Select a random split between the min and max range of the feature within the parent interval.
-        /// The implementation assumes that the features and targets have been sorted
-        /// together using the features as sort criteria
-        /// </summary>
-        /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
-        public RandomSplitSearcher(int minimumSplitSize, double minimumLeafWeight, int seed)
         {
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             m_minimumSplitSize = minimumSplitSize;
-            m_minimumLeafWeight = minimumLeafWeight;
             m_random = new Random(seed);
         }
 
@@ -109,6 +102,12 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                 impurityLeft, impurityRight);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public double RandomThreshold(double min, double max)
         {
             return m_random.NextDouble() * (max - min) + min;

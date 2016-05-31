@@ -3,10 +3,20 @@ using System.Runtime.InteropServices;
 
 namespace SharpLearning.Containers.Views
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct Interval2D : IEquatable<Interval2D>
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly Interval1D Rows;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly Interval1D Cols;
 
         /// <summary>
@@ -30,12 +40,22 @@ namespace SharpLearning.Containers.Views
             return new Interval2D(rowInterval, colInterval);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Interval2D other)
         {
             return (this.Cols.Equals(other.Cols)) &&
                    (this.Rows.Equals(other.Rows));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public override bool Equals(object other)
         {
             if (other is Interval2D)
@@ -44,17 +64,33 @@ namespace SharpLearning.Containers.Views
                 return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool operator !=(Interval2D x, Interval2D y)
         { 
             return !(x == y); 
         }
         
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static bool operator ==(Interval2D x, Interval2D y)
         { 
             return (x.Cols == y.Cols) && 
                    (x.Rows== y.Rows); 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.Cols.GetHashCode() ^ this.Rows.GetHashCode();
