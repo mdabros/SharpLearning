@@ -1,11 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.InputOutput.Csv;
+using System.IO;
 
-namespace SharpLearning.FeatureTransformations.Test
+namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 {
     /// <summary>
     /// Summary description for ReplaceMissingValuesTransformerTest

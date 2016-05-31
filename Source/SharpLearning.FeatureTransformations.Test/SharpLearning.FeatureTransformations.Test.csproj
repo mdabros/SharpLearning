@@ -49,7 +49,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -57,15 +59,15 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="SumColumnValueByColumnValueTransformerTest.cs" />
-    <Compile Include="DateTimeFeatureTransformerTest.cs" />
-    <Compile Include="MeanZeroFeatureTransformerTest.cs" />
-    <Compile Include="MapCategoricalFeaturesTransformerTest.cs" />
-    <Compile Include="FeatureNormalizationTransformerTest.cs" />
+    <Compile Include="CsvRowTransforms\DateTimeFeatureTransformerTest.cs" />
+    <Compile Include="FeatureTransformationExtensionsTest.cs" />
+    <Compile Include="MatrixTransforms\MeanZeroFeatureTransformerTest.cs" />
+    <Compile Include="CsvRowTransforms\MapCategoricalFeaturesTransformerTest.cs" />
+    <Compile Include="MatrixTransforms\MinMaxTransformerTest.cs" />
     <Compile Include="Normalization\LinearNormalizerTest.cs" />
-    <Compile Include="OneHotTransformerTest.cs" />
+    <Compile Include="CsvRowTransforms\OneHotTransformerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReplaceMissingValuesTransformerTest.cs" />
+    <Compile Include="CsvRowTransforms\ReplaceMissingValuesTransformerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.InputOutput.Csv;
 using System.IO;
 
-namespace SharpLearning.FeatureTransformations.Test
+namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 {
     /// <summary>
     /// Summary description for DateTimeFeatureTransformerTest
@@ -16,13 +14,13 @@ namespace SharpLearning.FeatureTransformations.Test
         [TestMethod]
         public void DateTimeFeatureTransformer_Transform()
         {
-            var sut = new DateTimeFeatureTransformer();
+            var sut = new DateTimeFeatureTransformer("Date");
             
             var writer = new StringWriter();
 
             new CsvParser(() => new StringReader(Input))
             .EnumerateRows()
-            .Transform(r => sut.Transform(r, "Date"))
+            .Transform(r => sut.Transform(r))
             .Write(() => writer);
 
             var actual = writer.ToString();

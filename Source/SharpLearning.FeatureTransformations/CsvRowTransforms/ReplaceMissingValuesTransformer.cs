@@ -5,13 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLearning.FeatureTransformations
+namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {
     /// <summary>
     /// Replaces missing values identified with the missing values identifiers. 
     /// The missing values are replaced by the provided replacement value
     /// </summary>
-    public sealed class ReplaceMissingValuesTransformer
+    public sealed class ReplaceMissingValuesTransformer : ICsvRowTransformer
     {
         readonly Dictionary<string, string> m_missingValueIdentifiers;
         readonly string m_replacementValue;

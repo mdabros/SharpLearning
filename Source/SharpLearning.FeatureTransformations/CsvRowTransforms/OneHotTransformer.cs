@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpLearning.FeatureTransformations
+namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {
     /// <summary>
     /// Transforms the selected features with multiple values into a set of binary features.
@@ -12,9 +12,10 @@ namespace SharpLearning.FeatureTransformations
     /// day_monday { 1, 0}
     /// day_tuesday {0, 1}
     /// </summary>
-    public sealed class OneHotTransformer
+    public sealed class OneHotTransformer : ICsvRowTransformer
     {
         readonly Dictionary<string, HashSet<string>> m_featureMap;
+        readonly string[] m_columnsToMap;
 
         /// <summary>
         /// Transforms the selected features with multiple values into a set of binary features.
@@ -24,9 +25,10 @@ namespace SharpLearning.FeatureTransformations
         /// day_monday { 1, 0}
         /// day_tuesday {0, 1}
         /// </summary>
-        public OneHotTransformer()
+        public OneHotTransformer(params string[] columnsToMap)
         {
             m_featureMap = new Dictionary<string, HashSet<string>>();
+            m_columnsToMap = columnsToMap;
         }
 
         /// <summary>
@@ -38,20 +40,19 @@ namespace SharpLearning.FeatureTransformations
         /// day_tuesday {0, 1}
         /// </summary>
         /// <param name="rows"></param>
-        /// <param name="columnsToMap"></param>
         /// <returns></returns>
-        public IEnumerable<CsvRow> Transform(IEnumerable<CsvRow> rows, params string[] columnsToMap)
+        public IEnumerable<CsvRow> Transform(IEnumerable<CsvRow> rows)
         {
             if(m_featureMap.Count == 0)
             {
-                foreach (var column in columnsToMap)
+                foreach (var column in m_columnsToMap)
                 {
                     m_featureMap.Add(column, new HashSet<string>());
                 }
             }
 
             // build map
-            BuildFeatureMap(rows, columnsToMap);
+            BuildFeatureMap(rows, m_columnsToMap);
 
             // add encoded fetures
             var newColumnNameToIndex = NewColumnNameToIndex(rows);
@@ -62,7 +63,7 @@ namespace SharpLearning.FeatureTransformations
                 var newValues = Enumerable.Range(0, row.Values.Length + additionalFeatures).Select(v => "0").ToArray();
 
                 row.Values.CopyTo(newValues, 0);
-                foreach (var column in columnsToMap)
+                foreach (var column in m_columnsToMap)
                 {
                     var value = row.GetValue(column);
                     var key = column + "_" + value;

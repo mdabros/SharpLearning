@@ -1,8 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.InputOutput.Csv;
 using System.IO;
 
-namespace SharpLearning.FeatureTransformations.Test
+namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 {
     [TestClass]
     public class OneHotTransformerTest
@@ -10,13 +11,13 @@ namespace SharpLearning.FeatureTransformations.Test
         [TestMethod]
         public void OneHotTransformer_Transform()
         {
-            var sut = new OneHotTransformer();
+            var sut = new OneHotTransformer("Day", "Open");
 
             var writer = new StringWriter();
 
             new CsvParser(() => new StringReader(Input))
             .EnumerateRows()
-            .Transform(r => sut.Transform(r, "Day", "Open"))
+            .Transform(r => sut.Transform(r))
             .Write(() => writer);
 
             var actual = writer.ToString();

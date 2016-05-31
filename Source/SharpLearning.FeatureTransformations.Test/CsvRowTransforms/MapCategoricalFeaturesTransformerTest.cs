@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.InputOutput.Csv;
+using System.IO;
 
-namespace SharpLearning.FeatureTransformations.Test
+namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 {
     [TestClass]
     public class MapCategoricalFeaturesTransformerTest
@@ -11,13 +11,13 @@ namespace SharpLearning.FeatureTransformations.Test
         [TestMethod]
         public void MapCategoricalFeaturesTransformer_Transform()
         {
-            var sut = new MapCategoricalFeaturesTransformer();
+            var sut = new MapCategoricalFeaturesTransformer("Day");
 
             var writer = new StringWriter();
 
             new CsvParser(() => new StringReader(Input))
             .EnumerateRows()
-            .Transform(r => sut.Transform(r, "Day"))
+            .Transform(r => sut.Transform(r))
             .Write(() => writer);
 
             var actual = writer.ToString();
