@@ -74,8 +74,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
 
-            var sut = new ClassificationForwardSearchModelSelectingEnsembleLearner(learners, new StratifiedCrossValidation<ProbabilityPrediction>(5, 23),
-                ensembleStrategy, metric, 5, 1, false);
+            var sut = new ClassificationForwardSearchModelSelectingEnsembleLearner(learners, 5,
+                new StratifiedCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy, metric, 1, false);
 
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
@@ -111,8 +111,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
 
-            var sut = new ClassificationForwardSearchModelSelectingEnsembleLearner(learners, new StratifiedCrossValidation<ProbabilityPrediction>(5, 23),
-                ensembleStrategy, metric, 5, 3, true);
+            var sut = new ClassificationForwardSearchModelSelectingEnsembleLearner(learners, 5,
+                new StratifiedCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy, metric, 3, true);
 
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
@@ -148,8 +148,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
 
-            var sut = new ClassificationForwardSearchModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
-                ensembleStrategy, metric, 5, 3, true);
+            var sut = new ClassificationForwardSearchModelSelectingEnsembleLearner(learners, 5,
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy, metric, 3, true);
 
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();

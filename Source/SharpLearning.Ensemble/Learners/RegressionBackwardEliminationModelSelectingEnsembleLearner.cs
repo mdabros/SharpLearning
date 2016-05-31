@@ -24,8 +24,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         public RegressionBackwardEliminationModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, int numberOfModelsToSelect)
-            : this(learners, new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), new MeanSquaredErrorRegressionMetric(),
-                  numberOfModelsToSelect)
+            : this(learners, numberOfModelsToSelect, new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(),
+                new MeanSquaredErrorRegressionMetric())
         {
         }
 
@@ -36,12 +36,12 @@ namespace SharpLearning.Ensemble.Learners
         /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
+        /// <param name="numberOfModelsToSelect">Number of models to select</param>
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="metric">Metric to minimize</param>
-        /// <param name="numberOfModelsToSelect">Number of models to select</param>
-        public RegressionBackwardEliminationModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
-            IRegressionEnsembleStrategy ensembleStrategy, IMetric<double, double> metric, int numberOfModelsToSelect)
+        public RegressionBackwardEliminationModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, int numberOfModelsToSelect,
+            ICrossValidation<double> crossValidation, IRegressionEnsembleStrategy ensembleStrategy, IMetric<double, double> metric)
             : base(learners, crossValidation, ensembleStrategy, new BackwardEliminationRegressionEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect))
         {
         }

@@ -25,8 +25,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         /// <param name="iterations">Number of iterations to random select model combinations.</param> 
         public RegressionRandomModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, int numberOfModelsToSelect, int iterations=50)
-            : this(learners, new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), new MeanSquaredErrorRegressionMetric(),
-                  numberOfModelsToSelect)
+            : this(learners, numberOfModelsToSelect, new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(),
+                new MeanSquaredErrorRegressionMetric())
         {
         }
 
@@ -38,15 +38,15 @@ namespace SharpLearning.Ensemble.Learners
         /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
+        /// <param name="numberOfModelsToSelect">Number of models to select</param>
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="metric">Metric to minimize</param>
-        /// <param name="numberOfModelsToSelect">Number of models to select</param>
         /// <param name="iterations">Number of iterations to random select model combinations.</param> 
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.</param>
         /// <param name="seed"></param>
-        public RegressionRandomModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
-            IRegressionEnsembleStrategy ensembleStrategy, IMetric<double, double> metric, int numberOfModelsToSelect, int iterations = 50, bool selectWithReplacement = true, int seed = 42)
+        public RegressionRandomModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, int numberOfModelsToSelect,
+            ICrossValidation<double> crossValidation, IRegressionEnsembleStrategy ensembleStrategy, IMetric<double, double> metric, int iterations = 50, bool selectWithReplacement = true, int seed = 42)
             : base(learners, crossValidation, ensembleStrategy, new RandomRegressionEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect, iterations, selectWithReplacement, seed))
         {
         }

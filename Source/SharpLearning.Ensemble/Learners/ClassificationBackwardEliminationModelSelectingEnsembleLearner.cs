@@ -25,8 +25,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         public ClassificationBackwardEliminationModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, int numberOfModelsToSelect)
-            : this(learners, new StratifiedCrossValidation<ProbabilityPrediction>(5, 42), new MeanProbabilityClassificationEnsembleStrategy(), new LogLossClassificationProbabilityMetric(),
-                  numberOfModelsToSelect)
+            : this(learners, numberOfModelsToSelect, new StratifiedCrossValidation<ProbabilityPrediction>(5, 42), new MeanProbabilityClassificationEnsembleStrategy(),
+                new LogLossClassificationProbabilityMetric())
         {
         }
 
@@ -37,12 +37,12 @@ namespace SharpLearning.Ensemble.Learners
         /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
+        /// <param name="numberOfModelsToSelect">Number of models to select</param>
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="metric">Metric to minimize</param>
-        /// <param name="numberOfModelsToSelect">Number of models to select</param>
-        public ClassificationBackwardEliminationModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, ICrossValidation<ProbabilityPrediction> crossValidation,
-            IClassificationEnsembleStrategy ensembleStrategy, IMetric<double, ProbabilityPrediction> metric, int numberOfModelsToSelect)
+        public ClassificationBackwardEliminationModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, int numberOfModelsToSelect,
+            ICrossValidation<ProbabilityPrediction> crossValidation, IClassificationEnsembleStrategy ensembleStrategy, IMetric<double, ProbabilityPrediction> metric)
             : base(learners, crossValidation, ensembleStrategy, new BackwardEliminationClassificationEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect))
         {
         }

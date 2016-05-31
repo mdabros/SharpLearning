@@ -25,8 +25,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var sut = new RegressionStackingEnsembleLearner(learners, new RandomCrossValidation<double>(5, 23),
-                new RegressionDecisionTreeLearner(9), false);
+            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+                new RandomCrossValidation<double>(5, 23), false);
 
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
@@ -52,8 +52,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var sut = new RegressionStackingEnsembleLearner(learners, new RandomCrossValidation<double>(5, 23),
-                new RegressionDecisionTreeLearner(9), true);
+            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+                new RandomCrossValidation<double>(5, 23), true);
 
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
@@ -79,8 +79,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var sut = new RegressionStackingEnsembleLearner(learners, new RandomCrossValidation<double>(5, 23),
-                new RegressionDecisionTreeLearner(9), false);
+            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+                new RandomCrossValidation<double>(5, 23), false);
 
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();

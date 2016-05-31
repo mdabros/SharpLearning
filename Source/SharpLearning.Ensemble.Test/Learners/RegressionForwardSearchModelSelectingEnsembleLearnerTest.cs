@@ -74,8 +74,8 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new MeanSquaredErrorRegressionMetric();
 
-            var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, new RandomCrossValidation<double>(5, 42),
-                new MeanRegressionEnsembleStrategy(), metric, 5, 1, false);
+            var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5,
+                new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), metric, 1, false);
 
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
@@ -111,8 +111,8 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new MeanSquaredErrorRegressionMetric();
 
-            var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, new RandomCrossValidation<double>(5, 42),
-                new MeanRegressionEnsembleStrategy(), metric, 5, 3, false);
+            var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5,
+                new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), metric, 3, false);
 
             var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();

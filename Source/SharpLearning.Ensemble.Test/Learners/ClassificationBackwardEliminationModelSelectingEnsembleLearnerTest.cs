@@ -74,8 +74,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
 
-            var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
-                ensembleStrategy, metric, 5);
+            var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, 5,
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy, metric);
 
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();

@@ -27,8 +27,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
-                new ClassificationDecisionTreeLearner(9), false);
+            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
@@ -54,8 +54,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
-                new ClassificationDecisionTreeLearner(9), true);
+            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), true);
 
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
@@ -81,8 +81,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
-                new ClassificationDecisionTreeLearner(9), false);
+            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
