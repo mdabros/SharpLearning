@@ -104,13 +104,17 @@ namespace SharpLearning.Optimization
             {
                 var set = CreateParameterSet();
                 var score = functionToMinimize(set).Error;
-                parameterSets.Add(set);
-                parameterSetScores.Add(score);
 
-                if(score < bestParameterSetScore)
+                if (!double.IsNaN(score))
                 {
-                    bestParameterSetScore = score;
-                    bestParameterSet = set;
+                    parameterSets.Add(set);
+                    parameterSetScores.Add(score);
+
+                    if (score < bestParameterSetScore)
+                    {
+                        bestParameterSetScore = score;
+                        bestParameterSet = set;
+                    }
                 }
             }
 
@@ -146,17 +150,20 @@ namespace SharpLearning.Optimization
 
                     var result = functionToMinimize(parameterSet);
                     
-                    // update best
-                    if (result.Error < bestParameterSetScore)
+                    if(!double.IsNaN(result.Error))
                     {
-                        bestParameterSetScore = result.Error;
-                        bestParameterSet = result.ParameterSet;
-                        //Console.WriteLine("New Best: " + result.Error + " : " + string.Join(", ", result.ParameterSet));
-                    }
+                        // update best
+                        if (result.Error < bestParameterSetScore)
+                        {
+                            bestParameterSetScore = result.Error;
+                            bestParameterSet = result.ParameterSet;
+                            //Console.WriteLine("New Best: " + result.Error + " : " + string.Join(", ", result.ParameterSet));
+                        }
 
-                    // add point to parameter set list for next iterations model
-                    parameterSets.Add(result.ParameterSet);
-                    parameterSetScores.Add(result.Error);
+                        // add point to parameter set list for next iterations model
+                        parameterSets.Add(result.ParameterSet);
+                        parameterSetScores.Add(result.Error);
+                    }
 
                     lastSet = parameterSet;
                     first = false;
