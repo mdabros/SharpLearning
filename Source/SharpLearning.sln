@@ -57,6 +57,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Ensemble", "S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Ensemble.Test", "SharpLearning.Ensemble.Test\SharpLearning.Ensemble.Test.csproj", "{2837DF0A-49F0-4EE8-BE39-96489E639ACC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural", "SharpLearning.Neural\SharpLearning.Neural.csproj", "{9E2B10B3-6FC9-4828-B5F8-BA3020B9D869}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural.Test", "SharpLearning.Neural.Test\SharpLearning.Neural.Test.csproj", "{2A2218BD-357B-40C4-B72A-BD70B0136B5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,12 +175,20 @@ Global
 		{2837DF0A-49F0-4EE8-BE39-96489E639ACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2837DF0A-49F0-4EE8-BE39-96489E639ACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2837DF0A-49F0-4EE8-BE39-96489E639ACC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E2B10B3-6FC9-4828-B5F8-BA3020B9D869}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E2B10B3-6FC9-4828-B5F8-BA3020B9D869}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E2B10B3-6FC9-4828-B5F8-BA3020B9D869}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E2B10B3-6FC9-4828-B5F8-BA3020B9D869}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A2218BD-357B-40C4-B72A-BD70B0136B5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A2218BD-357B-40C4-B72A-BD70B0136B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A2218BD-357B-40C4-B72A-BD70B0136B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A2218BD-357B-40C4-B72A-BD70B0136B5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 28
+		SccNumberOfProjects = 30
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://machinelearning.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -261,5 +273,11 @@ Global
 		SccProjectUniqueName27 = SharpLearning.Ensemble.Test\\SharpLearning.Ensemble.Test.csproj
 		SccProjectName27 = SharpLearning.Ensemble.Test
 		SccLocalPath27 = SharpLearning.Ensemble.Test
+		SccProjectUniqueName28 = SharpLearning.Neural\\SharpLearning.Neural.csproj
+		SccProjectName28 = SharpLearning.Neural
+		SccLocalPath28 = SharpLearning.Neural
+		SccProjectUniqueName29 = SharpLearning.Neural.Test\\SharpLearning.Neural.Test.csproj
+		SccProjectName29 = SharpLearning.Neural.Test
+		SccLocalPath29 = SharpLearning.Neural.Test
 	EndGlobalSection
 EndGlobal

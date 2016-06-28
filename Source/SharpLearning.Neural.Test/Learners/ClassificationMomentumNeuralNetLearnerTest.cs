@@ -1,0 +1,168 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.FeatureTransformations.MatrixTransforms;
+using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Classification;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Layers;
+using SharpLearning.Neural.Learners;
+using SharpLearning.Neural.Loss;
+using SharpLearning.Neural.Test.Properties;
+using System.IO;
+using System.Linq;
+
+namespace SharpLearning.Neural.Test.Learners
+{
+    [TestClass]
+    public class ClassificationMomentumNeuralNetLearnerTest
+    {
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+           
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
+                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.InvScaling);
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.23831775700934579, actual);
+        }
+
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn_L2Reguralization()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
+                100, 0.1f, 20, 0.1, 0.0, LearningRateSchedule.InvScaling);
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.38317757009345793, actual);
+        }
+
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn_Hidden_Dropout()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50, 0.5) }, new ReluActivation(), new LogLoss(),
+                100, 0.1f, 20, 0.0, 0.0, LearningRateSchedule.InvScaling);
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.40186915887850466, actual);
+        }
+
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn_Input_Dropout()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
+                100, 0.1f, 20, 0.0, 0.1, LearningRateSchedule.InvScaling);
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.43925233644859812, actual);
+        }
+
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn_Input_Dropout_Hidden_Dropout_L2Reguralization()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50, 0.5) }, new ReluActivation(), new LogLoss(),
+                100, 0.1f, 20, 0.1, 0.1, LearningRateSchedule.InvScaling);
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.44859813084112149, actual);
+        }
+
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn_probabilities()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
+                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.InvScaling);
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.PredictProbability(observations);
+
+            var evaluator = new LogLossClassificationProbabilityMetric();
+            var actual = evaluator.Error(targets, predictions);                      
+
+            Assert.AreEqual(0.63997073997143061, actual, 1e-6);
+            Assert.AreEqual(0.23831775700934579, new TotalErrorClassificationMetric<double>().Error(targets, predictions.Select(p => p.Prediction).ToArray()), 1e-6);
+        }
+    }
+}
