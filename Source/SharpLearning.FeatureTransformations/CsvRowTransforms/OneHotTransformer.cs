@@ -65,7 +65,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
                 row.Values.CopyTo(newValues, 0);
                 foreach (var column in m_columnsToMap)
                 {
-                    var value = row.GetValue(column);
+                    var value = row.GetValue(column).Trim();
                     var key = column + "_" + value;
                     newValues[newColumnNameToIndex[key]] = "1";
                 }
@@ -98,7 +98,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
             {
                 foreach (var column in columnsToMap)
                 {
-                    var value = row.GetValue(column);
+                    var value = row.GetValue(column).Trim();
                     if (!m_featureMap[column].Contains(value))
                     {
                         m_featureMap[column].Add(value);
