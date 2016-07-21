@@ -59,7 +59,8 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Augmentors\MungeAugmentorTest.cs" />
+    <Compile Include="Augmentors\NominalMungeAugmentorTest.cs" />
+    <Compile Include="Augmentors\ContinuousMungeAugmentorTest.cs" />
     <Compile Include="LearningCurves\LearningCurvePointExtensionsTest.cs" />
     <Compile Include="LearningCurves\LearningCurvePointTest.cs" />
     <Compile Include="LearningCurves\RandomLearningCurvesCalculatorTest.cs" />

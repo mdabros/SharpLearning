@@ -8,7 +8,8 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
     /// <summary>
     /// Normalizes features within the specified range (min, max)
     /// </summary>
-    public sealed class MinMaxTransformer : IF64MatrixTransform
+    [Serializable]
+    public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
     {
         class FeatureMinMax
         {
@@ -105,6 +106,43 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
                     }       
                 }
             }        
+        }
+
+        /// <summary>
+        /// Normalizes features within the specified range (min, max)
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public double[] Transform(double[] vector)
+        {
+            var output = new double[vector.Length];
+            Transform(vector, output);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Normalizes features within the specified range (min, max)
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="output"></param>
+        public void Transform(double[] vector, double[] output)
+        {
+            if (m_featureMinMax.Count == 0)
+            {
+                throw new ArgumentException("No feature min max calculated. " +
+                    "Feature min max must be calculated from a full matrix before the vector transform can be used");
+            }
+
+            var cols = vector.Length;
+
+            for (int i = 0; i < cols; i++)
+            {
+                var value = vector[i];
+                var minMax = m_featureMinMax[i];
+                var newValue = m_normalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
+                output[i] = newValue;
+            }
         }
     }
 }

@@ -5,20 +5,19 @@ using System.Collections.Generic;
 namespace SharpLearning.CrossValidation.Augmentators
 {
     /// <summary>
-    /// Augmentates continous data according to the MUNGE method:
+    /// Augmentates nominal data according to the MUNGE method:
     /// https://www.cs.cornell.edu/~caruana/compression.kdd06.pdf
     /// The method seeks to keep the original distribution of data. This is done by traversing each observation in the dataset
     /// finding its nearest neighbour (euclidean distance) and modifiyng each feature in the observation according to a probability. 
     /// The features are modified using the value from the nearest neighbour as the mean when sampling a new value from a uniform distribution.
     /// </summary>
-    public sealed class MungeAugmentator
+    public sealed class NominalMungeAugmentator
     {
         double m_probabilityParameter;
-        double m_localVariance;
         Random m_random;
 
         /// <summary>
-        /// Augmentates continous data according to the MUNGE method:
+        /// Augmentates nominal data according to the MUNGE method:
         /// https://www.cs.cornell.edu/~caruana/compression.kdd06.pdf
         /// The method seeks to keep the original distribution of data. This is done by traversing each observation in the dataset
         /// finding its nearest neighbour (euclidean distance) and modifiyng each feature in the observation according to a probability. 
@@ -26,16 +25,13 @@ namespace SharpLearning.CrossValidation.Augmentators
         /// </summary>
         /// <param name="probabilityParameter">The probability that a feature will be altered with its nearest neighbour. 
         /// Must be between 0.0 and 1.0. (Default is 0.2)</param>
-        /// <param name="localVariance">Variance when sampling a new value for an augmentated sample. (Default is 1.0)</param>
         /// <param name="seed">Seed for random augmentation</param>
-        public MungeAugmentator(double probabilityParameter=0.2, double localVariance=1.0, int seed = 432)
+        public NominalMungeAugmentator(double probabilityParameter=0.2, int seed = 432)
         {
             if (probabilityParameter > 1.0 || probabilityParameter < 0.0)
             { throw new ArgumentException("probabilityParameter must be between 0.0 and 1.0. Was: " + probabilityParameter); }
 
             m_probabilityParameter = probabilityParameter;
-            m_localVariance = localVariance;
-
             m_random = new Random(seed);
         }
 
@@ -72,7 +68,7 @@ namespace SharpLearning.CrossValidation.Augmentators
                     if (indicesVisited.Contains(f)) { continue; }
                     dataset.GetRow(f, candidate);
 
-                    var distance = GetDistance(sample, candidate);
+                    var distance = GetHammingDistance(sample, candidate);
                     if(distance < closestDistance)
                     {
                         closestDistance = distance;
@@ -92,13 +88,13 @@ namespace SharpLearning.CrossValidation.Augmentators
 
                         if (m_random.NextDouble() <= m_probabilityParameter && m_probabilityParameter != 0.0)
                         {
-                            var std = (sampleValue - candiateValue) / m_localVariance;
-
-                            augmentation.SetItemAt(j, h, SampleRandom(candiateValue, std));
-                            augmentation.SetItemAt(closestIndex, h, SampleRandom(sampleValue, std));
+                            // switch values
+                            augmentation.SetItemAt(j, h, candiateValue);
+                            augmentation.SetItemAt(closestIndex, h, sampleValue);
                         }
-                        else // keep values
+                        else 
                         {
+                            // keep values
                             augmentation.SetItemAt(j, h, sampleValue);
                             augmentation.SetItemAt(closestIndex, h, candiateValue);
                         }
@@ -108,33 +104,20 @@ namespace SharpLearning.CrossValidation.Augmentators
 
             return augmentation;
         }
+       
 
-        double SampleRandom(double mean, double std)
+        double GetHammingDistance(double[] a, double[] b)
         {
-            double u1 = m_random.NextDouble(); //these are uniform(0,1) random doubles
-            double u2 = m_random.NextDouble();
-
-            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); // random normal(0,1)
-            double randNormal = mean + std * randStdNormal; //random normal(mean,stdDev^2)
-
-            return randNormal;
-        }
-        
-        double GetDistance(double[] p, double[] q)
-        {
-            double distance = 0;
-            double diff = 0;
-
-            if (p.Length != q.Length)
-                throw new ArgumentException("Input vectors must be of the same dimension.");
-
-            for (int x = 0, len = p.Length; x < len; x++)
+            if (a.Length != b.Length) throw new ArgumentOutOfRangeException("lengths are not equal");
+            int count = 0;
+            for (int i = 0; i < a.Length; i++)
             {
-                diff = p[x] - q[x];
-                distance += diff * diff;
+                if (a[i] != b[i])
+                {
+                    count++;
+                }
             }
-
-            return distance;//Math.Sqrt(distance);
+            return count;
         }
     }
 }
