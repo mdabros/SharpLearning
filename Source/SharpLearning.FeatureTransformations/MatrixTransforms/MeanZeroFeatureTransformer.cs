@@ -1,17 +1,19 @@
 ﻿using SharpLearning.Containers.Matrices;
 using System.Collections.Generic;
+using System;
 
 namespace SharpLearning.FeatureTransformations.MatrixTransforms
 {
     /// <summary>
-    /// Shift data so the mean of each of the selected columns is zero
+    /// Shift data so the mean of each of the columns is zero
     /// </summary>
-    public sealed class MeanZeroFeatureTransformer : IF64MatrixTransform
+    [Serializable]
+    public sealed class MeanZeroFeatureTransformer : IF64MatrixTransform, IF64VectorTransform
     {
         readonly Dictionary<int, double> m_featureMean;
 
         /// <summary>
-        /// Shift data so the mean of each of the selected columns is zero
+        /// Shift data so the mean of each of the columns is zero
         /// </summary>
         public MeanZeroFeatureTransformer()
         {
@@ -19,7 +21,20 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
         }
 
         /// <summary>
-        /// Shift data so the mean of each of the selected columns is zero
+        /// Shift data so the mean of each of the columns is zero
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public double[] Transform(double[] vector)
+        {
+            var output = new double[vector.Length];
+            Transform(vector, output);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Shift data so the mean of each of the columns is zero
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
@@ -35,7 +50,30 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
         }
 
         /// <summary>
-        /// Shift data so the mean of each of the selected columns is zero
+        /// Shift data so the mean of each of the columns is zero
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <param name="output"></param>
+        public void Transform(double[] vector, double[] output)
+        {
+            if (m_featureMean.Count == 0)
+            {
+                throw new ArgumentException("No feature means calculated. " +
+                    "Feature means must be calculated from a full matrix before the vector transform can be used");
+            }
+
+            var cols = vector.Length;
+
+            for (int i = 0; i < cols; i++)
+            {
+                var value = vector[i];
+                var mean = m_featureMean[i];
+                output[i] = value - mean;
+            }
+        }
+
+        /// <summary>
+        /// Shift data so the mean of each of the columns is zero
         /// </summary>
         /// <param name="matrix"></param>
         /// <param name="output"></param>

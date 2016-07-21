@@ -51,7 +51,8 @@
     <Compile Include="FeatureTransformationExtensions.cs" />
     <Compile Include="CsvRowTransforms\ICsvRowTransformer.cs" />
     <Compile Include="CsvRowTransforms\MapCategoricalFeaturesTransformer.cs" />
-    <Compile Include="MatrixTransforms\IMatrixTransform.cs" />
+    <Compile Include="MatrixTransforms\IF64MatrixTransform.cs" />
+    <Compile Include="MatrixTransforms\IF64VectorTransform.cs" />
     <Compile Include="MatrixTransforms\MinMaxTransformer.cs" />
     <Compile Include="MatrixTransforms\MeanZeroFeatureTransformer.cs" />
     <Compile Include="Normalization\LinearNormalizer.cs" />
