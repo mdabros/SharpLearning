@@ -27,6 +27,9 @@ namespace SharpLearning.Optimization
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
         readonly Random m_random;
 
+        readonly List<double[]> m_previousParameterSets;
+        readonly List<double> m_previousParameterSetScores;
+
         readonly RegressionRandomForestLearner m_learner;
         readonly ParticleSwarmOptimizer m_optimizer;
 
@@ -65,6 +68,52 @@ namespace SharpLearning.Optimization
             m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
         }
 
+
+        /// <summary>
+        /// Sequential Model-based optimization (SMBO). SMBO learns a model based on the initial parameter sets and scores.
+        /// This model is used to sample new promising parameter candiates which are evaluated and added to the existing paramter sets.
+        /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
+        /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
+        /// But in that case it can usually reduce the number of iterations required to reach a good solution compared to less sophisticated methods.
+        /// Implementation loosely based on:
+        /// http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf
+        /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
+        /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
+        /// </summary>
+        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
+        /// <param name="previousParameterSets">Parameter sets from previous run</param>
+        /// <param name="previousParameterSetScores">Scores from from previous run corresponding to each parameter set</param>
+        /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
+        /// The parameter sets are inlcuded in order of most promissing outcome (default is 3)</param>
+        /// <param name="seed">Seed for the random initialization</param>
+        public SequentialModelBasedOptimizer(double[][] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+            int numberOfCandidatesEvaluatedPrIteration = 3, int seed = 42)
+        {
+            if (parameters == null) { throw new ArgumentNullException("parameters"); }
+            if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
+            if (previousParameterSets == null) { throw new ArgumentNullException("previousParameterSets"); }
+            if (previousParameterSetScores == null) { throw new ArgumentNullException("previousResults"); }
+            if (previousParameterSets.Count != previousParameterSetScores.Count) { throw new ArgumentException("previousParameterSets length: " 
+                + previousParameterSets.Count + " does not correspond with previousResults length: " + previousParameterSetScores.Count); }
+            if (previousParameterSetScores.Count < 2 || previousParameterSets.Count < 2)
+            { throw new ArgumentException("previousParameterSets length and previousResults length must be at least 2 and was: " + previousParameterSetScores.Count); }
+
+
+            m_parameters = parameters;
+            m_maxIterations = maxIterations;
+            m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
+
+            m_random = new Random(seed);
+            // hyper parameters for regression random forest learner
+            m_learner = new RegressionRandomForestLearner(20, 1, 2000, parameters.Length, 1e-6, 1.0, 42, 1);
+            // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
+            m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
+
+            m_previousParameterSets = previousParameterSets;
+            m_previousParameterSetScores = previousParameterSetScores;
+        }
+
         /// <summary>
         /// Optimization using Sequential Model-based optimization.
         /// Returns the result which best minimises the provided function.
@@ -84,9 +133,6 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            var parameterSets = new List<double[]>();
-            var parameterSetScores = new List<double>();
-
             var bestParameterSet = new double[m_parameters.Length];
             var bestParameterSetScore = double.MaxValue;
 
@@ -99,21 +145,47 @@ namespace SharpLearning.Optimization
                 minParameters[i] = m_parameters[i].Min();
             }
 
-            // initialize random starting points for the first iteration
-            for (int i = 0; i < m_numberOfStartingPoints; i++)
+            var parameterSets = new List<double[]>();
+            var parameterSetScores = new List<double>();
+
+            var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
+
+            if (usePreviousResults)
             {
-                var set = CreateParameterSet();
-                var score = functionToMinimize(set).Error;
+                parameterSets.AddRange(m_previousParameterSets);
+                parameterSetScores.AddRange(m_previousParameterSetScores);
 
-                if (!double.IsNaN(score))
+                for (int i = 0; i < parameterSets.Count; i++)
                 {
-                    parameterSets.Add(set);
-                    parameterSetScores.Add(score);
-
-                    if (score < bestParameterSetScore)
+                    var score = parameterSetScores[i];
+                    if (!double.IsNaN(score))
                     {
-                        bestParameterSetScore = score;
-                        bestParameterSet = set;
+                        if (score < bestParameterSetScore)
+                        {
+                            bestParameterSetScore = score;
+                            bestParameterSet = parameterSets[i];
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // initialize random starting points for the first iteration
+                for (int i = 0; i < m_numberOfStartingPoints; i++)
+                {
+                    var set = CreateParameterSet();
+                    var score = functionToMinimize(set).Error;
+
+                    if (!double.IsNaN(score))
+                    {
+                        parameterSets.Add(set);
+                        parameterSetScores.Add(score);
+
+                        if (score < bestParameterSetScore)
+                        {
+                            bestParameterSetScore = score;
+                            bestParameterSet = set;
+                        }
                     }
                 }
             }
