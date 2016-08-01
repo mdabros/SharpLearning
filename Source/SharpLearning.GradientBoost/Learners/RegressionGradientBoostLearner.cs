@@ -225,6 +225,8 @@ namespace SharpLearning.GradientBoost.Learners
                     var validPredictions = model.Predict(validationObservations);
                     var error = metric.Error(validationTargets, validPredictions);
 
+                    Trace.WriteLine("Iteration " + (iteration + 1) + " Validation Error: " + error);
+
                     if (currentBedstError > error)
                     {
                         currentBedstError = error;
