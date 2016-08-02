@@ -37,7 +37,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(1.0039261698226392, actual, 0.00001);
+            Assert.AreEqual(1.4383101999692078, actual, 0.00001);
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(1.0479123167563083, actual, 0.00001);
+            Assert.AreEqual(1.4344494318970409, actual, 0.00001);
         }
 
         [TestMethod]
@@ -85,7 +85,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(1.2586607075625156, actual, 0.00001);
+            Assert.AreEqual(1.2596566860129561, actual, 0.00001);
         }
 
         [TestMethod]
@@ -109,7 +109,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(1.1444705821910322, actual, 0.00001);
+            Assert.AreEqual(1.2974122244570778, actual, 0.00001);
         }
 
         [TestMethod]
@@ -133,7 +133,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(1.2661213154984761, actual, 0.00001);
+            Assert.AreEqual(1.6727303009622458, actual, 0.00001);
         }
 
         [TestMethod]
@@ -160,7 +160,7 @@ namespace SharpLearning.Neural.Test.Learners
             var predictions = model.Predict(split.TestSet.Observations);
 
             var actualError = evaluator.Error(split.TestSet.Targets, predictions);
-            Assert.AreEqual(1.2978281453134841, actualError, 1e-6);
+            Assert.AreEqual(1.4622647541728322, actualError, 1e-6);
             var actualIterations = model.Iterations;
             Assert.AreEqual(10, actualIterations);
         }

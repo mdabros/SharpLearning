@@ -30,7 +30,7 @@ namespace SharpLearning.Neural.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
-                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.InvScaling);
+                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.Constant);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -55,7 +55,7 @@ namespace SharpLearning.Neural.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
-                100, 0.1f, 20, 0.1, 0.0, LearningRateSchedule.InvScaling);
+                100, 0.1f, 20, 0.1, 0.0, LearningRateSchedule.Constant);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -63,7 +63,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.38317757009345793, actual);
+            Assert.AreEqual(0.397196261682243, actual);
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace SharpLearning.Neural.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50, 0.5) }, new ReluActivation(), new LogLoss(),
-                100, 0.1f, 20, 0.0, 0.0, LearningRateSchedule.InvScaling);
+                100, 0.1f, 20, 0.0, 0.0, LearningRateSchedule.Constant);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -88,7 +88,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.40186915887850466, actual);
+            Assert.AreEqual(0.40654205607476634, actual);
         }
 
         [TestMethod]
@@ -105,7 +105,7 @@ namespace SharpLearning.Neural.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
-                100, 0.1f, 20, 0.0, 0.1, LearningRateSchedule.InvScaling);
+                100, 0.1f, 20, 0.0, 0.1, LearningRateSchedule.Constant);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -130,7 +130,7 @@ namespace SharpLearning.Neural.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50, 0.5) }, new ReluActivation(), new LogLoss(),
-                100, 0.1f, 20, 0.1, 0.1, LearningRateSchedule.InvScaling);
+                100, 0.1f, 20, 0.1, 0.1, LearningRateSchedule.Constant);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -138,7 +138,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.44859813084112149, actual);
+            Assert.AreEqual(0.4719626168224299, actual);
         }
 
         [TestMethod]
@@ -154,7 +154,7 @@ namespace SharpLearning.Neural.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
-                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.InvScaling);
+                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.Constant);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.PredictProbability(observations);
@@ -162,7 +162,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new LogLossClassificationProbabilityMetric();
             var actual = evaluator.Error(targets, predictions);                      
 
-            Assert.AreEqual(0.63997073997143061, actual, 1e-6);
+            Assert.AreEqual(0.73692409238739565, actual, 1e-6);
             Assert.AreEqual(0.23831775700934579, new TotalErrorClassificationMetric<double>().Error(targets, predictions.Select(p => p.Prediction).ToArray()), 1e-6);
         }
 
@@ -182,7 +182,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new LogLossClassificationProbabilityMetric();
 
             var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
-                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.InvScaling);
+                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.Constant);
 
             var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,
                 split.TestSet.Observations, split.TestSet.Targets, evaluator, 10);
@@ -190,9 +190,9 @@ namespace SharpLearning.Neural.Test.Learners
             var predictions = model.PredictProbability(split.TestSet.Observations);
 
             var actualError = evaluator.Error(split.TestSet.Targets, predictions);
-            Assert.AreEqual(0.725486286899742, actualError, 1e-6);
+            Assert.AreEqual(0.71987659000502224, actualError, 1e-6);
             var actualIterations = model.Iterations;
-            Assert.AreEqual(40, actualIterations);
+            Assert.AreEqual(70, actualIterations);
         }
     }
 }

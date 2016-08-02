@@ -151,7 +151,7 @@ namespace SharpLearning.Neural.Optimizers
         {
             if(m_learningRateType == LearningRateSchedule.InvScaling)
             {
-                m_currentLearningRate += m_learningRateInit / (float)Math.Pow((float)samples + 1, m_power_t);
+                m_currentLearningRate = m_learningRateInit / (float)Math.Pow((float)samples + 1, m_power_t);
             }
         }
 
