@@ -6,6 +6,7 @@ using SharpLearning.Neural.Loss;
 using SharpLearning.Neural.Models;
 using SharpLearning.Neural.Optimizers;
 using SharpLearning.Neural.TargetEncoders;
+using System;
 
 namespace SharpLearning.Neural.Learners
 {
@@ -13,10 +14,8 @@ namespace SharpLearning.Neural.Learners
     /// RegressionNeuralNet learner utilizing the nesterov momentum method for stochastic optimization.
     /// https://en.wikipedia.org/wiki/Gradient_descent
     /// </summary>
-    public sealed class RegressionMomentumNeuralNetLearner : IIndexedLearner<double>, ILearner<double>
+    public sealed class RegressionMomentumNeuralNetLearner : NeuralNetLearner, IIndexedLearner<double>, ILearner<double>
     {
-        readonly NeuralNetLearner m_learner;
-
         /// <summary>
         /// RegressionNeuralNet learner utilizing the nesterov momentum method for stochastic optimization.
         /// https://en.wikipedia.org/wiki/Gradient_descent
@@ -78,10 +77,10 @@ namespace SharpLearning.Neural.Learners
         public RegressionMomentumNeuralNetLearner(HiddenLayer[] hiddenLayers, IActivation activiation, ILoss loss, int maxIterations = 200, double learningRateInitial = 0.001,
             int batchSize = 100, double l2regularization = 0.0001, double inputDropOut = 0.0, LearningRateSchedule learningRateSchedule = LearningRateSchedule.Constant,
             double powerT = 0.5, bool shuffle = true, int seed = 42, double tol = 1e-4f, double momentum = 0.9f, bool useNesterovsMomentum = true)
-        {
-            m_learner = new NeuralNetLearner(hiddenLayers, activiation, loss, new CopyTargetEncoder(), new IdentityActivation(),
+            : base(hiddenLayers, activiation, loss, new CopyTargetEncoder(), new IdentityActivation(),
                 new SGDNeuralNetOptimizer(learningRateInitial, learningRateSchedule, momentum, useNesterovsMomentum, powerT), maxIterations,
-                batchSize, l2regularization, inputDropOut, shuffle, seed, tol);
+                batchSize, l2regularization, inputDropOut, shuffle, seed, tol)
+        {
         }
 
         /// <summary>
@@ -92,7 +91,8 @@ namespace SharpLearning.Neural.Learners
         /// <returns></returns>
         public RegressionNeuralNetModel Learn(F64Matrix observations, double[] targets)
         {
-            return new RegressionNeuralNetModel(m_learner.Learn(observations, targets));
+            var model = this.BaseLearn(observations, targets, null, null, 0, null);
+            return new RegressionNeuralNetModel(model);
         }
 
         /// <summary>
@@ -104,7 +104,41 @@ namespace SharpLearning.Neural.Learners
         /// <returns></returns>
         public RegressionNeuralNetModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            return new RegressionNeuralNetModel(m_learner.Learn(observations, targets, indices));
+            var model = this.BaseLearn(observations, targets, indices, null, null, 0, null);
+            return new RegressionNeuralNetModel(model);
+        }
+
+        /// <summary>
+        /// Learns a RegressionNeuralNetModel with early stopping.
+        /// The parameter earlyStoppingRounds controls how often the validation error is measured.
+        /// If the validation error has increased, the learning is stopped and the model from the current iteration is returned.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <param name="metric">Metric used for measuring the validation error</param>
+        /// <param name="earlyStoppingRounds">How often is the validation error measured</param>
+        /// <returns></returns>
+        public RegressionNeuralNetModel LearnWithEarlyStopping(F64Matrix observations, double[] targets,
+                F64Matrix validationObservations, double[] validationTargets, IMetric<double, double> metric,
+                int earlyStoppingRounds)
+        {
+            Func<F64Matrix, double[], double> earlyStopping = (valObs, valTargets) =>
+            {
+                var validationModel = new RegressionNeuralNetModel(
+                    new NeuralNetModel(m_coefs, m_intercepts,
+                    m_hiddenActiviationFunc(), m_outputActiviationFunc(), 0));
+
+                var validationPredictions = validationModel.Predict(valObs);
+                var validationError = metric.Error(valTargets, validationPredictions);
+                return validationError;
+            };
+
+            var model = this.BaseLearn(observations, targets, validationObservations, validationTargets,
+                earlyStoppingRounds, earlyStopping);
+
+            return new RegressionNeuralNetModel(model);
         }
 
         /// <summary>

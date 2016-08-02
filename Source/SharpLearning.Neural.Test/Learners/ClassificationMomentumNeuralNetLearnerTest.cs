@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.CrossValidation.TrainingTestSplitters;
 using SharpLearning.FeatureTransformations.MatrixTransforms;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
@@ -163,6 +164,35 @@ namespace SharpLearning.Neural.Test.Learners
 
             Assert.AreEqual(0.63997073997143061, actual, 1e-6);
             Assert.AreEqual(0.23831775700934579, new TotalErrorClassificationMetric<double>().Error(targets, predictions.Select(p => p.Prediction).ToArray()), 1e-6);
+        }
+
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn_Probabilities_WithEarlyStopping()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var splitter = new RandomTrainingTestIndexSplitter<double>(0.7, 21);
+            var split = splitter.SplitSet(observations, targets);
+            var evaluator = new LogLossClassificationProbabilityMetric();
+
+            var sut = new ClassificationMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50) }, new ReluActivation(), new LogLoss(),
+                100, 0.1f, 20, 0, 0.0, LearningRateSchedule.InvScaling);
+
+            var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,
+                split.TestSet.Observations, split.TestSet.Targets, evaluator, 10);
+
+            var predictions = model.PredictProbability(split.TestSet.Observations);
+
+            var actualError = evaluator.Error(split.TestSet.Targets, predictions);
+            Assert.AreEqual(0.725486286899742, actualError, 1e-6);
+            var actualIterations = model.Iterations;
+            Assert.AreEqual(40, actualIterations);
         }
     }
 }

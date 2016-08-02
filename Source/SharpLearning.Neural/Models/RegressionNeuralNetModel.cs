@@ -18,12 +18,18 @@ namespace SharpLearning.Neural.Models
         readonly NeuralNetModel m_model;
 
         /// <summary>
+        /// Iterations used for training the model
+        /// </summary>
+        public readonly int Iterations;
+
+        /// <summary>
         /// Regression neural net model
         /// </summary>
         /// <param name="model"></param>
         public RegressionNeuralNetModel(NeuralNetModel model)
         {
             m_model = model;
+            Iterations = model.Iterations;
         }
 
         /// <summary>

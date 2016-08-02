@@ -19,6 +19,11 @@ namespace SharpLearning.Neural.Models
         readonly double[] m_targetNames;
 
         /// <summary>
+        /// Iterations used for training the model
+        /// </summary>
+        public readonly int Iterations;
+
+        /// <summary>
         /// Classification neural net model
         /// </summary>
         /// <param name="model"></param>
@@ -27,6 +32,7 @@ namespace SharpLearning.Neural.Models
         {
             m_model = model;
             m_targetNames = targetNames;
+            Iterations = model.Iterations;
         }
 
         /// <summary>

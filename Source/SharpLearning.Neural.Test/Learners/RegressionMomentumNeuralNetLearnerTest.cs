@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.CrossValidation.TrainingTestSplitters;
 using SharpLearning.FeatureTransformations.MatrixTransforms;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
@@ -133,6 +134,35 @@ namespace SharpLearning.Neural.Test.Learners
             var actual = evaluator.Error(targets, predictions);
 
             Assert.AreEqual(1.2661213154984761, actual, 0.00001);
+        }
+
+        [TestMethod]
+        public void ClassificationMomentumNeuralNetLearner_Learn_Probabilities_WithEarlyStopping()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var features = parser.EnumerateRows(v => v != "Target").First().ColumnNameToIndex.Keys.ToArray();
+            var normalizer = new MinMaxTransformer(0.0, 1.0);
+            var observations = parser.EnumerateRows(features)
+                .ToF64Matrix();
+            normalizer.Transform(observations, observations);
+
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var splitter = new RandomTrainingTestIndexSplitter<double>(0.7, 21);
+            var split = splitter.SplitSet(observations, targets);
+            var evaluator = new MeanSquaredErrorRegressionMetric();
+
+            var sut = new RegressionMomentumNeuralNetLearner(new HiddenLayer[] { HiddenLayer.New(50, 0.5) }, new ReluActivation(), new SquaredLoss(),
+                200, 0.1f, 20, 0.1, 0.1, LearningRateSchedule.InvScaling);
+
+            var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,
+                split.TestSet.Observations, split.TestSet.Targets, evaluator, 10);
+
+            var predictions = model.Predict(split.TestSet.Observations);
+
+            var actualError = evaluator.Error(split.TestSet.Targets, predictions);
+            Assert.AreEqual(1.2978281453134841, actualError, 1e-6);
+            var actualIterations = model.Iterations;
+            Assert.AreEqual(10, actualIterations);
         }
     }
 }

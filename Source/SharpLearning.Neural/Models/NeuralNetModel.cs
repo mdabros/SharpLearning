@@ -21,19 +21,26 @@ namespace SharpLearning.Neural.Models
         readonly int m_layes;
 
         /// <summary>
+        /// Iterations used for training the model
+        /// </summary>
+        public readonly int Iterations;
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="intercepts"></param>
         /// <param name="hiddenActivation"></param>
         /// <param name="outputActivation"></param>
-        public NeuralNetModel(List<Matrix<float>> weights, List<Vector<float>> intercepts, IActivation hiddenActivation, IActivation outputActivation)
+        /// <param name="iterations"></param>
+        public NeuralNetModel(List<Matrix<float>> weights, List<Vector<float>> intercepts, IActivation hiddenActivation, IActivation outputActivation, int iterations)
         {
             m_weights = weights;
             m_intercepts = intercepts;
             m_hiddenActivation = hiddenActivation;
             m_outputActivation = outputActivation;
             m_layes = weights.Count + 1;
+            Iterations = iterations;
         }
 
         /// <summary>

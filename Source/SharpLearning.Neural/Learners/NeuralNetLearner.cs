@@ -19,14 +19,22 @@ namespace SharpLearning.Neural.Learners
     /// <summary>
     /// Base NeuralNet Learner
     /// </summary>
-    public sealed class NeuralNetLearner
+    public class NeuralNetLearner
     {
         readonly int[] m_hiddenLayerSizes;
 
         readonly IActivation m_hiddenActiviation;
         readonly IActivation m_outputActiviation;
-        readonly Func<IActivation> m_hiddenActiviationFunc;
-        readonly Func<IActivation> m_outputActiviationFunc;
+        
+        /// <summary>
+        /// func to get hidden activation
+        /// </summary>
+        protected readonly Func<IActivation> m_hiddenActiviationFunc;
+
+        /// <summary>
+        /// func to get output activation
+        /// </summary>
+        protected readonly Func<IActivation> m_outputActiviationFunc;
 
         readonly INeuralNetOptimizer m_optimizer;
         readonly ITargetEncoder m_targetEncoder;
@@ -47,8 +55,16 @@ namespace SharpLearning.Neural.Learners
         int m_n_layers;
         int m_no_improvement_count;
 
-        List<Matrix<float>> m_coefs;
-        List<Vector<float>> m_intercepts;
+        /// <summary>
+        /// neural net coefs
+        /// </summary>
+        protected List<Matrix<float>> m_coefs;
+        
+        /// <summary>
+        /// neural net intercepts
+        /// </summary>
+        protected List<Vector<float>> m_intercepts;
+
         Dictionary<int, Matrix<float>> m_dropMasks;
         Dictionary<int, float[]> m_dropArrays;
 
@@ -171,11 +187,18 @@ namespace SharpLearning.Neural.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <param name="earlyStoppingRounds"></param>
+        /// <param name="earlyStoppingFunc"></param>
         /// <returns></returns>
-        public NeuralNetModel Learn(F64Matrix observations, double[] targets)
+        protected NeuralNetModel BaseLearn(F64Matrix observations, double[] targets,
+            F64Matrix validationObservations, double[] validationTargets, int earlyStoppingRounds,
+            Func<F64Matrix, double[], double> earlyStoppingFunc)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
-            return Learn(observations, targets, indices);
+            return BaseLearn(observations, targets, indices, validationObservations, 
+                validationTargets, earlyStoppingRounds, earlyStoppingFunc);
         }
 
         /// <summary>
@@ -184,8 +207,14 @@ namespace SharpLearning.Neural.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <param name="earlyStoppingRounds"></param>
+        /// <param name="earlyStoppingFunc"></param>
         /// <returns></returns>
-        public NeuralNetModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        protected NeuralNetModel BaseLearn(F64Matrix observations, double[] targets, int[] indices,
+            F64Matrix validationObservations, double[] validationTargets, int earlyStoppingRounds, 
+            Func<F64Matrix, double[], double> earlyStoppingFunc)
         {
             var n_samples = indices.Length;
             var n_features = observations.GetNumberOfColumns();
@@ -252,14 +281,29 @@ namespace SharpLearning.Neural.Learners
             // initialize optimizer
             m_optimizer.SetParameters(m_coefs, m_intercepts);
 
+
             var timer = new Stopwatch();
+
+            // early stopping variables
+            var iterationsUsed = 0;
+            var bestValidationError = double.MaxValue;
+            List<Matrix<float>> bestCoefs = null;
+            List<Vector<float>> bestIntercepts = null;
+
+            var useEarlyStopping = validationObservations != null && validationTargets != null && earlyStoppingRounds != 0 && earlyStoppingFunc != null;
+            if (useEarlyStopping)
+            {
+                bestCoefs = new List<Matrix<float>>();
+                bestIntercepts = new List<Vector<float>>();
+            }
+
             // train using stochastic gradient descent
             for (int iteration = 0; iteration < m_maxIterations; iteration++)
             {
                 timer.Restart();
                 var accumulatedLoss = 0.0;
 
-                if(m_shuffle)
+                if (m_shuffle)
                 {
                     learningIndices.Shuffle(m_random);
                 }
@@ -290,7 +334,28 @@ namespace SharpLearning.Neural.Learners
                 m_currentLoss = accumulatedLoss / (double)indices.Length;
                 m_t += n_samples;
 
-                Trace.WriteLine("Iteration: " + (iteration + 1) + " Loss: " + m_currentLoss + " Time (ms): " + timer.ElapsedMilliseconds);
+                if (useEarlyStopping && iteration % earlyStoppingRounds == 0)
+                {
+                    var validationError = earlyStoppingFunc(validationObservations, validationTargets);
+                    Trace.WriteLine("Iteration: " + (iteration + 1) + " Loss: " + m_currentLoss + " Validation Loss: " + validationError + " Time (ms): " + timer.ElapsedMilliseconds);
+
+                    if (validationError > bestValidationError)
+                    {
+                        Trace.WriteLine("Validation error has not improved during the last " + earlyStoppingRounds + " iterations. Stopping");
+                        break;
+                    }
+                    else
+                    {
+                        iterationsUsed = iteration;
+                        bestValidationError = validationError;
+                        CopyCurrentBestParameters(bestCoefs, bestIntercepts);
+                    }
+                }
+                else
+                {
+                    Trace.WriteLine("Iteration: " + (iteration + 1) + " Loss: " + m_currentLoss + " Time (ms): " + timer.ElapsedMilliseconds);
+                }
+
 
                 UpdateNoImprovement();
 
@@ -299,30 +364,64 @@ namespace SharpLearning.Neural.Learners
                 if (double.IsNaN(m_currentLoss))
                 {
                     Trace.WriteLine("Training loss is NaN, stopping");
+                    iterationsUsed = iteration;
                     break;
                 }
 
-                if (m_no_improvement_count > 2)
+                if(!useEarlyStopping)
                 {
-                    Trace.WriteLine("Training loss did not improve more than tol=" + m_tol + " for two iterations");
+                    if (m_no_improvement_count > 2)
+                    {
+                        Trace.WriteLine("Training loss did not improve more than tol=" + m_tol + " for two iterations");
 
-                    if (m_optimizer.TriggerStopping())
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        m_no_improvement_count = 0;
+                        if (m_optimizer.TriggerStopping())
+                        {
+                            iterationsUsed = iteration;
+                            break;
+                        }
+                        else
+                        {
+                            m_no_improvement_count = 0;
+                        }
                     }
                 }
 
                 if (iteration == (m_maxIterations - 1))
                 {
                     Trace.WriteLine("Max iterations reached");
+                    iterationsUsed = iteration;
                 }
             }
 
-            return new NeuralNetModel(m_coefs.ToList(), m_intercepts.ToList(), m_hiddenActiviationFunc(), m_outputActiviationFunc());
+            if(useEarlyStopping)
+            {
+                return new NeuralNetModel(bestCoefs,  bestIntercepts,
+                    m_hiddenActiviationFunc(), m_outputActiviationFunc(), iterationsUsed);
+            }
+            else
+            {
+                return new NeuralNetModel(m_coefs.ToList(), m_intercepts.ToList(),
+                    m_hiddenActiviationFunc(), m_outputActiviationFunc(), iterationsUsed);
+            }
+        }
+
+        void CopyCurrentBestParameters(List<Matrix<float>> bestCoefs, List<Vector<float>> bestIntercepts)
+        {
+            bestCoefs.Clear();
+            bestIntercepts.Clear();
+
+            for (int i = 0; i < m_coefs.Count; i++)
+            {
+                // copy current best coefs
+                var copyCoef = Matrix<float>.Build.Dense(m_coefs[i].RowCount, m_coefs[i].ColumnCount);
+                m_coefs[i].CopyTo(copyCoef);
+                bestCoefs.Add(copyCoef);
+
+                // copy current best inercepts
+                var copyIntercept = Vector<float>.Build.Dense(m_intercepts[i].Count);
+                m_intercepts[i].CopyTo(copyIntercept);
+                bestIntercepts.Add(copyIntercept);
+            }
         }
 
         void UpdateNoImprovement()

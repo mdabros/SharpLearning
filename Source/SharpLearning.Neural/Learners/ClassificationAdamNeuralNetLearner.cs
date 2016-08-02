@@ -7,6 +7,7 @@ using SharpLearning.Neural.Loss;
 using SharpLearning.Neural.Models;
 using SharpLearning.Neural.Optimizers;
 using SharpLearning.Neural.TargetEncoders;
+using System;
 using System.Linq;
 
 namespace SharpLearning.Neural.Learners
@@ -17,12 +18,9 @@ namespace SharpLearning.Neural.Learners
     /// The method is also appropriate for non-stationary objectives and problems with
     /// very noisy and/or sparse gradients. https://arxiv.org/pdf/1412.6980.pdf
     /// </summary>
-    public class ClassificationAdamNeuralNetLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
+    public class ClassificationAdamNeuralNetLearner : NeuralNetLearner, IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
         ILearner<double>, ILearner<ProbabilityPrediction>
     {
-        readonly NeuralNetLearner m_learner;
-
-
         /// <summary>
         /// ClassificationNeuralNet learner utilizing the Adam method for stochastic optimization. 
         /// is well suited for problems that are large in terms of data and/or parameters.
@@ -85,10 +83,10 @@ namespace SharpLearning.Neural.Learners
         /// in two consequitive iterations. The optimization terminates. (Default is 0.0001)</param>
         public ClassificationAdamNeuralNetLearner(HiddenLayer[] hiddenLayers, IActivation activiation, ILoss loss, int maxIterations = 200, double learningRateInitial = 0.001,
             int batchSize = 100, double l2regularization = 0.0001, double inputDropOut = 0.0, double beta1 = 0.9, double beta2 = 0.999, bool shuffle = true, int seed = 42, double tol = 1e-4)
+            : base(hiddenLayers, activiation, loss, new OneOfNTargetEncoder(), new SoftMaxActivation(),
+                new AdamNeuralNetOptimizer(learningRateInitial, beta1, beta2), maxIterations,
+                batchSize, l2regularization, inputDropOut, shuffle, seed, tol)
         {
-            m_learner = new NeuralNetLearner(hiddenLayers, activiation, loss, new OneOfNTargetEncoder(), new SoftMaxActivation(),
-                new AdamNeuralNetOptimizer(learningRateInitial, beta1, beta2), maxIterations, 
-                batchSize, l2regularization, inputDropOut, shuffle, seed, tol);
         }
 
         /// <summary>
@@ -100,8 +98,8 @@ namespace SharpLearning.Neural.Learners
         public ClassificationNeuralNetModel Learn(F64Matrix observations, double[] targets)
         {
             var targetNames = GetOrderedTargetNames(targets);
-
-            return new ClassificationNeuralNetModel(m_learner.Learn(observations, targets), targetNames);
+            var model = this.BaseLearn(observations, targets, null, null, 0, null);
+            return new ClassificationNeuralNetModel(model, targetNames);
         }
 
         /// <summary>
@@ -114,8 +112,80 @@ namespace SharpLearning.Neural.Learners
         public ClassificationNeuralNetModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             var targetNames = GetOrderedTargetNames(targets);
+            var model = this.BaseLearn(observations, targets, indices, null, null, 0, null);
+            return new ClassificationNeuralNetModel(model, targetNames);
+        }
 
-            return new ClassificationNeuralNetModel(m_learner.Learn(observations, targets, indices), targetNames);
+        /// <summary>
+        /// Learns a ClassificationNeuralNetModel with early stopping.
+        /// The parameter earlyStoppingRounds controls how often the validation error is measured.
+        /// If the validation error has increased, the learning is stopped and the model from the current iteration is returned.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <param name="metric">Metric used for measuring the validation error</param>
+        /// <param name="earlyStoppingRounds">How often is the validation error measured</param>
+        /// <returns></returns>
+        public ClassificationNeuralNetModel LearnWithEarlyStopping(F64Matrix observations, double[] targets,
+                F64Matrix validationObservations, double[] validationTargets, IMetric<double, ProbabilityPrediction> metric, 
+                int earlyStoppingRounds)
+        {
+            var targetNames = GetOrderedTargetNames(targets);
+
+            Func<F64Matrix, double[], double> earlyStopping = (valObs, valTargets) =>
+            {
+                var validationModel = new ClassificationNeuralNetModel(
+                    new NeuralNetModel(m_coefs, m_intercepts,
+                    m_hiddenActiviationFunc(), m_outputActiviationFunc(), 0),
+                    targetNames);
+
+                var validationPredictions = validationModel.PredictProbability(valObs);
+                var validationError = metric.Error(valTargets, validationPredictions);
+                return validationError;
+            };
+
+            var model = this.BaseLearn(observations, targets, validationObservations, validationTargets,
+                earlyStoppingRounds, earlyStopping);
+
+            return new ClassificationNeuralNetModel(model, targetNames);
+        }
+
+        /// <summary>
+        /// Learns a ClassificationNeuralNetModel with early stopping.
+        /// The parameter earlyStoppingRounds controls how often the validation error is measured.
+        /// If the validation error has increased, the learning is stopped and the model from the current iteration is returned.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <param name="metric">Metric used for measuring the validation error</param>
+        /// <param name="earlyStoppingRounds">How often is the validation error measured</param>
+        /// <returns></returns>
+        public ClassificationNeuralNetModel LearnWithEarlyStopping(F64Matrix observations, double[] targets,
+                F64Matrix validationObservations, double[] validationTargets, IMetric<double, double> metric,
+                int earlyStoppingRounds)
+        {
+            var targetNames = GetOrderedTargetNames(targets);
+
+            Func<F64Matrix, double[], double> earlyStopping = (valObs, valTargets) =>
+            {
+                var validationModel = new ClassificationNeuralNetModel(
+                    new NeuralNetModel(m_coefs, m_intercepts,
+                    m_hiddenActiviationFunc(), m_outputActiviationFunc(), 0),
+                    targetNames);
+
+                var validationPredictions = validationModel.Predict(valObs);
+                var validationError = metric.Error(valTargets, validationPredictions);
+                return validationError;
+            };
+
+            var model = this.BaseLearn(observations, targets, validationObservations, validationTargets, 
+                earlyStoppingRounds, earlyStopping);
+
+            return new ClassificationNeuralNetModel(model, targetNames);
         }
 
         /// <summary>
