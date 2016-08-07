@@ -216,5 +216,22 @@ namespace SharpLearning.Ensemble.Learners
 
             return cvPredictions;
         }
+
+        /// <summary>
+        /// Learns a stacking classification ensemble based on the provided meta observations.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="metaObservations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public ClassificationStackingEnsembleModel LearnStackingModel(F64Matrix observations, F64Matrix metaObservations, double[] targets)
+        {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            var metaModel = m_metaLearner(metaObservations, targets);
+            var ensembleModels = m_learners.Select(learner => learner.Learn(observations, targets, indices)).ToArray();
+
+            var numberOfClasses = targets.Distinct().Count();
+            return new ClassificationStackingEnsembleModel(ensembleModels, metaModel, m_includeOriginalFeaturesForMetaLearner, numberOfClasses);
+        }
     }
 }

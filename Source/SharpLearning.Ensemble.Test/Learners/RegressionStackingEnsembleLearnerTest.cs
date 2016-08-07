@@ -42,6 +42,35 @@ namespace SharpLearning.Ensemble.Test.Learners
         }
 
         [TestMethod]
+        public void RegressionStackingEnsembleLearner_CreateMetaFeatures_Then_Learn()
+        {
+            var learners = new IIndexedLearner<double>[]
+            {
+                new RegressionDecisionTreeLearner(2),
+                new RegressionDecisionTreeLearner(5),
+                new RegressionDecisionTreeLearner(7),
+                new RegressionDecisionTreeLearner(9)
+            };
+
+            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+                new RandomCrossValidation<double>(5, 23), false);
+
+            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
+            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
+            var targets = parser.EnumerateRows("T").ToF64Vector();
+
+            var metaObservations = sut.LearnMetaFeatures(observations, targets);
+            var model = sut.LearnStackingModel(observations, metaObservations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new MeanSquaredErrorRegressionMetric();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.06951934687172627, actual, 0.0001);
+        }
+
+        [TestMethod]
         public void RegressionStackingEnsembleLearner_Learn_Keep_Original_Features()
         {
             var learners = new IIndexedLearner<double>[]

@@ -44,6 +44,35 @@ namespace SharpLearning.Ensemble.Test.Learners
         }
 
         [TestMethod]
+        public void ClassificationStackingEnsembleLearner_CreateMetaFeatures_Then_Learn()
+        {
+            var learners = new IIndexedLearner<ProbabilityPrediction>[]
+            {
+                new ClassificationDecisionTreeLearner(2),
+                new ClassificationDecisionTreeLearner(5),
+                new ClassificationDecisionTreeLearner(7),
+                new ClassificationDecisionTreeLearner(9)
+            };
+
+            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
+
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var metaObservations = sut.LearnMetaFeatures(observations, targets);
+            var model = sut.LearnStackingModel(observations, metaObservations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var metric = new TotalErrorClassificationMetric<double>();
+            var actual = metric.Error(targets, predictions);
+
+            Assert.AreEqual(0.63551401869158874, actual, 0.0001);
+        }
+
+        [TestMethod]
         public void ClassificationStackingEnsembleLearner_Learn_Include_Original_Features()
         {
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
