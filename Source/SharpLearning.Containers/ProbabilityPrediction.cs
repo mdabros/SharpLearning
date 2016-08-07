@@ -7,6 +7,7 @@ namespace SharpLearning.Containers
     /// <summary>
     /// Probability prediction for classification learners with probability estimates
     /// </summary>
+    [Serializable]
     public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     {
         /// <summary>

@@ -9,6 +9,7 @@ namespace SharpLearning.Containers
     /// <summary>
     /// Certainty prediction for regression learners with certainty estimate
     /// </summary>
+    [Serializable]
     public struct CertaintyPrediction
     {
         /// <summary>
