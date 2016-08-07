@@ -271,7 +271,7 @@ namespace SharpLearning.Neural.Test.Models
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.23831775700934579, error, 0.0000001);
+            Assert.AreEqual(0.45794392523364486, error, 0.0000001);
         }
 
         void Write(ProbabilityPrediction[] predictions)

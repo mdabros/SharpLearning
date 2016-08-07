@@ -91,8 +91,8 @@ namespace SharpLearning.Ensemble.Learners
         public ClassificationEnsembleModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
             var metaObservations = LearnMetaFeatures(observations, targets, indices);
-
             var metaModelTargets = targets.GetIndices(indices);
+
             var ensembleModelIndices = m_ensembleSelection.Select(metaObservations, metaModelTargets);
 
             var ensembleModels = m_learners.GetIndices(ensembleModelIndices)
@@ -196,6 +196,26 @@ namespace SharpLearning.Ensemble.Learners
             }
 
             return ensemblePredictions;
+        }
+
+        /// <summary>
+        /// Based on the provided metaObservations selects the best combination of learners to include in the ensemble.
+        /// Following the selected learners are trained.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="metaObservations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public ClassificationEnsembleModel SelectModels(F64Matrix observations, ProbabilityPrediction[][] metaObservations, double[] targets)
+        {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            var ensembleModelIndices = m_ensembleSelection.Select(metaObservations, targets);
+
+            var ensembleModels = m_learners.GetIndices(ensembleModelIndices)
+                .Select(learner => learner.Learn(observations, targets, indices)).ToArray();
+
+            var numberOfClasses = targets.Distinct().Count();
+            return new ClassificationEnsembleModel(ensembleModels, m_ensembleStrategy());
         }
     }
 }

@@ -53,6 +53,42 @@ namespace SharpLearning.Ensemble.Test.Learners
         }
 
         [TestMethod]
+        public void ClassificationBackwardEliminationModelSelectingEnsembleLearner_CreateMetaFeatures_Then_Learn()
+        {
+            var learners = new IIndexedLearner<ProbabilityPrediction>[]
+            {
+                new ClassificationDecisionTreeLearner(2),
+                new ClassificationDecisionTreeLearner(5),
+                new ClassificationDecisionTreeLearner(7),
+                new ClassificationDecisionTreeLearner(9),
+                new ClassificationDecisionTreeLearner(11),
+                new ClassificationDecisionTreeLearner(21),
+                new ClassificationDecisionTreeLearner(23),
+                new ClassificationDecisionTreeLearner(1),
+                new ClassificationDecisionTreeLearner(14),
+                new ClassificationDecisionTreeLearner(17),
+                new ClassificationDecisionTreeLearner(19),
+                new ClassificationDecisionTreeLearner(33)
+            };
+
+            var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, 5);
+
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var metaObservations = sut.LearnMetaFeatures(observations, targets);
+            var model = sut.SelectModels(observations, metaObservations, targets);
+
+            var predictions = model.PredictProbability(observations);
+
+            var metric = new LogLossClassificationProbabilityMetric();
+            var actual = metric.Error(targets, predictions);
+
+            Assert.AreEqual(0.52351727716455632, actual, 0.0001);
+        }
+
+        [TestMethod]
         public void ClassificationBackwardEliminationModelSelectingEnsembleLearner_Learn_Indexed()
         {
             var learners = new IIndexedLearner<ProbabilityPrediction>[]

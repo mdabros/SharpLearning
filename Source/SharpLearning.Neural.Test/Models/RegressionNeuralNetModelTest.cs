@@ -209,7 +209,7 @@ namespace SharpLearning.Neural.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(1.0586876986141716, error, 0.0000001);
+            Assert.AreEqual(1.4383101999692078, error, 0.0000001);
         }
 
         void Write(ProbabilityPrediction[] predictions)

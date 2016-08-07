@@ -159,5 +159,24 @@ namespace SharpLearning.Ensemble.Learners
 
             return cvPredictions;
         }
+
+        /// <summary>
+        /// Based on the provided metaObservations selects the best combination of learners to include in the ensemble.
+        /// Following the selected learners are trained.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="metaObservations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public RegressionEnsembleModel SelectModels(F64Matrix observations, F64Matrix metaObservations, double[] targets)
+        {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            var ensembleModelIndices = m_ensembleSelection.Select(metaObservations, targets);
+
+            var ensembleModels = m_learners.GetIndices(ensembleModelIndices)
+                .Select(learner => learner.Learn(observations, targets, indices)).ToArray();
+
+            return new RegressionEnsembleModel(ensembleModels, m_ensembleStrategy());
+        }
     }
 }

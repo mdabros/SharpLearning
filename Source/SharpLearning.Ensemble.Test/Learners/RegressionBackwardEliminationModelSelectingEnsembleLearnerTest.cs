@@ -53,6 +53,43 @@ namespace SharpLearning.Ensemble.Test.Learners
         }
 
         [TestMethod]
+        public void RegressionBackwardEliminationModelSelectingEnsembleLearner_CreateMetaFeatures_Then_Learn()
+        {
+            var learners = new IIndexedLearner<double>[]
+            {
+                new RegressionDecisionTreeLearner(2),
+                new RegressionDecisionTreeLearner(5),
+                new RegressionDecisionTreeLearner(7),
+                new RegressionDecisionTreeLearner(9),
+                new RegressionDecisionTreeLearner(11),
+                new RegressionDecisionTreeLearner(21),
+                new RegressionDecisionTreeLearner(23),
+                new RegressionDecisionTreeLearner(1),
+                new RegressionDecisionTreeLearner(14),
+                new RegressionDecisionTreeLearner(17),
+                new RegressionDecisionTreeLearner(19),
+                new RegressionDecisionTreeLearner(33)
+
+            };
+
+            var sut = new RegressionBackwardEliminationModelSelectingEnsembleLearner(learners, 5);
+
+            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
+            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
+            var targets = parser.EnumerateRows("T").ToF64Vector();
+
+            var metaObservations = sut.LearnMetaFeatures(observations, targets);
+            var model = sut.SelectModels(observations, metaObservations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var metric = new MeanSquaredErrorRegressionMetric();
+            var actual = metric.Error(targets, predictions);
+
+            Assert.AreEqual(0.010316259438112841, actual, 0.0001);
+        }
+
+        [TestMethod]
         public void RegressionBackwardEliminationModelSelectingEnsembleLearner_Learn_Indexed()
         {
             var learners = new IIndexedLearner<double>[]
