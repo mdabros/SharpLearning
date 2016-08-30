@@ -19,6 +19,7 @@ namespace SharpLearning.InputOutput.Csv
         readonly Func<TextReader> m_getReader;
         readonly char m_separator;
         readonly bool m_quoteInclosedColumns;
+        readonly bool m_hasHeader;
 
         /// <summary>
         /// Creates an instance of the CsvParser
@@ -26,12 +27,14 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="reader"></param>
         /// <param name="separator"></param>
         /// <param name="quoteInclosedColumns"></param>
-        public CsvParser(Func<TextReader> reader, char separator = DefaultDelimiter, bool quoteInclosedColumns = false)
+        /// <param name="hasHeader"></param>
+        public CsvParser(Func<TextReader> reader, char separator = DefaultDelimiter, bool quoteInclosedColumns = false, bool hasHeader = true)
         {
             if (reader == null) { throw new ArgumentException("reader"); }
             m_getReader = reader;
             m_separator = separator;
             m_quoteInclosedColumns = quoteInclosedColumns;
+            m_hasHeader = hasHeader;
         }
 
         /// <summary>
@@ -41,6 +44,11 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public IEnumerable<CsvRow> EnumerateRows(Func<string, bool> selectColumnNames)
         {
+            if(!m_hasHeader)
+            {
+                throw new ArgumentException("CsvParser configured to use no header. Column names cannot be selected in this made");
+            }
+
             using (var reader = m_getReader())
             {
                 var headerLine = reader.ReadLine();
@@ -65,6 +73,11 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public IEnumerable<CsvRow> EnumerateRows(params string[] columnNames)
         {
+            if (!m_hasHeader)
+            {
+                throw new ArgumentException("CsvParser configured to use no header. Column names cannot be selected in this made");
+            }
+
             using (var reader = m_getReader())
             {
                 var headerLine = reader.ReadLine();
@@ -87,6 +100,18 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public IEnumerable<CsvRow> EnumerateRows()
         {
+            if(m_hasHeader)
+            {
+                return EnumerateRowsHeader();
+            }
+            else
+            {
+                return EnumerateRowsNoHeader();
+            }
+        }
+
+        IEnumerable<CsvRow> EnumerateRowsHeader()
+        {
             using (var reader = m_getReader())
             {
                 var headerLine = reader.ReadLine();
@@ -99,6 +124,40 @@ namespace SharpLearning.InputOutput.Csv
                     yield return new CsvRow(columnNameToIndex, lineSplit);
                 }
             }
+        }
+        
+        IEnumerable<CsvRow> EnumerateRowsNoHeader()
+        {
+            var columnNameToIndex = CreateHeaderForCsvFileWithout();
+
+            using (var reader = m_getReader())
+            {
+                string line = null;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var lineSplit = Split(line);
+                    yield return new CsvRow(columnNameToIndex, lineSplit);
+                }
+            }
+        }
+
+        Dictionary<string, int> CreateHeaderForCsvFileWithout()
+        {
+            Dictionary<string, int> columnNameToIndex = new Dictionary<string, int>();
+
+            // create header for csv file without header.
+            using (var reader = m_getReader())
+            {
+                var line = reader.ReadLine();
+                var splitLine = Split(line);
+
+                for (int i = 0; i < splitLine.Length; i++)
+                {
+                    columnNameToIndex.Add(i.ToString(), i);
+                }
+            }
+
+            return columnNameToIndex;
         }
 
         Dictionary<string, int> TrimSplitLineTrimColumnsToDictionary(string line)

@@ -11,6 +11,7 @@ namespace SharpLearning.InputOutput.Test.Csv
     [TestClass]
     public class CsvParserTest
     {
+
         [TestMethod]
         public void CsvParser_MergeFilesUsingKey_KeepRepeatedColumns()
         {          
@@ -126,6 +127,50 @@ namespace SharpLearning.InputOutput.Test.Csv
                             .ToList();
 
             CollectionAssert.AreEqual(Expected_Quote_Inclosed_Columns_Separator_In_Text(), actual);
+        }
+
+        [TestMethod]
+        public void CsvParser_NoHeader_EnumerateRows()
+        {
+            var data = @"1;15;0
+1;12;0
+4;6;0";
+
+            var sut = new CsvParser(() => new StringReader(data), ';', false, false);
+
+            var actual = sut.EnumerateRows()
+                .ToList();
+
+            CollectionAssert.AreEqual(Expected_NoHeader(), actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CsvParser_NoHeader_EnumerateRows_Func_Throw()
+        {
+            var sut = new CsvParser(() => new StringReader(string.Empty), ';', false, false);
+
+            sut.EnumerateRows(p => p.Contains("test"));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void CsvParser_NoHeader_EnumerateRows_Value_Throw()
+        {
+            var sut = new CsvParser(() => new StringReader(string.Empty), ';', false, false);
+
+            sut.EnumerateRows("test");
+        }
+        
+        List<CsvRow> Expected_NoHeader()
+        {
+            var columnNameToIndex = new Dictionary<string, int> { { "0", 0 }, { "1", 1 }, { "2", 2 } };
+
+            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "1", "15", "0"}),
+                                                new CsvRow(columnNameToIndex, new string[] { "1", "12", "0"}),
+                                                new CsvRow(columnNameToIndex, new string[] { "4", "6", "0"}) };
+
+            return expected;
         }
 
         List<CsvRow> Expected()
