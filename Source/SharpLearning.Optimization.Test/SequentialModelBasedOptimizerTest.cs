@@ -22,12 +22,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new SequentialModelBasedOptimizer(parameters, 20, 5);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.78008434504774338, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet.Length, 3);
+            Assert.AreEqual(-0.78008434504774338, actual.Error, 0.0000001);
+            Assert.AreEqual(3, actual.ParameterSet.Length);
 
-            Assert.AreEqual(actual.ParameterSet[0], -7.9348252981893745, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[1], 0.44480908593386381, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[2], 0.15339395991115268, 0.0000001);
+            Assert.AreEqual(-7.9348252981893745, actual.ParameterSet[0], 0.0000001);
+            Assert.AreEqual(0.44480908593386381, actual.ParameterSet[1], 0.0000001);
+            Assert.AreEqual(0.15339395991115268, actual.ParameterSet[2], 0.0000001);
         }
 
         [TestMethod]

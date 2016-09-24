@@ -39,7 +39,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.3364485981308411, actual);
+            Assert.AreEqual(0.31775700934579437, actual, 1e-6);
         }
 
         [TestMethod]
@@ -164,8 +164,8 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new LogLossClassificationProbabilityMetric();
             var actual = evaluator.Error(targets, predictions);
             
-            Assert.AreEqual(0.87556824055160276, actual, 1e-6);
-            Assert.AreEqual(0.3364485981308411, new TotalErrorClassificationMetric<double>().Error(targets, predictions.Select(p => p.Prediction).ToArray()), 1e-6);
+            Assert.AreEqual(0.87429730218368962, actual, 1e-6);
+            Assert.AreEqual(0.31775700934579437, new TotalErrorClassificationMetric<double>().Error(targets, predictions.Select(p => p.Prediction).ToArray()), 1e-6);
         }
 
         [TestMethod]
@@ -192,7 +192,7 @@ namespace SharpLearning.Neural.Test.Learners
             var predictions = model.PredictProbability(split.TestSet.Observations);
 
             var actualError = evaluator.Error(split.TestSet.Targets, predictions);
-            Assert.AreEqual(0.85893151684561364, actualError, 1e-6);
+            Assert.AreEqual(0.8542363543809357, actualError, 1e-6);
             var actualIterations = model.Iterations;
             Assert.AreEqual(30, actualIterations);
         }
