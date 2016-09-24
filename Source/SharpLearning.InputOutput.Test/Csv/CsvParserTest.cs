@@ -150,7 +150,9 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var sut = new CsvParser(() => new StringReader(string.Empty), ';', false, false);
 
-            sut.EnumerateRows(p => p.Contains("test"));
+            var actual = sut.EnumerateRows(p => p.Contains("test"));
+
+            CollectionAssert.AreEqual(Expected_NoHeader(), actual.ToList());
         }
 
         [TestMethod]
@@ -159,7 +161,9 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var sut = new CsvParser(() => new StringReader(string.Empty), ';', false, false);
 
-            sut.EnumerateRows("test");
+            var actual = sut.EnumerateRows("test");
+
+            CollectionAssert.AreEqual(Expected_NoHeader(), actual.ToList());
         }
         
         List<CsvRow> Expected_NoHeader()

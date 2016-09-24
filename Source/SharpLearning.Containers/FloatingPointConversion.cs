@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace SharpLearning.Containers
 {
@@ -18,6 +19,11 @@ namespace SharpLearning.Containers
         public static readonly NumberFormatInfo nfi = new NumberFormatInfo();
 
         /// <summary>
+        /// Default NumberStyle is Any.
+        /// </summary>
+        public static readonly NumberStyles NumberStyle = NumberStyles.Any;
+
+        /// <summary>
         /// Default format for outputting double values to string.
         /// </summary> 
         public static string ToString(double value)
@@ -32,7 +38,15 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public static double ToF64(string value)
         {
-            return double.Parse(value, nfi);
+            var result = 0.0;
+            if(double.TryParse(value, NumberStyle, nfi, out result))
+            {
+                return result;
+            }
+            else
+            {
+                throw new ArgumentException("Unable to pass value: " + value + " to double");
+            }
         }
     }
 }

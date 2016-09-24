@@ -21,5 +21,13 @@ namespace SharpLearning.Containers.Test
             var actual = FloatingPointConversion.ToF64(value);
             Assert.AreEqual(1.2354236, actual);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void FloatingPointConversion_ToF64_Unable_To_Parse()
+        {
+            var value = "infinity12";
+            FloatingPointConversion.ToF64(value);
+        }
     }
 }
