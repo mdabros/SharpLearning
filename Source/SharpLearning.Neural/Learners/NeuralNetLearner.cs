@@ -541,7 +541,7 @@ namespace SharpLearning.Neural.Learners
                     activations[i].Multiply(m_coefs[i], activations[i + 1]);
                 }
 
-                activations[i + 1].Add(m_intercepts[i], activations[i + 1]);
+                activations[i + 1].AddRowWise(m_intercepts[i], activations[i + 1]);
 
                 if ((i + 1) != m_n_layers - 1)
                 {

@@ -14,7 +14,7 @@ namespace SharpLearning.Neural
         /// <param name="m"></param>
         /// <param name="v"></param>
         /// <param name="output"></param>
-        public static void Add(this Matrix<float> m, Vector<float> v, Matrix<float> output)
+        public static void AddRowWise(this Matrix<float> m, Vector<float> v, Matrix<float> output)
         {
             var rows = m.RowCount;
             var cols = m.ColumnCount;
@@ -27,6 +27,29 @@ namespace SharpLearning.Neural
                 for (int j = 0; j < cols; j++)
                 {
                     output[i, j] = m[i, j] + v[j];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds vector v to matrix m. V is Added to each column of the matrix
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="v"></param>
+        /// <param name="output"></param>
+        public static void AddColumnWise(this Matrix<float> m, Vector<float> v, Matrix<float> output)
+        {
+            var rows = m.RowCount;
+            var cols = m.ColumnCount;
+
+            if (v.Count != rows)
+            { throw new ArgumentException("matrix rows: " + rows + " differs from vector length: " + v.Count); }
+
+            for (int i = 0; i < cols; i++)
+            {
+                for (int j = 0; j < rows; j++)
+                {
+                    output[j, i] = m[j, i] + v[j];
                 }
             }
         }

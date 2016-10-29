@@ -9,18 +9,34 @@ namespace SharpLearning.Neural.Test
     public class MathNetExtensionsTest
     {
         [TestMethod]
-        public void MathNetExtensions_Add()
+        public void MathNetExtensions_AddRowWise()
         {
             var matrix = Matrix<float>.Build.Dense(2, 3);
             var vector = Vector<float>.Build.Dense(new float[] { 1f, 2f, 3f });
             var actual = Matrix<float>.Build.Dense(2, 3);
 
-            matrix.Add(vector, actual);
+            matrix.AddRowWise(vector, actual);
 
             Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
             Trace.WriteLine(actual.ToString());
 
             var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 2, 2, 3, 3 });
+            Assert.AreEqual(expected.ToString(), actual.ToString());
+        }
+
+        [TestMethod]
+        public void MathNetExtensions_AddColumnWise()
+        {
+            var matrix = Matrix<float>.Build.Dense(2, 3);
+            var vector = Vector<float>.Build.Dense(new float[] { 1f, 2f });
+            var actual = Matrix<float>.Build.Dense(2, 3);
+
+            matrix.AddColumnWise(vector, actual);
+
+            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(actual.ToString());
+
+            var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 1, 2, 1, 2 });
             Assert.AreEqual(expected.ToString(), actual.ToString());
         }
 

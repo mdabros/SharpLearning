@@ -55,7 +55,7 @@ namespace SharpLearning.Neural.Models
             for (int i = 0; i < m_layes - 1; i++)
             {
                 output = output.Multiply(m_weights[i]);
-                output.Add(m_intercepts[i], output);
+                output.AddRowWise(m_intercepts[i], output);
 
                 if ((i + 1) != m_layes - 1)
                 {
