@@ -123,6 +123,38 @@ namespace SharpLearning.Neural
         }
 
         /// <summary>
+        /// Sums the columns of m into the vector sums. 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="sums"></param>
+        public static void SumColumns(this Matrix<float> m, Vector<float> sums)
+        {
+            for (int i = 0; i < m.ColumnCount; i++)
+            {
+                for (int j = 0; j < m.RowCount; j++)
+                {
+                    sums[i] += m.At(j, i);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sums the rows of m into the vector sums. 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="sums"></param>
+        public static void SumRows(this Matrix<float> m, Vector<float> sums)
+        {
+            for (int i = 0; i < m.RowCount; i++)
+            {
+                for (int j = 0; j < m.ColumnCount; j++)
+                {
+                    sums[i] += m.At(i, j);
+                }
+            }
+        }
+
+        /// <summary>
         /// Converts an array to a row wise matrix
         /// </summary>
         /// <param name="array"></param>

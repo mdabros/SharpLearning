@@ -12,6 +12,16 @@ namespace SharpLearning.Containers.Extensions
     public static class ArrayExtensions
     {
         /// <summary>
+        /// Clears array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        public static void Clear<T>(this T[] array)
+        {
+            Array.Clear(array, 0, array.Length);
+        }
+
+        /// <summary>
         /// Iterates over an array and perform the action at each element
         /// </summary>
         /// <typeparam name="T"></typeparam>

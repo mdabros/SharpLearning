@@ -85,5 +85,29 @@ namespace SharpLearning.Neural.Test
             var expected = Vector<float>.Build.Dense(new float[] { 2.5f, 6.5f, 0f });
             Assert.AreEqual(expected.ToString(), actual.ToString());
         }
+
+        [TestMethod]
+        public void MathNetExtensions_ColumnWiseMean_SumColumns()
+        {
+            var matrix = Matrix<float>.Build.Dense(4, 2, new float[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            var actual = Vector<float>.Build.Dense(2);
+
+            matrix.SumColumns(actual);
+
+            var expected = Vector<float>.Build.Dense(new float[] { 10, 26 });
+            Assert.AreEqual(expected.ToString(), actual.ToString());
+        }
+
+        [TestMethod]
+        public void MathNetExtensions_ColumnWiseMean_SumRows()
+        {
+            var matrix = Matrix<float>.Build.Dense(4, 2, new float[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            var actual = Vector<float>.Build.Dense(4);
+
+            matrix.SumRows(actual);
+
+            var expected = Vector<float>.Build.Dense(new float[] { 6, 8, 10, 12 });
+            Assert.AreEqual(expected.ToString(), actual.ToString());
+        }
     }
 }

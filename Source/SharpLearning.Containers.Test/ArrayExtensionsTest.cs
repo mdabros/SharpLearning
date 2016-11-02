@@ -13,6 +13,17 @@ namespace SharpLearning.Containers.Test
     public class ArrayExtensionsTest
     {
         [TestMethod]
+        public void ArrayExtensions_Clear()
+        {
+            var sut = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            sut.Clear();
+
+            var expected = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+            CollectionAssert.AreEqual(expected, sut);
+        }
+
+        [TestMethod]
         public void ArrayExtensions_GetIndices()
         {
             var sut = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
