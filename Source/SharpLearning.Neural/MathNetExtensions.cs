@@ -1,4 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Storage;
 using System;
 
 namespace SharpLearning.Neural
@@ -169,6 +170,17 @@ namespace SharpLearning.Neural
             }
 
             return matrix;
+        }
+
+        /// <summary>
+        /// Gets the underlying data array from the matrix. 
+        /// Data is storred as Column-Major.
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static float[] Data(this Matrix<float> m)
+        {
+            return ((DenseColumnMajorMatrixStorage<float>)(m.Storage)).Data;
         }
     }
 }
