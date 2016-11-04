@@ -27,7 +27,8 @@ namespace SharpLearning.Neural
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    output[i, j] = m[i, j] + v[j];
+                    var value = m.At(i, j) + v[j];
+                    output.At(i, j, value);
                 }
             }
         }
@@ -50,7 +51,8 @@ namespace SharpLearning.Neural
             {
                 for (int j = 0; j < rows; j++)
                 {
-                    output[j, i] = m[j, i] + v[j];
+                    var value = m.At(j, i) + v[j];
+                    output.At(j, i, value); 
                 }
             }
         }
@@ -73,7 +75,8 @@ namespace SharpLearning.Neural
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    output[i, j] = m[i, j] * v[j];
+                    var value = m.At(i, j) * v[j];
+                    output.At(i, j, value); 
                 }
             }
         }
@@ -93,13 +96,13 @@ namespace SharpLearning.Neural
             if (m2.ColumnCount!= cols)
             { throw new ArgumentException("m1 cols: " + cols + " differs from m2 cols: " + m2.ColumnCount); }
 
+            var m1Data = m1.Data();
+            var m2Data = m2.Data();
+
             var sum = 0.0f;
-            for (int i = 0; i < cols; i++)
+            for (int i = 0; i < m1Data.Length; i++)
             {
-                for (int j = 0; j < rows; j++)
-                {
-                    sum += m1[j, i] * m2[j, i];
-                }
+                sum += m1Data[i] * m2Data[i];
             }
 
             return sum;
@@ -116,7 +119,7 @@ namespace SharpLearning.Neural
             {
                 for (int j = 0; j < m.RowCount; j++)
                 {
-                    v[i] += m[j, i];
+                    v[i] += m.At(j, i);
                 }
 
                 v[i] = v[i] / (float)m.RowCount;
@@ -166,7 +169,7 @@ namespace SharpLearning.Neural
 
             for (int i = 0; i < array.Length; i++)
             {
-                matrix[0, i] = (float)array[i];
+                matrix.At(0, i, (float)array[i]);
             }
 
             return matrix;
