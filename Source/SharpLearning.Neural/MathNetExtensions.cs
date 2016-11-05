@@ -176,6 +176,20 @@ namespace SharpLearning.Neural
         }
 
         /// <summary>
+        /// Copies matrix row i into array row.
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="rowIndex"></param>
+        /// <param name="row"></param>
+        public static void Row(this Matrix<float> m, int rowIndex, float[] row)
+        {
+            for (int i = 0; i < m.ColumnCount; i++)
+            {
+                row[i] = m[rowIndex, i];
+            }
+        }
+
+        /// <summary>
         /// Gets the underlying data array from the matrix. 
         /// Data is storred as Column-Major.
         /// </summary>

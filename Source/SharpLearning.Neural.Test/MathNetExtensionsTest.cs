@@ -129,5 +129,17 @@ namespace SharpLearning.Neural.Test
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void MathNetExtensions_Matri_Row()
+        {
+            var data = new float[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var matrix = Matrix<float>.Build.Dense(4, 2, data);
+            var actual = new float[2];
+            matrix.Row(1, actual);
+
+            var expected = new float[] { 2, 6 };
+            CollectionAssert.AreEqual(expected, actual);
+        }
     }
 }
