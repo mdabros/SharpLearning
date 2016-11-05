@@ -185,5 +185,15 @@ namespace SharpLearning.Neural
         {
             return ((DenseColumnMajorMatrixStorage<float>)(m.Storage)).Data;
         }
+
+        /// <summary>
+        /// Gets the underlying data array from the vector. 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static float[] Data(this Vector<float> m)
+        {
+            return ((DenseVectorStorage<float>)(m.Storage)).Data;
+        }
     }
 }
