@@ -121,6 +121,25 @@ namespace SharpLearning.Neural.Test
         }
 
         [TestMethod]
+        public void MathNetExtensions_Matrix_Data_Modify()
+        {
+            var input = new float[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var matrix = Matrix<float>.Build.Dense(4, 2, input);
+
+            var changeIndex = 2;
+            var value = 666;
+
+            var data = matrix.Data();
+            data[changeIndex] = value;
+            
+            var expected = new float[] { 1, 2, value, 4, 5, 6, 7, 8 };
+            var actual = matrix.Data();
+
+            CollectionAssert.AreEqual(expected, actual);
+            Assert.AreEqual(value, matrix[changeIndex, 0]);
+        }
+
+        [TestMethod]
         public void MathNetExtensions_Vector_Data()
         {
             var expected = new float[] { 1, 2, 3, 4, 5, 6, 7, 8 };
@@ -129,6 +148,26 @@ namespace SharpLearning.Neural.Test
 
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void MathNetExtensions_Vector_Data_Modify()
+        {
+            var input = new float[] { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var vector = Vector<float>.Build.Dense(input);
+
+            var changeIndex = 2;
+            var value = 666;
+
+            var data = vector.Data();
+            data[changeIndex] = value;
+
+            var expected = new float[] { 1, 2, value, 4, 5, 6, 7, 8 };
+            var actual = vector.Data();
+
+            CollectionAssert.AreEqual(expected, actual);
+            Assert.AreEqual(value, vector[changeIndex]);
+        }
+
 
         [TestMethod]
         public void MathNetExtensions_Matri_Row()
