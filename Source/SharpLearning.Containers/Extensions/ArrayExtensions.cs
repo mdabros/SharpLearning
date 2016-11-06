@@ -36,6 +36,37 @@ namespace SharpLearning.Containers.Extensions
         }
 
         /// <summary>
+        /// Iterates over an array and applies the function a to the elements.
+        /// The values are updated directly in the array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="a"></param>
+        public static void Map<T>(this T[] array, Func<T> a)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = a();
+            }
+        }
+
+        /// <summary>
+        /// Iterates over an array and applies the function a to the elements.
+        /// The values are updated directly in the array.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="array"></param>
+        /// <param name="a"></param>
+        public static void Map<T>(this T[] array, Func<T, T> a)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = a(array[i]);
+            }
+        }
+
+
+        /// <summary>
         /// Converts Nan to 0.0, NegativeInfinity to double.MinValue and PositiveInfinity to double.MaxValue
         /// </summary>
         /// <param name="value"></param>

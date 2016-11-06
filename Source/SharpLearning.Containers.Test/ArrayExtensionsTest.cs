@@ -13,6 +13,29 @@ namespace SharpLearning.Containers.Test
     public class ArrayExtensionsTest
     {
         [TestMethod]
+        public void ArrayExtensions_Map()
+        {
+            var sut = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            var random = new Random(42);
+            sut.Map(() => (double)random.Next(0, 5));
+
+            var expected = new double[] { 3, 0, 0, 2, 0, 1, 3, 2, 0 };
+
+            CollectionAssert.AreEqual(expected, sut);
+        }
+
+        [TestMethod]
+        public void ArrayExtensions_Map_Param()
+        {
+            var sut = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            sut.Map(v => v + 3);
+
+            var expected = new double[] { 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+
+            CollectionAssert.AreEqual(expected, sut);
+        }
+        
+        [TestMethod]
         public void ArrayExtensions_Clear()
         {
             var sut = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
