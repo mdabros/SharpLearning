@@ -20,15 +20,20 @@ namespace SharpLearning.Neural
             var rows = m.RowCount;
             var cols = m.ColumnCount;
 
+            var mData = m.Data();
+            var outData = output.Data();
+            var vData = v.Data();
+
             if (v.Count != cols)
             { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Count); }
 
-            for (int i = 0; i < rows; i++)
+            for (int col = 0; col < cols; col++)
             {
-                for (int j = 0; j < cols; j++)
+                var rowOffSet = col * rows;
+                for (int row = 0; row < rows; row++)
                 {
-                    var value = m.At(i, j) + v[j];
-                    output.At(i, j, value);
+                    var mIndex = rowOffSet + row;
+                    outData[mIndex] = mData[mIndex] + vData[col];
                 }
             }
         }
@@ -44,15 +49,20 @@ namespace SharpLearning.Neural
             var rows = m.RowCount;
             var cols = m.ColumnCount;
 
+            var mData = m.Data();
+            var outData = output.Data();
+            var vData = v.Data();
+
             if (v.Count != rows)
             { throw new ArgumentException("matrix rows: " + rows + " differs from vector length: " + v.Count); }
 
-            for (int i = 0; i < cols; i++)
+            for (int col = 0; col < cols; col++)
             {
-                for (int j = 0; j < rows; j++)
+                var rowOffSet = col * rows;
+                for (int row = 0; row < rows; row++)
                 {
-                    var value = m.At(j, i) + v[j];
-                    output.At(j, i, value); 
+                    var mIndex = rowOffSet + row;
+                    outData[mIndex] = mData[mIndex] + vData[row];
                 }
             }
         }
@@ -133,11 +143,19 @@ namespace SharpLearning.Neural
         /// <param name="sums"></param>
         public static void SumColumns(this Matrix<float> m, Vector<float> sums)
         {
-            for (int i = 0; i < m.ColumnCount; i++)
+            var rows = m.RowCount;
+            var cols = m.ColumnCount;
+
+            var mData = m.Data();
+            var sumsData = sums.Data();
+
+            for (int col = 0; col < m.ColumnCount; col++)
             {
-                for (int j = 0; j < m.RowCount; j++)
+                var rowOffSet = col * rows;
+                for (int row = 0; row < m.RowCount; row++)
                 {
-                    sums[i] += m.At(j, i);
+                    var mIndex = rowOffSet + row;
+                    sumsData[col] += mData[mIndex];
                 }
             }
         }
@@ -149,11 +167,19 @@ namespace SharpLearning.Neural
         /// <param name="sums"></param>
         public static void SumRows(this Matrix<float> m, Vector<float> sums)
         {
-            for (int i = 0; i < m.RowCount; i++)
+            var rows = m.RowCount;
+            var cols = m.ColumnCount;
+
+            var mData = m.Data();
+            var sumsData = sums.Data();
+
+            for (int col = 0; col < m.ColumnCount; col++) 
             {
-                for (int j = 0; j < m.ColumnCount; j++)
+                var rowOffSet = col * rows;
+                for (int row = 0; row < m.RowCount; row++)
                 {
-                    sums[i] += m.At(i, j);
+                    var mIndex = rowOffSet + row;
+                    sumsData[row] += mData[mIndex];
                 }
             }
         }
