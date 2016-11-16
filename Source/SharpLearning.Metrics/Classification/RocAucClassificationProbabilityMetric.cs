@@ -31,7 +31,10 @@ namespace SharpLearning.Metrics.Classification
         public double Error(double[] targets, ProbabilityPrediction[] predictions)
         {
             if (targets.Distinct().Count() > 2)
-            { throw new ArgumentException("AucClassificationMetric only supports binary classification problems"); }
+            { throw new ArgumentException("RocAucClassificationProbabilityMetric only supports binary classification problems"); }
+
+            if (targets.Distinct().Count() == 1)
+            { throw new ArgumentException("Only one class present, RocAucClassificationProbabilityMetric is only defined for binary classification problems."); }
 
             var positiveTargetProbabilities = predictions.Select(p => p.Probabilities[m_positiveTarget])
                 .ToArray();

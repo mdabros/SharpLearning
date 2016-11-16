@@ -104,6 +104,36 @@ namespace SharpLearning.Metrics.Test.Classification
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RocAucClassificationMetric_Error_Only_Positve_Targets()
+        {
+            var positives = Enumerable.Range(0, 10).Select(s => 1.0).ToList();
+            var targets = positives.ToArray();
+
+            var probabilities = targets
+                .Select(s => new ProbabilityPrediction(0.0, new Dictionary<double, double> { { 0.0, 1.0 }, { 1.0, 0.0 } }))
+                .ToArray();
+
+            var sut = new RocAucClassificationProbabilityMetric(1);
+            sut.Error(targets, probabilities);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void RocAucClassificationMetric_Error_Only_Negative_Targets()
+        {
+            var positives = Enumerable.Range(0, 10).Select(s => 0.0).ToList();
+            var targets = positives.ToArray();
+
+            var probabilities = targets
+                .Select(s => new ProbabilityPrediction(0.0, new Dictionary<double, double> { { 0.0, 1.0 }, { 1.0, 0.0 } }))
+                .ToArray();
+
+            var sut = new RocAucClassificationProbabilityMetric(1);
+            sut.Error(targets, probabilities);
+        }
+
+        [TestMethod]
         public void RocAucClassificationMetric_ErrorString()
         {
             var targets = new double[] { 0, 1 };
