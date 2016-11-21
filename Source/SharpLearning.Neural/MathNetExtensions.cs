@@ -125,14 +125,21 @@ namespace SharpLearning.Neural
         /// <param name="v"></param>
         public static void ColumnWiseMean(this Matrix<float> m, Vector<float> v)
         {
-            for (int i = 0; i < m.ColumnCount; i++)
+            var rows = m.RowCount;
+            
+            var mData = m.Data();
+            var vData = v.Data();
+
+            for (int col = 0; col < m.ColumnCount; col++)
             {
-                for (int j = 0; j < m.RowCount; j++)
+                var rowOffSet = col * rows;
+                for (int row = 0; row < m.RowCount; row++)
                 {
-                    v[i] += m.At(j, i);
+                    var mIndex = rowOffSet + row;
+                    vData[col] += mData[mIndex];
                 }
 
-                v[i] = v[i] / (float)m.RowCount;
+                vData[col] = vData[col] / (float)m.RowCount;
             }
         }
 
