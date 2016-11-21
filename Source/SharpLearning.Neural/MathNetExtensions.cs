@@ -39,6 +39,35 @@ namespace SharpLearning.Neural
         }
 
         /// <summary>
+        /// Subtracts vector v from matrix m - rowwise.
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="v"></param>
+        /// <param name="output"></param>
+        public static void SubtractRowWise(this Matrix<float> m, Vector<float> v, Matrix<float> output)
+        {
+            var rows = m.RowCount;
+            var cols = m.ColumnCount;
+
+            var mData = m.Data();
+            var outData = output.Data();
+            var vData = v.Data();
+
+            if (v.Count != cols)
+            { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Count); }
+
+            for (int col = 0; col < cols; col++)
+            {
+                var rowOffSet = col * rows;
+                for (int row = 0; row < rows; row++)
+                {
+                    var mIndex = rowOffSet + row;
+                    outData[mIndex] = mData[mIndex] - vData[col];
+                }
+            }
+        }
+
+        /// <summary>
         /// Adds vector v to matrix m. V is Added to each column of the matrix
         /// </summary>
         /// <param name="m"></param>
