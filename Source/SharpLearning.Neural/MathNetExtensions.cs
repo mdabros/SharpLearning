@@ -184,11 +184,19 @@ namespace SharpLearning.Neural
         /// <param name="sums"></param>
         public static void SumColumns(this Matrix<float> m, Vector<float> sums)
         {
+            SumColumns(m, sums.Data());
+        }
+
+        /// <summary>
+        /// Sums the columns of m into the vector sums. 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="sums"></param>
+        public static void SumColumns(this Matrix<float> m, float[] sums)
+        {
             var rows = m.RowCount;
             var cols = m.ColumnCount;
-
             var mData = m.Data();
-            var sumsData = sums.Data();
 
             for (int col = 0; col < m.ColumnCount; col++)
             {
@@ -196,7 +204,7 @@ namespace SharpLearning.Neural
                 for (int row = 0; row < m.RowCount; row++)
                 {
                     var mIndex = rowOffSet + row;
-                    sumsData[col] += mData[mIndex];
+                    sums[col] += mData[mIndex];
                 }
             }
         }
@@ -208,19 +216,28 @@ namespace SharpLearning.Neural
         /// <param name="sums"></param>
         public static void SumRows(this Matrix<float> m, Vector<float> sums)
         {
+            SumRows(m, sums.Data());
+        }
+
+        /// <summary>
+        /// Sums the rows of m into the vector sums. 
+        /// </summary>
+        /// <param name="m"></param>
+        /// <param name="sums"></param>
+        public static void SumRows(this Matrix<float> m, float[] sums)
+        {
             var rows = m.RowCount;
             var cols = m.ColumnCount;
 
             var mData = m.Data();
-            var sumsData = sums.Data();
 
-            for (int col = 0; col < m.ColumnCount; col++) 
+            for (int col = 0; col < m.ColumnCount; col++)
             {
                 var rowOffSet = col * rows;
                 for (int row = 0; row < m.RowCount; row++)
                 {
                     var mIndex = rowOffSet + row;
-                    sumsData[row] += mData[mIndex];
+                    sums[row] += mData[mIndex];
                 }
             }
         }
