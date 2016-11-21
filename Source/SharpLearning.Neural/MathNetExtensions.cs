@@ -107,15 +107,20 @@ namespace SharpLearning.Neural
             var rows = m.RowCount;
             var cols = m.ColumnCount;
 
+            var mData = m.Data();
+            var outData = output.Data();
+            var vData = v.Data();
+
             if (v.Count != cols)
             { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Count); }
 
-            for (int i = 0; i < rows; i++)
+            for (int col = 0; col < cols; col++)
             {
-                for (int j = 0; j < cols; j++)
+                var rowOffSet = col * rows;
+                for (int row = 0; row < rows; row++)
                 {
-                    var value = m.At(i, j) * v[j];
-                    output.At(i, j, value); 
+                    var mIndex = rowOffSet + row;
+                    outData[mIndex] = mData[mIndex] * v[col];
                 }
             }
         }
