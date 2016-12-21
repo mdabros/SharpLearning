@@ -1,9 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Neural.Loss
 {
@@ -30,14 +26,15 @@ namespace SharpLearning.Neural.Loss
             var min = 1e-10f;
             var max = 1.0f - min;
 
-            var sum = 0.0f;            
-            for (int i = 0; i < targets.RowCount; i++)
+            var sum = 0.0f;
+
+            var targetsArray = targets.Data();
+            var predictionsArray = predictions.Data();
+
+            for (int i = 0; i < targetsArray.Length; i++)
             {
-                for (int j = 0; j < targets.ColumnCount; j++)
-                {
-                    var clip = (float)Math.Log(Math.Max(min, Math.Min(predictions[i, j], max)));
-                    sum += targets[i, j] * clip;
-                }
+                var clip = (float)Math.Log(Math.Max(min, Math.Min(predictionsArray[i], max)));
+                sum += targetsArray[i] * clip;
             }
 
             return -sum / (float)targets.RowCount;

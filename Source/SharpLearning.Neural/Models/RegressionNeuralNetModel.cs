@@ -9,27 +9,22 @@ using System.Linq;
 
 namespace SharpLearning.Neural.Models
 {
+
     /// <summary>
-    /// Regression neural net model
+    /// Regression neural net model.
     /// </summary>
     [Serializable]
     public sealed class RegressionNeuralNetModel : IPredictorModel<double>
     {
-        readonly NeuralNetModel m_model;
-
-        /// <summary>
-        /// Iterations used for training the model
-        /// </summary>
-        public readonly int Iterations;
+        readonly NeuralNet m_neuralNet;
 
         /// <summary>
         /// Regression neural net model
         /// </summary>
         /// <param name="model"></param>
-        public RegressionNeuralNetModel(NeuralNetModel model)
+        public RegressionNeuralNetModel(NeuralNet model)
         {
-            m_model = model;
-            Iterations = model.Iterations;
+            m_neuralNet = model;
         }
 
         /// <summary>
@@ -40,14 +35,14 @@ namespace SharpLearning.Neural.Models
         public double Predict(double[] observation)
         {
             var mObservation = observation
-                            .ConvertDoubleArray();
+                .ConvertDoubleArray();
 
-            var prediction = (double)m_model.ForwardPass(mObservation)
+            var prediction = (double)m_neuralNet.Forward(mObservation)
                 .ToColumnWiseArray().Single();
 
             return prediction;
         }
-        
+
         /// <summary>
         /// Predicts a set of observations
         /// </summary>
@@ -56,24 +51,27 @@ namespace SharpLearning.Neural.Models
         public double[] Predict(F64Matrix observations)
         {
             var rows = observations.GetNumberOfRows();
+            var cols = observations.GetNumberOfColumns();
             var predictions = new double[rows];
+            var observation = new double[cols];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = Predict(observations.GetRow(i));
+                observations.GetRow(i, observation);
+                predictions[i] = Predict(observation);
             }
 
             return predictions;
         }
 
         /// <summary>
-        /// Returns the raw variable importance
+        /// Returns the raw variable importance. 
         /// Variable importance is calculated using the connection weights method
         /// also known as the Olden method. 
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            return m_model.GetRawVariableImportance();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -83,7 +81,7 @@ namespace SharpLearning.Neural.Models
         /// <returns></returns>
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
-            return m_model.GetVariableImportance(featureNameToIndex);
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -110,10 +108,10 @@ namespace SharpLearning.Neural.Models
         public void Save(Func<TextWriter> writer)
         {
             var types = new Type[]
-                {
-                    typeof(DenseVectorStorage<float>),
-                    typeof(DenseColumnMajorMatrixStorage<float>)
-                };
+            {
+                typeof(DenseVectorStorage<float>),
+                typeof(DenseColumnMajorMatrixStorage<float>)
+            };
 
             new GenericXmlDataContractSerializer(types)
                 .Serialize(this, writer);

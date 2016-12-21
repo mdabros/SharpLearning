@@ -68,22 +68,29 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Activations\IdentityActivationTest.cs" />
-    <Compile Include="Activations\LogisticActiviationTestcs.cs" />
     <Compile Include="Activations\ReluActivationTest.cs" />
-    <Compile Include="Activations\SoftMaxActivationTest.cs" />
-    <Compile Include="Activations\TanhActivationTest.cs" />
-    <Compile Include="Layers\HiddenLayerTest.cs" />
-    <Compile Include="Learners\ClassificationAdamNeuralNetLearnerTest.cs" />
-    <Compile Include="Learners\ClassificationMomentumNeuralNetLearnerTest.cs" />
-    <Compile Include="Learners\NeuralNetLearnerTest.cs" />
-    <Compile Include="Learners\RegressionAdamNeuralNetLearnerTest.cs" />
-    <Compile Include="Learners\RegressionMomentumNeuralNetLearnerTest.cs" />
+    <Compile Include="ConvUtilsTest.cs" />
+    <Compile Include="GradientCheckerTool.cs" />
+    <Compile Include="Layers\ActivationLayerTest.cs" />
+    <Compile Include="Layers\BatchNormalizationLayerTest.cs" />
+    <Compile Include="Layers\ConvLayerTest.cs" />
+    <Compile Include="Layers\DenseLayerTest.cs" />
+    <Compile Include="Layers\DropoutLayerTest.cs" />
+    <Compile Include="Layers\InputLayerTest.cs" />
+    <Compile Include="Layers\MaxPoolLayerTest.cs" />
+    <Compile Include="Layers\SoftMaxLayerTest.cs" />
+    <Compile Include="Layers\SquaredErrorRegressionLayerTest.cs" />
+    <Compile Include="Layers\SvmLayerTest.cs" />
+    <Compile Include="Learners\ClassificationNeuralNetLearnerTest.cs" />
+    <Compile Include="Learners\RegressionNeuralNetLearnerTest.cs" />
+    <Compile Include="Loss\AccuracyLossTest.cs" />
+    <Compile Include="Loss\HingeLossTest.cs" />
     <Compile Include="Loss\LogLossTest.cs" />
-    <Compile Include="Loss\SquaredLossTest.cs" />
+    <Compile Include="Loss\SquareLossTest.cs" />
     <Compile Include="MathNetExtensionsTest.cs" />
-    <Compile Include="Models\RegressionNeuralNetModelTest.cs" />
+    <Compile Include="MatrixAsserts.cs" />
     <Compile Include="Models\ClassificationNeuralNetModelTest.cs" />
+    <Compile Include="Models\RegressionNeuralNetModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

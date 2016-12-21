@@ -57,33 +57,46 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="Activations\ActivationInitializationBounds.cs" />
+    <Compile Include="Activations\Activiation.cs" />
     <Compile Include="Activations\IActivation.cs" />
-    <Compile Include="Activations\IdentityActivation.cs" />
     <Compile Include="Activations\ReluActivation.cs" />
-    <Compile Include="Activations\LogisticActiviation.cs" />
-    <Compile Include="Activations\SoftMaxActivation.cs" />
-    <Compile Include="Activations\TanhActivation.cs" />
-    <Compile Include="Layers\HiddenLayer.cs" />
-    <Compile Include="Learners\ClassificationAdamNeuralNetLearner.cs" />
-    <Compile Include="Learners\ClassificationMomentumNeuralNetLearner.cs" />
+    <Compile Include="ConvUtils.cs" />
+    <Compile Include="Layers\ActivationLayer.cs" />
+    <Compile Include="Layers\BatchNormalizationLayer.cs" />
+    <Compile Include="Layers\ConvLayer.cs" />
+    <Compile Include="Layers\DenseLayer.cs" />
+    <Compile Include="Layers\DropoutLayer.cs" />
+    <Compile Include="Layers\IBatchNormalizable.cs" />
+    <Compile Include="Layers\IClassificationLayer.cs" />
+    <Compile Include="Layers\ILayer.cs" />
+    <Compile Include="Layers\InputLayer.cs" />
+    <Compile Include="Layers\IOutputLayer.cs" />
+    <Compile Include="Layers\IRegressionLayer.cs" />
+    <Compile Include="Layers\MaxPoolLayer.cs" />
+    <Compile Include="Layers\SoftMaxLayer.cs" />
+    <Compile Include="Layers\SquaredErrorRegressionLayer.cs" />
+    <Compile Include="Layers\SvmLayer.cs" />
+    <Compile Include="Learners\ClassificationNeuralNetLearner.cs" />
     <Compile Include="Learners\NeuralNetLearner.cs" />
-    <Compile Include="Learners\RegressionAdamNeuralNetLearner.cs" />
-    <Compile Include="Learners\RegressionMomentumNeuralNetLearner.cs" />
-    <Compile Include="LearningRateSchedule.cs" />
+    <Compile Include="Learners\RegressionNeuralNetLearner.cs" />
+    <Compile Include="Loss\AccuracyLoss.cs" />
+    <Compile Include="Loss\HingeLoss.cs" />
     <Compile Include="Loss\ILoss.cs" />
     <Compile Include="Loss\LogLoss.cs" />
-    <Compile Include="Loss\SquaredLoss.cs" />
+    <Compile Include="Loss\SquareLoss.cs" />
     <Compile Include="MathNetExtensions.cs" />
     <Compile Include="Models\ClassificationNeuralNetModel.cs" />
-    <Compile Include="Models\NeuralNetModel.cs" />
+    <Compile Include="Models\NeuralNet.cs" />
     <Compile Include="Models\RegressionNeuralNetModel.cs" />
-    <Compile Include="Optimizers\AdamNeuralNetOptimizer.cs" />
-    <Compile Include="Optimizers\INeuralNetOptimizer.cs" />
-    <Compile Include="Optimizers\SGDNeuralNetOptimizer.cs" />
+    <Compile Include="Optimizers\NeuralNetOptimizer.cs" />
+    <Compile Include="Optimizers\OptimizerMethod.cs" />
+    <Compile Include="ParametersAndGradients.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />
     <Compile Include="TargetEncoders\OneOfNTargetEncoder.cs" />
+    <Compile Include="WeightsAndBiases.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -102,6 +115,7 @@
       <Name>SharpLearning.InputOutput</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

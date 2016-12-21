@@ -9,30 +9,25 @@ using System.IO;
 
 namespace SharpLearning.Neural.Models
 {
+
     /// <summary>
-    /// Classification neural net model
+    /// Classification neural net model.
     /// </summary>
     [Serializable]
     public sealed class ClassificationNeuralNetModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
     {
-        readonly NeuralNetModel m_model;
+        readonly NeuralNet m_neuralNet;
         readonly double[] m_targetNames;
-
-        /// <summary>
-        /// Iterations used for training the model
-        /// </summary>
-        public readonly int Iterations;
 
         /// <summary>
         /// Classification neural net model
         /// </summary>
         /// <param name="model"></param>
         /// <param name="targetNames"></param>
-        public ClassificationNeuralNetModel(NeuralNetModel model, double[] targetNames)
+        public ClassificationNeuralNetModel(NeuralNet model, double[] targetNames)
         {
-            m_model = model;
+            m_neuralNet = model;
             m_targetNames = targetNames;
-            Iterations = model.Iterations;
         }
 
         /// <summary>
@@ -45,8 +40,8 @@ namespace SharpLearning.Neural.Models
             var mObservation = observation
                 .ConvertDoubleArray();
 
-            var probabilities = m_model.ForwardPass(mObservation);
-            
+            var probabilities = m_neuralNet.Forward(mObservation);
+
             var probability = 0.0;
             var prediction = 0.0;
 
@@ -105,7 +100,7 @@ namespace SharpLearning.Neural.Models
             var mObservation = observation
                 .ConvertDoubleArray();
 
-            var probabilities = m_model.ForwardPass(mObservation);
+            var probabilities = m_neuralNet.Forward(mObservation);
             var probabilityDictionary = new Dictionary<double, double>();
 
             var probability = 0.0;
@@ -113,7 +108,7 @@ namespace SharpLearning.Neural.Models
 
             for (int i = 0; i < m_targetNames.Length; i++)
             {
-                
+
                 probabilityDictionary.Add(m_targetNames[i], probabilities[0, i]);
                 if (probabilities[0, i] > probability)
                 {
@@ -153,7 +148,7 @@ namespace SharpLearning.Neural.Models
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            return m_model.GetRawVariableImportance();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -163,7 +158,7 @@ namespace SharpLearning.Neural.Models
         /// <returns></returns>
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
-            return m_model.GetVariableImportance(featureNameToIndex);
+            throw new NotImplementedException();
         }
 
         /// <summary>

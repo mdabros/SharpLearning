@@ -1,6 +1,4 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace SharpLearning.Neural.Activations
 {
@@ -13,16 +11,12 @@ namespace SharpLearning.Neural.Activations
         /// Rectified linear activation for neural net.
         /// </summary>
         /// <param name="x"></param>
-        public void Activation(Matrix<float> x)
+        public void Activation(float[] x)
         {
-            //for (int i = 0; i < x.RowCount; i++)
-            Parallel.For(0, x.RowCount, i =>
+            for (int j = 0; j < x.Length; j++)
             {
-                for (int j = 0; j < x.ColumnCount; j++)
-                {
-                    x[i, j] = Relu(x[i, j]);
-                }
-            });
+                x[j] = Relu(x[j]);
+            }
         }
 
         /// <summary>
@@ -30,16 +24,12 @@ namespace SharpLearning.Neural.Activations
         /// </summary>
         /// <param name="x"></param>
         /// <param name="output"></param>
-        public void Derivative(Matrix<float> x, Matrix<float> output)
+        public void Derivative(float[] x, float[] output)
         {
-            //for (int i = 0; i < x.RowCount; i++)
-            Parallel.For(0, x.RowCount, i =>
+            for (int j = 0; j < x.Length; j++)
             {
-                for (int j = 0; j < x.ColumnCount; j++)
-                {
-                    output[i, j] = Derivative(x[i, j]);
-                }
-            });
+                output[j] = Derivative(x[j]);
+            }
         }
 
         float Relu(float input)
@@ -53,18 +43,6 @@ namespace SharpLearning.Neural.Activations
                 return 1.0f;
             else
                 return 0.0f;
-        }
-
-        /// <summary>
-        /// Based on the fan-in and fan-out of the layer. 
-        /// Determines the initialization bounds for the weights in the layer.
-        /// </summary>
-        /// <param name="fanIn"></param>
-        /// <param name="fanOut"></param>
-        /// <returns></returns>
-        public float InitializationBound(int fanIn, int fanOut)
-        {
-            return (float)Math.Sqrt(6f / (float)(fanIn + fanOut));
         }
     }
 }
