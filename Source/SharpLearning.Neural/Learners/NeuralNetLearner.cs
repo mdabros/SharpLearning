@@ -179,6 +179,7 @@ namespace SharpLearning.Neural
 
                 if (double.IsNaN(currentLoss))
                 {
+                    Trace.WriteLine("Loss is NaN, stopping...");
                     break;
                 }
             }
