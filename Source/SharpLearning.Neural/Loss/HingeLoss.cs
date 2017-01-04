@@ -3,13 +3,13 @@
 namespace SharpLearning.Neural.Loss
 {
     /// <summary>
-    /// Hinge loss, used be linear svm
+    /// Hinge loss, used by linear svm
     /// https://en.wikipedia.org/wiki/Hinge_loss
     /// </summary>
     public sealed class HingeLoss : ILoss
     {
         /// <summary>
-        /// Hinge loss, used be linear svm
+        /// Hinge loss, used by linear svm
         /// https://en.wikipedia.org/wiki/Hinge_loss
         /// </summary>
         /// <param name="targets"></param>

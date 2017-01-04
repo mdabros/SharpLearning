@@ -159,9 +159,7 @@ namespace SharpLearning.Neural.Layers
 
                                 var v = inputData[inputIndex];
 
-                                // perform max pooling and store pointers to where
-                                // the max came from. This will speed up backprop 
-                                // and can help make nice visualizations in future
+                                // perform max pooling and store the index the max location.
                                 if (v > currentMax)
                                 {
                                     currentMax = v;

@@ -19,7 +19,7 @@ namespace SharpLearning.Neural.Activations
             switch (activation)
             {
                 case Activation.Undefined:
-                    return (float)Math.Sqrt(2.0 / (double)(fanOut));
+                    return (float)Math.Sqrt(2.0 / (double)(fanOut)); // use standard initialization for undefined.
                 case Activation.Relu:
                     return (float)Math.Sqrt(2.0 / (double)(fanOut)); // according to article on Relu activation: https://arxiv.org/pdf/1502.01852.pdf
                 default:

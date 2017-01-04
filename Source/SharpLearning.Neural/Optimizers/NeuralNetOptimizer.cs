@@ -116,7 +116,7 @@ namespace SharpLearning.Neural.Optimizers
             }
         }
 
-        private void UpdateParam(int i, float[] parameters, float[] gradients, double l2Decay, double l1Decay,
+        void UpdateParam(int i, float[] parameters, float[] gradients, double l2Decay, double l1Decay,
             List<double[]> gsum, List<double[]> xsum)
         {
             for (var j = 0; j < parameters.Length; j++)
