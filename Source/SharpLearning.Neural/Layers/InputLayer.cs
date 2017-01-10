@@ -43,10 +43,10 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="height"></param>
         /// <param name="width"></param>
+        /// <param name="height"></param>
         /// <param name="depth"></param>
-        public InputLayer(int height, int width, int depth)
+        public InputLayer(int width, int height, int depth)
         {
             Width = width;
             Height = height;
@@ -118,7 +118,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="layers"></param>
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
-            var copy = new InputLayer(Height, Width, Depth);
+            var copy = new InputLayer(Width, Height, Depth);
             layers.Add(copy);
         }
     }

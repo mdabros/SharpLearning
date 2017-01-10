@@ -19,7 +19,7 @@ namespace SharpLearning.Neural.Test.Layers
             var depth = 3;
             var random = new Random(232);
 
-            var sut = new InputLayer(width, height, depth);
+            var sut = new InputLayer(height, width, depth);
             sut.Initialize(1, 1, 1, batchSize, random);
 
             var layers = new List<ILayer>();
@@ -42,7 +42,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
             var fanIn = width * height * depth;
 
-            var sut = new InputLayer(width, height, depth);
+            var sut = new InputLayer(height, width, depth);
             sut.Initialize(1, 1, 1, batchSize, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -62,7 +62,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
             var fanIn = width * height * depth;
 
-            var sut = new InputLayer(width, height, depth);
+            var sut = new InputLayer(height, width, depth);
             sut.Initialize(1, 1, 1, batchSize, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
