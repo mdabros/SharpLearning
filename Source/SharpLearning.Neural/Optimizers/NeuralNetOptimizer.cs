@@ -12,7 +12,8 @@ namespace SharpLearning.Neural.Optimizers
     /// </summary>
     public sealed class NeuralNetOptimizer
     {
-        readonly float m_learningRate;
+        float m_learningRate;
+        readonly float m_learningRateInit;
         readonly float m_momentum;
         readonly int m_batchSize;
 
@@ -47,8 +48,8 @@ namespace SharpLearning.Neural.Optimizers
         /// <param name="rho">Squared gradient moving average decay factor (Default is 0.95)</param>
         /// <param name="beta1">Exponential decay rate for estimates of first moment vector, should be in range 0 to 1 (Default is 0.9)</param>
         /// <param name="beta2">Exponential decay rate for estimates of second moment vector, should be in range 0 to 1 (Default is 0.999)</param>
-        public NeuralNetOptimizer(double learningRate, int batchSize, double l1decay=0, double l2decay=0, 
-            OptimizerMethod optimizerMethod = OptimizerMethod.Adagrad, double momentum = 0.9, double rho=0.95, double beta1=0.9, double beta2=0.999)
+        public NeuralNetOptimizer(double learningRate, int batchSize, double l1decay = 0, double l2decay = 0,
+            OptimizerMethod optimizerMethod = OptimizerMethod.Adagrad, double momentum = 0.9, double rho = 0.95, double beta1 = 0.9, double beta2 = 0.999)
         {
             if (learningRate <= 0) { throw new ArgumentNullException("learning rate must be larger than 0. Was: " + learningRate); }
             if (batchSize <= 0) { throw new ArgumentNullException("batchSize must be larger than 0. Was: " + batchSize); }
@@ -60,10 +61,11 @@ namespace SharpLearning.Neural.Optimizers
             if (beta2 <= 0) { throw new ArgumentNullException("beta2 must be larger than 0. Was: " + beta2); }
 
             m_learningRate = (float)learningRate;
+            m_learningRateInit = (float)learningRate;
             m_batchSize = batchSize;
             m_l1Decay = (float)l1decay;
             m_l2Decay = (float)l2decay;
-            
+
             OptimizerMethod = optimizerMethod;
             m_momentum = (float)momentum;
             m_rho = (float)rho;
@@ -78,16 +80,16 @@ namespace SharpLearning.Neural.Optimizers
         public void UpdateParameters(List<ParametersAndGradients> parametersAndGradients)
         {
             m_iterationCounter++;
-            
+
             // initialize accumulators. Will only be done once on first iteration and if optimizer methods is not sgd
             var useAccumulators = gsumWeights.Count == 0 && (OptimizerMethod != OptimizerMethod.Sgd || m_momentum > 0.0);
             if (useAccumulators) { InitializeAccumulators(parametersAndGradients); }
 
             // perform update of all parameters
-            Parallel.For(0, parametersAndGradients.Count, i => 
+            Parallel.For(0, parametersAndGradients.Count, i =>
             {
                 var parametersAndGradient = parametersAndGradients[i];
-                
+
                 // extract parameters and gradients
                 var parameters = parametersAndGradient.Parameters.Weights.Data();
                 var parametersBias = parametersAndGradient.Parameters.Bias.Data();
@@ -96,7 +98,7 @@ namespace SharpLearning.Neural.Optimizers
 
                 // update weights
                 UpdateParam(i, parameters, gradients, m_l2Decay, m_l1Decay, gsumWeights, xsumWeights);
-                    
+
                 // Update biases
                 UpdateParam(i, parametersBias, gradientsBias, m_l2Decay, m_l1Decay, gsumBias, xsumBias);
             });
@@ -156,11 +158,13 @@ namespace SharpLearning.Neural.Optimizers
                         break;
                     case OptimizerMethod.Adam:
                         {
-                            gsumi[j] = gsumi[j] * m_beta1 + (1 - m_beta1) * gij; // update biased first moment estimate
-                            xsumi[j] = xsumi[j] * m_beta2 + (1 - m_beta2) * gij * gij; // update biased second moment estimate
-                            var biasCorr1 = gsumi[j] * (1 - Math.Pow(m_beta1, m_iterationCounter)); // correct bias first moment estimate
-                            var biasCorr2 = xsumi[j] * (1 - Math.Pow(m_beta2, m_iterationCounter)); // correct bias second moment estimate
-                            var dx = -m_learningRate * biasCorr1 / (Math.Sqrt(biasCorr2) + m_eps);
+                            gsumi[j] = gsumi[j] * m_beta1 + (1.0 - m_beta1) * gij; // update biased first moment estimate
+                            xsumi[j] = xsumi[j] * m_beta2 + (1.0 - m_beta2) * gij * gij; // update biased second moment estimate
+
+                            m_learningRate = (float)(m_learningRateInit * Math.Sqrt(1.0 - Math.Pow(m_beta2, m_iterationCounter)) /
+                                (1 - Math.Pow(m_beta1, m_iterationCounter)));
+
+                            var dx = -m_learningRate * gsumi[j] / (Math.Sqrt(xsumi[j]) + m_eps);
                             parameters[j] += (float)dx;
                         }
                         break;
@@ -209,7 +213,7 @@ namespace SharpLearning.Neural.Optimizers
         {
             // clear counter
             m_iterationCounter = 0;
-            
+
             // clear sums
             for (int i = 0; i < gsumWeights.Count; i++)
             {
