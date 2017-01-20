@@ -25,7 +25,7 @@ namespace SharpLearning.Neural.Optimizers
 
         readonly OptimizerMethod OptimizerMethod = OptimizerMethod.Sgd;
         readonly float m_rho = 0.95f;
-        readonly float m_eps = 1e-6f;
+        readonly float m_eps = 1e-8f;
         readonly float m_beta1 = 0.9f;
         readonly float m_beta2 = 0.999f;
 
