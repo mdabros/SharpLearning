@@ -101,7 +101,28 @@ namespace SharpLearning.Neural
 
             return activation;
         }
-                
+
+
+        /// <summary>
+        /// Forwards each observations from input and stores the results in output.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        public void Forward(Matrix<float> input, Matrix<float> output)
+        {
+            var row = Matrix<float>.Build.Dense(1, input.ColumnCount);
+            for (int rowIndex = 0; rowIndex < input.RowCount; rowIndex++)
+            {
+                input.Row(rowIndex, row.Data());
+                var prediction = Forward(row);
+
+                for (int col = 0; col < prediction.ColumnCount; col++)
+                {
+                    output[rowIndex, col] = prediction[0, col];
+                }
+            }
+        }
+
         /// <summary>
         /// Initializes the layers in the neural net (Instantiates members and creates random initialization of weights). 
         /// </summary>

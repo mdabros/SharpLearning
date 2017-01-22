@@ -20,9 +20,9 @@ namespace SharpLearning.Neural.Test.Learners
             var numberOfClasses = 5;
 
             var random = new Random(32);
-            var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
-            observations.Initialize(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            F64Matrix observations;
+            double[] targets;
+            CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out observations, out targets);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(numberOfFeatures));
@@ -41,6 +41,40 @@ namespace SharpLearning.Neural.Test.Learners
         }
 
         [TestMethod]
+        public void ClassificationNeuralNetLearner_Learn_Early_Stopping()
+        {
+            var numberOfObservations = 500;
+            var numberOfFeatures = 5;
+            var numberOfClasses = 5;
+
+            var random = new Random(32);
+
+            F64Matrix observations;
+            double[] targets;
+            CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out observations, out targets);
+
+            F64Matrix validationObservations;
+            double[] validationTargets;
+            CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out validationObservations, out validationTargets);
+
+            var net = new NeuralNet();
+            net.Add(new InputLayer(numberOfFeatures));
+            net.Add(new DenseLayer(10));
+            net.Add(new SvmLayer(numberOfClasses));
+
+            var sut = new ClassificationNeuralNetLearner(net, new AccuracyLoss());
+            var model = sut.Learn(observations, targets,
+                validationObservations, validationTargets);
+
+            var validationPredictions = model.Predict(validationObservations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(validationTargets, validationPredictions);
+
+            Assert.AreEqual(0.802, actual);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ClassificationNeuralNetLearner_Constructor_Throw_On_Wrong_OutputLayerType()
         {
@@ -50,6 +84,13 @@ namespace SharpLearning.Neural.Test.Learners
             net.Add(new SquaredErrorRegressionLayer());
 
             var sut = new ClassificationNeuralNetLearner(net, new AccuracyLoss());
+        }
+
+        void CreateData(int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random, out F64Matrix observations, out double[] targets)
+        {
+            observations = new F64Matrix(numberOfObservations, numberOfFeatures);
+            observations.Initialize(() => random.NextDouble());
+            targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
         }
     }
 }

@@ -30,8 +30,6 @@ namespace SharpLearning.Neural
         readonly ITargetEncoder m_targetEncoder;
         readonly ILoss m_loss;
 
-        int m_no_improvement_count;
-        double m_best_loss;
         const double m_tol = 1e-4;
 
         /// <summary>
@@ -103,6 +101,43 @@ namespace SharpLearning.Neural
         /// <returns></returns>
         public NeuralNet Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            return Learn(observations, targets, indices,
+                null, null); // no validation data
+        }
+
+        /// <summary>
+        /// Learns a neural net based on the observations and targets.
+        /// ValidationObservations and ValidationTargets are used to track the validation loss pr. iteration.
+        /// The iteration with the best validaiton loss is returned.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <returns></returns>
+        public NeuralNet Learn(F64Matrix observations, double[] targets,
+            F64Matrix validationObservations, double[] validationTargets)
+        {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices,
+                validationObservations, validationTargets); 
+        }
+
+        /// <summary>
+        /// Learns a neural net based on the observations and targets.
+        /// The learning only uses the observations which indices are present in indices.
+        /// ValidationObservations and ValidationTargets are used to track the validation loss pr. iteration.
+        /// The iteration with the best validaiton loss is returned.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <returns></returns>
+        public NeuralNet Learn(F64Matrix observations, double[] targets, int[] indices,
+            F64Matrix validationObservations, double[] validationTargets)
+        {
             // targetEncoder 
             var oneOfNTargets = m_targetEncoder.Encode(targets);
 
@@ -120,9 +155,7 @@ namespace SharpLearning.Neural
             }
 
             var currentLoss = 0.0;
-            m_best_loss = double.MaxValue;
-            m_no_improvement_count = 0;
-
+            
             // initialize net
             m_net.Initialize(m_batchSize, m_random);
 
@@ -131,6 +164,29 @@ namespace SharpLearning.Neural
 
             // reset optimizer
             m_optimizer.Reset();
+
+            // Setup early stopping if validation data is provided.
+            var earlyStopping = validationObservations != null && validationTargets != null;
+
+            NeuralNet bestNeuralNet = null;
+            Matrix<float> floatValidationObservations = null;
+            Matrix<float> floatValidationTargets = null;
+            Matrix<float> floatValidationPredictions = null;
+            var bestLoss = double.MaxValue;
+
+            if (earlyStopping)
+            {
+                var validationIndices = Enumerable.Range(0, validationTargets.Length).ToArray();
+
+                floatValidationObservations = Matrix<float>.Build
+                    .Dense(validationObservations.GetNumberOfRows(), validationObservations.GetNumberOfColumns());
+                CopyBatch(validationObservations, floatValidationObservations, validationIndices);
+
+                floatValidationTargets = m_targetEncoder.Encode(validationTargets);
+
+                floatValidationPredictions = Matrix<float>.Build
+                    .Dense(floatValidationTargets.RowCount, floatValidationTargets.ColumnCount);
+            }
 
             var timer = new Stopwatch();
 
@@ -173,9 +229,27 @@ namespace SharpLearning.Neural
                 timer.Stop();
 
                 currentLoss = accumulatedLoss / (double)indices.Length;
-                Trace.WriteLine("Iteration: " + (iteration + 1) + " Loss: " + currentLoss + " Time (ms): " + timer.ElapsedMilliseconds);
 
-                UpdateNoImprovement(currentLoss);
+                if(earlyStopping)
+                {
+                    var candidate = m_net.CopyNetForPredictionModel();
+                    candidate.Forward(floatValidationObservations, floatValidationPredictions);
+                    var validationLoss = m_loss.Loss(floatValidationTargets, floatValidationPredictions);
+
+                    Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Validation: {2:0.00000} - Time (ms): {3}",
+                        (iteration + 1), currentLoss, validationLoss, timer.ElapsedMilliseconds));
+
+                    if(validationLoss < bestLoss)
+                    {
+                        bestLoss = validationLoss;
+                        bestNeuralNet = candidate;
+                    }
+                }
+                else
+                {
+                    Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Time (ms): {2}",
+                        (iteration + 1), currentLoss, timer.ElapsedMilliseconds));
+                }
 
                 if (double.IsNaN(currentLoss))
                 {
@@ -184,7 +258,14 @@ namespace SharpLearning.Neural
                 }
             }
 
-            return m_net.CopyNetForPredictionModel();
+            if(earlyStopping)
+            {
+                return bestNeuralNet;
+            }
+            else
+            {
+                return m_net.CopyNetForPredictionModel();
+            }
         }
 
         void SetupLinerAlgebraProvider()
@@ -202,23 +283,6 @@ namespace SharpLearning.Neural
                 Control.UseManaged();
                 Control.UseMultiThreading();
                 Trace.WriteLine("Using .Net Managed Provider");
-            }
-        }
-
-        void UpdateNoImprovement(double currentLoss)
-        {
-            if (currentLoss > m_best_loss - m_tol)
-            {
-                m_no_improvement_count++;
-            }
-            else
-            {
-                m_no_improvement_count = 0;
-            }
-
-            if (currentLoss < m_best_loss)
-            {
-                m_best_loss = currentLoss;
             }
         }
 

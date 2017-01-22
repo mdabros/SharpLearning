@@ -76,6 +76,27 @@ namespace SharpLearning.Neural.Learners
         }
 
         /// <summary>
+        /// Learns a classification neural network.
+        /// ValidationObservations and ValidationTargets are used to track the validation loss pr. iteration.
+        /// The iteration with the best validaiton loss is returned.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="validationObservations"></param>
+        /// <param name="validationTargets"></param>
+        /// <returns></returns>
+        public ClassificationNeuralNetModel Learn(F64Matrix observations, double[] targets,
+            F64Matrix validationObservations, double[] validationTargets)
+        {
+            var targetNames = GetOrderedTargetNames(targets);
+
+            var model = m_learner.Learn(observations, targets, 
+                validationObservations, validationTargets);
+
+            return new ClassificationNeuralNetModel(model, targetNames);
+        }
+
+        /// <summary>
         /// Learns a classification neural network
         /// </summary>
         /// <param name="observations"></param>
