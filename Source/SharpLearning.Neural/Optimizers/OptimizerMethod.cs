@@ -13,7 +13,8 @@
         /// <summary>
         /// Adam (Adaptive Moment Estimation) is another method that computes adaptive learning rates for each parameter. 
         /// In addition to storing an exponentially decaying average of past squared gradients vtvt like Adadelta, 
-        /// Adam also keeps an exponentially decaying average of past gradients mtmt, similar to momentum:
+        /// Adam also keeps an exponentially decaying average of past gradients, similar to momentum.
+        /// Essentially Adam is RMSProp with momentum.
         /// https://arxiv.org/pdf/1412.6980.pdf
         /// </summary>
         Adam,
@@ -25,7 +26,7 @@
         AdaMax,
 
         /// <summary>
-        /// Much like Adam is essentially RMSprop with momentum, Nadam is Adam RMSprop with Nesterov momentum:
+        /// Much like Adam is essentially RMSprop with momentum, Nadam is RMSprop with Nesterov momentum:
         /// http://cs229.stanford.edu/proj2015/054_report.pdf
         /// </summary>
         Nadam,
