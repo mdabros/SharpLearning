@@ -29,6 +29,14 @@ namespace SharpLearning.Neural.Optimizers
         readonly float m_beta1 = 0.9f;
         readonly float m_beta2 = 0.999f;
 
+        // Nadam specific members.
+        float m_schedule_decay = 0.004f;
+        float m_schedule = 1.0f;
+        double m_momentumCache;
+        double m_momentumCache_1;
+        double m_scheduleNew;
+        double m_scheduleNext;
+
         readonly float m_l1Decay = 0.0f;
         readonly float m_l2Decay = 0.0f;
 
@@ -85,6 +93,8 @@ namespace SharpLearning.Neural.Optimizers
             var useAccumulators = gsumWeights.Count == 0 && (OptimizerMethod != OptimizerMethod.Sgd || m_momentum > 0.0);
             if (useAccumulators) { InitializeAccumulators(parametersAndGradients); }
 
+            UpdateLearningRate();
+
             // perform update of all parameters
             Parallel.For(0, parametersAndGradients.Count, i =>
             {
@@ -110,11 +120,43 @@ namespace SharpLearning.Neural.Optimizers
             {
                 gsumWeights.Add(new double[parametersAndGradients[i].Parameters.Weights.Data().Length]);
                 gsumBias.Add(new double[parametersAndGradients[i].Parameters.Bias.Data().Length]);
-                if (OptimizerMethod == OptimizerMethod.Adam || OptimizerMethod == OptimizerMethod.Adadelta)
+                if (OptimizerMethod == OptimizerMethod.Adam || 
+                    OptimizerMethod == OptimizerMethod.Adadelta || 
+                    OptimizerMethod == OptimizerMethod.AdaMax ||
+                    OptimizerMethod == OptimizerMethod.Nadam)
                 {
                     xsumWeights.Add(new double[parametersAndGradients[i].Parameters.Weights.Data().Length]);
                     xsumBias.Add(new double[parametersAndGradients[i].Parameters.Bias.Data().Length]);
                 }
+            }
+        }
+
+        void UpdateLearningRate()
+        {
+            switch (OptimizerMethod)
+            {
+                case OptimizerMethod.Adam:
+                    {
+                        m_learningRate = (float)(m_learningRateInit * Math.Sqrt(1.0 - Math.Pow(m_beta2, m_iterationCounter)) /
+                            (1 - Math.Pow(m_beta1, m_iterationCounter)));
+                    }
+                    break;
+                case OptimizerMethod.AdaMax:
+                    {
+                        m_learningRate = (float)(m_learningRateInit / (1.0 - Math.Pow(m_beta1, m_iterationCounter)));
+                    }
+                    break;
+                case OptimizerMethod.Nadam:
+                    {
+                        // Nadam does not update learning rate but updates the schedule for the momentum cache.
+                        m_momentumCache = m_beta1 * (1.0 - 0.5 * (Math.Pow(0.96, m_iterationCounter * m_schedule_decay)));
+                        m_momentumCache_1 = m_beta1 * (1.0 - 0.5 * (Math.Pow(0.96, (m_iterationCounter + 1) * m_schedule_decay)));
+
+                        m_scheduleNew = m_schedule * m_momentumCache;
+                        m_scheduleNext = m_schedule * m_momentumCache * m_momentumCache_1;
+                        m_schedule = (float)m_scheduleNew;
+                    }
+                    break;
             }
         }
 
@@ -146,9 +188,9 @@ namespace SharpLearning.Neural.Optimizers
                         {
                             if (m_momentum > 0.0) // sgd + momentum
                             {
-                                var dx = m_momentum * gsumi[j] - m_learningRate * gij; // step
-                                gsumi[j] = dx; // back this up for next iteration of momentum
-                                parameters[j] += (float)dx; // apply corrected gradient
+                                var dx = m_momentum * gsumi[j] - m_learningRate * gij;
+                                gsumi[j] = dx; 
+                                parameters[j] += (float)dx; 
                             }
                             else // standard sgd
                             {
@@ -158,35 +200,58 @@ namespace SharpLearning.Neural.Optimizers
                         break;
                     case OptimizerMethod.Adam:
                         {
-                            gsumi[j] = gsumi[j] * m_beta1 + (1.0 - m_beta1) * gij; // update biased first moment estimate
-                            xsumi[j] = xsumi[j] * m_beta2 + (1.0 - m_beta2) * gij * gij; // update biased second moment estimate
-
-                            m_learningRate = (float)(m_learningRateInit * Math.Sqrt(1.0 - Math.Pow(m_beta2, m_iterationCounter)) /
-                                (1 - Math.Pow(m_beta1, m_iterationCounter)));
+                            gsumi[j] = m_beta1 * gsumi[j] + (1.0 - m_beta1) * gij; 
+                            xsumi[j] = m_beta2 * xsumi[j] + (1.0 - m_beta2) * gij * gij;
 
                             var dx = -m_learningRate * gsumi[j] / (Math.Sqrt(xsumi[j]) + m_eps);
+                            parameters[j] += (float)dx;
+                        }
+                        break;
+                    case OptimizerMethod.AdaMax:
+                        {
+                            gsumi[j] = m_beta1 * gsumi[j] + (1.0 - m_beta1) * gij; 
+                            xsumi[j] = Math.Max(m_beta2 * xsumi[j], Math.Abs(gij)); 
+
+                            var dx = -m_learningRate * gsumi[j] / (xsumi[j] + m_eps);
+                            parameters[j] += (float)dx;
+                        }
+                        break;
+                    case OptimizerMethod.Nadam:
+                        {
+                            var gPrime = gij / (1.0 - m_scheduleNew);
+                            gsumi[j] = m_beta1 * gsumi[j] + (1.0 - m_beta1) * gij;
+                            var gsumiPrime = gsumi[j] / (1.0 - m_scheduleNext);
+
+                            xsumi[j] = m_beta2 * xsumi[j] + (1.0 - m_beta2) * gij * gij;
+                            var xsumiPrime = xsumi[j] / (1.0 - Math.Pow(m_beta2, m_iterationCounter));
+                            var gsumiBar = (1.0 - m_momentumCache) * gPrime + m_momentumCache_1 * gsumiPrime;
+
+                            var dx = -m_learningRate * gsumiBar / (Math.Sqrt(xsumiPrime) + m_eps);
                             parameters[j] += (float)dx;
                         }
                         break;
                     case OptimizerMethod.Adagrad:
                         {
                             gsumi[j] = gsumi[j] + gij * gij;
-                            var dx = -m_learningRate / Math.Sqrt(gsumi[j] + m_eps) * gij;
+                            var dx = -m_learningRate * gij / Math.Sqrt(gsumi[j] + m_eps);
+                            parameters[j] += (float)dx;
+                        }
+                        break;
+                    case OptimizerMethod.RMSProp:
+                        {
+                            gsumi[j] = m_rho * gsumi[j] + (1.0 - m_rho) * gij * gij;
+                            var dx = -m_learningRate * gij / (Math.Sqrt(gsumi[j]) + m_eps);
                             parameters[j] += (float)dx;
                         }
                         break;
                     case OptimizerMethod.Adadelta:
                         {
                             gsumi[j] = m_rho * gsumi[j] + (1 - m_rho) * gij * gij;
-                            var dx = -Math.Sqrt((xsumi[j] + m_eps) / (gsumi[j] + m_eps)) * gij;
+                            
+                            // learning rate multiplication left out since recommended default is 1.0. 
+                            var dx = - gij * Math.Sqrt(xsumi[j] + m_eps) / Math.Sqrt(gsumi[j] + m_eps); 
                             xsumi[j] = m_rho * xsumi[j] + (1 - m_rho) * dx * dx;
-                            parameters[j] += (float)dx;
-                        }
-                        break;
-                    case OptimizerMethod.Windowgrad:
-                        {
-                            gsumi[j] = m_rho * gsumi[j] + (1 - m_rho) * gij * gij;
-                            var dx = -m_learningRate / Math.Sqrt(gsumi[j] + m_eps) * gij;
+
                             parameters[j] += (float)dx;
                         }
                         break;

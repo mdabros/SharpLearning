@@ -11,31 +11,49 @@
         Sgd,
 
         /// <summary>
-        /// Adam is a method for stochastic optimization:
+        /// Adam (Adaptive Moment Estimation) is another method that computes adaptive learning rates for each parameter. 
+        /// In addition to storing an exponentially decaying average of past squared gradients vtvt like Adadelta, 
+        /// Adam also keeps an exponentially decaying average of past gradients mtmt, similar to momentum:
         /// https://arxiv.org/pdf/1412.6980.pdf
         /// </summary>
         Adam,
 
         /// <summary>
-        /// Adagrad is a method for stochastic optimization:
+        /// AdaMax is a variant of Adam based on the infinity norm. The algorithm is descriped in the Adam paper section 7:
+        /// https://arxiv.org/pdf/1412.6980.pdf
+        /// </summary>
+        AdaMax,
+
+        /// <summary>
+        /// Much like Adam is essentially RMSprop with momentum, Nadam is Adam RMSprop with Nesterov momentum:
+        /// http://cs229.stanford.edu/proj2015/054_report.pdf
+        /// </summary>
+        Nadam,
+
+        /// <summary>
+        /// Adagrad adapts the learning rate to each parameter, performing larger updates for infrequent and smaller updates for frequent parameters. 
+        /// For this reason, it is well-suited for dealing with sparse data:
         /// https://en.wikipedia.org/wiki/Stochastic_gradient_descent#AdaGrad
         /// </summary>
         Adagrad,
 
         /// <summary>
-        /// Adadelta: An adaptive learning rate method:
+        /// Adadelta is an extension of Adagrad that seeks to reduce its aggressive, 
+        /// monotonically decreasing learning rate. 
+        /// Instead of accumulating all past squared gradients, Adadelta restricts the window of accumulated past gradients to some fixed size w.
         /// https://arxiv.org/pdf/1212.5701v1.pdf
         /// </summary>
         Adadelta,
 
         /// <summary>
-        /// Windowgrad is adagrad but with a moving window weighted average.
-        /// </summary>
-        Windowgrad,
-
-        /// <summary>
         /// Stochastic gradient descent but with Nesterov's accelareted gradient.
         /// </summary>
-        Netsterov
+        Netsterov,
+
+        /// <summary>
+        /// RMSprop is an unpublished, adaptive learning rate method proposed by Geoff Hinton.
+        /// RMSprop and Adadelta have both been developed independently around the same time stemming from the need to resolve Adagrad's radically diminishing learning rates
+        /// </summary>
+        RMSProp
     }
 }
