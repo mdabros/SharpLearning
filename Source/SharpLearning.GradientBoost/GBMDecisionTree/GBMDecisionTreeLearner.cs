@@ -100,7 +100,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             var queue = new Queue<GBMTreeCreationItem>(100);
             queue.Enqueue(new GBMTreeCreationItem { Values = rootValues, InSample = inSample, Depth = 1 });
 
-            var featureCount = observations.GetNumberOfColumns();
+            var featureCount = observations.ColumnCount();
             var allFeatureIndices = Enumerable.Range(0, featureCount).ToArray();
 
             if (m_featuresPrSplit == 0)
@@ -322,13 +322,13 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
       
             m_loss.UpdateSplitConstants(ref left, ref right, targets[currentIndex], residuals[currentIndex]);
 
-            var previousValue = observations.GetItemAt(currentIndex, featureIndex);
+            var previousValue = observations.At(currentIndex, featureIndex);
                       
             while(right.Samples > 0)
             {
                 j = NextAllowedIndex(j + 1, orderedIndices, parentInSample);
                 currentIndex = orderedIndices[j];
-                var currentValue = observations.GetItemAt(currentIndex, featureIndex);
+                var currentValue = observations.At(currentIndex, featureIndex);
 
                 if (Math.Min(left.Samples, right.Samples) >= m_minimumSplitSize)
                 {

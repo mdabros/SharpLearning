@@ -22,8 +22,8 @@ namespace SharpLearning.CrossValidation.Test.Augmentors
                 10, 2);
 
             Assert.AreNotEqual(data, actual);
-            Assert.AreEqual(expected.GetNumberOfRows(), actual.GetNumberOfRows());
-            Assert.AreEqual(expected.GetNumberOfColumns(), actual.GetNumberOfColumns());
+            Assert.AreEqual(expected.RowCount(), actual.RowCount());
+            Assert.AreEqual(expected.ColumnCount(), actual.ColumnCount());
 
             var expectedData = expected.Data();
             var actualData = expected.Data();

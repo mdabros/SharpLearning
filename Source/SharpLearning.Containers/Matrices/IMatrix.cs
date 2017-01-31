@@ -13,7 +13,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        T GetItemAt(int row, int col);
+        T At(int row, int col);
 
         /// <summary>
         /// Sets item at location(row, col)
@@ -21,7 +21,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <param name="item"></param>
-        void SetItemAt(int row, int col, T item);
+        void At(int row, int col, T item);
 
         /// <summary>
         /// Gets row at index
@@ -35,35 +35,35 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        T[] GetColumn(int index);
+        T[] Column(int index);
 
         /// <summary>
         /// Gets row at index 
         /// </summary>
         /// <param name="index"></param>
         /// <param name="row"></param>
-        void GetRow(int index, T[] row);
+        void Row(int index, T[] row);
 
         /// <summary>
         /// Gets column at index
         /// </summary>
         /// <param name="index"></param>
         /// <param name="col"></param>
-        void GetColumn(int index, T[] col);
+        void Column(int index, T[] col);
 
         /// <summary>
         /// Gets rows
         /// </summary>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IMatrix<T> GetRows(params int[] indices);
+        IMatrix<T> Rows(params int[] indices);
 
         /// <summary>
         /// Gets columns
         /// </summary>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IMatrix<T> GetColumns(params int[] indices);
+        IMatrix<T> Columns(params int[] indices);
 
         /// <summary>
         /// Gets the array which stores all matrix values. values are storred row-wise.
@@ -75,12 +75,12 @@ namespace SharpLearning.Containers.Matrices
         /// Gets the number of columns
         /// </summary>
         /// <returns></returns>
-        int GetNumberOfColumns();
+        int ColumnCount();
 
         /// <summary>
         /// Gets the numver of rows
         /// </summary>
         /// <returns></returns>
-        int GetNumberOfRows();
+        int RowCount();
     }
 }

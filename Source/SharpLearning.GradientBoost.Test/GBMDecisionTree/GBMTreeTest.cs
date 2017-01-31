@@ -20,12 +20,12 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
             var inSample = targets.Select(t => true).ToArray();
-            var orderedElements = new int[observations.GetNumberOfColumns()][];
-            var rows = observations.GetNumberOfRows();
+            var orderedElements = new int[observations.ColumnCount()][];
+            var rows = observations.RowCount();
 
-            for (int i = 0; i < observations.GetNumberOfColumns(); i++)
+            for (int i = 0; i < observations.ColumnCount(); i++)
             {
-                var feature = observations.GetColumn(i);
+                var feature = observations.Column(i);
                 var indices = Enumerable.Range(0, rows).ToArray();
                 feature.SortWith(indices);
                 orderedElements[i] = indices;
@@ -34,7 +34,7 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
             var sut = new GBMDecisionTreeLearner(10);
             var tree = sut.Learn(observations, targets, targets, targets, orderedElements, inSample);
 
-            var actual = new double[observations.GetNumberOfColumns()];
+            var actual = new double[observations.ColumnCount()];
             tree.AddRawVariableImportances(actual);
 
             var expected = new double[] { 0.0, 105017.48701572006 };

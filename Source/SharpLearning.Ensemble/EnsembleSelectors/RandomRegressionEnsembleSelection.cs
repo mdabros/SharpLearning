@@ -57,18 +57,18 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(F64Matrix crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.GetNumberOfColumns() < m_numberOfModelsToSelect)
+            if(crossValidatedModelPredictions.ColumnCount() < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.GetNumberOfColumns() +
+                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount() +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 
-            m_allIndices = Enumerable.Range(0, crossValidatedModelPredictions.GetNumberOfColumns()).ToArray();
+            m_allIndices = Enumerable.Range(0, crossValidatedModelPredictions.ColumnCount()).ToArray();
             var bestModelIndices = new int[m_numberOfModelsToSelect];
             var candidateModelIndices = new int[m_numberOfModelsToSelect];
 
-            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.GetNumberOfRows(), m_numberOfModelsToSelect);
-            var candidatePredictions = new double[crossValidatedModelPredictions.GetNumberOfRows()];
+            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount(), m_numberOfModelsToSelect);
+            var candidatePredictions = new double[crossValidatedModelPredictions.RowCount()];
 
             var bestError = double.MaxValue;
 

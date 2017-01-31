@@ -12,15 +12,15 @@ namespace SharpLearning.Containers.Test.Matrices
     public class StringMatrixTest
     {
         [TestMethod]
-        public void StringMatrix_GetItemAt()
+        public void StringMatrix_At()
         {
             var sut = CreateFeatures();
-            var item = sut.GetItemAt(1, 1);
+            var item = sut.At(1, 1);
             Assert.AreEqual("20", item);
         }
 
         [TestMethod]
-        public void StringMatrix_GetItemAt_Indexer()
+        public void StringMatrix_At_Indexer()
         {
             var sut = CreateFeatures();
             Assert.AreEqual("1", sut[0, 0]);
@@ -33,29 +33,29 @@ namespace SharpLearning.Containers.Test.Matrices
 
 
         [TestMethod]
-        public void StringMatrix_SetItemAt()
+        public void StringMatrix_At_Set()
         {
             var sut = CreateFeatures();
             var item = "123.0";
-            sut.SetItemAt(1, 1, item);
+            sut.At(1, 1, item);
 
-            var value = sut.GetItemAt(1, 1);
+            var value = sut.At(1, 1);
             Assert.AreEqual(item, value);
         }
 
         [TestMethod]
-        public void StringMatrix_SetItemAt_Indexer()
+        public void StringMatrix_At_Set_Indexer()
         {
             var sut = CreateFeatures();
             var item = "123.0";
             sut[1, 1]= item;
 
-            var value = sut.GetItemAt(1, 1);
+            var value = sut.At(1, 1);
             Assert.AreEqual(item, value);
         }
 
         [TestMethod]
-        public void StringMatrix_GetRow()
+        public void StringMatrix_Row()
         {
             var sut = CreateFeatures();
             var row = sut.GetRow(1);
@@ -63,45 +63,45 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
-        public void StringMatrix_GetRow_Predefined()
+        public void StringMatrix_Row_Predefined()
         {
             var sut = CreateFeatures();
-            var row = new string[sut.GetNumberOfColumns()];
-            sut.GetRow(1, row);
+            var row = new string[sut.ColumnCount()];
+            sut.Row(1, row);
             CollectionAssert.AreEqual(GetExpectedRow(), row);
         }
 
         [TestMethod]
-        public void StringMatrix_GetColumn()
+        public void StringMatrix_Column()
         {
             var sut = CreateFeatures();
-            var col = sut.GetColumn(1);
+            var col = sut.Column(1);
 
             CollectionAssert.AreEqual(GetExpectedColumn(), col);
         }
 
         [TestMethod]
-        public void StringMatrix_GetColumn_Predefined()
+        public void StringMatrix_Column_Predefined()
         {
             var sut = CreateFeatures();
-            var col = new string[sut.GetNumberOfRows()];
-            sut.GetColumn(1, col);
+            var col = new string[sut.RowCount()];
+            sut.Column(1, col);
 
             CollectionAssert.AreEqual(GetExpectedColumn(), col);
         }
 
         [TestMethod]
-        public void StringMatrix_GetRows()
+        public void StringMatrix_Rows()
         {
             var sut = CreateFeatures();
-            var subMatrix = sut.GetRows(0, 2);
+            var subMatrix = sut.Rows(0, 2);
             var expected = GetExpectedRowSubMatrix();
 
             Assert.IsTrue(expected.Equals(subMatrix));
         }
 
         [TestMethod]
-        public void StringMatrix_GetRows_Predefined()
+        public void StringMatrix_Rows_Predefined()
         {
             var sut = CreateFeatures();
             var actual = new StringMatrix(2, 3);
@@ -112,17 +112,17 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
-        public void StringMatrix_GetColumns()
+        public void StringMatrix_Columns()
         {
             var sut = CreateFeatures();
-            var subMatrix = sut.GetColumns(0, 2);
+            var subMatrix = sut.Columns(0, 2);
             var expected = GetExpectedColSubMatrix();
 
             Assert.IsTrue(expected.Equals(subMatrix));
         }
 
         [TestMethod]
-        public void StringMatrix_GetColumns_Predefined()
+        public void StringMatrix_Columns_Predefined()
         {
             var sut = CreateFeatures();
             var actual = new StringMatrix(3, 2);

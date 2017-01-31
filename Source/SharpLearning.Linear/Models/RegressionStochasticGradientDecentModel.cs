@@ -49,7 +49,7 @@ namespace SharpLearning.Linear.Models
         /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
-            var predictions = new double[observations.GetNumberOfRows()];
+            var predictions = new double[observations.RowCount()];
             for (int i = 0; i < predictions.Length; i++)
             {
                 predictions[i] = Predict(observations.GetRow(i));

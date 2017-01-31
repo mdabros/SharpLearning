@@ -20,14 +20,14 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         public static TrainingTestSetSplit SplitSet(this ITrainingTestIndexSplitter<double> splitter, 
             F64Matrix observations, double[] targets)
         {
-            if (observations.GetNumberOfRows() != targets.Length)
+            if (observations.RowCount() != targets.Length)
             { throw new ArgumentException("Observations and targets has different number of rows"); }
 
             var indexSplit = splitter.Split(targets);
-            var trainingSet = new ObservationTargetSet((F64Matrix)observations.GetRows(indexSplit.TrainingIndices),
+            var trainingSet = new ObservationTargetSet((F64Matrix)observations.Rows(indexSplit.TrainingIndices),
                 targets.GetIndices(indexSplit.TrainingIndices));
 
-            var testSet = new ObservationTargetSet((F64Matrix)observations.GetRows(indexSplit.TestIndices),
+            var testSet = new ObservationTargetSet((F64Matrix)observations.Rows(indexSplit.TestIndices),
                 targets.GetIndices(indexSplit.TestIndices));
 
             return new TrainingTestSetSplit(trainingSet, testSet);

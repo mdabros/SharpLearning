@@ -51,7 +51,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
-            var rows = observations.GetNumberOfRows();
+            var rows = observations.RowCount();
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -69,7 +69,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public double[] Predict(F64Matrix observations, int[] indices)
         {
-            var rows = observations.GetNumberOfRows();
+            var rows = observations.RowCount();
             var predictions = new double[indices.Length];
             for (int i = 0; i < indices.Length; i++)
             {
@@ -106,7 +106,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public ProbabilityPrediction[] PredictProbability(F64Matrix observations)
         {
-            var rows = observations.GetNumberOfRows();
+            var rows = observations.RowCount();
             var predictions = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -124,7 +124,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <returns></returns>
         public ProbabilityPrediction[] PredictProbability(F64Matrix observations, int[] indices)
         {
-            var rows = observations.GetNumberOfRows();
+            var rows = observations.RowCount();
             var predictions = new ProbabilityPrediction[indices.Length];
             for (int i = 0; i < indices.Length; i++)
             {

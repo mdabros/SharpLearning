@@ -259,8 +259,8 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public static IEnumerable<CsvRow> EnumerateCsvRows<T>(this IMatrix<T> matrix, Dictionary<string, int> columnNameToIndex)
         {
-            var rows = matrix.GetNumberOfRows();
-            var cols = matrix.GetNumberOfColumns();
+            var rows = matrix.RowCount();
+            var cols = matrix.ColumnCount();
 
             if (cols != columnNameToIndex.Count)
             {

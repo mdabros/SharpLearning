@@ -8,15 +8,15 @@ namespace SharpLearning.Containers.Test.Matrices
     public class F64MatrixTest
     {
         [TestMethod]
-        public void F64Matrix_GetItemAt()
+        public void F64Matrix_At()
         {
             var sut = CreateFeatures();
-            var item = sut.GetItemAt(1, 1);
+            var item = sut.At(1, 1);
             Assert.AreEqual(20, item);
         }
 
         [TestMethod]
-        public void F64Matrix_GetItemAt_Indexer()
+        public void F64Matrix_At_Indexer()
         {
             var sut = CreateFeatures();
             Assert.AreEqual(1, sut[0, 0]);
@@ -29,30 +29,30 @@ namespace SharpLearning.Containers.Test.Matrices
 
 
         [TestMethod]
-        public void F64Matrix_SetItemAt()
+        public void F64Matrix_At_Set()
         {
             var sut = CreateFeatures();
             var item = 123.0;
-            sut.SetItemAt(1, 1, item);
+            sut.At(1, 1, item);
 
-            var value = sut.GetItemAt(1, 1);
+            var value = sut.At(1, 1);
             Assert.AreEqual(item, value);
         }
 
         [TestMethod]
-        public void F64Matrix_SetItemAt_Indexer()
+        public void F64Matrix_At_Set_Indexer()
         {
             var sut = CreateFeatures();
             var item = 123.0;
             sut[1, 1] = item;
 
-            var value = sut.GetItemAt(1, 1);
+            var value = sut.At(1, 1);
             Assert.AreEqual(item, value);
         }
 
 
         [TestMethod]
-        public void F64Matrix_GetRow()
+        public void F64Matrix_Row()
         {
             var sut = CreateFeatures();
             var row = sut.GetRow(1);
@@ -60,45 +60,45 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
-        public void F64Matrix_GetRow_Predefined()
+        public void F64Matrix_Row_Predefined()
         {
             var sut = CreateFeatures();
-            var row = new double[sut.GetNumberOfColumns()];
-            sut.GetRow(1, row);
+            var row = new double[sut.ColumnCount()];
+            sut.Row(1, row);
             CollectionAssert.AreEqual(GetExpectedRow(), row);
         }
 
         [TestMethod]
-        public void F64Matrix_GetColumn()
+        public void F64Matrix_Column()
         {
             var sut = CreateFeatures();
-            var col = sut.GetColumn(1);
+            var col = sut.Column(1);
 
             CollectionAssert.AreEqual(GetExpectedColumn(), col);
         }
 
         [TestMethod]
-        public void F64Matrix_GetColumn_Predefined()
+        public void F64Matrix_Column_Predefined()
         {
             var sut = CreateFeatures();
-            var col = new double[sut.GetNumberOfRows()];
-            sut.GetColumn(1, col);
+            var col = new double[sut.RowCount()];
+            sut.Column(1, col);
 
             CollectionAssert.AreEqual(GetExpectedColumn(), col);
         }
 
         [TestMethod]
-        public void F64Matrix_GetRows()
+        public void F64Matrix_Rows()
         {
             var sut = CreateFeatures();
-            var subMatrix = sut.GetRows(0, 2);
+            var subMatrix = sut.Rows(0, 2);
             var expected = GetExpectedRowSubMatrix();
 
             Assert.IsTrue(expected.Equals(subMatrix));
         }
 
         [TestMethod]
-        public void F64Matrix_GetRows_Predefined()
+        public void F64Matrix_Rows_Predefined()
         {
             var sut = CreateFeatures();
             var actual = new F64Matrix(2, 3);
@@ -109,17 +109,17 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
-        public void F64Matrix_GetColumns()
+        public void F64Matrix_Columns()
         {
             var sut = CreateFeatures();
-            var subMatrix = sut.GetColumns(0, 2);
+            var subMatrix = sut.Columns(0, 2);
             var expected = GetExpectedColSubMatrix();
 
             Assert.IsTrue(expected.Equals(subMatrix));
         }
 
         [TestMethod]
-        public void F64Matrix_GetColumns_predefined()
+        public void F64Matrix_Columns_predefined()
         {
             var sut = CreateFeatures();
             var actual = new F64Matrix(3, 2);

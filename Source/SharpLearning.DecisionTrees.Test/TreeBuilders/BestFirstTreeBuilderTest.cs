@@ -60,7 +60,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 2000, observations.GetNumberOfColumns(), 0.000001, 42,
+            var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 2000, observations.ColumnCount(), 0.000001, 42,
                 new OnlyUniqueThresholdsSplitSearcher(1), new GiniClasificationImpurityCalculator()));
 
             var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));
@@ -82,7 +82,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 4, observations.GetNumberOfColumns(), 0.000001, 42,
+            var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 4, observations.ColumnCount(), 0.000001, 42,
                 new OnlyUniqueThresholdsSplitSearcher(1), new GiniClasificationImpurityCalculator()));
 
             var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));

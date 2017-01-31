@@ -55,9 +55,9 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(F64Matrix crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.GetNumberOfColumns() < m_numberOfModelsToSelect)
+            if(crossValidatedModelPredictions.ColumnCount() < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.GetNumberOfColumns() +
+                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount() +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 
@@ -99,8 +99,8 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
 
         double SelectNextModelToAdd(F64Matrix crossValidatedModelPredictions, double[] targets, double currentBestError)
         {
-            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.GetNumberOfRows(), m_selectedModelIndices.Count + 1);
-            var candidatePredictions = new double[crossValidatedModelPredictions.GetNumberOfRows()];
+            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount(), m_selectedModelIndices.Count + 1);
+            var candidatePredictions = new double[crossValidatedModelPredictions.RowCount()];
             var candidateModelIndices = new int[m_selectedModelIndices.Count + 1];
 
             var bestError = currentBestError;
@@ -139,11 +139,11 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         Dictionary<int, double> GetInitialRanking(F64Matrix crossValidatedModelPredictions, double[] targets)
         {
             var ranking = new Dictionary<int, double>();
-            var currentPredictions = new double[crossValidatedModelPredictions.GetNumberOfRows()];
+            var currentPredictions = new double[crossValidatedModelPredictions.RowCount()];
 
-            for (int i = 0; i < crossValidatedModelPredictions.GetNumberOfColumns(); i++)
+            for (int i = 0; i < crossValidatedModelPredictions.ColumnCount(); i++)
             {
-                crossValidatedModelPredictions.GetColumn(i, currentPredictions);
+                crossValidatedModelPredictions.Column(i, currentPredictions);
                 var error = m_metric.Error(targets, currentPredictions);
                 ranking.Add(i, error);
             }

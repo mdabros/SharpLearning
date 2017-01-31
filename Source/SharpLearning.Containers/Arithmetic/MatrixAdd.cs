@@ -20,8 +20,8 @@ namespace SharpLearning.Containers.Arithmetic
         /// <param name="output"></param>
         public static void AddF64(F64Matrix m, double[] v, F64Matrix output)
         {    
-            var rows = m.GetNumberOfRows();
-            var cols = m.GetNumberOfColumns();
+            var rows = m.RowCount();
+            var cols = m.ColumnCount();
 
             if (v.Length != rows) 
             { throw new ArgumentException("matrix rows: " + rows + " differs from vector length: " + v.Length); }

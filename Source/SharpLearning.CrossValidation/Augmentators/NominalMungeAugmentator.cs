@@ -44,10 +44,10 @@ namespace SharpLearning.CrossValidation.Augmentators
         /// <returns></returns>
         public F64Matrix Agument(F64Matrix dataset)
         {
-            var orgCols = dataset.GetNumberOfColumns();
-            var orgRows = dataset.GetNumberOfRows();
+            var orgCols = dataset.ColumnCount();
+            var orgRows = dataset.RowCount();
 
-            var augmentation = new F64Matrix(dataset.GetNumberOfRows(), dataset.GetNumberOfColumns());
+            var augmentation = new F64Matrix(dataset.RowCount(), dataset.ColumnCount());
             var indicesVisited = new HashSet<int>();
 
             var sample = new double[orgCols];
@@ -57,7 +57,7 @@ namespace SharpLearning.CrossValidation.Augmentators
             for (int j = 0; j < orgRows; j++)
             {
                 if (indicesVisited.Contains(j)) { continue; }
-                dataset.GetRow(j, sample);
+                dataset.Row(j, sample);
 
                 var closestDistance = double.MaxValue;
                 var closestIndex = -1;
@@ -66,7 +66,7 @@ namespace SharpLearning.CrossValidation.Augmentators
                 for (int f = 0; f < orgRows; f++)
                 {
                     if (indicesVisited.Contains(f)) { continue; }
-                    dataset.GetRow(f, candidate);
+                    dataset.Row(f, candidate);
 
                     var distance = GetHammingDistance(sample, candidate);
                     if(distance < closestDistance)
@@ -78,7 +78,7 @@ namespace SharpLearning.CrossValidation.Augmentators
 
                 if(closestIndex != -1)
                 {
-                    dataset.GetRow(closestIndex, candidate);
+                    dataset.Row(closestIndex, candidate);
                     indicesVisited.Add(closestIndex);
 
                     for (int h = 0; h < sample.Length; h++)
@@ -89,14 +89,14 @@ namespace SharpLearning.CrossValidation.Augmentators
                         if (m_random.NextDouble() <= m_probabilityParameter && m_probabilityParameter != 0.0)
                         {
                             // switch values
-                            augmentation.SetItemAt(j, h, candiateValue);
-                            augmentation.SetItemAt(closestIndex, h, sampleValue);
+                            augmentation.At(j, h, candiateValue);
+                            augmentation.At(closestIndex, h, sampleValue);
                         }
                         else 
                         {
                             // keep values
-                            augmentation.SetItemAt(j, h, sampleValue);
-                            augmentation.SetItemAt(closestIndex, h, candiateValue);
+                            augmentation.At(j, h, sampleValue);
+                            augmentation.At(closestIndex, h, candiateValue);
                         }
                     }
                 }

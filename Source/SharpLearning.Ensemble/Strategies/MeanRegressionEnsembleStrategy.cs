@@ -27,15 +27,15 @@ namespace SharpLearning.Ensemble.Strategies
         /// <param name="predictions"></param>
         public void Combine(F64Matrix ensemblePredictions, double[] predictions)
         {
-            var cols = ensemblePredictions.GetNumberOfColumns();
-            var rows = ensemblePredictions.GetNumberOfRows();
+            var cols = ensemblePredictions.ColumnCount();
+            var rows = ensemblePredictions.RowCount();
 
             for (int i = 0; i < rows; i++)
             {
                 var sum = 0.0;
                 for (int j = 0; j < cols; j++)
                 {
-                    sum += ensemblePredictions.GetItemAt(i, j);
+                    sum += ensemblePredictions.At(i, j);
                 }
                 predictions[i] = sum / (double)cols;
             }

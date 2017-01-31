@@ -50,7 +50,7 @@ namespace SharpLearning.Containers.Test.Arithmetic
             var a = new F64Matrix(new double[6] { 1, 2, 3, 4, 5, 6 }, 2, 3);
             var b = new F64Matrix(new double[6] { 7, 8, 9, 10, 11, 12 }, 3, 2);
 
-            var actual = new F64Matrix(a.GetNumberOfRows(), b.GetNumberOfColumns());
+            var actual = new F64Matrix(a.RowCount(), b.ColumnCount());
 
             MatrixMultiplication.MultiplyF64(a, b, actual);
 

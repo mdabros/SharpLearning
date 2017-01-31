@@ -14,7 +14,7 @@ namespace SharpLearning.Containers.Arithmetic
         /// <returns></returns>
         public static F64Matrix TransposeF64(F64Matrix matrix)
         {
-            var transpose = new F64Matrix(matrix.GetNumberOfColumns(), matrix.GetNumberOfRows());
+            var transpose = new F64Matrix(matrix.ColumnCount(), matrix.RowCount());
             TransposeF64(matrix, transpose);
 
             return transpose;
@@ -29,14 +29,14 @@ namespace SharpLearning.Containers.Arithmetic
         /// <returns></returns>
         public static void TransposeF64(F64Matrix matrix, F64Matrix transposed)
         {
-            var cols = matrix.GetNumberOfColumns();
-            var rows = matrix.GetNumberOfRows();
+            var cols = matrix.ColumnCount();
+            var rows = matrix.RowCount();
 
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    transposed.SetItemAt(j, i, matrix.GetItemAt(i, j));
+                    transposed.At(j, i, matrix.At(i, j));
                 }
             }
         }

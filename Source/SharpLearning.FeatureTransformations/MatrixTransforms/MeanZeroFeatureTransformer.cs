@@ -40,8 +40,8 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
         /// <returns></returns>
         public F64Matrix Transform(F64Matrix matrix)
         {
-            var rows = matrix.GetNumberOfRows();
-            var cols = matrix.GetNumberOfColumns();
+            var rows = matrix.RowCount();
+            var cols = matrix.ColumnCount();
             var output = new F64Matrix(rows, cols);
 
             Transform(matrix, output);
@@ -79,8 +79,8 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
         /// <param name="output"></param>
         public void Transform(F64Matrix matrix, F64Matrix output)
         {
-            var rows = matrix.GetNumberOfRows();
-            var cols = matrix.GetNumberOfColumns();
+            var rows = matrix.RowCount();
+            var cols = matrix.ColumnCount();
 
             if (m_featureMean.Count == 0)
             {

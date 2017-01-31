@@ -103,7 +103,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <returns></returns>
         public RegressionGradientBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            var rows = observations.GetNumberOfRows();
+            var rows = observations.RowCount();
             var orderedElements = CreateOrderedElements(observations, rows);
 
             var inSample = targets.Select(t => false).ToArray();
@@ -116,7 +116,7 @@ namespace SharpLearning.GradientBoost.Learners
             var predictions = targets.Select(t => initialLoss).ToArray();
             var residuals = new double[targets.Length];
 
-            var predictWork = new double[observations.GetNumberOfRows()];
+            var predictWork = new double[observations.RowCount()];
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 m_loss.UpdateResiduals(targets, predictions, residuals, inSample);
@@ -144,7 +144,7 @@ namespace SharpLearning.GradientBoost.Learners
                 }
             }
 
-            return new RegressionGradientBoostModel(trees, m_learningRate, initialLoss, observations.GetNumberOfColumns());
+            return new RegressionGradientBoostModel(trees, m_learningRate, initialLoss, observations.ColumnCount());
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace SharpLearning.GradientBoost.Learners
                 throw new ArgumentException("Number of iterations " + m_iterations + " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
             }
 
-            var rows = trainingObservations.GetNumberOfRows();
+            var rows = trainingObservations.RowCount();
             var orderedElements = CreateOrderedElements(trainingObservations, rows);
 
             var inSample = trainingTargets.Select(t => false).ToArray();
@@ -189,7 +189,7 @@ namespace SharpLearning.GradientBoost.Learners
             var bestIterationCount = 0;
             var currentBedstError = double.MaxValue;
 
-            var predictWork = new double[trainingObservations.GetNumberOfRows()];
+            var predictWork = new double[trainingObservations.RowCount()];
 
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
@@ -221,7 +221,7 @@ namespace SharpLearning.GradientBoost.Learners
                 // If the validation error has increased, stop the learning and return the model with the best number of iterations (trees).
                 if (iteration % earlyStoppingRounds == 0)
                 {
-                    var model = new RegressionGradientBoostModel(trees.Take(iteration).ToArray(), m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
+                    var model = new RegressionGradientBoostModel(trees.Take(iteration).ToArray(), m_learningRate, initialLoss, trainingObservations.ColumnCount());
                     var validPredictions = model.Predict(validationObservations);
                     var error = metric.Error(validationTargets, validPredictions);
 
@@ -240,7 +240,7 @@ namespace SharpLearning.GradientBoost.Learners
             }
 
             return new RegressionGradientBoostModel(trees.Take(bestIterationCount).ToArray(),
-                m_learningRate, initialLoss, trainingObservations.GetNumberOfColumns());
+                m_learningRate, initialLoss, trainingObservations.ColumnCount());
         }
 
         /// <summary>
@@ -275,11 +275,11 @@ namespace SharpLearning.GradientBoost.Learners
         /// <returns></returns>
         int[][] CreateOrderedElements(F64Matrix observations, int rows)
         {
-            var orderedElements = new int[observations.GetNumberOfColumns()][];
+            var orderedElements = new int[observations.ColumnCount()][];
 
-            for (int i = 0; i < observations.GetNumberOfColumns(); i++)
+            for (int i = 0; i < observations.ColumnCount(); i++)
             {
-                var feature = observations.GetColumn(i);
+                var feature = observations.Column(i);
                 var indices = Enumerable.Range(0, rows).ToArray();
                 feature.SortWith(indices);
                 orderedElements[i] = indices;

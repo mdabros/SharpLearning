@@ -146,7 +146,7 @@ namespace SharpLearning.Neural
             var learningIndices = indices.ToArray();
             var numberOfBatches = samples / m_batchSize; // check for size mismatch
             var batchTargets = Matrix<float>.Build.Dense(m_batchSize, oneOfNTargets.ColumnCount);
-            var batchObservations = Matrix<float>.Build.Dense(m_batchSize, observations.GetNumberOfColumns());
+            var batchObservations = Matrix<float>.Build.Dense(m_batchSize, observations.ColumnCount());
 
             if (m_batchSize > samples)
             {
@@ -179,7 +179,7 @@ namespace SharpLearning.Neural
                 var validationIndices = Enumerable.Range(0, validationTargets.Length).ToArray();
 
                 floatValidationObservations = Matrix<float>.Build
-                    .Dense(validationObservations.GetNumberOfRows(), validationObservations.GetNumberOfColumns());
+                    .Dense(validationObservations.RowCount(), validationObservations.ColumnCount());
                 CopyBatch(validationObservations, floatValidationObservations, validationIndices);
 
                 floatValidationTargets = m_targetEncoder.Encode(validationTargets);
@@ -302,7 +302,7 @@ namespace SharpLearning.Neural
 
         void CopyBatch(F64Matrix observations, Matrix<float> batch, int[] indices)
         {
-            var cols = observations.GetNumberOfColumns();
+            var cols = observations.ColumnCount();
             var batchRow = 0;
             foreach (var row in indices)
             {

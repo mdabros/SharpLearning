@@ -33,9 +33,9 @@ namespace SharpLearning.CrossValidation.Test.TrainingTestSplitters
             var testIndices = Enumerable.Range(6, 4).ToArray();
 
             var expected = new TrainingTestSetSplit(
-                new ObservationTargetSet((F64Matrix)observations.GetRows(trainingIndices), 
+                new ObservationTargetSet((F64Matrix)observations.Rows(trainingIndices), 
                     targets.GetIndices(trainingIndices)),
-                new ObservationTargetSet((F64Matrix)observations.GetRows(testIndices), 
+                new ObservationTargetSet((F64Matrix)observations.Rows(testIndices), 
                     targets.GetIndices(testIndices)));
 
             Assert.AreEqual(expected, actual);

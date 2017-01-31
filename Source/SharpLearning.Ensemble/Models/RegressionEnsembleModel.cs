@@ -56,11 +56,11 @@ namespace SharpLearning.Ensemble.Models
         /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
-            var predictions = new double[observations.GetNumberOfRows()];
-            var observation = new double[observations.GetNumberOfColumns()];
-            for (int i = 0; i < observations.GetNumberOfRows(); i++)
+            var predictions = new double[observations.RowCount()];
+            var observation = new double[observations.ColumnCount()];
+            for (int i = 0; i < observations.RowCount(); i++)
             {
-                observations.GetRow(i, observation);
+                observations.Row(i, observation);
                 predictions[i] = Predict(observation);
             }
 

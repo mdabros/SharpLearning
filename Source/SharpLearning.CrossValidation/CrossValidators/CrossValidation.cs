@@ -94,7 +94,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
                 }
             }
 
-            var observation = new double[observations.GetNumberOfColumns()];
+            var observation = new double[observations.ColumnCount()];
             for (int i = 0; i < m_crossValidationFolds; i++)
             {
                 var holdoutIndices = holdOutSamples[i];
@@ -104,7 +104,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
 
                 for (int l = 0; l < predictions.Length; l++)
                 {
-                    observations.GetRow(holdoutIndices[l], observation);
+                    observations.Row(holdoutIndices[l], observation);
                     predictions[l] = model.Predict(observation);
                 }
 

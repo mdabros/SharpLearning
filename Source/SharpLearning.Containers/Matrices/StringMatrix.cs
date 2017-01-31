@@ -49,7 +49,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        public string GetItemAt(int row, int col)
+        public string At(int row, int col)
         {
             var rowOffSet = row * m_cols;
             var item = m_featureArray[rowOffSet + col];
@@ -63,7 +63,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <param name="item"></param>
-        public void SetItemAt(int row, int col, string item)
+        public void At(int row, int col, string item)
         {
             var rowOffSet = row * m_cols;
             m_featureArray[rowOffSet + col] = item;
@@ -105,7 +105,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="index"></param>
         /// <param name="row"></param>
-        public void GetRow(int index, string[] row)
+        public void Row(int index, string[] row)
         {
             var rowOffSet = index * m_cols;
 
@@ -120,7 +120,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public string[] GetColumn(int index)
+        public string[] Column(int index)
         {
             var col = new string[m_rows];
 
@@ -138,7 +138,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="index"></param>
         /// <param name="col"></param>
-        public void GetColumn(int index, string[] col)
+        public void Column(int index, string[] col)
         {
             for (int i = 0; i < m_rows; i++)
             {
@@ -151,7 +151,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public IMatrix<string> GetRows(params int[] indices)
+        public IMatrix<string> Rows(params int[] indices)
         {
             var rowCount = indices.Length;
             var subFeatureArray = new string[rowCount * m_cols];
@@ -197,7 +197,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public IMatrix<string> GetColumns(params int[] indices)
+        public IMatrix<string> Columns(params int[] indices)
         {
             var subFeatureCount = indices.Length;
             var subFeatureArray = new string[m_rows * subFeatureCount];
@@ -249,7 +249,7 @@ namespace SharpLearning.Containers.Matrices
         /// Gets the number of columns
         /// </summary>
         /// <returns></returns>
-        public int GetNumberOfColumns()
+        public int ColumnCount()
         {
             return m_cols;
         }
@@ -258,7 +258,7 @@ namespace SharpLearning.Containers.Matrices
         /// Gets the number of rows
         /// </summary>
         /// <returns></returns>
-        public int GetNumberOfRows()
+        public int RowCount()
         {
             return m_rows;
         }
@@ -270,8 +270,8 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public bool Equals(StringMatrix other)
         {
-            if (this.GetNumberOfRows() != other.GetNumberOfRows()) { return false; }
-            if (this.GetNumberOfColumns() != other.GetNumberOfColumns()) { return false; }
+            if (this.RowCount() != other.RowCount()) { return false; }
+            if (this.ColumnCount() != other.ColumnCount()) { return false; }
             if (!this.Data().SequenceEqual(other.Data())) { return false; }
 
             return true;

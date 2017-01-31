@@ -75,13 +75,13 @@ namespace SharpLearning.Neural.Models
         /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
-            var rows = observations.GetNumberOfRows();
-            var cols = observations.GetNumberOfColumns();
+            var rows = observations.RowCount();
+            var cols = observations.ColumnCount();
             var predictions = new double[rows];
             var observation = new double[cols];
             for (int i = 0; i < rows; i++)
             {
-                observations.GetRow(i, observation);
+                observations.Row(i, observation);
                 predictions[i] = Predict(observation);
             }
 
@@ -127,13 +127,13 @@ namespace SharpLearning.Neural.Models
         /// <returns></returns>
         public ProbabilityPrediction[] PredictProbability(F64Matrix observations)
         {
-            var rows = observations.GetNumberOfRows();
-            var cols = observations.GetNumberOfColumns();
+            var rows = observations.RowCount();
+            var cols = observations.ColumnCount();
             var predictions = new ProbabilityPrediction[rows];
             var observation = new double[cols];
             for (int i = 0; i < rows; i++)
             {
-                observations.GetRow(i, observation);
+                observations.Row(i, observation);
                 predictions[i] = PredictProbability(observation);
             }
 

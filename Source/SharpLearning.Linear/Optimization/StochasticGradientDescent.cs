@@ -105,7 +105,7 @@ namespace SharpLearning.Linear.Optimization
 
             var models = results.ToArray();
 
-            return AverageModels(observations.GetNumberOfColumns(), models);
+            return AverageModels(observations.ColumnCount(), models);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace SharpLearning.Linear.Optimization
             Random random, ConcurrentBag<double[]> models, Interval1D interval)
         {
             // initial theta + bias
-            var theta = new double[x.GetNumberOfColumns() + 1];
+            var theta = new double[x.ColumnCount() + 1];
 
             using (var pinned = x.GetPinnedPointer())
             {

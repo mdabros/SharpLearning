@@ -29,9 +29,9 @@ namespace SharpLearning.CrossValidation.LearningCurves
             for (int i = 0; i < points.Count; i++)
             {
                 var point = points[i];
-                matrix.SetItemAt(i, 0, point.SampleSize);
-                matrix.SetItemAt(i, 1, point.TrainingScore);
-                matrix.SetItemAt(i, 2, point.ValidationScore);
+                matrix.At(i, 0, point.SampleSize);
+                matrix.At(i, 1, point.TrainingScore);
+                matrix.At(i, 2, point.ValidationScore);
             }
 
             return matrix;
