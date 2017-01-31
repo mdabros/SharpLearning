@@ -37,7 +37,7 @@ namespace SharpLearning.Neural.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.086988999595858624, actual, 0.0001);
+            Assert.AreEqual(0.089005424175892453, actual, 0.0001);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace SharpLearning.Neural.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.086988999595858624, actual, 0.0001);
+            Assert.AreEqual(0.089005424175892453, actual, 0.0001);
         }
 
         [TestMethod]
