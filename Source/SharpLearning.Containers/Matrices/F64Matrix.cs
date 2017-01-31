@@ -171,7 +171,7 @@ namespace SharpLearning.Containers.Matrices
         public void GetRows(int[] indices, F64Matrix output)
         {
             var rowCount = indices.Length;
-            var subFeatureArray = output.GetFeatureArray();
+            var subFeatureArray = output.Data();
 
             for (int i = 0; i < indices.Length; i++)
             {
@@ -216,7 +216,7 @@ namespace SharpLearning.Containers.Matrices
         public void GetColumns(int[] indices, F64Matrix output)
         {
             var subFeatureCount = indices.Length;
-            var subFeatureArray = output.GetFeatureArray();
+            var subFeatureArray = output.Data();
             for (int i = 0; i < m_rows; i++)
             {
                 var rowOffSet = m_cols * i;
@@ -232,7 +232,7 @@ namespace SharpLearning.Containers.Matrices
         /// Gets the 1-d array containing all the values of the matrix
         /// </summary>
         /// <returns></returns>
-        public double[] GetFeatureArray()
+        public double[] Data()
         {
             return m_featureArray;
         }
@@ -273,7 +273,7 @@ namespace SharpLearning.Containers.Matrices
         {
             if (this.GetNumberOfRows() != other.GetNumberOfRows()) { return false; }
             if (this.GetNumberOfColumns() != other.GetNumberOfColumns()) { return false; }
-            if (!this.GetFeatureArray().SequenceEqual(other.GetFeatureArray())) { return false; }
+            if (!this.Data().SequenceEqual(other.Data())) { return false; }
 
             return true;
         }

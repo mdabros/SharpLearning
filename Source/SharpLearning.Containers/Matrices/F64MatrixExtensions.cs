@@ -1,4 +1,5 @@
 ﻿using System;
+using SharpLearning.Containers.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="matrix"></param>
         public static void Clear(this F64Matrix matrix)
         {
-            var data = matrix.GetFeatureArray();
+            var data = matrix.Data();
             for (int i = 0; i < data.Length; i++)
             {
                 data[i] = 0.0;
@@ -23,17 +24,26 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Sets the elements in the matrix according to the initfunc
+        /// Iterates over all elements in the matrix and applies the function to the elements.
+        /// The values are updated directly in the Matrix.
         /// </summary>
         /// <param name="matrix"></param>
-        /// <param name="initFunc"></param>
-        public static void Initialize(this F64Matrix matrix, Func<double> initFunc)
+        /// <param name="func"></param>
+        public static void Map(this F64Matrix matrix, Func<double> func)
         {
-            var data = matrix.GetFeatureArray();
-            for (int i = 0; i < data.Length; i++)
-            {
-                data[i] = initFunc();
-            }
+            matrix.Data().Map(func);
+        }
+
+
+        /// <summary>
+        /// Iterates over all elements in the matrix and applies the function to the elements.
+        /// The values are updated directly in the Matrix.
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="func"></param>
+        public static void Map(this F64Matrix matrix, Func<double, double> func)
+        {
+            matrix.Data().Map(func);
         }
 
         /// <summary>
@@ -43,7 +53,7 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public static StringMatrix ToStringMatrix(this F64Matrix matrix)
         {
-            var stringFeatures = Array.ConvertAll(matrix.GetFeatureArray(), FloatingPointConversion.ToString);
+            var stringFeatures = Array.ConvertAll(matrix.Data(), FloatingPointConversion.ToString);
             return new StringMatrix(stringFeatures, matrix.GetNumberOfRows(), matrix.GetNumberOfColumns());
         }
 
@@ -95,7 +105,7 @@ namespace SharpLearning.Containers.Matrices
             var cols = m.GetNumberOfColumns() + 1;
 
             var features = new double[rows * cols];
-            var matrixArray = m.GetFeatureArray();
+            var matrixArray = m.Data();
 
             var combineIndex = 0;
             for (int i = 0; i < rows; i++)
@@ -131,7 +141,7 @@ namespace SharpLearning.Containers.Matrices
             var cols = m.GetNumberOfColumns() + 1;
 
             var features = new double[rows * cols];
-            var matrixArray = m.GetFeatureArray();
+            var matrixArray = m.Data();
 
             var combineIndex = 0;
             for (int i = 0; i < rows; i++)
@@ -165,8 +175,8 @@ namespace SharpLearning.Containers.Matrices
             var rows = m1.GetNumberOfRows();
             var columns = m1.GetNumberOfColumns() + m2.GetNumberOfColumns();
 
-            var matrixArray = m1.GetFeatureArray();
-            var otherArray = m2.GetFeatureArray();
+            var matrixArray = m1.Data();
+            var otherArray = m2.Data();
 
             var features = new double[matrixArray.Length + otherArray.Length];
 
@@ -229,7 +239,7 @@ namespace SharpLearning.Containers.Matrices
             var cols = v.Length;
 
             var features = new double[rows * cols];
-            var matrixArray = m.GetFeatureArray();
+            var matrixArray = m.Data();
 
             Array.Copy(matrixArray, 0, features, 0, matrixArray.Length);
             Array.Copy(v, 0, features, matrixArray.Length, v.Length);
@@ -254,7 +264,7 @@ namespace SharpLearning.Containers.Matrices
             var cols = v.Length;
 
             var features = new double[rows * cols];
-            var matrixArray = m.GetFeatureArray();
+            var matrixArray = m.Data();
 
             Array.Copy(v, 0, features, 0, v.Length);
             Array.Copy(matrixArray, 0, features, v.Length, matrixArray.Length);
@@ -279,8 +289,8 @@ namespace SharpLearning.Containers.Matrices
             var rows = m1.GetNumberOfRows() + m2.GetNumberOfRows();
             var columns = m1.GetNumberOfColumns();
 
-            var matrixArray = m1.GetFeatureArray();
-            var otherArray = m2.GetFeatureArray();
+            var matrixArray = m1.Data();
+            var otherArray = m2.Data();
 
             var features = new double[matrixArray.Length + otherArray.Length];
 

@@ -17,20 +17,30 @@ namespace SharpLearning.Containers.Test.Matrices
             var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
             matrix.Clear();
 
-            CollectionAssert.AreEqual(new double[2 * 3], matrix.GetFeatureArray());
+            CollectionAssert.AreEqual(new double[2 * 3], matrix.Data());
         }
 
         [TestMethod]
-        public void F64MatrixExtensions_Initialize()
+        public void F64MatrixExtensions_Map()
         {
             var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
-            matrix.Initialize(() => 10);
+            matrix.Map(() => 10);
 
-            var expected = Enumerable.Range(0, matrix.GetFeatureArray().Length).Select(v => 10.0).ToArray();
-            CollectionAssert.AreEqual(expected, matrix.GetFeatureArray());
+            var expected = Enumerable.Range(0, matrix.Data().Length).Select(v => 10.0).ToArray();
+            CollectionAssert.AreEqual(expected, matrix.Data());
         }
+        
+        [TestMethod]
+        public void F64MatrixExtensions_Map2()
+        {
+            var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
+            matrix.Map(() => 10);
+            matrix.Map(v => v + 1);
 
-
+            var expected = Enumerable.Range(0, matrix.Data().Length).Select(v => 11.0).ToArray();
+            CollectionAssert.AreEqual(expected, matrix.Data());
+        }
+        
         [TestMethod]
         public void F64MatrixExtensions_ToStringMatrix()
         {

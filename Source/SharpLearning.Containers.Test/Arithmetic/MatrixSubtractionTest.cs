@@ -24,13 +24,13 @@ namespace SharpLearning.Containers.Test.Arithmetic
         {
             var m1 = new F64Matrix(4, 3);
             var m2 = new F64Matrix(4, 3);
-            m2.Initialize(() => 1.0);
+            m2.Map(() => 1.0);
 
             var actual = new F64Matrix(4, 3);
             MatrixSubtraction.SubtractF64(m1, m2, actual);
 
             var expected = new F64Matrix(4, 3);
-            expected.Initialize(() => -1.0);
+            expected.Map(() => -1.0);
             Assert.AreEqual(expected, actual);
         }
 
@@ -38,16 +38,16 @@ namespace SharpLearning.Containers.Test.Arithmetic
         public void MatrixSubtraction_SubtractF64Matrix_2()
         {
             var m1 = new F64Matrix(4, 3);
-            m1.Initialize(() => 5);
+            m1.Map(() => 5);
 
             var m2 = new F64Matrix(4, 3);
-            m2.Initialize(() => 1.0);
+            m2.Map(() => 1.0);
 
             var actual = new F64Matrix(4, 3);
             MatrixSubtraction.SubtractF64(m1, m2, actual);
 
             var expected = new F64Matrix(4, 3);
-            expected.Initialize(() => 4.0);
+            expected.Map(() => 4.0);
             Assert.AreEqual(expected, actual);
         }
 

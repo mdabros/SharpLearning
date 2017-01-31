@@ -13,7 +13,7 @@ namespace SharpLearning.CrossValidation.Test.Augmentors
         {
             var random = new Random(2342);
             var data = new F64Matrix(10, 2);
-            data.Initialize(() => random.Next(2));
+            data.Map(() => random.Next(2));
 
             var sut = new NominalMungeAugmentator(0.5);
             var actual = sut.Agument(data);
@@ -25,8 +25,8 @@ namespace SharpLearning.CrossValidation.Test.Augmentors
             Assert.AreEqual(expected.GetNumberOfRows(), actual.GetNumberOfRows());
             Assert.AreEqual(expected.GetNumberOfColumns(), actual.GetNumberOfColumns());
 
-            var expectedData = expected.GetFeatureArray();
-            var actualData = expected.GetFeatureArray();
+            var expectedData = expected.Data();
+            var actualData = expected.Data();
 
             for (int i = 0; i < expectedData.Length; i++)
             {

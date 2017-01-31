@@ -71,7 +71,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
             var random = new Random(42);
 
             var observations = new F64Matrix(10, 10);
-            observations.Initialize(() => random.Next());
+            observations.Map(() => random.Next());
             var targets = Enumerable.Range(0, 10).Select(v => random.NextDouble()).ToArray();
 
             var actual = sut.Select(observations, targets);
@@ -89,7 +89,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
             var random = new Random(42);
 
             var observations = new F64Matrix(10, 10);
-            observations.Initialize(() => random.Next());
+            observations.Map(() => random.Next());
             var targets = Enumerable.Range(0, 10).Select(v => random.NextDouble()).ToArray();
 
             var actual = sut.Select(observations, targets);
@@ -107,7 +107,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
             var random = new Random(42);
 
             var observations = new F64Matrix(10, 10);
-            observations.Initialize(() => random.Next());
+            observations.Map(() => random.Next());
             var targets = Enumerable.Range(0, 10).Select(v => random.NextDouble()).ToArray();
 
             var actual = sut.Select(observations, targets);

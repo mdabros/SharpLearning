@@ -21,7 +21,7 @@ namespace SharpLearning.Containers.Arithmetic
             var rows = a.GetNumberOfRows();
             var cols = a.GetNumberOfColumns();
             
-            var data = a.GetFeatureArray();
+            var data = a.Data();
             var output = new double[rows];
 
             if (cols != v.Length) 
@@ -49,7 +49,7 @@ namespace SharpLearning.Containers.Arithmetic
             var rows = a.GetNumberOfRows();
             var cols = a.GetNumberOfColumns();
 
-            var data = a.GetFeatureArray();
+            var data = a.Data();
 
             if (cols != v.Length)
             { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Length); }
@@ -114,11 +114,11 @@ namespace SharpLearning.Containers.Arithmetic
         /// <returns></returns>
         public static F64Matrix MultiplyF64(F64Matrix a, F64Matrix b)
         {
-            var aData = a.GetFeatureArray();
+            var aData = a.Data();
             var aRows = a.GetNumberOfRows();
             var aCols = a.GetNumberOfColumns();
 
-            var bData = b.GetFeatureArray();
+            var bData = b.Data();
             var bRows = b.GetNumberOfRows();
             var bCols = b.GetNumberOfColumns();
 
@@ -152,15 +152,15 @@ namespace SharpLearning.Containers.Arithmetic
         /// <param name="output"></param>
         public static void MultiplyF64(F64Matrix a, F64Matrix b, F64Matrix output)
         {
-            var aData = a.GetFeatureArray();
+            var aData = a.Data();
             var aRows = a.GetNumberOfRows();
             var aCols = a.GetNumberOfColumns();
 
-            var bData = b.GetFeatureArray();
+            var bData = b.Data();
             var bRows = b.GetNumberOfRows();
             var bCols = b.GetNumberOfColumns();
 
-            var outputArray = output.GetFeatureArray();
+            var outputArray = output.Data();
 
             if (aCols != bRows)
             { throw new ArgumentException("matrix a cols: " + aCols + " differs from matrix b rows: " + bRows); }

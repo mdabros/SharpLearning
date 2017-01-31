@@ -88,7 +88,7 @@ namespace SharpLearning.Neural.Test.Learners
         void CreateData(int numberOfObservations, int numberOfFeatures, Random random, out F64Matrix observations, out double[] targets)
         {
             observations = new F64Matrix(numberOfObservations, numberOfFeatures);
-            observations.Initialize(() => random.NextDouble());
+            observations.Map(() => random.NextDouble());
             targets = Enumerable.Range(0, numberOfObservations).Select(i => random.NextDouble()).ToArray();
         }
 

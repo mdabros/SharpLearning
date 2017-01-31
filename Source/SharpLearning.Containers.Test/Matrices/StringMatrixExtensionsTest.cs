@@ -23,6 +23,27 @@ namespace SharpLearning.Containers.Test.Matrices
         }
 
         [TestMethod]
+        public void StringMatrixExtensions_Map()
+        {
+            var matrix = new StringMatrix(InputData.ToArray(), 2, 3);
+            matrix.Map(() => "10");
+
+            var expected = Enumerable.Range(0, matrix.Data().Length).Select(v => "10").ToArray();
+            CollectionAssert.AreEqual(expected, matrix.Data());
+        }
+
+        [TestMethod]
+        public void StringMatrixExtensions_Map2()
+        {
+            var matrix = new StringMatrix(InputData.ToArray(), 2, 3);
+            matrix.Map(() => "10");
+            matrix.Map(v => v + "1");
+
+            var expected = Enumerable.Range(0, matrix.Data().Length).Select(v => "101").ToArray();
+            CollectionAssert.AreEqual(expected, matrix.Data());
+        }
+
+        [TestMethod]
         public void StringMatrixExtensions_CombineStringMatrices_Cols()
         {
             var matrix1 = new StringMatrix(InputData,2, 3);

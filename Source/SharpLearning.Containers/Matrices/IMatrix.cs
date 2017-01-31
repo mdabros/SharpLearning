@@ -69,7 +69,7 @@ namespace SharpLearning.Containers.Matrices
         /// Gets the array which stores all matrix values. values are storred row-wise.
         /// </summary>
         /// <returns></returns>
-        T[] GetFeatureArray();
+        T[] Data();
 
         /// <summary>
         /// Gets the number of columns

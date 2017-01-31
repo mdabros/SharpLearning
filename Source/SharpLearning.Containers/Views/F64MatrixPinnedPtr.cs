@@ -28,7 +28,7 @@ namespace SharpLearning.Containers.Views
         {
             if (matrix == null) { throw new ArgumentNullException("matrix"); }
             
-            var data = matrix.GetFeatureArray();
+            var data = matrix.Data();
             m_handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             m_ptr = (double*)m_handle.AddrOfPinnedObject().ToPointer();
             m_rows = matrix.GetNumberOfRows();
