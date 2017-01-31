@@ -226,8 +226,6 @@ namespace SharpLearning.Neural
                     m_optimizer.UpdateParameters(parametersAndGradients);
                 }
 
-                timer.Stop();
-
                 currentLoss = accumulatedLoss / (double)indices.Length;
 
                 if(earlyStopping)
@@ -235,6 +233,8 @@ namespace SharpLearning.Neural
                     var candidate = m_net.CopyNetForPredictionModel();
                     candidate.Forward(floatValidationObservations, floatValidationPredictions);
                     var validationLoss = m_loss.Loss(floatValidationTargets, floatValidationPredictions);
+
+                    timer.Stop();
 
                     Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Validation: {2:0.00000} - Time (ms): {3}",
                         (iteration + 1), currentLoss, validationLoss, timer.ElapsedMilliseconds));
@@ -247,6 +247,8 @@ namespace SharpLearning.Neural
                 }
                 else
                 {
+                    timer.Stop();
+
                     Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Time (ms): {2}",
                         (iteration + 1), currentLoss, timer.ElapsedMilliseconds));
                 }
