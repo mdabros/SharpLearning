@@ -49,7 +49,7 @@ namespace SharpLearning.Neural.Test.Layers
             var input = Matrix<float>.Build.Random(batchSize, numberOfClasses, random.Next());
             var actual = sut.Forward(input);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
             var expected = Matrix<float>.Build.Dense(batchSize, numberOfClasses, new float[] { 0.1234713f, 0.7669879f, -0.9698473f, 1.814438f, 0.2316814f, -0.05312517f, 0.5537131f, -0.2031853f, 0.01274186f, -0.4482329f });
             MatrixAsserts.AreEqual(expected, actual);
@@ -74,7 +74,7 @@ namespace SharpLearning.Neural.Test.Layers
             var delta = Matrix<float>.Build.Random(batchSize, numberOfClasses, random.Next());
             var actual = sut.Backward(delta);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
             var expected = Matrix<float>.Build.Dense(batchSize, numberOfClasses, new float[] { 1f, 1f, 1f, 1f, 1f, -9f, 1f, 1f, 1f, 1f });
             MatrixAsserts.AreEqual(expected, actual);

@@ -1,10 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Neural.Test
 {
@@ -18,8 +13,8 @@ namespace SharpLearning.Neural.Test
         /// <param name="delta"></param>
         public static void AreEqual(Matrix<float> expected, Matrix<float> actual, double delta = 0.0001)
         {
-            var m1Array = expected.ToRowWiseArray();
-            var m2Array = actual.ToRowWiseArray();
+            var m1Array = expected.ToRowMajorArray();
+            var m2Array = actual.ToRowMajorArray();
 
             Assert.AreEqual(m1Array.Length, m2Array.Length);
 

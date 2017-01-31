@@ -53,7 +53,7 @@ namespace SharpLearning.Neural.Test
 
                     output1.Subtract(output2, output1); // output1 = output1 - output2
 
-                    var grad = output1.ToRowWiseArray().Select(f => f / (2.0f * epsilon));
+                    var grad = output1.ToRowMajorArray().Select(f => f / (2.0f * epsilon));
                     var gradient = grad.Sum(); // approximated gradient
                     var actual = weightGradients[x, y];
 
@@ -83,7 +83,7 @@ namespace SharpLearning.Neural.Test
 
                     output1.Subtract(output2, output1); // output1 = output1 - output2
 
-                    var grad = output1.ToRowWiseArray().Select(f => f / (2.0f * epsilon));
+                    var grad = output1.ToRowMajorArray().Select(f => f / (2.0f * epsilon));
 
                     var gradient = grad.Sum();
                     var actual = biasesGradients[i];

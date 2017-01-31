@@ -38,7 +38,7 @@ namespace SharpLearning.Neural.Models
                 .ConvertDoubleArray();
 
             var prediction = (double)m_neuralNet.Forward(mObservation)
-                .ToColumnWiseArray().Single();
+                .ToColumnMajorArray().Single();
 
             return prediction;
         }

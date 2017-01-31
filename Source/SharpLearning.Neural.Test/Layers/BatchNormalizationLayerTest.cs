@@ -61,7 +61,7 @@ namespace SharpLearning.Neural.Test.Layers
 
             var actual = sut.Forward(input);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual);
 
             var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { -0.09664511f, 0.09664511f, -0.6003481f, 0.6003481f, 0.1156925f, -0.1156925f, -0.2164436f, 0.2164436f });
@@ -107,7 +107,7 @@ namespace SharpLearning.Neural.Test.Layers
 
             var actual = sut.Forward(rowWiseInput);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual);
 
             var expected = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight, new float[] { -0.07037111f, 0.06627183f, -0.06900468f, 0.06763826f, -0.06763826f, 0.06900468f, -0.06627183f, 0.07037111f, -0.4371365f, 0.4116722f, -0.4286484f, 0.4201603f, -0.4201603f, 0.4286484f, -0.4116722f, 0.4371365f });
@@ -133,7 +133,7 @@ namespace SharpLearning.Neural.Test.Layers
             var delta = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             var actual = sut.Backward(delta);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
             var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { -2.600517E-06f, 2.615418E-06f, -1.349278E-06f, 1.349278E-06f, 1.158319E-06f, -1.150868E-06f, -5.639333E-10f, -9.261829E-10f });
             MatrixAsserts.AreEqual(expected, actual);

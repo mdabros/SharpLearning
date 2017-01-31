@@ -1,6 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MathNet.Numerics.LinearAlgebra;
 using System.Diagnostics;
 
 namespace SharpLearning.Neural.Test
@@ -17,7 +16,7 @@ namespace SharpLearning.Neural.Test
 
             matrix.AddRowWise(vector, actual);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual.ToString());
 
             var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 2, 2, 3, 3 });
@@ -33,7 +32,7 @@ namespace SharpLearning.Neural.Test
 
             matrix.SubtractRowWise(vector, actual);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual.ToString());
 
             var expected = Matrix<float>.Build.Dense(2, 3, new float[] { -1, -1, -2, -2, -3, -3 });
@@ -49,7 +48,7 @@ namespace SharpLearning.Neural.Test
 
             matrix.AddColumnWise(vector, actual);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual.ToString());
 
             var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 1, 2, 1, 2 });
@@ -65,7 +64,7 @@ namespace SharpLearning.Neural.Test
 
             matrix.Multiply(vector, actual);
 
-            Trace.WriteLine(string.Join(", ", actual.ToColumnWiseArray()));
+            Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual.ToString());
 
             var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 0, 0, 1, 1 });
