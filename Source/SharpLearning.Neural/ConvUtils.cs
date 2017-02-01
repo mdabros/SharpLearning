@@ -263,9 +263,11 @@ namespace SharpLearning.Neural
                     for (int h = 0; h < height_col; ++h)
                     {
                         var rowOffSet = h * width_col;
+                        int h_pad = h * stride_h - pad_h + h_offset;
+
                         for (int w = 0; w < width_col; ++w)
                         {
-                            int h_pad = h * stride_h - pad_h + h_offset;
+                            
                             int w_pad = w * stride_w - pad_w + w_offset;
                             if (h_pad >= 0 && h_pad < height && w_pad >= 0 && w_pad < width)
                             {

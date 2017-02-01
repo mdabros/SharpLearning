@@ -137,13 +137,15 @@ namespace SharpLearning.Neural.Layers
                 for (int ph = 0; ph < Height; ++ph)
                 {
                     var poolRowOffSet = ph * Width;
+
+                    int hstart = ph * m_stride - m_padding;
+                    int hend = Math.Min(hstart + m_poolHeight, InputHeight);
+                    hstart = Math.Max(hstart, 0);
+
                     for (int pw = 0; pw < Width; ++pw)
                     {
-                        int hstart = ph * m_stride - m_padding;
                         int wstart = pw * m_stride - m_padding;
-                        int hend = Math.Min(hstart + m_poolHeight, InputHeight);
                         int wend = Math.Min(wstart + m_poolWidth, InputWidth);
-                        hstart = Math.Max(hstart, 0);
                         wstart = Math.Max(wstart, 0);
 
                         var currentMax = float.MinValue;
