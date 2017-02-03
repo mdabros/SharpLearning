@@ -55,7 +55,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void F64Matrix_Row()
         {
             var sut = CreateFeatures();
-            var row = sut.GetRow(1);
+            var row = sut.Row(1);
             CollectionAssert.AreEqual(GetExpectedRow(), row);
         }
 

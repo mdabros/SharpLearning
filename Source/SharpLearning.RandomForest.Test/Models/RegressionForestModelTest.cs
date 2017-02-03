@@ -29,7 +29,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = sut.Predict(observations.GetRow(i));
+                predictions[i] = sut.Predict(observations.Row(i));
             }
 
             var evaluator = new MeanSquaredErrorRegressionMetric();
@@ -71,7 +71,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var actual = new CertaintyPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                actual[i] = sut.PredictCertainty(observations.GetRow(i));
+                actual[i] = sut.PredictCertainty(observations.Row(i));
             }
 
             var evaluator = new MeanSquaredErrorRegressionMetric();

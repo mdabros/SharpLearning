@@ -269,7 +269,7 @@ namespace SharpLearning.InputOutput.Csv
 
             for (int i = 0; i < rows; i++)
             {
-                var row = matrix.GetRow(i)
+                var row = matrix.Row(i)
                                 .Select(value => value.ToString())
                                 .ToArray();
 

@@ -273,7 +273,7 @@ namespace SharpLearning.AdaBoost.Learners
             for (int i = 0; i < rows; i++)
             {
                 var index = indices[i];
-                predictions[i] = Predict(observations.GetRow(index));
+                predictions[i] = Predict(observations.Row(index));
             }
 
             var error = m_errorMetric.Error(m_indexedTargets, predictions);

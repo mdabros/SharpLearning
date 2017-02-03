@@ -65,7 +65,7 @@ namespace SharpLearning.Linear.Models
             var predictions = new double[observations.RowCount()];
             for (int i = 0; i < predictions.Length; i++)
             {
-                predictions[i] = Predict(observations.GetRow(i));
+                predictions[i] = Predict(observations.Row(i));
             }
 
             return predictions;
@@ -96,7 +96,7 @@ namespace SharpLearning.Linear.Models
             var predictions = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = PredictProbability(observations.GetRow(i));
+                predictions[i] = PredictProbability(observations.Row(i));
             }
 
             return predictions;

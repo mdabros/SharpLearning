@@ -120,12 +120,12 @@ namespace SharpLearning.CrossValidation.LearningCurves
 
                     for (int i = 0; i < trainingPredictions.Length; i++)
                     {
-                        trainingPredictions[i] = model.Predict(observations.GetRow(sampleIndices[i]));
+                        trainingPredictions[i] = model.Predict(observations.Row(sampleIndices[i]));
                     }
 
                     for (int i = 0; i < validationIndices.Length; i++)
                     {
-                        validationPredictions[i] = model.Predict(observations.GetRow(validationIndices[i]));
+                        validationPredictions[i] = model.Predict(observations.Row(validationIndices[i]));
                     }
 
                     var sampleTargets = targets.GetIndices(sampleIndices);

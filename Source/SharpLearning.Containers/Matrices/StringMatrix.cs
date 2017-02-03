@@ -86,7 +86,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public string[] GetRow(int index)
+        public string[] Row(int index)
         {
             var row = new string[m_cols];
             var rowOffSet = index * m_cols;

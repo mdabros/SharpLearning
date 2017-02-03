@@ -78,7 +78,7 @@ namespace SharpLearning.GradientBoost.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = Predict(observations.GetRow(i));
+                predictions[i] = Predict(observations.Row(i));
             }
 
             return predictions;

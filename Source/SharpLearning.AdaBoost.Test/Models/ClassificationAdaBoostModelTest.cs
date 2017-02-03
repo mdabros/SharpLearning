@@ -29,7 +29,7 @@ namespace SharpLearning.AdaBoost.Test.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = sut.Predict(observations.GetRow(i));
+                predictions[i] = sut.Predict(observations.Row(i));
             }
 
             var evaluator = new TotalErrorClassificationMetric<double>();
@@ -71,7 +71,7 @@ namespace SharpLearning.AdaBoost.Test.Models
             var actual = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                actual[i] = sut.PredictProbability(observations.GetRow(i));
+                actual[i] = sut.PredictProbability(observations.Row(i));
             }
 
             var evaluator = new TotalErrorClassificationMetric<double>();

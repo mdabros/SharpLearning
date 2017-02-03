@@ -37,7 +37,7 @@ namespace SharpLearning.FeatureTransformations.Test.MatrixTransforms
             var actual = new F64Matrix(3, 3);
             for (int i = 0; i < actual.RowCount(); i++)
             {
-                var row = sut.Transform(matrix.GetRow(i));
+                var row = sut.Transform(matrix.Row(i));
                 for (int j = 0; j < actual.ColumnCount(); j++)
                 {
                     actual[i, j] = row[j];

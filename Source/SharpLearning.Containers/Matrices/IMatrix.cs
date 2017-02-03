@@ -28,7 +28,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        T[] GetRow(int index);
+        T[] Row(int index);
 
         /// <summary>
         /// Gets column at index

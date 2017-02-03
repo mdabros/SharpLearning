@@ -38,7 +38,7 @@ namespace SharpLearning.Ensemble.Test.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = sut.Predict(observations.GetRow(i));
+                predictions[i] = sut.Predict(observations.Row(i));
             }
 
             var metric = new TotalErrorClassificationMetric<double>();
@@ -96,7 +96,7 @@ namespace SharpLearning.Ensemble.Test.Models
             var predictions = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = sut.PredictProbability(observations.GetRow(i));
+                predictions[i] = sut.PredictProbability(observations.Row(i));
             }
 
             var metric = new LogLossClassificationProbabilityMetric();

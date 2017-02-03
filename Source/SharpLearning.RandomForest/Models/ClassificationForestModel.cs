@@ -67,7 +67,7 @@ namespace SharpLearning.RandomForest.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = Predict(observations.GetRow(i));
+                predictions[i] = Predict(observations.Row(i));
             }
 
             return predictions;
@@ -126,7 +126,7 @@ namespace SharpLearning.RandomForest.Models
             var predictions = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = PredictProbability(observations.GetRow(i));
+                predictions[i] = PredictProbability(observations.Row(i));
             }
 
             return predictions;

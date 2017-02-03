@@ -84,7 +84,7 @@ namespace SharpLearning.Containers.Matrices
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public double[] GetRow(int index)
+        public double[] Row(int index)
         {
             var row = new double[m_cols];
             Row(index, row);
