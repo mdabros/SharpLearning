@@ -52,7 +52,6 @@ namespace SharpLearning.InputOutput.Serialization
 
                     serializer.WriteObject(xmlWriter, data);
                 }
-
             }
         }
 
