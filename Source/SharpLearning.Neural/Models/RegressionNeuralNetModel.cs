@@ -64,24 +64,24 @@ namespace SharpLearning.Neural.Models
         }
 
         /// <summary>
-        /// Returns the raw variable importance. 
-        /// Variable importance is calculated using the connection weights method
-        /// also known as the Olden method. 
+        /// Variable importance is currently not supported by Neural Net.
+        /// Returns 0.0 for all features.
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            throw new NotImplementedException();
+            return m_neuralNet.GetRawVariableImportance();
         }
 
         /// <summary>
-        /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name
+        /// Variable importance is currently not supported by Neural Net.
+        /// Returns 0.0 for all features.
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
-            throw new NotImplementedException();
+            return m_neuralNet.GetVariableImportance(featureNameToIndex);
         }
 
         /// <summary>

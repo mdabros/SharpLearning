@@ -158,6 +158,32 @@ namespace SharpLearning.Neural
         }
 
         /// <summary>
+        /// Variable importance is currently not supported by Neural Net.
+        /// Returns 0.0 for all features.
+        /// </summary>
+        /// <returns></returns>
+        public double[] GetRawVariableImportance()
+        {
+            var inputlayer = Layers.First();
+            return new double[inputlayer.Width * inputlayer.Height * inputlayer.Depth];
+        }
+
+        /// <summary>
+        /// Variable importance is currently not supported by Neural Net.
+        /// Returns 0.0 for all features.
+        /// </summary>
+        /// <param name="featureNameToIndex"></param>
+        /// <returns></returns>
+        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
+        {
+            var rawVariableImportance = GetRawVariableImportance();
+
+            return featureNameToIndex.ToDictionary(kvp => kvp.Key, kvp => rawVariableImportance[kvp.Value])
+                        .OrderByDescending(kvp => kvp.Value)
+                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+
+        /// <summary>
         /// Copies a minimal version of the neural net to be used in a model for predictions.
         /// </summary>
         public NeuralNet CopyNetForPredictionModel()
