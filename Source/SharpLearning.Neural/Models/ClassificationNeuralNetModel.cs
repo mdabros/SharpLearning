@@ -162,6 +162,16 @@ namespace SharpLearning.Neural.Models
         }
 
         /// <summary>
+        /// Outputs a string representation of the neural net.
+        /// Neural net must be initialized before the dimensions are correct.
+        /// </summary>
+        /// <returns></returns>
+        public string GetLayerDimensions()
+        {
+            return m_neuralNet.GetLayerDimensions();
+        }
+
+        /// <summary>
         /// Loads a ClassificationNeuralNetModel.
         /// </summary>
         /// <param name="reader"></param>

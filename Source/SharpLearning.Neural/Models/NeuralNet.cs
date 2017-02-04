@@ -207,5 +207,21 @@ namespace SharpLearning.Neural
         {
             return new NeuralNet(layers);
         }
+
+        /// <summary>
+        /// Outputs a string representation of the neural net.
+        /// Neural net must be initialized before the dimensions are correct.
+        /// </summary>
+        /// <returns></returns>
+        public string GetLayerDimensions()
+        {
+            var dimensions = string.Empty;
+            foreach (var layer in Layers)
+            {
+                dimensions += string.Format("{0}: {1}x{2}x{3}", layer.GetType().Name, layer.Width, layer.Height, layer.Depth) + Environment.NewLine;
+            }
+
+            return dimensions;
+        }
     }
 }
