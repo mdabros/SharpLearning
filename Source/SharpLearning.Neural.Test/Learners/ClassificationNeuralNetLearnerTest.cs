@@ -37,7 +37,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.766, actual);
+            Assert.AreEqual(0.762, actual);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace SharpLearning.Neural.Test.Learners
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(validationTargets, validationPredictions);
 
-            Assert.AreEqual(0.802, actual);
+            Assert.AreEqual(0.798, actual);
         }
 
         [TestMethod]
