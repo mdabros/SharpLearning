@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Layers;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace SharpLearning.Neural.Test.Layers
             var neuronCount = 5;
 
             var sut = new DenseLayer(neuronCount, Activation.Undefined);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
@@ -47,14 +48,14 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new DenseLayer(neuronCount, Activation.Undefined);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             var actual = sut.Forward(input);
 
             Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-            var expected = Matrix<float>.Build.Dense(batchSize, neuronCount, new float[] { 0.9332361f, 0.4143196f, 0.4015771f, -0.9911515f, -0.4725787f, 0.07631265f });
+            var expected = Matrix<float>.Build.Dense(batchSize, neuronCount, new float[] { 0.9898463f, 0.4394523f, 0.4259368f, -1.051275f, -0.5012454f, 0.08094172f });
             MatrixAsserts.AreEqual(expected, actual);
         }
 
@@ -67,7 +68,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new DenseLayer(neuronCount, Activation.Undefined);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);
@@ -77,7 +78,7 @@ namespace SharpLearning.Neural.Test.Layers
 
             Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-            var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { 0.001648388f, -0.2465896f, -0.6055009f, -0.01361072f, 0.434257f, -0.6961878f, -0.6534721f, 0.1021654f, -0.5873953f, -1.138367f });
+            var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { 0.001748383f, -0.2615477f, -0.6422306f, -0.01443626f, 0.4605991f, -0.7384186f, -0.6931117f, 0.1083627f, -0.6230267f, -1.20742f });
             MatrixAsserts.AreEqual(expected, actual);
         }
 
@@ -90,7 +91,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new DenseLayer(neuronCount, Activation.Undefined);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
 
@@ -114,7 +115,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new DenseLayer(neuronCount, Activation.Undefined);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);

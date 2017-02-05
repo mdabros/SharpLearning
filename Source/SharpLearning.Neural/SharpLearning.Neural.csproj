@@ -57,9 +57,11 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
-    <Compile Include="Activations\ActivationInitializationBounds.cs" />
+    <Compile Include="Initializations\FanInFanOut.cs" />
+    <Compile Include="Initializations\WeightInitialization.cs" />
     <Compile Include="Activations\Activiation.cs" />
     <Compile Include="Activations\IActivation.cs" />
+    <Compile Include="Initializations\Initialization.cs" />
     <Compile Include="Activations\ReluActivation.cs" />
     <Compile Include="ConvUtils.cs" />
     <Compile Include="Layers\ActivationLayer.cs" />

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Layers
 {
@@ -246,18 +247,16 @@ namespace SharpLearning.Neural.Layers
         /// <param name="inputHeight"></param>
         /// <param name="inputDepth"></param>
         /// <param name="batchSize"></param>
+        /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
         {
             Width = inputWidth;
             Height = inputHeight;
             Depth = inputDepth;
             var fanOutAndIn = Width * Height * Depth;
 
-            var bound = ActivationInitializationBounds.InitializationBound(ActivationFunc, fanOutAndIn, fanOutAndIn);
-            var distribution = new ContinuousUniform(-bound, bound, new Random(random.Next()));
-
-            Scale = Matrix<float>.Build.Random(1, fanOutAndIn, distribution); // scale is done pr. feature or pr. feature map.
+            Scale = Matrix<float>.Build.Dense(1, fanOutAndIn, 1.0f); // scale is done pr. feature or pr. feature map.
             Bias = Vector<float>.Build.Dense(fanOutAndIn, 0.0f);
 
             BatchColumnMeans = new float[inputDepth];

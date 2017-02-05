@@ -5,6 +5,8 @@ using MathNet.Numerics.LinearAlgebra;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -15,12 +17,11 @@ namespace SharpLearning.Neural.Test.Layers
         public void MaxPoolLayer_CopyLayerForPredictionModel()
         {
             var batchSize = 1;
-            var random = new Random(232);
 
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(3, 3, 1, batchSize, random);
+            sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
@@ -61,7 +62,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             var actual = sut.Forward(input);
@@ -83,13 +84,12 @@ namespace SharpLearning.Neural.Test.Layers
             const int fanOut = 2 * 2 * 1;
 
             const int batchSize = 1;
-            var random = new Random(32);
 
             // Create layer
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -110,13 +110,12 @@ namespace SharpLearning.Neural.Test.Layers
             const int fanOut = 2 * 2 * 2;
 
             const int batchSize = 1;
-            var random = new Random(32);
 
             // Create layer
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -143,7 +142,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);
@@ -174,7 +173,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -204,7 +203,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -234,7 +233,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             var expected = Matrix<float>.Build.Dense(batchSize, fanOut);
@@ -264,7 +263,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPoolLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);

@@ -1,5 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 using System;
 using System.Collections.Generic;
 
@@ -89,8 +90,10 @@ namespace SharpLearning.Neural.Layers
         /// <param name="inputHeight"></param>
         /// <param name="inputDepth"></param>
         /// <param name="batchSize"></param>
+        /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Random random)
+
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
         {
             OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
             m_delta = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);

@@ -5,6 +5,8 @@ using MathNet.Numerics.LinearAlgebra;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -15,10 +17,9 @@ namespace SharpLearning.Neural.Test.Layers
         public void BatchNormalizationLayer_CopyLayerForPredictionModel()
         {
             var batchSize = 1;
-            var random = new Random(232);
 
             var sut = new BatchNormalizationLayer();
-            sut.Initialize(3, 3, 1, batchSize, random);
+            sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
@@ -49,12 +50,11 @@ namespace SharpLearning.Neural.Test.Layers
         {
             const int fanIn = 4;
             const int batchSize = 2;
-            var random = new Random(232);
 
             var sut = new BatchNormalizationLayer();
-            sut.Initialize(1, 1, fanIn, batchSize, random);
+            sut.Initialize(1, 1, fanIn, batchSize, Initialization.GlorotUniform, new Random(232));
 
-            var data = new float[] { 0, 1, -1, 1, 0.5f, 1.5f, -10, 10 };                        
+            var data = new float[] { 0, 1, -1, 1, 0.5f, 1.5f, -10, 10 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, data);
 
             Trace.WriteLine(input.ToString());
@@ -64,7 +64,7 @@ namespace SharpLearning.Neural.Test.Layers
             Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual);
 
-            var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { -0.09664511f, 0.09664511f, -0.6003481f, 0.6003481f, 0.1156925f, -0.1156925f, -0.2164436f, 0.2164436f });
+            var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { -0.999998f, 0.999998f, -0.9999995f, 0.9999995f, -0.999998f, 0.999998f, -1, 1 });
             MatrixAsserts.AreEqual(expected, actual);
         }
 
@@ -100,17 +100,15 @@ namespace SharpLearning.Neural.Test.Layers
 
             Trace.WriteLine(rowWiseInput);
 
-            var random = new Random(232);
-
             var sut = new BatchNormalizationLayer();
-            sut.Initialize(filterGridWidth, filterGridHeight, filterDepth, batchSize, random);
+            sut.Initialize(filterGridWidth, filterGridHeight, filterDepth, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var actual = sut.Forward(rowWiseInput);
 
             Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
             Trace.WriteLine(actual);
 
-            var expected = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight, new float[] { -0.07037111f, 0.06627183f, -0.06900468f, 0.06763826f, -0.06763826f, 0.06900468f, -0.06627183f, 0.07037111f, -0.4371365f, 0.4116722f, -0.4286484f, 0.4201603f, -0.4201603f, 0.4286484f, -0.4116722f, 0.4371365f });
+            var expected = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight, new float[] { -1.0297426f, 0.9697576f, -1.00974762f, 0.9897526f, -0.9897526f, 1.00974762f, -0.9697576f, 1.0297426f, -1.0297426f, 0.9697576f, -1.00974762f, 0.9897526f, -0.9897526f, 1.00974762f, -0.9697576f, 1.0297426f });
             MatrixAsserts.AreEqual(expected, actual);
         }
 
@@ -122,7 +120,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new BatchNormalizationLayer();
-            sut.Initialize(1, 1, fanIn, batchSize, random);
+            sut.Initialize(1, 1, fanIn, batchSize, Initialization.GlorotUniform, random);
 
             var data = new float[] { 0, 1, -1, 1, 0.5f, 1.5f, -10, 10 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, data);

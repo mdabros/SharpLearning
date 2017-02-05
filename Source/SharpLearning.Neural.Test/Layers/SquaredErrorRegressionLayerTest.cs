@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.Layers;
 using MathNet.Numerics.LinearAlgebra;
 using System.Diagnostics;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -26,7 +28,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new SquaredErrorRegressionLayer(numberOfTargets);
-            sut.Initialize(width, height, depth, batchSize, random);
+            sut.Initialize(width, height, depth, batchSize, Initialization.GlorotUniform, random);
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
@@ -48,7 +50,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new SquaredErrorRegressionLayer(numberOfClasses);
-            sut.Initialize(width, height, depth, batchSize, random);
+            sut.Initialize(width, height, depth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, numberOfClasses, random.Next());
             var actual = sut.Forward(input);
@@ -70,7 +72,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new SquaredErrorRegressionLayer(numberOfClasses);
-            sut.Initialize(width, height, depth, batchSize, random);
+            sut.Initialize(width, height, depth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, numberOfClasses, random.Next());
             sut.Forward(input);

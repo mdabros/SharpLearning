@@ -4,6 +4,7 @@ using SharpLearning.Neural.Layers;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural
 {
@@ -18,11 +19,15 @@ namespace SharpLearning.Neural
         /// </summary>
         public readonly List<ILayer> Layers;
 
+        readonly Initialization m_initialization;
+
         /// <summary>
         /// 
         /// </summary>
-        public NeuralNet()
+        /// <param name="initialization">Initialization type for the layers with weights (default is GlorotUniform)</param>
+        public NeuralNet(Initialization initialization = Initialization.GlorotUniform)
         {
+            m_initialization = initialization;
             Layers = new List<ILayer>();
         }
 
@@ -143,7 +148,7 @@ namespace SharpLearning.Neural
             for (int i = 1; i < Layers.Count; i++)
             {
                 var previousLayer = Layers[i - 1];
-                Layers[i].Initialize(previousLayer.Width, previousLayer.Height, previousLayer.Depth, batchSize, random);
+                Layers[i].Initialize(previousLayer.Width, previousLayer.Height, previousLayer.Depth, batchSize, m_initialization, random);
             }
         }
 

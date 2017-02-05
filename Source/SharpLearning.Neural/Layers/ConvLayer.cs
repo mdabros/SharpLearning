@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 using System;
 using System.Collections.Generic;
 
@@ -42,9 +43,20 @@ namespace SharpLearning.Neural.Layers
         int m_padding = 0;
         int m_stride = 1;
 
-        int m_filterWidth;
-        int m_filterHeight;
-        int m_filterCount;
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly int FilterWidth;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly int FilterHeight;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly int FilterCount;
 
         /// <summary>
         /// Weights in the layer.
@@ -114,9 +126,9 @@ namespace SharpLearning.Neural.Layers
         public ConvLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1, int padding = 0,
             Activation activation = Activation.Relu)
         {
-            m_filterWidth = filterWidth;
-            m_filterHeight = filterHeight;
-            m_filterCount = filterCount;
+            FilterWidth = filterWidth;
+            FilterHeight = filterHeight;
+            FilterCount = filterCount;
 
             ActivationFunc = activation;
             m_stride = stride;
@@ -132,7 +144,7 @@ namespace SharpLearning.Neural.Layers
         {
             // Reshape delta to fit with data layout in im2col
             ConvUtils.ReshapeConvolutionsToRowMajor(delta, InputDepth, InputHeight, InputWidth,
-                m_filterWidth, m_filterHeight, m_padding, m_padding, m_stride, m_stride, m_deltaInReshape);
+                FilterWidth, FilterHeight, m_padding, m_padding, m_stride, m_stride, m_deltaInReshape);
 
             // Calculate gradients for weights and biases
             m_deltaInReshape.TransposeAndMultiply(Im2Cols, WeightsGradients);
@@ -144,7 +156,7 @@ namespace SharpLearning.Neural.Layers
             // convert back to original layout
             m_delta.Clear();
             ConvUtils.Batch_Col2Im(Im2Cols, InputDepth, InputHeight, InputWidth,
-                m_filterHeight, m_filterWidth, m_padding, m_padding, m_stride, m_stride, m_delta);
+                FilterHeight, FilterWidth, m_padding, m_padding, m_stride, m_stride, m_delta);
 
             return m_delta;
         }
@@ -160,7 +172,7 @@ namespace SharpLearning.Neural.Layers
 
             // Arrange input item for GEMM version of convolution.
             ConvUtils.Batch_Im2Col(m_inputActivations, InputDepth, InputHeight, InputWidth,
-                m_filterWidth, m_filterHeight, m_padding, m_padding, m_stride, m_stride, Im2Cols);
+                FilterWidth, FilterHeight, m_padding, m_padding, m_stride, m_stride, Im2Cols);
 
             // matrix multiplication for convolution
             Weights.Multiply(Im2Cols, Conv);
@@ -168,7 +180,7 @@ namespace SharpLearning.Neural.Layers
 
             // Return the covolved data to row major and copy  data to output
             ConvUtils.ReshapeConvolutionsToRowMajor(Conv, InputDepth, InputHeight, InputWidth,
-                m_filterWidth, m_filterHeight, m_padding, m_padding, m_stride, m_stride, OutputActivations);
+                FilterWidth, FilterHeight, m_padding, m_padding, m_stride, m_stride, OutputActivations);
 
             return OutputActivations;
         }
@@ -180,44 +192,43 @@ namespace SharpLearning.Neural.Layers
         /// <param name="inputHeight"></param>
         /// <param name="inputDepth"></param>
         /// <param name="batchSize"></param>
+        /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Random random)
+
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
         {
             InputHeight = inputHeight;
             InputWidth = inputWidth;
             InputDepth = inputDepth;           
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, m_filterWidth, m_stride, m_padding);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, m_filterHeight, m_stride, m_padding);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, m_stride, m_padding);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, m_stride, m_padding);
 
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
-            var filterCubeSize = InputDepth * m_filterWidth * m_filterHeight;
+            var filterCubeSize = InputDepth * FilterWidth * FilterHeight;
             var filterGridSize = filterGridWidth * filterGridHeight;
 
             Height = filterGridHeight;
             Width = filterGridWidth;
-            Depth = m_filterCount;
+            Depth = FilterCount;
 
-            var fanIn = inputWidth * inputHeight * inputDepth;
-            var fanOut = Width * Height * Depth;
+            var fans = WeightInitialization.GetFans(this, InputWidth, InputHeight, inputDepth);
+            var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
 
-            var boundFanOut = m_filterWidth * m_filterHeight * m_filterCount;
-            var bound = ActivationInitializationBounds.InitializationBound(ActivationFunc, fanIn, boundFanOut);
-            var distribution = new ContinuousUniform(-bound, bound, new Random(random.Next()));
+            Weights = Matrix<float>.Build.Random(FilterCount, filterCubeSize, distribution);
+            WeightsGradients = Matrix<float>.Build.Dense(FilterCount, filterCubeSize);
 
-            Weights = Matrix<float>.Build.Random(m_filterCount, filterCubeSize, distribution);
-            WeightsGradients = Matrix<float>.Build.Dense(m_filterCount, filterCubeSize);
-
-            Bias = Vector<float>.Build.Dense(m_filterCount, 0.0f);
-            BiasGradients = Vector<float>.Build.Dense(m_filterCount);
+            Bias = Vector<float>.Build.Dense(FilterCount, 0.0f);
+            BiasGradients = Vector<float>.Build.Dense(FilterCount);
 
             Im2Cols = Matrix<float>.Build.Dense(filterCubeSize, filterGridSize * batchSize);
-            Conv = Matrix<float>.Build.Dense(m_filterCount, filterGridSize * batchSize);
+            Conv = Matrix<float>.Build.Dense(FilterCount, filterGridSize * batchSize);
             
-            OutputActivations = Matrix<float>.Build.Dense(batchSize, m_filterCount * filterGridSize);
-            m_deltaInReshape = Matrix<float>.Build.Dense(m_filterCount, filterGridSize * batchSize);
+            OutputActivations = Matrix<float>.Build.Dense(batchSize, FilterCount * filterGridSize);
+            m_deltaInReshape = Matrix<float>.Build.Dense(FilterCount, filterGridSize * batchSize);
 
+            var fanIn = inputWidth * inputHeight * inputDepth;
             m_delta = Matrix<float>.Build.Dense(batchSize, fanIn);
         }
 
@@ -256,18 +267,18 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1; // prediction time only uses 1 item at a time.
-            var copy = new ConvLayer(m_filterWidth, m_filterHeight, m_filterCount, m_stride, m_padding, ActivationFunc);
+            var copy = new ConvLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padding, ActivationFunc);
 
             copy.InputDepth = InputDepth;
             copy.InputWidth = InputWidth;
             copy.InputHeight = InputHeight;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, m_filterWidth, m_stride, m_padding);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, m_filterHeight, m_stride, m_padding);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, m_stride, m_padding);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, m_stride, m_padding);
 
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
-            var filterCubeSize = InputDepth * m_filterWidth * m_filterHeight;
+            var filterCubeSize = InputDepth * FilterWidth * FilterHeight;
             var filterGridSize = filterGridWidth * filterGridHeight;
 
             copy.Width = this.Width;
@@ -282,7 +293,7 @@ namespace SharpLearning.Neural.Layers
             Array.Copy(Bias.Data(), copy.Bias.Data(), Bias.Data().Length);
 
             copy.Im2Cols = Matrix<float>.Build.Dense(filterCubeSize, filterGridSize * batchSize);
-            copy.Conv = Matrix<float>.Build.Dense(m_filterCount, filterGridSize * batchSize);
+            copy.Conv = Matrix<float>.Build.Dense(FilterCount, filterGridSize * batchSize);
             copy.OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOut);
 
             layers.Add(copy);

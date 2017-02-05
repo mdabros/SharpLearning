@@ -4,6 +4,8 @@ using SharpLearning.Neural.Layers;
 using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using System.Diagnostics;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -14,10 +16,9 @@ namespace SharpLearning.Neural.Test.Layers
         public void DropoutLayer_CopyLayerForPredictionModel()
         {
             var batchSize = 1;
-            var random = new Random(232);
 
             var sut = new DropoutLayer(0.5);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, new Random(233));
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
@@ -33,7 +34,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new DropoutLayer(0.5);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             var actual = sut.Forward(input);
@@ -52,7 +53,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new DropoutLayer(0.5);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);
@@ -74,7 +75,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new DropoutLayer(0.5);
-            sut.Initialize(5, 1, 1, batchSize, random);
+            sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);

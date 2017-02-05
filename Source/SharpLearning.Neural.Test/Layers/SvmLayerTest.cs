@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using System.Diagnostics;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -19,10 +21,9 @@ namespace SharpLearning.Neural.Test.Layers
             var height = 28;
             var depth = 3;
             var numberOfClasses = 10;
-            var random = new Random(232);
 
             var sut = new SvmLayer(numberOfClasses);
-            sut.Initialize(width, height, depth, batchSize, random);
+            sut.Initialize(width, height, depth, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
@@ -44,7 +45,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new SvmLayer(numberOfClasses);
-            sut.Initialize(width, height, depth, batchSize, random);
+            sut.Initialize(width, height, depth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, numberOfClasses, random.Next());
             var actual = sut.Forward(input);
@@ -66,7 +67,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
 
             var sut = new SvmLayer(numberOfClasses);
-            sut.Initialize(width, height, depth, batchSize, random);
+            sut.Initialize(width, height, depth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, numberOfClasses, random.Next());
             sut.Forward(input);

@@ -1,6 +1,7 @@
 ﻿using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 using System;
 using System.Collections.Generic;
 
@@ -116,24 +117,23 @@ namespace SharpLearning.Neural.Layers
         /// <param name="inputHeight"></param>
         /// <param name="inputDepth"></param>
         /// <param name="batchSize"></param>
+        /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Random random)
+
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
         {
-            var fanOut = Width * Height * Depth;
-            var fanIn = inputWidth * inputHeight * inputDepth;
+            var fans = WeightInitialization.GetFans(this, inputWidth, inputHeight, inputDepth);
+            var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
+            
+            Weights = Matrix<float>.Build.Random(fans.FanIn, fans.FanOut, distribution);
+            Bias = Vector<float>.Build.Dense(fans.FanOut, 0.0f);
 
-            var bound = ActivationInitializationBounds.InitializationBound(ActivationFunc, fanIn, fanOut);
-            var distribution = new ContinuousUniform(-bound, bound, new Random(random.Next()));
+            WeightsGradients = Matrix<float>.Build.Dense(fans.FanIn, fans.FanOut);
+            BiasGradients = Vector<float>.Build.Dense(fans.FanOut);
 
-            Weights = Matrix<float>.Build.Random(fanIn, fanOut, distribution);
-            Bias = Vector<float>.Build.Dense(fanOut, 0.0f);
+            OutputActivations = Matrix<float>.Build.Dense(batchSize, fans.FanOut);
 
-            WeightsGradients = Matrix<float>.Build.Dense(fanIn, fanOut);
-            BiasGradients = Vector<float>.Build.Dense(fanOut);
-
-            OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOut);
-
-            m_delta = Matrix<float>.Build.Dense(batchSize, fanIn);
+            m_delta = Matrix<float>.Build.Dense(batchSize, fans.FanIn);
         }
 
         /// <summary>

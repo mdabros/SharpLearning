@@ -4,6 +4,7 @@ using SharpLearning.Neural.Layers;
 using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -24,10 +25,9 @@ namespace SharpLearning.Neural.Test.Layers
         public void ActivationLayer_CopyLayerForPredictionModel()
         {
             var batchSize = 1;
-            var random = new Random(232);
 
             var sut = new ActivationLayer(Activation.Relu);
-            sut.Initialize(3, 3, 1, batchSize, random);
+            sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);

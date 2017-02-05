@@ -1,5 +1,7 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Layers;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ namespace SharpLearning.Neural.Test
         public static void CheckLayer(ILayer layer, int fanInWidth, int fanInHeight, int fanInDepth, int batchSize, float epsilon, Random random)
         {
             var accuracyCondition = 1e-2;
-            layer.Initialize(fanInWidth, fanInHeight, fanInDepth, batchSize, random);
+            layer.Initialize(fanInWidth, fanInHeight, fanInDepth, batchSize, Initialization.GlorotUniform, random);
 
             var fanIn = fanInWidth * fanInHeight * fanInDepth;
             var fanOut = layer.Width * layer.Height * layer.Depth;
