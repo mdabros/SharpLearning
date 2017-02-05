@@ -33,10 +33,8 @@ namespace SharpLearning.Neural.Test.Layers
             MatrixAsserts.AreEqual(sut.Scale, actual.Scale);
             MatrixAsserts.AreEqual(sut.Bias, actual.Bias);
 
-            // batch means and vars are copied to actual means and vars and are used during test/model predictions.
-            // Batch means and vars should be null during test/model predictions.
-            MatrixAsserts.AreEqual(sut.BatchColumnMeans, actual.ColumnMeans);
-            MatrixAsserts.AreEqual(sut.BatchcolumnVars, actual.ColumnVars);
+            MatrixAsserts.AreEqual(sut.MovingAverageMeans, actual.MovingAverageMeans);
+            MatrixAsserts.AreEqual(sut.MovingAverageVariance, actual.MovingAverageVariance);
             Assert.IsNull(actual.BatchColumnMeans);
             Assert.IsNull(actual.BatchcolumnVars);
 

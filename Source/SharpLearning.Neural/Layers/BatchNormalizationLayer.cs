@@ -3,6 +3,7 @@ using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Containers.Extensions;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Diagnostics;
@@ -36,7 +37,7 @@ namespace SharpLearning.Neural.Layers
         /// 
         /// </summary>
         public Activation ActivationFunc { get; set; }
-        
+
         /// <summary>
         /// The weights outputtet by the layer.
         /// </summary>
@@ -56,12 +57,12 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// The final column means used at prediction time.
         /// </summary>
-        public float[] ColumnMeans;
+        public float[] MovingAverageMeans;
 
         /// <summary>
         /// The final column variances used at prediction time.
         /// </summary>
-        public float[] ColumnVars;
+        public float[] MovingAverageVariance;
 
         Matrix<float> m_delta;
 
@@ -166,8 +167,8 @@ namespace SharpLearning.Neural.Layers
             {
                 float mean = 0;
                 float variance = 0;
-                
-                if(is_training)
+
+                if (is_training)
                 {
                     for (int n = 0; n < N; ++n)
                         for (int h = 0; h < H; ++h)
@@ -186,10 +187,10 @@ namespace SharpLearning.Neural.Layers
                 }
                 else
                 {
-                    mean = ColumnMeans[c];
-                    variance = ColumnVars[c];
+                    mean = MovingAverageMeans[c];
+                    variance = MovingAverageVariance[c];
                 }
-                
+
                 for (int n = 0; n < N; ++n)
                     for (int h = 0; h < H; ++h)
                         for (int w = 0; w < W; ++w)
@@ -202,6 +203,9 @@ namespace SharpLearning.Neural.Layers
 
                 if (is_training)
                 {
+                    MovingAverageMeans[c] = MovingAverage(MovingAverageMeans[c], mean);
+                    MovingAverageVariance[c] = MovingAverage(MovingAverageVariance[c], variance);
+
                     BatchColumnMeans[c] = mean;
                     BatchcolumnVars[c] = variance;
                 }
@@ -209,6 +213,13 @@ namespace SharpLearning.Neural.Layers
 
             return OutputActivations;
         }
+
+        float MovingAverage(float currentValue, float value, float momentum = 0.99f)
+        {
+            var newValue = currentValue * momentum + value * (1.0f - momentum);
+            return newValue;
+        }
+
 
         /// <summary>
         /// Gets the gradients of the layer. 
@@ -262,8 +273,8 @@ namespace SharpLearning.Neural.Layers
             BatchColumnMeans = new float[inputDepth];
             BatchcolumnVars = new float[inputDepth];
 
-            ColumnMeans = new float[inputDepth];
-            ColumnVars = new float[inputDepth];
+            MovingAverageMeans = new float[inputDepth];
+            MovingAverageVariance = Enumerable.Range(0, inputDepth).Select(v => 1.0f).ToArray();
 
             ScaleGradients = Matrix<float>.Build.Dense(1, fanOutAndIn, 1);
             BiasGradients = Vector<float>.Build.Dense(fanOutAndIn);
@@ -292,12 +303,10 @@ namespace SharpLearning.Neural.Layers
             Array.Copy(Scale.Data(), copy.Scale.Data(), Scale.Data().Length);
             Array.Copy(Bias.Data(), copy.Bias.Data(), Bias.Data().Length);
 
-            // currently the means and vars from last batch is used for test time.
-            // this should be changed to mean and vars based on a larger sample
-            copy.ColumnMeans = new float[Depth];
-            copy.ColumnVars = new float[Depth];
-            Array.Copy(BatchColumnMeans, copy.ColumnMeans, BatchColumnMeans.Length);
-            Array.Copy(BatchcolumnVars, copy.ColumnVars, BatchcolumnVars.Length);
+            copy.MovingAverageMeans = new float[Depth];
+            copy.MovingAverageVariance = new float[Depth];
+            Array.Copy(MovingAverageMeans, copy.MovingAverageMeans, MovingAverageMeans.Length);
+            Array.Copy(MovingAverageVariance, copy.MovingAverageVariance, MovingAverageVariance.Length);
 
             copy.OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOut);
 
