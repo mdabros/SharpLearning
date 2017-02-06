@@ -5,6 +5,7 @@ namespace SharpLearning.Neural.Activations
     /// <summary>
     /// Rectified linear activation for neural net.
     /// </summary>
+    [Serializable]
     public sealed class ReluActivation : IActivation
     {
         /// <summary>
