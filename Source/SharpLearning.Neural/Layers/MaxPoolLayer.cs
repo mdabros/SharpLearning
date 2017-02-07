@@ -50,7 +50,8 @@ namespace SharpLearning.Neural.Layers
         /// </summary>
         public int InputDepth;
 
-        int m_padding;
+        int m_padWidth;
+        int m_padHeight;
         int m_stride;
 
         int m_poolWidth;
@@ -75,18 +76,55 @@ namespace SharpLearning.Neural.Layers
         Matrix<float> m_delta;
 
         /// <summary>
-        /// Max pool layer. 
+        /// Border mode for the pooling operation.
         /// </summary>
-        /// <param name="poolWidth">The width of the pool area</param>
-        /// <param name="poolHeight">The height of the pool area</param>
+        public BorderMode BorderMode;
+
+        /// <summary>
+        /// Max pool layer. 
+        /// The max pool layers function is to progressively reduce the spatial size of the representation 
+        /// to reduce the amount of parameters and computation in the network. 
+        /// The reduction is only done on the width and height. Depth dimension is preserved.
+        /// </summary>
+        /// <param name="poolWidth">The width of the pool area (default is 2)</param>
+        /// <param name="poolHeight">The height of the pool area (default is 2)</param>
         /// <param name="stride">Controls the distance between each neighbouring pool areas (default is 2)</param>
-        public MaxPoolLayer(int poolWidth, int poolHeight, int stride=2)
+        /// <param name="padWidth">Zero padding for the width dimension (default is 0)</param>
+        /// <param name="padHeight">Zero padding for the height dimension (default is 0)</param>
+        public MaxPoolLayer(int poolWidth, int poolHeight, int stride, int padWidth, int padHeight)
         {
+            if (poolWidth < 1) { throw new ArgumentException("poolWidth is less than 1: " + poolWidth); }
+            if (poolHeight < 1) { throw new ArgumentException("poolHeight is less than 1: " + poolHeight); }
+            if (padWidth < 0) { throw new ArgumentException("padWidth is less than 0: " + padWidth); }
+            if (padHeight < 0) { throw new ArgumentException("padHeight is less than 0: " + padHeight); }
+            if (stride < 1) { throw new ArgumentException("stride is less than 0: " + stride); }
+
             m_poolWidth = poolWidth;
             m_poolHeight = poolHeight;
             m_stride = stride;
-            m_padding = 0;
+            m_padWidth = padWidth;
+            m_padWidth = padWidth;
+            BorderMode = BorderMode.Undefined;
             ActivationFunc = Activation.Undefined;
+        }
+
+        /// <summary>
+        /// Max pool layer. 
+        /// The max pool layers function is to progressively reduce the spatial size of the representation 
+        /// to reduce the amount of parameters and computation in the network. 
+        /// The reduction is only done on the width and height. Depth dimension is preserved.
+        /// </summary>
+        /// <param name="poolWidth">The width of the pool area (default is 2)</param>
+        /// <param name="poolHeight">The height of the pool area (default is 2)</param>
+        /// <param name="stride">Controls the distance between each neighbouring pool areas (default is 2)</param>
+        /// <param name="borderMode">Border mode of the max pool operation. 
+        /// This will set the width and height padding automatically (default is Valid).</param>
+        public MaxPoolLayer(int poolWidth, int poolHeight, int stride = 2, BorderMode borderMode = BorderMode.Valid)
+            : this(poolWidth, poolHeight, stride,
+                  ConvUtils.PaddingFromBorderMode(poolWidth, borderMode),
+                  ConvUtils.PaddingFromBorderMode(poolHeight, borderMode))
+        {
+            BorderMode = borderMode;
         }
 
         /// <summary>
@@ -139,13 +177,13 @@ namespace SharpLearning.Neural.Layers
                 {
                     var poolRowOffSet = ph * Width;
 
-                    int hstart = ph * m_stride - m_padding;
+                    int hstart = ph * m_stride - m_padHeight;
                     int hend = Math.Min(hstart + m_poolHeight, InputHeight);
                     hstart = Math.Max(hstart, 0);
 
                     for (int pw = 0; pw < Width; ++pw)
                     {
-                        int wstart = pw * m_stride - m_padding;
+                        int wstart = pw * m_stride - m_padWidth;
                         int wend = Math.Min(wstart + m_poolWidth, InputWidth);
                         wstart = Math.Max(wstart, 0);
 
@@ -199,11 +237,11 @@ namespace SharpLearning.Neural.Layers
                 var inputDepthOffSet = depth * InputHeight * InputWidth;
                 var outputDeptOffSet = depth * Height * Width;
 
-                var x = -this.m_padding;
-                var y = -this.m_padding;
+                var x = -this.m_padWidth;
+               // var y = -this.m_padHeight;
                 for (var ax = 0; ax < this.Width; x += this.m_stride, ax++)
                 {
-                    y = -this.m_padding;
+                    var y = -this.m_padHeight;
                     var axOffSet = ax + outputDeptOffSet;
                     for (var ay = 0; ay < this.Height; y += this.m_stride, ay++)
                     {
@@ -265,8 +303,8 @@ namespace SharpLearning.Neural.Layers
 
             // computed
             this.Depth = this.InputDepth;
-            this.Width = ConvUtils.GetFilterGridLength(InputWidth, m_poolWidth, m_stride, m_padding);
-            this.Height = ConvUtils.GetFilterGridLength(InputHeight, m_poolHeight, m_stride, m_padding);
+            this.Width = ConvUtils.GetFilterGridLength(InputWidth, m_poolWidth, m_stride, m_padWidth, BorderMode);
+            this.Height = ConvUtils.GetFilterGridLength(InputHeight, m_poolHeight, m_stride, m_padHeight, BorderMode);
 
             // store switches for x,y coordinates for where the max comes from, for each output neuron
             this.Switchx = Enumerable.Range(0, batchSize).Select(v => new int[this.Width * this.Height * this.Depth]).ToArray();
@@ -286,7 +324,8 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1;
-            var copy = new MaxPoolLayer(m_poolWidth, m_poolHeight, m_stride);
+            var copy = new MaxPoolLayer(m_poolWidth, m_poolHeight, m_stride, m_padWidth, m_poolHeight);
+            copy.BorderMode = BorderMode;
 
             copy.InputDepth = InputDepth;
             copy.InputWidth = InputWidth;

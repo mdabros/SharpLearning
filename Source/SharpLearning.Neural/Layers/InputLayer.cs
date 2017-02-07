@@ -49,6 +49,10 @@ namespace SharpLearning.Neural.Layers
         /// <param name="depth"></param>
         public InputLayer(int width, int height, int depth)
         {
+            if (width < 1) { throw new ArgumentException("width is less than 1: " + width); }
+            if (height < 1) { throw new ArgumentException("height is less than 1: " + height); }
+            if (depth < 1) { throw new ArgumentException("depth is less than 1: " + depth); }
+
             Width = width;
             Height = height;
             Depth = depth;

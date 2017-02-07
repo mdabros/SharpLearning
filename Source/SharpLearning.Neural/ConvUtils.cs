@@ -11,15 +11,46 @@ namespace SharpLearning.Neural
     public static class ConvUtils
     {
         /// <summary>
-        ///  Gets the filter grid width based on input length, filter size, stride and padding.
+        /// 
+        /// </summary>
+        /// <param name="filterSize"></param>
+        /// <param name="borderMode"></param>
+        /// <returns></returns>
+        public static int PaddingFromBorderMode(int filterSize, BorderMode borderMode)
+        {
+            switch (borderMode)
+            {
+                case BorderMode.Same:
+                    return filterSize / 2;
+                case BorderMode.Valid:
+                    return 0;
+                case BorderMode.Full:
+                    return filterSize - 1;
+                case BorderMode.Undefined:
+                    return 0;
+                default:
+                    throw new ArgumentException("Unsupported border mode: " + borderMode);
+            }
+        }
+
+        /// <summary>
+        /// Gets the filter grid width based on input length, filter size, stride and padding.
         /// </summary>
         /// <param name="inputLength"></param>
         /// <param name="filterSize"></param>
         /// <param name="stride"></param>
         /// <param name="padding"></param>
+        /// <param name="borderMode"></param>
         /// <returns></returns>
-        public static int GetFilterGridLength(int inputLength, int filterSize, int stride, int padding)
+        public static int GetFilterGridLength(int inputLength, int filterSize, int stride, int padding, BorderMode borderMode)
         {
+            // BorderMode.Same pads with half the filter size on both sides (one less on
+            // the second side for an even filter size)
+            if (borderMode == BorderMode.Same && filterSize % 2 == 0) 
+            {
+                return (int)Math.Floor((inputLength + (padding + padding - 1) - filterSize) / (double)stride + 1);
+            }
+
             return (int)Math.Floor((inputLength + padding * 2 - filterSize) / (double)stride + 1);
         }
 
@@ -76,10 +107,10 @@ namespace SharpLearning.Neural
         /// <param name="stride_w"></param>
         /// <param name="data_col"></param>
         public static void Batch_Im2Col(Matrix<float> data_im, int channels, int height, int width,
-            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, Matrix<float> data_col)
+            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, BorderMode bordeMode, Matrix<float> data_col)
         {
-            int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h);
-            int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w);
+            int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, bordeMode);
+            int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, bordeMode);
             var batchSize = data_im.RowCount;
 
             int channels_col = channels * kernel_h * kernel_w;
@@ -141,10 +172,10 @@ namespace SharpLearning.Neural
         /// <param name="stride_w"></param>
         /// <param name="data_convolutedRowMajor"></param>
         public static void ReshapeConvolutionsToRowMajor(Matrix<float> convoluted, int channels, int height, int width,
-            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, Matrix<float> data_convolutedRowMajor)
+            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, BorderMode borderMode, Matrix<float> data_convolutedRowMajor)
         {
-            int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h);
-            int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w);
+            int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
+            int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
 
             var columnWidth = height_col * width_col;
             var filterCount = convoluted.RowCount;
@@ -190,10 +221,10 @@ namespace SharpLearning.Neural
         /// <param name="stride_w"></param>
         /// <param name="convoluted"></param>
         public static void ReshapeRowMajorToConvolutionLayout(Matrix<float> data_convolutedRowMajor, int channels, int height, int width,
-            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, Matrix<float> convoluted)
+            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, BorderMode borderMode, Matrix<float> convoluted)
         {
-            int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h);
-            int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w);
+            int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
+            int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
 
             var columnWidth = height_col * width_col;
             var filterCount = convoluted.RowCount;
@@ -239,10 +270,10 @@ namespace SharpLearning.Neural
         /// <param name="stride_w"></param>
         /// <param name="data_im"></param>
         public static void Batch_Col2Im(Matrix<float> data_col, int channels, int height, int width,
-                        int patch_h, int patch_w, int pad_h, int pad_w, int stride_h, int stride_w, Matrix<float> data_im)
+                        int patch_h, int patch_w, int pad_h, int pad_w, int stride_h, int stride_w, BorderMode borderMode, Matrix<float> data_im)
         {
-            int height_col = GetFilterGridLength(height, patch_h, stride_h, pad_h);
-            int width_col = GetFilterGridLength(width, patch_w, stride_w, pad_w);
+            int height_col = GetFilterGridLength(height, patch_h, stride_h, pad_h, borderMode);
+            int width_col = GetFilterGridLength(width, patch_w, stride_w, pad_w, borderMode);
             int channels_col = channels * patch_h * patch_w;
             var batchSize = data_im.RowCount;
 

@@ -52,6 +52,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="numberOfClasses"></param>
         public SvmLayer(int numberOfClasses)
         {
+            if (numberOfClasses < 2) { throw new ArgumentException("numberOfClasses is less than 2: " + numberOfClasses); }
+
             ActivationFunc = Activation.Undefined;
             NumberOfClasses = numberOfClasses;
             Height = 1;

@@ -57,6 +57,7 @@
     <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
+    <Compile Include="BorderMode.cs" />
     <Compile Include="Initializations\FanInFanOut.cs" />
     <Compile Include="Initializations\WeightInitialization.cs" />
     <Compile Include="Activations\Activiation.cs" />

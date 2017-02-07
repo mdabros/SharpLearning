@@ -46,6 +46,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="numberOfTargets">If more than one regression target. Default is 1</param>
         public SquaredErrorRegressionLayer(int numberOfTargets = 1)
         {
+            if (numberOfTargets < 1) { throw new ArgumentException("numberOfClasses is less than 1: " + numberOfTargets); }
+
             ActivationFunc = Activation.Undefined;
             NumberOfTargets = numberOfTargets;
             Height = 1;

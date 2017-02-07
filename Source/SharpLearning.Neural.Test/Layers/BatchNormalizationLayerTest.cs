@@ -82,8 +82,8 @@ namespace SharpLearning.Neural.Test.Layers
             var inputHeight = 3;
             var inputDepth = 3;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, padding);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, padding);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, padding, BorderMode.Valid);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, padding, BorderMode.Valid);
 
             var k = filterDepth;
 
@@ -94,7 +94,7 @@ namespace SharpLearning.Neural.Test.Layers
             Trace.WriteLine(convInput);
 
             ConvUtils.ReshapeConvolutionsToRowMajor(convInput, inputDepth, inputHeight, inputWidth, filterHeight, filterWidth,
-                padding, padding, stride, stride, rowWiseInput);
+                padding, padding, stride, stride, BorderMode.Valid, rowWiseInput);
 
             Trace.WriteLine(rowWiseInput);
 

@@ -40,7 +40,8 @@ namespace SharpLearning.Neural.Layers
         /// </summary>
         public bool UseBatchNormalization { get; set; }
 
-        int m_padding = 0;
+        int m_padWidth = 0;
+        int m_padHeight = 0;
         int m_stride = 1;
 
         /// <summary>
@@ -113,6 +114,11 @@ namespace SharpLearning.Neural.Layers
         Matrix<float> m_deltaInReshape;
 
         /// <summary>
+        /// Border mode used for convolution.
+        /// </summary>
+        public BorderMode BorderMode;
+
+        /// <summary>
         /// Convolutional layer using GEMM implementation 
         /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
         /// and: https://arxiv.org/pdf/1410.0759.pdf
@@ -120,20 +126,53 @@ namespace SharpLearning.Neural.Layers
         /// <param name="filterWidth">The width of the filters</param>
         /// <param name="filterHeight">The height of the filters</param>
         /// <param name="filterCount">The number of filters</param>
-        /// <param name="stride">Controls the distance between each neighbouring filter (default is 1).</param>
-        /// <param name="padding">Controls the padding at the edges of the input (default is 0).</param>
-        /// <param name="activation">Type of activation function used (default is Relu).</param>
-        public ConvLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1, int padding = 0,
-            Activation activation = Activation.Relu)
+        /// <param name="stride">Controls the distance between each neighbouring filter (default is 1)</param>
+        /// <param name="padWidth">Zero padding for the width dimension (default is 0)</param>
+        /// <param name="padHeight">Zero padding for the height dimension (default is 0)</param>
+        /// <param name="activation">Type of activation function used (default is Relu)</param>
+        public ConvLayer(int filterWidth, int filterHeight, int filterCount, int stride, 
+            int padWidth, int padHeight, Activation activation = Activation.Relu)
         {
+            if (filterWidth < 1) { throw new ArgumentException("filterWidth is less than 1: " + filterWidth); }
+            if (filterHeight < 1) { throw new ArgumentException("poolHeight is less than 1: " + filterHeight); }
+            if (filterCount < 1) { throw new ArgumentException("filterCount is less than 1: " + filterCount); }
+            if (padWidth < 0) { throw new ArgumentException("padWidth is less than 0: " + padWidth); }
+            if (padHeight < 0) { throw new ArgumentException("padHeight is less than 0: " + padHeight); }
+            if (stride < 1) { throw new ArgumentException("stride is less than 0: " + stride); }
+
+
             FilterWidth = filterWidth;
             FilterHeight = filterHeight;
             FilterCount = filterCount;
 
             ActivationFunc = activation;
             m_stride = stride;
-            m_padding = padding;
+            m_padWidth = padWidth;
+            m_padHeight = padHeight;
+            BorderMode = BorderMode.Undefined;
         }
+
+        /// <summary>
+        /// Convolutional layer using GEMM implementation 
+        /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
+        /// and: https://arxiv.org/pdf/1410.0759.pdf
+        /// </summary>
+        /// <param name="filterWidth">The width of the filters</param>
+        /// <param name="filterHeight">The height of the filters</param>
+        /// <param name="filterCount">The number of filters</param>
+        /// <param name="stride">Controls the distance between each neighbouring filter (default is 1)</param>
+        /// <param name="borderMode">Border mode of the convolutional operation. 
+        /// This will set the width and height padding automatically (default is Valid)</param>
+        /// <param name="activation">Type of activation function used (default is Relu)</param>
+        public ConvLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1, 
+            BorderMode borderMode = BorderMode.Valid, Activation activation = Activation.Relu)
+            : this(filterWidth, filterHeight, filterCount, stride,
+                  ConvUtils.PaddingFromBorderMode(filterWidth, borderMode),
+                  ConvUtils.PaddingFromBorderMode(filterHeight, borderMode))
+        {
+            BorderMode = borderMode;
+        }
+
 
         /// <summary>
         /// 
@@ -144,7 +183,7 @@ namespace SharpLearning.Neural.Layers
         {
             // Reshape delta to fit with data layout in im2col
             ConvUtils.ReshapeConvolutionsToRowMajor(delta, InputDepth, InputHeight, InputWidth,
-                FilterWidth, FilterHeight, m_padding, m_padding, m_stride, m_stride, m_deltaInReshape);
+                FilterWidth, FilterHeight, m_padHeight, m_padWidth, m_stride, m_stride, BorderMode, m_deltaInReshape);
 
             // Calculate gradients for weights and biases
             m_deltaInReshape.TransposeAndMultiply(Im2Cols, WeightsGradients);
@@ -156,7 +195,7 @@ namespace SharpLearning.Neural.Layers
             // convert back to original layout
             m_delta.Clear();
             ConvUtils.Batch_Col2Im(Im2Cols, InputDepth, InputHeight, InputWidth,
-                FilterHeight, FilterWidth, m_padding, m_padding, m_stride, m_stride, m_delta);
+                FilterHeight, FilterWidth, m_padHeight, m_padWidth, m_stride, m_stride, BorderMode, m_delta);
 
             return m_delta;
         }
@@ -172,7 +211,7 @@ namespace SharpLearning.Neural.Layers
 
             // Arrange input item for GEMM version of convolution.
             ConvUtils.Batch_Im2Col(m_inputActivations, InputDepth, InputHeight, InputWidth,
-                FilterWidth, FilterHeight, m_padding, m_padding, m_stride, m_stride, Im2Cols);
+                FilterWidth, FilterHeight, m_padHeight, m_padWidth, m_stride, m_stride, BorderMode, Im2Cols);
 
             // matrix multiplication for convolution
             Weights.Multiply(Im2Cols, Conv);
@@ -180,7 +219,7 @@ namespace SharpLearning.Neural.Layers
 
             // Return the covolved data to row major and copy  data to output
             ConvUtils.ReshapeConvolutionsToRowMajor(Conv, InputDepth, InputHeight, InputWidth,
-                FilterWidth, FilterHeight, m_padding, m_padding, m_stride, m_stride, OutputActivations);
+                FilterWidth, FilterHeight, m_padHeight, m_padWidth, m_stride, m_stride, BorderMode, OutputActivations);
 
             return OutputActivations;
         }
@@ -201,8 +240,8 @@ namespace SharpLearning.Neural.Layers
             InputWidth = inputWidth;
             InputDepth = inputDepth;           
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, m_stride, m_padding);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, m_stride, m_padding);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, m_stride, m_padWidth, BorderMode);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, m_stride, m_padHeight, BorderMode);
 
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
@@ -267,14 +306,15 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1; // prediction time only uses 1 item at a time.
-            var copy = new ConvLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padding, ActivationFunc);
+            var copy = new ConvLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padWidth, m_padHeight, ActivationFunc);
 
             copy.InputDepth = InputDepth;
             copy.InputWidth = InputWidth;
             copy.InputHeight = InputHeight;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, m_stride, m_padding);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, m_stride, m_padding);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, m_stride, m_padWidth, BorderMode);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, m_stride, m_padHeight, BorderMode);
+            copy.BorderMode = BorderMode;
 
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf

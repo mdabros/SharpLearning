@@ -24,6 +24,7 @@ namespace SharpLearning.Neural.Models
         /// <param name="model"></param>
         public RegressionNeuralNetModel(NeuralNet model)
         {
+            if (model == null) { throw new ArgumentNullException("model"); }
             m_neuralNet = model;
         }
 
