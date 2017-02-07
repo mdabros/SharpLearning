@@ -19,7 +19,7 @@ namespace SharpLearning.Neural.Test.Layers
         {
             var batchSize = 1;
 
-            var sut = new ConvLayer(2, 2, 2);
+            var sut = new ConvLayer(2, 2, 3, 4, 5, 6);
             sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
@@ -40,6 +40,8 @@ namespace SharpLearning.Neural.Test.Layers
 
             Assert.AreEqual(sut.Im2Cols.RowCount, actual.Im2Cols.RowCount);
             Assert.AreEqual(sut.Im2Cols.ColumnCount, actual.Im2Cols.ColumnCount);
+
+            Assert.AreEqual(sut.BorderMode, actual.BorderMode);
 
             Assert.AreEqual(sut.Conv.RowCount, actual.Conv.RowCount);
             Assert.AreEqual(sut.Conv.ColumnCount, actual.Conv.ColumnCount);

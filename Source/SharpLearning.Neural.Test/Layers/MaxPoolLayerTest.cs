@@ -20,7 +20,7 @@ namespace SharpLearning.Neural.Test.Layers
 
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPoolLayer(width, height, 1, 5, 6);
             sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
@@ -31,6 +31,7 @@ namespace SharpLearning.Neural.Test.Layers
             Assert.AreEqual(sut.Width, actual.Width);
             Assert.AreEqual(sut.Height, actual.Height);
             Assert.AreEqual(sut.Depth, actual.Depth);
+            Assert.AreEqual(sut.BorderMode, actual.BorderMode);
 
             Assert.AreEqual(sut.InputWidth, actual.InputWidth);
             Assert.AreEqual(sut.InputHeight, actual.InputHeight);

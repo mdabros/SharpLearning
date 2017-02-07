@@ -324,7 +324,7 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1;
-            var copy = new MaxPoolLayer(m_poolWidth, m_poolHeight, m_stride, m_padWidth, m_poolHeight);
+            var copy = new MaxPoolLayer(m_poolWidth, m_poolHeight, m_stride, m_padWidth, m_padHeight);
             copy.BorderMode = BorderMode;
 
             copy.InputDepth = InputDepth;
