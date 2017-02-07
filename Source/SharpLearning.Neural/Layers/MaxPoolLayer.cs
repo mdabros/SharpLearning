@@ -103,7 +103,7 @@ namespace SharpLearning.Neural.Layers
             m_poolHeight = poolHeight;
             m_stride = stride;
             m_padWidth = padWidth;
-            m_padWidth = padWidth;
+            m_padHeight = padHeight;
             BorderMode = BorderMode.Undefined;
             ActivationFunc = Activation.Undefined;
         }
@@ -118,7 +118,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="poolHeight">The height of the pool area (default is 2)</param>
         /// <param name="stride">Controls the distance between each neighbouring pool areas (default is 2)</param>
         /// <param name="borderMode">Border mode of the max pool operation. 
-        /// This will set the width and height padding automatically (default is Valid).</param>
+        /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid).</param>
         public MaxPoolLayer(int poolWidth, int poolHeight, int stride = 2, BorderMode borderMode = BorderMode.Valid)
             : this(poolWidth, poolHeight, stride,
                   ConvUtils.PaddingFromBorderMode(poolWidth, borderMode),

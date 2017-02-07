@@ -162,7 +162,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="filterCount">The number of filters</param>
         /// <param name="stride">Controls the distance between each neighbouring filter (default is 1)</param>
         /// <param name="borderMode">Border mode of the convolutional operation. 
-        /// This will set the width and height padding automatically (default is Valid)</param>
+        /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid)</param>
         /// <param name="activation">Type of activation function used (default is Relu)</param>
         public ConvLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1, 
             BorderMode borderMode = BorderMode.Valid, Activation activation = Activation.Relu)
