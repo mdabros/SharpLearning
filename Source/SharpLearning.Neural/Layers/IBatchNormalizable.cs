@@ -8,6 +8,6 @@
         /// <summary>
         /// Does the layer use batch normalization
         /// </summary>
-        bool UseBatchNormalization { get; set; }
+        bool BatchNormalization { get; set; }
     }
 }

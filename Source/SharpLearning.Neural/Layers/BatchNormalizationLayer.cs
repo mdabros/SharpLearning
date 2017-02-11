@@ -1,13 +1,10 @@
-﻿using MathNet.Numerics.Distributions;
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
-using SharpLearning.Containers.Extensions;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using SharpLearning.Neural.Initializations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SharpLearning.Neural.Layers
 {

@@ -36,7 +36,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// Does the layer use batch normalization
         /// </summary>
-        public bool UseBatchNormalization { get; set; }
+        public bool BatchNormalization { get; set; }
 
         /// <summary>
         /// Weights in the layer.

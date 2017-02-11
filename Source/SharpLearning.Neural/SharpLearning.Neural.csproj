@@ -67,7 +67,7 @@
     <Compile Include="ConvUtils.cs" />
     <Compile Include="Layers\ActivationLayer.cs" />
     <Compile Include="Layers\BatchNormalizationLayer.cs" />
-    <Compile Include="Layers\ConvLayer.cs" />
+    <Compile Include="Layers\Conv2DLayer.cs" />
     <Compile Include="Layers\DenseLayer.cs" />
     <Compile Include="Layers\DropoutLayer.cs" />
     <Compile Include="Layers\IBatchNormalizable.cs" />

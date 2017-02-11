@@ -67,7 +67,7 @@ namespace SharpLearning.Neural
 
             if(layer is IBatchNormalizable) // consider adding seperate interface for batch normalization
             {
-                if(((IBatchNormalizable)layer).UseBatchNormalization)
+                if(((IBatchNormalizable)layer).BatchNormalization)
                 {
                     Layers.Add(new BatchNormalizationLayer());
                 }

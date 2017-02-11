@@ -8,12 +8,12 @@ using System.Collections.Generic;
 namespace SharpLearning.Neural.Layers
 {
     /// <summary>
-    /// Convolutional layer using GEMM implementation 
+    /// 2D Convolutional layer using GEMM implementation 
     /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
     /// and: https://arxiv.org/pdf/1410.0759.pdf
     /// </summary>
     [Serializable]
-    public sealed class ConvLayer : ILayer, IBatchNormalizable
+    public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     {
         /// <summary>
         /// 
@@ -38,7 +38,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// Does the layer use batch normalization
         /// </summary>
-        public bool UseBatchNormalization { get; set; }
+        public bool BatchNormalization { get; set; }
 
         int m_padWidth = 0;
         int m_padHeight = 0;
@@ -119,7 +119,7 @@ namespace SharpLearning.Neural.Layers
         public BorderMode BorderMode;
 
         /// <summary>
-        /// Convolutional layer using GEMM implementation 
+        /// 2D Convolutional layer using GEMM implementation 
         /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
         /// and: https://arxiv.org/pdf/1410.0759.pdf
         /// </summary>
@@ -130,7 +130,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="padWidth">Zero padding for the width dimension (default is 0)</param>
         /// <param name="padHeight">Zero padding for the height dimension (default is 0)</param>
         /// <param name="activation">Type of activation function used (default is Relu)</param>
-        public ConvLayer(int filterWidth, int filterHeight, int filterCount, int stride, 
+        public Conv2DLayer(int filterWidth, int filterHeight, int filterCount, int stride, 
             int padWidth, int padHeight, Activation activation = Activation.Relu)
         {
             if (filterWidth < 1) { throw new ArgumentException("filterWidth is less than 1: " + filterWidth); }
@@ -153,7 +153,7 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// Convolutional layer using GEMM implementation 
+        /// 2D Convolutional layer using GEMM implementation 
         /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
         /// and: https://arxiv.org/pdf/1410.0759.pdf
         /// </summary>
@@ -164,7 +164,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="borderMode">Border mode of the convolutional operation. 
         /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid)</param>
         /// <param name="activation">Type of activation function used (default is Relu)</param>
-        public ConvLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1, 
+        public Conv2DLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1, 
             BorderMode borderMode = BorderMode.Valid, Activation activation = Activation.Relu)
             : this(filterWidth, filterHeight, filterCount, stride,
                   ConvUtils.PaddingFromBorderMode(filterWidth, borderMode),
@@ -306,7 +306,7 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1; // prediction time only uses 1 item at a time.
-            var copy = new ConvLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padWidth, m_padHeight, ActivationFunc);
+            var copy = new Conv2DLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padWidth, m_padHeight, ActivationFunc);
 
             copy.InputDepth = InputDepth;
             copy.InputWidth = InputWidth;

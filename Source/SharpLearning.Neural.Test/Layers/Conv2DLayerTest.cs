@@ -11,21 +11,21 @@ using SharpLearning.Neural.Initializations;
 namespace SharpLearning.Neural.Test.Layers
 {
     [TestClass]
-    public class ConvLayerTest
+    public class Conv2DLayerTest
     {
 
         [TestMethod]
-        public void ConvLayer_CopyLayerForPredictionModel()
+        public void Conv2DLayer_CopyLayerForPredictionModel()
         {
             var batchSize = 1;
 
-            var sut = new ConvLayer(2, 2, 3, 4, 5, 6);
+            var sut = new Conv2DLayer(2, 2, 3, 4, 5, 6);
             sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
 
-            var actual = (ConvLayer)layers.Single();
+            var actual = (Conv2DLayer)layers.Single();
 
             Assert.AreEqual(sut.Width, actual.Width);
             Assert.AreEqual(sut.Height, actual.Height);
@@ -51,22 +51,22 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void ConvLayer_Initialize()
+        public void Conv2DLayer_Initialize()
         {
             var batchSize = 1;
                  
-            var sut = new ConvLayer(2, 2, 2);
+            var sut = new Conv2DLayer(2, 2, 2);
             sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
         }
 
         [TestMethod]
-        public void ConvLayer_Forward()
+        public void Conv2DLayer_Forward()
         {
             var fanIn = 3 * 3 * 3;
             var batchSize = 10;
             var random = new Random(232);
 
-            var sut = new ConvLayer(2, 2, 20);
+            var sut = new Conv2DLayer(2, 2, 20);
             sut.Initialize(3, 3, 3, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -79,13 +79,13 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void ConvLayer_Backward()
+        public void Conv2DLayer_Backward()
         {
             var fanIn = 3 * 3 * 3;
             var batchSize = 10;
             var random = new Random(232);
 
-            var sut = new ConvLayer(2, 2, 2);
+            var sut = new Conv2DLayer(2, 2, 2);
             sut.Initialize(3, 3, 3, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -101,14 +101,14 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void ConvLayer_MultipleForwardsPasses()
+        public void Conv2DLayer_MultipleForwardsPasses()
         {
             var fanIn = 3 * 3 * 3;
             var fanOut = 2 * 2 * 2;
             var batchSize = 10;
             var random = new Random(232);
 
-            var sut = new ConvLayer(2, 2, 2);
+            var sut = new Conv2DLayer(2, 2, 2);
             sut.Initialize(3, 3, 3, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -125,14 +125,14 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void ConvLayer_MultipleBackwardsPasses()
+        public void Conv2DLayer_MultipleBackwardsPasses()
         {
             var fanIn = 3 * 3 * 3;
             var fanOut = 2 * 2 * 2;
             var batchSize = 10;
             var random = new Random(232);
 
-            var sut = new ConvLayer(2, 2, 2);
+            var sut = new Conv2DLayer(2, 2, 2);
             sut.Initialize(3, 3, 3, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -151,26 +151,26 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void ConvLayer_GradientCheck_BatchSize_1()
+        public void Conv2DLayer_GradientCheck_BatchSize_1()
         {
             var inputWidth = 3;
             var inputHeight = 3;
             var inputDepth = 3;
             var batchSize = 1;
 
-            var sut = new ConvLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
+            var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
             GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
         }
 
         [TestMethod]
-        public void ConvLayer_GradientCheck_BatchSize_11()
+        public void Conv2DLayer_GradientCheck_BatchSize_11()
         {
             var inputWidth = 3;
             var inputHeight = 3;
             var inputDepth = 3;
             var batchSize = 11;
 
-            var sut = new ConvLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
+            var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
             GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
         }
     }
