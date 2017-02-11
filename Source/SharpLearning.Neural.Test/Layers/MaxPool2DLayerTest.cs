@@ -1,32 +1,31 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Neural.Layers;
-using MathNet.Numerics.LinearAlgebra;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
+using SharpLearning.Neural.Layers;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace SharpLearning.Neural.Test.Layers
 {
     [TestClass]
-    public class MaxPoolLayerTest
+    public class MaxPool2DLayerTest
     {
         [TestMethod]
-        public void MaxPoolLayer_CopyLayerForPredictionModel()
+        public void MaxPool2DLayer_CopyLayerForPredictionModel()
         {
             var batchSize = 1;
 
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height, 1, 5, 6);
+            var sut = new MaxPool2DLayer(width, height, 1, 5, 6);
             sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
             sut.CopyLayerForPredictionModel(layers);
 
-            var actual = (MaxPoolLayer)layers.Single();
+            var actual = (MaxPool2DLayer)layers.Single();
 
             Assert.AreEqual(sut.Width, actual.Width);
             Assert.AreEqual(sut.Height, actual.Height);
@@ -48,7 +47,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_Forward()
+        public void MaxPool2DLayer_Forward()
         {
             const int inputWidth = 20;
             const int inputHeight = 20;
@@ -62,7 +61,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -76,7 +75,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_Forward_2()
+        public void MaxPool2DLayer_Forward_2()
         {
             const int inputWidth = 4;
             const int inputHeight = 4;
@@ -89,7 +88,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7 };
@@ -102,7 +101,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_Forward_3()
+        public void MaxPool2DLayer_Forward_3()
         {
             const int inputWidth = 4;
             const int inputHeight = 4;
@@ -115,7 +114,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
@@ -128,7 +127,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_Backward()
+        public void MaxPool2DLayer_Backward()
         {
             const int inputWidth = 20;
             const int inputHeight = 20;
@@ -142,7 +141,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -159,7 +158,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_Backward_2()
+        public void MaxPool2DLayer_Backward_2()
         {
             const int inputWidth = 4;
             const int inputHeight = 4;
@@ -173,7 +172,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7 };
@@ -189,7 +188,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_Backward_3()
+        public void MaxPool2DLayer_Backward_3()
         {
             const int inputWidth = 4;
             const int inputHeight = 4;
@@ -203,7 +202,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
@@ -219,7 +218,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_MultipleForwardsPasses()
+        public void MaxPool2DLayer_MultipleForwardsPasses()
         {
             const int inputWidth = 20;
             const int inputHeight = 20;
@@ -233,7 +232,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -249,7 +248,7 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         [TestMethod]
-        public void MaxPoolLayer_MultipleBackwardsPasses()
+        public void MaxPool2DLayer_MultipleBackwardsPasses()
         {
             const int inputWidth = 20;
             const int inputHeight = 20;
@@ -263,7 +262,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -283,7 +282,7 @@ namespace SharpLearning.Neural.Test.Layers
         // currently it is not possible to gradient check layers without weights and gradients
         [Ignore]
         [TestMethod]
-        public void MaxPoolLayer_GradientCheck_BatchSize_1()
+        public void MaxPool2DLayer_GradientCheck_BatchSize_1()
         {
             const int inputWidth = 20;
             const int inputHeight = 20;
@@ -294,14 +293,14 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
         }
 
         // currently it is not possible to gradient check layers without weights and gradients
         [Ignore]
         [TestMethod]
-        public void MaxPoolLayer_GradientCheck_BatchSize_10()
+        public void MaxPool2DLayer_GradientCheck_BatchSize_10()
         {
             const int inputWidth = 20;
             const int inputHeight = 20;
@@ -312,7 +311,7 @@ namespace SharpLearning.Neural.Test.Layers
             // Create layer
             const int width = 2;
             const int height = 2;
-            var sut = new MaxPoolLayer(width, height);
+            var sut = new MaxPool2DLayer(width, height);
             GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
         }
     }

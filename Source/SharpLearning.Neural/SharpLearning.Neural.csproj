@@ -76,7 +76,7 @@
     <Compile Include="Layers\InputLayer.cs" />
     <Compile Include="Layers\IOutputLayer.cs" />
     <Compile Include="Layers\IRegressionLayer.cs" />
-    <Compile Include="Layers\MaxPoolLayer.cs" />
+    <Compile Include="Layers\MaxPool2DLayer.cs" />
     <Compile Include="Layers\SoftMaxLayer.cs" />
     <Compile Include="Layers\SquaredErrorRegressionLayer.cs" />
     <Compile Include="Layers\SvmLayer.cs" />

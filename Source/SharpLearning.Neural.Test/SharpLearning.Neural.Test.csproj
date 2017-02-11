@@ -77,7 +77,7 @@
     <Compile Include="Layers\DenseLayerTest.cs" />
     <Compile Include="Layers\DropoutLayerTest.cs" />
     <Compile Include="Layers\InputLayerTest.cs" />
-    <Compile Include="Layers\MaxPoolLayerTest.cs" />
+    <Compile Include="Layers\MaxPool2DLayerTest.cs" />
     <Compile Include="Layers\SoftMaxLayerTest.cs" />
     <Compile Include="Layers\SquaredErrorRegressionLayerTest.cs" />
     <Compile Include="Layers\SvmLayerTest.cs" />

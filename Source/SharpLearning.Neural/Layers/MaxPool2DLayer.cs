@@ -13,7 +13,7 @@ namespace SharpLearning.Neural.Layers
     /// Max pool layer
     /// </summary>
     [Serializable]
-    public sealed class MaxPoolLayer : ILayer
+    public sealed class MaxPool2DLayer : ILayer
     {
         /// <summary>
         /// 
@@ -91,7 +91,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="stride">Controls the distance between each neighbouring pool areas (default is 2)</param>
         /// <param name="padWidth">Zero padding for the width dimension (default is 0)</param>
         /// <param name="padHeight">Zero padding for the height dimension (default is 0)</param>
-        public MaxPoolLayer(int poolWidth, int poolHeight, int stride, int padWidth, int padHeight)
+        public MaxPool2DLayer(int poolWidth, int poolHeight, int stride, int padWidth, int padHeight)
         {
             if (poolWidth < 1) { throw new ArgumentException("poolWidth is less than 1: " + poolWidth); }
             if (poolHeight < 1) { throw new ArgumentException("poolHeight is less than 1: " + poolHeight); }
@@ -119,7 +119,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="stride">Controls the distance between each neighbouring pool areas (default is 2)</param>
         /// <param name="borderMode">Border mode of the max pool operation. 
         /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid).</param>
-        public MaxPoolLayer(int poolWidth, int poolHeight, int stride = 2, BorderMode borderMode = BorderMode.Valid)
+        public MaxPool2DLayer(int poolWidth, int poolHeight, int stride = 2, BorderMode borderMode = BorderMode.Valid)
             : this(poolWidth, poolHeight, stride,
                   ConvUtils.PaddingFromBorderMode(poolWidth, borderMode),
                   ConvUtils.PaddingFromBorderMode(poolHeight, borderMode))
@@ -324,7 +324,7 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1;
-            var copy = new MaxPoolLayer(m_poolWidth, m_poolHeight, m_stride, m_padWidth, m_padHeight);
+            var copy = new MaxPool2DLayer(m_poolWidth, m_poolHeight, m_stride, m_padWidth, m_padHeight);
             copy.BorderMode = BorderMode;
 
             copy.InputDepth = InputDepth;
