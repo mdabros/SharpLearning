@@ -1,4 +1,6 @@
 # Build Directories
+Build/
+BuildTest/
 bin/
 obj/
 out/
@@ -56,7 +58,7 @@ ehthumbs.db
 Desktop.ini
 
 # NuGet Packages
-packages/*
+Source/packages/*
 !packages/.gitattributes
 !packages/TaskParallelLibrary
 !packages/FSharp.Core
