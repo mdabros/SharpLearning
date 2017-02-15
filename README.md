@@ -2,7 +2,7 @@ SharpLearning
 =================
 
 SharpLearning is an opensource machine learning library for C# .Net. 
-The purpose of SharpLearning is to provide .Net developers with easy access to machine learning algorithms and models.
+The goal of SharpLearning is to provide .Net developers with easy access to machine learning algorithms and models.
 
 Currently the main focus is supervised learning using classification and regression, 
 while also providing the necesarry tools for optimizing and validating the trained models.
@@ -25,7 +25,7 @@ model.Save(() => new StreamWriter("randomforest.xml"));
 ```
 All machine learning algorithms and models use the same interface for easy replacement.
 
-Currently SharpLearning support the following machine learning algorithms and models:
+Currently SharpLearning supports the following machine learning algorithms and models:
 
 * DecisionTrees
 * Adaboost (trees)
