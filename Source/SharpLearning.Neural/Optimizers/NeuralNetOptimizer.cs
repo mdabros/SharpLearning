@@ -20,9 +20,6 @@ namespace SharpLearning.Neural.Optimizers
         readonly List<double[]> gsumWeights = new List<double[]>(); // last iteration gradients (used for momentum calculations)
         readonly List<double[]> xsumWeights = new List<double[]>(); // used in adam or adadelta
 
-        readonly List<double[]> gsumBias = new List<double[]>(); // last iteration gradients (used for momentum calculations)
-        readonly List<double[]> xsumBias = new List<double[]>(); // used in adam or adadelta
-
         readonly OptimizerMethod OptimizerMethod = OptimizerMethod.Sgd;
         readonly float m_rho = 0.95f;
         readonly float m_eps = 1e-8f;
@@ -101,16 +98,11 @@ namespace SharpLearning.Neural.Optimizers
                 var parametersAndGradient = parametersAndGradients[i];
 
                 // extract parameters and gradients
-                var parameters = parametersAndGradient.Parameters.Weights.Data();
-                var parametersBias = parametersAndGradient.Parameters.Bias.Data();
-                var gradients = parametersAndGradient.Gradients.Weights.Data();
-                var gradientsBias = parametersAndGradient.Gradients.Bias.Data();
+                var parameters = parametersAndGradient.Parameters;
+                var gradients = parametersAndGradient.Gradients;
 
                 // update weights
                 UpdateParam(i, parameters, gradients, m_l2Decay, m_l1Decay, gsumWeights, xsumWeights);
-
-                // Update biases
-                UpdateParam(i, parametersBias, gradientsBias, m_l2Decay, m_l1Decay, gsumBias, xsumBias);
             });
         }
 
@@ -118,15 +110,13 @@ namespace SharpLearning.Neural.Optimizers
         {
             for (var i = 0; i < parametersAndGradients.Count; i++)
             {
-                gsumWeights.Add(new double[parametersAndGradients[i].Parameters.Weights.Data().Length]);
-                gsumBias.Add(new double[parametersAndGradients[i].Parameters.Bias.Data().Length]);
+                gsumWeights.Add(new double[parametersAndGradients[i].Parameters.Length]);
                 if (OptimizerMethod == OptimizerMethod.Adam || 
                     OptimizerMethod == OptimizerMethod.Adadelta || 
                     OptimizerMethod == OptimizerMethod.AdaMax ||
                     OptimizerMethod == OptimizerMethod.Nadam)
                 {
-                    xsumWeights.Add(new double[parametersAndGradients[i].Parameters.Weights.Data().Length]);
-                    xsumBias.Add(new double[parametersAndGradients[i].Parameters.Bias.Data().Length]);
+                    xsumWeights.Add(new double[parametersAndGradients[i].Parameters.Length]);
                 }
             }
         }
@@ -283,9 +273,7 @@ namespace SharpLearning.Neural.Optimizers
             for (int i = 0; i < gsumWeights.Count; i++)
             {
                 gsumWeights[i].Clear();
-                gsumBias[i].Clear();
                 xsumWeights[i].Clear();
-                xsumBias[i].Clear();
             }
         }
     }

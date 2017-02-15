@@ -128,24 +128,6 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// Dropout layer does not have any parameters or graidents.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetGradients()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Dropout layer does not have any parameters or graidents.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetParameters()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Copies a minimal version of the layer to be used in a model for predictions.
         /// </summary>
         /// <param name="layers"></param>

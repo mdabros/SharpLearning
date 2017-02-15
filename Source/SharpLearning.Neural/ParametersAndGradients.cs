@@ -10,19 +10,19 @@ namespace SharpLearning.Neural
         /// <summary>
         /// 
         /// </summary>
-        public readonly WeightsAndBiases Parameters;
+        public readonly float[] Parameters;
 
         /// <summary>
         /// 
         /// </summary>
-        public readonly WeightsAndBiases Gradients;
+        public readonly float[] Gradients;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parameters"></param>
         /// <param name="gradients"></param>
-        public ParametersAndGradients(WeightsAndBiases parameters, WeightsAndBiases gradients)
+        public ParametersAndGradients(float[] parameters, float[] gradients)
         {
             Parameters = parameters;
             Gradients = gradients;

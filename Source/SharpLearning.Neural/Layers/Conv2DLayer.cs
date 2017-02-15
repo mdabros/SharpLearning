@@ -277,26 +277,10 @@ namespace SharpLearning.Neural.Layers
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            var all = new ParametersAndGradients(GetParameters(), GetGradients());
-            parametersAndGradients.Add(all);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetGradients()
-        {
-            return new WeightsAndBiases(WeightsGradients, BiasGradients);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetParameters()
-        {
-            return new WeightsAndBiases(Weights, Bias);
+            var weights = new ParametersAndGradients(Weights.Data(), WeightsGradients.Data());
+            var bias = new ParametersAndGradients(Bias.Data(), BiasGradients.Data());
+            parametersAndGradients.Add(weights);
+            parametersAndGradients.Add(bias);
         }
 
         /// <summary>

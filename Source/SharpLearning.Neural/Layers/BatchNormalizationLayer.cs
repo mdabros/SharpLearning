@@ -217,35 +217,17 @@ namespace SharpLearning.Neural.Layers
             return newValue;
         }
 
-
-        /// <summary>
-        /// Gets the gradients of the layer. 
-        /// For BatchNormalizationLayer this is the gradients of the linear scale + bias controlling the normaliztion.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetGradients()
-        {
-            return new WeightsAndBiases(ScaleGradients, BiasGradients);
-        }
-
-        /// <summary>
-        /// Gets the parameters of the layer. 
-        /// For BatchNormalizationLayer this is the linear scale + bias controlling the normaliztion.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetParameters()
-        {
-            return new WeightsAndBiases(Scale, Bias);
-        }
-
         /// <summary>
         /// Adds the parameters and gradients of the layer to the list.
         /// </summary>
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            var all = new ParametersAndGradients(GetParameters(), GetGradients());
-            parametersAndGradients.Add(all);
+            var scale = new ParametersAndGradients(Scale.Data(), ScaleGradients.Data());
+            var bias = new ParametersAndGradients(Bias.Data(), BiasGradients.Data());
+
+            parametersAndGradients.Add(scale);
+            parametersAndGradients.Add(bias);
         }
 
         /// <summary>

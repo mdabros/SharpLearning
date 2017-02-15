@@ -122,23 +122,5 @@ namespace SharpLearning.Neural.Layers
         {
             // SquaredErrorRegressionLayer layer does not have any parameters or graidents.
         }
-
-        /// <summary>
-        /// SquaredErrorRegressionLayer layer does not have any parameters or graidents.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetGradients()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// SquaredErrorRegressionLayer layer does not have any parameters or graidents.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetParameters()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

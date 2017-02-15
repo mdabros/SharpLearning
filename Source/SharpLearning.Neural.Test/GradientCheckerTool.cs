@@ -30,76 +30,40 @@ namespace SharpLearning.Neural.Test
             layer.Backward(delta);
 
             // get weights and gradients
-            var weightGradients = layer.GetGradients().Weights;
-            var weightParameters = layer.GetParameters().Weights;
-     
-            var output1 = Matrix<float>.Build.Dense(batchSize, fanOut);
-            var output2 = Matrix<float>.Build.Dense(batchSize, fanOut);
+            var parametersAndGradients = new List<ParametersAndGradients>();
+            layer.AddParameresAndGradients(parametersAndGradients);
 
-            // Check weights
-            for (var y = 0; y < weightParameters.ColumnCount; y++)
+            foreach (var parameterAndGradient in parametersAndGradients)
             {
-                for (var x = 0; x < weightParameters.RowCount; x++)
+                var gradients = parameterAndGradient.Gradients;
+                var parameters = parameterAndGradient.Parameters;
+
+                var output1 = Matrix<float>.Build.Dense(batchSize, fanOut);
+                var output2 = Matrix<float>.Build.Dense(batchSize, fanOut);
+
+                for (int i = 0; i < parameters.Length; i++)
                 {
                     output1.Clear();
                     output2.Clear();
 
-                    var oldValue = weightParameters[x, y];
+                    var oldValue = parameters[i];
 
-                    weightParameters[x, y] = oldValue + epsilon;
+                    parameters[i] = oldValue + epsilon;
                     layer.Forward(input).CopyTo(output1);
-                    weightParameters[x, y] = oldValue - epsilon;
+                    parameters[i] = oldValue - epsilon;
                     layer.Forward(input).CopyTo(output2);
 
-                    weightParameters[x, y] = oldValue;
+                    parameters[i] = oldValue;
 
                     output1.Subtract(output2, output1); // output1 = output1 - output2
 
                     var grad = output1.ToRowMajorArray().Select(f => f / (2.0f * epsilon));
                     var gradient = grad.Sum(); // approximated gradient
-                    var actual = weightGradients[x, y];
+                    var actual = gradients[i];
 
                     Assert.AreEqual(gradient, actual, accuracyCondition);
                 }
             }
-
-            // Check biases
-            var biasesGradients = layer.GetGradients().Bias;
-            var biasesParameters = layer.GetParameters().Bias;
-
-            if (biasesGradients != null)
-            {
-                for (int i = 0; i < biasesGradients.Count; i++)
-                {
-                    output1.Clear();
-                    output2.Clear();
-
-                    var oldValue = biasesParameters[i];
-
-                    biasesParameters[i] = oldValue + epsilon;
-                    layer.Forward(input).CopyTo(output1);
-                    biasesParameters[i] = oldValue - epsilon;
-                    layer.Forward(input).CopyTo(output2);
-
-                    biasesParameters[i] = oldValue;
-
-                    output1.Subtract(output2, output1); // output1 = output1 - output2
-
-                    var grad = output1.ToRowMajorArray().Select(f => f / (2.0f * epsilon));
-
-                    var gradient = grad.Sum();
-                    var actual = biasesGradients[i];
-
-                    Assert.AreEqual(gradient, actual, accuracyCondition);
-                }
-            }
-        }
-
-        static Matrix<float> GetWeights(ILayer layer)
-        {
-            var parametersAndGradients = new List<ParametersAndGradients>();
-            layer.AddParameresAndGradients(parametersAndGradients);
-            return parametersAndGradients.Single().Parameters.Weights;
         }
     }
 }

@@ -130,24 +130,6 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetGradients()
-        {
-            return new WeightsAndBiases(ActivationDerivative, null); // no bias
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetParameters()
-        {
-            return new WeightsAndBiases(m_inputActivations, null); // no bias
-        }
-
-        /// <summary>
         /// Copies a minimal version of the layer to be used in a model for predictions.
         /// </summary>
         /// <param name="layers"></param>

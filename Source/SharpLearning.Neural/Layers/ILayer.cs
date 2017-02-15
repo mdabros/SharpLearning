@@ -62,18 +62,6 @@ namespace SharpLearning.Neural.Layers
         void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients);
 
         /// <summary>
-        /// Get the gradients
-        /// </summary>
-        /// <returns></returns>
-        WeightsAndBiases GetGradients();
-
-        /// <summary>
-        /// Get the Parameters
-        /// </summary>
-        /// <returns></returns>
-        WeightsAndBiases GetParameters();
-
-        /// <summary>
         /// Copies a minimal version of the layer to be used in a model for predictions.
         /// </summary>
         /// <param name="layers"></param>

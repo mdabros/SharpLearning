@@ -268,24 +268,6 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// Pool layer does not have any parameters or graidents.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetGradients()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Pool layer does not have any parameters or graidents.
-        /// </summary>
-        /// <returns></returns>
-        public WeightsAndBiases GetParameters()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="inputWidth"></param>

@@ -99,7 +99,6 @@
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />
     <Compile Include="TargetEncoders\OneOfNTargetEncoder.cs" />
-    <Compile Include="WeightsAndBiases.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
