@@ -18,8 +18,8 @@ namespace SharpLearning.Containers.Arithmetic
         /// <returns></returns>
         public static double[] MultiplyVectorF64(F64Matrix a, double[] v)
         {
-            var rows = a.RowCount();
-            var cols = a.ColumnCount();
+            var rows = a.RowCount;
+            var cols = a.ColumnCount;
             
             var data = a.Data();
             var output = new double[rows];
@@ -46,8 +46,8 @@ namespace SharpLearning.Containers.Arithmetic
         /// <param name="output"></param>
         public static void MultiplyVectorF64(F64Matrix a, double[] v, double[] output)
         {
-            var rows = a.RowCount();
-            var cols = a.ColumnCount();
+            var rows = a.RowCount;
+            var cols = a.ColumnCount;
 
             var data = a.Data();
 
@@ -115,12 +115,12 @@ namespace SharpLearning.Containers.Arithmetic
         public static F64Matrix MultiplyF64(F64Matrix a, F64Matrix b)
         {
             var aData = a.Data();
-            var aRows = a.RowCount();
-            var aCols = a.ColumnCount();
+            var aRows = a.RowCount;
+            var aCols = a.ColumnCount;
 
             var bData = b.Data();
-            var bRows = b.RowCount();
-            var bCols = b.ColumnCount();
+            var bRows = b.RowCount;
+            var bCols = b.ColumnCount;
 
             var cRows = aRows;
             var cCols = bCols;
@@ -153,12 +153,12 @@ namespace SharpLearning.Containers.Arithmetic
         public static void MultiplyF64(F64Matrix a, F64Matrix b, F64Matrix output)
         {
             var aData = a.Data();
-            var aRows = a.RowCount();
-            var aCols = a.ColumnCount();
+            var aRows = a.RowCount;
+            var aCols = a.ColumnCount;
 
             var bData = b.Data();
-            var bRows = b.RowCount();
-            var bCols = b.ColumnCount();
+            var bRows = b.RowCount;
+            var bCols = b.ColumnCount;
 
             var outputArray = output.Data();
 
@@ -166,13 +166,13 @@ namespace SharpLearning.Containers.Arithmetic
             { throw new ArgumentException("matrix a cols: " + aCols + " differs from matrix b rows: " + bRows); }
 
 
-            if (output.RowCount() != aRows)
-            { throw new ArgumentException("output matrix rows: " + output.RowCount() 
+            if (output.RowCount != aRows)
+            { throw new ArgumentException("output matrix rows: " + output.RowCount 
                 + " differs from matrix a rows: " + aRows); }
 
-            if (output.ColumnCount() != bCols)
+            if (output.ColumnCount != bCols)
             {
-                throw new ArgumentException("output matrix rows: " + output.ColumnCount()
+                throw new ArgumentException("output matrix rows: " + output.ColumnCount
                   + " differs from matrix b cols: " + bCols);
             }
 

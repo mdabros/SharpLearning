@@ -134,7 +134,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new ClassificationDecisionTreeLearner(treeDepth, 1, observations.ColumnCount(), 0.001, 42);
+            var sut = new ClassificationDecisionTreeLearner(treeDepth, 1, observations.ColumnCount, 0.001, 42);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -169,7 +169,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var rows = targets.Length;
 
             var weights = targets.Select(v => Weight(v, 1, weight)).ToArray();
-            var sut = new ClassificationDecisionTreeLearner(treeDepth, 1, observations.ColumnCount(), 0.001, 42);
+            var sut = new ClassificationDecisionTreeLearner(treeDepth, 1, observations.ColumnCount, 0.001, 42);
             var model = sut.Learn(observations, targets, weights);
 
             var predictions = model.Predict(observations);

@@ -63,7 +63,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void F64Matrix_Row_Predefined()
         {
             var sut = CreateFeatures();
-            var row = new double[sut.ColumnCount()];
+            var row = new double[sut.ColumnCount];
             sut.Row(1, row);
             CollectionAssert.AreEqual(GetExpectedRow(), row);
         }
@@ -81,7 +81,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void F64Matrix_Column_Predefined()
         {
             var sut = CreateFeatures();
-            var col = new double[sut.RowCount()];
+            var col = new double[sut.RowCount];
             sut.Column(1, col);
 
             CollectionAssert.AreEqual(GetExpectedColumn(), col);

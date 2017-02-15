@@ -103,7 +103,7 @@ namespace SharpLearning.AdaBoost.Learners
             }
 
             m_modelLearner = new RegressionDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, 
-                observations.ColumnCount(), m_minimumInformationGain, 42);
+                observations.ColumnCount, m_minimumInformationGain, 42);
 
             m_modelErrors.Clear();
             m_modelWeights.Clear();
@@ -153,7 +153,7 @@ namespace SharpLearning.AdaBoost.Learners
                 }
             }
 
-            var featuresCount = observations.ColumnCount();
+            var featuresCount = observations.ColumnCount;
             var variableImportance = VariableImportance(featuresCount);
 
             return new RegressionAdaBoostModel(m_models.ToArray(), m_modelWeights.ToArray(),

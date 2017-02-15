@@ -103,7 +103,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <returns></returns>
         public ClassificationGradientBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            var rows = observations.RowCount();
+            var rows = observations.RowCount;
             var orderedElements = CreateOrderedElements(observations, rows);
 
             var inSample = targets.Select(t => false).ToArray();
@@ -146,7 +146,7 @@ namespace SharpLearning.GradientBoost.Learners
                 }
             }
 
-            var predictWork = new double[observations.RowCount()];
+            var predictWork = new double[observations.RowCount];
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
@@ -176,7 +176,7 @@ namespace SharpLearning.GradientBoost.Learners
                 }
             }
 
-            return new ClassificationGradientBoostModel(trees, uniqueTargets, m_learningRate, initialLoss, observations.ColumnCount());
+            return new ClassificationGradientBoostModel(trees, uniqueTargets, m_learningRate, initialLoss, observations.ColumnCount);
         }
 
         /// <summary>
@@ -204,7 +204,7 @@ namespace SharpLearning.GradientBoost.Learners
                 throw new ArgumentException("Number of iterations " + m_iterations + " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
             }
 
-            var rows = trainingObservations.RowCount();
+            var rows = trainingObservations.RowCount;
             var orderedElements = CreateOrderedElements(trainingObservations, rows);
 
             var inSample = trainingTargets.Select(t => false).ToArray();
@@ -251,7 +251,7 @@ namespace SharpLearning.GradientBoost.Learners
             var bestIterationCount = 0;
             var currentBedstError = double.MaxValue;
 
-            var predictWork = new double[trainingObservations.RowCount()];
+            var predictWork = new double[trainingObservations.RowCount];
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
@@ -285,7 +285,7 @@ namespace SharpLearning.GradientBoost.Learners
                 if(iteration % earlyStoppingRounds == 0)
                 {
                     var model = new ClassificationGradientBoostModel(trees.Select(t => t.Take(iteration).ToArray()).ToArray(),
-                        uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount());
+                        uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount);
 
                     var validPredictions = model.Predict(validationObservations);
                     var error = metric.Error(validationTargets, validPredictions);
@@ -305,7 +305,7 @@ namespace SharpLearning.GradientBoost.Learners
             }
 
             return new ClassificationGradientBoostModel(trees.Select(t => t.Take(bestIterationCount).ToArray()).ToArray(), 
-                uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount());
+                uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount);
         }
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace SharpLearning.GradientBoost.Learners
                 throw new ArgumentException("Number of iterations " + m_iterations + " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
             }
 
-            var rows = trainingObservations.RowCount();
+            var rows = trainingObservations.RowCount;
             var orderedElements = CreateOrderedElements(trainingObservations, rows);
 
             var inSample = trainingTargets.Select(t => false).ToArray();
@@ -413,7 +413,7 @@ namespace SharpLearning.GradientBoost.Learners
                 if (iteration % earlyStoppingRounds == 0)
                 {
                     var model = new ClassificationGradientBoostModel(trees.Select(t => t.Take(iteration).ToArray()).ToArray(),
-                        uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount());
+                        uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount);
 
                     var validPredictions = model.PredictProbability(validationObservations);
                     var error = metric.Error(validationTargets, validPredictions);
@@ -433,7 +433,7 @@ namespace SharpLearning.GradientBoost.Learners
             }
 
             return new ClassificationGradientBoostModel(trees.Select(t => t.Take(bestIterationCount).ToArray()).ToArray(),
-                uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount());
+                uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount);
         }
 
         /// <summary>
@@ -490,9 +490,9 @@ namespace SharpLearning.GradientBoost.Learners
         /// <returns></returns>
         int[][] CreateOrderedElements(F64Matrix observations, int rows)
         {
-            var orderedElements = new int[observations.ColumnCount()][];
+            var orderedElements = new int[observations.ColumnCount][];
 
-            for (int i = 0; i < observations.ColumnCount(); i++)
+            for (int i = 0; i < observations.ColumnCount; i++)
             {
                 var feature = observations.Column(i);
                 var indices = Enumerable.Range(0, rows).ToArray();

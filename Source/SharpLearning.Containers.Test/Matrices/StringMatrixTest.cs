@@ -66,7 +66,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void StringMatrix_Row_Predefined()
         {
             var sut = CreateFeatures();
-            var row = new string[sut.ColumnCount()];
+            var row = new string[sut.ColumnCount];
             sut.Row(1, row);
             CollectionAssert.AreEqual(GetExpectedRow(), row);
         }
@@ -84,7 +84,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void StringMatrix_Column_Predefined()
         {
             var sut = CreateFeatures();
-            var col = new string[sut.RowCount()];
+            var col = new string[sut.RowCount];
             sut.Column(1, col);
 
             CollectionAssert.AreEqual(GetExpectedColumn(), col);

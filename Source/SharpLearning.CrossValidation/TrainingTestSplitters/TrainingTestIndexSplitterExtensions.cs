@@ -20,7 +20,7 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         public static TrainingTestSetSplit SplitSet(this ITrainingTestIndexSplitter<double> splitter, 
             F64Matrix observations, double[] targets)
         {
-            if (observations.RowCount() != targets.Length)
+            if (observations.RowCount != targets.Length)
             { throw new ArgumentException("Observations and targets has different number of rows"); }
 
             var indexSplit = splitter.Split(targets);

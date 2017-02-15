@@ -47,9 +47,9 @@ namespace SharpLearning.Ensemble.Models
         /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
-            var predictions = new double[observations.RowCount()];
-            var observation = new double[observations.ColumnCount()];
-            for (int i = 0; i < observations.RowCount(); i++)
+            var predictions = new double[observations.RowCount];
+            var observation = new double[observations.ColumnCount];
+            for (int i = 0; i < observations.RowCount; i++)
             {
                 observations.Row(i, observation);
                 predictions[i] = Predict(observation);
@@ -93,9 +93,9 @@ namespace SharpLearning.Ensemble.Models
         /// <returns></returns>
         public ProbabilityPrediction[] PredictProbability(F64Matrix observations)
         {
-            var predictions = new ProbabilityPrediction[observations.RowCount()];
-            var observation = new double[observations.ColumnCount()];
-            for (int i = 0; i < observations.RowCount(); i++)
+            var predictions = new ProbabilityPrediction[observations.RowCount];
+            var observation = new double[observations.ColumnCount];
+            for (int i = 0; i < observations.RowCount; i++)
             {
                 observations.Row(i, observation);
                 predictions[i] = PredictProbability(observation);

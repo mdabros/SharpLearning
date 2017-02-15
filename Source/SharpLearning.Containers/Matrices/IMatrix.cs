@@ -92,12 +92,12 @@ namespace SharpLearning.Containers.Matrices
         /// Gets the number of columns
         /// </summary>
         /// <returns></returns>
-        int ColumnCount();
+        int ColumnCount { get; }
 
         /// <summary>
         /// Gets the numver of rows
         /// </summary>
         /// <returns></returns>
-        int RowCount();
+        int RowCount { get; }
     }
 }

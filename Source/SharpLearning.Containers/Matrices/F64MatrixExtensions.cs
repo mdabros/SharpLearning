@@ -54,7 +54,7 @@ namespace SharpLearning.Containers.Matrices
         public static StringMatrix ToStringMatrix(this F64Matrix matrix)
         {
             var stringFeatures = Array.ConvertAll(matrix.Data(), FloatingPointConversion.ToString);
-            return new StringMatrix(stringFeatures, matrix.RowCount(), matrix.ColumnCount());
+            return new StringMatrix(stringFeatures, matrix.RowCount, matrix.ColumnCount);
         }
 
 
@@ -96,13 +96,13 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public static F64Matrix CombineCols(this F64Matrix m, double[] v)
         {
-            if (m.RowCount() != v.Length)
+            if (m.RowCount != v.Length)
             {
                 throw new ArgumentException("matrix must have same number of rows as vector");
             }
 
             var rows = v.Length;
-            var cols = m.ColumnCount() + 1;
+            var cols = m.ColumnCount + 1;
 
             var features = new double[rows * cols];
             var matrixArray = m.Data();
@@ -110,11 +110,11 @@ namespace SharpLearning.Containers.Matrices
             var combineIndex = 0;
             for (int i = 0; i < rows; i++)
             {
-                var matrixIndex = i * m.ColumnCount();
-                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount());
+                var matrixIndex = i * m.ColumnCount;
+                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);
 
                 var otherIndex = i;
-                combineIndex += m.ColumnCount();
+                combineIndex += m.ColumnCount;
 
                 Array.Copy(v, otherIndex, features, combineIndex, 1);
                 combineIndex += 1;
@@ -132,13 +132,13 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public static F64Matrix CombineCols(this double[] v, F64Matrix m)
         {
-            if (m.RowCount() != v.Length)
+            if (m.RowCount != v.Length)
             {
                 throw new ArgumentException("matrix must have same number of rows as vector");
             }
 
             var rows = v.Length;
-            var cols = m.ColumnCount() + 1;
+            var cols = m.ColumnCount + 1;
 
             var features = new double[rows * cols];
             var matrixArray = m.Data();
@@ -149,9 +149,9 @@ namespace SharpLearning.Containers.Matrices
                 Array.Copy(v, i, features, combineIndex, 1);
                 combineIndex += 1;
                 
-                var matrixIndex = i * m.ColumnCount();
-                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount());
-                combineIndex += m.ColumnCount();
+                var matrixIndex = i * m.ColumnCount;
+                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);
+                combineIndex += m.ColumnCount;
 
             }
             
@@ -167,13 +167,13 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public static F64Matrix CombineCols(this F64Matrix m1, F64Matrix m2)
         {
-            if (m1.RowCount() != m2.RowCount())
+            if (m1.RowCount != m2.RowCount)
             {
                 throw new ArgumentException("matrices must have same number of rows inorder to be combined");
             }
 
-            var rows = m1.RowCount();
-            var columns = m1.ColumnCount() + m2.ColumnCount();
+            var rows = m1.RowCount;
+            var columns = m1.ColumnCount + m2.ColumnCount;
 
             var matrixArray = m1.Data();
             var otherArray = m2.Data();
@@ -183,14 +183,14 @@ namespace SharpLearning.Containers.Matrices
             var combineIndex = 0;
             for (int i = 0; i < rows; i++)
             {
-                var matrixIndex = i * m1.ColumnCount();
-                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m1.ColumnCount());
+                var matrixIndex = i * m1.ColumnCount;
+                Array.Copy(matrixArray, matrixIndex, features, combineIndex, m1.ColumnCount);
 
-                var otherIndex = i * m2.ColumnCount();
-                combineIndex += m1.ColumnCount();
+                var otherIndex = i * m2.ColumnCount;
+                combineIndex += m1.ColumnCount;
 
-                Array.Copy(otherArray, otherIndex, features, combineIndex, m2.ColumnCount());
-                combineIndex += m2.ColumnCount();
+                Array.Copy(otherArray, otherIndex, features, combineIndex, m2.ColumnCount);
+                combineIndex += m2.ColumnCount;
             }
 
 
@@ -230,12 +230,12 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public static F64Matrix CombineRows(this F64Matrix m, double[] v)
         {
-            if (m.ColumnCount() != v.Length)
+            if (m.ColumnCount != v.Length)
             {
                 throw new ArgumentException("matrix must have same number of colums as vector");
             }
 
-            var rows = m.RowCount() + 1;
+            var rows = m.RowCount + 1;
             var cols = v.Length;
 
             var features = new double[rows * cols];
@@ -255,12 +255,12 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public static F64Matrix CombineRows(this double[] v, F64Matrix m)
         {
-            if (m.ColumnCount() != v.Length)
+            if (m.ColumnCount != v.Length)
             {
                 throw new ArgumentException("matrix must have same number of colums as vector");
             }
 
-            var rows = m.RowCount() + 1;
+            var rows = m.RowCount + 1;
             var cols = v.Length;
 
             var features = new double[rows * cols];
@@ -281,13 +281,13 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public static F64Matrix CombineRows(this F64Matrix m1, F64Matrix m2)
         {
-            if (m1.ColumnCount() != m2.ColumnCount())
+            if (m1.ColumnCount != m2.ColumnCount)
             {
                 throw new ArgumentException("matrices must have same number of columns inorder to be combined");
             }
 
-            var rows = m1.RowCount() + m2.RowCount();
-            var columns = m1.ColumnCount();
+            var rows = m1.RowCount + m2.RowCount;
+            var columns = m1.ColumnCount;
 
             var matrixArray = m1.Data();
             var otherArray = m2.Data();

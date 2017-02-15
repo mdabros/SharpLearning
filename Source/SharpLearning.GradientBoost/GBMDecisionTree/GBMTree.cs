@@ -34,7 +34,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
-            var rows = observations.RowCount();
+            var rows = observations.RowCount;
             var predictions = new double[rows];
 
             Predict(observations, predictions);
@@ -50,8 +50,8 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="predictions"></param>
         public void Predict(F64Matrix observations, double[] predictions)
         {
-            var rows = observations.RowCount();
-            var features = new double[observations.ColumnCount()];
+            var rows = observations.RowCount;
+            var features = new double[observations.ColumnCount];
             for (int i = 0; i < rows; i++)
             {
                 observations.Row(i, features);

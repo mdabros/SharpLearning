@@ -10,8 +10,6 @@ namespace SharpLearning.Containers.Matrices
     public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     {
         double[] m_featureArray;
-        readonly int m_rows;
-        readonly int m_cols;
 
         /// <summary>
         /// Creates a zero-matrix with the specified number of rows and cols
@@ -37,8 +35,8 @@ namespace SharpLearning.Containers.Matrices
             if (cols < 1) { throw new ArgumentException("matrix must have at least 1 col"); }
             
             m_featureArray = values;
-            m_rows = rows;
-            m_cols = cols;
+            RowCount = rows;
+            ColumnCount = cols;
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public double At(int row, int col)
         {
-            var rowOffSet = row * m_cols;
+            var rowOffSet = row * ColumnCount;
             var item = m_featureArray[rowOffSet + col];
 
             return item;
@@ -63,7 +61,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="item"></param>
         public void At(int row, int col, double item)
         {
-            var rowOffSet = row * m_cols;
+            var rowOffSet = row * ColumnCount;
             m_featureArray[rowOffSet + col] = item;
         }
 
@@ -75,8 +73,8 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public double this[int row, int col]
         {
-            get { return m_featureArray[row * m_cols + col]; }
-            set { m_featureArray[row * m_cols + col] = value; }
+            get { return m_featureArray[row * ColumnCount + col]; }
+            set { m_featureArray[row * ColumnCount + col] = value; }
         }
 
         /// <summary>
@@ -86,7 +84,7 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public double[] Row(int index)
         {
-            var row = new double[m_cols];
+            var row = new double[ColumnCount];
             Row(index, row);
             return row;
         }
@@ -99,9 +97,9 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="row"></param>
         public void Row(int index, double[] row)
         {
-            var rowOffSet = index * m_cols;
+            var rowOffSet = index * ColumnCount;
 
-            for (int i = 0; i < m_cols; i++)
+            for (int i = 0; i < ColumnCount; i++)
             {
                 row[i] = m_featureArray[rowOffSet + i];
             }
@@ -114,11 +112,11 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public double[] Column(int index)
         {
-            var col = new double[m_rows];
+            var col = new double[RowCount];
 
-            for (int i = 0; i < m_rows; i++)
+            for (int i = 0; i < RowCount; i++)
             {
-                col[i] = m_featureArray[m_cols * i + index];
+                col[i] = m_featureArray[ColumnCount * i + index];
             }
 
             return col;
@@ -132,9 +130,9 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="col"></param>
         public void Column(int index, double[] col)
         {
-            for (int i = 0; i < m_rows; i++)
+            for (int i = 0; i < RowCount; i++)
             {
-                col[i] = m_featureArray[m_cols * i + index];
+                col[i] = m_featureArray[ColumnCount * i + index];
             }
         }
 
@@ -146,19 +144,19 @@ namespace SharpLearning.Containers.Matrices
         public IMatrix<double> Rows(params int[] indices)
         {
             var rowCount = indices.Length;
-            var subFeatureArray = new double[rowCount * m_cols];
+            var subFeatureArray = new double[rowCount * ColumnCount];
 
             for (int i = 0; i < indices.Length; i++)
             {
-                var rowOffSet = m_cols * indices[i];
-                var subRowOffSet = m_cols * i;
-                for (int j = 0; j < m_cols; j++)
+                var rowOffSet = ColumnCount * indices[i];
+                var subRowOffSet = ColumnCount * i;
+                for (int j = 0; j < ColumnCount; j++)
                 {
                     subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + j];
                 }
             }
 
-            return new F64Matrix(subFeatureArray, indices.Length, m_cols);
+            return new F64Matrix(subFeatureArray, indices.Length, ColumnCount);
         }
 
         /// <summary>
@@ -175,9 +173,9 @@ namespace SharpLearning.Containers.Matrices
 
             for (int i = 0; i < indices.Length; i++)
             {
-                var rowOffSet = m_cols * indices[i];
-                var subRowOffSet = m_cols * i;
-                for (int j = 0; j < m_cols; j++)
+                var rowOffSet = ColumnCount * indices[i];
+                var subRowOffSet = ColumnCount * i;
+                for (int j = 0; j < ColumnCount; j++)
                 {
                     subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + j];
                 }
@@ -192,10 +190,10 @@ namespace SharpLearning.Containers.Matrices
         public IMatrix<double> Columns(params int[] indices)
         {
             var subFeatureCount = indices.Length;
-            var subFeatureArray = new double[m_rows * subFeatureCount];
-            for (int i = 0; i < m_rows; i++)
+            var subFeatureArray = new double[RowCount * subFeatureCount];
+            for (int i = 0; i < RowCount; i++)
             {
-                var rowOffSet = m_cols * i;
+                var rowOffSet = ColumnCount * i;
                 var subRowOffSet = subFeatureCount * i;
                 for (int j = 0; j < indices.Length; j++)
                 {
@@ -203,7 +201,7 @@ namespace SharpLearning.Containers.Matrices
                 }
             }
 
-            return new F64Matrix(subFeatureArray, m_rows, indices.Length);
+            return new F64Matrix(subFeatureArray, RowCount, indices.Length);
         }
 
         /// <summary>
@@ -217,9 +215,9 @@ namespace SharpLearning.Containers.Matrices
         {
             var subFeatureCount = indices.Length;
             var subFeatureArray = output.Data();
-            for (int i = 0; i < m_rows; i++)
+            for (int i = 0; i < RowCount; i++)
             {
-                var rowOffSet = m_cols * i;
+                var rowOffSet = ColumnCount * i;
                 var subRowOffSet = subFeatureCount * i;
                 for (int j = 0; j < indices.Length; j++)
                 {
@@ -240,20 +238,14 @@ namespace SharpLearning.Containers.Matrices
         /// <summary>
         /// Gets the number of columns
         /// </summary>
-        /// <returns></returns>
-        public int ColumnCount()
-        {
-            return m_cols;
-        }
+        /// <value></value>
+        public int ColumnCount { get; private set; }
 
         /// <summary>
         /// Gets the number of rows
         /// </summary>
-        /// <returns></returns>
-        public int RowCount()
-        {
-            return m_rows;
-        }
+        /// <value></value>
+        public int RowCount { get; private set; }
 
         /// <summary>
         /// Gets a pinned pointer to the F64Matrix
@@ -271,8 +263,8 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public bool Equals(F64Matrix other)
         {
-            if (this.RowCount() != other.RowCount()) { return false; }
-            if (this.ColumnCount() != other.ColumnCount()) { return false; }
+            if (this.RowCount != other.RowCount) { return false; }
+            if (this.ColumnCount != other.ColumnCount) { return false; }
             if (!this.Data().SequenceEqual(other.Data())) { return false; }
 
             return true;
@@ -304,8 +296,8 @@ namespace SharpLearning.Containers.Matrices
             {
                 int hash = 17;
                 hash = hash * 23 + m_featureArray.GetHashCode();
-                hash = hash * 23 + m_cols.GetHashCode();
-                hash = hash * 23 + m_rows.GetHashCode();
+                hash = hash * 23 + ColumnCount.GetHashCode();
+                hash = hash * 23 + RowCount.GetHashCode();
 
                 return hash;
             }

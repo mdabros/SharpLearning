@@ -26,7 +26,7 @@ namespace SharpLearning.Containers.Test.Views
             using (var pinnedMatrix = matrix.GetPinnedPointer())
             {
                 var view = pinnedMatrix.View();
-                for (int i = 0; i < matrix.ColumnCount(); i++)
+                for (int i = 0; i < matrix.ColumnCount; i++)
 			    {
                     AssertColumnView(matrix.Column(i), view.ColumnView(i));
 			    }                
@@ -65,9 +65,9 @@ namespace SharpLearning.Containers.Test.Views
 
         unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
         {
-            for (int i = 0; i < matrix.RowCount(); i++)
+            for (int i = 0; i < matrix.RowCount; i++)
             {
-                for (int j = 0; j < matrix.ColumnCount(); j++)
+                for (int j = 0; j < matrix.ColumnCount; j++)
                 {
                     Assert.AreEqual(matrix.At(i, j), view[i][j]);
                 }

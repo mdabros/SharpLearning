@@ -48,10 +48,10 @@ namespace SharpLearning.CrossValidation.Augmentators
         /// <returns></returns>
         public F64Matrix Agument(F64Matrix dataset)
         {
-            var orgCols = dataset.ColumnCount();
-            var orgRows = dataset.RowCount();
+            var orgCols = dataset.ColumnCount;
+            var orgRows = dataset.RowCount;
 
-            var augmentation = new F64Matrix(dataset.RowCount(), dataset.ColumnCount());
+            var augmentation = new F64Matrix(dataset.RowCount, dataset.ColumnCount);
             var indicesVisited = new HashSet<int>();
 
             var sample = new double[orgCols];

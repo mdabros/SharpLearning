@@ -31,8 +31,8 @@ namespace SharpLearning.Containers.Views
             var data = matrix.Data();
             m_handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             m_ptr = (double*)m_handle.AddrOfPinnedObject().ToPointer();
-            m_rows = matrix.RowCount();
-            m_cols = matrix.ColumnCount();
+            m_rows = matrix.RowCount;
+            m_cols = matrix.ColumnCount;
         }
 
         /// <summary>

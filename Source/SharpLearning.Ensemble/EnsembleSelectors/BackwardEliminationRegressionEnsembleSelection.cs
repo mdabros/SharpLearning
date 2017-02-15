@@ -46,13 +46,13 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(F64Matrix crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.ColumnCount() < m_numberOfModelsToSelect)
+            if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount() +
+                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 
-            m_remainingModelIndices = Enumerable.Range(0, crossValidatedModelPredictions.ColumnCount()).ToList();
+            m_remainingModelIndices = Enumerable.Range(0, crossValidatedModelPredictions.ColumnCount).ToList();
 
             var currentError = double.MaxValue;
             var modelsToRemove = m_remainingModelIndices.Count - 1;
@@ -76,8 +76,8 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
 
         double SelectNextModelToRemove(F64Matrix crossValidatedModelPredictions, double[] targets, double currentBestError)
         {
-            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount(), m_remainingModelIndices.Count - 1);
-            var candidatePredictions = new double[crossValidatedModelPredictions.RowCount()];
+            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount, m_remainingModelIndices.Count - 1);
+            var candidatePredictions = new double[crossValidatedModelPredictions.RowCount];
             var candidateModelIndices = new int[m_remainingModelIndices.Count - 1];
 
             var bestError = double.MaxValue;

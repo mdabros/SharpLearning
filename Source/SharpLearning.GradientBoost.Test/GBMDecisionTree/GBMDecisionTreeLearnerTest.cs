@@ -64,10 +64,10 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
             var inSample = targets.Select(t => true).ToArray();
-            var orderedElements = new int[observations.ColumnCount()][];
-            var rows = observations.RowCount();
+            var orderedElements = new int[observations.ColumnCount][];
+            var rows = observations.RowCount;
 
-            for (int i = 0; i < observations.ColumnCount(); i++)
+            for (int i = 0; i < observations.ColumnCount; i++)
 			{
 			    var feature = observations.Column(i);
                 var indices = Enumerable.Range(0, rows).ToArray();

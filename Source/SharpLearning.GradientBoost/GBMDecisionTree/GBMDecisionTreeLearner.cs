@@ -100,7 +100,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             var queue = new Queue<GBMTreeCreationItem>(100);
             queue.Enqueue(new GBMTreeCreationItem { Values = rootValues, InSample = inSample, Depth = 1 });
 
-            var featureCount = observations.ColumnCount();
+            var featureCount = observations.ColumnCount;
             var allFeatureIndices = Enumerable.Range(0, featureCount).ToArray();
 
             if (m_featuresPrSplit == 0)

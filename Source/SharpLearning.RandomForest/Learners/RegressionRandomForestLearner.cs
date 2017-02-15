@@ -105,7 +105,7 @@ namespace SharpLearning.RandomForest.Learners
         {
             if (m_featuresPrSplit == 0)
             {
-                var count = (int)(observations.ColumnCount() / 3.0);
+                var count = (int)(observations.ColumnCount / 3.0);
                 m_featuresPrSplit = count <= 0 ? 1 : count;
             }
 
@@ -128,7 +128,7 @@ namespace SharpLearning.RandomForest.Learners
             m_threadedWorker.Run();
 
             var models = results.ToArray();
-            var rawVariableImportance = VariableImportance(models, observations.ColumnCount());
+            var rawVariableImportance = VariableImportance(models, observations.ColumnCount);
 
             return new RegressionForestModel(models, rawVariableImportance);
         }

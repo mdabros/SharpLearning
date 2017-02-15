@@ -182,7 +182,7 @@ namespace SharpLearning.Ensemble.Learners
 
             if (m_includeOriginalFeaturesForMetaLearner)
             {
-                cvCols = cvCols + observations.ColumnCount();
+                cvCols = cvCols + observations.ColumnCount;
             }
 
             var cvPredictions = new F64Matrix(cvRows, cvCols);
@@ -206,7 +206,7 @@ namespace SharpLearning.Ensemble.Learners
             {
                 for (int i = 0; i < cvRows; i++)
                 {
-                    for (int j = 0; j < observations.ColumnCount(); j++)
+                    for (int j = 0; j < observations.ColumnCount; j++)
                     {
                         var value = cvPredictions[i, j + ensembleFeatures];
                         cvPredictions[i, j + ensembleFeatures] = observations[indices[i], j];
