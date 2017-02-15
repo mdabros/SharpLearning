@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.GradientBoost")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("SharpLearning.GradientBoost, provides learning algorithms and models for GradientBoost regression and classification.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SharpLearning.GradientBoost")]

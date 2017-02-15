@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.InputOutput")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("SharpLearning.InputOutput, provides CsvParser and serialization for SharpLearning.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SharpLearning.InputOutput")]

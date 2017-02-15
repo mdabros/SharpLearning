@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.DecisionTrees")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("SharpLearning.DecisionTrees, provides learning algorithms and models for DecisionTree regression and classification.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SharpLearning.DecisionTrees")]
