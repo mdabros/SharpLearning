@@ -13,13 +13,6 @@ namespace SharpLearning.Threading.Test
     public class WorkerRunnerTest
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void WorkerRunner_Arguments()
-        {
-            new ThreadedWorker<int>(0);
-        }
-
-        [TestMethod]
         public void WorkerRunner_Run_Processor_Count_1()
         {
             var threads = 1;
