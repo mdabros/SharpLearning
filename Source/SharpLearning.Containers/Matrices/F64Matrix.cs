@@ -168,7 +168,7 @@ namespace SharpLearning.Containers.Matrices
         /// <param name="indices"></param>
         /// <param name="output"></param>
         /// <returns></returns>
-        public void GetRows(int[] indices, F64Matrix output)
+        public void Rows(int[] indices, IMatrix<double> output)
         {
             var rowCount = indices.Length;
             var subFeatureArray = output.Data();
@@ -207,13 +207,13 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Gets the specified columns as a matrix
+        /// Gets the specified rows as a matrix. 
         /// Output is copied to the provided matrix
         /// </summary>
         /// <param name="indices"></param>
         /// <param name="output"></param>
         /// <returns></returns>
-        public void GetColumns(int[] indices, F64Matrix output)
+        public void Columns(int[] indices, IMatrix<double> output)
         {
             var subFeatureCount = indices.Length;
             var subFeatureArray = output.Data();

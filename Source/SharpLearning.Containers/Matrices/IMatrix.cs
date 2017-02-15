@@ -59,11 +59,28 @@ namespace SharpLearning.Containers.Matrices
         IMatrix<T> Rows(params int[] indices);
 
         /// <summary>
+        /// Gets the specified rows as a matrix. 
+        /// Output is copied to the provided matrix
+        /// </summary>
+        /// <param name="indices"></param>
+        /// <param name="output"></param>
+        /// <returns></returns>
+        void Rows(int[] indices, IMatrix<T> output);
+
+        /// <summary>
         /// Gets columns
         /// </summary>
         /// <param name="indices"></param>
         /// <returns></returns>
         IMatrix<T> Columns(params int[] indices);
+
+        /// <summary>
+        /// Gets the specified cols as a matrix. 
+        /// Output is copied to the provided matrix
+        /// </summary>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        void Columns(int[] indices, IMatrix<T> output);
 
         /// <summary>
         /// Gets the array which stores all matrix values. values are storred row-wise.

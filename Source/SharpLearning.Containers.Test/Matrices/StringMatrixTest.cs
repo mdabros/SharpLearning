@@ -105,7 +105,7 @@ namespace SharpLearning.Containers.Test.Matrices
         {
             var sut = CreateFeatures();
             var actual = new StringMatrix(2, 3);
-            sut.GetRows(new int[] { 0, 2 }, actual);
+            sut.Rows(new int[] { 0, 2 }, actual);
             var expected = GetExpectedRowSubMatrix();
 
             Assert.IsTrue(expected.Equals(actual));
@@ -126,7 +126,7 @@ namespace SharpLearning.Containers.Test.Matrices
         {
             var sut = CreateFeatures();
             var actual = new StringMatrix(3, 2);
-            sut.GetColumns(new int [] { 0, 2 }, actual);
+            sut.Columns(new int [] { 0, 2 }, actual);
             var expected = GetExpectedColSubMatrix();
 
             Assert.IsTrue(expected.Equals(actual));

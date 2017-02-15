@@ -111,7 +111,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 m_selectedModelIndices.CopyTo(candidateModelIndices);
                 candidateModelIndices[candidateModelIndices.Length - 1] = index;
 
-                crossValidatedModelPredictions.GetColumns(candidateModelIndices, candidateModelMatrix);
+                crossValidatedModelPredictions.Columns(candidateModelIndices, candidateModelMatrix);
                 
                 m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
                 var error = m_metric.Error(targets, candidatePredictions);

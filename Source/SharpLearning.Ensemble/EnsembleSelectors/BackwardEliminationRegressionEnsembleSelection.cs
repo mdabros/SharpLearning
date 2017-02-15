@@ -95,7 +95,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                     }
                 }
 
-                crossValidatedModelPredictions.GetColumns(candidateModelIndices, candidateModelMatrix);
+                crossValidatedModelPredictions.Columns(candidateModelIndices, candidateModelMatrix);
                 
                 m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
                 var error = m_metric.Error(targets, candidatePredictions);
