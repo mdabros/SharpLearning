@@ -8,11 +8,8 @@
     <owners>$author$</owners>
     <licenseUrl>https://github.com/mdabros/SharpLearning/blob/master/LICENSE.md</licenseUrl>
     <projectUrl>https://github.com/mdabros/SharpLearning</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright 2017</copyright>
-    <tags>Tag1 Tag2</tags>
+    <copyright>$copyright$</copyright>    
   </metadata>
 </package>

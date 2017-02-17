@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.InputOutput")]
-[assembly: AssemblyDescription("SharpLearning.InputOutput, provides CsvParser and serialization for SharpLearning.")]
+[assembly: AssemblyDescription("Provides CsvParser and serialization for SharpLearning.")]
 [assembly: AssemblyProduct("SharpLearning.InputOutput")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

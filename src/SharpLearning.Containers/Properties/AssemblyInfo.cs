@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.Containers")]
-[assembly: AssemblyDescription("SharpLearning.Containers, provides containers and base extension methods for SharpLearning.")]
+[assembly: AssemblyDescription("Provides containers and base extension methods for SharpLearning.")]
 [assembly: AssemblyProduct("SharpLearning.Containers")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.Neural")]
-[assembly: AssemblyDescription("SharpLearning.Neural, provides learning algorithms and models for neural net regression and classification")]
+[assembly: AssemblyDescription("Provides learning algorithms and models for neural net regression and classification")]
 [assembly: AssemblyProduct("SharpLearning.Neural")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

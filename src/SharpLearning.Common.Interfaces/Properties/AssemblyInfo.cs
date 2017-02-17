@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.Common.Interfaces")]
-[assembly: AssemblyDescription("SharpLearning.Common.Interfaces, provides common interfaces for SharpLearning.")]
+[assembly: AssemblyDescription("Provides common interfaces for SharpLearning.")]
 [assembly: AssemblyProduct("SharpLearning.Common.Interfaces")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
