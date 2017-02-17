@@ -1,6 +1,7 @@
 # Build Directories
 Build/
 BuildTest/
+packages/
 bin/
 obj/
 out/
@@ -56,10 +57,3 @@ $RECYCLE.BIN/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-
-# NuGet Packages
-Source/packages/*
-!packages/.gitattributes
-!packages/TaskParallelLibrary
-!packages/FSharp.Core
-
