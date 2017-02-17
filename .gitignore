@@ -2,6 +2,7 @@
 Build/
 BuildTest/
 packages/
+nupkgs/
 bin/
 obj/
 out/

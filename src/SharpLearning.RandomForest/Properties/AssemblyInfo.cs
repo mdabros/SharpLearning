@@ -7,12 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.RandomForest")]
 [assembly: AssemblyDescription("SharpLearning.RandomForest, provides learning algorithms and models for RandomForest and ExtraTrees regression and classification.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SharpLearning.RandomForest")]
-[assembly: AssemblyCopyright("Copyright © Mads Dabros 2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

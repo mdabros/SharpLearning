@@ -7,12 +7,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyTitle("SharpLearning.Metrics")]
 [assembly: AssemblyDescription("SharpLearning.Metrics, provides classification, regression, impurity and ranking metrics.")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SharpLearning.Metrics")]
-[assembly: AssemblyCopyright("Copyright © Mads Dabros 2014")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
