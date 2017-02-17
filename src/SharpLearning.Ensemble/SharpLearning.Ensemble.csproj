@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpLearning.Ensemble</RootNamespace>
+    <AssemblyName>SharpLearning.Ensemble</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\Debug\SharpLearning.Ensemble.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\Build\Release\SharpLearning.Ensemble.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="EnsembleSelectors\BackwardEliminationClassificationEnsembleSelection.cs" />
+    <Compile Include="EnsembleSelectors\RandomClassificationEnsembleSelection.cs" />
+    <Compile Include="EnsembleSelectors\ForwardSearchClassificationEnsembleSelection.cs" />
+    <Compile Include="EnsembleSelectors\BackwardEliminationRegressionEnsembleSelection.cs" />
+    <Compile Include="EnsembleSelectors\RandomRegressionEnsembleSelection.cs" />
+    <Compile Include="EnsembleSelectors\IClassificationEnsembleSelection.cs" />
+    <Compile Include="EnsembleSelectors\IRegressionEnsembleSelection.cs" />
+    <Compile Include="Learners\ClassificationEnsembleLearner.cs" />
+    <Compile Include="Learners\ClassificationBackwardEliminationModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\ClassificationRandomModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\ClassificationModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\ClassificationStackingEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionEnsembleLearner.cs" />
+    <Compile Include="Learners\ClassificationForwardSearchModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionBackwardEliminationModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionRandomModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionForwardSearchModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionModelSelectingEnsembleLearner.cs" />
+    <Compile Include="Learners\RegressionStackingEnsembleLearner.cs" />
+    <Compile Include="Models\ClassificationEnsembleModel.cs" />
+    <Compile Include="Models\ClassificationStackingEnsembleModel.cs" />
+    <Compile Include="Models\RegressionEnsembleModel.cs" />
+    <Compile Include="Models\RegressionStackingEnsembleModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EnsembleSelectors\ForwardSearchRegressionEnsembleSelection.cs" />
+    <Compile Include="Strategies\GeometricMeanProbabilityClassificationEnsembleStrategy.cs" />
+    <Compile Include="Strategies\IClassificationEnsembleStrategy.cs" />
+    <Compile Include="Strategies\MeanProbabilityClassificationEnsembleStrategy.cs" />
+    <Compile Include="Strategies\MeanRegressionEnsembleStrategy.cs" />
+    <Compile Include="Strategies\IRegressionEnsembleStrategy.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj">
+      <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
+      <Name>SharpLearning.Common.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
+      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
+      <Name>SharpLearning.Containers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.CrossValidation\SharpLearning.CrossValidation.csproj">
+      <Project>{86038cef-f3b5-45c5-bbbc-8f700a1cfb86}</Project>
+      <Name>SharpLearning.CrossValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
+      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
+      <Name>SharpLearning.InputOutput</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
+      <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
+      <Name>SharpLearning.Metrics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
