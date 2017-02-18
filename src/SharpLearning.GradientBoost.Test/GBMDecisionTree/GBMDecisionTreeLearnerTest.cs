@@ -46,16 +46,9 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
         [TestMethod]
         public void GBMDecisionTreeLearner_Constructor_Loss_Null()
         {
-            new GBMDecisionTreeLearner(1, 1, 1.0, 1, null, 1);
+            new GBMDecisionTreeLearner(1, 1, 1.0, 1, null, false);
         }
-
-        [ExpectedException(typeof(ArgumentException))]
-        [TestMethod]
-        public void GBMDecisionTreeLearner_Constructor_NumberOfThreads()
-        {
-            new GBMDecisionTreeLearner(1, 1, 0.0, 1, new GradientBoostSquaredLoss(), 0);
-        }
-        
+      
         [TestMethod]
         public void GBMDecisionTreeLearner_Learn()
         {

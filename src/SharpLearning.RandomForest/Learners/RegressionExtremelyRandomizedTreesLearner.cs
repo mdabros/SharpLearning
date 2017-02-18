@@ -6,11 +6,11 @@ using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.RandomForest.Models;
-using SharpLearning.Threading;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SharpLearning.RandomForest.Learners
 {
@@ -27,44 +27,7 @@ namespace SharpLearning.RandomForest.Learners
         readonly double m_minimumInformationGain;
         readonly int m_maximumTreeDepth;
         readonly Random m_random;
-        readonly int m_numberOfThreads;
-
-        WorkerRunner m_threadedWorker;
-
-        /// <summary>
-        /// The extremely randomized trees learner is an ensemble learner consisting of a series of randomized decision trees. 
-        /// It takes the randomization a step futher than random forest and also select the splits randomly
-        /// </summary>
-        /// <param name="trees">Number of trees to use in the ensemble</param>
-        /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
-        /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
-        /// <param name="featuresPrSplit">Number of features used at each split in each tree. 0 means Sqrt(of availible features)</param>
-        /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        /// <param name="subSampleRatio">The ratio of observations sampled with replacement for each tree. 
-        /// Default is 1.0 sampling the same count as the number of observations in the input. 
-        /// If below 1.0 the algorithm changes to random patches</param>
-        /// <param name="seed">Seed for the random number generator</param>
-        /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public RegressionExtremelyRandomizedTreesLearner(int trees, int minimumSplitSize, int maximumTreeDepth,
-            int featuresPrSplit, double minimumInformationGain, double subSampleRatio, int seed, int numberOfThreads)
-        {
-            if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
-            if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 1"); }
-            if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
-            if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
-            if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
-            if (numberOfThreads < 1) { throw new ArgumentException("Number of threads must be at least 1"); }
-
-            m_trees = trees;
-            m_minimumSplitSize = minimumSplitSize;
-            m_maximumTreeDepth = maximumTreeDepth;
-            m_featuresPrSplit = featuresPrSplit;
-            m_minimumInformationGain = minimumInformationGain;
-            m_subSampleRatio = subSampleRatio;
-            m_numberOfThreads = numberOfThreads;
-
-            m_random = new Random(seed);
-        }
+        readonly bool m_runParallel;
 
         /// <summary>
         /// The extremely randomized trees learner is an ensemble learner consisting of a series of randomized decision trees. 
@@ -79,11 +42,25 @@ namespace SharpLearning.RandomForest.Learners
         /// Default is 1.0 sampling the same count as the number of observations in the input. 
         /// If below 1.0 the algorithm changes to random patches</param>
         /// <param name="seed">Seed for the random number generator</param>
+        /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
         public RegressionExtremelyRandomizedTreesLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000,
-            int featuresPrSplit = 0, double minimumInformationGain = .000001, double subSampleRatio = 1.0 , int seed = 42)
-          : this(trees, minimumSplitSize, maximumTreeDepth, featuresPrSplit, minimumInformationGain,
-            subSampleRatio, seed, Environment.ProcessorCount)
+            int featuresPrSplit = 0, double minimumInformationGain = .000001, double subSampleRatio = 1.0 , int seed = 42, bool runParallel = true)
         {
+            if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
+            if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 1"); }
+            if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
+            if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
+            if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
+          
+            m_trees = trees;
+            m_minimumSplitSize = minimumSplitSize;
+            m_maximumTreeDepth = maximumTreeDepth;
+            m_featuresPrSplit = featuresPrSplit;
+            m_minimumInformationGain = minimumInformationGain;
+            m_subSampleRatio = subSampleRatio;
+            m_runParallel = runParallel;
+
+            m_random = new Random(seed);
         }
 
         /// <summary>
@@ -114,22 +91,23 @@ namespace SharpLearning.RandomForest.Learners
             }
 
             var results = new ConcurrentBag<RegressionDecisionTreeModel>();
-            
-            var workItems = new ConcurrentQueue<int>();
-            for (int i = 0; i < m_trees; i++)
-            {
-                workItems.Enqueue(0);
-            }
 
-            var workers = new List<Action>();
-            for (int i = 0; i < m_numberOfThreads; i++)
+            if (!m_runParallel)
             {
-                workers.Add(() => CreateTreeModel(observations, targets, indices, new Random(m_random.Next()),
-                    results, workItems));                    
+                for (int i = 0; i < m_trees; i++)
+                {
+                    results.Add(CreateTree(observations, targets, indices, new Random(m_random.Next())));
+                };
             }
-
-            m_threadedWorker = new WorkerRunner(workers);
-            m_threadedWorker.Run();
+            else
+            {
+                var workItems = Enumerable.Range(0, m_trees).ToArray();
+                var rangePartitioner = Partitioner.Create(workItems, true);
+                Parallel.ForEach(rangePartitioner, (work, loopState) =>
+                {
+                    results.Add(CreateTree(observations, targets, indices, new Random(m_random.Next())));
+                });
+            }
 
             var models = results.ToArray();
             var rawVariableImportance = VariableImportance(models, observations.ColumnCount);
@@ -176,8 +154,7 @@ namespace SharpLearning.RandomForest.Learners
             return rawVariableImportance;
         }
 
-        void CreateTreeModel(F64Matrix observations, double[] targets, int[] indices, Random random,
-            ConcurrentBag<RegressionDecisionTreeModel> models, ConcurrentQueue<int> workItems)
+        RegressionDecisionTreeModel CreateTree(F64Matrix observations, double[] targets, int[] indices, Random random)
         {
             var learner = new DecisionTreeLearner(
                 new DepthFirstTreeBuilder(m_maximumTreeDepth,
@@ -190,17 +167,13 @@ namespace SharpLearning.RandomForest.Learners
             var treeIndicesLength = (int)Math.Round(m_subSampleRatio * (double)indices.Length);
             var treeIndices = new int[treeIndicesLength];
 
-            int task = -1;
-            while (workItems.TryDequeue(out task))
+            for (int j = 0; j < treeIndicesLength; j++)
             {
-                for (int j = 0; j < treeIndicesLength; j++)
-                {
-                    treeIndices[j] = indices[random.Next(indices.Length)];
-                }
-
-                var model = new RegressionDecisionTreeModel(learner.Learn(observations, targets, treeIndices));
-                models.Add(model);
+                treeIndices[j] = indices[random.Next(indices.Length)];
             }
+
+            var model = new RegressionDecisionTreeModel(learner.Learn(observations, targets, treeIndices));
+            return model;
         }
     }
 }

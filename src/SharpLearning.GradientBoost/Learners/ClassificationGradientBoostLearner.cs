@@ -42,9 +42,9 @@ namespace SharpLearning.GradientBoost.Learners
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         /// <param name="loss">loss function used</param>
-        /// <param name="numberOfThreads">Number of threads to use for paralization</param>
+        /// <param name="runParallel">Use multi threading to speed up execution</param>
         public ClassificationGradientBoostLearner(int iterations, double learningRate, int maximumTreeDepth,
-            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int featuresPrSplit, IGradientBoostLoss loss, int numberOfThreads)
+            int minimumSplitSize, double minimumInformationGain, double subSampleRatio, int featuresPrSplit, IGradientBoostLoss loss, bool runParallel)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (learningRate <= 0.0) { throw new ArgumentException("learning rate must be larger than 0"); }
@@ -59,7 +59,7 @@ namespace SharpLearning.GradientBoost.Learners
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
             m_loss = loss;
-            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, m_loss, numberOfThreads);
+            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, m_loss, runParallel);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace SharpLearning.GradientBoost.Learners
         public ClassificationGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
             int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0, int featuresPrSplit = 0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
-                subSampleRatio, featuresPrSplit, new GradientBoostBinomialLoss(), Environment.ProcessorCount)
+                subSampleRatio, featuresPrSplit, new GradientBoostBinomialLoss(), true)
         {
         }
 

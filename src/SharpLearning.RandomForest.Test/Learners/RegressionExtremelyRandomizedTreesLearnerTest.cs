@@ -27,21 +27,21 @@ namespace SharpLearning.RandomForest.Test.Learners
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_5()
         {
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(5);
-            Assert.AreEqual(0.088792307692307712, error, 0.0000001);
+            Assert.AreEqual(0.098342735042735052, error, 0.0000001);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_100()
         {
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(100);
-            Assert.AreEqual(0.079629411481205281, error, 0.0000001);
+            Assert.AreEqual(0.082338163950233079, error, 0.0000001);
         }
         
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_100_SubSample()
         {
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(100, 0.5);
-            Assert.AreEqual(0.11459688611647814, error, 0.0000001);
+            Assert.AreEqual(0.11122241560374152, error, 0.0000001);
         }
 
         [TestMethod]
@@ -55,21 +55,21 @@ namespace SharpLearning.RandomForest.Test.Learners
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_5()
         {
             var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(5);
-            Assert.AreEqual(0.50272659119354779, error, 0.0000001);
+            Assert.AreEqual(0.36926159796856561, error, 0.0000001);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_100()
         {
             var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(100);
-            Assert.AreEqual(0.3513123937886431, error, 0.0000001);
+            Assert.AreEqual(0.34674921190387004, error, 0.0000001);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_100_SubSample()
         {
             var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(100, 0.5);
-            Assert.AreEqual(0.58293009065656265, error, 0.0000001);
+            Assert.AreEqual(0.57461156877304931, error, 0.0000001);
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(100, 1, 100, 1, 0.0001, 1.0, 42, 1);
+            var sut = new RegressionExtremelyRandomizedTreesLearner(100, 1, 100, 1, 0.0001, 1.0, 42, false);
             
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -94,7 +94,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.63876128131525645, error, 0.0000001);
+            Assert.AreEqual(0.622380056587391, error, 0.0000001);
         }
 
         double RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(int trees, double subSampleRatio = 1.0)
@@ -104,7 +104,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, 1);
+            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -121,7 +121,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, 1);
+            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);

@@ -77,14 +77,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [ExpectedException(typeof(ArgumentNullException))]
         public void RegressionGradientBoostLearner_Constructor_Loss()
         {
-            new RegressionGradientBoostLearner(1, 1, 1, 1, 1, 1.0, 1, null, 1);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void RegressionGradientBoostLearner_Constructor_SubSampleRatio_NumberOfThreads()
-        {
-            new RegressionGradientBoostLearner(1, 1, 1, 1, 1, 1.0, 1, new GradientBoostSquaredLoss(), 0);
+            new RegressionGradientBoostLearner(1, 1, 1, 1, 1, 1.0, 1, null, false);
         }
 
         [TestMethod]
@@ -98,7 +91,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var splitter = new RandomTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);
 
-            var sut = new RegressionSquareLossGradientBoostLearner(5, 0.1, 3, 1, 1e-6, 1.0, 0, 1);
+            var sut = new RegressionSquareLossGradientBoostLearner(5, 0.1, 3, 1, 1e-6, 1.0, 0, false);
             var evaluator = new MeanSquaredErrorRegressionMetric();
 
             var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,
@@ -115,7 +108,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var splitter = new RandomTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);
 
-            var sut = new RegressionSquareLossGradientBoostLearner(1000, 0.1, 3, 1, 1e-6, 1.0, 0, 1);
+            var sut = new RegressionSquareLossGradientBoostLearner(1000, 0.1, 3, 1, 1e-6, 1.0, 0, false);
             var evaluator = new MeanSquaredErrorRegressionMetric();
 
             var model = sut.LearnWithEarlyStopping(split.TrainingSet.Observations, split.TrainingSet.Targets,

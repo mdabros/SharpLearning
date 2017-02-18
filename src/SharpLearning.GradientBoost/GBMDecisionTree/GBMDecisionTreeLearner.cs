@@ -2,11 +2,11 @@
 using SharpLearning.Containers.Extensions;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.GradientBoost.Loss;
-using SharpLearning.Threading;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
@@ -18,8 +18,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         readonly int m_minimumSplitSize;
         readonly double m_minimumInformationGain;
         readonly int m_maximumTreeDepth;
-        readonly int m_numberOfThreads;
-        WorkerRunner m_threadedWorker;
+        readonly bool m_runParallel;
         readonly IGradientBoostLoss m_loss;
         int m_featuresPrSplit;
         readonly Random m_random = new Random(234);
@@ -32,21 +31,20 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         /// <param name="loss">loss function used</param>
-        /// <param name="numberOfThreads">Number of threads to use for paralization</param>
-        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, int featuresPrSplit, IGradientBoostLoss loss, int numberOfThreads)
+        /// <param name="runParallel">Use multi threading to speed up execution</param>
+        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, int featuresPrSplit, IGradientBoostLoss loss, bool runParallel)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
             if (loss == null) { throw new ArgumentNullException("loss"); }
-            if (numberOfThreads < 1) { throw new ArgumentException("Number of threads must be at least 1"); }
 
             m_maximumTreeDepth = maximumTreeDepth;
             m_minimumSplitSize = minimumSplitSize;
             m_minimumInformationGain = minimumInformationGain;
             m_featuresPrSplit = featuresPrSplit;
-            m_numberOfThreads = numberOfThreads;
+            m_runParallel = runParallel;
             m_loss = loss;
         }
 
@@ -58,7 +56,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         public GBMDecisionTreeLearner(int maximumTreeDepth = 2000, int minimumSplitSize = 1, double minimumInformationGain = 1E-6, int featuresPrSplit = 0)
-            : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, new GradientBoostSquaredLoss(), Environment.ProcessorCount)
+            : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, new GradientBoostSquaredLoss(), true)
         {
         }
 
@@ -141,7 +139,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                     Array.Copy(allFeatureIndices, featuresPrSplit, featuresPrSplit.Length);
                 }
                 
-                if (m_numberOfThreads == 1)
+                if (!m_runParallel)
                 {
                     foreach (var i in featuresPrSplit)
                     {
@@ -150,7 +148,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
 
                     }
                 }
-                else
+                else // multi-threaded search for best split
                 {
                     var workItems = new ConcurrentQueue<int>();
                     foreach (var i in featuresPrSplit)
@@ -158,17 +156,17 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                         workItems.Enqueue(i);
                     }
 
-                    Action workAction = () => SplitWorker(observations, residuals, targets, predictions, orderedElements, parentItem,
+                    Action findSplit = () => SplitWorker(observations, residuals, targets, predictions, orderedElements, parentItem,
                             parentInSample, workItems, splitResults);
 
                     var workers = new List<Action>();
-                    for (int i = 0; i < m_numberOfThreads; i++)
-                    {
-                        workers.Add(workAction);
-                    }
 
-                    m_threadedWorker = new WorkerRunner(workers);
-                    m_threadedWorker.Run();
+                    for (int i = 0; i < Environment.ProcessorCount; i++)
+                    { workers.Add(findSplit); }
+
+                    var rangePartitioner = Partitioner.Create(workers, true);
+                    // Loop over the partitions in parallel.
+                    Parallel.ForEach(rangePartitioner, (work, loopState) => work());
                 }
 
                 var bestSplitResult = new GBMSplitResult { BestSplit = initBestSplit, Left = GBMSplitInfo.NewEmpty(), Right = GBMSplitInfo.NewEmpty() };

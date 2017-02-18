@@ -63,7 +63,7 @@ namespace SharpLearning.Optimization
 
             m_random = new Random(seed);
             // hyper parameters for regression random forest learner
-            m_learner = new RegressionRandomForestLearner(20, 1, 2000, parameters.Length, 1e-6, 1.0, 42, 1);
+            m_learner = new RegressionRandomForestLearner(20, 1, 2000, parameters.Length, 1e-6, 1.0, 42, false);
             // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
             m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
         }
@@ -106,7 +106,7 @@ namespace SharpLearning.Optimization
 
             m_random = new Random(seed);
             // hyper parameters for regression random forest learner
-            m_learner = new RegressionRandomForestLearner(20, 1, 2000, parameters.Length, 1e-6, 1.0, 42, 1);
+            m_learner = new RegressionRandomForestLearner(20, 1, 2000, parameters.Length, 1e-6, 1.0, 42, false);
             // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
             m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
 

@@ -22,12 +22,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new SequentialModelBasedOptimizer(parameters, 20, 5);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(-0.78008434504774338, actual.Error, 0.0000001);
+            Assert.AreEqual(-0.269409232963923, actual.Error, 0.0000001);
             Assert.AreEqual(3, actual.ParameterSet.Length);
 
-            Assert.AreEqual(-7.9348252981893745, actual.ParameterSet[0], 0.0000001);
-            Assert.AreEqual(0.44480908593386381, actual.ParameterSet[1], 0.0000001);
-            Assert.AreEqual(0.15339395991115268, actual.ParameterSet[2], 0.0000001);
+            Assert.AreEqual(4.64108438783116, actual.ParameterSet[0], 0.0000001);
+            Assert.AreEqual(0.1219014932466601, actual.ParameterSet[1], 0.0000001);
+            Assert.AreEqual(-2.6749184863164222, actual.ParameterSet[2], 0.0000001);
         }
 
         [TestMethod]
@@ -45,12 +45,12 @@ namespace SharpLearning.Optimization.Test
 
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.91943588723373215, 0.0000001);
+            Assert.AreEqual(actual.Error, -0.92800714564457032, 0.0000001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], -7.6494288656810925, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[1], 0.23936649346810235, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[2], -0.034585140934172642, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[0], -7.6414678546865495, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[1], 0.20388710032211321, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[2], -0.031518669660561827, 0.0000001);
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.713759626383109 }, 109.34382945231164),
+                new OptimizerResult(new double[] { 37.712345696964071 }, 109.34384021647092),
                 new OptimizerResult(new double[] { 66.810646591154239}, 34867.634010511123)
             };
 

@@ -21,7 +21,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0, 0.9, 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0, 0.9, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -39,7 +39,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 1, 0.9, 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 1, 0.9, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -57,7 +57,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, 0.9, 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, 0.9, false);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -82,7 +82,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0, 0.9, 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0, 0.9, false);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -107,7 +107,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
             var targets = parser.EnumerateRows("T").ToF64Vector();
 
-            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, 0.9, 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, 0.9, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -125,7 +125,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, 0.9, 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, 0.9, false);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
@@ -150,7 +150,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 3, 0.9, 1);
+            var sut = new RegressionHuberLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 3, 0.9, false);
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
