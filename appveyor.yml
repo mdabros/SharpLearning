@@ -1,3 +1,11 @@
-build_script:
-  - all.ps1
+before_build:
+  - nuget restore
 
+platform: 
+  - Any CPU
+  - x86
+  - x64
+  
+configuration: 
+  - Release  
+  - Debug  
