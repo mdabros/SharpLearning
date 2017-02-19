@@ -161,11 +161,19 @@ namespace SharpLearning.RandomForest.Test.Models
             var learner = new RegressionRandomForestLearner(2, 5, 100, 1, 0.0001, 1.0, 42, false);
             var sut = learner.Learn(observations, targets);
 
+            // save model.
             var writer = new StringWriter();
             sut.Save(() => writer);
-   
-            var actual = writer.ToString();
-            Assert.AreEqual(ClassificationForestModelString, actual);
+
+            // load model and assert prediction results.
+            sut = RegressionForestModel.Load(() => new StringReader(writer.ToString()));
+            var predictions = sut.Predict(observations);
+
+            var evaluator = new MeanSquaredErrorRegressionMetric();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.14547628738104926, actual, 0.0001);
+
         }
 
         [TestMethod]

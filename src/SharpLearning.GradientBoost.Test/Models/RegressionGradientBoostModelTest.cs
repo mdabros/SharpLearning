@@ -115,11 +115,18 @@ namespace SharpLearning.GradientBoost.Test.Models
             var learner = new RegressionGradientBoostLearner(2, 0.1, 3, 1, 1e-6, 1.0, 0, new GradientBoostSquaredLoss(), false);
             var sut = learner.Learn(observations, targets);
 
+            // save model.
             var writer = new StringWriter();
             sut.Save(() => writer);
 
-            var actual = writer.ToString();
-            Assert.AreEqual(RegressionGradientBoostModelString, actual);
+            // load model and assert prediction results.
+            sut = RegressionGradientBoostModel.Load(() => new StringReader(writer.ToString()));
+            var predictions = sut.Predict(observations);
+
+            var evaluator = new MeanSquaredErrorRegressionMetric();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.192163332018409, actual, 0.0001);
         }
 
         [TestMethod]

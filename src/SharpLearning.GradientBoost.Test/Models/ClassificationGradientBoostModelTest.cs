@@ -162,11 +162,18 @@ namespace SharpLearning.GradientBoost.Test.Models
             var learner = new ClassificationGradientBoostLearner(5);
             var sut = learner.Learn(observations, targets);
 
+            // save model.
             var writer = new StringWriter();
             sut.Save(() => writer);
 
-            var actual = writer.ToString();
-            Assert.AreEqual(ClassificationGradientBoostModelString, actual);
+            // load model and assert prediction results.
+            sut = ClassificationGradientBoostModel.Load(() => new StringReader(writer.ToString()));
+            var predictions = sut.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.15384615384615385, actual, 0.0000001);
         }
 
         [TestMethod]

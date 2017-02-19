@@ -192,8 +192,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="validationObservations"></param>
         /// <param name="validationTargets"></param>
         /// <param name="metric">The metric to use for early stopping</param>
-        /// <param name="earlyStoppingRounds">The number of rounds the error is allowed not to decline before early stopping. 
-        /// The resulting model and iteration will be the last with the error declining</param>
+        /// <param name="earlyStoppingRounds">This controls how often the validation error is checked to estimate the best number of iterations.</param>
         /// <returns>ClassificationGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
         public ClassificationGradientBoostModel LearnWithEarlyStopping(F64Matrix trainingObservations, double[] trainingTargets,
             F64Matrix validationObservations, double[] validationTargets,
@@ -297,10 +296,6 @@ namespace SharpLearning.GradientBoost.Learners
                         currentBedstError = error;
                         bestIterationCount = iteration;
                     }
-                    else
-                    {
-                        break;
-                    }
                 }
             }
 
@@ -321,8 +316,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="validationObservations"></param>
         /// <param name="validationTargets"></param>
         /// <param name="metric">The metric to use for early stopping</param>
-        /// <param name="earlyStoppingRounds">The number of rounds the error is allowed not to decline before early stopping. 
-        /// The resulting model and iteration will be the last with the error declining</param>
+        /// <param name="earlyStoppingRounds">This controls how often the validation error is checked to estimate the best number of iterations</param>
         /// <returns>ClassificationGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
         public ClassificationGradientBoostModel LearnWithEarlyStopping(F64Matrix trainingObservations, double[] trainingTargets,
             F64Matrix validationObservations, double[] validationTargets,
@@ -424,10 +418,6 @@ namespace SharpLearning.GradientBoost.Learners
                     {
                         currentBedstError = error;
                         bestIterationCount = iteration;
-                    }
-                    else
-                    {
-                        break;
                     }
                 }
             }
