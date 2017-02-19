@@ -62,3 +62,7 @@ The recommended way to get SharpLearning is to use NuGet. The packages are provi
 
 The nuget packages will be availible shortly.
 
+Build Status
+------------
+Windows (.Net): [![Build status](https://ci.appveyor.com/api/projects/status/ps37sxd83yddob6i?svg=true)](https://ci.appveyor.com/project/mdabros/sharplearning)
+
