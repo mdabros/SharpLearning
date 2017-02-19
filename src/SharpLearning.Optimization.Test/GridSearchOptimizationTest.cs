@@ -39,18 +39,10 @@ namespace SharpLearning.Optimization.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void GridSearchOptimizer_ArgumentCheck_MaxDegreeOfParallelism()
-        {
-            var parameters = new double[][] { new double[] { 10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0 } };
-            var sut = new GridSearchOptimizer(parameters, 0);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void GridSearchOptimizer_ArgumentCheck_ParameterRanges()
         {
-            var sut = new GridSearchOptimizer(null, 10);
+            var sut = new GridSearchOptimizer(null, false);
         }
 
         OptimizerResult Minimize(double[] parameters)

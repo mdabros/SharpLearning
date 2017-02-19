@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using SharpLearning.GradientBoost.Models;
 using SharpLearning.GradientBoost.Learners;
+using SharpLearning.GradientBoost.Loss;
 
 namespace SharpLearning.GradientBoost.Test.Models
 {
@@ -24,7 +25,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationGradientBoostLearner();
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
             var predictions = new double[rows];
@@ -47,7 +48,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationGradientBoostLearner();
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -66,7 +67,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationGradientBoostLearner();
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
             var actual = new ProbabilityPrediction[rows];
@@ -92,7 +93,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var rows = targets.Length;
 
-            var learner = new ClassificationGradientBoostLearner();
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.PredictProbability(observations);
@@ -114,12 +115,12 @@ namespace SharpLearning.GradientBoost.Test.Models
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
-            var learner = new ClassificationGradientBoostLearner();
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
-            var expected = new Dictionary<string, double> { {"PreviousExperience_month", 100},
-                {"AptitudeTestScore", 56.81853305612 }};
+            var expected = new Dictionary<string, double> { {"PreviousExperience_month", 100}, 
+                {"AptitudeTestScore", 56.81853305612 } };
 
             Assert.AreEqual(expected.Count, actual.Count);
             var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
@@ -138,7 +139,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
 
-            var learner = new ClassificationGradientBoostLearner();
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();

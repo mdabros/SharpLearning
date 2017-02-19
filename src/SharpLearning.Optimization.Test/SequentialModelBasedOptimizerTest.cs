@@ -10,50 +10,6 @@ namespace SharpLearning.Optimization.Test
     public class SequentialModelBasedOptimizerTest
     {
         [TestMethod]
-        public void SequentialModelBasedOptimizer_OptimizeBest()
-        {
-            var parameters = new double[][]
-            {
-                new double[] { -10.0, 10.0 },
-                new double[] { -10.0, 10.0 },
-                new double[] { -10.0, 10.0 }
-            };
-
-            var sut = new SequentialModelBasedOptimizer(parameters, 20, 5);
-            var actual = sut.OptimizeBest(Minimize);
-
-            Assert.AreEqual(-0.269409232963923, actual.Error, 0.0000001);
-            Assert.AreEqual(3, actual.ParameterSet.Length);
-
-            Assert.AreEqual(4.64108438783116, actual.ParameterSet[0], 0.0000001);
-            Assert.AreEqual(0.1219014932466601, actual.ParameterSet[1], 0.0000001);
-            Assert.AreEqual(-2.6749184863164222, actual.ParameterSet[2], 0.0000001);
-        }
-
-        [TestMethod]
-        public void SequentialModelBasedOptimizer_OptimizeBest_UsingPreviousResults()
-        {
-            var parameters = new double[][]
-            {
-                new double[] { -10.0, 10.0 },
-                new double[] { -10.0, 10.0 },
-                new double[] { -10.0, 10.0 }
-            };
-
-            var sut = new SequentialModelBasedOptimizer(parameters, 20, 
-                PreviousParameterSets, PreviousParameterSetScores);
-
-            var actual = sut.OptimizeBest(Minimize);
-
-            Assert.AreEqual(actual.Error, -0.92800714564457032, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet.Length, 3);
-
-            Assert.AreEqual(actual.ParameterSet[0], -7.6414678546865495, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[1], 0.20388710032211321, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[2], -0.031518669660561827, 0.0000001);
-        }
-
-        [TestMethod]
         public void SequentialModelBasedOptimizer_Optimize()
         {
             var parameters = new double[][] { new double[] { 0.0, 100.0 } };

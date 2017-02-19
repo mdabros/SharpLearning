@@ -11,30 +11,19 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class GridSearchOptimizer : IOptimizer
     {
-        readonly int m_maxDegreeOfParallelism;
+        readonly bool m_runParallel;
         readonly double[][] m_parameters;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>
-        public GridSearchOptimizer(double[][] parameterRanges)
-            : this(parameterRanges, Environment.ProcessorCount)
-        {
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>
-        /// <param name="maxDegreeOfParallelism">How many cores must be used for the optimization. 
-        /// The function to minimize must be thread safe to use multi threading</param>
-        public GridSearchOptimizer(double[][] parameterRanges, int maxDegreeOfParallelism)
+        /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
+        public GridSearchOptimizer(double[][] parameterRanges, bool runParallel = true)
         {
             if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
-            if (maxDegreeOfParallelism < 1) { throw new ArgumentException("maxDegreeOfParallelism must be at least 1"); }
             m_parameters = parameterRanges;
-            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
+            m_runParallel = runParallel;
         }
 
         /// <summary>
@@ -58,20 +47,29 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
-            double[][] grid = CartesianProduct(m_parameters);
+            var grid = CartesianProduct(m_parameters);
 
             // Initialize the search
             var results = new ConcurrentBag<OptimizerResult>();
-            var options = new ParallelOptions();
-            options.MaxDegreeOfParallelism = m_maxDegreeOfParallelism;
-
-            Parallel.ForEach(grid, options, param =>
+            if (!m_runParallel)
             {
-                // Get the current parameters for the current point
-                var result = functionToMinimize(param);
-                //Trace.WriteLine("Error: " + result.Error);//
-                results.Add(result);
-            });
+                foreach (var param in grid)
+                {
+                    // Get the current parameters for the current point
+                    var result = functionToMinimize(param);
+                    results.Add(result);
+                }
+            }
+            else
+            {
+                var rangePartitioner = Partitioner.Create(grid, true);
+                Parallel.ForEach(rangePartitioner, (param, loopState) =>
+                {
+                    // Get the current parameters for the current point
+                    var result = functionToMinimize(param);
+                    results.Add(result);
+                });
+            }
 
             // return all results ordered
             return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
