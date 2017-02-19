@@ -127,7 +127,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             foreach (var item in zip)
             {
                 Assert.AreEqual(item.Expected.Key, item.Actual.Key);
-                Assert.AreEqual(item.Expected.Value, item.Actual.Value, 0.000001);
+                Assert.AreEqual(item.Expected.Value, item.Actual.Value, 0.01);
             }
         }
 

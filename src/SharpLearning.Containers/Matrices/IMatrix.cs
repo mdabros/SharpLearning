@@ -79,6 +79,7 @@ namespace SharpLearning.Containers.Matrices
         /// Output is copied to the provided matrix
         /// </summary>
         /// <param name="indices"></param>
+        /// <param name="output"></param>
         /// <returns></returns>
         void Columns(int[] indices, IMatrix<T> output);
 
