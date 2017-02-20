@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>randomforest extratrees machinelearning classification regression</tags>
+    <tags>randomforest extratrees machinelearning classification regression machine learning</tags>
   </metadata>
 </package>

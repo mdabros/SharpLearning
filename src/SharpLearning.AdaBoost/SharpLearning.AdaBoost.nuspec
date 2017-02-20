@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>adaboost machinelearning classification regression</tags>
+    <tags>adaboost machinelearning classification regression machine learning</tags>
   </metadata>
 </package>

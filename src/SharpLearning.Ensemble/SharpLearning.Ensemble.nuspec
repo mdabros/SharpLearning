@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>ensemblelearning machinelearning classification regression</tags>
+    <tags>ensemblelearning machinelearning classification regression machine learning</tags>
   </metadata>
 </package>

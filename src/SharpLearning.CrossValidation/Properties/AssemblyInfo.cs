@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SharpLearning.Containers.Test")]
+[assembly: AssemblyTitle("SharpLearning.CrossValidation")]
 [assembly: AssemblyDescription("Provides cross-validation, training/test set samplers and learning curves for SharpLearning.")]
-[assembly: AssemblyProduct("SharpLearning.Containers.Test")]
+[assembly: AssemblyProduct("SharpLearning.CrossValidation")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>crossvalidation sampling learningcurves</tags>
+    <tags>crossvalidation cross validation sampling learningcurves machine learning</tags>
   </metadata>
 </package>
