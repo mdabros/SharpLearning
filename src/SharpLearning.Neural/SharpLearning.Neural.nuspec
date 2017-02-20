@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>neural network convolutional neuralnetwork deep learning machinelearning classification regression machine learning</tags>
+    <tags>neural network convolutional deep learning machinelearning classification regression machine learning</tags>
   </metadata>
 </package>

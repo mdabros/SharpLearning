@@ -11,6 +11,6 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>$copyright$</copyright>
-    <tags>optimization machinelearning gridsearch randomsearch particleswarm neldermead smo machine learning</tags>
+    <tags>optimization machinelearning grid search random search particle swarm neldermead nelder mead smo machine learning</tags>
   </metadata>
 </package>
