@@ -60,7 +60,27 @@ Installation
 
 The recommended way to get SharpLearning is to use NuGet. The packages are provided and maintained in the public [NuGet Gallery](https://nuget.org/profiles/mdabros/).
 
-The nuget packages will be availible shortly.
+Learner and model packages:
+
+- **SharpLearning.DecisionTrees** - Provides learning algorithms and models for DecisionTree regression and classification.
+- **SharpLearning.AdaBoost** - Provides learning algorithms and models for AdaBoost regression and classification.
+- **SharpLearning.RandomForest** - Provides learning algorithms and models for RandomForest and ExtraTrees regression and classification.
+- **SharpLearning.GradientBoost** - Provides learning algorithms and models for GradientBoost regression and classification.
+- **SharpLearning.Neural** - Provides learning algorithms and models for neural net regression and classification. Layers availible for fully connected and covolutional nets.
+- **SharpLearning.Ensemble** - Provides ensemble learning for regression and classification. Makes it possible to combine the other learners/models from SharpLearning.
+- **SharpLearning.Common.Interfaces** - Provides common interfaces for SharpLearning.
+
+Validation and model selection packages:
+
+- **SharpLearning.CrossValidation** - Provides cross-validation, training/test set samplers and learning curves for SharpLearning.
+- **SharpLearning.Metrics** - Provides classification, regression, impurity and ranking metrics..
+- **SharpLearning.Optimization** - Provides optimization algorithms for hyperparameter tuning.
+
+Container/IO packages:
+
+- **SharpLearning.Containers** - Provides containers and base extension methods for SharpLearning.
+- **SharpLearning.InputOutput** - Provides csv parsing and serialization for SharpLearning.
+- **SharpLearning.FeatureTransformations** - Provides CsvRow transforms like missing value replacement and matrix transforms like MinMaxNormalization.
 
 Build Status
 ------------
