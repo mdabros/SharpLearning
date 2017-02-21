@@ -4,7 +4,7 @@ SharpLearning
 SharpLearning is an opensource machine learning library for C# .Net. 
 The goal of SharpLearning is to provide .Net developers with easy access to machine learning algorithms and models.
 
-Currently the main focus is supervised learning using classification and regression, 
+Currently the main focus is supervised learning for classification and regression, 
 while also providing the necesarry tools for optimizing and validating the trained models.
 
 SharpLearning provides a unified interface for machine learning algorithms. In SharpLearning a machine learning algorithm is refered to as a *Learner*, 
