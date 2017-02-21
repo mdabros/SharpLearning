@@ -51,9 +51,11 @@ SharpLearning is covered under the terms of the [MIT](LICENSE.md) license. You m
 
 Documentation
 -------------
-The code contains xml comments to help guide users. 
+SharpLearning contains xml documentation to help guide the user while using the library. 
 
-A separate repository with examples is planned as well as further markdown dokumentation.
+Code examples and more information about how to use SharpLearning can be found in [SharpLearning.Examples](https://github.com/mdabros/SharpLearning.Examples)
+
+further markdown dokumentation of the learners and models is planned.
 
 Installation
 ------------
