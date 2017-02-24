@@ -9,7 +9,8 @@ The goal of SharpLearning is to provide .Net developers with easy access to mach
 Currently the main focus is supervised learning for classification and regression, 
 while also providing the necesarry tools for optimizing and validating the trained models.
 
-SharpLearning provides a unified interface for machine learning algorithms. In SharpLearning a machine learning algorithm is refered to as a *Learner*, 
+SharpLearning provides a simple high-level interface for machine learning algorithms.    
+In SharpLearning a machine learning algorithm is refered to as a *Learner*, 
 and a machine learning model is refered to as a *PredictorModel*. An example of usage can be seen below:
 
 ```c#
@@ -25,7 +26,8 @@ var predictions = model.Predict(testObservations);
 // save the model for use with another application
 model.Save(() => new StreamWriter("randomforest.xml"));
 ```
-All machine learning algorithms and models use the same interface for easy replacement.
+
+All machine learning algorithms and models implement the same interface for easy replacement.
 
 Currently SharpLearning supports the following machine learning algorithms and models:
 
