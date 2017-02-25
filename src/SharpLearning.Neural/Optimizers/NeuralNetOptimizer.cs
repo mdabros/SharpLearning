@@ -273,6 +273,10 @@ namespace SharpLearning.Neural.Optimizers
             for (int i = 0; i < gsumWeights.Count; i++)
             {
                 gsumWeights[i].Clear();
+            }
+
+            for (int i = 0; i < xsumWeights.Count; i++)
+            {
                 xsumWeights[i].Clear();
             }
         }

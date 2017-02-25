@@ -1,0 +1,28 @@
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Neural.Optimizers;
+using System.Collections.Generic;
+
+namespace SharpLearning.Neural.Test.Optimizers
+{
+    [TestClass]
+    public class NeuralNetOptimizerTest
+    {
+        [TestMethod]
+        public void NeuralNetOptimizer_Reset_Does_Not_Throw()
+        {
+            var parametersAndGradients = new List<ParametersAndGradients>
+            {
+                new ParametersAndGradients(new float[10], new float[10]),
+                new ParametersAndGradients(new float[10], new float[10]),
+            };
+
+            foreach (OptimizerMethod optimizer in Enum.GetValues(typeof(OptimizerMethod)))
+            {
+                var sut = new NeuralNetOptimizer(0.001, 10, optimizerMethod: optimizer);
+                sut.UpdateParameters(parametersAndGradients);
+                sut.Reset();
+            }           
+        }
+    }
+}
