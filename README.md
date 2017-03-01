@@ -59,9 +59,10 @@ SharpLearning contains xml documentation to help guide the user while using the 
 
 Code examples and more information about how to use SharpLearning can be found in [SharpLearning.Examples](https://github.com/mdabros/SharpLearning.Examples)
 
-The wiki also contains information about how to [get started](https://github.com/mdabros/SharpLearning/wiki/Getting-started), as well as an 
-introductory guide to SharpLearning: [Introduction to SharpLearning](https://github.com/mdabros/SharpLearning/wiki/Introduction-to-SharpLearning).
-
+The wiki also contains a set of guides on how to get started: 
+ - [**Getting Started**](https://github.com/mdabros/SharpLearning/wiki/Getting-started).
+ - [**Introduction to SharpLearning**](https://github.com/mdabros/SharpLearning/wiki/Introduction-to-SharpLearning).
+ - [**Tuning Hyperparameters**](https://github.com/mdabros/SharpLearning/wiki/hyperparameter-tuning).
 
 
 Installation
