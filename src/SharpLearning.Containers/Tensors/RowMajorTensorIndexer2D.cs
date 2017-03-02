@@ -49,10 +49,8 @@ namespace SharpLearning.Containers.Tensors
         /// <returns></returns>
         public T At(int x, int y)
         {
-            var rowOffSet = x * DimYCount;
-            var item = m_tensor.Data[rowOffSet + y];
-
-            return item;
+            var index = x * DimYCount + y;
+            return m_tensor.Data[index];
         }
 
         /// <summary>

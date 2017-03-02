@@ -59,9 +59,7 @@ namespace SharpLearning.Containers.Tensors
         public T At(int x, int y, int z)
         {
             var index = ((this.DimXCount * y) + x) * this.DimZCount + z;
-            var item = m_tensor.Data[index];
-
-            return item;
+            return m_tensor.Data[index];
         }
 
         /// <summary>

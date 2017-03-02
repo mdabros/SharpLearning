@@ -9,17 +9,17 @@
         /// <summary>
         /// 
         /// </summary>
+        int DimXCount { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         int DimYCount { get; }
 
         /// <summary>
         /// 
         /// </summary>
         int NumberOfElements { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        int DimXCount { get; }
 
         /// <summary>
         /// 
