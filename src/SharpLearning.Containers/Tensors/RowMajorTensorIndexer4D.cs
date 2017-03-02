@@ -61,6 +61,16 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
+        public TensorShape Shape { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int NumberOfElements { get { return Shape.NumberOfElements; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
@@ -151,16 +161,5 @@ namespace SharpLearning.Containers.Tensors
                 output[i] = At(x, y, z, i);
             }
         }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TensorShape Shape { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int NumberOfElements { get { return Shape.NumberOfElements; } }
     }
 }
