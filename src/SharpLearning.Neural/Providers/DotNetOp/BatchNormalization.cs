@@ -1,4 +1,5 @@
 ﻿using SharpLearning.Containers.Tensors;
+using SharpLearning.Containers.Views;
 using System;
 using System.Threading.Tasks;
 
@@ -42,21 +43,32 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 float mean = 0;
                 float variance = 0;
 
+                var interval = Interval1D.Create(0, W);
+                var intervalValues = new float[interval.Length];
+
                 if (isTraining)
                 {
                     for (int n = 0; n < N; ++n)
                         for (int h = 0; h < H; ++h)
+                        {
+                            src.RangeX(h, c, n, interval, intervalValues);
                             for (int w = 0; w < W; ++w)
-                                mean += src.At(n, c, h, w);
+                                mean += intervalValues[w];//mean += src.At(w, h, c, n);
+                        }
+
                     mean /= W * N * H;
 
                     for (int n = 0; n < N; ++n)
                         for (int h = 0; h < H; ++h)
+                        {
+                            src.RangeX(h, c, n, interval, intervalValues);
                             for (int w = 0; w < W; ++w)
                             {
-                                var m = src.At(n, c, h, w) - mean;
+                                var m = intervalValues[w] - mean;
+                                //var m = src.At(w, h, c, n) - mean;
                                 variance += m * m;
                             }
+                        }
                     variance = 1f / (float)Math.Sqrt(variance / (W * H * N) + eps);
                 }
                 else
@@ -65,17 +77,21 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     variance = MovingAverageVariance[c];
                 }
 
+                var scale = Scale.Indexer1D.At(c);
+                var bias = Bias.Indexer1D.At(c);
+
+
                 for (int n = 0; n < N; ++n)
                     for (int h = 0; h < H; ++h)
+                    {
+                        src.RangeX(h, c, n, interval, intervalValues);
                         for (int w = 0; w < W; ++w)
                         {
-                            var scale = Scale.Indexer1D.At(c);
-                            var bias = Bias.Indexer1D.At(c);
-
-                            var value = scale * (src.At(n, c, h, w) - mean) * variance + bias;
-                            dst.At(n, c, h, w, value);
+                            var value = scale * (intervalValues[w] - mean) * variance + bias;
+                            //var value = scale * (src.At(w, h, c, n) - mean) * variance + bias;
+                            dst.At(w, h, c, n, value);
                         }
-
+                    }
                 if (isTraining)
                 {
                     MovingAverageMeans[c] = MovingAverage(MovingAverageMeans[c], mean);

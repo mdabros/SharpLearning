@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpLearning.Containers.Views;
+using System;
 using System.Diagnostics;
 
 namespace SharpLearning.Containers.Tensors
@@ -85,6 +86,72 @@ namespace SharpLearning.Containers.Tensors
             var index = ((n * DimZCount + z) * DimYCount + y) * DimXCount + x;
             m_tensor.Data[index] = value;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="n"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        public void RangeX(int y, int z, int n, Interval1D interval, T[] output)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                output[i] = At(i, y, z, n);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="z"></param>
+        /// <param name="n"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        public void RangeY(int x, int z, int n, Interval1D interval, T[] output)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                output[i] = At(x, i, z, n);
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="n"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        public void RangeZ(int x, int y, int n, Interval1D interval, T[] output)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                output[i] = At(x, y, i, n);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        public void RangeN(int x, int y, int z, Interval1D interval, T[] output)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                output[i] = At(x, y, z, i);
+            }
+        }
+
 
         /// <summary>
         /// 

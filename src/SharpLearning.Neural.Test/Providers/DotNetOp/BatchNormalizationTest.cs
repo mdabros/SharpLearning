@@ -16,12 +16,12 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         [TestMethod]
         public void BatchNormalization_Forward_Prototype_Timing()
         {
-            const int width = 32;
-            const int height = 32;
-            const int depth = 64;
-            const int batchSize = 256;
+            const int width = 64;
+            const int height = 64;
+            const int depth = 256;
+            const int batchSize = 128;
 
-            var iterations = 30;
+            var iterations = 10;
 
             var timer = new Stopwatch();
             var ellapsed = RunCurrentBatchNorm(iterations, timer,

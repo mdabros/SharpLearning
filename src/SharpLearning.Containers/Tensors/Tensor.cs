@@ -22,6 +22,28 @@ namespace SharpLearning.Containers.Tensors
             Shape = shape;
             Layout = layout;
             Data = new T[shape.NumberOfElements];
+
+            if(NumberOfDimensions == 1)
+            {
+                m_indexer1D = Create1DIndexer();
+            }
+            else if (NumberOfDimensions == 2)
+            {
+                m_indexer2D = Create2DIndexer();
+            }
+            else if (NumberOfDimensions == 3)
+            {
+                m_indexer3D = Create3DIndexer();
+            }
+            else if (NumberOfDimensions == 4)
+            {
+                m_indexer4D = Create4DIndexer();
+            }
+            else
+            {
+                throw new ArgumentException("Maximum dimensions is 4");
+            }
+
         }
 
         /// <summary>
@@ -95,15 +117,7 @@ namespace SharpLearning.Containers.Tensors
         {
             get
             {
-                if(m_indexer2D != null)
-                {
-                    return m_indexer2D;
-                }
-                else
-                {
-                    m_indexer2D = Create2DIndexer();
-                    return m_indexer2D;
-                }
+                return m_indexer2D;
             }
         } 
 
@@ -114,15 +128,7 @@ namespace SharpLearning.Containers.Tensors
         {
             get
             {
-                if (m_indexer3D != null)
-                {
-                    return m_indexer3D;
-                }
-                else
-                {
-                    m_indexer3D = Create3DIndexer();
-                    return m_indexer3D;
-                }
+                return m_indexer3D;
             }
         }
 
@@ -133,15 +139,7 @@ namespace SharpLearning.Containers.Tensors
         {
             get
             {
-                if (m_indexer4D != null)
-                {
-                    return m_indexer4D;
-                }
-                else
-                {
-                    m_indexer4D = Create4DIndexer();
-                    return m_indexer4D;
-                }
+                return m_indexer4D;
             }
         }
 

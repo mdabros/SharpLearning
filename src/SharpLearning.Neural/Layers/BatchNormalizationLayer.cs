@@ -188,13 +188,14 @@ namespace SharpLearning.Neural.Layers
                     variance = MovingAverageVariance[c];
                 }
 
+                var scale = Scale.At(0, c);
+                var bias = Bias[c];
+
                 for (int n = 0; n < N; ++n)
                     for (int h = 0; h < H; ++h)
                         for (int w = 0; w < W; ++w)
                         {
                             var d_off = src.GetDataIndex(n, c, h, w, Depth, Width, Height);
-                            var scale = Scale.At(0, c);
-                            var bias = Bias[c];
                             dst[d_off] = scale * (src.Data()[d_off] - mean) * variance + bias;
                         }
 

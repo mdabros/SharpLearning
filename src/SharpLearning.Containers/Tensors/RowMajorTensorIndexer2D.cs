@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpLearning.Containers.Views;
+using System;
 
 namespace SharpLearning.Containers.Tensors
 {
@@ -44,6 +45,16 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
+        public TensorShape Shape { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int NumberOfElements { get { return Shape.NumberOfElements; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
@@ -65,14 +76,34 @@ namespace SharpLearning.Containers.Tensors
             m_tensor.Data[index] = value;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public TensorShape Shape { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public int NumberOfElements { get { return Shape.NumberOfElements; } }
+        /// <param name="y"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        public void RangeX(int y, Interval1D interval, T[] output)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                output[i] = At(i, y);
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        public void RangeY(int x, Interval1D interval, T[] output)
+        {
+            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+            {
+                output[i] = At(x, i);
+            }
+        }
     }
 }
