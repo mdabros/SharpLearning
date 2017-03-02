@@ -63,7 +63,13 @@
     <Compile Include="Matrices\StringMatrixExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tensors\DataLayout.cs" />
+    <Compile Include="Tensors\ITensorIndexer1D.cs" />
+    <Compile Include="Tensors\ITensorIndexer2D.cs" />
+    <Compile Include="Tensors\ITensorIndexer3D.cs" />
+    <Compile Include="Tensors\TensorIndexer1D.cs" />
     <Compile Include="Tensors\Tensor.cs" />
+    <Compile Include="Tensors\RowMajorTensorIndexer2D.cs" />
+    <Compile Include="Tensors\RowMajorTensorIndexer3D.cs" />
     <Compile Include="Tensors\TensorShape.cs" />
     <Compile Include="Views\F64MatrixColumnView.cs" />
     <Compile Include="Views\F64MatrixView.cs" />
