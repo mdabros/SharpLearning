@@ -145,6 +145,16 @@ namespace SharpLearning.Containers.Tensors
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <returns></returns>
+        public static Tensor<T> CreateRowMajor(params int[] dimensions)
+        {
+            return new Tensor<T>(dimensions, DataLayout.RowMajor);
+        }
+
         ITensorIndexer1D<T> Create1DIndexer()
         {
             return new TensorIndexer1D<T>(this, Dimensions[0]);

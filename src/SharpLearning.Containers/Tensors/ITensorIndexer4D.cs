@@ -30,7 +30,7 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        int DimHCount { get; }
+        int DimNCount { get; }
 
         /// <summary>
         /// 
@@ -48,7 +48,18 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
+        /// <param name="n"></param>
         /// <returns></returns>
-        T At(int x, int y, int z, int h);
+        T At(int x, int y, int z, int n);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="n"></param>
+        /// <param name="value"></param>
+        void At(int x, int y, int z, int n, T value);
     }
 }

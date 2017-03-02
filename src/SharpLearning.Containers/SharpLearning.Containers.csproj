@@ -68,6 +68,7 @@
     <Compile Include="Tensors\ITensorIndexer3D.cs" />
     <Compile Include="Tensors\ITensorIndexer4D.cs" />
     <Compile Include="Tensors\RowMajorTensorIndexer4D.cs" />
+    <Compile Include="Tensors\TensorExtensions.cs" />
     <Compile Include="Tensors\TensorIndexer1D.cs" />
     <Compile Include="Tensors\Tensor.cs" />
     <Compile Include="Tensors\RowMajorTensorIndexer2D.cs" />

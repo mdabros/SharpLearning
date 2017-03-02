@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace SharpLearning.Containers.Tensors
 {
@@ -23,7 +24,7 @@ namespace SharpLearning.Containers.Tensors
             if (tensor == null)
             { throw new ArgumentNullException(nameof(tensor)); }
 
-            Shape = new TensorShape(dimX, dimY, dimZ);
+            Shape = new TensorShape(dimX, dimY, dimZ, dimH);
             if (Shape != tensor.Shape)
             {
                 throw new ArgumentException($"Indexer shape: {Shape} does not match tensor shape: {tensor.Shape}");
@@ -33,7 +34,7 @@ namespace SharpLearning.Containers.Tensors
             DimXCount = dimX;
             DimYCount = dimY;
             DimZCount = dimZ;
-            DimHCount = dimH;
+            DimNCount = dimH;
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public int DimHCount { get; }
+        public int DimNCount { get; }
 
         /// <summary>
         /// 
@@ -62,12 +63,27 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="z"></param>
-        /// <param name="h"></param>
+        /// <param name="n"></param>
         /// <returns></returns>
-        public T At(int x, int y, int z, int h)
+        public T At(int x, int y, int z, int n)
         {
-            var index = ((h * DimZCount + z) * DimYCount + y) * DimXCount + x;
+            var index = ((n * DimZCount + z) * DimYCount + y) * DimXCount + x;
             return m_tensor.Data[index];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        /// <param name="n"></param>
+        /// <param name="value"></param>
+        public void At(int x, int y, int z, int n, T value)
+        {
+            //var index = x + y * DimXCount + z * DimXCount * DimYCount + n * DimXCount * DimYCount * DimZCount;
+            var index = ((n * DimZCount + z) * DimYCount + y) * DimXCount + x;
+            m_tensor.Data[index] = value;
         }
 
         /// <summary>

@@ -56,6 +56,18 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="value"></param>
+        public void At(int x, int y, T value)
+        {
+            var index = x * DimYCount + y;
+            m_tensor.Data[index] = value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public TensorShape Shape { get; }
 
         /// <summary>

@@ -33,5 +33,13 @@
         /// <param name="y"></param>
         /// <returns></returns>
         T At(int x, int y);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="value"></param>
+        void At(int x, int y, T value);
     }
 }

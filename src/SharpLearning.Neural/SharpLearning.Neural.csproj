@@ -96,6 +96,7 @@
     <Compile Include="Optimizers\OptimizerMethod.cs" />
     <Compile Include="ParametersAndGradients.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\DotNetOp\BatchNormalization.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />
     <Compile Include="TargetEncoders\OneOfNTargetEncoder.cs" />
