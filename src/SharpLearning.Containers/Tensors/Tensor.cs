@@ -10,6 +10,7 @@ namespace SharpLearning.Containers.Tensors
         ITensorIndexer1D<T> m_indexer1D;
         ITensorIndexer2D<T> m_indexer2D;
         ITensorIndexer3D<T> m_indexer3D;
+        ITensorIndexer4D<T> m_indexer4D;
 
         /// <summary>
         /// 
@@ -57,6 +58,11 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         public int[] Dimensions { get { return Shape.Dimensions; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int NumberOfDimensions { get { return Shape.Dimensions.Length; } }
 
         /// <summary>
         /// 
@@ -120,6 +126,25 @@ namespace SharpLearning.Containers.Tensors
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ITensorIndexer4D<T> Indexer4D
+        {
+            get
+            {
+                if (m_indexer4D != null)
+                {
+                    return m_indexer4D;
+                }
+                else
+                {
+                    m_indexer4D = Create4DIndexer();
+                    return m_indexer4D;
+                }
+            }
+        }
+
         ITensorIndexer1D<T> Create1DIndexer()
         {
             return new TensorIndexer1D<T>(this, Dimensions[0]);
@@ -144,6 +169,19 @@ namespace SharpLearning.Containers.Tensors
             {
                 case DataLayout.RowMajor:
                     return new RowMajorTensorIndexer3D<T>(this, Dimensions[0], Dimensions[1], Dimensions[2]);
+                case DataLayout.ColumnMajor:
+                    throw new NotImplementedException();
+                default:
+                    throw new NotImplementedException("Unknown DataLayout: " + Layout);
+            }
+        }
+
+        ITensorIndexer4D<T> Create4DIndexer()
+        {
+            switch (Layout)
+            {
+                case DataLayout.RowMajor:
+                    return new RowMajorTensorIndexer4D<T>(this, Dimensions[0], Dimensions[1], Dimensions[2], Dimensions[3]);
                 case DataLayout.ColumnMajor:
                     throw new NotImplementedException();
                 default:
