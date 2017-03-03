@@ -14,40 +14,40 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <param name="tensor"></param>
-        /// <param name="dimX"></param>
-        /// <param name="dimY"></param>
-        /// <param name="dimZ"></param>
-        public RowMajorTensorIndexer3D(Tensor<T> tensor, int dimX, int dimY, int dimZ)
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="depth"></param>
+        public RowMajorTensorIndexer3D(Tensor<T> tensor, int width, int height, int depth)
         {
             if (tensor == null)
             { throw new ArgumentNullException(nameof(tensor)); }
 
-            Shape = new TensorShape(dimX, dimY, dimZ);
+            Shape = new TensorShape(width, height, depth);
             if (Shape.NumberOfElements != tensor.NumberOfElements)
             {
                 throw new ArgumentException($"Indexer number of elements: {Shape.NumberOfElements} does not match tensor number of elements: {tensor.NumberOfElements}");
             }
 
             m_tensor = tensor;
-            DimXCount = dimX;
-            DimYCount = dimY;
-            DimZCount = dimZ;
+            Width = width;
+            Height = height;
+            Depth = depth;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public int DimXCount { get; }
+        public int Width { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public int DimYCount { get; }
+        public int Height { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public int DimZCount { get; }
+        public int Depth { get; }
 
 
         /// <summary>
@@ -63,71 +63,71 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <returns></returns>
-        public T At(int x, int y, int z)
+        public T At(int w, int h, int d)
         {
-            var index = ((this.DimXCount * y) + x) * this.DimZCount + z;
+            var index = ((this.Width * h) + w) * this.Depth + d;
             return m_tensor.Data[index];
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <param name="value"></param>
-        public void At(int x, int y, int z, T value)
+        public void At(int w, int h, int d, T value)
         {
-            var index = ((this.DimXCount * y) + x) * this.DimZCount + z;
+            var index = ((this.Width * h) + w) * this.Depth + d;
             m_tensor.Data[index] = value;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeX(int y, int z, Interval1D interval, T[] output)
+        public void RangeWidth(int h, int d, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(i, y, z);
+                output[i] = At(i, h, d);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="d"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeY(int x, int z, Interval1D interval, T[] output)
+        public void RangeHeight(int w, int d, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(x, i, z);
+                output[i] = At(w, i, d);
             }
         }
         
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="h"></param>
+        /// <param name="w"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeZ(int x, int y, Interval1D interval, T[] output)
+        public void RangeDepth(int h, int w, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(x, y, i);
+                output[i] = At(h, w, i);
             }
         }
     }

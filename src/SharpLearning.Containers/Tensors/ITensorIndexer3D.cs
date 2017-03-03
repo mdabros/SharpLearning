@@ -9,17 +9,17 @@
         /// <summary>
         /// 
         /// </summary>
-        int DimXCount { get; }
+        int Width { get; }
         
         /// <summary>
         /// 
         /// </summary>
-        int DimYCount { get; }
+        int Height { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int DimZCount { get; }
+        int Depth { get; }
 
         /// <summary>
         /// 
@@ -34,19 +34,19 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <returns></returns>
-        T At(int x, int y, int z);
+        T At(int w, int h, int d);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <param name="value"></param>
-        void At(int x, int y, int z, T value);
+        void At(int w, int h, int d, T value);
     }
 }

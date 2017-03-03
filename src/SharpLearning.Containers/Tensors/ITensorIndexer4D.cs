@@ -16,22 +16,22 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        int DimXCount { get; }
+        int Height { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int DimYCount { get; }
+        int Width { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int DimZCount { get; }
+        int Depth { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int DimNCount { get; }
+        int Dim4 { get; }
 
         /// <summary>
         /// 
@@ -46,61 +46,61 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <param name="n"></param>
         /// <returns></returns>
-        T At(int x, int y, int z, int n);
+        T At(int w, int h, int d, int n);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <param name="n"></param>
         /// <param name="value"></param>
-        void At(int x, int y, int z, int n, T value);
+        void At(int w, int h, int d, int n, T value);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <param name="n"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeX(int y, int z, int n, Interval1D interval, T[] output);
+        void RangeWidth(int h, int d, int n, Interval1D interval, T[] output);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="d"></param>
         /// <param name="n"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeY(int x, int z, int n, Interval1D interval, T[] output);
+        void RangeHeight(int w, int d, int n, Interval1D interval, T[] output);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
         /// <param name="n"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeZ(int x, int y, int n, Interval1D interval, T[] output);
+        void RangeDepth(int w, int h, int n, Interval1D interval, T[] output);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        /// <param name="d"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeN(int x, int y, int z, Interval1D interval, T[] output);
+        void RangeDim4(int w, int h, int d, Interval1D interval, T[] output);
     }
 }

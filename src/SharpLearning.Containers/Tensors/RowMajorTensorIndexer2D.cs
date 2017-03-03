@@ -14,33 +14,33 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <param name="tensor"></param>
-        /// <param name="dimX"></param>
-        /// <param name="dimY"></param>
-        public RowMajorTensorIndexer2D(Tensor<T> tensor, int dimX, int dimY)
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        public RowMajorTensorIndexer2D(Tensor<T> tensor, int width, int height)
         {
             if (tensor == null)
             { throw new ArgumentNullException(nameof(tensor)); }
 
-            Shape = new TensorShape(dimX, dimY);
+            Shape = new TensorShape(width, height);
             if (Shape.NumberOfElements != tensor.NumberOfElements)
             {
                 throw new ArgumentException($"Indexer number of elements: {Shape.NumberOfElements} does not match tensor number of elements: {tensor.NumberOfElements}");
             }
 
             m_tensor = tensor;
-            DimXCount = dimX;
-            DimYCount = dimY;
+            Width = width;
+            Height = height;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public int DimXCount { get; }
+        public int Width { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public int DimYCount { get; }
+        public int Height { get; }
 
         /// <summary>
         /// 
@@ -55,24 +55,24 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
         /// <returns></returns>
-        public T At(int x, int y)
+        public T At(int w, int h)
         {
-            var index = x * DimYCount + y;
+            var index = w * Height + h;
             return m_tensor.Data[index];
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
         /// <param name="value"></param>
-        public void At(int x, int y, T value)
+        public void At(int w, int h, T value)
         {
-            var index = x * DimYCount + y;
+            var index = w * Height + h;
             m_tensor.Data[index] = value;
         }
 
@@ -80,14 +80,14 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="y"></param>
+        /// <param name="h"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeX(int y, Interval1D interval, T[] output)
+        public void RangeWidth(int h, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(y, i);
+                output[i] = At(h, i);
             }
         }
 
@@ -95,14 +95,14 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="w"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeY(int x, Interval1D interval, T[] output)
+        public void Rangeheight(int w, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(i, x);
+                output[i] = At(i, w);
             }
         }
     }

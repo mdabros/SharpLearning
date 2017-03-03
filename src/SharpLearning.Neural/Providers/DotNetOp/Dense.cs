@@ -22,7 +22,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Tensor<float> output)
         {
             var src = input.AsTensor4D();
-            var src2D = input.AsTensor2D(src.DimNCount, src.DimXCount * src.DimYCount * src.DimZCount);
+            var src2D = input.AsTensor2D(src.Dim4, src.Height * src.Width * src.Depth);
 
             var dst = output.AsTensor4D();
             
@@ -30,9 +30,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var w = weights.AsTensor2D();
             var b = bias.AsTensor1D();
 
-            int MB = src.DimNCount;
-            int OC = dst.DimZCount;
-            int IC = src.DimZCount;
+            int MB = src.Dim4;
+            int OC = dst.Depth;
+            int IC = src.Depth;
 
             var dst2D = output.AsTensor2D(MB, OC);
 
@@ -62,11 +62,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         static float Forward(ITensorIndexer2D<float> src, ITensorIndexer4D<float> dst,
             ITensorIndexer2D<float> w, int mb, int oc)
         {
-            int MB = src.DimXCount;
-            int OC = dst.DimZCount;
-            int IC = src.DimYCount;
-            int KH = w.DimYCount;
-            int KW = w.DimXCount;
+            int MB = src.Width;
+            int OC = dst.Depth;
+            int IC = src.Height;
+            int KH = w.Height;
+            int KW = w.Width;
             var d = 0f;
 
             for (int ic = 0; ic < IC; ++ic)
@@ -79,13 +79,13 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         }
 
         static float ForwardSpatial(ITensorIndexer4D<float> src, ITensorIndexer4D<float> dst, 
-            ITensorIndexer2D<float> w, int mb, int oc)
+            ITensorIndexer4D<float> w, int mb, int oc)
         {
-            int MB = src.DimNCount;
-            int OC = dst.DimZCount;
-            int IC = src.DimZCount;
-            int KH = w.DimYCount;
-            int KW = w.DimXCount;
+            int MB = src.Dim4;
+            int OC = dst.Depth;
+            int IC = src.Depth;
+            int KH = w.Height;
+            int KW = w.Width;
 
             var d = 0f;
             for (int ic = 0; ic < IC; ++ic)
@@ -95,7 +95,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     for (int kw = 0; kw < KW; ++kw)
                     {
                         d += src.At(kw, kh, ic, mb)
-                            * w.At(kw, kh);
+                            * w.At(kw, kh, ic, oc);
 
                         //d += src[src_d.off(mb, ic, kh, kw)]
                         //    * weights[weights_d.off(oc, ic, kh, kw)];

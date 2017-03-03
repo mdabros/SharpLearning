@@ -31,10 +31,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var src = input.AsTensor4D();
             var dst = output.AsTensor4D();
             
-            int N = src.DimNCount; // number of items in mini batch
-            int C = src.DimZCount;
-            int H = src.DimYCount;
-            int W = src.DimXCount;
+            int N = src.Dim4; // number of items in mini batch
+            int C = src.Depth;
+            int H = src.Width;
+            int W = src.Height;
 
             var sc = Scale.AsTensor1D();
             var bi = Scale.AsTensor1D();
@@ -54,7 +54,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     for (int n = 0; n < N; ++n)
                         for (int h = 0; h < H; ++h)
                         {
-                            src.RangeX(h, c, n, interval, intervalValues);
+                            src.RangeWidth(h, c, n, interval, intervalValues);
                             for (int w = 0; w < W; ++w)
                                 mean += intervalValues[w];//mean += src.At(w, h, c, n);
                         }
@@ -64,7 +64,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     for (int n = 0; n < N; ++n)
                         for (int h = 0; h < H; ++h)
                         {
-                            src.RangeX(h, c, n, interval, intervalValues);
+                            src.RangeWidth(h, c, n, interval, intervalValues);
                             for (int w = 0; w < W; ++w)
                             {
                                 var m = intervalValues[w] - mean;
@@ -87,7 +87,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 for (int n = 0; n < N; ++n)
                     for (int h = 0; h < H; ++h)
                     {
-                        src.RangeX(h, c, n, interval, intervalValues);
+                        src.RangeWidth(h, c, n, interval, intervalValues);
                         for (int w = 0; w < W; ++w)
                         {
                             var value = scale * (intervalValues[w] - mean) * variance + bias;

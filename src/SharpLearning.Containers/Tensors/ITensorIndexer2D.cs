@@ -11,12 +11,12 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        int DimXCount { get; }
+        int Width { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int DimYCount { get; }
+        int Height { get; }
 
         /// <summary>
         /// 
@@ -31,35 +31,35 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
         /// <returns></returns>
-        T At(int x, int y);
+        T At(int w, int h);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
         /// <param name="value"></param>
-        void At(int x, int y, T value);
+        void At(int w, int h, T value);
 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="y"></param>
+        /// <param name="h"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeX(int y, Interval1D interval, T[] output);
+        void RangeWidth(int h, Interval1D interval, T[] output);
 
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="w"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeY(int x, Interval1D interval, T[] output);
+        void Rangeheight(int w, Interval1D interval, T[] output);
     }
 }
