@@ -1,4 +1,6 @@
-﻿namespace SharpLearning.Containers.Tensors
+﻿using SharpLearning.Containers.Views;
+
+namespace SharpLearning.Containers.Tensors
 {
     /// <summary>
     /// 
@@ -41,5 +43,23 @@
         /// <param name="y"></param>
         /// <param name="value"></param>
         void At(int x, int y, T value);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="y"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        void RangeX(int y, Interval1D interval, T[] output);
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        void RangeY(int x, Interval1D interval, T[] output);
     }
 }

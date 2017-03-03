@@ -11,63 +11,58 @@ using System.Linq;
 namespace SharpLearning.Neural.Test.Providers.DotNetOp
 {
     [TestClass]
-    public class BatchNormalizationTest
+    public class DenseTest
     {
         [TestMethod]
-        public void BatchNormalization_Forward_Prototype_Timing()
+        public void DenseTest_Forward_Prototype_Timing()
         {
             const int width = 25;
             const int height = 25;
-            const int depth = 32;
+            const int depth = 1;
             const int batchSize = 128;
+            const int units = 128;
 
             var iterations = 10;
 
             var timer = new Stopwatch();
-            var ellapsed = RunCurrentBatchNorm(iterations, timer,
-                width, height, depth, batchSize);
+            var ellapsed = RunCurrent(iterations, timer,
+                width, height, depth, batchSize, units);
             Trace.WriteLine($"Current: {ellapsed}");
 
             timer.Reset();
-            ellapsed = RunDotNetBatchNorm(iterations, timer,
-                width, height, depth, batchSize);
+            ellapsed = RunDotNet(iterations, timer,
+                width, height, depth, batchSize, units);
             Trace.WriteLine($"DotNet: {ellapsed}");
 
             //Assert.IsFalse(true);
         }
 
-        double RunDotNetBatchNorm(int iterations, Stopwatch timer,
-            int width, int height, int depth, int batchSize)
+        double RunDotNet(int iterations, Stopwatch timer,
+            int width, int height, int depth, int batchSize, int units)
         {
             var fanIn = width * height * depth;
+            var fanOut = units;
+
+            var weights = Tensor<float>.CreateRowMajor(fanIn, fanOut);
+            var bias = Tensor<float>.CreateRowMajor(fanOut);
 
             var input = Tensor<float>.CreateRowMajor(width, height, depth, batchSize);
-            var output = Tensor<float>.CreateRowMajor(width, height, depth, batchSize);
-
-            var scale = Tensor<float>.CreateRowMajor(fanIn);
-            var bias = Tensor<float>.CreateRowMajor(fanIn);
-
-            var batchMeans = new float[depth];
-            var batchVars = new float[depth];
-
-            var MovingAverageMeans = new float[depth];
-            var MovingAverageVariance = Enumerable.Range(0, depth).Select(v => 1.0f).ToArray();
+            var output = Tensor<float>.CreateRowMajor(1, 1, fanOut, batchSize);
 
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
-                BatchNormalization.Forward(input, scale, bias, batchMeans, batchVars,
-                    MovingAverageMeans, MovingAverageVariance, output, true);
+                Dense.Forward(input, weights, bias, output);
                 timer.Stop();
             }
 
             return timer.ElapsedMilliseconds / (double)iterations;
         }
 
-        double RunCurrentBatchNorm(int iterations, Stopwatch timer,
-            int width, int height, int depth, int batchSize)
+        double RunCurrent(int iterations, Stopwatch timer,
+            int width, int height, int depth, int batchSize, int units)
         {           
-            var sut = new BatchNormalizationLayer();
+            var sut = new DenseLayer(units);
 
             sut.Initialize(width, height, depth, batchSize, 
                 Initialization.GlorotUniform, new Random(232));

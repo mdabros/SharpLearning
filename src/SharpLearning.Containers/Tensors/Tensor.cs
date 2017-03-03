@@ -98,15 +98,7 @@ namespace SharpLearning.Containers.Tensors
         {
             get
             {
-                if (m_indexer1D != null)
-                {
-                    return m_indexer1D;
-                }
-                else
-                {
-                    m_indexer1D = Create1DIndexer();
-                    return m_indexer1D;
-                }
+                return m_indexer1D;
             }
         }
 
@@ -155,15 +147,39 @@ namespace SharpLearning.Containers.Tensors
 
         ITensorIndexer1D<T> Create1DIndexer()
         {
-            return new TensorIndexer1D<T>(this, Dimensions[0]);
+            return Create1DIndexer(Dimensions[0]);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dim"></param>
+        /// <returns></returns>
+        public ITensorIndexer1D<T> Create1DIndexer(int dim)
+        {
+            return new TensorIndexer1D<T>(this, dim);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         ITensorIndexer2D<T> Create2DIndexer()
+        {
+            return Create2DIndexer(Dimensions[0], Dimensions[1]);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ITensorIndexer2D<T> Create2DIndexer(int dimX, int dimY)
         {
             switch (Layout)
             {
                 case DataLayout.RowMajor:
-                    return new RowMajorTensorIndexer2D<T>(this, Dimensions[0], Dimensions[1]);
+                    return new RowMajorTensorIndexer2D<T>(this, dimX, dimY);
                 case DataLayout.ColumnMajor:
                     throw new NotImplementedException();
                 default:
@@ -173,10 +189,23 @@ namespace SharpLearning.Containers.Tensors
 
         ITensorIndexer3D<T> Create3DIndexer()
         {
+            return Create3DIndexer(Dimensions[0], Dimensions[1], Dimensions[2]);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dimX"></param>
+        /// <param name="dimY"></param>
+        /// <param name="dimZ"></param>
+        /// <returns></returns>
+        public ITensorIndexer3D<T> Create3DIndexer(int dimX, int dimY, int dimZ)
+        {
             switch (Layout)
             {
                 case DataLayout.RowMajor:
-                    return new RowMajorTensorIndexer3D<T>(this, Dimensions[0], Dimensions[1], Dimensions[2]);
+                    return new RowMajorTensorIndexer3D<T>(this, dimX, dimY, dimZ);
                 case DataLayout.ColumnMajor:
                     throw new NotImplementedException();
                 default:
@@ -186,10 +215,23 @@ namespace SharpLearning.Containers.Tensors
 
         ITensorIndexer4D<T> Create4DIndexer()
         {
+            return Create4DIndexer(Dimensions[0], Dimensions[1], Dimensions[2], Dimensions[3]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dimX"></param>
+        /// <param name="dimY"></param>
+        /// <param name="dimZ"></param>
+        /// <param name="dimN"></param>
+        /// <returns></returns>
+        public ITensorIndexer4D<T> Create4DIndexer(int dimX, int dimY, int dimZ, int dimN)
+        {
             switch (Layout)
             {
                 case DataLayout.RowMajor:
-                    return new RowMajorTensorIndexer4D<T>(this, Dimensions[0], Dimensions[1], Dimensions[2], Dimensions[3]);
+                    return new RowMajorTensorIndexer4D<T>(this, dimX, dimY, dimZ, dimN);
                 case DataLayout.ColumnMajor:
                     throw new NotImplementedException();
                 default:

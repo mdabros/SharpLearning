@@ -26,9 +26,9 @@ namespace SharpLearning.Containers.Tensors
             { throw new ArgumentNullException(nameof(tensor)); }
 
             Shape = new TensorShape(dimX, dimY, dimZ, dimH);
-            if (Shape != tensor.Shape)
+            if (Shape.NumberOfElements != tensor.NumberOfElements)
             {
-                throw new ArgumentException($"Indexer shape: {Shape} does not match tensor shape: {tensor.Shape}");
+                throw new ArgumentException($"Indexer number of elements: {Shape.NumberOfElements} does not match tensor number of elements: {tensor.NumberOfElements}");
             }
 
             m_tensor = tensor;
