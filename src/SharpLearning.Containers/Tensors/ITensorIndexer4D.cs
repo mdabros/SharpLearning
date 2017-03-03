@@ -16,22 +16,22 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        int Height { get; }
+        int N { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int Width { get; }
+        int C { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int Depth { get; }
+        int H { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int Dim4 { get; }
+        int W { get; }
 
         /// <summary>
         /// 
@@ -71,7 +71,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="n"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeWidth(int h, int d, int n, Interval1D interval, T[] output);
+        void RangeN(int h, int d, int n, Interval1D interval, T[] output);
 
         /// <summary>
         /// 
@@ -81,7 +81,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="n"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeHeight(int w, int d, int n, Interval1D interval, T[] output);
+        void RangeC(int w, int d, int n, Interval1D interval, T[] output);
 
         /// <summary>
         /// 
@@ -91,7 +91,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="n"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeDepth(int w, int h, int n, Interval1D interval, T[] output);
+        void RangeH(int w, int h, int n, Interval1D interval, T[] output);
 
         /// <summary>
         /// 
@@ -101,6 +101,6 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="d"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeDim4(int w, int h, int d, Interval1D interval, T[] output);
+        void RangeW(int w, int h, int d, Interval1D interval, T[] output);
     }
 }

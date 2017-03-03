@@ -11,12 +11,12 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        int Width { get; }
+        int H { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int Height { get; }
+        int W { get; }
 
         /// <summary>
         /// 
@@ -51,7 +51,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="h"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeWidth(int h, Interval1D interval, T[] output);
+        void RangeH(int h, Interval1D interval, T[] output);
 
 
         /// <summary>
@@ -60,6 +60,6 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="w"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void Rangeheight(int w, Interval1D interval, T[] output);
+        void RangeW(int w, Interval1D interval, T[] output);
     }
 }

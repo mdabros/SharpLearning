@@ -22,7 +22,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Tensor<float> output)
         {
             var src = input.AsTensor4D();
-            var src2D = input.AsTensor2D(src.Dim4, src.Height * src.Width * src.Depth);
+            var src2D = input.AsTensor2D(src.W, src.N * src.C * src.H);
 
             var dst = output.AsTensor4D();
             
@@ -30,9 +30,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var w = weights.AsTensor2D();
             var b = bias.AsTensor1D();
 
-            int MB = src.Dim4;
-            int OC = dst.Depth;
-            int IC = src.Depth;
+            int MB = src.W;
+            int OC = dst.H;
+            int IC = src.H;
 
             var dst2D = output.AsTensor2D(MB, OC);
 
@@ -62,11 +62,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         static float Forward(ITensorIndexer2D<float> src, ITensorIndexer4D<float> dst,
             ITensorIndexer2D<float> w, int mb, int oc)
         {
-            int MB = src.Width;
-            int OC = dst.Depth;
-            int IC = src.Height;
-            int KH = w.Height;
-            int KW = w.Width;
+            int MB = src.H;
+            int OC = dst.H;
+            int IC = src.W;
+            int KH = w.W;
+            int KW = w.H;
             var d = 0f;
 
             for (int ic = 0; ic < IC; ++ic)
@@ -81,11 +81,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         static float ForwardSpatial(ITensorIndexer4D<float> src, ITensorIndexer4D<float> dst, 
             ITensorIndexer4D<float> w, int mb, int oc)
         {
-            int MB = src.Dim4;
-            int OC = dst.Depth;
-            int IC = src.Depth;
-            int KH = w.Height;
-            int KW = w.Width;
+            int MB = src.W;
+            int OC = dst.H;
+            int IC = src.H;
+            int KH = w.N;
+            int KW = w.C;
 
             var d = 0f;
             for (int ic = 0; ic < IC; ++ic)

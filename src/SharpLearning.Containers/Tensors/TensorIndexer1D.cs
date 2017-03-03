@@ -13,13 +13,13 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <param name="tensor"></param>
-        /// <param name="length"></param>
-        public TensorIndexer1D(Tensor<T> tensor, int length)
+        /// <param name="w"></param>
+        public TensorIndexer1D(Tensor<T> tensor, int w)
         {
             if (tensor == null)
             { throw new ArgumentNullException(nameof(tensor)); }
 
-            Shape = new TensorShape(length);
+            Shape = new TensorShape(w);
             if (Shape != tensor.Shape)
             {
                 throw new ArgumentException($"Indexer shape: {Shape} does not match tensor shape: {tensor.Shape}");
@@ -31,11 +31,11 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="index"></param>
+        /// <param name="w"></param>
         /// <returns></returns>
-        public T At(int index)
+        public T At(int w)
         {
-            return m_tensor.Data[index];
+            return m_tensor.Data[w];
         }
 
         /// <summary>

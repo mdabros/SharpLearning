@@ -14,40 +14,40 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <param name="tensor"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="depth"></param>
-        public RowMajorTensorIndexer3D(Tensor<T> tensor, int width, int height, int depth)
+        /// <param name="c"></param>
+        /// <param name="h"></param>
+        /// <param name="w"></param>
+        public RowMajorTensorIndexer3D(Tensor<T> tensor, int c, int h, int w)
         {
             if (tensor == null)
             { throw new ArgumentNullException(nameof(tensor)); }
 
-            Shape = new TensorShape(width, height, depth);
+            Shape = new TensorShape(c, h, w);
             if (Shape.NumberOfElements != tensor.NumberOfElements)
             {
                 throw new ArgumentException($"Indexer number of elements: {Shape.NumberOfElements} does not match tensor number of elements: {tensor.NumberOfElements}");
             }
 
             m_tensor = tensor;
-            Width = width;
-            Height = height;
-            Depth = depth;
+            C = c;
+            H = h;
+            W = w;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public int Width { get; }
+        public int C { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public int Height { get; }
+        public int H { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        public int Depth { get; }
+        public int W { get; }
 
 
         /// <summary>
@@ -63,26 +63,26 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="w"></param>
+        /// <param name="c"></param>
         /// <param name="h"></param>
-        /// <param name="d"></param>
+        /// <param name="w"></param>
         /// <returns></returns>
-        public T At(int w, int h, int d)
+        public T At(int c, int h, int w)
         {
-            var index = ((this.Width * h) + w) * this.Depth + d;
+            var index = ((this.C * h) + c) * this.W + w;
             return m_tensor.Data[index];
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="w"></param>
+        /// <param name="c"></param>
         /// <param name="h"></param>
-        /// <param name="d"></param>
+        /// <param name="w"></param>
         /// <param name="value"></param>
-        public void At(int w, int h, int d, T value)
+        public void At(int c, int h, int w, T value)
         {
-            var index = ((this.Width * h) + w) * this.Depth + d;
+            var index = ((this.C * h) + c) * this.W + w;
             m_tensor.Data[index] = value;
         }
 
@@ -90,44 +90,44 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <param name="h"></param>
-        /// <param name="d"></param>
+        /// <param name="w"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeWidth(int h, int d, Interval1D interval, T[] output)
+        public void RangeC(int h, int w, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(i, h, d);
+                output[i] = At(i, h, w);
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="c"></param>
         /// <param name="w"></param>
-        /// <param name="d"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeHeight(int w, int d, Interval1D interval, T[] output)
+        public void RangeH(int c, int w, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(w, i, d);
+                output[i] = At(c, i, w);
             }
         }
         
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="c"></param>
         /// <param name="h"></param>
-        /// <param name="w"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        public void RangeDepth(int h, int w, Interval1D interval, T[] output)
+        public void RangeW(int c, int h, Interval1D interval, T[] output)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
-                output[i] = At(h, w, i);
+                output[i] = At(c, h, i);
             }
         }
     }

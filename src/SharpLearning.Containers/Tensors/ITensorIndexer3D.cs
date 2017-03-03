@@ -9,17 +9,17 @@
         /// <summary>
         /// 
         /// </summary>
-        int Width { get; }
+        int C { get; }
         
         /// <summary>
         /// 
         /// </summary>
-        int Height { get; }
+        int H { get; }
 
         /// <summary>
         /// 
         /// </summary>
-        int Depth { get; }
+        int W { get; }
 
         /// <summary>
         /// 
