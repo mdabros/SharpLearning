@@ -19,7 +19,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             const int width = 25;
             const int height = 25;
             const int depth = 1;
-            const int batchSize = 10;
+            const int batchSize = 128;
             const int units = 800;
 
             var iterations = 10;
@@ -34,7 +34,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
                 width, height, depth, batchSize, units);
             Trace.WriteLine($"DotNet: {ellapsed}");
 
-            //Assert.IsFalse(true);
+            Assert.IsFalse(true);
         }
 
         double RunDotNet(int iterations, Stopwatch timer,
@@ -43,11 +43,11 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var fanIn = width * height * depth;
             var fanOut = units;
 
-            var weights = Tensor<float>.CreateRowMajor(fanIn, fanOut);
+            var weights = Tensor<float>.CreateRowMajor(fanOut, fanIn);
             var bias = Tensor<float>.CreateRowMajor(fanOut);
 
-            var input = Tensor<float>.CreateRowMajor(width, height, depth, batchSize);
-            var output = Tensor<float>.CreateRowMajor(1, 1, fanOut, batchSize);
+            var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
+            var output = Tensor<float>.CreateRowMajor(batchSize, fanOut);
 
             for (int i = 0; i < iterations; i++)
             {

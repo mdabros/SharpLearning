@@ -79,7 +79,10 @@ namespace SharpLearning.Containers.Tensors
         /// <returns></returns>
         public T At(int n, int c, int h, int w)
         {
-            var index = ((n * H + h) * C + c) * N + n;
+            //w=n, h=c, d=h, n=w
+
+            //var index = ((n * Depth + d) * Width + h) * Height + w;
+            var index = ((w * H + h) * N + c) * C + n;
             return m_tensor.Data[index];
         }
 
@@ -94,7 +97,7 @@ namespace SharpLearning.Containers.Tensors
         public void At(int n, int c, int h, int w, T value)
         {
             //var index = x + y * DimXCount + z * DimXCount * DimYCount + n * DimXCount * DimYCount * DimZCount;
-            var index = ((n * H + h) * C + c) * N + n;
+            var index = ((w * H + h) * N + c) * C + n;
             m_tensor.Data[index] = value;
         }
 

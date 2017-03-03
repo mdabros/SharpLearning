@@ -34,19 +34,19 @@
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="w"></param>
+        /// <param name="c"></param>
         /// <param name="h"></param>
-        /// <param name="d"></param>
+        /// <param name="w"></param>
         /// <returns></returns>
-        T At(int w, int h, int d);
+        T At(int c, int h, int w);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="w"></param>
+        /// <param name="c"></param>
         /// <param name="h"></param>
-        /// <param name="d"></param>
+        /// <param name="w"></param>
         /// <param name="value"></param>
-        void At(int w, int h, int d, T value);
+        void At(int c, int h, int w, T value);
     }
 }

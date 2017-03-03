@@ -1,7 +1,6 @@
-﻿using SharpLearning.Containers.Tensors;
-using SharpLearning.Containers.Views;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
@@ -31,10 +30,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var src = input.AsTensor4D();
             var dst = output.AsTensor4D();
             
-            int N = src.W; // number of items in mini batch
-            int C = src.H;
-            int H = src.C;
-            int W = src.N;
+            int N = src.N; // number of items in mini batch
+            int C = src.C;
+            int H = src.H;
+            int W = src.W;
 
             var sc = Scale.AsTensor1D();
             var bi = Scale.AsTensor1D();
@@ -46,29 +45,21 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 float mean = 0;
                 float variance = 0;
 
-                var interval = Interval1D.Create(0, W);
-                var intervalValues = new float[interval.Length];
-
                 if (isTraining)
                 {
                     for (int n = 0; n < N; ++n)
                         for (int h = 0; h < H; ++h)
-                        {
-                            src.RangeN(h, c, n, interval, intervalValues);
-                            for (int w = 0; w < W; ++w)
-                                mean += intervalValues[w];//mean += src.At(w, h, c, n);
-                        }
+                            for (int w = 0; w < W; ++w)                                
+                                mean += src.At(n, c, h, w);
 
                     mean /= W * N * H;
 
                     for (int n = 0; n < N; ++n)
                         for (int h = 0; h < H; ++h)
                         {
-                            src.RangeN(h, c, n, interval, intervalValues);
                             for (int w = 0; w < W; ++w)
                             {
-                                var m = intervalValues[w] - mean;
-                                //var m = src.At(w, h, c, n) - mean;
+                                var m = src.At(n, c, h, w) - mean;
                                 variance += m * m;
                             }
                         }
@@ -87,12 +78,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 for (int n = 0; n < N; ++n)
                     for (int h = 0; h < H; ++h)
                     {
-                        src.RangeN(h, c, n, interval, intervalValues);
                         for (int w = 0; w < W; ++w)
                         {
-                            var value = scale * (intervalValues[w] - mean) * variance + bias;
-                            //var value = scale * (src.At(w, h, c, n) - mean) * variance + bias;
-                            dst.At(w, h, c, n, value);
+                            var value = scale * (src.At(n, c, h, w) - mean) * variance + bias;
+                            dst.At(n, c, h, w, value);
                         }
                     }
                 if (isTraining)

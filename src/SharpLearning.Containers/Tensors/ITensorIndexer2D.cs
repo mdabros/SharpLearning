@@ -31,28 +31,18 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="w"></param>
         /// <param name="h"></param>
+        /// <param name="w"></param>
         /// <returns></returns>
-        T At(int w, int h);
+        T At(int h, int w);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="w"></param>
         /// <param name="h"></param>
+        /// <param name="w"></param>
         /// <param name="value"></param>
-        void At(int w, int h, T value);
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="h"></param>
-        /// <param name="interval"></param>
-        /// <param name="output"></param>
-        void RangeH(int h, Interval1D interval, T[] output);
-
+        void At(int h, int w, T value);
 
         /// <summary>
         /// 
@@ -60,6 +50,14 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="w"></param>
         /// <param name="interval"></param>
         /// <param name="output"></param>
-        void RangeW(int w, Interval1D interval, T[] output);
+        void RangeH(int w, Interval1D interval, T[] output);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="interval"></param>
+        /// <param name="output"></param>
+        void RangeW(int h, Interval1D interval, T[] output);
     }
 }
