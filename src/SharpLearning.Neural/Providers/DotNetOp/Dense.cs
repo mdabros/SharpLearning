@@ -21,20 +21,20 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Tensor<float> weights, Tensor<float> bias, 
             Tensor<float> output)
         {
-            var src = input.Indexer4D;
-            var src2D = input.Create2DIndexer(src.DimNCount, src.DimXCount * src.DimYCount * src.DimZCount);
+            var src = input.AsTensor4D();
+            var src2D = input.AsTensor2D(src.DimNCount, src.DimXCount * src.DimYCount * src.DimZCount);
 
-            var dst = output.Indexer4D;
+            var dst = output.AsTensor4D();
             
 
-            var w = weights.Indexer2D;
-            var b = bias.Indexer1D;
+            var w = weights.AsTensor2D();
+            var b = bias.AsTensor1D();
 
             int MB = src.DimNCount;
             int OC = dst.DimZCount;
             int IC = src.DimZCount;
 
-            var dst2D = output.Create2DIndexer(MB, OC);
+            var dst2D = output.AsTensor2D(MB, OC);
 
             Parallel.For(0, MB, mb =>
             //for (int mb = 0; mb < MB; ++mb)

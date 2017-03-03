@@ -7,11 +7,6 @@ namespace SharpLearning.Containers.Tensors
     /// </summary>
     public sealed class Tensor<T>
     {
-        ITensorIndexer1D<T> m_indexer1D;
-        ITensorIndexer2D<T> m_indexer2D;
-        ITensorIndexer3D<T> m_indexer3D;
-        ITensorIndexer4D<T> m_indexer4D;
-
         /// <summary>
         /// 
         /// </summary>
@@ -22,28 +17,6 @@ namespace SharpLearning.Containers.Tensors
             Shape = shape;
             Layout = layout;
             Data = new T[shape.NumberOfElements];
-
-            if(NumberOfDimensions == 1)
-            {
-                m_indexer1D = Create1DIndexer();
-            }
-            else if (NumberOfDimensions == 2)
-            {
-                m_indexer2D = Create2DIndexer();
-            }
-            else if (NumberOfDimensions == 3)
-            {
-                m_indexer3D = Create3DIndexer();
-            }
-            else if (NumberOfDimensions == 4)
-            {
-                m_indexer4D = Create4DIndexer();
-            }
-            else
-            {
-                throw new ArgumentException("Maximum dimensions is 4");
-            }
-
         }
 
         /// <summary>
@@ -91,49 +64,6 @@ namespace SharpLearning.Containers.Tensors
         /// </summary>
         public int NumberOfElements { get { return Shape.NumberOfElements; } }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public ITensorIndexer1D<T> Indexer1D
-        {
-            get
-            {
-                return m_indexer1D;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public ITensorIndexer2D<T> Indexer2D
-        {
-            get
-            {
-                return m_indexer2D;
-            }
-        } 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public ITensorIndexer3D<T> Indexer3D
-        {
-            get
-            {
-                return m_indexer3D;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public ITensorIndexer4D<T> Indexer4D
-        {
-            get
-            {
-                return m_indexer4D;
-            }
-        }
 
         /// <summary>
         /// 
@@ -145,9 +75,15 @@ namespace SharpLearning.Containers.Tensors
             return new Tensor<T>(dimensions, DataLayout.RowMajor);
         }
 
-        ITensorIndexer1D<T> Create1DIndexer()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public ITensorIndexer1D<T> AsTensor1D()
         {
-            return Create1DIndexer(Dimensions[0]);
+            return AsTensor1D(Dimensions[0]);
         }
 
         /// <summary>
@@ -155,7 +91,7 @@ namespace SharpLearning.Containers.Tensors
         /// </summary>
         /// <param name="dim"></param>
         /// <returns></returns>
-        public ITensorIndexer1D<T> Create1DIndexer(int dim)
+        public ITensorIndexer1D<T> AsTensor1D(int dim)
         {
             return new TensorIndexer1D<T>(this, dim);
         }
@@ -164,9 +100,9 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <returns></returns>
-        ITensorIndexer2D<T> Create2DIndexer()
+        public ITensorIndexer2D<T> AsTensor2D()
         {
-            return Create2DIndexer(Dimensions[0], Dimensions[1]);
+            return AsTensor2D(Dimensions[0], Dimensions[1]);
         }
 
 
@@ -174,7 +110,7 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <returns></returns>
-        public ITensorIndexer2D<T> Create2DIndexer(int dimX, int dimY)
+        public ITensorIndexer2D<T> AsTensor2D(int dimX, int dimY)
         {
             switch (Layout)
             {
@@ -187,9 +123,13 @@ namespace SharpLearning.Containers.Tensors
             }
         }
 
-        ITensorIndexer3D<T> Create3DIndexer()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ITensorIndexer3D<T> AsTensor3D()
         {
-            return Create3DIndexer(Dimensions[0], Dimensions[1], Dimensions[2]);
+            return AsTensor3D(Dimensions[0], Dimensions[1], Dimensions[2]);
         }
 
 
@@ -200,7 +140,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="dimY"></param>
         /// <param name="dimZ"></param>
         /// <returns></returns>
-        public ITensorIndexer3D<T> Create3DIndexer(int dimX, int dimY, int dimZ)
+        public ITensorIndexer3D<T> AsTensor3D(int dimX, int dimY, int dimZ)
         {
             switch (Layout)
             {
@@ -213,9 +153,13 @@ namespace SharpLearning.Containers.Tensors
             }
         }
 
-        ITensorIndexer4D<T> Create4DIndexer()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ITensorIndexer4D<T> AsTensor4D()
         {
-            return Create4DIndexer(Dimensions[0], Dimensions[1], Dimensions[2], Dimensions[3]);
+            return AsTensor4D(Dimensions[0], Dimensions[1], Dimensions[2], Dimensions[3]);
         }
 
         /// <summary>
@@ -226,7 +170,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="dimZ"></param>
         /// <param name="dimN"></param>
         /// <returns></returns>
-        public ITensorIndexer4D<T> Create4DIndexer(int dimX, int dimY, int dimZ, int dimN)
+        public ITensorIndexer4D<T> AsTensor4D(int dimX, int dimY, int dimZ, int dimN)
         {
             switch (Layout)
             {

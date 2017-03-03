@@ -28,13 +28,16 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             float[] MovingAverageMeans, float[] MovingAverageVariance,
             Tensor <float> output, bool isTraining)
         {
-            var src = input.Indexer4D;
-            var dst = output.Indexer4D;
+            var src = input.AsTensor4D();
+            var dst = output.AsTensor4D();
             
             int N = src.DimNCount; // number of items in mini batch
             int C = src.DimZCount;
             int H = src.DimYCount;
             int W = src.DimXCount;
+
+            var sc = Scale.AsTensor1D();
+            var bi = Scale.AsTensor1D();
 
             double eps = 1e-6;
 
@@ -77,8 +80,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     variance = MovingAverageVariance[c];
                 }
 
-                var scale = Scale.Indexer1D.At(c);
-                var bias = Bias.Indexer1D.At(c);
+                var scale = sc.At(c);
+                var bias = bi.At(c);
 
 
                 for (int n = 0; n < N; ++n)
