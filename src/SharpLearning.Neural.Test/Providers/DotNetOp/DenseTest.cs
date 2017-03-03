@@ -19,8 +19,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             const int width = 25;
             const int height = 25;
             const int depth = 1;
-            const int batchSize = 128;
-            const int units = 128;
+            const int batchSize = 10;
+            const int units = 800;
 
             var iterations = 10;
 
@@ -34,7 +34,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
                 width, height, depth, batchSize, units);
             Trace.WriteLine($"DotNet: {ellapsed}");
 
-            //Assert.IsFalse(true);
+            Assert.IsFalse(true);
         }
 
         double RunDotNet(int iterations, Stopwatch timer,
