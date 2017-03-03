@@ -89,11 +89,11 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dim"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
-        public ITensorIndexer1D<T> AsTensor1D(int dim)
+        public ITensorIndexer1D<T> AsTensor1D(int size)
         {
-            return new TensorIndexer1D<T>(this, dim);
+            return new TensorIndexer1D<T>(this, size);
         }
 
         /// <summary>
@@ -110,12 +110,12 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         /// <returns></returns>
-        public ITensorIndexer2D<T> AsTensor2D(int dimX, int dimY)
+        public ITensorIndexer2D<T> AsTensor2D(int width, int height)
         {
             switch (Layout)
             {
                 case DataLayout.RowMajor:
-                    return new RowMajorTensorIndexer2D<T>(this, dimX, dimY);
+                    return new RowMajorTensorIndexer2D<T>(this, width, height);
                 case DataLayout.ColumnMajor:
                     throw new NotImplementedException();
                 default:
@@ -136,16 +136,16 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dimX"></param>
-        /// <param name="dimY"></param>
-        /// <param name="dimZ"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="depth"></param>
         /// <returns></returns>
-        public ITensorIndexer3D<T> AsTensor3D(int dimX, int dimY, int dimZ)
+        public ITensorIndexer3D<T> AsTensor3D(int width, int height, int depth)
         {
             switch (Layout)
             {
                 case DataLayout.RowMajor:
-                    return new RowMajorTensorIndexer3D<T>(this, dimX, dimY, dimZ);
+                    return new RowMajorTensorIndexer3D<T>(this, width, height, depth);
                 case DataLayout.ColumnMajor:
                     throw new NotImplementedException();
                 default:
@@ -165,17 +165,17 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="dimX"></param>
-        /// <param name="dimY"></param>
-        /// <param name="dimZ"></param>
-        /// <param name="dimN"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="depth"></param>
+        /// <param name="dim4"></param>
         /// <returns></returns>
-        public ITensorIndexer4D<T> AsTensor4D(int dimX, int dimY, int dimZ, int dimN)
+        public ITensorIndexer4D<T> AsTensor4D(int width, int height, int depth, int dim4)
         {
             switch (Layout)
             {
                 case DataLayout.RowMajor:
-                    return new RowMajorTensorIndexer4D<T>(this, dimX, dimY, dimZ, dimN);
+                    return new RowMajorTensorIndexer4D<T>(this, width, height, depth, dim4);
                 case DataLayout.ColumnMajor:
                     throw new NotImplementedException();
                 default:
