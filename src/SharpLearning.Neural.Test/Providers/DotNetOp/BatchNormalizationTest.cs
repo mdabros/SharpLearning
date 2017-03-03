@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
                 width, height, depth, batchSize);
             Trace.WriteLine($"DotNet: {ellapsed}");
 
-            Assert.IsFalse(true);
+            //Assert.IsFalse(true);
         }
 
         double RunDotNetBatchNorm(int iterations, Stopwatch timer,
