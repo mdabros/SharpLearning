@@ -101,10 +101,9 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="output"></param>
         public void RangeW(int h, Interval1D interval, T[] output)
         {
-            for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
-            {
-                output[i] = At(h, i);
-            }
+            // row-major makes direct copy of rows possible.
+            var startIndex = h * W + interval.FromInclusive;
+            Array.Copy(m_tensor.Data, startIndex, output, 0, interval.ToExclusive);
         }
     }
 }
