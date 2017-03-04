@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using SharpLearning.Containers.Tensors;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
@@ -20,8 +21,16 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Tensor<float> weights, Tensor<float> bias, 
             Tensor<float> output)
         {
-            var src = input.AsTensor4D();
-            var src2D = input.AsTensor2D(src.N, src.C * src.H * src.W);
+            ITensorIndexer2D<float> src;
+            if (input.NumberOfDimensions == 4)
+            {
+                var src4d = input.AsTensor4D();
+                src = input.AsTensor2D(src4d.N, src4d.C * src4d.H * src4d.W);
+            }
+            else
+            {
+                src = input.AsTensor2D();
+            }
 
             var dst = output.AsTensor2D();
 
@@ -30,26 +39,23 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             int MB = dst.H;
             int OC = dst.W;
-            int IC = src.C;
+            int IC = src.W;
+
+            var interval = Interval1D.Create(0, IC);
 
             Parallel.For(0, MB, mb =>
             {
+                var srcValues = new float[IC];
+                var wValues = new float[IC];
+                src.RangeW(mb, interval, srcValues);
+
                 for (int oc = 0; oc < OC; ++oc)
                 {
-                    var d = Forward(src2D, dst, w, mb, oc);
+                    w.RangeW(oc, interval, wValues);
+                    var d = Utils.Dot(srcValues, wValues);
+
                     d += b.At(oc);
                     dst.At(mb, oc, d);
-
-                    //data_t* d = &dst[dst_d.off(mb, oc)];
-                    //*d = bias ? bias[bias_d.off(oc)] : data_t(0);
-                    //if (src_has_spatial)
-                    //{
-                    //    ker_has_spatial(d, mb, oc);
-                    //}
-                    //else
-                    //{
-                    //    ker_no_spatial(d, mb, oc);
-                    //}
                 }
             });
         }
@@ -58,8 +64,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             ITensorIndexer2D<float> w, int mb, int oc)
         {
             int IC = src.W;
-
             var d = 0f;
+
             for (int ic = 0; ic < IC; ++ic)
             {
                 d += src.At(mb, ic) * w.At(oc, ic);

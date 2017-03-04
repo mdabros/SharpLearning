@@ -7,6 +7,7 @@ using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Providers.DotNetOp;
 using SharpLearning.Containers.Tensors;
 using System.Linq;
+using MathNet.Numerics;
 
 namespace SharpLearning.Neural.Test.Providers.DotNetOp
 {
@@ -20,9 +21,9 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             const int height = 25;
             const int depth = 1;
             const int batchSize = 128;
-            const int units = 800;
+            const int units = 256;
 
-            var iterations = 10;
+            var iterations = 100;
 
             var timer = new Stopwatch();
             var ellapsed = RunCurrent(iterations, timer,
@@ -61,7 +62,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
         double RunCurrent(int iterations, Stopwatch timer,
             int width, int height, int depth, int batchSize, int units)
-        {           
+        {
             var sut = new DenseLayer(units);
 
             sut.Initialize(width, height, depth, batchSize, 
