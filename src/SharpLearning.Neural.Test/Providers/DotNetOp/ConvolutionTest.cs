@@ -17,12 +17,12 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         [TestMethod]
         public void ConvolutionTest_Forward_Prototype_Timing()
         {
-            const int width = 25;
-            const int height = 25;
-            const int depth = 1;
+            const int width = 32;
+            const int height = 32;
+            const int depth = 3;
             const int batchSize = 128;
 
-            int filterCount = 8;
+            int filterCount = 32;
             int filterHeight = 5;
             int filterWidth = 5;
 

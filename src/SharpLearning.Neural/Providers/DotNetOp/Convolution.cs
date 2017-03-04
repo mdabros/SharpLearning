@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Tensors;
+﻿using System.Threading.Tasks;
+using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
@@ -42,7 +43,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             int padT = padH; //top
             int padL = padW; //left
 
-            for (int mb = 0; mb < MB; ++mb)
+            Parallel.For(0, MB, mb =>
+            //for (int mb = 0; mb < MB; ++mb)
             {
                 for (int oc = 0; oc < OC; ++oc)
                 {
@@ -51,7 +53,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         for (int ow = 0; ow < OW; ++ow)
                         {
                             var d = Kernel(mb, oc, oh, ow,
-                                src, dst, weights,
+                                src, weights,
                                 filterHeight, filterWidth,
                                 strideH, strideW,
                                 padH, padW);
@@ -59,28 +61,21 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             d += bias.At(oc);
                             dst.At(mb, oc, oh, ow, d);
 
-                            //data_t & d = dst[dst_d.off(mb, g * OC + oc, oh, ow)];
-                            //d = bias ? bias[bias_d.off(g * OC + oc)] : data_t(0);
-                            //ker(d, g, mb, oc, oh, ow);
                             //if (with_relu && d < 0) d *= nslope;
                         }
                     }
                 }
-            }
+            });
         }
 
         static float Kernel(int mb, int oc, int oh, int ow, 
-            ITensorIndexer4D<float> src, ITensorIndexer4D<float> dst, ITensorIndexer4D<float> weights,
+            ITensorIndexer4D<float> src, ITensorIndexer4D<float> weights,
             int filterHeight, int filterWidth, int strideH, int strideW, int padH, int padW)
         {
 
-            int MB = src.N;
-            int OH = dst.H;
-            int OW = dst.W;
             int IH = src.H;
             int IW = src.W;
 
-            int OC = dst.C;
             int IC = src.C;
             int KH = filterHeight; //return cdesc_().weights_desc.dims[2 + with_groups()];
             int KW = filterWidth; //return cdesc_().weights_desc.dims[3 + with_groups()]
