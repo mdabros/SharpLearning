@@ -20,7 +20,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             const int width = 32;
             const int height = 32;
             const int depth = 3;
-            const int batchSize = 128;
+            const int batchSize = 32;
 
             int filterCount = 32;
             int filterHeight = 5;
@@ -32,7 +32,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             int padH = 0;
             int padW = 0;
 
-            var iterations = 100;
+            var iterations = 10;
 
             var timer = new Stopwatch();
             var ellapsed = RunCurrent(iterations, timer,

@@ -6,6 +6,7 @@ using SharpLearning.Containers.Arithmetic;
 using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.Providers.DotNetOp;
 using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics;
 
 namespace SharpLearning.Neural.Test.Providers.DotNetOp
 {

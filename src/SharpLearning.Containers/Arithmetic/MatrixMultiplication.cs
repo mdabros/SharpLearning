@@ -178,11 +178,17 @@ namespace SharpLearning.Containers.Arithmetic
 
             Parallel.For(0, aRows, i =>
             {
+                var outputRow = i * bCols;
+                var aRow = i * aCols;
+
                 for (int k = 0; k < bRows; k++)
                 {
+                    var aValue = aData[aRow+ k];
+                    var bRow = k * bCols;
+
                     for (int j = 0; j < bCols; j++)
                     {
-                        outputArray[i * bCols + j] += aData[i * aCols + k] * bData[k * bCols + j];
+                        outputArray[outputRow + j] += aValue * bData[bRow + j];
                     }
                 }
             });

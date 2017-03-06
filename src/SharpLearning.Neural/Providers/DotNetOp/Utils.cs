@@ -56,6 +56,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             return result;
         }
 
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -80,8 +82,21 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             
             Parallel.For(0, m1.H, i =>
             {
+                //var colInterval = Interval1D.Create(0, m2.W);
+                //var outValues = new float[colInterval.Length];
+                //var m2Values = new float[colInterval.Length];
+
+                //output.RangeW(i, colInterval, outValues);
+                //m2.RangeW(i, colInterval, m2Values);
+
+                //var rowInterval = Interval1D.Create(0, m1.W);
+                //var m1values = new float[rowInterval.Length];
+
+                //m1.RangeW(i, rowInterval, m1values);
+
                 for (int k = 0; k < m2.H; k++)
                 {
+                    //var m1Value = m1values[k];
                     var a = m1.At(i, k);
 
                     for (int j = 0; j < m2.W; j++)
@@ -90,8 +105,42 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         value += a * m2.At(k, j);
                         output.At(i, j, value);
                     }
+
+                    //// only works with ref arrays
+                    //InnerLoop(m2Values, m1Value, outValues);
+                    //InnerLoopSimd(m2Values, m1Value, outValues);
                 }
             });
+        }
+        
+        static void InnerLoop(float[] v, float value, float[] output)
+        {
+            for (int i = 0; i < v.Length; i++)
+            {
+                output[i] = value * v[i];
+            }
+        }
+
+
+        static void InnerLoopSimd(float[] v, float value, float[] output)
+        {
+            var simdLength = Vector<float>.Count;
+
+            var i = 0;
+            for (i = 0; i <= v.Length - simdLength; i += simdLength)
+            {
+                var va = new Vector<float>(v, i);
+                var vb = new Vector<float>(value);
+                var vr = va * vb;
+
+                var vOut = new Vector<float>(output, i);
+                (vr + vOut).CopyTo(output, i);
+            }
+
+            for (; i < v.Length; ++i)
+            {
+                output[i] = value * v[i];
+            }
         }
     }
 }
