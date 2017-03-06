@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Linq;
 
 namespace SharpLearning.Containers.Tensors
 {
     /// <summary>
     /// 
     /// </summary>
-    public sealed class Tensor<T>
+    public sealed class Tensor<T> : IEquatable<Tensor<T>>
     {
         /// <summary>
         /// 
@@ -13,10 +14,8 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="shape"></param>
         /// <param name="layout"></param>
         public Tensor(TensorShape shape, DataLayout layout)
+            : this(new T[shape.NumberOfElements], shape, layout)
         {
-            Shape = shape;
-            Layout = layout;
-            Data = new T[shape.NumberOfElements];
         }
 
         /// <summary>
@@ -27,6 +26,23 @@ namespace SharpLearning.Containers.Tensors
         public Tensor(int[] dimensions, DataLayout layout)
             : this(new TensorShape(dimensions), layout)
         {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="shape"></param>
+        /// <param name="layout"></param>
+        public Tensor(T[] data, TensorShape shape, DataLayout layout)
+        {
+            if (data == null) { throw new ArgumentNullException(nameof(data)); }
+            if (data.Length != shape.NumberOfElements)
+            { throw new ArgumentNullException($"data length: {data.Length} does not match shape size: {shape.NumberOfElements}"); }
+            
+            Shape = shape;
+            Layout = layout;
+            Data = data;
         }
 
         /// <summary>
@@ -73,6 +89,17 @@ namespace SharpLearning.Containers.Tensors
         public static Tensor<T> CreateRowMajor(params int[] dimensions)
         {
             return new Tensor<T>(dimensions, DataLayout.RowMajor);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="dimensions"></param>
+        /// <returns></returns>
+        public static Tensor<T> CreateRowMajor(T[] data, params int[] dimensions)
+        {
+            return new Tensor<T>(data, new TensorShape(dimensions), DataLayout.RowMajor);
         }
 
         /// <summary>
@@ -180,6 +207,51 @@ namespace SharpLearning.Containers.Tensors
                     throw new NotImplementedException();
                 default:
                     throw new NotImplementedException("Unknown DataLayout: " + Layout);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Tensor<T> other)
+        {
+            if (this.Shape != other.Shape) { return false; }
+            if (!this.Data.SequenceEqual(other.Data)) { return false; }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            Tensor<T> other = obj as Tensor<T>;
+            if (other != null && Equals(other))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + Data.GetHashCode();
+                hash = hash * 23 + Shape.GetHashCode();
+
+                return hash;
             }
         }
     }

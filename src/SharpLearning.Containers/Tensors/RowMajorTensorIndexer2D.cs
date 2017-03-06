@@ -6,7 +6,9 @@ namespace SharpLearning.Containers.Tensors
     /// <summary>
     /// 
     /// </summary>
-    public sealed class RowMajorTensorIndexer2D<T> : ITensorIndexer2D<T>
+    public sealed class RowMajorTensorIndexer2D<T> 
+        : ITensorIndexer2D<T>
+        , IEquatable<RowMajorTensorIndexer2D<T>>
     {
         Tensor<T> m_tensor;
 
@@ -104,6 +106,50 @@ namespace SharpLearning.Containers.Tensors
             // row-major makes direct copy of rows possible.
             var startIndex = h * W + interval.FromInclusive;
             Array.Copy(m_tensor.Data, startIndex, output, 0, interval.ToExclusive);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(RowMajorTensorIndexer2D<T> other)
+        {
+            if (!this.m_tensor.Equals(other.m_tensor)) { return false; }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            RowMajorTensorIndexer2D<T> other = obj as RowMajorTensorIndexer2D<T>;
+            if (other != null && Equals(other))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked // Overflow is fine, just wrap
+            {
+                int hash = 17;
+                hash = hash * 23 + m_tensor.GetHashCode();
+                hash = hash * 23 + Shape.GetHashCode();
+
+                return hash;
+            }
         }
     }
 }
