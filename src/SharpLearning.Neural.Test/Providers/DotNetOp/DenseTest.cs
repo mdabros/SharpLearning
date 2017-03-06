@@ -50,6 +50,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
             var output = Tensor<float>.CreateRowMajor(batchSize, fanOut);
 
+            Dense.Forward(input, weights, bias, output);
+
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
@@ -70,6 +72,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             var fanIn = width * height * depth;
             var input = Matrix<float>.Build.Dense(batchSize, fanIn);
+
+            sut.Forward(input);
 
             for (int i = 0; i < iterations; i++)
             {
