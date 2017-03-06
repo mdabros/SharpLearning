@@ -57,6 +57,39 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <param name="tOut"></param>
+        public static void Multiply_MathNet(Tensor<float> t1, Tensor<float> t2, Tensor<float> tOut)
+        {
+            if (t1.NumberOfDimensions != 2 || t2.NumberOfDimensions != 2 || tOut.NumberOfDimensions != 2)
+            { throw new ArgumentException($"Only 2-dim tensors is supported"); }
+
+            if (t1.Dimensions[1] != t2.Dimensions[0])
+            { throw new ArgumentException($"matrix a cols: differs from matrix b rows: "); }
+
+
+            if (tOut.Dimensions[0] != t1.Dimensions[0])
+            {
+                throw new ArgumentException($"output matrix rows: differs from matrix a rows: " );
+            }
+
+            if (tOut.Dimensions[1] != t2.Dimensions[1])
+            {
+                throw new ArgumentException($"output matrix rows: differs from matrix b cols: ");
+            }
+
+            var m1 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(t1.Dimensions[0], t1.Dimensions[1], t1.Data);
+            var m2 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(t2.Dimensions[0], t2.Dimensions[1], t2.Data);
+            var mOut = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOut.Dimensions[0], tOut.Dimensions[1], tOut.Data);
+
+            m1.Multiply(m2, mOut);
+        }
+
+
 
         /// <summary>
         /// 

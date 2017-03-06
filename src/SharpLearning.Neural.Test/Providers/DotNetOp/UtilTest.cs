@@ -44,6 +44,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             Matrix(elements, iterations, timer);
 
             MathNet_MKL(elements, iterations, timer);
+
+            Tensor_Mathnet_MKL(elements, iterations, timer);
         }
 
         private static void MathNet_MKL(int elements, int iterations, Stopwatch timer)
@@ -52,6 +54,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var m1 = Matrix<float>.Build.Dense(elements, elements);
             var m2 = Matrix<float>.Build.Dense(elements, elements);
             var mOut = Matrix<float>.Build.Dense(elements, elements);
+
+            m1.Multiply(m2, mOut);
 
             for (int i = 0; i < iterations; i++)
             {
@@ -70,6 +74,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var m1 = new F64Matrix(elements, elements);
             var m2 = new F64Matrix(elements, elements);
             var mOut = new F64Matrix(elements, elements);
+
+            MatrixMultiplication.MultiplyF64(m1, m2, mOut);
 
             for (int i = 0; i < iterations; i++)
             {
@@ -91,6 +97,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var tOut = Tensor<float>.CreateRowMajor(elements, elements)
                 .AsTensor2D();
 
+            Utils.Multiply(t1, t2, tOut);
+
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
@@ -99,6 +107,25 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             }
 
             Trace.WriteLine($"Tensor: " + timer.ElapsedMilliseconds);
+        }
+
+        private static void Tensor_Mathnet_MKL(int elements, int iterations, Stopwatch timer)
+        {
+            timer.Reset();
+            var t1 = Tensor<float>.CreateRowMajor(elements, elements);
+            var t2 = Tensor<float>.CreateRowMajor(elements, elements);
+            var tOut = Tensor<float>.CreateRowMajor(elements, elements);
+
+            Utils.Multiply_MathNet(t1, t2, tOut);
+
+            for (int i = 0; i < iterations; i++)
+            {
+                timer.Start();
+                Utils.Multiply_MathNet(t1, t2, tOut);
+                timer.Stop();
+            }
+
+            Trace.WriteLine($"Tensor Math.et MKL: " + timer.ElapsedMilliseconds);
         }
     }
 }
