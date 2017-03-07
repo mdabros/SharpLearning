@@ -27,42 +27,65 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             float[] MovingAverageMeans, float[] MovingAverageVariance,
             Tensor <float> output, bool isTraining)
         {
-            var src = input.AsTensor4D();
-            var dst = output.AsTensor4D();
-            
-            int N = src.N; // number of items in mini batch
-            int C = src.C;
-            int H = src.H;
-            int W = src.W;
+            if(input.NumberOfDimensions != 4 || output.NumberOfDimensions != 4)
+            {
+                throw new ArgumentException("Expected 4-dimensional input and output");
+            }
 
-            var sc = Scale.AsTensor1D();
-            var bi = Scale.AsTensor1D();
+            var src = input;
+            var dst = output;
+            
+            int N = src.Dimensions[0]; // number of items in mini batch
+            int C = src.Dimensions[1];
+            int H = src.Dimensions[2];
+            int W = src.Dimensions[3];
+
+            var sc = Scale.Data;
+            var bi = Bias.Data;
 
             double eps = 1e-6;
+
+            var srcData = src.Data;
+            var dstData = dst.Data;
 
             Parallel.For(0, C, c =>
             {
                 float mean = 0;
                 float variance = 0;
 
+                var srcCoffSet = src.DimensionOffSets[1] * c;
+
                 if (isTraining)
                 {
                     for (int n = 0; n < N; ++n)
+                    {
+                        var srcBOffSet = src.DimensionOffSets[0] * n;
                         for (int h = 0; h < H; ++h)
-                            for (int w = 0; w < W; ++w)                                
-                                mean += src.At(n, c, h, w);
-
+                        {
+                            var srcHOffSet = src.DimensionOffSets[2] * h;
+                            for (int w = 0; w < W; ++w)
+                            {
+                                var srcIndex = srcBOffSet + srcCoffSet + srcHOffSet + w;
+                                mean += srcData[srcIndex];
+                            }
+                        }
+                    }
                     mean /= W * N * H;
 
                     for (int n = 0; n < N; ++n)
+                    {
+                        var srcBOffSet = src.DimensionOffSets[0] * n;
                         for (int h = 0; h < H; ++h)
                         {
+                            var srcHOffSet = src.DimensionOffSets[2] * h;
                             for (int w = 0; w < W; ++w)
                             {
-                                var m = src.At(n, c, h, w) - mean;
+                                var srcIndex = srcBOffSet + srcCoffSet + srcHOffSet + w;
+                                var m = srcData[srcIndex] - mean;
                                 variance += m * m;
                             }
                         }
+                    }
                     variance = 1f / (float)Math.Sqrt(variance / (W * H * N) + eps);
                 }
                 else
@@ -71,19 +94,23 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     variance = MovingAverageVariance[c];
                 }
 
-                var scale = sc.At(c);
-                var bias = bi.At(c);
+                var scale = sc[c];
+                var bias = bi[c];
 
 
                 for (int n = 0; n < N; ++n)
+                {
+                    var bOffSet = src.DimensionOffSets[0] * n;
                     for (int h = 0; h < H; ++h)
                     {
+                        var hOffSet = src.DimensionOffSets[2] * h;
                         for (int w = 0; w < W; ++w)
                         {
-                            var value = scale * (src.At(n, c, h, w) - mean) * variance + bias;
-                            dst.At(n, c, h, w, value);
+                            var index = bOffSet + srcCoffSet + hOffSet + w;
+                            dstData[index] = scale * (srcData[index] - mean) * variance + bias;
                         }
                     }
+                }
                 if (isTraining)
                 {
                     MovingAverageMeans[c] = MovingAverage(MovingAverageMeans[c], mean);
