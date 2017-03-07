@@ -13,15 +13,13 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// 
         /// </summary>
         public static void Forward(Tensor<float> input,
-            Tensor<float> weights2, Tensor<float> bias2,
+            Tensor<float> weights, Tensor<float> bias,
             int filterCount, int filterHeight, int filterWidth,
             int strideH, int strideW,
             int padH, int padW,
             Tensor<float> output)
         {
             var src = input;
-            var weights = weights2;
-            var bias = bias2;
             var dst = output;
 
             //const bool with_groups = false;//conf_.with_groups();
