@@ -32,7 +32,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             for (; i < v1.Length; ++i)
             {
-                result = v1[i] * v2[i];
+                result += v1[i] * v2[i];
             }
 
             return result;
