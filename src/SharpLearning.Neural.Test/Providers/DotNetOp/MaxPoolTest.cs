@@ -15,13 +15,46 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
     public class MaxPoolTest
     {
         [TestMethod]
+        public void MaxPool_Forward()
+        {
+            const int inputWidth = 4;
+            const int inputHeight = 4;
+            const int inputDepth = 2;
+
+            const int batchSize = 1;
+            const int stride = 2;
+            const int pad = 0;
+
+            // Create layer
+            const int poolWidth = 2;
+            const int poolHeight = 2;
+
+            var outputC = inputDepth;
+            var outputW = ConvUtils.GetFilterGridLength(inputWidth, poolWidth, stride, pad, BorderMode.Undefined);
+            var outputH = ConvUtils.GetFilterGridLength(inputHeight, poolHeight, stride, pad, BorderMode.Undefined);
+
+            // store switches for x,y coordinates for where the max comes from, for each output neuron
+            var switchx = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
+            var switchy = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
+
+            var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
+            var input = Tensor<float>.CreateRowMajor(inputData, batchSize, inputDepth, inputHeight, inputWidth);
+            var output = Tensor<float>.CreateRowMajor(batchSize, outputC, outputH, outputW);
+
+            MaxPool.Forward(input, poolHeight, poolWidth,
+                stride, stride, pad, pad, switchx, switchy, output);
+
+            var expected = Tensor<float>.CreateRowMajor(new float[] { 3, 6, 8, 10, 8, 5, 10, 12 }, batchSize, outputC, outputH, outputW);
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
         public void MaxPoolTest_Forward_Prototype_Timing()
         {
             const int width = 32;
             const int height = 32;
-            const int depth = 3;
+            const int depth = 64;
             const int batchSize = 128;
-            const int units = 256;
 
             int poolHeight = 2;
             int poolWidth = 2;
@@ -68,19 +101,20 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var fanIn = width * depth * height;
             var fanOut = outputC * outputW * outputH;
 
-            var switches = new int[batchSize * fanIn];
+            var switchx = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
+            var switchy = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
 
             var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
             var output = Tensor<float>.CreateRowMajor(batchSize, outputC, outputH, outputW);
             
             MaxPool.Forward(input, poolHeight, poolWidth, 
-                strideH, strideW, padH, padW, switches, output);
+                strideH, strideW, padH, padW, switchx, switchy, output);
 
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
                 MaxPool.Forward(input, poolHeight, poolWidth,
-                    strideH, strideW, padH, padW, switches, output);
+                    strideH, strideW, padH, padW, switchx, switchy, output);
                 timer.Stop();
             }
 
