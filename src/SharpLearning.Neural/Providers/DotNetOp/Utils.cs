@@ -97,51 +97,52 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="m1"></param>
         /// <param name="m2"></param>
         /// <param name="output"></param>
-        public static void Multiply(ITensorIndexer2D<float> m1, ITensorIndexer2D<float> m2, ITensorIndexer2D<float> output)
+        public static void Multiply(Tensor<float> m1, Tensor<float> m2, Tensor<float> output)
         {
-            if (m1.W != m2.H)
-            { throw new ArgumentException($"matrix a cols: {m1.W} differs from matrix b rows: {m2.H}"); }
+            if(m1.NumberOfDimensions != 2 || m2.NumberOfDimensions != 2 || output.NumberOfDimensions != 2)
+            { throw new ArgumentException("Only 2-dimensional tensors are supported. "); }
+
+            var m1data = m1.Data;
+            var m2daa = m2.Data;
+            var outData = output.Data;
+
+            var m1H = m1.Dimensions[0];
+            var m1W = m1.Dimensions[1];
+
+            var m2H = m2.Dimensions[0];
+            var m2W = m2.Dimensions[1];
+
+            var outH = output.Dimensions[0];
+            var outW = output.Dimensions[1];
+
+            if (m1W != m2H)
+            { throw new ArgumentException($"matrix a cols: {m1W} differs from matrix b rows: {m2H}"); }
 
 
-            if (output.H != m1.H)
+            if (outH != m1H)
             {
-                throw new ArgumentException($"output matrix rows: {output.H} differs from matrix a rows: " + m1.H);
+                throw new ArgumentException($"output matrix rows: {outH} differs from matrix a rows: " + m1H);
             }
 
-            if (output.W != m2.W)
+            if (outW != m2W)
             {
-                throw new ArgumentException($"output matrix rows: {output.W} differs from matrix b cols: {m2.W}");
+                throw new ArgumentException($"output matrix rows: {outW} differs from matrix b cols: {m2W}");
             }
-            
-            Parallel.For(0, m1.H, i =>
+
+            Parallel.For(0, m1H, i =>
             {
-                //var colInterval = Interval1D.Create(0, m2.W);
-                //var outValues = new float[colInterval.Length];
-                //var m2Values = new float[colInterval.Length];
+                var m1OffSet = m1W * i;
+                var outOffSet = outW * i;
 
-                //output.RangeW(i, colInterval, outValues);
-                //m2.RangeW(i, colInterval, m2Values);
-
-                //var rowInterval = Interval1D.Create(0, m1.W);
-                //var m1values = new float[rowInterval.Length];
-
-                //m1.RangeW(i, rowInterval, m1values);
-
-                for (int k = 0; k < m2.H; k++)
+                for (int k = 0; k < m2H; k++)
                 {
-                    //var m1Value = m1values[k];
-                    var a = m1.At(i, k);
+                    var a = m1data[m1OffSet + k];
+                    var m2OffSet = m2W * k;
 
-                    for (int j = 0; j < m2.W; j++)
+                    for (int j = 0; j < m2W; j++)
                     {
-                        var value = output.At(i, j);
-                        value += a * m2.At(k, j);
-                        output.At(i, j, value);
+                        outData[outOffSet + j] += a * m2daa[m2OffSet + j];
                     }
-
-                    //// only works with ref arrays
-                    //InnerLoop(m2Values, m1Value, outValues);
-                    //InnerLoopSimd(m2Values, m1Value, outValues);
                 }
             });
         }

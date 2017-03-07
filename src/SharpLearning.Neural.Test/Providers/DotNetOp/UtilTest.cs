@@ -16,18 +16,14 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         [TestMethod]
         public void Util_Multiply()
         {
-            var a = Tensor<float>.CreateRowMajor(new float[] { 1, 2, 3, 4, 5, 6 }, 2, 3)
-                .AsTensor2D();
-            var b = Tensor<float>.CreateRowMajor(new float[] { 7, 8, 9, 10, 11, 12 }, 3, 2)
-                .AsTensor2D();
+            var a = Tensor<float>.CreateRowMajor(new float[] { 1, 2, 3, 4, 5, 6 }, 2, 3);
+            var b = Tensor<float>.CreateRowMajor(new float[] { 7, 8, 9, 10, 11, 12 }, 3, 2);
 
-            var actual = Tensor<float>.CreateRowMajor(a.H, b.W)
-                .AsTensor2D();
+            var actual = Tensor<float>.CreateRowMajor(a.Dimensions[0], b.Dimensions[1]);
 
             Utils.Multiply(a, b, actual);
 
-            var expected = Tensor<float>.CreateRowMajor(new float[] { 58, 64, 139, 154 }, 2, 2)
-                .AsTensor2D();
+            var expected = Tensor<float>.CreateRowMajor(new float[] { 58, 64, 139, 154 }, 2, 2);
 
             Assert.AreEqual(expected, actual);
         }
@@ -90,12 +86,9 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         private static void Tensor(int elements, int iterations, Stopwatch timer)
         {
             timer.Reset();
-            var t1 = Tensor<float>.CreateRowMajor(elements, elements)
-                .AsTensor2D();
-            var t2 = Tensor<float>.CreateRowMajor(elements, elements)
-                .AsTensor2D();
-            var tOut = Tensor<float>.CreateRowMajor(elements, elements)
-                .AsTensor2D();
+            var t1 = Tensor<float>.CreateRowMajor(elements, elements);
+            var t2 = Tensor<float>.CreateRowMajor(elements, elements);
+            var tOut = Tensor<float>.CreateRowMajor(elements, elements);
 
             Utils.Multiply(t1, t2, tOut);
 
