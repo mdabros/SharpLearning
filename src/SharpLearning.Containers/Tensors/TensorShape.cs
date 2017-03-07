@@ -25,7 +25,7 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public int NumberOfElements { get { return Elements(); } }
+        public int ElementCount { get { return Elements(); } }
 
         /// <summary>
         /// 

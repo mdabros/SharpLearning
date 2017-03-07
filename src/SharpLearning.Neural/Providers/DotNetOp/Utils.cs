@@ -65,7 +65,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="tOut"></param>
         public static void Multiply_MathNet(Tensor<float> t1, Tensor<float> t2, Tensor<float> tOut)
         {
-            if (t1.NumberOfDimensions != 2 || t2.NumberOfDimensions != 2 || tOut.NumberOfDimensions != 2)
+            if (t1.DimensionCount != 2 || t2.DimensionCount != 2 || tOut.DimensionCount != 2)
             { throw new ArgumentException($"Only 2-dim tensors is supported"); }
 
             if (t1.Dimensions[1] != t2.Dimensions[0])
@@ -99,7 +99,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="output"></param>
         public static void Multiply(Tensor<float> m1, Tensor<float> m2, Tensor<float> output)
         {
-            if(m1.NumberOfDimensions != 2 || m2.NumberOfDimensions != 2 || output.NumberOfDimensions != 2)
+            if(m1.DimensionCount != 2 || m2.DimensionCount != 2 || output.DimensionCount != 2)
             { throw new ArgumentException("Only 2-dimensional tensors are supported. "); }
 
             var m1data = m1.Data;

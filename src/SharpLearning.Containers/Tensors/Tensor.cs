@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers.Tensors
 {
@@ -14,7 +15,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="shape"></param>
         /// <param name="layout"></param>
         public Tensor(TensorShape shape, DataLayout layout)
-            : this(new T[shape.NumberOfElements], shape, layout)
+            : this(new T[shape.ElementCount], shape, layout)
         {
         }
 
@@ -37,8 +38,8 @@ namespace SharpLearning.Containers.Tensors
         public Tensor(T[] data, TensorShape shape, DataLayout layout)
         {
             if (data == null) { throw new ArgumentNullException(nameof(data)); }
-            if (data.Length != shape.NumberOfElements)
-            { throw new ArgumentNullException($"data length: {data.Length} does not match shape size: {shape.NumberOfElements}"); }
+            if (data.Length != shape.ElementCount)
+            { throw new ArgumentNullException($"data length: {data.Length} does not match shape size: {shape.ElementCount}"); }
             
             Shape = shape;
             Layout = layout;
@@ -84,13 +85,45 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public int NumberOfDimensions { get { return Shape.Dimensions.Length; } }
+        public int DimensionCount { get { return Shape.Dimensions.Length; } }
 
         /// <summary>
         /// 
         /// </summary>
-        public int NumberOfElements { get { return Shape.NumberOfElements; } }
+        public int ElementCount { get { return Shape.ElementCount; } }
 
+        /// <summary>
+        /// Returns a slice of the tensor specified by the interval.
+        /// values are copied.
+        /// </summary>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public Tensor<T> Slice(Interval1D interval)
+        {
+            // only works for first dimension currently.
+            int dimension = 0;
+
+            if (dimension >= Dimensions.Length)
+            {
+                throw new ArgumentException($"Dimension: {dimension} is larger than dimension count: {DimensionCount}");
+            }
+                        
+            var sliceShape = new TensorShape(Dimensions.Skip(dimension).ToArray());
+            var sliceMaxElementCount = Dimensions.Skip(dimension).Aggregate((x, y) => x * y);
+
+            if (sliceShape.ElementCount > sliceMaxElementCount)
+            {
+                throw new ArgumentException("Slice elementCount larger than availible elemens in tensor for this dimension");
+            }
+
+            var sliceData = new T[sliceShape.ElementCount];
+            var startIndex = interval.FromInclusive * DimensionOffSets[0];
+            var length = interval.Length * DimensionOffSets[0];
+
+            Array.Copy(Data, startIndex, sliceData, 0, length);
+
+            return new Tensor<T>(sliceData, sliceShape, DataLayout.RowMajor);
+        }
 
         /// <summary>
         /// 

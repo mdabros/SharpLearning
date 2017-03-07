@@ -27,7 +27,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             float[] MovingAverageMeans, float[] MovingAverageVariance,
             Tensor <float> output, bool isTraining)
         {
-            if(input.NumberOfDimensions != 4 || output.NumberOfDimensions != 4)
+            if(input.DimensionCount != 4 || output.DimensionCount != 4)
             {
                 throw new ArgumentException("Expected 4-dimensional input and output");
             }

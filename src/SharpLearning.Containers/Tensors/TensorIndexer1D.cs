@@ -46,6 +46,6 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public int NumberOfElements { get { return Shape.NumberOfElements; } }
+        public int NumberOfElements { get { return Shape.ElementCount; } }
     }
 }
