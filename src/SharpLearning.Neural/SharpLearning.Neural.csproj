@@ -103,6 +103,7 @@
     <Compile Include="Providers\DotNetOp\BatchNormalization.cs" />
     <Compile Include="Providers\DotNetOp\Convolution.cs" />
     <Compile Include="Providers\DotNetOp\Dense.cs" />
+    <Compile Include="Providers\DotNetOp\MaxPool.cs" />
     <Compile Include="Providers\DotNetOp\Utils.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />

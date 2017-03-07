@@ -103,6 +103,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Providers\DotNetOp\ConvolutionTest.cs" />
+    <Compile Include="Providers\DotNetOp\MaxPoolTest.cs" />
     <Compile Include="Providers\DotNetOp\DenseTest.cs" />
     <Compile Include="Providers\DotNetOp\BatchNormalizationTest.cs" />
     <Compile Include="Providers\DotNetOp\UtilTest.cs" />
