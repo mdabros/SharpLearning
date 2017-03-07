@@ -43,6 +43,12 @@ namespace SharpLearning.Containers.Tensors
             Shape = shape;
             Layout = layout;
             Data = data;
+
+            DimensionOffSets = new int[Dimensions.Length - 1];
+            for (int i = 0; i < Dimensions.Length - 1; i++)
+            {
+                DimensionOffSets[i] = Dimensions.Skip(i + 1).Aggregate((x, y) => x * y);
+            }
         }
 
         /// <summary>
@@ -69,6 +75,11 @@ namespace SharpLearning.Containers.Tensors
         /// 
         /// </summary>
         public int[] Dimensions { get { return Shape.Dimensions; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int[] DimensionOffSets { get;  }
 
         /// <summary>
         /// 

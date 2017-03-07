@@ -97,6 +97,12 @@ namespace SharpLearning.Containers.Tensors
         public void At(int n, int c, int h, int w, T value)
         {
             //var index = x + y * DimXCount + z * DimXCount * DimYCount + n * DimXCount * DimYCount * DimZCount;
+
+            // width offset = x
+            // height offset: y * DimXCount
+            // chan offset:  z * DimXCount * DimYCount
+            // batch off set: n * DimXCount * DimYCount * DimZCount;
+
             var index = ((w * H + h) * N + c) * C + n;
             m_tensor.Data[index] = value;
         }
