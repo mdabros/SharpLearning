@@ -93,12 +93,22 @@ namespace SharpLearning.Containers.Tensors
         public int ElementCount { get { return Shape.ElementCount; } }
 
         /// <summary>
-        /// Returns a slice of the tensor specified by the interval.
-        /// values are copied.
+        /// 
         /// </summary>
         /// <param name="interval"></param>
         /// <returns></returns>
         public Tensor<T> Slice(Interval1D interval)
+        {
+            return Slice(interval.FromInclusive, interval.Length);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fromInclusive"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public Tensor<T> Slice(int fromInclusive, int length=1)
         {
             // only works for first dimension currently.
             int dimension = 0;
@@ -108,8 +118,8 @@ namespace SharpLearning.Containers.Tensors
                 throw new ArgumentException($"Dimension: {dimension} is larger than dimension count: {DimensionCount}");
             }
                         
-            var sliceShape = new TensorShape(Dimensions.Skip(dimension).ToArray());
-            var sliceMaxElementCount = Dimensions.Skip(dimension).Aggregate((x, y) => x * y);
+            var sliceShape = new TensorShape(Dimensions.Skip(1).ToArray());
+            var sliceMaxElementCount = Dimensions.Skip(1).Aggregate((x, y) => x * y);
 
             if (sliceShape.ElementCount > sliceMaxElementCount)
             {
@@ -117,10 +127,10 @@ namespace SharpLearning.Containers.Tensors
             }
 
             var sliceData = new T[sliceShape.ElementCount];
-            var startIndex = interval.FromInclusive * DimensionOffSets[0];
-            var length = interval.Length * DimensionOffSets[0];
+            var startIndex = fromInclusive * DimensionOffSets[0];
+            var copyLength = length * DimensionOffSets[0];
 
-            Array.Copy(Data, startIndex, sliceData, 0, length);
+            Array.Copy(Data, startIndex, sliceData, 0, copyLength);
 
             return new Tensor<T>(sliceData, sliceShape, DataLayout.RowMajor);
         }
