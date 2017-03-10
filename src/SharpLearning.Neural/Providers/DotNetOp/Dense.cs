@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using SharpLearning.Containers.Tensors;
-using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {

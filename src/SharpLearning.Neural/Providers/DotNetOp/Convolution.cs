@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Numerics;
 using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
@@ -110,16 +111,63 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                     var srcHOffSet = srcCOffSet + src.DimensionOffSets[2] * ih;
                     var wHOffSet = wCOffSet + weights.DimensionOffSets[2] * kh;
-                    for (int kw = 0; kw < KW; ++kw)
-                    {                       
-                        int iw = ow * KSW - padL + kw;                       
-                        if (iw < 0 || iw >= IW) continue;
 
-                        result += srcData[srcHOffSet + iw] * wData[wHOffSet + kw];
-                        //result += src.At(mb, ic, ih, iw)
-                        //    * weights.At(oc, ic, kh, kw);
+                    if(Vector.IsHardwareAccelerated)
+                    {
+                        result = InnerLoopSimd(ow, IW, KW, KSW, padL,
+                            srcData, wData, srcHOffSet, wHOffSet);
+
+                    }
+                    else
+                    {
+                        result = InnerLoop(ow, IW, KW, KSW, padL,
+                            srcData, wData, srcHOffSet, wHOffSet);
+
                     }
                 }
+            }
+
+            return result;
+        }
+
+        static float InnerLoop(int ow, int IW, int KW, int KSW, int padL, float[] srcData, float[] wData, int srcHOffSet, int wHOffSet)
+        {
+            var result = 0f;
+            for (int kw = 0; kw < KW; ++kw)
+            {
+                int iw = ow * KSW - padL + kw;
+                if (iw < 0 || iw >= IW) continue;
+
+                result += srcData[srcHOffSet + iw] * wData[wHOffSet + kw];
+                //result += src.At(mb, ic, ih, iw)
+                //    * weights.At(oc, ic, kh, kw);
+            }
+
+            return result;
+        }
+
+        static float InnerLoopSimd(int ow, int IW, int KW, int KSW, int padL, float[] srcData, float[] wData, int srcHOffSet, int wHOffSet)
+        {
+            var simdLength = Vector<float>.Count;
+            var kw = 0;
+
+            var result = 0f;
+
+            for (kw = 0; kw <= KW - simdLength; kw += simdLength)
+            {
+                //if (iw < 0 || iw >= IW) continue; issue
+
+                var vSrc = new Vector<float>(srcData, srcHOffSet);
+                var vW = new Vector<float>(wData, wHOffSet);
+                result += Vector.Dot(vSrc, vW);
+            }
+
+            for (; kw < KW; ++kw)
+            {
+                int iw = ow * KSW - padL + kw;
+                if (iw < 0 || iw >= IW) continue;
+
+                result += srcData[srcHOffSet + iw] * wData[wHOffSet + kw];
             }
 
             return result;
