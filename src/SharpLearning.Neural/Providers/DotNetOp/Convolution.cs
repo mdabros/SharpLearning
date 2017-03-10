@@ -130,7 +130,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             return result;
         }
 
-        static float InnerLoop(int ow, int IW, int KW, int KSW, int padL, float[] srcData, float[] wData, int srcHOffSet, int wHOffSet)
+        static float InnerLoop(int ow, int IW, int KW, int KSW, int padL, 
+            float[] srcData, float[] wData, int srcHOffSet, int wHOffSet)
         {
             var result = 0f;
             for (int kw = 0; kw < KW; ++kw)
@@ -146,7 +147,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             return result;
         }
 
-        static float InnerLoopSimd(int ow, int IW, int KW, int KSW, int padL, float[] srcData, float[] wData, int srcHOffSet, int wHOffSet)
+        static float InnerLoopSimd(int ow, int IW, int KW, int KSW, int padL, 
+            float[] srcData, float[] wData, int srcHOffSet, int wHOffSet)
         {
             var simdLength = Vector<float>.Count;
             var kw = 0;
@@ -155,10 +157,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             for (kw = 0; kw <= KW - simdLength; kw += simdLength)
             {
+                int iw = ow * KSW - padL + kw;
                 //if (iw < 0 || iw >= IW) continue; issue
 
-                var vSrc = new Vector<float>(srcData, srcHOffSet);
-                var vW = new Vector<float>(wData, wHOffSet);
+                var vSrc = new Vector<float>(srcData, srcHOffSet + iw);
+                var vW = new Vector<float>(wData, wHOffSet + kw);
                 result += Vector.Dot(vSrc, vW);
             }
 

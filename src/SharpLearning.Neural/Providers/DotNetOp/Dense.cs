@@ -89,8 +89,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             for (ic = 0; ic <= IC - simdLength; ic += simdLength)
             {
-                var vSrc = new Vector<float>(srcData, srcBOffSet);
-                var vW = new Vector<float>(wData, wCOffSet);
+                var vSrc = new Vector<float>(srcData, srcBOffSet + ic);
+                var vW = new Vector<float>(wData, wCOffSet + ic);
                 d += Vector.Dot(vSrc, vW);
             }
 
