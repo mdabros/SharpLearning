@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using SharpLearning.Containers.Tensors;
@@ -11,7 +13,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
     /// </summary>
     public static class Dense
     {
-
         /// <summary>
         /// 
         /// </summary>
@@ -63,8 +64,15 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 {
                     var wCOffSet = w.DimensionOffSets[0] * oc;
 
-                    //float d = InnerLoopSimd(IC, srcData, wData, srcBOffSet, wCOffSet);
-                    float d = InnerLoop(IC, srcData, wData, srcBOffSet, wCOffSet);
+                    float d = 0.0f;
+                    if(Vector.IsHardwareAccelerated)
+                    {
+                        d = InnerLoopSimd(IC, srcData, wData, srcBOffSet, wCOffSet);
+                    }
+                    else
+                    {
+                        d = InnerLoop(IC, srcData, wData, srcBOffSet, wCOffSet);
+                    }
 
                     // add bias
                     d += bData[oc];
