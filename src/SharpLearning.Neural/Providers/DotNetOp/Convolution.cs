@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System;
 using System.Numerics;
+using System.Threading.Tasks;
 using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
@@ -8,16 +8,59 @@ namespace SharpLearning.Neural.Providers.DotNetOp
     /// <summary>
     /// 
     /// </summary>
-    public static class Convolution
+    public class Convolution
     {
+        readonly int m_filterCount;
+        readonly int m_filterH;
+        readonly int m_filterW;
+        readonly int m_strideH;
+        readonly int m_strideW;
+        readonly int m_padH;
+        readonly int m_padW;
+
         /// <summary>
         /// 
         /// </summary>
-        public static void Forward(Tensor<float> input,
+        /// <param name="filterCount">Number of filters</param>
+        /// <param name="filterH">The height of each filter</param>
+        /// <param name="filterW">The width of each filter</param>
+        /// <param name="strideH">The vertical stride of the filter</param>
+        /// <param name="strideW">The horizontal stride of the filter</param>
+        /// <param name="padH">Zero padding at the top and bottom</param>
+        /// <param name="padW">Zero padding to the left and right</param>
+        public Convolution(int filterCount, int filterH, int filterW, 
+            int strideH, int strideW, 
+            int padH, int padW)
+        {
+            if (filterCount < 1)
+            { throw new ArgumentException($"filterCount must be at least 1, was {filterCount}"); }
+            if (filterH < 1)
+            { throw new ArgumentException($"filterH must be at least 1, was {filterH}"); }
+            if (filterW < 1)
+            { throw new ArgumentException($"filterW must be at least 1, was {filterW}"); }
+            if (strideH < 1)
+            { throw new ArgumentException($"strideH must be at least 1, was {strideH}"); }
+            if (strideW < 1)
+            { throw new ArgumentException($"strideW must be at least 1, was {strideW}"); }
+            if (padH < 0)
+            { throw new ArgumentException($"padH must be at least 0, was {padH}"); }
+            if (padW < 0)
+            { throw new ArgumentException($"padW must be at least 0, was {padW}"); }
+
+            m_filterCount = filterCount;
+            m_filterH = filterH;
+            m_filterW = filterW;
+            m_strideH = strideH;
+            m_strideW = strideW;
+            m_padH = padH;
+            m_padW = padW;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Forward(Tensor<float> input,
             Tensor<float> weights, Tensor<float> bias,
-            int filterCount, int filterHeight, int filterWidth,
-            int strideH, int strideW,
-            int padH, int padW,
             Tensor<float> output)
         {
             var src = input;
@@ -33,14 +76,14 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             int OC = dst.Dimensions[1];
             int IC = src.Dimensions[1];
-            int KH = filterHeight; //return cdesc_().weights_desc.dims[2 + with_groups()];
-            int KW = filterWidth; //return cdesc_().weights_desc.dims[3 + with_groups()]
+            int KH = m_filterH; //return cdesc_().weights_desc.dims[2 + with_groups()];
+            int KW = m_filterW; //return cdesc_().weights_desc.dims[3 + with_groups()]
 
-            int KSH = strideH;
-            int KSW = strideW;
+            int KSH = m_strideH;
+            int KSW = m_strideW;
 
-            int padT = padH; //top
-            int padL = padW; //left
+            int padT = m_padH; //top
+            int padL = m_padW; //left
 
             var dstData = dst.Data;
             var biasData = bias.Data;
@@ -59,9 +102,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         {
                             var d = Kernel(mb, oc, oh, ow,
                                 src, weights,
-                                filterHeight, filterWidth,
-                                strideH, strideW,
-                                padH, padW);
+                                m_filterH, m_filterW,
+                                m_strideH, m_strideW,
+                                m_padH, m_padW);
 
                             d += biasData[oc];
 

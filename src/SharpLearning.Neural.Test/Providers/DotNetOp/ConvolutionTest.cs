@@ -77,21 +77,19 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
             var output = Tensor<float>.CreateRowMajor(batchSize, filterCount, filterGridHeight, filterGridWidth);
 
-            // warmup
-            Convolution.Forward(input, weights, bias,
-                filterCount, filterHeight, filterWidth,
+            var sut = new Convolution(filterCount, filterHeight, filterWidth,
                 strideH, strideW,
-                padH, padW,
+                padH, padW);
+
+            // warmup
+            sut.Forward(input, weights, bias,
                 output);
 
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
 
-                Convolution.Forward(input, weights, bias,
-                    filterCount, filterHeight, filterWidth, 
-                    strideH, strideW, 
-                    padH, padW, 
+                sut.Forward(input, weights, bias,
                     output);
 
                 timer.Stop();
