@@ -7,8 +7,15 @@ namespace SharpLearning.Neural.Providers.DotNetOp
     /// <summary>
     /// 
     /// </summary>
-    public static class BatchNormalization
+    public class BatchNormalization
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public BatchNormalization()
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -21,7 +28,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="MovingAverageVariance"></param>
         /// <param name="output"></param>
         /// <param name="isTraining"></param>
-        public static void Forward(Tensor<float> input, 
+        public void Forward(Tensor<float> input, 
             Tensor<float> Scale, Tensor<float> Bias,
             float[] BatchColumnMeans, float[] BatchcolumnVars,
             float[] MovingAverageMeans, float[] MovingAverageVariance,

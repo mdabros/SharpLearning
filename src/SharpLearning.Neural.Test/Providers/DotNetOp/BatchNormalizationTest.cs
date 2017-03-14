@@ -53,10 +53,16 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var MovingAverageMeans = new float[depth];
             var MovingAverageVariance = Enumerable.Range(0, depth).Select(v => 1.0f).ToArray();
 
+            var sut = new BatchNormalization();
+
+            // warmup
+            sut.Forward(input, scale, bias, batchMeans, batchVars,
+                MovingAverageMeans, MovingAverageVariance, output, true);
+
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
-                BatchNormalization.Forward(input, scale, bias, batchMeans, batchVars,
+                sut.Forward(input, scale, bias, batchMeans, batchVars,
                     MovingAverageMeans, MovingAverageVariance, output, true);
                 timer.Stop();
             }
