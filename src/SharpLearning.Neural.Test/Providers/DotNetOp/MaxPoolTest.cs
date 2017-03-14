@@ -33,16 +33,15 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var outputW = ConvUtils.GetFilterGridLength(inputWidth, poolWidth, stride, pad, BorderMode.Undefined);
             var outputH = ConvUtils.GetFilterGridLength(inputHeight, poolHeight, stride, pad, BorderMode.Undefined);
 
-            // store switches for x,y coordinates for where the max comes from, for each output neuron
-            var switchx = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
-            var switchy = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
-
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
             var input = Tensor<float>.CreateRowMajor(inputData, batchSize, inputDepth, inputHeight, inputWidth);
             var output = Tensor<float>.CreateRowMajor(batchSize, outputC, outputH, outputW);
 
-            MaxPool.Forward(input, poolHeight, poolWidth,
-                stride, stride, pad, pad, switchx, switchy, output);
+            var sut = new MaxPool(poolHeight, poolWidth,
+                stride, stride, pad, pad,
+                batchSize, outputC, outputH, outputW);
+
+            sut.Forward(input, output);
 
             var expected = Tensor<float>.CreateRowMajor(new float[] { 3, 6, 8, 10, 8, 5, 10, 12 }, batchSize, outputC, outputH, outputW);
             Assert.AreEqual(expected, output);
@@ -101,20 +100,20 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var fanIn = width * depth * height;
             var fanOut = outputC * outputW * outputH;
 
-            var switchx = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
-            var switchy = Enumerable.Range(0, batchSize).Select(v => new int[outputC * outputW * outputH]).ToArray();
-
             var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
             var output = Tensor<float>.CreateRowMajor(batchSize, outputC, outputH, outputW);
-            
-            MaxPool.Forward(input, poolHeight, poolWidth, 
-                strideH, strideW, padH, padW, switchx, switchy, output);
+
+            var sut = new MaxPool(poolHeight, poolWidth,
+                strideH, strideW, padH, strideW,
+                batchSize, outputC, outputH, outputW);
+
+            // warmup
+            sut.Forward(input, output);
 
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
-                MaxPool.Forward(input, poolHeight, poolWidth,
-                    strideH, strideW, padH, padW, switchx, switchy, output);
+                sut.Forward(input, output);
                 timer.Stop();
             }
 

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using SharpLearning.Containers.Tensors;
 
@@ -10,28 +8,66 @@ namespace SharpLearning.Neural.Providers.DotNetOp
     /// <summary>
     /// 
     /// </summary>
-    public static class MaxPool
+    public class MaxPool
     {
+        readonly int m_poolH;
+        readonly int m_poolW;
+        readonly int m_strideH;
+        readonly int m_strideW;
+        readonly int m_padH;
+        readonly int m_padW;
 
+        readonly int[][] m_switchX;
+        readonly int[][] m_switchY;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="poolH">Height of the pooling window</param>
+        /// <param name="poolW">Width of the pooling window</param>
+        /// <param name="strideH">Pooling vertical stride</param>
+        /// <param name="strideW">Pooling horizontal stride</param>
+        /// <param name="padH">Size of vertical padding</param>
+        /// <param name="padW">Size of horizontal padding</param>
+        /// <param name="outN">Number of batch items in output</param>
+        /// <param name="outC">Depth of output</param>
+        /// <param name="outH">Height of output</param>
+        /// <param name="outw">Width of output</param>
+        public MaxPool(int poolH, int poolW,
+            int strideH, int strideW,
+            int padH, int padW, 
+            int outN, int outC, int outH, int outw)
+        {
+            if (poolH < 1)
+            { throw new ArgumentException($"filterH must be at least 1, was {poolH}"); }
+            if (poolW < 1)
+            { throw new ArgumentException($"filterW must be at least 1, was {poolW}"); }
+            if (strideH < 1)
+            { throw new ArgumentException($"strideH must be at least 1, was {strideH}"); }
+            if (strideW < 1)
+            { throw new ArgumentException($"strideW must be at least 1, was {strideW}"); }
+            if (padH < 0)
+            { throw new ArgumentException($"padH must be at least 0, was {padH}"); }
+            if (padW < 0)
+            { throw new ArgumentException($"padW must be at least 0, was {padW}"); }
+
+            m_poolH = poolH;
+            m_poolW = poolW;
+            m_strideH = strideH;
+            m_strideW = strideW;
+            m_padH = padH;
+            m_padW = padW;
+
+            m_switchX = Enumerable.Range(0, outN).Select(v => new int[outC * outH * outw]).ToArray();
+            m_switchY = Enumerable.Range(0, outN).Select(v => new int[outC * outH * outw]).ToArray();
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="input"></param>
-        /// <param name="poolHeight"></param>
-        /// <param name="poolWidth"></param>
-        /// <param name="strideH"></param>
-        /// <param name="strideW"></param>
-        /// <param name="padH"></param>
-        /// <param name="padW"></param>
-        /// <param name="switchX"></param>
-        /// <param name="switchY"></param>
         /// <param name="output"></param>
-        public static void Forward(Tensor<float> input,
-            int poolHeight, int poolWidth,
-            int strideH, int strideW,
-            int padH, int padW,
-            int[][] switchX, int[][] switchY,
+        public void Forward(Tensor<float> input,
             Tensor<float> output)
         {
             var src = input;
@@ -41,20 +77,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             Parallel.For(0, MB, mb =>
             {
-                ForwardSingleItem(input, output, mb,
-                    poolHeight, poolWidth,
-                    strideH, strideW,
-                    padH, padW, switchX, switchY);
+                ForwardSingleItem(input, output, mb);
             });
         }
 
-
-
-        static void ForwardSingleItem(Tensor<float> src, Tensor<float> dst, int mb,
-            int poolHeight, int poolWidth, 
-            int strideH, int strideW, 
-            int padH, int padW,
-            int[][] switchX, int[][] switchXY)
+        void ForwardSingleItem(Tensor<float> src, Tensor<float> dst, int mb)
         {
             var MB = src.Dimensions[0];
             var IC = src.Dimensions[1];
@@ -70,6 +97,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var dstBOffSet = dst.DimensionOffSets[0] * mb;
             var srcBOffSet = src.DimensionOffSets[0] * mb;
 
+            var switchX = m_switchX[mb];
+            var switchY = m_switchY[mb];
+
             for (int ic = 0; ic < IC; ++ic)
             {
                 var n = ic * OW * OH; // a counter for switches
@@ -81,15 +111,15 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 {
                     var dstHOffSet = dstCOffSet + dst.DimensionOffSets[2] * oh;
 
-                    int hstart = oh * strideH - padH;
-                    int hend = Math.Min(hstart + poolHeight, IH);
+                    int hstart = oh * m_strideH - m_padH;
+                    int hend = Math.Min(hstart + m_poolH, IH);
                     hstart = Math.Max(hstart, 0);
 
                     for (int ow = 0; ow < OW; ++ow)
                     {
 
-                        int wstart = ow * strideW - padW;
-                        int wend = Math.Min(wstart + poolWidth, IW);
+                        int wstart = ow * m_strideW - m_padW;
+                        int wend = Math.Min(wstart + m_poolW, IW);
                         wstart = Math.Max(wstart, 0);
 
                         var currentMax = float.MinValue;
@@ -114,8 +144,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             }
                         }
 
-                        switchX[mb][n] = winx;
-                        switchXY[mb][n] = winy;
+                        switchX[n] = winx;
+                        switchY[n] = winy;
                         n++;
 
                         var dstIndex = dstHOffSet + ow;
