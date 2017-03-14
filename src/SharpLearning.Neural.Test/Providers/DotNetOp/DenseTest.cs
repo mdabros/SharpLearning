@@ -50,12 +50,14 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
             var output = Tensor<float>.CreateRowMajor(batchSize, fanOut);
 
-            Dense.Forward(input, weights, bias, output);
+            var sut = new Dense();
+
+            sut.Forward(input, weights, bias, output);
 
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
-                Dense.Forward(input, weights, bias, output);
+                sut.Forward(input, weights, bias, output);
                 timer.Stop();
             }
 

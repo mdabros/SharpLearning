@@ -8,8 +8,15 @@ namespace SharpLearning.Neural.Providers.DotNetOp
     /// <summary>
     /// 
     /// </summary>
-    public static class Dense
+    public class Dense
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public Dense()
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -17,7 +24,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="weights"></param>
         /// <param name="bias"></param>
         /// <param name="output"></param>
-        public static void Forward(Tensor<float> input,
+        public void Forward(Tensor<float> input,
             Tensor<float> weights, Tensor<float> bias,
             Tensor<float> output)
         {
