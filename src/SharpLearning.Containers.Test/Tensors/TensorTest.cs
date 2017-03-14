@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Tensors;
 
@@ -10,7 +8,7 @@ namespace SharpLearning.Containers.Test.Tensors
     public class TensorTest
     {
         [TestMethod]
-        public void Tensor_Slice()
+        public void Tensor_SliceCopy()
         {
             var shape = new TensorShape(50, 40, 30, 20);
             var data = Enumerable.Range(0, shape.ElementCount).ToArray();
@@ -23,9 +21,9 @@ namespace SharpLearning.Containers.Test.Tensors
                 {
                     for (int h = 0; h < sut.Dimensions[2]; h++)
                     {
-                        var wSlice = sut.Slice(n)
-                                        .Slice(c)
-                                        .Slice(h).Data;
+                        var wSlice = sut.SliceCopy(n)
+                                        .SliceCopy(c)
+                                        .SliceCopy(h).Data;
 
                         for (int w = 0; w < sut.Dimensions[3]; w++)
                         {

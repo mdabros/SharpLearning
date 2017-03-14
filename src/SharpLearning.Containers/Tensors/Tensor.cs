@@ -97,9 +97,9 @@ namespace SharpLearning.Containers.Tensors
         /// </summary>
         /// <param name="interval"></param>
         /// <returns></returns>
-        public Tensor<T> Slice(Interval1D interval)
+        public Tensor<T> SliceCopy(Interval1D interval)
         {
-            return Slice(interval.FromInclusive, interval.Length);
+            return SliceCopy(interval.FromInclusive, interval.Length);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="fromInclusive"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public Tensor<T> Slice(int fromInclusive, int length=1)
+        public Tensor<T> SliceCopy(int fromInclusive, int length=1)
         {
             // only works for first dimension currently.
             int dimension = 0;
