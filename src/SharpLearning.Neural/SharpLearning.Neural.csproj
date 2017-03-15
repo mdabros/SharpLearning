@@ -69,6 +69,9 @@
     <Compile Include="Initializations\Initialization.cs" />
     <Compile Include="Activations\ReluActivation.cs" />
     <Compile Include="ConvUtils.cs" />
+    <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
+    <Compile Include="LayersNew\Data.cs" />
+    <Compile Include="LayersNew\Executor.cs" />
     <Compile Include="Layers\ActivationLayer.cs" />
     <Compile Include="Layers\BatchNormalizationLayer.cs" />
     <Compile Include="Layers\Conv2DLayer.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="Providers\DotNetOp\Dense.cs" />
     <Compile Include="Providers\DotNetOp\MaxPool.cs" />
     <Compile Include="Providers\DotNetOp\Utils.cs" />
+    <Compile Include="Providers\IBatchNormalization.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />
     <Compile Include="TargetEncoders\OneOfNTargetEncoder.cs" />

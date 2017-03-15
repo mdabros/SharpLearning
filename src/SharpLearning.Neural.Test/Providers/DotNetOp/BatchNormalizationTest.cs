@@ -41,11 +41,11 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         {
             var fanIn = width * height * depth;
 
-            var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
-            var output = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
+            var input = Tensor<float>.Build(batchSize, depth, height, width);
+            var output = Tensor<float>.Build(batchSize, depth, height, width);
 
-            var scale = Tensor<float>.CreateRowMajor(fanIn);
-            var bias = Tensor<float>.CreateRowMajor(fanIn);
+            var scale = Tensor<float>.Build(fanIn);
+            var bias = Tensor<float>.Build(fanIn);
 
             var batchMeans = new float[depth];
             var batchVars = new float[depth];

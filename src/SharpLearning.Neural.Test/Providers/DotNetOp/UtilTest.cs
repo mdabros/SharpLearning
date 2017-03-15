@@ -16,14 +16,14 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         [TestMethod]
         public void Util_Multiply()
         {
-            var a = Tensor<float>.CreateRowMajor(new float[] { 1, 2, 3, 4, 5, 6 }, 2, 3);
-            var b = Tensor<float>.CreateRowMajor(new float[] { 7, 8, 9, 10, 11, 12 }, 3, 2);
+            var a = Tensor<float>.Build(new float[] { 1, 2, 3, 4, 5, 6 }, 2, 3);
+            var b = Tensor<float>.Build(new float[] { 7, 8, 9, 10, 11, 12 }, 3, 2);
 
-            var actual = Tensor<float>.CreateRowMajor(a.Dimensions[0], b.Dimensions[1]);
+            var actual = Tensor<float>.Build(a.Dimensions[0], b.Dimensions[1]);
 
             Utils.Multiply(a, b, actual);
 
-            var expected = Tensor<float>.CreateRowMajor(new float[] { 58, 64, 139, 154 }, 2, 2);
+            var expected = Tensor<float>.Build(new float[] { 58, 64, 139, 154 }, 2, 2);
 
             Assert.AreEqual(expected, actual);
         }
@@ -86,9 +86,9 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         private static void Tensor(int elements, int iterations, Stopwatch timer)
         {
             timer.Reset();
-            var t1 = Tensor<float>.CreateRowMajor(elements, elements);
-            var t2 = Tensor<float>.CreateRowMajor(elements, elements);
-            var tOut = Tensor<float>.CreateRowMajor(elements, elements);
+            var t1 = Tensor<float>.Build(elements, elements);
+            var t2 = Tensor<float>.Build(elements, elements);
+            var tOut = Tensor<float>.Build(elements, elements);
 
             Utils.Multiply(t1, t2, tOut);
 
@@ -105,9 +105,9 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         private static void Tensor_Mathnet_MKL(int elements, int iterations, Stopwatch timer)
         {
             timer.Reset();
-            var t1 = Tensor<float>.CreateRowMajor(elements, elements);
-            var t2 = Tensor<float>.CreateRowMajor(elements, elements);
-            var tOut = Tensor<float>.CreateRowMajor(elements, elements);
+            var t1 = Tensor<float>.Build(elements, elements);
+            var t2 = Tensor<float>.Build(elements, elements);
+            var tOut = Tensor<float>.Build(elements, elements);
 
             Utils.Multiply_MathNet(t1, t2, tOut);
 

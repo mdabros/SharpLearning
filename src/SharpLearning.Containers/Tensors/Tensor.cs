@@ -44,12 +44,6 @@ namespace SharpLearning.Containers.Tensors
             Shape = shape;
             Layout = layout;
             Data = data;
-
-            DimensionOffSets = new int[Dimensions.Length - 1];
-            for (int i = 0; i < Dimensions.Length - 1; i++)
-            {
-                DimensionOffSets[i] = Dimensions.Skip(i + 1).Aggregate((x, y) => x * y);
-            }
         }
 
         /// <summary>
@@ -80,7 +74,7 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public int[] DimensionOffSets { get;  }
+        public int[] DimensionOffSets { get { return Shape.DimensionOffSets; }  }
 
         /// <summary>
         /// 
@@ -138,12 +132,26 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="value"></param>
         /// <param name="dimensions"></param>
         /// <returns></returns>
-        public static Tensor<T> CreateRowMajor(params int[] dimensions)
+        public static Tensor<T> Build(T value, params int[] dimensions)
+        {
+            var tensor = new Tensor<T>(dimensions, DataLayout.RowMajor);
+            tensor.Map(v => value);
+            return tensor;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <returns></returns>
+        public static Tensor<T> Build(params int[] dimensions)
         {
             return new Tensor<T>(dimensions, DataLayout.RowMajor);
         }
+
 
         /// <summary>
         /// 
@@ -151,7 +159,7 @@ namespace SharpLearning.Containers.Tensors
         /// <param name="data"></param>
         /// <param name="dimensions"></param>
         /// <returns></returns>
-        public static Tensor<T> CreateRowMajor(T[] data, params int[] dimensions)
+        public static Tensor<T> Build(T[] data, params int[] dimensions)
         {
             return new Tensor<T>(data, new TensorShape(dimensions), DataLayout.RowMajor);
         }

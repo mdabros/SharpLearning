@@ -71,11 +71,11 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             var fans = WeightInitialization.GetFans(new Conv2DLayer(1, 1, 1), width, height, depth);
 
-            var weights = Tensor<float>.CreateRowMajor(filterCount, depth, filterHeight, filterWidth);
-            var bias = Tensor<float>.CreateRowMajor(filterCount);
+            var weights = Tensor<float>.Build(filterCount, depth, filterHeight, filterWidth);
+            var bias = Tensor<float>.Build(filterCount);
             
-            var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
-            var output = Tensor<float>.CreateRowMajor(batchSize, filterCount, filterGridHeight, filterGridWidth);
+            var input = Tensor<float>.Build(batchSize, depth, height, width);
+            var output = Tensor<float>.Build(batchSize, filterCount, filterGridHeight, filterGridWidth);
 
             var sut = new Convolution(filterCount, filterHeight, filterWidth,
                 strideH, strideW,

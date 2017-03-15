@@ -75,6 +75,7 @@
     <Compile Include="Activations\ReluActivationTest.cs" />
     <Compile Include="ConvUtilsTest.cs" />
     <Compile Include="GradientCheckerTool.cs" />
+    <Compile Include="LayersNew\BatchNormalizationLayerTest.cs" />
     <Compile Include="Layers\ActivationLayerTest.cs" />
     <Compile Include="Layers\BatchNormalizationLayerTest.cs" />
     <Compile Include="Layers\Conv2DLayerTest.cs" />

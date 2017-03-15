@@ -44,11 +44,11 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var fanIn = width * height * depth;
             var fanOut = units;
 
-            var weights = Tensor<float>.CreateRowMajor(fanOut, fanIn);
-            var bias = Tensor<float>.CreateRowMajor(fanOut);
+            var weights = Tensor<float>.Build(fanOut, fanIn);
+            var bias = Tensor<float>.Build(fanOut);
 
-            var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
-            var output = Tensor<float>.CreateRowMajor(batchSize, fanOut);
+            var input = Tensor<float>.Build(batchSize, depth, height, width);
+            var output = Tensor<float>.Build(batchSize, fanOut);
 
             var sut = new Dense();
 

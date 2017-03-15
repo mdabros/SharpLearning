@@ -34,8 +34,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var outputH = ConvUtils.GetFilterGridLength(inputHeight, poolHeight, stride, pad, BorderMode.Undefined);
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
-            var input = Tensor<float>.CreateRowMajor(inputData, batchSize, inputDepth, inputHeight, inputWidth);
-            var output = Tensor<float>.CreateRowMajor(batchSize, outputC, outputH, outputW);
+            var input = Tensor<float>.Build(inputData, batchSize, inputDepth, inputHeight, inputWidth);
+            var output = Tensor<float>.Build(batchSize, outputC, outputH, outputW);
 
             var sut = new MaxPool(poolHeight, poolWidth,
                 stride, stride, pad, pad,
@@ -43,7 +43,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             sut.Forward(input, output);
 
-            var expected = Tensor<float>.CreateRowMajor(new float[] { 3, 6, 8, 10, 8, 5, 10, 12 }, batchSize, outputC, outputH, outputW);
+            var expected = Tensor<float>.Build(new float[] { 3, 6, 8, 10, 8, 5, 10, 12 }, batchSize, outputC, outputH, outputW);
             Assert.AreEqual(expected, output);
         }
 
@@ -100,8 +100,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var fanIn = width * depth * height;
             var fanOut = outputC * outputW * outputH;
 
-            var input = Tensor<float>.CreateRowMajor(batchSize, depth, height, width);
-            var output = Tensor<float>.CreateRowMajor(batchSize, outputC, outputH, outputW);
+            var input = Tensor<float>.Build(batchSize, depth, height, width);
+            var output = Tensor<float>.Build(batchSize, outputC, outputH, outputW);
 
             var sut = new MaxPool(poolHeight, poolWidth,
                 strideH, strideW, padH, strideW,

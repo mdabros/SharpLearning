@@ -15,12 +15,23 @@ namespace SharpLearning.Containers.Tensors
         {
             if (dimensions == null) { throw new ArgumentNullException(); }
             Dimensions = dimensions;
+
+            DimensionOffSets = new int[Dimensions.Length - 1];
+            for (int i = 0; i < Dimensions.Length - 1; i++)
+            {
+                DimensionOffSets[i] = Dimensions.Skip(i + 1).Aggregate((x, y) => x * y);
+            }
         }
 
         /// <summary>
         /// 
         /// </summary>
         public int[] Dimensions { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int[] DimensionOffSets { get; }
 
         /// <summary>
         /// 

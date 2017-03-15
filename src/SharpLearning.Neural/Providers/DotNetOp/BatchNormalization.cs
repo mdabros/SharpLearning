@@ -7,7 +7,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
     /// <summary>
     /// 
     /// </summary>
-    public class BatchNormalization
+    public class BatchNormalization : IBatchNormalization
     {
         /// <summary>
         /// 
