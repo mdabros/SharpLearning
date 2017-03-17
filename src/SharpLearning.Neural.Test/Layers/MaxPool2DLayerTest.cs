@@ -280,7 +280,6 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         // currently it is not possible to gradient check layers without weights and gradients
-        [Ignore]
         [TestMethod]
         public void MaxPool2DLayer_GradientCheck_BatchSize_1()
         {
@@ -298,7 +297,6 @@ namespace SharpLearning.Neural.Test.Layers
         }
 
         // currently it is not possible to gradient check layers without weights and gradients
-        [Ignore]
         [TestMethod]
         public void MaxPool2DLayer_GradientCheck_BatchSize_10()
         {
@@ -306,7 +304,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int inputHeight = 20;
             const int inputDepth = 2;
 
-            const int batchSize = 11;
+            const int batchSize = 10;
 
             // Create layer
             const int width = 2;

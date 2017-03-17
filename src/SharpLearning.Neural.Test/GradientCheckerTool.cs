@@ -29,42 +29,35 @@ namespace SharpLearning.Neural.Test
             var delta = Matrix<float>.Build.Dense(batchSize, fanOut, 1.0f);
 
             // Backward pass to calculate gradients
-            layer.Backward(delta);
+            var computedGradient = layer.Backward(delta);
 
-            // get weights and gradients
-            var parametersAndGradients = new List<ParametersAndGradients>();
-            layer.AddParameresAndGradients(parametersAndGradients);
+            var gradients = computedGradient.Data();
+            var parameters = input.Data();
 
-            foreach (var parameterAndGradient in parametersAndGradients)
+            var output1 = Matrix<float>.Build.Dense(batchSize, fanOut);
+            var output2 = Matrix<float>.Build.Dense(batchSize, fanOut);
+
+            for (int i = 0; i < parameters.Length; i++)
             {
-                var gradients = parameterAndGradient.Gradients;
-                var parameters = parameterAndGradient.Parameters;
+                output1.Clear();
+                output2.Clear();
 
-                var output1 = Matrix<float>.Build.Dense(batchSize, fanOut);
-                var output2 = Matrix<float>.Build.Dense(batchSize, fanOut);
+                var oldValue = parameters[i];
 
-                for (int i = 0; i < parameters.Length; i++)
-                {
-                    output1.Clear();
-                    output2.Clear();
+                parameters[i] = oldValue + epsilon;
+                layer.Forward(input).CopyTo(output1);
+                parameters[i] = oldValue - epsilon;
+                layer.Forward(input).CopyTo(output2);
 
-                    var oldValue = parameters[i];
+                parameters[i] = oldValue;
 
-                    parameters[i] = oldValue + epsilon;
-                    layer.Forward(input).CopyTo(output1);
-                    parameters[i] = oldValue - epsilon;
-                    layer.Forward(input).CopyTo(output2);
+                output1.Subtract(output2, output1); // output1 = output1 - output2
 
-                    parameters[i] = oldValue;
+                var grad = output1.ToRowMajorArray().Select(f => f / (2.0f * epsilon));
+                var gradient = grad.Sum(); // approximated gradient
+                var actual = gradients[i];
 
-                    output1.Subtract(output2, output1); // output1 = output1 - output2
-
-                    var grad = output1.ToRowMajorArray().Select(f => f / (2.0f * epsilon));
-                    var gradient = grad.Sum(); // approximated gradient
-                    var actual = gradients[i];
-
-                    Assert.AreEqual(gradient, actual, accuracyCondition);
-                }
+                Assert.AreEqual(gradient, actual, accuracyCondition);
             }
         }
 
@@ -91,6 +84,7 @@ namespace SharpLearning.Neural.Test
                 parameters[i] = oldValue + epsilon;
                 layer.Forward(executor);
                 executor.GetTensor(layer.Output).Data.CopyTo(output1, 0);
+
                 parameters[i] = oldValue - epsilon;
                 layer.Forward(executor);
                 executor.GetTensor(layer.Output).Data.CopyTo(output2, 0);
