@@ -129,9 +129,8 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="parameters"></param>
-        public void GetParameterShapes(List<TensorShape> parameters)
+        public void GetTrainableParameterShapes(List<TensorShape> parameters)
         {
-            parameters.Add(Input);
             parameters.Add(Scale);
             parameters.Add(Bias);
         }

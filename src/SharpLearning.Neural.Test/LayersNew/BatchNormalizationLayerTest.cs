@@ -14,11 +14,11 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
+            var input = new TensorShape(10, 1, 28, 28);
             var sut = new BatchNormalizationLayer(new BatchNormalization());
-            sut.Initialize(new TensorShape(10, 1, 28, 28), executor);
+            sut.Initialize(input, executor);
 
-            sut.Forward(executor);
-            sut.Backward(executor);
+            GradientCheckTools.CheckLayer(sut, executor, input, 1e-4f, new Random(21));
         }
     }
 }

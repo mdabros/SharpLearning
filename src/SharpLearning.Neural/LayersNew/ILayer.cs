@@ -34,6 +34,6 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="parameters"></param>
-        void GetParameterShapes(List<TensorShape> parameters);
+        void GetTrainableParameterShapes(List<TensorShape> parameters);
     }
 }

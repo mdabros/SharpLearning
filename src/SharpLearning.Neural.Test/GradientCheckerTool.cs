@@ -70,35 +70,39 @@ namespace SharpLearning.Neural.Test
 
         public static void CheckLayer(ILayerNew layer, Executor executor, TensorShape inputShape, float epsilon, Random random)
         {
+            var accuracyCondition = 1e-6;
+
             var input = executor.GetTensor(inputShape);
             input.Map(v => (float)random.NextDouble());
 
             layer.Forward(executor);
             layer.Backward(executor);
 
-            var shapes = new List<TensorShape>();
-            layer.GetParameterShapes(shapes);
+            var parameters = executor.GetTensor(inputShape).Data;
+            var gradients = executor.GetGradient(inputShape).Data;
 
-            var parameters = shapes.Select(s => executor.GetTensor(s)).ToList();
-            var gradients = shapes.Select(s => executor.GetGradient(s)).ToList();
+            var output1 = new float[parameters.Length];
+            var output2 = new float[parameters.Length];
 
-            Assert.AreEqual(parameters.Count, gradients.Count);
-
-            for (int i = 0; i < parameters.Count; i++)
+            for (int i = 0; i < parameters.Length; i++)
             {
-                //var shape = shapes[i];
-                //var parameter = parameters[i].Data;
-                //var gradient = gradients[i].Data.ToArray();
+                var oldValue = parameters[i];
 
-                //var oldValue = parameter[i];
+                parameters[i] = oldValue + epsilon;
+                layer.Forward(executor);
+                executor.GetTensor(layer.Output).Data.CopyTo(output1, 0);
+                parameters[i] = oldValue - epsilon;
+                layer.Forward(executor);
+                executor.GetTensor(layer.Output).Data.CopyTo(output2, 0);
 
-                //parameter[i] = oldValue + epsilon;
-                //layer.Forward(executor);
-                //var output1 = executor.GetTensor()
-                //parameter[i] = oldValue - epsilon;
-                //layer.Forward(input).CopyTo(output2);
+                parameters[i] = oldValue;
 
-                //parameters[i] = oldValue;
+                // approximated gradient
+                var gradient = output1.Zip(output2, 
+                    (v1, v2) => (v1 - v2) / (2.0f * epsilon)).Sum();
+
+                var actual = gradients[i];
+                Assert.AreEqual(gradient, actual, accuracyCondition);
             }
         }
     }
