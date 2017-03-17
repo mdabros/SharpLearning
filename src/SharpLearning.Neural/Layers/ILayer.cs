@@ -29,7 +29,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// Activation
         /// </summary>
-        NonLinearity Activation { get; set; }
+        Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// Backward pass.

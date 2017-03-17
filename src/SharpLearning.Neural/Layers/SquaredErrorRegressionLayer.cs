@@ -38,7 +38,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public NonLinearity Activation { get; set; }
+        public Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// Regression layer using the squared error as loss function.
@@ -48,7 +48,7 @@ namespace SharpLearning.Neural.Layers
         {
             if (numberOfTargets < 1) { throw new ArgumentException("numberOfClasses is less than 1: " + numberOfTargets); }
 
-            Activation = NonLinearity.Undefined;
+            ActivationFunc = Activation.Undefined;
             NumberOfTargets = numberOfTargets;
             Height = 1;
             Depth = numberOfTargets;

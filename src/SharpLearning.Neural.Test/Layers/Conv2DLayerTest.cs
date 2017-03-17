@@ -158,7 +158,7 @@ namespace SharpLearning.Neural.Test.Layers
             var inputDepth = 3;
             var batchSize = 1;
 
-            var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, NonLinearity.Undefined);
+            var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
             GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
         }
 
@@ -170,7 +170,7 @@ namespace SharpLearning.Neural.Test.Layers
             var inputDepth = 3;
             var batchSize = 11;
 
-            var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, NonLinearity.Undefined);
+            var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
             GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
         }
     }

@@ -43,7 +43,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public NonLinearity Activation { get; set; }
+        public Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes. 
@@ -56,7 +56,7 @@ namespace SharpLearning.Neural.Layers
         {
             if (numberOfClasses < 2) { throw new ArgumentException("numberOfClasses is less than 2: " + numberOfClasses); }
 
-            Activation = NonLinearity.Undefined;
+            ActivationFunc = Activation.Undefined;
             NumberOfClasses = numberOfClasses;
             Height = 1;
             Depth = numberOfClasses;

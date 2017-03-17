@@ -20,7 +20,7 @@ namespace SharpLearning.Neural.Test.Layers
             var random = new Random(232);
             var neuronCount = 5;
 
-            var sut = new DenseLayer(neuronCount, NonLinearity.Undefined);
+            var sut = new DenseLayer(neuronCount, Activation.Undefined);
             sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var layers = new List<ILayer>();
@@ -47,7 +47,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int neuronCount = 3;
             var random = new Random(232);
 
-            var sut = new DenseLayer(neuronCount, NonLinearity.Undefined);
+            var sut = new DenseLayer(neuronCount, Activation.Undefined);
             sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -67,7 +67,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int neuronCount = 3;
             var random = new Random(232);
 
-            var sut = new DenseLayer(neuronCount, NonLinearity.Undefined);
+            var sut = new DenseLayer(neuronCount, Activation.Undefined);
             sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -90,7 +90,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int neuronCount = 3;
             var random = new Random(232);
 
-            var sut = new DenseLayer(neuronCount, NonLinearity.Undefined);
+            var sut = new DenseLayer(neuronCount, Activation.Undefined);
             sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -114,7 +114,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int neuronCount = 3;
             var random = new Random(232);
 
-            var sut = new DenseLayer(neuronCount, NonLinearity.Undefined);
+            var sut = new DenseLayer(neuronCount, Activation.Undefined);
             sut.Initialize(5, 1, 1, batchSize, Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
@@ -138,7 +138,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int batchSize = 1;
             const int neuronCount = 3;
 
-            var sut = new DenseLayer(neuronCount, NonLinearity.Undefined);
+            var sut = new DenseLayer(neuronCount, Activation.Undefined);
             GradientCheckTools.CheckLayer(sut, fanIn, 1, 1, batchSize, 1e-4f, new Random(21));
         }
 
@@ -149,7 +149,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int batchSize = 10;
             const int neuronCount = 3;
 
-            var sut = new DenseLayer(neuronCount, NonLinearity.Undefined);
+            var sut = new DenseLayer(neuronCount, Activation.Undefined);
             GradientCheckTools.CheckLayer(sut, fanIn, 1, 1, batchSize, 1e-4f, new Random(21));
         }
     }

@@ -30,7 +30,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public NonLinearity Activation { get; set; }
+        public Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// 
@@ -56,7 +56,7 @@ namespace SharpLearning.Neural.Layers
             Width = width;
             Height = height;
             Depth = depth;
-            Activation = NonLinearity.Undefined;
+            ActivationFunc = Activation.Undefined;
         }
 
         /// <summary>

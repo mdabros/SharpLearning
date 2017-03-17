@@ -24,7 +24,7 @@ namespace SharpLearning.Neural.Layers
         public Matrix<float> ActivationDerivative;
         Matrix<float> m_delta;
 
-        INonLinearity m_activation;
+        IActivation m_activation;
 
         /// <summary>
         /// 
@@ -44,22 +44,22 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public NonLinearity Activation { get; set; }
+        public Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// Activation layer. Adds activation functions to a neural net.
         /// </summary>
         /// <param name="activation"></param>
-        public ActivationLayer(NonLinearity activation)
+        public ActivationLayer(Activation activation)
         {
-            Activation = activation;
+            ActivationFunc = activation;
 
             switch (activation)
             {
-                case NonLinearity.Undefined:
+                case Activation.Undefined:
                     throw new ArgumentException("ActivationLayer must have a defined activation function. Provided with: " + activation);
-                case NonLinearity.Relu:
-                    m_activation = new Relu();
+                case Activation.Relu:
+                    m_activation = new ReluActivation();
                     break;
                 default:
                     throw new ArgumentException("Unsupported activation type: " + activation);
@@ -136,7 +136,7 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1; // prediction time only uses 1 item at a time.
-            var copy = new ActivationLayer(Activation);
+            var copy = new ActivationLayer(ActivationFunc);
 
             copy.Width = this.Width;
             copy.Height = this.Height;

@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public NonLinearity Activation { get; set; }
+        public Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// Does the layer use batch normalization
@@ -131,7 +131,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="padHeight">Zero padding for the height dimension (default is 0)</param>
         /// <param name="activation">Type of activation function used (default is Relu)</param>
         public Conv2DLayer(int filterWidth, int filterHeight, int filterCount, int stride, 
-            int padWidth, int padHeight, NonLinearity activation = NonLinearity.Relu)
+            int padWidth, int padHeight, Activation activation = Activation.Relu)
         {
             if (filterWidth < 1) { throw new ArgumentException("filterWidth is less than 1: " + filterWidth); }
             if (filterHeight < 1) { throw new ArgumentException("poolHeight is less than 1: " + filterHeight); }
@@ -145,7 +145,7 @@ namespace SharpLearning.Neural.Layers
             FilterHeight = filterHeight;
             FilterCount = filterCount;
 
-            Activation = activation;
+            ActivationFunc = activation;
             m_stride = stride;
             m_padWidth = padWidth;
             m_padHeight = padHeight;
@@ -165,7 +165,7 @@ namespace SharpLearning.Neural.Layers
         /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid)</param>
         /// <param name="activation">Type of activation function used (default is Relu)</param>
         public Conv2DLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1, 
-            BorderMode borderMode = BorderMode.Valid, NonLinearity activation = NonLinearity.Relu)
+            BorderMode borderMode = BorderMode.Valid, Activation activation = Activation.Relu)
             : this(filterWidth, filterHeight, filterCount, stride,
                   ConvUtils.PaddingFromBorderMode(filterWidth, borderMode),
                   ConvUtils.PaddingFromBorderMode(filterHeight, borderMode))
@@ -290,7 +290,7 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1; // prediction time only uses 1 item at a time.
-            var copy = new Conv2DLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padWidth, m_padHeight, Activation);
+            var copy = new Conv2DLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padWidth, m_padHeight, ActivationFunc);
 
             copy.InputDepth = InputDepth;
             copy.InputWidth = InputWidth;

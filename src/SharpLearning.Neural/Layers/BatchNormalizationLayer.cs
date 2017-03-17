@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public NonLinearity Activation { get; set; }
+        public Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// The weights outputtet by the layer.
@@ -82,7 +82,7 @@ namespace SharpLearning.Neural.Layers
         /// </summary>
         public BatchNormalizationLayer()
         {
-            Activation = NonLinearity.Undefined;
+            ActivationFunc = Activation.Undefined;
         }
 
         /// <summary>

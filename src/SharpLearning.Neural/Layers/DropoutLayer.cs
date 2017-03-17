@@ -44,7 +44,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public NonLinearity Activation { get; set; }
+        public Activation ActivationFunc { get; set; }
 
         /// <summary>
         /// Dropout layer for neural network learners.
@@ -56,7 +56,7 @@ namespace SharpLearning.Neural.Layers
         {
             if (dropOut < 0.0 || dropOut >= 1.0) { throw new ArgumentException("Dropout must be below 1.0 and at least 0.0"); }
             DropOut = dropOut;
-            Activation = NonLinearity.Undefined;
+            ActivationFunc = Activation.Undefined;
         }
 
         /// <summary>

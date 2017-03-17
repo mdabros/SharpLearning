@@ -17,7 +17,7 @@ namespace SharpLearning.Neural.Test.Layers
             const int fanIn = 5;
             const int batchSize = 10;
 
-            var sut = new ActivationLayer(NonLinearity.Relu);
+            var sut = new ActivationLayer(Activation.Relu);
             GradientCheckTools.CheckLayer(sut, fanIn, 1, 1, batchSize, 1e-4f, new Random(21));
         }
 
@@ -26,7 +26,7 @@ namespace SharpLearning.Neural.Test.Layers
         {
             var batchSize = 1;
 
-            var sut = new ActivationLayer(NonLinearity.Relu);
+            var sut = new ActivationLayer(Activation.Relu);
             sut.Initialize(3, 3, 1, batchSize, Initialization.GlorotUniform, new Random(232));
 
             var layers = new List<ILayer>();
@@ -38,7 +38,7 @@ namespace SharpLearning.Neural.Test.Layers
             Assert.AreEqual(sut.Height, actual.Height);
             Assert.AreEqual(sut.Depth, actual.Depth);
 
-            Assert.AreEqual(sut.Activation, actual.Activation);
+            Assert.AreEqual(sut.ActivationFunc, actual.ActivationFunc);
 
             Assert.AreEqual(sut.OutputActivations.RowCount, actual.OutputActivations.RowCount);
             Assert.AreEqual(sut.OutputActivations.ColumnCount, actual.OutputActivations.ColumnCount);
