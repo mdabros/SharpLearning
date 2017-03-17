@@ -6,7 +6,7 @@ namespace SharpLearning.Neural.Activations
     /// Rectified linear activation for neural net.
     /// </summary>
     [Serializable]
-    public sealed class ReluActivation : IActivation
+    public sealed class Relu : INonLinearity
     {
         /// <summary>
         /// Rectified linear activation for neural net.
@@ -16,7 +16,7 @@ namespace SharpLearning.Neural.Activations
         {
             for (int j = 0; j < x.Length; j++)
             {
-                x[j] = Relu(x[j]);
+                x[j] = ReluFunc(x[j]);
             }
         }
 
@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.Activations
             }
         }
 
-        float Relu(float input)
+        float ReluFunc(float input)
         {
             return Math.Max(0, input);
         }

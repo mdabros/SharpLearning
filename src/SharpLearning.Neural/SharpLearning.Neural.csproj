@@ -62,12 +62,17 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="BorderMode.cs" />
+    <Compile Include="Descriptors\Activation.cs" />
+    <Compile Include="Descriptors\BatchNormalization.cs" />
+    <Compile Include="Descriptors\Conv2D.cs" />
+    <Compile Include="Descriptors\Dense.cs" />
+    <Compile Include="Descriptors\MaxPool2D.cs" />
     <Compile Include="Initializations\FanInFanOut.cs" />
     <Compile Include="Initializations\WeightInitialization.cs" />
-    <Compile Include="Activations\Activiation.cs" />
-    <Compile Include="Activations\IActivation.cs" />
+    <Compile Include="Activations\NonLinearity.cs" />
+    <Compile Include="Activations\INonLinearity.cs" />
     <Compile Include="Initializations\Initialization.cs" />
-    <Compile Include="Activations\ReluActivation.cs" />
+    <Compile Include="Activations\Relu.cs" />
     <Compile Include="ConvUtils.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
     <Compile Include="LayersNew\Data.cs" />

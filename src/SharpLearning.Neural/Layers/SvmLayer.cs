@@ -42,7 +42,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public Activation ActivationFunc { get; set; }
+        public NonLinearity Activation { get; set; }
 
         /// <summary>
         /// Because the SVM is a margin classifier, it is happy once the margins are satisfied 
@@ -54,7 +54,7 @@ namespace SharpLearning.Neural.Layers
         {
             if (numberOfClasses < 2) { throw new ArgumentException("numberOfClasses is less than 2: " + numberOfClasses); }
 
-            ActivationFunc = Activation.Undefined;
+            Activation = NonLinearity.Undefined;
             NumberOfClasses = numberOfClasses;
             Height = 1;
             Depth = numberOfClasses;

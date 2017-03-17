@@ -59,7 +59,7 @@ namespace SharpLearning.Neural
 
             if(layer is IOutputLayer)
             {
-                var denseLayer = new DenseLayer(layer.Depth, Activation.Undefined);
+                var denseLayer = new DenseLayer(layer.Depth, NonLinearity.Undefined);
                 Layers.Add(denseLayer);
             }
 
@@ -73,9 +73,9 @@ namespace SharpLearning.Neural
                 }
             }
 
-            if(layer.ActivationFunc != Activation.Undefined)
+            if(layer.Activation != NonLinearity.Undefined)
             {
-                Layers.Add(new ActivationLayer(layer.ActivationFunc));
+                Layers.Add(new ActivationLayer(layer.Activation));
             }
         }
 

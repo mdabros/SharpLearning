@@ -5,7 +5,7 @@ namespace SharpLearning.Neural.Activations
     /// <summary>
     /// Neural net activiation interface
     /// </summary>
-    public interface IActivation
+    public interface INonLinearity
     {
         /// <summary>
         /// Calcualtes the activation and stores the result in x

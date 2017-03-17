@@ -3,7 +3,7 @@
     /// <summary>
     /// Activation type for neural net. 
     /// </summary>
-    public enum Activation
+    public enum NonLinearity
     {
         /// <summary>
         /// No activation.

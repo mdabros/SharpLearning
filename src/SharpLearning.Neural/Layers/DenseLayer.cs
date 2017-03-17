@@ -31,7 +31,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// 
         /// </summary>
-        public Activation ActivationFunc { get; set; }
+        public NonLinearity Activation { get; set; }
 
         /// <summary>
         /// Does the layer use batch normalization
@@ -71,13 +71,13 @@ namespace SharpLearning.Neural.Layers
         /// </summary>
         /// <param name="units">Number of hidden units or neurons in the layer</param>
         /// <param name="activation">Activation function for the layer</param>
-        public DenseLayer(int units, Activation activation = Activation.Relu)
+        public DenseLayer(int units, NonLinearity activation = NonLinearity.Relu)
         {
             if (units < 1) { throw new ArgumentException("HiddenLayer must have at least 1 hidden unit"); }
             Width = 1;
             Height = 1;
             Depth = units;
-            ActivationFunc = activation;
+            Activation = activation;
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace SharpLearning.Neural.Layers
             var batchSize = 1; // prediction time only uses 1 item at a time.
             var fanOut = Width * Height * Depth;
 
-            var copy = new DenseLayer(fanOut, ActivationFunc);
+            var copy = new DenseLayer(fanOut, Activation);
 
             copy.Weights = Matrix<float>.Build.Dense(Weights.RowCount, Weights.ColumnCount);
             copy.Bias = Vector<float>.Build.Dense(Bias.Count);
