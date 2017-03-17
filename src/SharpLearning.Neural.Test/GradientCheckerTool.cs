@@ -6,6 +6,8 @@ using SharpLearning.Neural.Layers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Neural.LayersNew;
+using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Test
 {
@@ -63,6 +65,40 @@ namespace SharpLearning.Neural.Test
 
                     Assert.AreEqual(gradient, actual, accuracyCondition);
                 }
+            }
+        }
+
+        public static void CheckLayer(ILayerNew layer, Executor executor, TensorShape inputShape, float epsilon, Random random)
+        {
+            var input = executor.GetTensor(inputShape);
+            input.Map(v => (float)random.NextDouble());
+
+            layer.Forward(executor);
+            layer.Backward(executor);
+
+            var shapes = new List<TensorShape>();
+            layer.GetParameterShapes(shapes);
+
+            var parameters = shapes.Select(s => executor.GetTensor(s)).ToList();
+            var gradients = shapes.Select(s => executor.GetGradient(s)).ToList();
+
+            Assert.AreEqual(parameters.Count, gradients.Count);
+
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                //var shape = shapes[i];
+                //var parameter = parameters[i].Data;
+                //var gradient = gradients[i].Data.ToArray();
+
+                //var oldValue = parameter[i];
+
+                //parameter[i] = oldValue + epsilon;
+                //layer.Forward(executor);
+                //var output1 = executor.GetTensor()
+                //parameter[i] = oldValue - epsilon;
+                //layer.Forward(input).CopyTo(output2);
+
+                //parameters[i] = oldValue;
             }
         }
     }

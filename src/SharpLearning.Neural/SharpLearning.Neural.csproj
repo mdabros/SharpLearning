@@ -72,6 +72,7 @@
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\Executor.cs" />
+    <Compile Include="LayersNew\ILayer.cs" />
     <Compile Include="Layers\ActivationLayer.cs" />
     <Compile Include="Layers\BatchNormalizationLayer.cs" />
     <Compile Include="Layers\Conv2DLayer.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.Providers;
@@ -8,12 +9,19 @@ namespace SharpLearning.Neural.LayersNew
     /// <summary>
     /// 
     /// </summary>
-    public sealed class BatchNormalizationLayer
+    public sealed class BatchNormalizationLayer : ILayerNew
     {
         readonly IBatchNormalization m_batchNorm;
 
-        TensorShape Output;
-        TensorShape Input;
+        /// <summary>
+        /// Layer output shape
+        /// </summary>
+        public TensorShape Output { get; set; }
+
+        /// <summary>
+        /// Layer Input shape
+        /// </summary>
+        public TensorShape Input { get; set; }
 
         TensorShape BatchColumnMeans;
         TensorShape BatchcolumnVars;
@@ -93,7 +101,6 @@ namespace SharpLearning.Neural.LayersNew
         public void Initialize(TensorShape inputShape, Executor excecutor)
         {
             Input = inputShape;
-
             Output = new TensorShape(inputShape.Dimensions.ToArray());
             
             var c = inputShape.Dimensions[1];
@@ -116,6 +123,17 @@ namespace SharpLearning.Neural.LayersNew
             MovingAverageVariance = new TensorShape(c);
             excecutor.GetTensor(MovingAverageVariance)
                 .Map(v => 1.0f);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        public void GetParameterShapes(List<TensorShape> parameters)
+        {
+            parameters.Add(Input);
+            parameters.Add(Scale);
+            parameters.Add(Bias);
         }
     }
 }

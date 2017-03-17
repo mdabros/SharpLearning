@@ -13,8 +13,8 @@ namespace SharpLearning.Neural.Test.LayersNew
         public void BatchNormalizationLayer_GradientCheck()
         {
             var executor = new Executor();
-            var sut = new BatchNormalizationLayer(new BatchNormalization());
 
+            var sut = new BatchNormalizationLayer(new BatchNormalization());
             sut.Initialize(new TensorShape(10, 1, 28, 28), executor);
 
             sut.Forward(executor);
