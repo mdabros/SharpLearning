@@ -198,8 +198,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             for (var c = 0; c < OC; c++)
             {
                 var n = c * OW * OH; // conter for switches
-                var dstCOffSet = dstBOffSet + outputGradient.DimensionOffSets[1] * c;
 
+                var dstCOffSet = dstBOffSet + outputGradient.DimensionOffSets[1] * c;
                 var srcCOffset = srcBOffSet + inputGradient.DimensionOffSets[1] * c;
 
                 for (var h = 0; h < OH; h++)
