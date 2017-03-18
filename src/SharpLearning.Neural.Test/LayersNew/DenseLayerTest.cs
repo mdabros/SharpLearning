@@ -19,5 +19,17 @@ namespace SharpLearning.Neural.Test.LayersNew
 
             GradientCheckTools.CheckLayer(sut, executor, input, 1e-4f, new Random(21));
         }
+
+        [TestMethod]
+        public void DenseLayer_ParameterGradientCheck()
+        {
+            var executor = new Executor();
+
+            var input = Variable.Create(10, 5, 1, 1);
+            var sut = new DenseLayer(3);
+            sut.Initialize(input, executor, new Random());
+
+            GradientCheckTools.CheckLayerParameters(sut, executor, input, 1e-4f, new Random(21));
+        }
     }
 }

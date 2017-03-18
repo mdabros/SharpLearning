@@ -22,6 +22,21 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="parameters"></param>
+        public void GetTrainableParameters(List<Data> parameters)
+        {
+            foreach (var data in m_data)
+            {
+                if(data.Key.Trainable)
+                {
+                    parameters.Add(data.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="shape"></param>
         /// <returns></returns>
         public Tensor<float> GetTensor(Variable shape)

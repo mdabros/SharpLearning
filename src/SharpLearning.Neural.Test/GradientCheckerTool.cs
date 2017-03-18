@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -106,6 +107,61 @@ namespace SharpLearning.Neural.Test
 
                 var actual = gradients[i];
                 Assert.AreEqual(gradient, actual, accuracyCondition);
+            }
+        }
+
+        public static void CheckLayerParameters(ILayerNew layer, Executor executor, Variable inputVariable, float epsilon, Random random)
+        {
+            var accuracyCondition = 1e-2;
+
+            var fans = new FanInFanOut(layer.Input.DimensionOffSets[0],
+                layer.Output.DimensionOffSets[0]);
+
+            // set input to 1
+            var input = executor.GetTensor(inputVariable);
+            input.Map(v => 1.0f);
+
+            layer.Forward(executor);
+
+            // set output gradients to 1
+            executor.GetGradient(layer.Output).Map(v => 1.0f);
+
+            layer.Backward(executor);
+
+            var output1 = new float[layer.Output.ElementCount];
+            var output2 = new float[layer.Output.ElementCount];
+
+            var trainableParameters = new List<Data>();
+            executor.GetTrainableParameters(trainableParameters);
+
+            foreach (var data in trainableParameters)
+            {
+                var parameters = data.Tensor.Data;
+                var gradients = data.Gradient.Data;
+
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    var oldValue = parameters[i];
+
+                    parameters[i] = oldValue + epsilon;
+                    layer.Forward(executor);
+                    executor.GetTensor(layer.Output).Data.CopyTo(output1, 0);
+
+                    parameters[i] = oldValue - epsilon;
+                    layer.Forward(executor);
+                    executor.GetTensor(layer.Output).Data.CopyTo(output2, 0);
+
+                    parameters[i] = oldValue;
+
+                    // approximated gradient
+                    var diff = output1.Zip(output2,
+                        (v1, v2) => (v1 - v2)).ToArray();
+
+                    var gradient = diff.Select(v => v / (2.0f * epsilon)).Sum();
+
+                    var actual = gradients[i];
+                    Assert.AreEqual(gradient, actual, accuracyCondition);
+                }
             }
         }
     }
