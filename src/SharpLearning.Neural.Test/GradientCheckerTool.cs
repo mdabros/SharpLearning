@@ -173,7 +173,8 @@ namespace SharpLearning.Neural.Test
                 return 0.0;
             }
 
-            return Math.Abs(approximatedGradient - computedGradient) / Math.Max(approximatedGradient, computedGradient);
+            return Math.Abs(approximatedGradient - computedGradient) / 
+                Math.Max(Math.Abs(approximatedGradient), Math.Abs(computedGradient));
         }
     }
 }
