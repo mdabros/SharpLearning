@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SharpLearning.Containers.Tensors;
+using SharpLearning.Neural.LayersNew;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
     /// <summary>
     /// 
     /// </summary>
-    public class BatchNormalization : IBatchNormalization
+    public static class BatchNormalization
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public BatchNormalization()
-        {
-        }
+
 
         /// <summary>
         /// 
@@ -27,28 +23,34 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="MovingAverageMeans"></param>
         /// <param name="MovingAverageVariance"></param>
         /// <param name="output"></param>
+        /// <param name="executor"></param>
         /// <param name="isTraining"></param>
-        public void Forward(Tensor<float> input, 
-            Tensor<float> Scale, Tensor<float> Bias,
-            float[] BatchColumnMeans, float[] BatchcolumnVars,
-            float[] MovingAverageMeans, float[] MovingAverageVariance,
-            Tensor <float> output, bool isTraining)
+        public static void Forward(Variable input,
+            Variable Scale, Variable Bias,
+            Variable BatchColumnMeans, Variable BatchcolumnVars,
+            Variable MovingAverageMeans, Variable MovingAverageVariance,
+            Executor executor, bool isTraining, Variable output)
         {
             if(input.DimensionCount != 4 || output.DimensionCount != 4)
             {
                 throw new ArgumentException("Expected 4-dimensional input and output");
             }
 
-            var src = input;
-            var dst = output;
-            
+            var src = executor.GetTensor(input);
+            var dst = executor.GetTensor(output);
+
+            var sc = executor.GetTensor(Scale).Data;
+            var bi = executor.GetTensor(Bias).Data;
+
+            var bColumnMeans = executor.GetTensor(BatchColumnMeans).Data;
+            var bcolumnVars = executor.GetTensor(BatchcolumnVars).Data;
+            var movingAverageMeans = executor.GetTensor(MovingAverageMeans).Data;
+            var movingAverageVariance = executor.GetTensor(MovingAverageVariance).Data;
+
             int N = src.Dimensions[0]; // number of items in mini batch
             int C = src.Dimensions[1];
             int H = src.Dimensions[2];
             int W = src.Dimensions[3];
-
-            var sc = Scale.Data;
-            var bi = Bias.Data;
 
             double eps = 1e-6;
 
@@ -97,8 +99,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 }
                 else
                 {
-                    mean = MovingAverageMeans[c];
-                    variance = MovingAverageVariance[c];
+                    mean = movingAverageMeans[c];
+                    variance = movingAverageVariance[c];
                 }
 
                 var scale = sc[c];
@@ -120,11 +122,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 }
                 if (isTraining)
                 {
-                    MovingAverageMeans[c] = MovingAverage(MovingAverageMeans[c], mean);
-                    MovingAverageVariance[c] = MovingAverage(MovingAverageVariance[c], variance);
+                    movingAverageMeans[c] = MovingAverage(movingAverageMeans[c], mean);
+                    movingAverageVariance[c] = MovingAverage(movingAverageVariance[c], variance);
 
-                    BatchColumnMeans[c] = mean;
-                    BatchcolumnVars[c] = variance;
+                    bColumnMeans[c] = mean;
+                    bcolumnVars[c] = variance;
                 }
             });
         }
@@ -136,39 +138,39 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="input"></param>
         /// <param name="Scale"></param>
         /// <param name="Bias"></param>
-        /// <param name="ScaleGradients"></param>
-        /// <param name="BiasGradients"></param>
         /// <param name="BatchColumnMeans"></param>
         /// <param name="BatchcolumnVars"></param>
         /// <param name="dstDiff"></param>
         /// <param name="srcDiff"></param>
-        public void Backward(Tensor<float> input,
-            Tensor<float> Scale, Tensor<float> Bias,
-            Tensor<float> ScaleGradients, Tensor<float> BiasGradients,
-            float[] BatchColumnMeans, float[] BatchcolumnVars,
-            Tensor<float> dstDiff, Tensor<float> srcDiff)
+        /// <param name="executor"></param>
+        public static void Backward(Variable input,
+            Variable Scale, Variable Bias,
+            Variable BatchColumnMeans, Variable BatchcolumnVars,
+            Executor executor, Variable output)
         {
-            var src = input;
-            var mean = BatchColumnMeans;
-            var variance = BatchcolumnVars;
-            var diff_dst = dstDiff;
-            var diff_src = srcDiff;
+            var src = executor.GetTensor(input);
+            var diff_src = executor.GetGradient(input);
+
+            var scale = executor.GetTensor(Scale).Data;
+
+            var scaleGradient = executor.GetGradient(Scale).Data;
+            var biasGradient = executor.GetGradient(Bias).Data;
+
+            var mean = executor.GetTensor(BatchColumnMeans).Data;
+            var variance = executor.GetTensor(BatchcolumnVars).Data;
+
+            var diff_dst = executor.GetTensor(output);
 
             int N = input.Dimensions[0];
             int C = input.Dimensions[1];
             int H = input.Dimensions[2];
             int W = input.Dimensions[3];
 
-            var scaleData = Scale.Data;
-
-            var scaleGradientsData = ScaleGradients.Data;
-            var biasGradientsData = BiasGradients.Data;
-
             //double eps = conf_.desc()->batch_norm_epsilon;
             //bool use_scaleshift = conf_.use_scaleshift();
             //bool calculate_diff_stats = !conf_.omit_stats();
 
-            const float eps = 1e-6f;
+            //const float eps = 1e-6f;
 
             var srcData = src.Data;
             var diffDstData = diff_dst.Data;
@@ -180,7 +182,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 var v_mean = mean[c];
                 var v_variance = variance[c];
                 //var sqrt_variance = 1.0f / (float)Math.Sqrt(v_variance + eps);
-                var gamma = scaleData[c];
+                var gamma = scale[c];
                 var diff_gamma = 0.0f;
                 var diff_beta = 0.0f;
 
@@ -212,8 +214,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 diff_gamma *= v_variance;
 
-                scaleGradientsData[c] = diff_gamma;
-                biasGradientsData[c] = diff_gamma;
+                scaleGradient[c] = diff_gamma;
+                biasGradient[c] = diff_gamma;
 
                 for (int n = 0; n < N; ++n)
                 {

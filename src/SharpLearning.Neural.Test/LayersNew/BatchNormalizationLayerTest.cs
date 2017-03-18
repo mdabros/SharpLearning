@@ -14,7 +14,7 @@ namespace SharpLearning.Neural.Test.LayersNew
             var executor = new Executor();
 
             var input = Variable.Create(1, 3, 3, 3);
-            var sut = new BatchNormalizationLayer(new BatchNormalization());
+            var sut = new BatchNormalizationLayer();
             sut.Initialize(input, executor);
 
             GradientCheckTools.CheckLayer(sut, executor, input, 1e-4f, new Random(21));

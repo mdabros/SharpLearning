@@ -50,6 +50,17 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
+        public int ElementCount { get { return Shape.ElementCount; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int DimensionCount { get { return Shape.DimensionCount; } }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="dimensions"></param>
         /// <returns></returns>
         public static Variable CreateTrainable(params int[] dimensions)
