@@ -237,13 +237,10 @@ namespace SharpLearning.Neural.Layers
                 var inputDepthOffSet = depth * InputHeight * InputWidth;
                 var outputDeptOffSet = depth * Height * Width;
 
-                var x = -this.m_padWidth;
-               // var y = -this.m_padHeight;
-                for (var ax = 0; ax < this.Width; x += this.m_stride, ax++)
+                for (var ax = 0; ax < this.Width; ax++)
                 {
-                    var y = -this.m_padHeight;
                     var axOffSet = ax + outputDeptOffSet;
-                    for (var ay = 0; ay < this.Height; y += this.m_stride, ay++)
+                    for (var ay = 0; ay < this.Height; ay++)
                     {
                         var inputGradientColIndex = ay * Width + axOffSet;
                         var inputGradientIndex = inputGradientColIndex * batchSize + batchItem;

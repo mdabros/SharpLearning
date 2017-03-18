@@ -61,18 +61,22 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputShape, float epsilon, Random random)
+        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputVariable, float epsilon, Random random)
         {
             var accuracyCondition = 1e-2;
 
-            var input = executor.GetTensor(inputShape);
+            var input = executor.GetTensor(inputVariable);
             input.Map(v => (float)random.NextDouble());
 
             layer.Forward(executor);
+
+            executor.GetGradient(layer.Output)
+                .Map(v => 1.0f); // set output gradients to 1
+
             layer.Backward(executor);
 
-            var parameters = executor.GetTensor(inputShape).Data;
-            var gradients = executor.GetGradient(inputShape).Data;
+            var parameters = executor.GetTensor(inputVariable).Data;
+            var gradients = executor.GetGradient(inputVariable).Data;
 
             var output1 = new float[parameters.Length];
             var output2 = new float[parameters.Length];

@@ -70,6 +70,29 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="distribution"></param>
+        public void AssignTensor(Variable shape, float[] data)
+        {
+            if (!m_data.ContainsKey(shape))
+            {
+                m_data[shape] = new Data();
+            }
+
+            var tensor = m_data[shape].GetOrAllocateTensor(shape);
+            
+            if(tensor.ElementCount != data.Length)
+            {
+                throw new ArgumentException($"tensor element count: {tensor.ElementCount}, differs from data length: {data.Length}");
+            }
+
+            data.CopyTo(tensor.Data, 0);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="shape"></param>
+        /// <param name="distribution"></param>
         public void AssignGradient(Variable shape, Func<float> distribution)
         {
             if (!m_data.ContainsKey(shape))

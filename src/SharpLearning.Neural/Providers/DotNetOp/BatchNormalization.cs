@@ -140,9 +140,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="Bias"></param>
         /// <param name="BatchColumnMeans"></param>
         /// <param name="BatchcolumnVars"></param>
-        /// <param name="dstDiff"></param>
-        /// <param name="srcDiff"></param>
         /// <param name="executor"></param>
+        /// <param name="output"></param>
         public static void Backward(Variable input,
             Variable Scale, Variable Bias,
             Variable BatchColumnMeans, Variable BatchcolumnVars,

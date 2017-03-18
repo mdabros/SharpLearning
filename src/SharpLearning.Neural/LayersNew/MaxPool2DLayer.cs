@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using SharpLearning.Neural.Providers.DotNetOp;
 
 namespace SharpLearning.Neural.LayersNew
 {
@@ -8,12 +9,7 @@ namespace SharpLearning.Neural.LayersNew
     /// </summary>
     public sealed class MaxPool2DLayer : ILayerNew
     {
-        readonly int m_poolH;
-        readonly int m_poolW;
-        readonly int m_strideH;
-        readonly int m_strideW;
-        readonly int m_padH;
-        readonly int m_padW;
+        readonly MaxPool2DDescriptor m_descriptor;
 
         int[][] m_switchX;
         int[][] m_switchY;
@@ -33,25 +29,9 @@ namespace SharpLearning.Neural.LayersNew
             int strideH, int strideW,
             int padH, int padW)
         {
-            if (poolH < 1)
-            { throw new ArgumentException($"filterH must be at least 1, was {poolH}"); }
-            if (poolW < 1)
-            { throw new ArgumentException($"filterW must be at least 1, was {poolW}"); }
-            if (strideH < 1)
-            { throw new ArgumentException($"strideH must be at least 1, was {strideH}"); }
-            if (strideW < 1)
-            { throw new ArgumentException($"strideW must be at least 1, was {strideW}"); }
-            if (padH < 0)
-            { throw new ArgumentException($"padH must be at least 0, was {padH}"); }
-            if (padW < 0)
-            { throw new ArgumentException($"padW must be at least 0, was {padW}"); }
-
-            m_poolH = poolH;
-            m_poolW = poolW;
-            m_strideH = strideH;
-            m_strideW = strideW;
-            m_padH = padH;
-            m_padW = padW;
+            m_descriptor = new MaxPool2DDescriptor(poolH, poolW,
+            strideH, strideW,
+            padH, padW);
         }
 
         /// <summary>
@@ -87,7 +67,8 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="executor"></param>
         public void Forward(Executor executor)
         {
-            throw new NotImplementedException();
+            MaxPool2D.Forward(Input, Output, m_descriptor,
+                m_switchX, m_switchY, executor);
         }
 
         /// <summary>
@@ -96,7 +77,8 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="executor"></param>
         public void Backward(Executor executor)
         {
-            throw new NotImplementedException();
+            MaxPool2D.Backward(Input, Output,
+                m_switchX, m_switchY, executor);
         }
 
         /// <summary>
@@ -113,14 +95,15 @@ namespace SharpLearning.Neural.LayersNew
             var h = inputVariable.Dimensions[2];
             var w = inputVariable.Dimensions[3];
 
-            // computed
+            // compute output dimensions.
             var outC = c;
-            var outH = ConvUtils.GetFilterGridLength(h, m_poolH, m_strideH, m_padH, m_borderMode);
-            var outW = ConvUtils.GetFilterGridLength(w, m_poolW, m_strideW, m_padW, m_borderMode);
+            var outH = ConvUtils.GetFilterGridLength(h, m_descriptor.PoolH, m_descriptor.StrideH, m_descriptor.PadH, m_borderMode);
+            var outW = ConvUtils.GetFilterGridLength(w, m_descriptor.PoolW, m_descriptor.StrideW, m_descriptor.PadW, m_borderMode);
 
             Output = Variable.Create(batchSize, outC, outH, outW);
-            var fanOut = Output.DimensionOffSets[1]; // product of all dimensions except batch size.
 
+            var fanOut = Output.DimensionOffSets[0]; // product of all dimensions except batch size.
+            
             // store switches for x,y coordinates for where the max comes from, for each output neuron
             // only used during training.
             this.m_switchX = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();

@@ -73,6 +73,7 @@
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\Executor.cs" />
     <Compile Include="LayersNew\ILayer.cs" />
+    <Compile Include="LayersNew\MaxPool2DDescriptor.cs" />
     <Compile Include="LayersNew\MaxPool2DLayer.cs" />
     <Compile Include="LayersNew\Variable.cs" />
     <Compile Include="Layers\ActivationLayer.cs" />
@@ -109,7 +110,7 @@
     <Compile Include="Providers\DotNetOp\BatchNormalization.cs" />
     <Compile Include="Providers\DotNetOp\Convolution.cs" />
     <Compile Include="Providers\DotNetOp\Dense.cs" />
-    <Compile Include="Providers\DotNetOp\MaxPool.cs" />
+    <Compile Include="Providers\DotNetOp\MaxPool2D.cs" />
     <Compile Include="Providers\DotNetOp\Utils.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />
