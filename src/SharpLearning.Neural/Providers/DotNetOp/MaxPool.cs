@@ -156,6 +156,72 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        public void Backward(Tensor<float> input,
+            Tensor<float> output)
+        {
+            var src = input;
+            var dst = output;
+
+            int MB = src.Dimensions[0];
+
+            // enumerate each batch item one at a time
+            Parallel.For(0, MB, mb =>
+            {
+                BackwardSingleItem(input, output, mb);
+            });
+        }
+
+        void BackwardSingleItem(Tensor<float> inputGradient, Tensor<float> outputGradient, int mb)
+        {
+            var MB = inputGradient.Dimensions[0];
+            var IH = inputGradient.Dimensions[2];
+            var IW = inputGradient.Dimensions[3];
+
+            var OC = outputGradient.Dimensions[1];
+            var OH = outputGradient.Dimensions[2];
+            var OW = outputGradient.Dimensions[3];
+
+            var inputData = inputGradient.Data;
+            var outputData = outputGradient.Data;
+
+            var switchx = m_switchX[mb];
+            var switchy = m_switchY[mb];
+
+            var dstBOffSet = outputGradient.DimensionOffSets[0] * mb;
+            var srcBOffSet = inputGradient.DimensionOffSets[0] * mb;
+
+            for (var c = 0; c < OC; c++)
+            {
+                var n = c * OW * OH; // conter for switches
+                var dstCOffSet = dstBOffSet + outputGradient.DimensionOffSets[1] * c;
+
+                var srcCOffset = srcBOffSet + inputGradient.DimensionOffSets[1] * c;
+
+                for (var h = 0; h < OH; h++)
+                {
+                    var dstHOffSet = dstCOffSet + outputGradient.DimensionOffSets[2] * h;
+
+                    for (var w = 0; w < OW; w++)
+                    {
+                        var dstIndex = dstHOffSet + w;
+                        var gradient = outputData[dstIndex];
+
+                        var srcHOffset = srcCOffset + inputGradient.DimensionOffSets[2] * switchy[n];
+                        var srcIndex = srcHOffset + switchx[n];
+                        inputData[srcIndex] += gradient;
+
+                        n++;
+                    }
+                }
+            }
+        }
+
+            #region MKL IMPL
 
         static void Forward(Tensor<float> input,
             int poolHeight, int poolWidth,
@@ -242,5 +308,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             return d;
         }
+
+        # endregion
     }
 }
