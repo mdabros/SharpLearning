@@ -29,5 +29,12 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="executor"></param>
         void Backward(Executor executor);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputVariable"></param>
+        /// <param name="excecutor"></param>
+        void Initialize(Variable inputVariable, Executor excecutor);
     }
 }
