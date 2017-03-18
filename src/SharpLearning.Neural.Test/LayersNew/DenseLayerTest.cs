@@ -13,7 +13,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
-            var input = Variable.Create(10, 5, 1, 1);
+            var input = Variable.Create(1, 5, 1, 1);
             var sut = new DenseLayer(3);
             sut.Initialize(input, executor, new Random());
 

@@ -64,9 +64,7 @@ namespace SharpLearning.Neural.Test
         public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputVariable, float epsilon, Random random)
         {
             var accuracyCondition = 1e-2;
-
-            var fans = new FanInFanOut(layer.Input.DimensionOffSets[0],
-                layer.Output.DimensionOffSets[0]);
+            var batchSize = inputVariable.Dimensions[0];
 
             // set input to 1
             var input = executor.GetTensor(inputVariable);
@@ -103,19 +101,19 @@ namespace SharpLearning.Neural.Test
                 var diff = output1.Zip(output2,
                     (v1, v2) => (v1 - v2)).ToArray();
 
-                var gradient = diff.Select(v => v / (2.0f * epsilon)).Sum();
+                var approxGradient = diff.Select(v => v / (2.0 * epsilon)).Sum();
+                var computedGradient = gradients[i];
 
-                var actual = gradients[i];
-                Assert.AreEqual(gradient, actual, accuracyCondition);
+                var error = RelativeError(approxGradient, computedGradient);
+
+                Assert.IsTrue(error < accuracyCondition);
             }
         }
 
         public static void CheckLayerParameters(ILayerNew layer, Executor executor, Variable inputVariable, float epsilon, Random random)
         {
             var accuracyCondition = 1e-2;
-
-            var fans = new FanInFanOut(layer.Input.DimensionOffSets[0],
-                layer.Output.DimensionOffSets[0]);
+            var batchSize = inputVariable.Dimensions[0];
 
             // set input to 1
             var input = executor.GetTensor(inputVariable);
@@ -157,12 +155,25 @@ namespace SharpLearning.Neural.Test
                     var diff = output1.Zip(output2,
                         (v1, v2) => (v1 - v2)).ToArray();
 
-                    var gradient = diff.Select(v => v / (2.0f * epsilon)).Sum();
+                    var approxGradient = diff.Select(v => v / (2.0 * epsilon)).Sum();
+                    var computedGradient = gradients[i];
+                    
+                    var error = RelativeError(approxGradient, computedGradient);
 
-                    var actual = gradients[i];
-                    Assert.AreEqual(gradient, actual, accuracyCondition);
+                    Assert.IsTrue(error < accuracyCondition);
                 }
             }
+        }
+
+        static double RelativeError(double approximatedGradient, double computedGradient)
+        {
+            if (approximatedGradient == 0.0 && computedGradient == 0.0)
+            {
+                // in case both gradients are zero, skip the calculation.
+                return 0.0;
+            }
+
+            return Math.Abs(approximatedGradient - computedGradient) / Math.Max(approximatedGradient, computedGradient);
         }
     }
 }
