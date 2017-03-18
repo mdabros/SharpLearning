@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.LayersNew
@@ -8,14 +9,14 @@ namespace SharpLearning.Neural.LayersNew
     /// </summary>
     public class Executor
     {
-        readonly Dictionary<TensorShape, Data> m_data;
+        readonly Dictionary<Variable, Data> m_data;
 
         /// <summary>
         /// 
         /// </summary>
         public Executor()
         {
-            m_data = new Dictionary<TensorShape, Data>();
+            m_data = new Dictionary<Variable, Data>();
         }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public Tensor<float> GetTensor(TensorShape shape)
+        public Tensor<float> GetTensor(Variable shape)
         {
             if(!m_data.ContainsKey(shape))
             {
@@ -38,7 +39,7 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public Tensor<float> GetGradient(TensorShape shape)
+        public Tensor<float> GetGradient(Variable shape)
         {
             if (!m_data.ContainsKey(shape))
             {
@@ -46,6 +47,38 @@ namespace SharpLearning.Neural.LayersNew
             }
 
             return m_data[shape].GetOrAllocateGradient(shape);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="shape"></param>
+        /// <param name="distribution"></param>
+        public void AssignTensor(Variable shape, Func<float> distribution)
+        {
+            if (!m_data.ContainsKey(shape))
+            {
+                m_data[shape] = new Data();
+            }
+
+            var tensor = m_data[shape].GetOrAllocateTensor(shape);
+            tensor.Map(v => distribution());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="shape"></param>
+        /// <param name="distribution"></param>
+        public void AssignGradient(Variable shape, Func<float> distribution)
+        {
+            if (!m_data.ContainsKey(shape))
+            {
+                m_data[shape] = new Data();
+            }
+
+            var tensor = m_data[shape].GetOrAllocateGradient(shape);
+            tensor.Map(v => distribution());
         }
     }
 }

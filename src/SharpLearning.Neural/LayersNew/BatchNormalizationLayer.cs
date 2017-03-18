@@ -16,21 +16,21 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// Layer output shape
         /// </summary>
-        public TensorShape Output { get; set; }
+        public Variable Output { get; set; }
 
         /// <summary>
         /// Layer Input shape
         /// </summary>
-        public TensorShape Input { get; set; }
+        public Variable Input { get; set; }
 
-        TensorShape BatchColumnMeans;
-        TensorShape BatchcolumnVars;
+        Variable BatchColumnMeans;
+        Variable BatchcolumnVars;
 
-        TensorShape MovingAverageMeans;
-        TensorShape MovingAverageVariance;
+        Variable MovingAverageMeans;
+        Variable MovingAverageVariance;
 
-        TensorShape Scale;
-        TensorShape Bias;
+        Variable Scale;
+        Variable Bias;
 
         /// <summary>
         /// 
@@ -96,43 +96,27 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="inputShape"></param>
+        /// <param name="inputVariable"></param>
         /// <param name="excecutor"></param>
-        public void Initialize(TensorShape inputShape, Executor excecutor)
+        public void Initialize(Variable inputVariable, Executor excecutor)
         {
-            Input = inputShape;
-            Output = new TensorShape(inputShape.Dimensions.ToArray());
+            Input = inputVariable;
+            Output = new Variable(inputVariable.Dimensions.ToArray());
             
-            var c = inputShape.Dimensions[1];
-            var fanOutAndIn = inputShape.DimensionOffSets[0]; // product of all dimensions except batch size.
+            var c = inputVariable.Dimensions[1];
+            var fanOutAndIn = inputVariable.DimensionOffSets[0]; // product of all dimensions except batch size.
 
-            Scale = new TensorShape(fanOutAndIn);
-            excecutor.GetTensor(Scale)
-                .Map(v => 1.0f);
-            excecutor.GetGradient(Scale) // should gradients also be mapped to 1?
-                .Map(v => 1.0f);
+            Scale = Variable.CreateTrainable(fanOutAndIn);
+            excecutor.AssignTensor(Scale, () => 1.0f);
+                
+            Bias = Variable.CreateTrainable(fanOutAndIn);
+  
+            BatchColumnMeans = Variable.Create(c);
+            BatchcolumnVars = Variable.Create(c);
 
-            Bias = new TensorShape(fanOutAndIn);
-            excecutor.GetTensor(Scale)
-                .Map(v => 0.0f);
-
-            BatchColumnMeans = new TensorShape(c);
-            BatchcolumnVars = new TensorShape(c);
-
-            MovingAverageMeans = new TensorShape(c);
-            MovingAverageVariance = new TensorShape(c);
-            excecutor.GetTensor(MovingAverageVariance)
-                .Map(v => 1.0f);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameters"></param>
-        public void GetTrainableParameterShapes(List<TensorShape> parameters)
-        {
-            parameters.Add(Scale);
-            parameters.Add(Bias);
+            MovingAverageMeans = Variable.Create(c);
+            MovingAverageVariance = Variable.Create(c);
+            excecutor.AssignTensor(MovingAverageVariance, () => 1.0f);
         }
     }
 }

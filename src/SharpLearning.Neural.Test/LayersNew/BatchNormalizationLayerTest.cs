@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.LayersNew;
 using SharpLearning.Neural.Providers.DotNetOp;
 
@@ -14,7 +13,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
-            var input = new TensorShape(10, 1, 28, 28);
+            var input = Variable.Create(1, 3, 3, 3);
             var sut = new BatchNormalizationLayer(new BatchNormalization());
             sut.Initialize(input, executor);
 

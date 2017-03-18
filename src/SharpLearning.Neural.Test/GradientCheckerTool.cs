@@ -61,9 +61,9 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayer(ILayerNew layer, Executor executor, TensorShape inputShape, float epsilon, Random random)
+        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputShape, float epsilon, Random random)
         {
-            var accuracyCondition = 1e-6;
+            var accuracyCondition = 1e-2;
 
             var input = executor.GetTensor(inputShape);
             input.Map(v => (float)random.NextDouble());

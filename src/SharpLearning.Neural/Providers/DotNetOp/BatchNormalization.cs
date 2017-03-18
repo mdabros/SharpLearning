@@ -179,7 +179,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             {
                 var v_mean = mean[c];
                 var v_variance = variance[c];
-                var sqrt_variance = 1.0f / (float)Math.Sqrt(v_variance + eps);
+                //var sqrt_variance = 1.0f / (float)Math.Sqrt(v_variance + eps);
                 var gamma = scaleData[c];
                 var diff_gamma = 0.0f;
                 var diff_beta = 0.0f;
@@ -210,7 +210,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     }
                 }
 
-                diff_gamma *= sqrt_variance;
+                diff_gamma *= v_variance;
 
                 scaleGradientsData[c] = diff_gamma;
                 biasGradientsData[c] = diff_gamma;
@@ -237,9 +237,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             
                             v_diff_src -= diff_beta / (W * H * N) +
                                 (srcData[srcIndex] - v_mean) *
-                                diff_gamma * sqrt_variance / (W * H * N);
+                                diff_gamma * v_variance / (W * H * N);
 
-                            v_diff_src *= gamma * sqrt_variance;
+                            v_diff_src *= gamma * v_variance;
                             diffSrcData[diffSrcIndex] = v_diff_src;
                         }
                     }

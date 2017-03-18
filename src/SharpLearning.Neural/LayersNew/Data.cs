@@ -17,31 +17,33 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         public Tensor<float> Gradient { get; set; }
 
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="shape"></param>
+        /// <param name="variable"></param>
         /// <returns></returns>
-        public Tensor<float> GetOrAllocateTensor(TensorShape shape)
+        public Tensor<float> GetOrAllocateTensor(Variable variable)
         {
             if (Tensor == null)
             {
-                Tensor = new Tensor<float>(shape, DataLayout.RowMajor);
+                Tensor = new Tensor<float>(variable.Shape, DataLayout.RowMajor);
             }
 
             return Tensor;
         }
 
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="shape"></param>
+        /// <param name="variable"></param>
         /// <returns></returns>
-        public Tensor<float> GetOrAllocateGradient(TensorShape shape)
+        public Tensor<float> GetOrAllocateGradient(Variable variable)
         {
             if (Gradient == null)
             {
-                Gradient = new Tensor<float>(shape, DataLayout.RowMajor);
+                Gradient = new Tensor<float>(variable.Shape, DataLayout.RowMajor);
             }
 
             return Gradient;

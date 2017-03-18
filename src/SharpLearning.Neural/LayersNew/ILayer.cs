@@ -11,12 +11,12 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// Layer output shape
         /// </summary>
-        TensorShape Output { get; set; }
+        Variable Output { get; set; }
 
         /// <summary>
         /// Layer Input shape
         /// </summary>
-        TensorShape Input { get; set; }
+        Variable Input { get; set; }
 
         /// <summary>
         /// 
@@ -29,11 +29,5 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="executor"></param>
         void Backward(Executor executor);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="parameters"></param>
-        void GetTrainableParameterShapes(List<TensorShape> parameters);
     }
 }
