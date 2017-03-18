@@ -65,11 +65,12 @@ namespace SharpLearning.Neural.LayersNew
             tensor.Map(v => distribution());
         }
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="shape"></param>
-        /// <param name="distribution"></param>
+        /// <param name="data"></param>
         public void AssignTensor(Variable shape, float[] data)
         {
             if (!m_data.ContainsKey(shape))

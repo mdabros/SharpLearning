@@ -29,6 +29,21 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         }
 
         [TestMethod]
+        public void Util_Multiply_2()
+        {
+            var a = Tensor<float>.Build(new float[] { 1, 2, 3, 4, 5, 6 }, 3, 2);
+            var b = Tensor<float>.Build(new float[] { 7, 8, 9, 10, 11, 12, 13, 14 }, 2, 4);
+
+            var actual = Tensor<float>.Build(a.Dimensions[0], b.Dimensions[1]);
+
+            Utils.Multiply(a, b, actual);
+
+            var expected = Tensor<float>.Build(new float[] { 29, 32, 35, 38, 65, 72, 79, 86, 101, 112, 123, 134 }, 3, 4);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         public void Util_Multiply_Timing()
         {
             var elements = 300;
@@ -90,12 +105,12 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var t2 = Tensor<float>.Build(elements, elements);
             var tOut = Tensor<float>.Build(elements, elements);
 
-            Utils.Multiply(t1, t2, tOut);
+            Utils.MultiplyRef(t1, t2, tOut);
 
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
-                Utils.Multiply(t1, t2, tOut);
+                Utils.MultiplyRef(t1, t2, tOut);
                 timer.Stop();
             }
 
@@ -109,12 +124,12 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var t2 = Tensor<float>.Build(elements, elements);
             var tOut = Tensor<float>.Build(elements, elements);
 
-            Utils.Multiply_MathNet(t1, t2, tOut);
+            Utils.Multiply(t1, t2, tOut);
 
             for (int i = 0; i < iterations; i++)
             {
                 timer.Start();
-                Utils.Multiply_MathNet(t1, t2, tOut);
+                Utils.Multiply(t1, t2, tOut);
                 timer.Stop();
             }
 

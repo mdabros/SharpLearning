@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using MathNet.Numerics;
+using MathNet.Numerics.Providers.LinearAlgebra;
 using SharpLearning.Containers.Tensors;
+using SharpLearning.Containers.Extensions;
+
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
@@ -63,32 +68,144 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="t1"></param>
         /// <param name="t2"></param>
         /// <param name="tOut"></param>
-        public static void Multiply_MathNet(Tensor<float> t1, Tensor<float> t2, Tensor<float> tOut)
+        public static void Multiply(this Tensor<float> t1, Tensor<float> t2, Tensor<float> tOut)
         {
-            if (t1.DimensionCount != 2 || t2.DimensionCount != 2 || tOut.DimensionCount != 2)
-            { throw new ArgumentException($"Only 2-dim tensors is supported"); }
+            var t1Rows = t1.Dimensions[0];
+            // Assumes 2D or else collapses to 2D
+            var t1Cols = t1.DimensionOffSets[0];
 
-            if (t1.Dimensions[1] != t2.Dimensions[0])
-            { throw new ArgumentException($"matrix a cols: differs from matrix b rows: "); }
+            var t2Rows = t2.Dimensions[0];
+            // Assumes 2D or else collapses to 2D
+            var t2Cols = t2.DimensionOffSets[0];
 
+            var tOutRows = tOut.Dimensions[0];
+            // Assumes 2D or else collapses to 2D
+            var tOutCols = tOut.DimensionOffSets[0];
 
-            if (tOut.Dimensions[0] != t1.Dimensions[0])
+            if (t1Cols != t2Rows)
+            { throw new ArgumentException($"tensor1 cols: {t1Cols} differs from tensor2 rows: {t2Rows}"); }
+
+            if (tOutRows != t1Rows)
             {
-                throw new ArgumentException($"output matrix rows: differs from matrix a rows: " );
+                throw new ArgumentException($"output tensor rows: {tOutRows} differs from tensor1 rows: {t1Rows}" );
             }
 
-            if (tOut.Dimensions[1] != t2.Dimensions[1])
+            if (tOutCols != t2Cols)
             {
-                throw new ArgumentException($"output matrix rows: differs from matrix b cols: ");
+                throw new ArgumentException($"output tensor rows: {tOutCols} differs from matrix b cols: {t2Cols} ");
             }
 
-            var m1 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(t1.Dimensions[0], t1.Dimensions[1], t1.Data);
-            var m2 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(t2.Dimensions[0], t2.Dimensions[1], t2.Data);
-            var mOut = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOut.Dimensions[0], tOut.Dimensions[1], tOut.Data);
+            // clear tOut
+            tOut.Data.Clear();
 
-            m1.Multiply(m2, mOut);
+            // transpose and switch dimensions inorder to switch from row-major to col-major (math.net representation).
+            Control.LinearAlgebraProvider
+            .MatrixMultiplyWithUpdate(Transpose.Transpose, Transpose.Transpose,
+                1.0f, t1.Data, t1Cols, t1Rows, t2.Data, t2Cols, t2Rows, 1.0f, tOut.Data);
+
+            // results has to be transposed inorder to get back to row-major.
+            var tr1 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOutRows, tOutCols, tOut.Data.ToArray());
+            var tr2 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOutCols, tOutRows, tOut.Data);
+            tr1.Transpose(tr2);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <param name="tOut"></param>
+        public static void TransposeAndMultiply(this Tensor<float> t1, Tensor<float> t2, Tensor<float> tOut)
+        {
+            var t1Rows = t1.Dimensions[0];
+            // Assumes 2D or else collapses to 2D
+            var t1Cols = t1.DimensionOffSets[0];
+
+            // rows and cols are switched since these has to match the transposed dimensions.
+            var t2Rows = t2.DimensionOffSets[0]; 
+            // Assumes 2D or else collapses to 2D
+            var t2Cols = t2.Dimensions[0];
+
+            var tOutRows = tOut.Dimensions[0];
+            // Assumes 2D or else collapses to 2D
+            var tOutCols = tOut.DimensionOffSets[0];
+
+            if (t1Cols != t2Rows)
+            { throw new ArgumentException($"tensor1 cols: {t1Cols} differs from tensor2 rows: {t2Rows}"); }
+
+            if (tOutRows != t1Rows)
+            {
+                throw new ArgumentException($"output tensor rows: {tOutRows} differs from tensor1 rows: {t1Rows}");
+            }
+
+            if (tOutCols != t2Cols)
+            {
+                throw new ArgumentException($"output tensor rows: {tOutCols} differs from matrix b cols: {t2Cols} ");
+            }
+
+            // clear tOut
+            tOut.Data.Clear();
+
+            // t2 should be transposed in this multiplication. Because of row-major to col-major (math.net representation),
+            // t2 is kept as original and t1 transposed
+            Control.LinearAlgebraProvider
+            .MatrixMultiplyWithUpdate(Transpose.Transpose, Transpose.DontTranspose,
+                1.0f, t1.Data, t1Cols, t1Rows, t2.Data, t2Rows, t2Cols, 1.0f, tOut.Data);
+
+            // results has to be transposed inorder to get back to row-major.
+            var tr1 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOutRows, tOutCols, tOut.Data.ToArray());
+            var tr2 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOutCols, tOutRows, tOut.Data);
+            tr1.Transpose(tr2);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <param name="tOut"></param>
+        public static void TransposeThisAndMultiply(this Tensor<float> t1, Tensor<float> t2, Tensor<float> tOut)
+        {
+            // rows and cols are switched since these has to match the transposed dimensions.
+            var t1Rows = t1.DimensionOffSets[0];
+            // Assumes 2D or else collapses to 2D
+            var t1Cols = t1.Dimensions[0]; 
+
+            var t2Rows = t2.Dimensions[0];
+            // Assumes 2D or else collapses to 2D
+            var t2Cols = t2.DimensionOffSets[0];
+
+            var tOutRows = tOut.Dimensions[0];
+            // Assumes 2D or else collapses to 2D
+            var tOutCols = tOut.DimensionOffSets[0];
+
+            if (t1Cols != t2Rows)
+            { throw new ArgumentException($"tensor1 cols: {t1Cols} differs from tensor2 rows: {t2Rows}"); }
+
+            if (tOutRows != t1Rows)
+            {
+                throw new ArgumentException($"output tensor rows: {tOutRows} differs from tensor1 rows: {t1Rows}");
+            }
+
+            if (tOutCols != t2Cols)
+            {
+                throw new ArgumentException($"output tensor rows: {tOutCols} differs from matrix b cols: {t2Cols} ");
+            }
+
+            // clear tOut
+            tOut.Data.Clear();
+
+            // t1 should be transposed in this multiplication. Because of row-major to col-major (math.net representation),
+            // t1 is kept as original and t1 transposed
+            Control.LinearAlgebraProvider
+            .MatrixMultiplyWithUpdate(Transpose.DontTranspose, Transpose.Transpose,
+                1.0f, t1.Data, t1Rows, t1Cols, t2.Data, t2Cols, t2Rows, 1.0f, tOut.Data);
+
+            // results has to be transposed inorder to get back to row-major.
+            var tr1 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOutRows, tOutCols, tOut.Data.ToArray());
+            var tr2 = MathNet.Numerics.LinearAlgebra.Matrix<float>.Build.Dense(tOutCols, tOutRows, tOut.Data);
+            tr1.Transpose(tr2);
+        }
 
 
         /// <summary>
@@ -97,7 +214,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="m1"></param>
         /// <param name="m2"></param>
         /// <param name="output"></param>
-        public static void Multiply(Tensor<float> m1, Tensor<float> m2, Tensor<float> output)
+        public static void MultiplyRef(Tensor<float> m1, Tensor<float> m2, Tensor<float> output)
         {
             if(m1.DimensionCount != 2 || m2.DimensionCount != 2 || output.DimensionCount != 2)
             { throw new ArgumentException("Only 2-dimensional tensors are supported. "); }
@@ -146,35 +263,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 }
             });
         }
-        
-        static void InnerLoop(float[] v, float value, float[] output)
-        {
-            for (int i = 0; i < v.Length; i++)
-            {
-                output[i] = value * v[i];
-            }
-        }
-
-
-        static void InnerLoopSimd(float[] v, float value, float[] output)
-        {
-            var simdLength = Vector<float>.Count;
-
-            var i = 0;
-            for (i = 0; i <= v.Length - simdLength; i += simdLength)
-            {
-                var va = new Vector<float>(v, i);
-                var vb = new Vector<float>(value);
-                var vr = va * vb;
-
-                var vOut = new Vector<float>(output, i);
-                (vr + vOut).CopyTo(output, i);
-            }
-
-            for (; i < v.Length; ++i)
-            {
-                output[i] = value * v[i];
-            }
-        }
+       
     }
 }

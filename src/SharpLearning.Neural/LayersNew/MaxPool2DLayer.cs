@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Providers.DotNetOp;
 
 namespace SharpLearning.Neural.LayersNew
@@ -86,7 +87,10 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="inputVariable"></param>
         /// <param name="excecutor"></param>
-        public void Initialize(Variable inputVariable, Executor excecutor)
+        /// <param name="random"></param>
+        /// <param name="initializtion"></param>
+        public void Initialize(Variable inputVariable, Executor excecutor, Random random,
+            Initialization initializtion = Initialization.GlorotUniform)
         {
             Input = inputVariable;
 

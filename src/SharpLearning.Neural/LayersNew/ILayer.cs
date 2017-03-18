@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SharpLearning.Containers.Tensors;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.LayersNew
 {
@@ -35,6 +37,8 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="inputVariable"></param>
         /// <param name="excecutor"></param>
-        void Initialize(Variable inputVariable, Executor excecutor);
+        /// <param name="random"></param>
+        /// <param name="initializtion"></param>
+        void Initialize(Variable inputVariable, Executor excecutor, Random random, Initialization initializtion);
     }
 }

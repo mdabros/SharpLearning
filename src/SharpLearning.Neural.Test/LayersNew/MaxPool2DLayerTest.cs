@@ -14,7 +14,7 @@ namespace SharpLearning.Neural.Test.LayersNew
 
             var input = Variable.Create(5, 2, 20, 20);
             var sut = new MaxPool2DLayer(2, 2);
-            sut.Initialize(input, executor);
+            sut.Initialize(input, executor, new Random());
 
             GradientCheckTools.CheckLayer(sut, executor, input, 1e-4f, new Random(21));
         }

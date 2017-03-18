@@ -45,6 +45,18 @@ namespace SharpLearning.Containers.Test.Arithmetic
         }
 
         [TestMethod]
+        public void F64MatrixMultiplication_F64MatrixMultiply_2()
+        {
+            var a = new F64Matrix(new double[] { 1, 2, 3, 4, 5, 6, }, 3, 2);
+            var b = new F64Matrix(new double[] { 7, 8, 9, 10, 11, 12, 13, 14 }, 2, 4);
+
+            var c = a.Multiply(b);
+
+            var expected = new F64Matrix(new double[] { 29, 32, 35, 38, 65, 72, 79, 86, 101, 112, 123, 134 }, 3, 4);
+            Assert.AreEqual(expected, c);
+        }
+
+        [TestMethod]
         public void F64MatrixMultiplication_F64MatrixMultiply_Predefined()
         {
             var a = new F64Matrix(new double[6] { 1, 2, 3, 4, 5, 6 }, 2, 3);

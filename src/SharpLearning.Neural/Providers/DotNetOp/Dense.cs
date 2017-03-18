@@ -1,20 +1,41 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading.Tasks;
+using MathNet.Numerics;
+using MathNet.Numerics.Providers.LinearAlgebra;
 using SharpLearning.Containers.Tensors;
+using SharpLearning.Neural.LayersNew;
+using SharpLearning.Containers.Extensions;
+
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
     /// <summary>
     /// 
     /// </summary>
-    public class Dense
+    public static class Dense
     {
         /// <summary>
         /// 
         /// </summary>
-        public Dense()
+        /// <param name="input"></param>
+        /// <param name="weights"></param>
+        /// <param name="bias"></param>
+        /// <param name="output"></param>
+        /// <param name="executor"></param>
+        public static void Forward(Variable input,
+            Variable weights, Variable bias,
+            Variable output, Executor executor)
         {
+            var src = executor.GetTensor(input);
+
+            var w = executor.GetTensor(weights);
+            var b = executor.GetTensor(bias).Data;
+
+            var dst = executor.GetTensor(output);
+
+            src.Multiply(w, dst);
+            dst.AddRowWise(b, dst);
         }
 
         /// <summary>
@@ -24,7 +45,39 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="weights"></param>
         /// <param name="bias"></param>
         /// <param name="output"></param>
-        public void Forward(Tensor<float> input,
+        /// <param name="executor"></param>
+        public static void Backward(Variable input,
+            Variable weights, Variable bias,
+            Variable output, Executor executor)
+        {
+            var src = executor.GetTensor(input);
+            var srcDiff = executor.GetGradient(input);
+
+            var w = executor.GetTensor(weights);
+            var wDiff = executor.GetGradient(weights);
+
+            var bDiff = executor.GetGradient(bias).Data;           
+            var dstDiff = executor.GetGradient(output);
+
+            // calculate gradients
+            src.TransposeThisAndMultiply(dstDiff, wDiff);
+            dstDiff.SumColumns(bDiff);
+
+            // calculate delta for next layer
+            dstDiff.TransposeAndMultiply(w, srcDiff);
+        }
+
+
+        #region DotNet IMPL
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="weights"></param>
+        /// <param name="bias"></param>
+        /// <param name="output"></param>
+        static void Forward(Tensor<float> input,
             Tensor<float> weights, Tensor<float> bias,
             Tensor<float> output)
         {
@@ -125,5 +178,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             return d;
         }
+
+        #endregion
     }
 }

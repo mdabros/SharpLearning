@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.LayersNew;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
