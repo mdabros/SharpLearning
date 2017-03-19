@@ -69,6 +69,7 @@
     <Compile Include="Initializations\Initialization.cs" />
     <Compile Include="Activations\ReluActivation.cs" />
     <Compile Include="ConvUtils.cs" />
+    <Compile Include="LayersNew\ActivationLayer.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\DenseLayer.cs" />
@@ -108,10 +109,13 @@
     <Compile Include="Optimizers\OptimizerMethod.cs" />
     <Compile Include="ParametersAndGradients.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\DotNetOp\Activation.cs" />
     <Compile Include="Providers\DotNetOp\BatchNormalization.cs" />
     <Compile Include="Providers\DotNetOp\Convolution.cs" />
     <Compile Include="Providers\DotNetOp\Dense.cs" />
     <Compile Include="Providers\DotNetOp\MaxPool2D.cs" />
+    <Compile Include="Providers\DotNetOp\Relu.cs" />
+    <Compile Include="Providers\DotNetOp\SoftMax.cs" />
     <Compile Include="Providers\DotNetOp\Utils.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />

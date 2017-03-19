@@ -66,7 +66,6 @@ namespace SharpLearning.Neural.Test
             var accuracyCondition = 1e-2;
             var batchSize = inputVariable.Dimensions[0];
 
-            // set input to 1
             var input = executor.GetTensor(inputVariable);
             input.Map(v => (float)random.NextDouble());
 

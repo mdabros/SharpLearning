@@ -75,6 +75,7 @@
     <Compile Include="Activations\ReluActivationTest.cs" />
     <Compile Include="ConvUtilsTest.cs" />
     <Compile Include="GradientCheckerTool.cs" />
+    <Compile Include="LayersNew\ActivationLayerTest.cs" />
     <Compile Include="LayersNew\DenseLayerTest.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayerTest.cs" />
     <Compile Include="LayersNew\MaxPool2DLayerTest.cs" />

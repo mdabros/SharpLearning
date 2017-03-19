@@ -14,5 +14,10 @@
         /// Relu activation.
         /// </summary>
         Relu,
+
+        /// <summary>
+        /// SoftMax activation.
+        /// </summary>
+        SoftMax,
     }
 }

@@ -32,6 +32,48 @@ namespace SharpLearning.Containers.Tensors
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <param name="output"></param>
+        public static void Subtract(this Tensor<float> t1, Tensor<float> t2, Tensor<float> output)
+        {
+            if(t1.ElementCount != t2.ElementCount)
+            { throw new ArgumentException($"t1 element count: {t1.ElementCount} differs from t2: {t2.ElementCount}"); }
+
+            var t1Data = t1.Data;
+            var t2Data = t2.Data;
+            var tOutData = output.Data;
+
+            for (int i = 0; i < t1.ElementCount; i++)
+            {
+                tOutData[i] = t1Data[i] - t2Data[i];
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="t1"></param>
+        /// <param name="t2"></param>
+        /// <param name="output"></param>
+        public static void PointwiseMultiply(this Tensor<float> t1, Tensor<float> t2, Tensor<float> output)
+        {
+            if (t1.ElementCount != t2.ElementCount)
+            { throw new ArgumentException($"t1 element count: {t1.ElementCount} differs from t2: {t2.ElementCount}"); }
+
+            var t1Data = t1.Data;
+            var t2Data = t2.Data;
+            var tOutData = output.Data;
+
+            for (int i = 0; i < t1.ElementCount; i++)
+            {
+                tOutData[i] = t1Data[i] * t2Data[i];
+            }
+        }
+
+        /// <summary>
         /// Adds vector v to matrix m. V is Added to each row of the matrix
         /// </summary>
         /// <param name="m"></param>
