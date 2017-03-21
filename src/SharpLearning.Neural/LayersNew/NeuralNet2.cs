@@ -58,6 +58,16 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public Tensor<float> BatchPredictions()
+        {
+            var prediction = Executor.GetTensor(Layers.Last().Output);
+            return prediction;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Forward()
         {
             Layers.ForEach(l => l.Forward(Executor));
