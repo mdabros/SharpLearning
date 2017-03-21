@@ -20,7 +20,7 @@ namespace SharpLearning.Neural.Loss
         /// <returns></returns>
         public float Loss(Matrix<float> targets, Matrix<float> predictions)
         {
-            return Loss(targets, predictions);
+            return Loss(targets.Data(), predictions.Data());
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.Loss
         /// <returns></returns>
         public float Loss(Tensor<float> targets, Tensor<float> predictions)
         {
-            return Loss(targets, predictions);
+            return Loss(targets.Data, predictions.Data);
         }
 
         float Loss(float[] targetsData, float[] predictionsData)
