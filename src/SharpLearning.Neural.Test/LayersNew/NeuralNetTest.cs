@@ -16,11 +16,11 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var random = new Random(32);
             var inputShape = new TensorShape(10, 25, 25);
-            var observations = Tensor<float>.Build(inputShape.Dimensions);
-            observations.Map(v => (float)random.NextDouble());
+            var observations = Tensor<double>.Build(inputShape.Dimensions);
+            observations.Map(v => random.NextDouble());
 
-            var targets = Tensor<float>.Build(10, 2);
-            targets.Map(v => (float)random.Next(2));
+            var targets = Tensor<double>.Build(10, 2);
+            targets.Map(v => random.Next(2));
 
             var sut = new NeuralNet2();
 

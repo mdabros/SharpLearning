@@ -43,12 +43,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             }
         }
 
-        static float ReluMax(float input)
+        static double ReluMax(double input)
         {
             return Math.Max(0, input);
         }
 
-        static float Derivative(float dst, float dstGradient)
+        static double Derivative(double dst, double dstGradient)
         {
             if (dst > 0.0)
                 return dstGradient;

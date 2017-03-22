@@ -9,21 +9,21 @@ namespace SharpLearning.Neural.LayersNew
     /// </summary>
     public class Executor
     {
-        readonly Dictionary<Variable, Data> m_data;
+        readonly Dictionary<Variable, Data<double>> m_data;
 
         /// <summary>
         /// 
         /// </summary>
         public Executor()
         {
-            m_data = new Dictionary<Variable, Data>();
+            m_data = new Dictionary<Variable, Data<double>>();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parameters"></param>
-        public void GetTrainableParameters(List<Data> parameters)
+        public void GetTrainableParameters(List<Data<double>> parameters)
         {
             foreach (var data in m_data)
             {
@@ -39,11 +39,11 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public Tensor<float> GetTensor(Variable shape)
+        public Tensor<double> GetTensor(Variable shape)
         {
             if(!m_data.ContainsKey(shape))
             {
-                m_data[shape] = new Data();
+                m_data[shape] = new Data<double>();
             }
 
             return m_data[shape].GetOrAllocateTensor(shape);
@@ -54,11 +54,11 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <returns></returns>
-        public Tensor<float> GetGradient(Variable shape)
+        public Tensor<double> GetGradient(Variable shape)
         {
             if (!m_data.ContainsKey(shape))
             {
-                m_data[shape] = new Data();
+                m_data[shape] = new Data<double>();
             }
 
             return m_data[shape].GetOrAllocateGradient(shape);
@@ -69,11 +69,11 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="distribution"></param>
-        public void AssignTensor(Variable shape, Func<float> distribution)
+        public void AssignTensor(Variable shape, Func<double> distribution)
         {
             if (!m_data.ContainsKey(shape))
             {
-                m_data[shape] = new Data();
+                m_data[shape] = new Data<double>();
             }
 
             var tensor = m_data[shape].GetOrAllocateTensor(shape);
@@ -86,11 +86,11 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="data"></param>
-        public void AssignTensor(Variable shape, float[] data)
+        public void AssignTensor(Variable shape, double[] data)
         {
             if (!m_data.ContainsKey(shape))
             {
-                m_data[shape] = new Data();
+                m_data[shape] = new Data<double>();
             }
 
             var tensor = m_data[shape].GetOrAllocateTensor(shape);
@@ -111,11 +111,11 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="distribution"></param>
-        public void AssignGradient(Variable shape, Func<float> distribution)
+        public void AssignGradient(Variable shape, Func<double> distribution)
         {
             if (!m_data.ContainsKey(shape))
             {
-                m_data[shape] = new Data();
+                m_data[shape] = new Data<double>();
             }
 
             var tensor = m_data[shape].GetOrAllocateGradient(shape);
@@ -127,11 +127,11 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="data"></param>
-        public void AssignGradient(Variable shape, float[] data)
+        public void AssignGradient(Variable shape, double[] data)
         {
             if (!m_data.ContainsKey(shape))
             {
-                m_data[shape] = new Data();
+                m_data[shape] = new Data<double>();
             }
 
             var gradient = m_data[shape].GetOrAllocateGradient(shape);

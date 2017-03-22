@@ -32,7 +32,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var outputH = ConvUtils.GetFilterGridLength(inputHeight, descriptor.PoolH, 
                 descriptor.StrideH, descriptor.PadH, BorderMode.Undefined);
 
-            var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
+            var inputData = new double[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
             var input = Variable.Create(batchSize, inputDepth, inputHeight, inputWidth);
             var output = Variable.Create(batchSize, outputC, outputH, outputW);
             var fanOut = output.DimensionOffSets[0];
@@ -48,7 +48,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             var actual = executor.GetTensor(output);
 
-            var expected = Tensor<float>.Build(new float[] { 3, 6, 8, 10, 8, 5, 10, 12 }, batchSize, outputC, outputH, outputW);
+            var expected = Tensor<double>.Build(new double[] { 3, 6, 8, 10, 8, 5, 10, 12 }, batchSize, outputC, outputH, outputW);
             Assert.AreEqual(expected, actual);
         } 
     }

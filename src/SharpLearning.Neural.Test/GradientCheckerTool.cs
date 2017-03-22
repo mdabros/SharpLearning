@@ -61,13 +61,13 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputVariable, float epsilon, Random random)
+        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputVariable, double epsilon, Random random)
         {
-            var accuracyCondition = 1e-2;
+            var accuracyCondition = 1e-6;
             var batchSize = inputVariable.Dimensions[0];
 
             var input = executor.GetTensor(inputVariable);
-            input.Map(v => (float)random.NextDouble());
+            input.Map(v => random.NextDouble());
 
             layer.Forward(executor);
 
@@ -79,8 +79,8 @@ namespace SharpLearning.Neural.Test
             var parameters = executor.GetTensor(inputVariable).Data;
             var gradients = executor.GetGradient(inputVariable).Data;
 
-            var output1 = new float[layer.Output.ElementCount];
-            var output2 = new float[layer.Output.ElementCount];
+            var output1 = new double[layer.Output.ElementCount];
+            var output2 = new double[layer.Output.ElementCount];
 
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -109,7 +109,7 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayerParameters(ILayerNew layer, Executor executor, Variable inputVariable, float epsilon, Random random)
+        public static void CheckLayerParameters(ILayerNew layer, Executor executor, Variable inputVariable, double epsilon, Random random)
         {
             var accuracyCondition = 1e-2;
             var batchSize = inputVariable.Dimensions[0];
@@ -125,10 +125,10 @@ namespace SharpLearning.Neural.Test
 
             layer.Backward(executor);
 
-            var output1 = new float[layer.Output.ElementCount];
-            var output2 = new float[layer.Output.ElementCount];
+            var output1 = new double[layer.Output.ElementCount];
+            var output2 = new double[layer.Output.ElementCount];
 
-            var trainableParameters = new List<Data>();
+            var trainableParameters = new List<Data<double>>();
             executor.GetTrainableParameters(trainableParameters);
 
             foreach (var data in trainableParameters)

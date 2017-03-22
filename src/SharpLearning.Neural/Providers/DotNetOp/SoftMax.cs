@@ -76,7 +76,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var srcDiff = executor.GetGradient(input);
 
             dstDiff.Subtract(dst, srcDiff);
-            srcDiff.Map(v => v * -1f);
+            srcDiff.Map(v => v * -1);
         }
     }
 }

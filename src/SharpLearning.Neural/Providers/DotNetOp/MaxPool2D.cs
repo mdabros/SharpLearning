@@ -69,7 +69,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             int wend = Math.Min(wstart + desc.PoolW, IW);
                             wstart = Math.Max(wstart, 0);
 
-                            var currentMax = float.MinValue;
+                            var currentMax = double.MinValue;
                             int winx = -1, winy = -1;
 
                             for (int kh = hstart; kh < hend; ++kh)

@@ -58,10 +58,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             }
         }
 
-        static void Forward4D(bool isTraining, Tensor<float> src, Tensor<float> dst, 
-            float[] scaleData, float[] biasData, 
-            float[] batchColumnMeansData, float[] batcColumnVarsData, 
-            float[] movingAverageMeansData, float[] movingAverageVarianceData)
+        static void Forward4D(bool isTraining, Tensor<double> src, Tensor<double> dst, 
+            double[] scaleData, double[] biasData, 
+            double[] batchColumnMeansData, double[] batcColumnVarsData, 
+            double[] movingAverageMeansData, double[] movingAverageVarianceData)
         {
             int N = src.Dimensions[0]; // number of items in mini batch
             int C = src.Dimensions[1];
@@ -75,8 +75,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             Parallel.For(0, C, c =>
             {
-                float mean = 0;
-                float variance = 0;
+                double mean = 0;
+                double variance = 0;
 
                 var srcCoffSet = src.DimensionOffSets[1] * c;
 
@@ -111,7 +111,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             }
                         }
                     }
-                    variance = 1f / (float)Math.Sqrt(variance / (W * H * N) + eps);
+                    variance = 1f / (double)Math.Sqrt(variance / (W * H * N) + eps);
                 }
                 else
                 {
@@ -147,10 +147,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             });
         }
 
-        static void Forward2D(bool isTraining, Tensor<float> src, Tensor<float> dst,
-            float[] scaleData, float[] biasData,
-            float[] batchColumnMeansData, float[] batcColumnVarsData,
-            float[] movingAverageMeansData, float[] movingAverageVarianceData)
+        static void Forward2D(bool isTraining, Tensor<double> src, Tensor<double> dst,
+            double[] scaleData, double[] biasData,
+            double[] batchColumnMeansData, double[] batcColumnVarsData,
+            double[] movingAverageMeansData, double[] movingAverageVarianceData)
         {
             int N = src.Dimensions[0]; // number of items in mini batch
             int C = src.Dimensions[1];
@@ -162,8 +162,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             Parallel.For(0, C, c =>
             {
-                float mean = 0;
-                float variance = 0;
+                double mean = 0;
+                double variance = 0;
 
                 if (isTraining)
                 {
@@ -182,7 +182,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         var m = srcData[srcIndex] - mean;
                         variance += m * m;
                     }
-                    variance = 1f / (float)Math.Sqrt(variance / C + eps);
+                    variance = 1f / (double)Math.Sqrt(variance / C + eps);
                 }
                 else
                 {
@@ -256,11 +256,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             }
         }
 
-        static void Backward4D(Tensor<float> src, Tensor<float> diff_src, 
-            float[] scaleData, float[] scaleGradientData, 
-            float[] biasGradientData, 
-            float[] meanData, float[] varianceData, 
-            Tensor<float> diff_dst)
+        static void Backward4D(Tensor<double> src, Tensor<double> diff_src, 
+            double[] scaleData, double[] scaleGradientData, 
+            double[] biasGradientData, 
+            double[] meanData, double[] varianceData, 
+            Tensor<double> diff_dst)
         {
             int N = src.Dimensions[0];
             int C = src.Dimensions[1];
@@ -271,7 +271,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             //bool use_scaleshift = conf_.use_scaleshift();
             //bool calculate_diff_stats = !conf_.omit_stats();
 
-            //const float eps = 1e-6f;
+            //const double eps = 1e-6f;
 
             var srcData = src.Data;
             var diffDstData = diff_dst.Data;
@@ -282,10 +282,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             {
                 var v_mean = meanData[c];
                 var v_variance = varianceData[c];
-                //var sqrt_variance = 1.0f / (float)Math.Sqrt(v_variance + eps);
+                //var sqrt_variance = 1.0f / (double)Math.Sqrt(v_variance + eps);
                 var gamma = scaleData[c];
-                var diff_gamma = 0.0f;
-                var diff_beta = 0.0f;
+                var diff_gamma = 0.0;
+                var diff_beta = 0.0;
 
                 var srcCoffSet = src.DimensionOffSets[1] * c;
                 var diffDstCOffSet = diff_dst.DimensionOffSets[1] * c;
@@ -350,11 +350,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             }
         }
 
-        static void Backward2D(Tensor<float> src, Tensor<float> diff_src,
-             float[] scaleData, float[] scaleGradientData,
-             float[] biasGradientData,
-             float[] meanData, float[] varianceData,
-             Tensor<float> diff_dst)
+        static void Backward2D(Tensor<double> src, Tensor<double> diff_src,
+             double[] scaleData, double[] scaleGradientData,
+             double[] biasGradientData,
+             double[] meanData, double[] varianceData,
+             Tensor<double> diff_dst)
         {
             int N = src.Dimensions[0];
             int C = src.Dimensions[1];
@@ -363,7 +363,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             //bool use_scaleshift = conf_.use_scaleshift();
             //bool calculate_diff_stats = !conf_.omit_stats();
 
-            //const float eps = 1e-6f;
+            //const double eps = 1e-6f;
 
             var srcData = src.Data;
             var diffDstData = diff_dst.Data;
@@ -373,10 +373,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             {
                 var v_mean = meanData[c];
                 var v_variance = varianceData[c];
-                //var sqrt_variance = 1.0f / (float)Math.Sqrt(v_variance + eps);
+                //var sqrt_variance = 1.0f / (double)Math.Sqrt(v_variance + eps);
                 var gamma = scaleData[c];
-                var diff_gamma = 0.0f;
-                var diff_beta = 0.0f;
+                var diff_gamma = 0.0;
+                var diff_beta = 0.0;
 
                 for (int n = 0; n < N; ++n)
                 {
@@ -417,7 +417,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             }
         }
 
-        static float MovingAverage(float currentValue, float value, float momentum = 0.99f)
+        static double MovingAverage(double currentValue, double value, double momentum = 0.99f)
         {
             var newValue = currentValue * momentum + value * (1.0f - momentum);
             return newValue;

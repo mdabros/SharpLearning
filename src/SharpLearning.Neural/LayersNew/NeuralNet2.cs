@@ -44,7 +44,7 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        public void SetNextBatch(Tensor<float> observations, Tensor<float> targets)
+        public void SetNextBatch(Tensor<double> observations, Tensor<double> targets)
         {
             // inputs are assinged to the first layer.
             var input = Layers.First().Input;
@@ -59,7 +59,7 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <returns></returns>
-        public Tensor<float> BatchPredictions()
+        public Tensor<double> BatchPredictions()
         {
             var prediction = Executor.GetTensor(Layers.Last().Output);
             return prediction;

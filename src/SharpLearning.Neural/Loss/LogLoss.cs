@@ -41,6 +41,20 @@ namespace SharpLearning.Neural.Loss
             return Loss(targets.Data, predictions.Data, targets.Dimensions[0]);
         }
 
+        /// <summary>
+        /// returns log los
+        /// This error metric is used when one needs to predict that something is true or false with a probability (likelihood) 
+        /// ranging from definitely true (1) to equally true (0.5) to definitely false(0).
+        /// The use of log on the error provides extreme punishments for being both confident and wrong.
+        /// </summary>
+        /// <param name="targets"></param>
+        /// <param name="predictions"></param>
+        /// <returns></returns>
+        public double Loss(Tensor<double> targets, Tensor<double> predictions)
+        {
+            return Loss(targets.Data, predictions.Data, targets.Dimensions[0]);
+        }
+
         float Loss(float[] targetsData, float[] predictionsData, int batchSize)
         {
             var min = 1e-10f;
@@ -54,6 +68,21 @@ namespace SharpLearning.Neural.Loss
             }
 
             return -sum / (float)batchSize;
+        }
+
+        double Loss(double[] targetsData, double[] predictionsData, int batchSize)
+        {
+            var min = 1e-10;
+            var max = 1.0 - min;
+            var sum = 0.0;
+
+            for (int i = 0; i < targetsData.Length; i++)
+            {
+                var clip = Math.Log(Math.Max(min, Math.Min(predictionsData[i], max)));
+                sum += targetsData[i] * clip;
+            }
+
+            return -sum / (double)batchSize;
         }
     }
 }

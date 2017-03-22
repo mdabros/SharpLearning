@@ -24,5 +24,13 @@ namespace SharpLearning.Neural.Loss
         /// <param name="predictions"></param>
         /// <returns></returns>
         float Loss(Tensor<float> targets, Tensor<float> predictions);
+
+        /// <summary>
+        /// Returns the loss
+        /// </summary>
+        /// <param name="targets"></param>
+        /// <param name="predictions"></param>
+        /// <returns></returns>
+        double Loss(Tensor<double> targets, Tensor<double> predictions);
     }
 }
