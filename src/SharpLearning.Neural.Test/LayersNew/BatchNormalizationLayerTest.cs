@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.LayersNew;
-using SharpLearning.Neural.Providers.DotNetOp;
-using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Test.LayersNew
 {

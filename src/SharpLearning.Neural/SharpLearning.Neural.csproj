@@ -78,6 +78,7 @@
     <Compile Include="LayersNew\MaxPool2DDescriptor.cs" />
     <Compile Include="LayersNew\MaxPool2DLayer.cs" />
     <Compile Include="LayersNew\NeuralNet2.cs" />
+    <Compile Include="LayersNew\NeuralNetOptimizer2.cs" />
     <Compile Include="LayersNew\Variable.cs" />
     <Compile Include="Layers\ActivationLayer.cs" />
     <Compile Include="Layers\BatchNormalizationLayer.cs" />

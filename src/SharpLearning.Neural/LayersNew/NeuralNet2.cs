@@ -97,7 +97,16 @@ namespace SharpLearning.Neural.LayersNew
             {
                 var previousLayer = Layers[i - 1];
                 Layers[i].Initialize(previousLayer.Output, Executor, random, m_initialization);
-            }
+            }           
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        public void GetTrainableParameters(List<Data<double>> parameters)
+        {
+            Executor.GetTrainableParameters(parameters);
         }
     }
 }
