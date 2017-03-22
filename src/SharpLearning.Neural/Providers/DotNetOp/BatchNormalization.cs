@@ -77,20 +77,20 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 double variance = 0;
                 double sqrtVariance = 0;
 
-                var srcCoffSet = src.DimensionOffSets[1] * c;
+                var cOffSet = src.DimensionOffSets[1] * c;
 
                 if (isTraining)
                 {
                     for (int n = 0; n < N; ++n)
                     {
-                        var srcBOffSet = src.DimensionOffSets[0] * n;
+                        var nOffSet = src.DimensionOffSets[0] * n;
                         for (int h = 0; h < H; ++h)
                         {
-                            var srcHOffSet = src.DimensionOffSets[2] * h;
+                            var hOffSet = src.DimensionOffSets[2] * h;
                             for (int w = 0; w < W; ++w)
                             {
-                                var srcIndex = srcBOffSet + srcCoffSet + srcHOffSet + w;
-                                mean += srcData[srcIndex];
+                                var index = nOffSet + cOffSet + hOffSet + w;
+                                mean += srcData[index];
                             }
                         }
                     }
@@ -98,14 +98,14 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                     for (int n = 0; n < N; ++n)
                     {
-                        var srcBOffSet = src.DimensionOffSets[0] * n;
+                        var nOffSet = src.DimensionOffSets[0] * n;
                         for (int h = 0; h < H; ++h)
                         {
-                            var srcHOffSet = src.DimensionOffSets[2] * h;
+                            var hOffSet = src.DimensionOffSets[2] * h;
                             for (int w = 0; w < W; ++w)
                             {
-                                var srcIndex = srcBOffSet + srcCoffSet + srcHOffSet + w;
-                                var m = srcData[srcIndex] - mean;
+                                var index = nOffSet + cOffSet + hOffSet + w;
+                                var m = srcData[index] - mean;
                                 variance += m * m;
                             }
                         }
@@ -130,7 +130,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         var hOffSet = src.DimensionOffSets[2] * h;
                         for (int w = 0; w < W; ++w)
                         {
-                            var index = bOffSet + srcCoffSet + hOffSet + w;
+                            var index = bOffSet + cOffSet + hOffSet + w;
                             dstData[index] = scale * (srcData[index] - mean) * sqrtVariance + bias;
                         }
                     }
@@ -168,17 +168,17 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 {
                     for (int n = 0; n < N; ++n)
                     {
-                        var srcBOffSet = src.DimensionOffSets[0] * n;
-                        var srcIndex = srcBOffSet + c;
-                        mean += srcData[srcIndex];
+                        var nOffSet = src.DimensionOffSets[0] * n;
+                        var index = nOffSet + c;
+                        mean += srcData[index];
                     }
                     mean /= C;
 
                     for (int n = 0; n < N; ++n)
                     {
-                        var srcBOffSet = src.DimensionOffSets[0] * n;
-                        var srcIndex = srcBOffSet + c;
-                        var m = srcData[srcIndex] - mean;
+                        var nOffSet = src.DimensionOffSets[0] * n;
+                        var index = nOffSet + c;
+                        var m = srcData[index] - mean;
                         variance += m * m;
                     }
                     variance /= C;
@@ -193,7 +193,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 var scale = scaleData[c];
                 var bias = biasData[c];
-
 
                 for (int n = 0; n < N; ++n)
                 {
@@ -282,28 +281,25 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 var diff_gamma = 0.0;
                 var diff_beta = 0.0;
 
-                var srcCoffSet = src.DimensionOffSets[1] * c;
-                var diffDstCOffSet = diff_dst.DimensionOffSets[1] * c;
-                var diffSrcCOffSet = diff_src.DimensionOffSets[1] * c;
+                // src, dst and gradients all have same dimensions in batch norm.
+                // Index and offsets, is calculated for only one.
+                var coffSet = src.DimensionOffSets[1] * c;
 
                 for (int n = 0; n < N; ++n)
                 {
-                    var srcBOffSet = src.DimensionOffSets[0] * n;
-                    var diffDstBOffSet = diff_dst.DimensionOffSets[0] * n;
+                    var nOffSet = src.DimensionOffSets[0] * n;
 
                     for (int h = 0; h < H; ++h)
                     {
-                        var srcHOffSet = src.DimensionOffSets[2] * h;
-                        var diffDstHOffSet = diff_dst.DimensionOffSets[2] * h;
+                        var hOffSet = src.DimensionOffSets[2] * h;
 
                         for (int w = 0; w < W; ++w)
                         {
-                            var srcIndex = srcBOffSet + srcCoffSet + srcHOffSet + w;
-                            var diffDstIndex = diffDstBOffSet + diffDstCOffSet + diffDstHOffSet + w;
+                            var index = nOffSet + coffSet + hOffSet + w;
 
-                            diff_gamma += (srcData[srcIndex] - mean)
-                                * diffDstData[diffDstIndex];
-                            diff_beta += diffDstData[diffDstIndex];
+                            diff_gamma += (srcData[index] - mean) * diffDstData[index];
+
+                            diff_beta += diffDstData[index];
                         }
                     }
                 }
@@ -315,30 +311,24 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 for (int n = 0; n < N; ++n)
                 {
-                    var srcBOffSet = src.DimensionOffSets[0] * n;
-                    var diffDstBOffSet = diff_dst.DimensionOffSets[0] * n;
-                    var diffSrcBOffSet = diff_src.DimensionOffSets[0] * n;
+                    var nOffSet = src.DimensionOffSets[0] * n;
 
                     for (int h = 0; h < H; ++h)
                     {
-                        var srcHOffSet = src.DimensionOffSets[2] * h;
-                        var diffDstHOffSet = diff_dst.DimensionOffSets[2] * h;
-                        var diffSrcHOffSet = diff_src.DimensionOffSets[2] * h;
+                        var hOffSet = src.DimensionOffSets[2] * h;
 
                         for (int w = 0; w < W; ++w)
                         {
-                            var srcIndex = srcBOffSet + srcCoffSet + srcHOffSet + w;
-                            var diffDstIndex = diffDstBOffSet + diffDstCOffSet + diffDstHOffSet + w;
-                            var diffSrcIndex = diffSrcBOffSet + diffSrcCOffSet + diffSrcHOffSet + w;
+                            var index = nOffSet + coffSet + hOffSet + w;
 
-                            var v_diff_src = diffDstData[diffDstIndex];
+                            var v_diff_src = diffDstData[index];
 
                             v_diff_src -= diff_beta / (W * H * N) +
-                                (srcData[srcIndex] - mean) *
+                                (srcData[index] - mean) *
                                 diff_gamma * sqrtVariance / (W * H * N);
 
                             v_diff_src *= gamma * sqrtVariance;
-                            diffSrcData[diffSrcIndex] = v_diff_src;
+                            diffSrcData[index] = v_diff_src;
                         }
                     }
                 }
@@ -375,15 +365,14 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 for (int n = 0; n < N; ++n)
                 {
-                    var srcBOffSet = src.DimensionOffSets[0] * n;
-                    var diffDstBOffSet = diff_dst.DimensionOffSets[0] * n;
+                    // src, dst and gradients all have same dimensions in batch norm.
+                    // Index and offsets, is calculated for only one.
+                    var nOffSet = src.DimensionOffSets[0] * n;
+                    var index = nOffSet + c;
 
-                    var srcIndex = srcBOffSet + c;
-                    var diffDstIndex = diffDstBOffSet + c;
+                    diff_gamma += (srcData[index] - mean) * diffDstData[index];
 
-                    diff_gamma += (srcData[srcIndex] - mean)
-                        * diffDstData[diffDstIndex];
-                    diff_beta += diffDstData[diffDstIndex];
+                    diff_beta += diffDstData[index];
                 }
 
                 diff_gamma *= sqrtVariance;
@@ -393,21 +382,18 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 for (int n = 0; n < N; ++n)
                 {
-                    var srcBOffSet = src.DimensionOffSets[0] * n;
-                    var diffDstBOffSet = diff_dst.DimensionOffSets[0] * n;
-                    var diffSrcBOffSet = diff_src.DimensionOffSets[0] * n;
+                    // src, dst and gradients all have same dimensions in batch norm.
+                    // Index and offsets, is calculated for only one.
+                    var nOffSet = src.DimensionOffSets[0] * n;
+                    var index = nOffSet + c;
 
-                    var srcIndex = srcBOffSet + c;
-                    var diffDstIndex = diffDstBOffSet + c;
-                    var diffSrcIndex = diffSrcBOffSet + c;
+                    var v_diff_src = diffDstData[index];
 
-                    var v_diff_src = diffDstData[diffDstIndex];
-
-                    v_diff_src -= diff_beta / (C) + (srcData[srcIndex] - mean) *
+                    v_diff_src -= diff_beta / (C) + (srcData[index] - mean) *
                         diff_gamma * sqrtVariance / (C);
 
                     v_diff_src *= gamma * sqrtVariance;
-                    diffSrcData[diffSrcIndex] = v_diff_src;
+                    diffSrcData[index] = v_diff_src;
                 }
             }
         }
