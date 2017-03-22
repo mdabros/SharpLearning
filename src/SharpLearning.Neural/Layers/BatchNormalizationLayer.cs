@@ -256,7 +256,7 @@ namespace SharpLearning.Neural.Layers
             MovingAverageMeans = new float[inputDepth];
             MovingAverageVariance = Enumerable.Range(0, inputDepth).Select(v => 1.0f).ToArray();
 
-            ScaleGradients = Matrix<float>.Build.Dense(1, fanOutAndIn, 1);
+            ScaleGradients = Matrix<float>.Build.Dense(1, fanOutAndIn);
             BiasGradients = Vector<float>.Build.Dense(fanOutAndIn);
 
             OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOutAndIn);

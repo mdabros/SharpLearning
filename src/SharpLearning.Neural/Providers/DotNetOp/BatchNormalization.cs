@@ -10,7 +10,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
     /// </summary>
     public static class BatchNormalization
     {
-
+        const double eps = 1e-6f;
 
         /// <summary>
         /// 
@@ -68,8 +68,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             int H = src.Dimensions[2];
             int W = src.Dimensions[3];
 
-            double eps = 1e-6;
-
             var srcData = src.Data;
             var dstData = dst.Data;
 
@@ -77,6 +75,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             {
                 double mean = 0;
                 double variance = 0;
+                double sqrtVariance = 0;
 
                 var srcCoffSet = src.DimensionOffSets[1] * c;
 
@@ -111,7 +110,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             }
                         }
                     }
-                    variance = 1f / (double)Math.Sqrt(variance / (W * H * N) + eps);
+                    variance /= W * H * N;
                 }
                 else
                 {
@@ -119,9 +118,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     variance = movingAverageVarianceData[c];
                 }
 
+                sqrtVariance = 1.0 / Math.Sqrt(variance + eps);
                 var scale = scaleData[c];
                 var bias = biasData[c];
-
 
                 for (int n = 0; n < N; ++n)
                 {
@@ -132,10 +131,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         for (int w = 0; w < W; ++w)
                         {
                             var index = bOffSet + srcCoffSet + hOffSet + w;
-                            dstData[index] = scale * (srcData[index] - mean) * variance + bias;
+                            dstData[index] = scale * (srcData[index] - mean) * sqrtVariance + bias;
                         }
                     }
                 }
+
                 if (isTraining)
                 {
                     movingAverageMeansData[c] = MovingAverage(movingAverageMeansData[c], mean);
@@ -155,8 +155,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             int N = src.Dimensions[0]; // number of items in mini batch
             int C = src.Dimensions[1];
 
-            double eps = 1e-6;
-
             var srcData = src.Data;
             var dstData = dst.Data;
 
@@ -164,6 +162,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             {
                 double mean = 0;
                 double variance = 0;
+                double sqrtVariance = 0;
 
                 if (isTraining)
                 {
@@ -182,13 +181,15 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         var m = srcData[srcIndex] - mean;
                         variance += m * m;
                     }
-                    variance = 1f / (double)Math.Sqrt(variance / C + eps);
+                    variance /= C;
                 }
                 else
                 {
                     mean = movingAverageMeansData[c];
                     variance = movingAverageVarianceData[c];
                 }
+
+                sqrtVariance = 1.0 / Math.Sqrt(variance + eps);
 
                 var scale = scaleData[c];
                 var bias = biasData[c];
@@ -198,7 +199,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 {
                     var bOffSet = src.DimensionOffSets[0] * n;
                     var index = bOffSet + c;
-                    dstData[index] = scale * (srcData[index] - mean) * variance + bias;
+                    dstData[index] = scale * (srcData[index] - mean) * sqrtVariance + bias;
                 }
                 if (isTraining)
                 {
@@ -238,7 +239,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var meanData = executor.GetTensor(BatchColumnMeans).Data;
             var varianceData = executor.GetTensor(BatchcolumnVars).Data;
 
-            var diff_dst = executor.GetTensor(output);
+            var diff_dst = executor.GetGradient(output);
 
             if (input.DimensionCount == 4)
             {
@@ -267,12 +268,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             int H = src.Dimensions[2];
             int W = src.Dimensions[3];
 
-            //double eps = conf_.desc()->batch_norm_epsilon;
-            //bool use_scaleshift = conf_.use_scaleshift();
-            //bool calculate_diff_stats = !conf_.omit_stats();
-
-            //const double eps = 1e-6f;
-
             var srcData = src.Data;
             var diffDstData = diff_dst.Data;
             var diffSrcData = diff_src.Data;
@@ -280,9 +275,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             //#pragma omp parallel for schedule(static)
             for (int c = 0; c < C; ++c)
             {
-                var v_mean = meanData[c];
-                var v_variance = varianceData[c];
-                //var sqrt_variance = 1.0f / (double)Math.Sqrt(v_variance + eps);
+                var mean = meanData[c];
+                var variance = varianceData[c];
+                var sqrtVariance = 1.0 / Math.Sqrt(variance + eps);
                 var gamma = scaleData[c];
                 var diff_gamma = 0.0;
                 var diff_beta = 0.0;
@@ -306,17 +301,17 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             var srcIndex = srcBOffSet + srcCoffSet + srcHOffSet + w;
                             var diffDstIndex = diffDstBOffSet + diffDstCOffSet + diffDstHOffSet + w;
 
-                            diff_gamma += (srcData[srcIndex] - v_mean)
+                            diff_gamma += (srcData[srcIndex] - mean)
                                 * diffDstData[diffDstIndex];
                             diff_beta += diffDstData[diffDstIndex];
                         }
                     }
                 }
 
-                diff_gamma *= v_variance;
+                diff_gamma *= sqrtVariance;
 
                 scaleGradientData[c] = diff_gamma;
-                biasGradientData[c] = diff_gamma;
+                biasGradientData[c] = diff_beta;
 
                 for (int n = 0; n < N; ++n)
                 {
@@ -339,10 +334,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             var v_diff_src = diffDstData[diffDstIndex];
 
                             v_diff_src -= diff_beta / (W * H * N) +
-                                (srcData[srcIndex] - v_mean) *
-                                diff_gamma * v_variance / (W * H * N);
+                                (srcData[srcIndex] - mean) *
+                                diff_gamma * sqrtVariance / (W * H * N);
 
-                            v_diff_src *= gamma * v_variance;
+                            v_diff_src *= gamma * sqrtVariance;
                             diffSrcData[diffSrcIndex] = v_diff_src;
                         }
                     }
@@ -371,9 +366,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             for (int c = 0; c < C; ++c)
             {
-                var v_mean = meanData[c];
-                var v_variance = varianceData[c];
-                //var sqrt_variance = 1.0f / (double)Math.Sqrt(v_variance + eps);
+                var mean = meanData[c];
+                var variance = varianceData[c];
+                var sqrtVariance = 1.0 / Math.Sqrt(variance + eps);
                 var gamma = scaleData[c];
                 var diff_gamma = 0.0;
                 var diff_beta = 0.0;
@@ -386,15 +381,15 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     var srcIndex = srcBOffSet + c;
                     var diffDstIndex = diffDstBOffSet + c;
 
-                    diff_gamma += (srcData[srcIndex] - v_mean)
+                    diff_gamma += (srcData[srcIndex] - mean)
                         * diffDstData[diffDstIndex];
                     diff_beta += diffDstData[diffDstIndex];
                 }
 
-                diff_gamma *= v_variance;
+                diff_gamma *= sqrtVariance;
 
                 scaleGradientData[c] = diff_gamma;
-                biasGradientData[c] = diff_gamma;
+                biasGradientData[c] = diff_beta;
 
                 for (int n = 0; n < N; ++n)
                 {
@@ -408,10 +403,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                     var v_diff_src = diffDstData[diffDstIndex];
 
-                    v_diff_src -= diff_beta / (C) + (srcData[srcIndex] - v_mean) *
-                        diff_gamma * v_variance / (C);
+                    v_diff_src -= diff_beta / (C) + (srcData[srcIndex] - mean) *
+                        diff_gamma * sqrtVariance / (C);
 
-                    v_diff_src *= gamma * v_variance;
+                    v_diff_src *= gamma * sqrtVariance;
                     diffSrcData[diffSrcIndex] = v_diff_src;
                 }
             }

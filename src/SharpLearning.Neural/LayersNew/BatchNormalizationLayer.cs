@@ -71,16 +71,17 @@ namespace SharpLearning.Neural.LayersNew
             var fanOutAndIn = inputVariable.DimensionOffSets[0]; // product of all dimensions except batch size.
 
             Scale = Variable.CreateTrainable(fanOutAndIn);
-            excecutor.AssignTensor(Scale, () => 1.0f);
+            excecutor.AssignTensor(Scale, () => 1.0);
                 
             Bias = Variable.CreateTrainable(fanOutAndIn);
-  
+            excecutor.AssignTensor(Bias, () => 0.0);
+
             BatchColumnMeans = Variable.Create(c);
             BatchcolumnVars = Variable.Create(c);
 
             MovingAverageMeans = Variable.Create(c);
             MovingAverageVariance = Variable.Create(c);
-            excecutor.AssignTensor(MovingAverageVariance, () => 1.0f);
+            excecutor.AssignTensor(MovingAverageVariance, () => 1.0);
         }
     }
 }
