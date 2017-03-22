@@ -23,9 +23,14 @@ namespace SharpLearning.Neural.Test.LayersNew
             targets.Map(v => (float)random.Next(2));
 
             var sut = new NeuralNet2();
-            sut.Add(new DenseLayer(30));
+
+            sut.Add(new DenseLayer(100));
+            sut.Add(new BatchNormalizationLayer());
             sut.Add(new ActivationLayer(Neural.Activations.Activation.Relu));
+
+            // output layer 
             sut.Add(new DenseLayer(2)); // corresponds to number of classes
+            sut.Add(new BatchNormalizationLayer());
             sut.Add(new ActivationLayer(Neural.Activations.Activation.SoftMax));
 
             // hack because of missing input layer.

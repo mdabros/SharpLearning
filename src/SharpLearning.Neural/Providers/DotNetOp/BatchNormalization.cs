@@ -31,11 +31,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Variable MovingAverageMeans, Variable MovingAverageVariance,
             Executor executor, bool isTraining, Variable output)
         {
-            if (input.DimensionCount != 4 || output.DimensionCount != 4)
-            {
-                throw new ArgumentException("Expected 4-dimensional input and output");
-            }
-
             var src = executor.GetTensor(input);
             var dst = executor.GetTensor(output);
 
