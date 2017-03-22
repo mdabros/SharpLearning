@@ -13,11 +13,11 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
-            var input = Variable.Create(1, 5, 1, 1);
-            var sut = new DenseLayer(3);
+            var input = Variable.Create(1, 2, 5, 5);
+            var sut = new DenseLayer(10);
             sut.Initialize(input, executor, new Random());
 
-            GradientCheckTools.CheckLayer(sut, executor, input, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayer(sut, executor, input, new Random(21));
         }
 
         [TestMethod]
@@ -25,11 +25,11 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
-            var input = Variable.Create(10, 5, 1, 1);
-            var sut = new DenseLayer(3);
+            var input = Variable.Create(10, 2, 5, 5);
+            var sut = new DenseLayer(10);
             sut.Initialize(input, executor, new Random());
 
-            GradientCheckTools.CheckLayerParameters(sut, executor, input, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayerParameters(sut, executor, input, new Random(21));
         }
     }
 }

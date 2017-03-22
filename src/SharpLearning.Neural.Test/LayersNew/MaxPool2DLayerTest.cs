@@ -12,11 +12,11 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
-            var input = Variable.Create(5, 2, 20, 20);
+            var input = Variable.Create(10, 3, 5, 5);
             var sut = new MaxPool2DLayer(2, 2);
             sut.Initialize(input, executor, new Random());
 
-            GradientCheckTools.CheckLayer(sut, executor, input, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayer(sut, executor, input, new Random(21));
         }
     }
 }

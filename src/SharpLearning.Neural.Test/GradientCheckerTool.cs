@@ -61,9 +61,10 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputVariable, double epsilon, Random random)
+        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputVariable, Random random)
         {
-            var accuracyCondition = 1e-6;
+            var maxAllowedRelativeError = 1e-7;
+            var epsilon = 1e-5;
             var batchSize = inputVariable.Dimensions[0];
 
             var input = executor.GetTensor(inputVariable);
@@ -72,7 +73,7 @@ namespace SharpLearning.Neural.Test
             layer.Forward(executor);
 
             // set output gradients to 1
-            executor.GetGradient(layer.Output).Map(v => 1.0f); 
+            executor.GetGradient(layer.Output).Map(v => 1.0); 
 
             layer.Backward(executor);
 
@@ -100,28 +101,32 @@ namespace SharpLearning.Neural.Test
                 var diff = output1.Zip(output2,
                     (v1, v2) => (v1 - v2)).ToArray();
 
+                var sum = diff.Sum();
+                var distinct = diff.Distinct().ToArray();
+
                 var approxGradient = diff.Select(v => v / (2.0 * epsilon)).Sum();
                 var computedGradient = gradients[i];
 
                 var error = RelativeError(approxGradient, computedGradient);
 
-                Assert.IsTrue(error < accuracyCondition);
+                Assert.IsTrue(error < maxAllowedRelativeError);
             }
         }
 
-        public static void CheckLayerParameters(ILayerNew layer, Executor executor, Variable inputVariable, double epsilon, Random random)
+        public static void CheckLayerParameters(ILayerNew layer, Executor executor, Variable inputVariable, Random random)
         {
-            var accuracyCondition = 1e-2;
+            var maxAllowedRelativeError = 1e-7;
+            var epsilon = 1e-5;
             var batchSize = inputVariable.Dimensions[0];
 
             // set input to 1
             var input = executor.GetTensor(inputVariable);
-            input.Map(v => 1.0f);
+            input.Map(v => 1.0);
 
             layer.Forward(executor);
 
             // set output gradients to 1
-            executor.GetGradient(layer.Output).Map(v => 1.0f);
+            executor.GetGradient(layer.Output).Map(v => 1.0);
 
             layer.Backward(executor);
 
@@ -159,7 +164,7 @@ namespace SharpLearning.Neural.Test
                     
                     var error = RelativeError(approxGradient, computedGradient);
 
-                    Assert.IsTrue(error < accuracyCondition);
+                    Assert.IsTrue(error < maxAllowedRelativeError);
                 }
             }
         }

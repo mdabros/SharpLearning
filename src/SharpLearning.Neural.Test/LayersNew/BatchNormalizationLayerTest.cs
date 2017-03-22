@@ -18,7 +18,7 @@ namespace SharpLearning.Neural.Test.LayersNew
             var sut = new BatchNormalizationLayer();
             sut.Initialize(input, executor, new Random());
 
-            GradientCheckTools.CheckLayer(sut, executor, input, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayer(sut, executor, input, new Random(21));
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace SharpLearning.Neural.Test.LayersNew
             var sut = new BatchNormalizationLayer();
             sut.Initialize(input, executor, new Random());
 
-            GradientCheckTools.CheckLayerParameters(sut, executor, input, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayerParameters(sut, executor, input, new Random(21));
         }
     }
 }
