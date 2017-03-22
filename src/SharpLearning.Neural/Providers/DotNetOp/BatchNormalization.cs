@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.LayersNew;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
@@ -30,7 +31,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Variable MovingAverageMeans, Variable MovingAverageVariance,
             Executor executor, bool isTraining, Variable output)
         {
-            if(input.DimensionCount != 4 || output.DimensionCount != 4)
+            if (input.DimensionCount != 4 || output.DimensionCount != 4)
             {
                 throw new ArgumentException("Expected 4-dimensional input and output");
             }
@@ -38,14 +39,35 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var src = executor.GetTensor(input);
             var dst = executor.GetTensor(output);
 
-            var sc = executor.GetTensor(Scale).Data;
-            var bi = executor.GetTensor(Bias).Data;
+            var scaleData = executor.GetTensor(Scale).Data;
+            var biasData = executor.GetTensor(Bias).Data;
 
             var bColumnMeans = executor.GetTensor(BatchColumnMeans).Data;
             var bcolumnVars = executor.GetTensor(BatchcolumnVars).Data;
             var movingAverageMeans = executor.GetTensor(MovingAverageMeans).Data;
             var movingAverageVariance = executor.GetTensor(MovingAverageVariance).Data;
 
+            if(input.DimensionCount == 4)
+            {
+                Forward4D(isTraining, src, dst, scaleData, biasData, 
+                    bColumnMeans, bcolumnVars, movingAverageMeans, movingAverageVariance);
+            }
+            else if(input.DimensionCount == 2)
+            {
+                Forward2D(isTraining, src, dst, scaleData, biasData,
+                    bColumnMeans, bcolumnVars, movingAverageMeans, movingAverageVariance);
+            }
+            else
+            {
+                throw new ArgumentException("Expected 2D or 4D input and output");
+            }
+        }
+
+        static void Forward4D(bool isTraining, Tensor<float> src, Tensor<float> dst, 
+            float[] scaleData, float[] biasData, 
+            float[] batchColumnMeansData, float[] batcColumnVarsData, 
+            float[] movingAverageMeansData, float[] movingAverageVarianceData)
+        {
             int N = src.Dimensions[0]; // number of items in mini batch
             int C = src.Dimensions[1];
             int H = src.Dimensions[2];
@@ -98,12 +120,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 }
                 else
                 {
-                    mean = movingAverageMeans[c];
-                    variance = movingAverageVariance[c];
+                    mean = movingAverageMeansData[c];
+                    variance = movingAverageVarianceData[c];
                 }
 
-                var scale = sc[c];
-                var bias = bi[c];
+                var scale = scaleData[c];
+                var bias = biasData[c];
 
 
                 for (int n = 0; n < N; ++n)
@@ -121,11 +143,75 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 }
                 if (isTraining)
                 {
-                    movingAverageMeans[c] = MovingAverage(movingAverageMeans[c], mean);
-                    movingAverageVariance[c] = MovingAverage(movingAverageVariance[c], variance);
+                    movingAverageMeansData[c] = MovingAverage(movingAverageMeansData[c], mean);
+                    movingAverageVarianceData[c] = MovingAverage(movingAverageVarianceData[c], variance);
 
-                    bColumnMeans[c] = mean;
-                    bcolumnVars[c] = variance;
+                    batchColumnMeansData[c] = mean;
+                    batcColumnVarsData[c] = variance;
+                }
+            });
+        }
+
+        static void Forward2D(bool isTraining, Tensor<float> src, Tensor<float> dst,
+            float[] scaleData, float[] biasData,
+            float[] batchColumnMeansData, float[] batcColumnVarsData,
+            float[] movingAverageMeansData, float[] movingAverageVarianceData)
+        {
+            int N = src.Dimensions[0]; // number of items in mini batch
+            int C = src.Dimensions[1];
+
+            double eps = 1e-6;
+
+            var srcData = src.Data;
+            var dstData = dst.Data;
+
+            Parallel.For(0, C, c =>
+            {
+                float mean = 0;
+                float variance = 0;
+
+                if (isTraining)
+                {
+                    for (int n = 0; n < N; ++n)
+                    {
+                        var srcBOffSet = src.DimensionOffSets[0] * n;
+                        var srcIndex = srcBOffSet + c;
+                        mean += srcData[srcIndex];
+                    }
+                    mean /= C;
+
+                    for (int n = 0; n < N; ++n)
+                    {
+                        var srcBOffSet = src.DimensionOffSets[0] * n;
+                        var srcIndex = srcBOffSet + c;
+                        var m = srcData[srcIndex] - mean;
+                        variance += m * m;
+                    }
+                    variance = 1f / (float)Math.Sqrt(variance / C + eps);
+                }
+                else
+                {
+                    mean = movingAverageMeansData[c];
+                    variance = movingAverageVarianceData[c];
+                }
+
+                var scale = scaleData[c];
+                var bias = biasData[c];
+
+
+                for (int n = 0; n < N; ++n)
+                {
+                    var bOffSet = src.DimensionOffSets[0] * n;
+                    var index = bOffSet + c;
+                    dstData[index] = scale * (srcData[index] - mean) * variance + bias;
+                }
+                if (isTraining)
+                {
+                    movingAverageMeansData[c] = MovingAverage(movingAverageMeansData[c], mean);
+                    movingAverageVarianceData[c] = MovingAverage(movingAverageVarianceData[c], variance);
+
+                    batchColumnMeansData[c] = mean;
+                    batcColumnVarsData[c] = variance;
                 }
             });
         }
@@ -149,20 +235,42 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var src = executor.GetTensor(input);
             var diff_src = executor.GetGradient(input);
 
-            var scale = executor.GetTensor(Scale).Data;
+            var scaleData = executor.GetTensor(Scale).Data;
 
-            var scaleGradient = executor.GetGradient(Scale).Data;
-            var biasGradient = executor.GetGradient(Bias).Data;
+            var scaleGradientData = executor.GetGradient(Scale).Data;
+            var biasGradientData = executor.GetGradient(Bias).Data;
 
-            var mean = executor.GetTensor(BatchColumnMeans).Data;
-            var variance = executor.GetTensor(BatchcolumnVars).Data;
+            var meanData = executor.GetTensor(BatchColumnMeans).Data;
+            var varianceData = executor.GetTensor(BatchcolumnVars).Data;
 
             var diff_dst = executor.GetTensor(output);
 
-            int N = input.Dimensions[0];
-            int C = input.Dimensions[1];
-            int H = input.Dimensions[2];
-            int W = input.Dimensions[3];
+            if (input.DimensionCount == 4)
+            {
+                Backward4D(src, diff_src, scaleData, 
+                    scaleGradientData, biasGradientData, meanData, varianceData, diff_dst);
+            }
+            else if (input.DimensionCount == 2)
+            {
+                Backward2D(src, diff_src, scaleData, 
+                    scaleGradientData, biasGradientData, meanData, varianceData, diff_dst);
+            }
+            else
+            {
+                throw new ArgumentException("Expected 2D or 4D input and output");
+            }
+        }
+
+        static void Backward4D(Tensor<float> src, Tensor<float> diff_src, 
+            float[] scaleData, float[] scaleGradientData, 
+            float[] biasGradientData, 
+            float[] meanData, float[] varianceData, 
+            Tensor<float> diff_dst)
+        {
+            int N = src.Dimensions[0];
+            int C = src.Dimensions[1];
+            int H = src.Dimensions[2];
+            int W = src.Dimensions[3];
 
             //double eps = conf_.desc()->batch_norm_epsilon;
             //bool use_scaleshift = conf_.use_scaleshift();
@@ -177,10 +285,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             //#pragma omp parallel for schedule(static)
             for (int c = 0; c < C; ++c)
             {
-                var v_mean = mean[c];
-                var v_variance = variance[c];
+                var v_mean = meanData[c];
+                var v_variance = varianceData[c];
                 //var sqrt_variance = 1.0f / (float)Math.Sqrt(v_variance + eps);
-                var gamma = scale[c];
+                var gamma = scaleData[c];
                 var diff_gamma = 0.0f;
                 var diff_beta = 0.0f;
 
@@ -212,8 +320,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 diff_gamma *= v_variance;
 
-                scaleGradient[c] = diff_gamma;
-                biasGradient[c] = diff_gamma;
+                scaleGradientData[c] = diff_gamma;
+                biasGradientData[c] = diff_gamma;
 
                 for (int n = 0; n < N; ++n)
                 {
@@ -234,7 +342,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             var diffSrcIndex = diffSrcBOffSet + diffSrcCOffSet + diffSrcHOffSet + w;
 
                             var v_diff_src = diffDstData[diffDstIndex];
-                            
+
                             v_diff_src -= diff_beta / (W * H * N) +
                                 (srcData[srcIndex] - v_mean) *
                                 diff_gamma * v_variance / (W * H * N);
@@ -243,6 +351,73 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             diffSrcData[diffSrcIndex] = v_diff_src;
                         }
                     }
+                }
+            }
+        }
+
+        static void Backward2D(Tensor<float> src, Tensor<float> diff_src,
+             float[] scaleData, float[] scaleGradientData,
+             float[] biasGradientData,
+             float[] meanData, float[] varianceData,
+             Tensor<float> diff_dst)
+        {
+            int N = src.Dimensions[0];
+            int C = src.Dimensions[1];
+
+            //double eps = conf_.desc()->batch_norm_epsilon;
+            //bool use_scaleshift = conf_.use_scaleshift();
+            //bool calculate_diff_stats = !conf_.omit_stats();
+
+            //const float eps = 1e-6f;
+
+            var srcData = src.Data;
+            var diffDstData = diff_dst.Data;
+            var diffSrcData = diff_src.Data;
+
+            for (int c = 0; c < C; ++c)
+            {
+                var v_mean = meanData[c];
+                var v_variance = varianceData[c];
+                //var sqrt_variance = 1.0f / (float)Math.Sqrt(v_variance + eps);
+                var gamma = scaleData[c];
+                var diff_gamma = 0.0f;
+                var diff_beta = 0.0f;
+
+                for (int n = 0; n < N; ++n)
+                {
+                    var srcBOffSet = src.DimensionOffSets[0] * n;
+                    var diffDstBOffSet = diff_dst.DimensionOffSets[0] * n;
+
+                    var srcIndex = srcBOffSet + c;
+                    var diffDstIndex = diffDstBOffSet + c;
+
+                    diff_gamma += (srcData[srcIndex] - v_mean)
+                        * diffDstData[diffDstIndex];
+                    diff_beta += diffDstData[diffDstIndex];
+                }
+
+                diff_gamma *= v_variance;
+
+                scaleGradientData[c] = diff_gamma;
+                biasGradientData[c] = diff_gamma;
+
+                for (int n = 0; n < N; ++n)
+                {
+                    var srcBOffSet = src.DimensionOffSets[0] * n;
+                    var diffDstBOffSet = diff_dst.DimensionOffSets[0] * n;
+                    var diffSrcBOffSet = diff_src.DimensionOffSets[0] * n;
+
+                    var srcIndex = srcBOffSet + c;
+                    var diffDstIndex = diffDstBOffSet + c;
+                    var diffSrcIndex = diffSrcBOffSet + c;
+
+                    var v_diff_src = diffDstData[diffDstIndex];
+
+                    v_diff_src -= diff_beta / (C) + (srcData[srcIndex] - v_mean) *
+                        diff_gamma * v_variance / (C);
+
+                    v_diff_src *= gamma * v_variance;
+                    diffSrcData[diffSrcIndex] = v_diff_src;
                 }
             }
         }
