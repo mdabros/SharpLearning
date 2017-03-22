@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.LayersNew;
 using SharpLearning.Neural.Providers.DotNetOp;
+using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Test.LayersNew
 {
@@ -27,14 +28,13 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
-            var input = Variable.Create(10, 5, 1, 1);
+            var input = Variable.Create(10, 5);
             var sut = new BatchNormalizationLayer();
             sut.Initialize(input, executor, new Random());
 
-            GradientCheckTools.CheckLayer(sut, executor, input, new Random(21));
+            GradientCheckTools.CheckLayer(sut, executor, input, new Random(345));
         }
-
-
+        
         [TestMethod]
         public void BatchNormalizationLayer_ParameterGradientCheck_4D()
         {
@@ -52,7 +52,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         {
             var executor = new Executor();
 
-            var input = Variable.Create(10, 10, 1, 1);
+            var input = Variable.Create(10, 10);
             var sut = new BatchNormalizationLayer();
             sut.Initialize(input, executor, new Random());
 

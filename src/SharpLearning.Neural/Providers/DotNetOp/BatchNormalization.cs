@@ -124,13 +124,13 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 for (int n = 0; n < N; ++n)
                 {
-                    var bOffSet = src.DimensionOffSets[0] * n;
+                    var nOffSet = src.DimensionOffSets[0] * n;
                     for (int h = 0; h < H; ++h)
                     {
                         var hOffSet = src.DimensionOffSets[2] * h;
                         for (int w = 0; w < W; ++w)
                         {
-                            var index = bOffSet + cOffSet + hOffSet + w;
+                            var index = nOffSet + cOffSet + hOffSet + w;
                             dstData[index] = scale * (srcData[index] - mean) * sqrtVariance + bias;
                         }
                     }
@@ -158,7 +158,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var srcData = src.Data;
             var dstData = dst.Data;
 
-            Parallel.For(0, C, c =>
+            //Parallel.For(0, C, c =>
+            for (int c = 0; c < C; c++)
             {
                 double mean = 0;
                 double variance = 0;
@@ -172,7 +173,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         var index = nOffSet + c;
                         mean += srcData[index];
                     }
-                    mean /= C;
+                    mean /= N;
 
                     for (int n = 0; n < N; ++n)
                     {
@@ -181,7 +182,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         var m = srcData[index] - mean;
                         variance += m * m;
                     }
-                    variance /= C;
+                    variance /= N;
                 }
                 else
                 {
@@ -196,8 +197,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                 for (int n = 0; n < N; ++n)
                 {
-                    var bOffSet = src.DimensionOffSets[0] * n;
-                    var index = bOffSet + c;
+                    var nOffSet = src.DimensionOffSets[0] * n;
+                    var index = nOffSet + c;
                     dstData[index] = scale * (srcData[index] - mean) * sqrtVariance + bias;
                 }
                 if (isTraining)
@@ -208,7 +209,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     batchColumnMeansData[c] = mean;
                     batcColumnVarsData[c] = variance;
                 }
-            });
+            }//);
         }
 
 
@@ -323,11 +324,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                             var v_diff_src = diffDstData[index];
 
-                            v_diff_src -= diff_beta / (W * H * N) +
-                                (srcData[index] - mean) *
+                            v_diff_src -= diff_beta / (W * H * N) + (srcData[index] - mean) *
                                 diff_gamma * sqrtVariance / (W * H * N);
 
                             v_diff_src *= gamma * sqrtVariance;
+
                             diffSrcData[index] = v_diff_src;
                         }
                     }
@@ -343,12 +344,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         {
             int N = src.Dimensions[0];
             int C = src.Dimensions[1];
-
-            //double eps = conf_.desc()->batch_norm_epsilon;
-            //bool use_scaleshift = conf_.use_scaleshift();
-            //bool calculate_diff_stats = !conf_.omit_stats();
-
-            //const double eps = 1e-6f;
 
             var srcData = src.Data;
             var diffDstData = diff_dst.Data;
@@ -389,8 +384,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                     var v_diff_src = diffDstData[index];
 
-                    v_diff_src -= diff_beta / (C) + (srcData[index] - mean) *
-                        diff_gamma * sqrtVariance / (C);
+                    v_diff_src -= diff_beta / (N) + (srcData[index] - mean) *
+                        diff_gamma * sqrtVariance / (N);
 
                     v_diff_src *= gamma * sqrtVariance;
                     diffSrcData[index] = v_diff_src;
