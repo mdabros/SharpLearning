@@ -7,7 +7,6 @@ using MathNet.Numerics.Providers.LinearAlgebra;
 using SharpLearning.Containers.Tensors;
 using SharpLearning.Containers.Extensions;
 
-
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
     /// <summary>
@@ -97,6 +96,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             // clear tOut
             tOut.Data.Clear();
+
+            // using using CSIntel.Mkl, use row-major directly.
+            //CBLAS.sgemm(CBLAS.ORDER.RowMajor, CBLAS.TRANSPOSE.NoTrans, CBLAS.TRANSPOSE.NoTrans,
+            //    t1Rows, t2Cols, t1Cols, 1.0f, t1.Data, t1Cols, t2.Data, t2Cols, 1.0f, ref tOutData, tOutCols);
 
             // transpose and switch dimensions inorder to switch from row-major to col-major (math.net representation).
             Control.LinearAlgebraProvider
