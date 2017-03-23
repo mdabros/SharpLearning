@@ -15,19 +15,27 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void NeuralNet_Test()
         {
-            var batchSize = 100;
+            var observationSize = 500;
+            var channels = 3;
+            var height = 32;
+            var width = 32;
+
+            var batchSize = 128;
             var numberOfTargets = 10;
 
             var random = new Random(32);
-            var inputShape = new TensorShape(batchSize, 1, 25, 25);
+            var inputShape = new TensorShape(observationSize, channels, height, width);
             var observations = Tensor<double>.Build(inputShape.Dimensions);
             observations.Map(v => random.NextDouble());
 
-            var targetsIn = Enumerable.Range(0, batchSize)
+            var targetsIn = Enumerable.Range(0, observationSize)
                 .Select(v => (double)random.Next(numberOfTargets))
                 .ToArray();
 
             var targets = Encode(targetsIn);
+
+            var batchObservations = Tensor<double>.Build(batchSize, channels, height, width);
+            var batchTargets = Tensor<double>.Build(batchSize, numberOfTargets);
 
             var optimizer = new NeuralNetOptimizer2(0.001, batchSize);
             var sut = new NeuralNet2();
@@ -43,24 +51,37 @@ namespace SharpLearning.Neural.Test.LayersNew
             sut.Add(new ActivationLayer(Neural.Activations.Activation.SoftMax));
 
             // hack because of missing input layer.
-            sut.Initialize(new Variable(inputShape), random);
+            sut.Initialize(new Variable(batchObservations.Shape), random);
             
             var parameters = new List<Data<double>>();
             sut.GetTrainableParameters(parameters);
 
             var lossFunc = new LogLoss();
-            var iteration = 10;
+            var epochs = 10;
 
-            for (int i = 0; i < iteration; i++)
+            var batcher = new Batcher();
+            batcher.Initialize(observations.Shape, random.Next());
+
+            for (int i = 0; i < epochs; i++)
             {
-                sut.SetNextBatch(observations, targets);
+                batcher.Shuffle();
+                var accumulatedLoss = 0.0;
 
-                sut.Forward();
-                sut.Backward();
-                
-                Trace.WriteLine($"Loss: {lossFunc.Loss(targets, sut.BatchPredictions())}");
+                while (batcher.Next(batchSize, 
+                    sut, observations, targets, 
+                    batchObservations, batchTargets))
+                {
+                    sut.Forward();
+                    sut.Backward();
 
-                optimizer.UpdateParameters(parameters);
+                    optimizer.UpdateParameters(parameters);
+
+                    var batchLoss = lossFunc.Loss(batchTargets, sut.BatchPredictions());
+                    accumulatedLoss += batchLoss * batchSize;
+                }
+
+                var loss = accumulatedLoss / (double)observationSize;
+                Trace.WriteLine($"Loss: {loss}");
             }
         }
 

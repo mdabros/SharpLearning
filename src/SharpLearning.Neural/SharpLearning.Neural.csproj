@@ -70,6 +70,7 @@
     <Compile Include="Activations\ReluActivation.cs" />
     <Compile Include="ConvUtils.cs" />
     <Compile Include="LayersNew\ActivationLayer.cs" />
+    <Compile Include="LayersNew\Batcher.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\DenseLayer.cs" />

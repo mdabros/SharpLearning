@@ -132,6 +132,33 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="indices"></param>
+        /// <param name="copy"></param>
+        public void SliceCopy(int[] indices, Tensor<T> copy)
+        {
+            // only works for first dimension currently.
+            int dimension = 0;
+            int elements = indices.Length * DimensionOffSets[0];
+
+            if (elements != copy.ElementCount)
+            {
+                throw new ArgumentException($"Required element count : {elements} is larger than copy element count: {copy.ElementCount}");
+            }
+
+            var dimensionSize = DimensionOffSets[dimension];
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var index = indices[i];
+                var startIndex = index * dimensionSize;
+                var copyStartIndex = i * dimensionSize;
+
+                Array.Copy(Data, startIndex, copy.Data, copyStartIndex, dimensionSize);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="value"></param>
         /// <param name="dimensions"></param>
         /// <returns></returns>
