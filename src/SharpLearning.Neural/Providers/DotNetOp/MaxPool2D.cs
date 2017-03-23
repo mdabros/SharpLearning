@@ -23,7 +23,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         public static void Forward(Variable input,
             Variable output, MaxPool2DDescriptor desc,
             int[][] m_switchX, int[][] m_switchY,
-            Executor executor)
+            NeuralNetStorage executor)
         {
             var src = executor.GetTensor(input);
             var dst = executor.GetTensor(output);
@@ -114,7 +114,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="executor"></param>
         public static void Backward(Variable input, Variable output,
             int[][] m_switchX, int[][] m_switchY,
-            Executor executor)
+            NeuralNetStorage executor)
         {
             var inputGradient = executor.GetGradient(input);
             var outputGradient = executor.GetGradient(output);

@@ -35,7 +35,7 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        public void Forward(Executor executor)
+        public void Forward(NeuralNetStorage executor)
         {
             Activation.Forward(m_activation,
                 Input, Output, executor);
@@ -45,7 +45,7 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        public void Backward(Executor executor)
+        public void Backward(NeuralNetStorage executor)
         {
             Activation.Backward(m_activation, 
                 Input, Output, executor);
@@ -56,10 +56,10 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="inputVariable"></param>
-        /// <param name="excecutor"></param>
+        /// <param name="storage"></param>
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
-        public void Initialize(Variable inputVariable, Executor excecutor, Random random, 
+        public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, 
             Initialization initializtion = Initialization.GlorotUniform)
         {
             Input = inputVariable;

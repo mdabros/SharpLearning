@@ -11,7 +11,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [Ignore] // gradient seems off
         public void BatchNormalizationLayer_GradientCheck_4D()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 5, 3, 3);
             var sut = new BatchNormalizationLayer();
@@ -24,7 +24,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [Ignore] // gradient seems off
         public void BatchNormalizationLayer_GradientCheck_2D()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 5);
             var sut = new BatchNormalizationLayer();
@@ -36,7 +36,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void BatchNormalizationLayer_ParameterGradientCheck_4D()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 10, 5, 5);
             var sut = new BatchNormalizationLayer();
@@ -48,7 +48,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void BatchNormalizationLayer_ParameterGradientCheck_2D()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 10);
             var sut = new BatchNormalizationLayer();

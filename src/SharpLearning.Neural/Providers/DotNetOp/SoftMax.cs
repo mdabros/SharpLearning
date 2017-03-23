@@ -19,7 +19,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="input"></param>
         /// <param name="output"></param>
         /// <param name="executor"></param>
-        public static void Forward(Variable input, Variable output, Executor executor)
+        public static void Forward(Variable input, Variable output, NeuralNetStorage executor)
         {
             var src = executor.GetTensor(input);
             var dst = executor.GetTensor(output);
@@ -69,7 +69,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="input"></param>
         /// <param name="output">In softmax output gradient will be the original target values</param>
         /// <param name="executor"></param>
-        public static void Backward(Variable input, Variable output, Executor executor)
+        public static void Backward(Variable input, Variable output, NeuralNetStorage executor)
         {
             var dst = executor.GetTensor(output); // softmax outputs, predictions
             var dstDiff = executor.GetGradient(output); // target values are storred in output gradient.

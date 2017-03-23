@@ -73,7 +73,7 @@
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\DenseLayer.cs" />
-    <Compile Include="LayersNew\Executor.cs" />
+    <Compile Include="LayersNew\NeuralNetStorage.cs" />
     <Compile Include="LayersNew\ILayer.cs" />
     <Compile Include="LayersNew\MaxPool2DDescriptor.cs" />
     <Compile Include="LayersNew\MaxPool2DLayer.cs" />

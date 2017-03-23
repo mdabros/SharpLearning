@@ -7,14 +7,14 @@ namespace SharpLearning.Neural.LayersNew
     /// <summary>
     /// 
     /// </summary>
-    public class Executor
+    public class NeuralNetStorage
     {
         readonly Dictionary<Variable, Data<double>> m_data;
 
         /// <summary>
         /// 
         /// </summary>
-        public Executor()
+        public NeuralNetStorage()
         {
             m_data = new Dictionary<Variable, Data<double>>();
         }

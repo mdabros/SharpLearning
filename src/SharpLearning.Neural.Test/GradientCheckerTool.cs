@@ -61,7 +61,7 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayer(ILayerNew layer, Executor executor, Variable inputVariable, Random random)
+        public static void CheckLayer(ILayerNew layer, NeuralNetStorage executor, Variable inputVariable, Random random)
         {
             var maxAllowedRelativeError = 1e-7;
             var epsilon = 1e-5;
@@ -113,7 +113,7 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayerParameters(ILayerNew layer, Executor executor, Variable inputVariable, Random random)
+        public static void CheckLayerParameters(ILayerNew layer, NeuralNetStorage executor, Variable inputVariable, Random random)
         {
             var maxAllowedRelativeError = 1e-7;
             var epsilon = 1e-5;

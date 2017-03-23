@@ -10,7 +10,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void MaxPool2DLayer_GradientCheck()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 3, 5, 5);
             var sut = new MaxPool2DLayer(2, 2);

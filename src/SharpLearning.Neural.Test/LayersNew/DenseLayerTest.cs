@@ -11,7 +11,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void DenseLayer_GradientCheck()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(1, 2, 5, 5);
             var sut = new DenseLayer(10);
@@ -23,7 +23,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void DenseLayer_ParameterGradientCheck()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 2, 5, 5);
             var sut = new DenseLayer(10);

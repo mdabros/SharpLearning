@@ -16,7 +16,7 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         public readonly List<ILayerNew> Layers;
 
-        readonly Executor Executor;
+        readonly NeuralNetStorage Storage;
 
         readonly Initialization m_initialization;
 
@@ -27,7 +27,7 @@ namespace SharpLearning.Neural.LayersNew
         {
             m_initialization = initialization;
             Layers = new List<ILayerNew>();
-            Executor = new Executor();
+            Storage = new NeuralNetStorage();
         }
 
         /// <summary>
@@ -48,11 +48,11 @@ namespace SharpLearning.Neural.LayersNew
         {
             // inputs are assinged to the first layer.
             var input = Layers.First().Input;
-            Executor.AssignTensor(input, observations.Data);
+            Storage.AssignTensor(input, observations.Data);
 
             // targets are stored as the gradients of the final layer.
             var output = Layers.Last().Output;
-            Executor.AssignGradient(output, targets.Data);
+            Storage.AssignGradient(output, targets.Data);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <returns></returns>
         public Tensor<double> BatchPredictions()
         {
-            var prediction = Executor.GetTensor(Layers.Last().Output);
+            var prediction = Storage.GetTensor(Layers.Last().Output);
             return prediction;
         }
 
@@ -70,7 +70,7 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         public void Forward()
         {
-            Layers.ForEach(l => l.Forward(Executor));
+            Layers.ForEach(l => l.Forward(Storage));
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace SharpLearning.Neural.LayersNew
         {
             for (int i = Layers.Count; i-- > 0;)
             {
-                Layers[i].Backward(Executor);
+                Layers[i].Backward(Storage);
             }
         }
 
@@ -91,12 +91,12 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="random"></param>
         public void Initialize(Variable input, Random random)
         {
-            Layers.First().Initialize(input, Executor, random, m_initialization);
+            Layers.First().Initialize(input, Storage, random, m_initialization);
 
             for (int i = 1; i < Layers.Count; i++)
             {
                 var previousLayer = Layers[i - 1];
-                Layers[i].Initialize(previousLayer.Output, Executor, random, m_initialization);
+                Layers[i].Initialize(previousLayer.Output, Storage, random, m_initialization);
             }           
         }
 
@@ -106,7 +106,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="parameters"></param>
         public void GetTrainableParameters(List<Data<double>> parameters)
         {
-            Executor.GetTrainableParameters(parameters);
+            Storage.GetTrainableParameters(parameters);
         }
     }
 }

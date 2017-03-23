@@ -16,7 +16,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="output"></param>
         /// <param name="executor"></param>
         public static void Forward(Activations.Activation activation,
-            Variable input, Variable output, Executor executor)
+            Variable input, Variable output, NeuralNetStorage executor)
         {
             switch (activation)
             {
@@ -41,7 +41,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="output"></param>
         /// <param name="executor"></param>
         public static void Backward(SharpLearning.Neural.Activations.Activation activation,
-            Variable input, Variable output, Executor executor)
+            Variable input, Variable output, NeuralNetStorage executor)
         {
             // calculate gradient
             switch (activation)

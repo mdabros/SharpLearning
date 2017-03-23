@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        public void Forward(Executor executor)
+        public void Forward(NeuralNetStorage executor)
         {
             bool isTraining = true; // needs to be set
 
@@ -47,7 +47,7 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        public void Backward(Executor executor)
+        public void Backward(NeuralNetStorage executor)
         {
             BatchNormalization.Backward(Input, Scale, Bias,
                 BatchColumnMeans, BatchcolumnVars,
@@ -58,10 +58,10 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="inputVariable"></param>
-        /// <param name="excecutor"></param>
+        /// <param name="storage"></param>
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
-        public void Initialize(Variable inputVariable, Executor excecutor, Random random, 
+        public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, 
             Initialization initializtion = Initialization.GlorotUniform)
         {
             Input = inputVariable;
@@ -71,17 +71,17 @@ namespace SharpLearning.Neural.LayersNew
             var fanOutAndIn = inputVariable.DimensionOffSets[0]; // product of all dimensions except batch size.
 
             Scale = Variable.CreateTrainable(fanOutAndIn);
-            excecutor.AssignTensor(Scale, () => 1.0);
+            storage.AssignTensor(Scale, () => 1.0);
                 
             Bias = Variable.CreateTrainable(fanOutAndIn);
-            excecutor.AssignTensor(Bias, () => 0.0);
+            storage.AssignTensor(Bias, () => 0.0);
 
             BatchColumnMeans = Variable.Create(c);
             BatchcolumnVars = Variable.Create(c);
 
             MovingAverageMeans = Variable.Create(c);
             MovingAverageVariance = Variable.Create(c);
-            excecutor.AssignTensor(MovingAverageVariance, () => 1.0);
+            storage.AssignTensor(MovingAverageVariance, () => 1.0);
         }
     }
 }

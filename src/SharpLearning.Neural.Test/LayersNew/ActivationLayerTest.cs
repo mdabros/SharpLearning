@@ -10,7 +10,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void ActivationLayer_Relu_GradientCheck()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 2, 5, 5);
             var sut = new ActivationLayer(Neural.Activations.Activation.Relu);
@@ -23,7 +23,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         [Ignore] // gradient check seems off.
         public void ActivationLayer_SoftMax_GradientCheck()
         {
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
 
             var input = Variable.Create(10, 5, 1, 1);
             var sut = new ActivationLayer(Neural.Activations.Activation.SoftMax);

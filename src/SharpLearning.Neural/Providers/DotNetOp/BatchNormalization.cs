@@ -29,7 +29,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Variable Scale, Variable Bias,
             Variable BatchColumnMeans, Variable BatchcolumnVars,
             Variable MovingAverageMeans, Variable MovingAverageVariance,
-            Executor executor, bool isTraining, Variable output)
+            NeuralNetStorage executor, bool isTraining, Variable output)
         {
             var src = executor.GetTensor(input);
             var dst = executor.GetTensor(output);
@@ -226,7 +226,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         public static void Backward(Variable input,
             Variable Scale, Variable Bias,
             Variable BatchColumnMeans, Variable BatchcolumnVars,
-            Executor executor, Variable output)
+            NeuralNetStorage executor, Variable output)
         {
             var src = executor.GetTensor(input);
             var diff_src = executor.GetGradient(input);

@@ -25,7 +25,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="executor"></param>
         public static void Forward(Variable input,
             Variable weights, Variable bias,
-            Variable output, Executor executor)
+            Variable output, NeuralNetStorage executor)
         {
             var src = executor.GetTensor(input);
 
@@ -48,7 +48,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="executor"></param>
         public static void Backward(Variable input,
             Variable weights, Variable bias,
-            Variable output, Executor executor)
+            Variable output, NeuralNetStorage executor)
         {
             var src = executor.GetTensor(input);
             var srcDiff = executor.GetGradient(input);

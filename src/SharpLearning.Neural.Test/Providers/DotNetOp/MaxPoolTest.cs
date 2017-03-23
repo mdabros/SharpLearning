@@ -40,7 +40,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var switchX = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
             var switchY = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
 
-            var executor = new Executor();
+            var executor = new NeuralNetStorage();
             executor.AssignTensor(input, inputData);
 
             MaxPool2D.Forward(input, output, descriptor,

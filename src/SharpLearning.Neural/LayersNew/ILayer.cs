@@ -24,21 +24,21 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        void Forward(Executor executor);
+        void Forward(NeuralNetStorage executor);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        void Backward(Executor executor);
+        void Backward(NeuralNetStorage executor);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="inputVariable"></param>
-        /// <param name="excecutor"></param>
+        /// <param name="storage"></param>
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
-        void Initialize(Variable inputVariable, Executor excecutor, Random random, Initialization initializtion);
+        void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, Initialization initializtion);
     }
 }
