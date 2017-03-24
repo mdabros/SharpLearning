@@ -86,6 +86,7 @@ namespace SharpLearning.Containers.Tensors
         /// </summary>
         public int ElementCount { get { return Shape.ElementCount; } }
 
+
         /// <summary>
         /// 
         /// </summary>
@@ -104,14 +105,7 @@ namespace SharpLearning.Containers.Tensors
         /// <returns></returns>
         public Tensor<T> SliceCopy(int fromInclusive, int length=1)
         {
-            // only works for first dimension currently.
-            int dimension = 0;
-
-            if (dimension >= Dimensions.Length)
-            {
-                throw new ArgumentException($"Dimension: {dimension} is larger than dimension count: {DimensionCount}");
-            }
-                        
+            // only works for first dimension currently                       
             var sliceShape = new TensorShape(Dimensions.Skip(1).ToArray());
             var sliceMaxElementCount = Dimensions.Skip(1).Aggregate((x, y) => x * y);
 
@@ -120,13 +114,41 @@ namespace SharpLearning.Containers.Tensors
                 throw new ArgumentException("Slice elementCount larger than availible elemens in tensor for this dimension");
             }
 
-            var sliceData = new T[sliceShape.ElementCount];
-            var startIndex = fromInclusive * DimensionOffSets[0];
-            var copyLength = length * DimensionOffSets[0];
+            var slice = new Tensor<T>(sliceShape, DataLayout.RowMajor);
+            SliceCopy(fromInclusive, length, slice);
 
-            Array.Copy(Data, startIndex, sliceData, 0, copyLength);
+            return slice;
+        }
 
-            return new Tensor<T>(sliceData, sliceShape, DataLayout.RowMajor);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fromInclusive"></param>
+        /// <param name="length"></param>
+        /// <param name="copy"></param>
+        /// <returns></returns>
+        public void SliceCopy(int fromInclusive, int length, Tensor<T> copy)
+        {
+            // only works for first dimension currently.
+            int dimension = 0;
+
+            if (dimension >= Dimensions.Length)
+            {
+                throw new ArgumentException($"Dimension: {dimension} is larger than dimension count: {DimensionCount}");
+            }
+
+            int elementsToCopy = length * DimensionOffSets[0];
+            if (elementsToCopy != copy.ElementCount)
+            {
+                throw new ArgumentException($"Required element count : {elementsToCopy} is larger than copy element count: {copy.ElementCount}");
+            }
+
+            var dimensionSize = DimensionOffSets[dimension];
+
+            var index = fromInclusive;
+            var srcStartIndex = index * dimensionSize;
+            
+            Array.Copy(Data, srcStartIndex, copy.Data, 0, elementsToCopy);
         }
 
         /// <summary>
@@ -154,6 +176,32 @@ namespace SharpLearning.Containers.Tensors
 
                 Array.Copy(Data, startIndex, copy.Data, copyStartIndex, dimensionSize);
             }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="values"></param>
+        public void SetSlice(int index, Tensor<T> values)
+        {
+            // only works for first dimension currently.
+            int dimension = 0;
+            int length = values.Dimensions[0];
+
+            var dstDimensionSize = DimensionOffSets[dimension];
+            var srcDimensionSize = values.DimensionOffSets[dimension];
+
+            int elementsToCopy = length * values.DimensionOffSets[0];
+            if (dstDimensionSize != srcDimensionSize)
+            {
+                throw new ArgumentException($"Destination dimension size: {dstDimensionSize} differs from soruce dimension size {srcDimensionSize}");
+            }
+            
+            var dstStartIndex = index * dstDimensionSize;
+
+            Array.Copy(values.Data, 0, Data, dstStartIndex, elementsToCopy);
         }
 
         /// <summary>

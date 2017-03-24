@@ -68,6 +68,48 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        public Tensor<double> Predict(Tensor<double> observations)
+        {
+            var dimensions = new List<int> { 1 };
+            dimensions.AddRange(observations.Dimensions.Skip(1));
+            var observation = Tensor<double>.Build(dimensions.ToArray());
+            
+            if(observation.Shape != Layers.First().Input.Shape)
+            {
+                Storage.ClearNonTrainables();
+                UpdateDimensions(new Variable(observation.Shape.Dimensions.ToArray()));
+            }
+
+            var output = Layers.Last().Output;
+            var predictionsDimensions = new List<int> { observations.Dimensions[0] };
+            predictionsDimensions.AddRange(output.Dimensions.Skip(1));
+
+            var predictions = Tensor<double>.Build(predictionsDimensions.ToArray());
+
+            for (int i = 0; i < observations.Dimensions[0]; i++)
+            {
+                // copy observation
+                observations.SliceCopy(i, 1, observation);
+
+                // set observation
+                var input = Layers.First().Input;
+                Storage.AssignTensor(input, observation.Data);
+
+                // pedict
+                Forward();
+
+                // set prediction
+                predictions.SetSlice(i, Storage.GetTensor(output));
+            }
+
+            return predictions;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Forward()
         {
             Layers.ForEach(l => l.Forward(Storage));
@@ -107,6 +149,31 @@ namespace SharpLearning.Neural.LayersNew
         public void GetTrainableParameters(List<Data<double>> parameters)
         {
             Storage.GetTrainableParameters(parameters);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void ClearNonTrainableStorage()
+        {
+            Storage.ClearNonTrainables();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        public void UpdateDimensions(Variable input)
+        {
+            ClearNonTrainableStorage();
+
+            Layers.First().UpdateDimensions(input);
+
+            for (int i = 1; i < Layers.Count; i++)
+            {
+                var previousLayer = Layers[i - 1];
+                Layers[i].UpdateDimensions(previousLayer.Output);
+            }
         }
     }
 }

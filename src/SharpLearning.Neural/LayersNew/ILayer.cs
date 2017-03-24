@@ -40,5 +40,11 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
         void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, Initialization initializtion);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        void UpdateDimensions(Variable input);
     }
 }

@@ -64,9 +64,8 @@ namespace SharpLearning.Neural.LayersNew
         public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random,
             Initialization initializtion = Initialization.GlorotUniform)
         {
-            Input = inputVariable;
+            UpdateDimensions(inputVariable);
 
-            var batchSize = inputVariable.Dimensions[0];
             var fanIn = inputVariable.DimensionOffSets[0]; // product of all dimensions except batch size.
             var fanOut = m_units;
 
@@ -77,8 +76,18 @@ namespace SharpLearning.Neural.LayersNew
             storage.AssignTensor(Weights, () => (float)distribution.Sample());
 
             Bias = Variable.CreateTrainable(fans.FanOut);
+        }
 
-            Output = Variable.Create(batchSize, fans.FanOut);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        public void UpdateDimensions(Variable input)
+        {
+            Input = input;
+
+            var batchSize = input.Dimensions[0];
+            Output = Variable.Create(batchSize, m_units);
         }
     }
 }

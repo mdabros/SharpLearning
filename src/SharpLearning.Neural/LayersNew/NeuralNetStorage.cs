@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using SharpLearning.Containers.Tensors;
 
@@ -32,6 +33,19 @@ namespace SharpLearning.Neural.LayersNew
                     parameters.Add(data.Value);
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        public void ClearNonTrainables()
+        {
+            var variablesToClear = m_data.Keys.Where(k => !k.Trainable)
+                .ToList();
+
+            foreach (var key in variablesToClear)
+                m_data.Remove(key);
         }
 
         /// <summary>

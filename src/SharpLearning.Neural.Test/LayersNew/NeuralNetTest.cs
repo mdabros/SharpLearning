@@ -57,7 +57,7 @@ namespace SharpLearning.Neural.Test.LayersNew
             sut.GetTrainableParameters(parameters);
 
             var lossFunc = new LogLoss();
-            var epochs = 10;
+            var epochs = 100;
 
             var batcher = new Batcher();
             batcher.Initialize(observations.Shape, random.Next());

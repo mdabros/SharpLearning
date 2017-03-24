@@ -62,8 +62,17 @@ namespace SharpLearning.Neural.LayersNew
         public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, 
             Initialization initializtion = Initialization.GlorotUniform)
         {
-            Input = inputVariable;
-            Output = Variable.Create(inputVariable.Dimensions.ToArray());
+            UpdateDimensions(inputVariable);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        public void UpdateDimensions(Variable input)
+        {
+            Input = input;
+            Output = Variable.Create(input.Dimensions.ToArray());
         }
     }
 }

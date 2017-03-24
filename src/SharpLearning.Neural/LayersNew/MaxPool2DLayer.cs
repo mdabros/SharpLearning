@@ -92,12 +92,29 @@ namespace SharpLearning.Neural.LayersNew
         public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random,
             Initialization initializtion = Initialization.GlorotUniform)
         {
-            Input = inputVariable;
+            UpdateDimensions(inputVariable);
 
             var batchSize = inputVariable.Dimensions[0];
-            var c = inputVariable.Dimensions[1];
-            var h = inputVariable.Dimensions[2];
-            var w = inputVariable.Dimensions[3];
+            var fanOut = Output.DimensionOffSets[0]; // product of all dimensions except batch size.
+            
+            // store switches for x,y coordinates for where the max comes from, for each output neuron
+            // only used during training.
+            this.m_switchX = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
+            this.m_switchY = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        public void UpdateDimensions(Variable input)
+        {
+            Input = input;
+
+            var batchSize = input.Dimensions[0];
+            var c = input.Dimensions[1];
+            var h = input.Dimensions[2];
+            var w = input.Dimensions[3];
 
             // compute output dimensions.
             var outC = c;
@@ -105,13 +122,6 @@ namespace SharpLearning.Neural.LayersNew
             var outW = ConvUtils.GetFilterGridLength(w, m_descriptor.PoolW, m_descriptor.StrideW, m_descriptor.PadW, m_borderMode);
 
             Output = Variable.Create(batchSize, outC, outH, outW);
-
-            var fanOut = Output.DimensionOffSets[0]; // product of all dimensions except batch size.
-            
-            // store switches for x,y coordinates for where the max comes from, for each output neuron
-            // only used during training.
-            this.m_switchX = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
-            this.m_switchY = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
         }
     }
 }
