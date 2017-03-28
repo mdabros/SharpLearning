@@ -11,12 +11,12 @@ namespace SharpLearning.Neural.LayersNew
     /// </summary>
     public sealed class NeuralNet2
     {
-        /// <summary>
-        /// The layers in the network
-        /// </summary>
-        public readonly List<ILayerNew> Layers;
+        readonly List<ILayerNew> Layers;
 
-        readonly NeuralNetStorage Storage;
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly NeuralNetStorage Storage;
 
         readonly Initialization m_initialization;
 
@@ -29,6 +29,16 @@ namespace SharpLearning.Neural.LayersNew
             Layers = new List<ILayerNew>();
             Storage = new NeuralNetStorage();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Variable Input { get { return Layers.First().Input; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Variable Output { get { return Layers.Last().Output; } }
 
         /// <summary>
         /// 
@@ -160,6 +170,30 @@ namespace SharpLearning.Neural.LayersNew
                 var previousLayer = Layers[i - 1];
                 Layers[i].UpdateDimensions(previousLayer.Output);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public NeuralNet2 Copy()
+        {
+            var inputDimensions = new List<int> { 1 };
+            inputDimensions.AddRange(Input.Dimensions.Skip(1));
+
+            var input = Variable.Create(inputDimensions.ToArray());
+            var net = new NeuralNet2();
+
+            var copy = Layers.First().Copy(input, Storage, net.Storage);
+            net.Add(copy);
+            
+            for (int i = 1; i < Layers.Count; i++)
+            {
+                copy = Layers[i].Copy(copy.Output, Storage, net.Storage);
+                net.Add(copy);
+            }
+
+            return net;
         }
     }
 }

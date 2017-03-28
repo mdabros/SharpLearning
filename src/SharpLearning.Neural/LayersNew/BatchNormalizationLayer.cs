@@ -91,5 +91,32 @@ namespace SharpLearning.Neural.LayersNew
             Input = input;
             Output = Variable.Create(input.Dimensions.ToArray());
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputVariable"></param>
+        /// <param name="storage"></param>
+        /// <param name="copyStorage"></param>
+        /// <returns></returns>
+        public ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage)
+        {
+            var copy = new BatchNormalizationLayer();
+            copy.UpdateDimensions(inputVariable);
+
+            copy.Scale = Scale.Copy();
+            copyStorage.AssignTensor(copy.Scale, storage.GetTensor(Scale).Data.ToArray());
+
+            copy.Bias = Bias.Copy();
+            copyStorage.AssignTensor(copy.Bias, storage.GetTensor(Bias).Data.ToArray());
+
+            copy.MovingAverageMeans = MovingAverageMeans.Copy();
+            copyStorage.AssignTensor(copy.MovingAverageMeans, storage.GetTensor(MovingAverageMeans).Data.ToArray());
+
+            copy.MovingAverageVariance = MovingAverageVariance.Copy();
+            copyStorage.AssignTensor(copy.MovingAverageVariance, storage.GetTensor(MovingAverageVariance).Data.ToArray());
+
+            return copy;
+        }
     }
 }

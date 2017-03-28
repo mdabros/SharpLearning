@@ -72,7 +72,8 @@ namespace SharpLearning.Neural.Test.LayersNew
             var epochs = 40;
 
             var batcher = new Batcher();
-            batcher.Initialize(observations.Shape, random.Next());
+            batcher.Initialize(observations.Shape, Enumerable.Range(0, observations.Dimensions[0]).ToArray(),
+                random.Next());
 
             for (int i = 0; i < epochs; i++)
             {
@@ -124,7 +125,7 @@ namespace SharpLearning.Neural.Test.LayersNew
         /// </summary>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public Tensor<double> Encode(double[] targets)
+        public static Tensor<double> Encode(double[] targets)
         {
             var index = 0;
             var targetNameToTargetIndex = targets.Distinct().OrderBy(v => v)
@@ -141,11 +142,6 @@ namespace SharpLearning.Neural.Test.LayersNew
             }
 
             return oneOfN;
-        }
-
-        public Tensor<double> EncodeRegression(double[] targets)
-        {
-            return Tensor<double>.Build(targets, targets.Length);
         }
     }
 }

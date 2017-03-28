@@ -45,6 +45,15 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="inputVariable"></param>
+        /// <param name="storage"></param>
+        /// <param name="copyStorage"></param>
+        /// <returns></returns>
+        ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage);
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="input"></param>
         void UpdateDimensions(Variable input);
     }

@@ -75,5 +75,20 @@ namespace SharpLearning.Neural.LayersNew
             Input = input;
             Output = Variable.Create(input.Dimensions.ToArray());
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputVariable"></param>
+        /// <param name="storage"></param>
+        /// <param name="copyStorage"></param>
+        /// <returns></returns>
+        public ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage)
+        {
+            var copy = new ActivationLayer(m_activation);
+            copy.UpdateDimensions(inputVariable);
+
+            return copy;
+        }
     }
 }

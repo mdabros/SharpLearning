@@ -74,6 +74,7 @@
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\DenseLayer.cs" />
+    <Compile Include="LayersNew\NeuralNetLearner2.cs" />
     <Compile Include="LayersNew\NeuralNetStorage.cs" />
     <Compile Include="LayersNew\ILayer.cs" />
     <Compile Include="LayersNew\MaxPool2DDescriptor.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Providers\DotNetOp\Relu.cs" />
     <Compile Include="Providers\DotNetOp\SoftMax.cs" />
     <Compile Include="Providers\DotNetOp\Utils.cs" />
+    <Compile Include="Providers\ProviderType.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoder.cs" />
     <Compile Include="TargetEncoders\ITargetEncoder.cs" />
     <Compile Include="TargetEncoders\OneOfNTargetEncoder.cs" />

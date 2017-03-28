@@ -18,10 +18,11 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="observations"></param>
+        /// <param name="indices"></param>
         /// <param name="seed"></param>
-        public void Initialize(TensorShape observations, int seed)
+        public void Initialize(TensorShape observations, int[] indices, int seed)
         {
-            m_indices = Enumerable.Range(0, observations.Dimensions[0]).ToArray();
+            m_indices = indices.ToArray(); // copy indices to avoid shuffling the original.
             m_random = new Random(seed);
             Shuffle();
         }

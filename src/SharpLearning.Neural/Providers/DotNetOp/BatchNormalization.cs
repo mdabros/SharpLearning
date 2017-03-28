@@ -24,12 +24,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="MovingAverageVariance"></param>
         /// <param name="output"></param>
         /// <param name="executor"></param>
-        /// <param name="isTraining"></param>
+        /// <param name="training"></param>
         public static void Forward(Variable input,
             Variable Scale, Variable Bias,
             Variable BatchColumnMeans, Variable BatchcolumnVars,
             Variable MovingAverageMeans, Variable MovingAverageVariance,
-            NeuralNetStorage executor, bool isTraining, Variable output)
+            NeuralNetStorage executor, bool training, Variable output)
         {
             var src = executor.GetTensor(input);
             var dst = executor.GetTensor(output);
@@ -37,19 +37,26 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var scaleData = executor.GetTensor(Scale).Data;
             var biasData = executor.GetTensor(Bias).Data;
 
-            var bColumnMeans = executor.GetTensor(BatchColumnMeans).Data;
-            var bcolumnVars = executor.GetTensor(BatchcolumnVars).Data;
+            double[] bColumnMeans = null;
+            double[] bcolumnVars = null;
+
+            if (training)
+            {
+                bColumnMeans = executor.GetTensor(BatchColumnMeans).Data;
+                bcolumnVars = executor.GetTensor(BatchcolumnVars).Data;
+            }
+
             var movingAverageMeans = executor.GetTensor(MovingAverageMeans).Data;
             var movingAverageVariance = executor.GetTensor(MovingAverageVariance).Data;
 
             if(input.Rank == 4)
             {
-                Forward4D(isTraining, src, dst, scaleData, biasData, 
+                Forward4D(training, src, dst, scaleData, biasData, 
                     bColumnMeans, bcolumnVars, movingAverageMeans, movingAverageVariance);
             }
             else if(input.Rank == 2)
             {
-                Forward2D(isTraining, src, dst, scaleData, biasData,
+                Forward2D(training, src, dst, scaleData, biasData,
                     bColumnMeans, bcolumnVars, movingAverageMeans, movingAverageVariance);
             }
             else

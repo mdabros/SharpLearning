@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Tensors;
+﻿using System.Linq;
+using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.LayersNew
 {
@@ -65,6 +66,14 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         public int Rank { get { return Shape.Rank; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Variable Copy()
+        {
+            return new Variable(Dimensions.ToArray(), Trainable, Preservable);
+        }
 
         /// <summary>
         /// 

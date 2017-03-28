@@ -33,6 +33,8 @@ namespace SharpLearning.Neural.LayersNew
             m_descriptor = new MaxPool2DDescriptor(poolH, poolW,
             strideH, strideW,
             padH, padW);
+
+            m_borderMode = BorderMode.Undefined;
         }
 
         /// <summary>
@@ -123,6 +125,24 @@ namespace SharpLearning.Neural.LayersNew
             var outW = ConvUtils.GetFilterGridLength(w, m_descriptor.PoolW, m_descriptor.StrideW, m_descriptor.PadW, m_borderMode);
 
             Output = Variable.Create(batchSize, outC, outH, outW);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputVariable"></param>
+        /// <param name="storage"></param>
+        /// <param name="copyStorage"></param>
+        /// <returns></returns>
+        public ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage)
+        {
+            var copy = new MaxPool2DLayer(m_descriptor.PoolH, m_descriptor.PoolW,
+                m_descriptor.StrideH, m_descriptor.StrideW, 
+                m_descriptor.PadH, m_descriptor.PadW);
+
+            copy.UpdateDimensions(inputVariable);
+
+            return copy;
         }
     }
 }

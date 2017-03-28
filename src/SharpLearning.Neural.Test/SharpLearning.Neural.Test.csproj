@@ -79,6 +79,7 @@
     <Compile Include="LayersNew\DenseLayerTest.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayerTest.cs" />
     <Compile Include="LayersNew\MaxPool2DLayerTest.cs" />
+    <Compile Include="LayersNew\NeuralNetLearner2Test.cs" />
     <Compile Include="LayersNew\NeuralNetTest.cs" />
     <Compile Include="Layers\ActivationLayerTest.cs" />
     <Compile Include="Layers\BatchNormalizationLayerTest.cs" />

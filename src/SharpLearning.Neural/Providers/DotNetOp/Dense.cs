@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading.Tasks;
-using MathNet.Numerics;
-using MathNet.Numerics.Providers.LinearAlgebra;
 using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.LayersNew;
-using SharpLearning.Containers.Extensions;
 
 
 namespace SharpLearning.Neural.Providers.DotNetOp

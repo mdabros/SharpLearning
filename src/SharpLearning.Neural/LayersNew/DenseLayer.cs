@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Providers.DotNetOp;
 
@@ -89,6 +90,27 @@ namespace SharpLearning.Neural.LayersNew
 
             var batchSize = input.Dimensions[0];
             Output = Variable.Create(batchSize, m_units);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputVariable"></param>
+        /// <param name="storage"></param>
+        /// <param name="copyStorage"></param>
+        /// <returns></returns>
+        public ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage)
+        {
+            var copy = new DenseLayer(m_units);
+            copy.UpdateDimensions(inputVariable);
+
+            copy.Weights = Weights.Copy();
+            copyStorage.AssignTensor(copy.Weights, storage.GetTensor(Weights).Data.ToArray());
+
+            copy.Bias = Bias.Copy();
+            copyStorage.AssignTensor(copy.Bias, storage.GetTensor(Bias).Data.ToArray());
+
+            return copy;
         }
     }
 }
