@@ -22,7 +22,6 @@ namespace SharpLearning.Neural.LayersNew
         readonly Random m_random;
 
         readonly NeuralNetOptimizer2 m_optimizer;
-        readonly ITargetEncoder m_targetEncoder;
         readonly ILoss m_loss;
 
         /// <summary>
