@@ -37,6 +37,17 @@ namespace SharpLearning.Neural.Test.LayersNew
             var batchObservations = Tensor<double>.Build(batchSize, channels, height, width);
             var batchTargets = Tensor<double>.Build(batchSize, numberOfTargets);
 
+            var validatinSize = 2 * batchSize;
+            var validationObservations = Tensor<double>.Build(validatinSize, channels, height, width);
+            validationObservations.Map(v => random.NextDouble());
+            var validationTargetsIn = Enumerable.Range(0, validatinSize)
+                .Select(v => (double)random.Next(numberOfTargets))
+                .ToArray();
+            var ValidationTargets = Encode(validationTargetsIn);
+
+            var validationObservation = Tensor<double>.Build(1, channels, height, width);
+            var validationPredictions = Tensor<double>.Build(ValidationTargets.Dimensions.ToArray());
+
             var optimizer = new NeuralNetOptimizer2(0.001, batchSize);
             var sut = new NeuralNet2();
 
@@ -51,13 +62,14 @@ namespace SharpLearning.Neural.Test.LayersNew
             sut.Add(new ActivationLayer(Neural.Activations.Activation.SoftMax));
 
             // hack because of missing input layer.
-            sut.Initialize(new Variable(batchObservations.Shape), random);
+            var trainingInput = Variable.Create(batchObservations.Dimensions.ToArray());
+            sut.Initialize(trainingInput, random);
             
             var parameters = new List<Data<double>>();
             sut.GetTrainableParameters(parameters);
 
             var lossFunc = new LogLoss();
-            var epochs = 100;
+            var epochs = 40;
 
             var batcher = new Batcher();
             batcher.Initialize(observations.Shape, random.Next());
@@ -74,14 +86,31 @@ namespace SharpLearning.Neural.Test.LayersNew
                     sut.Forward();
                     sut.Backward();
 
-                    optimizer.UpdateParameters(parameters);
-
                     var batchLoss = lossFunc.Loss(batchTargets, sut.BatchPredictions());
                     accumulatedLoss += batchLoss * batchSize;
+
+                    optimizer.UpdateParameters(parameters);
                 }
 
                 var loss = accumulatedLoss / (double)observationSize;
                 Trace.WriteLine($"Loss: {loss}");
+
+                // validation
+                if (i % 5 == 0 && i != 0)
+                {
+                    for (int j = 0; j < validationObservations.Dimensions[0]; j++)
+                    {
+                        validationObservations.SliceCopy(j, 1, validationObservation);
+                        var prediction = sut.Predict(validationObservation);
+                        validationPredictions.SetSlice(j, prediction);
+                    }
+
+                    var batchPredictionLoss = lossFunc.Loss(ValidationTargets, validationPredictions);
+                    Trace.WriteLine($"Validation Loss: {batchPredictionLoss}");
+
+                    // reset input to training.
+                    sut.UpdateDimensions(trainingInput);
+                }
             }
         }
 

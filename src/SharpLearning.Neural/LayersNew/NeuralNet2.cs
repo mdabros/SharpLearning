@@ -72,39 +72,28 @@ namespace SharpLearning.Neural.LayersNew
         /// <returns></returns>
         public Tensor<double> Predict(Tensor<double> observations)
         {
-            var dimensions = new List<int> { 1 };
-            dimensions.AddRange(observations.Dimensions.Skip(1));
-            var observation = Tensor<double>.Build(dimensions.ToArray());
-            
-            if(observation.Shape != Layers.First().Input.Shape)
+            var input = Layers.First().Input;
+
+            if (input.Shape != observations.Shape)
             {
-                Storage.ClearNonTrainables();
-                UpdateDimensions(new Variable(observation.Shape.Dimensions.ToArray()));
-            }
-
-            var output = Layers.Last().Output;
-            var predictionsDimensions = new List<int> { observations.Dimensions[0] };
-            predictionsDimensions.AddRange(output.Dimensions.Skip(1));
-
-            var predictions = Tensor<double>.Build(predictionsDimensions.ToArray());
-
-            for (int i = 0; i < observations.Dimensions[0]; i++)
-            {
-                // copy observation
-                observations.SliceCopy(i, 1, observation);
+                var newInput = Variable.Create(observations.Dimensions.ToArray());
+                UpdateDimensions(newInput);
 
                 // set observation
-                var input = Layers.First().Input;
-                Storage.AssignTensor(input, observation.Data);
-
-                // pedict
-                Forward();
-
-                // set prediction
-                predictions.SetSlice(i, Storage.GetTensor(output));
+                Storage.AssignTensor(newInput, observations.Data);
+            }
+            else
+            {
+                // set observation
+                Storage.AssignTensor(input, observations.Data);
             }
 
-            return predictions;
+            // pedict
+            Forward(training: false);
+
+            // return prediction
+            var output = Layers.Last().Output;
+            return Storage.GetTensor(output);
         }
 
         /// <summary>
@@ -112,7 +101,12 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         public void Forward()
         {
-            Layers.ForEach(l => l.Forward(Storage));
+            Forward(true);
+        }
+
+        void Forward(bool training)
+        {
+            Layers.ForEach(l => l.Forward(Storage, training));
         }
 
         /// <summary>
@@ -154,18 +148,10 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        public void ClearNonTrainableStorage()
-        {
-            Storage.ClearNonTrainables();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="input"></param>
         public void UpdateDimensions(Variable input)
         {
-            ClearNonTrainableStorage();
+            Storage.ClearNonPreservables();
 
             Layers.First().UpdateDimensions(input);
 

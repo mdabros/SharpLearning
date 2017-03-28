@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             for (int row = 0; row < rows; row++)
             {
-                var rowSum = 0.0f;
+                var rowSum = 0.0;
                 var max = double.MinValue;
 
                 for (int col = 0; col < cols; ++col)
@@ -50,7 +50,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 {
                     var index = row * cols + col;
 
-                    var value = (float)Math.Exp(srcData[index] - max);
+                    var value = Math.Exp(srcData[index] - max);
                     rowSum += value;
                     dstData[index] = value;
                 }

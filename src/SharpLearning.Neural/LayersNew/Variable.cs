@@ -12,10 +12,12 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="shape"></param>
         /// <param name="trainable"></param>
-        public Variable(TensorShape shape, bool trainable = false)
+        /// <param name="preservable"></param>
+        Variable(TensorShape shape, bool trainable = false, bool preservable = false)
         {
             Shape = shape;
             Trainable = trainable;
+            Preservable = preservable;
         }
 
         /// <summary>
@@ -23,8 +25,9 @@ namespace SharpLearning.Neural.LayersNew
         /// </summary>
         /// <param name="dimensions"></param>
         /// <param name="trainable"></param>
-        public Variable(int[] dimensions, bool trainable = false)
-            : this(new TensorShape(dimensions), trainable)
+        /// <param name="preservable"></param>
+        Variable(int[] dimensions, bool trainable = false, bool preservable = false)
+            : this(new TensorShape(dimensions), trainable, preservable)
         { }
 
         /// <summary>
@@ -36,6 +39,11 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         public bool Trainable { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Preservable { get; }
 
         /// <summary>
         /// 
@@ -55,7 +63,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        public int DimensionCount { get { return Shape.DimensionCount; } }
+        public int Rank { get { return Shape.Rank; } }
 
 
         /// <summary>
@@ -65,7 +73,17 @@ namespace SharpLearning.Neural.LayersNew
         /// <returns></returns>
         public static Variable CreateTrainable(params int[] dimensions)
         {
-            return new Variable(dimensions, true);
+            return new Variable(dimensions, true, true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dimensions"></param>
+        /// <returns></returns>
+        public static Variable CreatePreservable(params int[] dimensions)
+        {
+            return new Variable(dimensions, false, true);
         }
 
         /// <summary>

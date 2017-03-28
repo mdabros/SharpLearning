@@ -38,10 +38,9 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parameters"></param>
-        public void ClearNonTrainables()
+        public void ClearNonPreservables()
         {
-            var variablesToClear = m_data.Keys.Where(k => !k.Trainable)
+            var variablesToClear = m_data.Keys.Where(k => !k.Trainable && !k.Preservable)
                 .ToList();
 
             foreach (var key in variablesToClear)

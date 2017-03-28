@@ -41,7 +41,7 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public int DimensionCount { get { return Dimensions.Length; } }
+        public int Rank { get { return Dimensions.Length; } }
 
 
         /// <summary>

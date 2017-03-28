@@ -81,14 +81,14 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Tensor<float> weights, Tensor<float> bias,
             Tensor<float> output)
         {
-            if (output.DimensionCount != 2)
+            if (output.Rank != 2)
             {
-                throw new ArgumentException($"output must be 2-dimensional, was: {output.DimensionCount}");
+                throw new ArgumentException($"output must be 2-dimensional, was: {output.Rank}");
             }
 
             int IC = 0;
 
-            if (input.DimensionCount == 4)
+            if (input.Rank == 4)
             {
                 // 4D, IC is the product of the last 3 dimensions. flatten to 2D.
                 IC = input.DimensionOffSets[0];

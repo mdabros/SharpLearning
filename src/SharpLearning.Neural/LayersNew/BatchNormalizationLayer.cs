@@ -28,19 +28,18 @@ namespace SharpLearning.Neural.LayersNew
 
         Variable Scale;
         Variable Bias;
-       
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        public void Forward(NeuralNetStorage executor)
+        /// <param name="training"></param>
+        public void Forward(NeuralNetStorage executor, bool training = true)
         {
-            bool isTraining = true; // needs to be set
-
             BatchNormalization.Forward(Input, Scale, Bias,
                 BatchColumnMeans, BatchcolumnVars,
                 MovingAverageMeans, MovingAverageVariance,
-                executor, isTraining, Output);
+                executor, training, Output);
         }
 
         /// <summary>
@@ -78,8 +77,8 @@ namespace SharpLearning.Neural.LayersNew
             BatchColumnMeans = Variable.Create(c);
             BatchcolumnVars = Variable.Create(c);
 
-            MovingAverageMeans = Variable.Create(c);
-            MovingAverageVariance = Variable.Create(c);
+            MovingAverageMeans = Variable.CreatePreservable(c);
+            MovingAverageVariance = Variable.CreatePreservable(c);
             storage.AssignTensor(MovingAverageVariance, () => 1.0);
         }
 

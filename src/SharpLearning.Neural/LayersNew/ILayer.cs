@@ -24,7 +24,8 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        void Forward(NeuralNetStorage executor);
+        /// <param name="training"></param>
+        void Forward(NeuralNetStorage executor, bool training=true);
 
         /// <summary>
         /// 

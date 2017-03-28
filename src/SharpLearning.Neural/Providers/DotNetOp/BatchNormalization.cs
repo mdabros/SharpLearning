@@ -42,12 +42,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var movingAverageMeans = executor.GetTensor(MovingAverageMeans).Data;
             var movingAverageVariance = executor.GetTensor(MovingAverageVariance).Data;
 
-            if(input.DimensionCount == 4)
+            if(input.Rank == 4)
             {
                 Forward4D(isTraining, src, dst, scaleData, biasData, 
                     bColumnMeans, bcolumnVars, movingAverageMeans, movingAverageVariance);
             }
-            else if(input.DimensionCount == 2)
+            else if(input.Rank == 2)
             {
                 Forward2D(isTraining, src, dst, scaleData, biasData,
                     bColumnMeans, bcolumnVars, movingAverageMeans, movingAverageVariance);
@@ -201,6 +201,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     var index = nOffSet + c;
                     dstData[index] = scale * (srcData[index] - mean) * sqrtVariance + bias;
                 }
+                    
                 if (isTraining)
                 {
                     movingAverageMeansData[c] = MovingAverage(movingAverageMeansData[c], mean);
@@ -241,12 +242,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             var diff_dst = executor.GetGradient(output);
 
-            if (input.DimensionCount == 4)
+            if (input.Rank == 4)
             {
                 Backward4D(src, diff_src, scaleData, 
                     scaleGradientData, biasGradientData, meanData, varianceData, diff_dst);
             }
-            else if (input.DimensionCount == 2)
+            else if (input.Rank == 2)
             {
                 Backward2D(src, diff_src, scaleData, 
                     scaleGradientData, biasGradientData, meanData, varianceData, diff_dst);

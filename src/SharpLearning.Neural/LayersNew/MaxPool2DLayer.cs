@@ -66,10 +66,11 @@ namespace SharpLearning.Neural.LayersNew
         /// 
         /// </summary>
         /// <param name="executor"></param>
-        public void Forward(NeuralNetStorage executor)
+        /// <param name="training"></param>
+        public void Forward(NeuralNetStorage executor, bool training = true)
         {
             MaxPool2D.Forward(Input, Output, m_descriptor,
-                m_switchX, m_switchY, executor);
+                m_switchX, m_switchY, training, executor);
         }
 
         /// <summary>

@@ -44,7 +44,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             executor.AssignTensor(input, inputData);
 
             MaxPool2D.Forward(input, output, descriptor,
-                switchX, switchY, executor);
+                switchX, switchY, true, executor);
 
             var actual = executor.GetTensor(output);
 

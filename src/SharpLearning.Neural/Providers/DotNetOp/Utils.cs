@@ -344,7 +344,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="output"></param>
         public static void MultiplyRef(Tensor<float> m1, Tensor<float> m2, Tensor<float> output)
         {
-            if(m1.DimensionCount != 2 || m2.DimensionCount != 2 || output.DimensionCount != 2)
+            if(m1.Rank != 2 || m2.Rank != 2 || output.Rank != 2)
             { throw new ArgumentException("Only 2-dimensional tensors are supported. "); }
 
             var m1data = m1.Data;

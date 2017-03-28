@@ -79,13 +79,12 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public int DimensionCount { get { return Shape.DimensionCount; } }
+        public int Rank { get { return Shape.Rank; } }
 
         /// <summary>
         /// 
         /// </summary>
         public int ElementCount { get { return Shape.ElementCount; } }
-
 
         /// <summary>
         /// 
@@ -134,7 +133,7 @@ namespace SharpLearning.Containers.Tensors
 
             if (dimension >= Dimensions.Length)
             {
-                throw new ArgumentException($"Dimension: {dimension} is larger than dimension count: {DimensionCount}");
+                throw new ArgumentException($"Dimension: {dimension} is larger than dimension count: {Rank}");
             }
 
             int elementsToCopy = length * DimensionOffSets[0];

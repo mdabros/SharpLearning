@@ -19,10 +19,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="desc"></param>
         /// <param name="m_switchX"></param>
         /// <param name="m_switchY"></param>
+        /// <param name="training"></param>
         /// <param name="executor"></param>
         public static void Forward(Variable input,
             Variable output, MaxPool2DDescriptor desc,
-            int[][] m_switchX, int[][] m_switchY,
+            int[][] m_switchX, int[][] m_switchY, bool training,
             NeuralNetStorage executor)
         {
             var src = executor.GetTensor(input);
@@ -43,9 +44,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             {
                 var dstBOffSet = dst.DimensionOffSets[0] * mb;
                 var srcBOffSet = src.DimensionOffSets[0] * mb;
-
-                var switchX = m_switchX[mb];
-                var switchY = m_switchY[mb];
 
                 for (int ic = 0; ic < IC; ++ic)
                 {
@@ -91,9 +89,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                                 }
                             }
 
-                            switchX[n] = winx;
-                            switchY[n] = winy;
-                            n++;
+                            if(training)
+                            {
+                                m_switchX[mb][n] = winx;
+                                m_switchY[mb][n] = winy;
+                                n++;
+                            }
 
                             var dstIndex = dstHOffSet + ow;
                             dstData[dstIndex] = currentMax;
