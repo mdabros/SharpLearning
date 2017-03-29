@@ -33,7 +33,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        public Variable Input { get { return Layers.First().Input; } }
+        public Variable Input { get { return Layers.First().Input; } private set { } }
 
         /// <summary>
         /// 
@@ -46,6 +46,11 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="layer"></param>
         public void Add(ILayerNew layer)
         {
+            if(Layers.Count == 0)
+            {
+                Input = layer.Input;
+            }
+
             Layers.Add(layer);
         }
 
@@ -137,6 +142,11 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="random"></param>
         public void Initialize(Variable input, Random random)
         {
+            if (!(Layers.First() is InputLayer))
+            {
+                throw new ArgumentException("First layer must be InputLayer. Was: " + Layers.First().GetType().Name);
+            }
+
             Layers.First().Initialize(input, Storage, random, m_initialization);
 
             for (int i = 1; i < Layers.Count; i++)

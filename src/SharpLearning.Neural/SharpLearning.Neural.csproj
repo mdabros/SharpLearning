@@ -72,8 +72,11 @@
     <Compile Include="LayersNew\ActivationLayer.cs" />
     <Compile Include="LayersNew\Batcher.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
+    <Compile Include="LayersNew\ClassificationNeuralNetLearner2.cs" />
+    <Compile Include="LayersNew\ClassificationNeuralNetModel2.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\DenseLayer.cs" />
+    <Compile Include="LayersNew\InputLayer.cs" />
     <Compile Include="LayersNew\NeuralNetLearner2.cs" />
     <Compile Include="LayersNew\NeuralNetStorage.cs" />
     <Compile Include="LayersNew\ILayer.cs" />

@@ -35,6 +35,7 @@ namespace SharpLearning.Neural.Test.LayersNew
 
             var sut = new NeuralNet2();
 
+            sut.Add(new InputLayer(width, height, channels));
             sut.Add(new MaxPool2DLayer(2, 2));
             sut.Add(new DenseLayer(100));
             sut.Add(new BatchNormalizationLayer());

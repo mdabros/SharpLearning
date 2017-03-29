@@ -14,7 +14,10 @@ namespace SharpLearning.Neural.LayersNew
     /// </summary>
     public class NeuralNetLearner2
     {
-        readonly NeuralNet2 m_net;
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly NeuralNet2 Net;
 
         readonly int m_epochs;
         readonly int m_batchSize;
@@ -54,7 +57,7 @@ namespace SharpLearning.Neural.LayersNew
             if (beta1 <= 0) { throw new ArgumentNullException("beta1 must be larger than 0. Was: " + beta1); }
             if (beta2 <= 0) { throw new ArgumentNullException("beta2 must be larger than 0. Was: " + beta2); }
 
-            m_net = net;
+            Net = net;
             m_loss = loss;
             m_epochs = epochs;
             m_batchSize = batchSize;
@@ -98,10 +101,10 @@ namespace SharpLearning.Neural.LayersNew
 
             // hack because of missing input layer.
             var trainingInput = Variable.Create(batchObservations.Dimensions.ToArray());
-            m_net.Initialize(trainingInput, m_random);
+            Net.Initialize(trainingInput, m_random);
 
             var parameters = new List<Data<double>>();
-            m_net.GetTrainableParameters(parameters);
+            Net.GetTrainableParameters(parameters);
 
             var lossFunc = new LogLoss();
 
@@ -118,13 +121,13 @@ namespace SharpLearning.Neural.LayersNew
 
                 timer.Restart();
                 while (batcher.Next(m_batchSize,
-                    m_net, observations, targets,
+                    Net, observations, targets,
                     batchObservations, batchTargets))
                 {
-                    m_net.Forward();
-                    m_net.Backward();
+                    Net.Forward();
+                    Net.Backward();
 
-                    var batchLoss = lossFunc.Loss(batchTargets, m_net.BatchPredictions());
+                    var batchLoss = lossFunc.Loss(batchTargets, Net.BatchPredictions());
                     accumulatedLoss += batchLoss * m_batchSize;
 
                     m_optimizer.UpdateParameters(parameters);
@@ -153,7 +156,7 @@ namespace SharpLearning.Neural.LayersNew
                 //}
             }
 
-            return m_net.Copy();
+            return Net.Copy();
         }
 
         static int NumberOfTargets(Tensor<double> targets)
