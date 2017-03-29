@@ -165,8 +165,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var srcData = src.Data;
             var dstData = dst.Data;
 
-            //Parallel.For(0, C, c =>
-            for (int c = 0; c < C; c++)
+            Parallel.For(0, C, c =>
+            //for (int c = 0; c < C; c++)
             {
                 double mean = 0;
                 double variance = 0;
@@ -217,7 +217,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     batchColumnMeansData[c] = mean;
                     batcColumnVarsData[c] = variance;
                 }
-            }//);
+            });
         }
 
 
@@ -281,7 +281,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var diffSrcData = diff_src.Data;
 
             //#pragma omp parallel for schedule(static)
-            for (int c = 0; c < C; ++c)
+            //for (int c = 0; c < C; ++c)
+            Parallel.For(0, C, c =>
             {
                 var mean = meanData[c];
                 var variance = varianceData[c];
@@ -341,7 +342,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         }
                     }
                 }
-            }
+            });
         }
 
         static void Backward2D(Tensor<double> src, Tensor<double> diff_src,
@@ -357,7 +358,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var diffDstData = diff_dst.Data;
             var diffSrcData = diff_src.Data;
 
-            for (int c = 0; c < C; ++c)
+            //for (int c = 0; c < C; ++c)
+            Parallel.For(0, C, c =>
             {
                 var mean = meanData[c];
                 var variance = varianceData[c];
@@ -398,7 +400,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     v_diff_src *= gamma * sqrtVariance;
                     diffSrcData[index] = v_diff_src;
                 }
-            }
+            });
         }
 
         static double MovingAverage(double currentValue, double value, double momentum = 0.99f)

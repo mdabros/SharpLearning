@@ -109,11 +109,14 @@ namespace SharpLearning.Neural.LayersNew
             batcher.Initialize(observations.Shape, 
                 indices, m_random.Next());
 
+            var timer = new Stopwatch();
+
             for (int epoch = 0; epoch < m_epochs; epoch++)
             {
                 batcher.Shuffle();
                 var accumulatedLoss = 0.0;
 
+                timer.Restart();
                 while (batcher.Next(m_batchSize,
                     m_net, observations, targets,
                     batchObservations, batchTargets))
@@ -126,9 +129,10 @@ namespace SharpLearning.Neural.LayersNew
 
                     m_optimizer.UpdateParameters(parameters);
                 }
+                timer.Stop();
 
                 var loss = accumulatedLoss / (double)numberOfObservations;
-                Trace.WriteLine($"Epoch: {epoch}, Loss: {loss}");
+                Trace.WriteLine($"Epoch: {epoch}, Loss: {loss}, Time (ms): {timer.ElapsedMilliseconds}");
 
 
                 // validation
