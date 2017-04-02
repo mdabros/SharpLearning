@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Providers.DotNetOp;
@@ -127,14 +128,15 @@ namespace SharpLearning.Neural.LayersNew
             Output = Variable.Create(batchSize, outC, outH, outW);
         }
 
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="inputVariable"></param>
         /// <param name="storage"></param>
         /// <param name="copyStorage"></param>
-        /// <returns></returns>
-        public ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage)
+        /// <param name="layers"></param>
+        public void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayerNew> layers)
         {
             var copy = new MaxPool2DLayer(m_descriptor.PoolH, m_descriptor.PoolW,
                 m_descriptor.StrideH, m_descriptor.StrideW, 
@@ -142,7 +144,7 @@ namespace SharpLearning.Neural.LayersNew
 
             copy.UpdateDimensions(inputVariable);
 
-            return copy;
+            layers.Add(copy);
         }
     }
 }

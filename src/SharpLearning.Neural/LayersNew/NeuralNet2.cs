@@ -57,6 +57,20 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="layers"></param>
+        public void AddRange(IReadOnlyList<ILayerNew> layers)
+        {
+            if (Layers.Count == 0)
+            {
+                Input = layers.First().Input;
+            }
+
+            Layers.AddRange(layers);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         public void SetNextBatch(Tensor<double> observations, Tensor<double> targets)
@@ -194,14 +208,16 @@ namespace SharpLearning.Neural.LayersNew
             var input = Variable.Create(inputDimensions.ToArray());
             var net = new NeuralNet2();
 
-            var copy = Layers.First().Copy(input, Storage, net.Storage);
-            net.Add(copy);
+            var copyLayers = new List<ILayerNew>();
+            Layers.First().Copy(input, Storage, net.Storage, copyLayers);
             
             for (int i = 1; i < Layers.Count; i++)
             {
-                copy = Layers[i].Copy(copy.Output, Storage, net.Storage);
-                net.Add(copy);
+                Layers[i].Copy(copyLayers.Last().Output, 
+                    Storage, net.Storage, copyLayers);
             }
+
+            net.AddRange(copyLayers);
 
             return net;
         }

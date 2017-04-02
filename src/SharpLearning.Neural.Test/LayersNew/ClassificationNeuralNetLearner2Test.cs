@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
 using SharpLearning.Neural.LayersNew;
 using SharpLearning.Neural.Loss;
@@ -27,7 +30,9 @@ namespace SharpLearning.Neural.Test.LayersNew
 
             net.Add(new InputLayer(numberOfFeatures));
             net.Add(new DenseLayer(10));
+            net.Add(new BatchNormalizationLayer());
             net.Add(new ActivationLayer(Neural.Activations.Activation.Relu));
+            net.Add(new DropoutLayer(0.5));
 
             // output layer 
             net.Add(new DenseLayer(numberOfClasses));
@@ -41,7 +46,7 @@ namespace SharpLearning.Neural.Test.LayersNew
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.754, actual);
+            Assert.AreEqual(0.75, actual);
         }
 
         void CreateData(int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random, out F64Matrix observations, out double[] targets)

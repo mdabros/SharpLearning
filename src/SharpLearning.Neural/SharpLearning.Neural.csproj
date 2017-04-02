@@ -76,6 +76,7 @@
     <Compile Include="LayersNew\ClassificationNeuralNetModel2.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\DenseLayer.cs" />
+    <Compile Include="LayersNew\DropoutLayer.cs" />
     <Compile Include="LayersNew\InputLayer.cs" />
     <Compile Include="LayersNew\NeuralNetLearner2.cs" />
     <Compile Include="LayersNew\NeuralNetStorage.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="Providers\DotNetOp\BatchNormalization.cs" />
     <Compile Include="Providers\DotNetOp\Convolution.cs" />
     <Compile Include="Providers\DotNetOp\Dense.cs" />
+    <Compile Include="Providers\DotNetOp\Dropout.cs" />
     <Compile Include="Providers\DotNetOp\MaxPool2D.cs" />
     <Compile Include="Providers\DotNetOp\Relu.cs" />
     <Compile Include="Providers\DotNetOp\SoftMax.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Providers.DotNetOp;
@@ -98,8 +99,8 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="inputVariable"></param>
         /// <param name="storage"></param>
         /// <param name="copyStorage"></param>
-        /// <returns></returns>
-        public ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage)
+        /// <param name="layers"></param>
+        public void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayerNew> layers)
         {
             var copy = new DenseLayer(m_units);
             copy.UpdateDimensions(inputVariable);
@@ -110,7 +111,7 @@ namespace SharpLearning.Neural.LayersNew
             copy.Bias = Bias.Copy();
             copyStorage.AssignTensor(copy.Bias, storage.GetTensor(Bias).Data.ToArray());
 
-            return copy;
+            layers.Add(copy);
         }
     }
 }

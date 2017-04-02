@@ -23,15 +23,15 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         /// <param name="training"></param>
-        void Forward(NeuralNetStorage executor, bool training=true);
+        void Forward(NeuralNetStorage storage, bool training=true);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="executor"></param>
-        void Backward(NeuralNetStorage executor);
+        /// <param name="storage"></param>
+        void Backward(NeuralNetStorage storage);
 
         /// <summary>
         /// 
@@ -48,8 +48,8 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="inputVariable"></param>
         /// <param name="storage"></param>
         /// <param name="copyStorage"></param>
-        /// <returns></returns>
-        ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage);
+        /// <param name="layers"></param>
+        void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayerNew> layers);
 
         /// <summary>
         /// 

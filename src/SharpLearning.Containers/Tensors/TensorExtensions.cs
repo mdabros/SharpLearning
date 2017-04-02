@@ -1,5 +1,6 @@
 ﻿using SharpLearning.Containers.Extensions;
 using System;
+using System.Numerics;
 
 namespace SharpLearning.Containers.Tensors
 {
@@ -88,9 +89,28 @@ namespace SharpLearning.Containers.Tensors
             var t2Data = t2.Data;
             var tOutData = output.Data;
 
-            for (int i = 0; i < t1.ElementCount; i++)
+            if (Vector.IsHardwareAccelerated)
             {
-                tOutData[i] = t1Data[i] * t2Data[i];
+                var simdLength = Vector<float>.Count;
+                var i = 0;
+                for (i = 0; i <= t1Data.Length - simdLength; i += simdLength)
+                {
+                    var va = new Vector<float>(t1Data, i);
+                    var vb = new Vector<float>(t2Data, i);
+                    (va * vb).CopyTo(tOutData, i);
+                }
+
+                for (; i < t1Data.Length; ++i)
+                {
+                    tOutData[i] = t1Data[i] * t2Data[i];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < t1.ElementCount; i++)
+                {
+                    tOutData[i] = t1Data[i] * t2Data[i];
+                }
             }
         }
 
@@ -109,9 +129,28 @@ namespace SharpLearning.Containers.Tensors
             var t2Data = t2.Data;
             var tOutData = output.Data;
 
-            for (int i = 0; i < t1.ElementCount; i++)
+            if(Vector.IsHardwareAccelerated)
             {
-                tOutData[i] = t1Data[i] * t2Data[i];
+                var simdLength = Vector<double>.Count;
+                var i = 0;
+                for (i = 0; i <= t1Data.Length - simdLength; i += simdLength)
+                {
+                    var va = new Vector<double>(t1Data, i);
+                    var vb = new Vector<double>(t2Data, i);
+                    (va * vb).CopyTo(tOutData, i);
+                }
+
+                for (; i < t1Data.Length; ++i)
+                {
+                    tOutData[i] = t1Data[i] * t2Data[i];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < t1.ElementCount; i++)
+                {
+                    tOutData[i] = t1Data[i] * t2Data[i];
+                }
             }
         }
 

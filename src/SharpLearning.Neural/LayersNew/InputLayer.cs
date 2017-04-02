@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.LayersNew
@@ -72,13 +73,13 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="inputVariable"></param>
         /// <param name="storage"></param>
         /// <param name="copyStorage"></param>
-        /// <returns></returns>
-        public ILayerNew Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage)
+        /// <param name="layers"></param>
+        public void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayerNew> layers)
         {
             var copy = new InputLayer(inputVariable.Copy());
             copy.UpdateDimensions(inputVariable);
 
-            return copy;
+            layers.Add(copy);
         }
 
         /// <summary>
