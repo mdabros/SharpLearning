@@ -72,5 +72,22 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
                 Assert.AreEqual(initalExpected, actual);
             }
         }
+
+        [TestMethod]
+        public void Convolution_Col2Im_BatchSize_2()
+        {
+            var col2ImData = new double[] { 0, 1, 3, 4, 1, 2, 4, 5, 3, 4, 6, 7, 4, 5, 7, 8, 10, 11, 13, 14, 11, 12, 14, 15, 13, 14, 16, 17, 14, 15, 17, 18, 20, 21, 23, 24, 21, 22, 24, 25, 23, 24, 26, 27, 24, 25, 27, 28, 100, 101, 103, 104, 101, 102, 104, 105, 103, 104, 106, 107, 104, 105, 107, 108, 110, 111, 113, 114, 111, 112, 114, 115, 113, 114, 116, 117, 114, 115, 117, 118, 120, 121, 123, 124, 121, 122, 124, 125, 123, 124, 126, 127, 124, 125, 127, 128 };
+            var col2Im = Tensor<double>.Build(col2ImData, 2, 3, 4, 4);
+
+            var actual = Tensor<double>.Build(2, 3, 3, 3);            
+            var convDescriptor = new ConvolutionDescriptor(2, 2, 2, 1, 1, 0, 0);
+
+            Convolution.Col2Im(col2Im, convDescriptor, BorderMode.Valid, actual);
+
+            var expected = Tensor<double>.Build(new double[] { 0, 2, 2, 6, 16, 10, 6, 14, 8, 10, 22, 12, 26, 56, 30, 16, 34, 18, 20, 42, 22, 46, 96, 50, 26, 54, 28, 100, 202, 102, 206, 416, 210, 106, 214, 108, 110, 222, 112, 226, 456, 230, 116, 234, 118, 120, 242, 122, 246, 496, 250, 126, 254, 128 },
+                actual.Dimensions.ToArray());
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

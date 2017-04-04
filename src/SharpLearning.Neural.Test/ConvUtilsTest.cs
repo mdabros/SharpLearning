@@ -68,13 +68,16 @@ namespace SharpLearning.Neural.Test
             var fanIn = inputWidth * inputHeight * inputDepth;
 
             var input = Matrix<float>.Build.Random(k, n, 42);
+
+            Trace.WriteLine(string.Join(",", input.ToRowMajorArray()));
+
             var actual = Matrix<float>.Build.Dense(batchSize, fanIn);
 
             ConvUtils.Batch_Col2Im(input, inputDepth, inputHeight, inputWidth,
                 filterHeight, filterWidth, padding, padding, stride, stride, BorderMode.Valid, actual);
 
             Trace.WriteLine(actual.ToString());
-            Trace.WriteLine(string.Join(",", actual.ToColumnMajorArray()));
+            Trace.WriteLine(string.Join(",", actual.ToRowMajorArray()));
 
             var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { 0.408388f,  -0.3281617f,  -0.163763f,  -0.7540793f,  -0.8690567f,  -0.8093507f,  0.2888344f,  -1.777985f,  -2.136633f,  2.92046f,  -2.021355f,  -0.4799407f,  -0.6079422f,  0.5664175f,  1.640147f,  0.2616988f,  -0.4687745f,  -0.7903177f,  1.407904f,  0.1495381f,  -1.212453f,  0.6085976f,  -0.7663184f,  -0.05670342f,  1.895431f,  -0.6066797f,  -0.2541801f,  -0.01155096f,  1.438064f,  -1.349128f,  1.942754f,  0.5057944f,  -1.907569f,  -0.5227588f,  0.5727027f,  -1.167249f,  0.2078037f,  2.980192f,  0.4892522f,  -0.6720377f,  0.9384909f,  -0.9973568f,  0.5546624f,  1.710745f,  1.995577f,  -0.734176f,  -2.817736f,  -0.8027026f,  -0.7883626f,  -1.275902f,  -0.5054669f,  0.3228757f,  3.105314f,  -0.3089013f,  1.549119f,  -0.5383296f,  1.401819f,  1.837471f,  0.1251182f,  -0.7002729f,  0.07180786f,  -0.9396007f,  0.6037194f,  -0.7305622f,  1.063156f,  4.591741f,  0.4193244f,  -1.031005f,  -3.045349f,  0.4254266f,  0.6900162f,  -2.136511f,  -1.578628f,  0.7839373f,  1.781849f,  0.1622419f,  -0.6845301f,  -1.676224f,  1.028266f,  0.9345228f,  0.789884f,  1.158841f,  1.703116f,  -0.8997472f,  -1.423375f,  -0.1056926f,  -0.08005979f,  1.399474f,  -0.05612089f,  -0.722365f,  -0.6606446f,  0.08791012f,  -1.749763f,  0.685056f,  0.3641174f,  0.2083111f,  -0.5394329f,  1.846675f,  0.5931945f,  -1.26804f,  -1.087396f,  0.5506561f,  -1.644088f,  -0.8753259f,  -1.839462f,  0.5598704f,  -2.054844f,  1.20434f,  -3.263947f,  1.221963f,  -0.5145022f,  -1.402665f,  1.101824f,  0.4248552f,  -2.63849f,  1.160408f,  2.130142f,  0.3172536f,  1.109406f,  0.9979748f,  0.2864983f,  0.00849107f,  -2.00572f,  1.178588f,  -0.3127078f,  -1.662103f,  -1.043834f,  1.065703f,  -0.9702578f,  -0.1781971f,  -1.362978f,  0.4443011f,  -1.050083f,  0.6755545f,  -1.088875f });
             MatrixAsserts.AreEqual(expected, actual);

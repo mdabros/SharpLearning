@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Threading.Tasks;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.LayersNew;
 
@@ -87,6 +88,69 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             {
                                 im2ColData[outputIndex++] = 0;
                             }
+                        }
+                    }
+                }
+            });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="im2Col"></param>
+        /// <param name="desc"></param>
+        /// <param name="borderMode"></param>
+        /// <param name="im"></param>
+        public static void Col2Im(Tensor<double> im2Col, ConvolutionDescriptor desc, BorderMode borderMode, Tensor<double> im)
+        {
+            var N = im.Dimensions[0];
+            var C = im.Dimensions[1];
+            var H = im.Dimensions[2];
+            var W = im.Dimensions[3];
+
+            int filterW = desc.FilterW;
+            int filterH = desc.FilterH;
+            int strideH = desc.StrideH;
+            int strideW = desc.StrideW;
+            int padH = desc.PadH;
+            int padW = desc.PadW;
+
+            var filterGridWidth = ConvUtils.GetFilterGridLength(W, filterW, strideW, padW, borderMode);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(H, filterH, strideH, padH, borderMode);
+            int channels_col = C * filterH * filterW;
+
+            var imData = im.Data;
+            var im2ColData = im2Col.Data;
+
+            imData.Clear();
+
+            Parallel.For(0, N, n =>
+            //for (int n = 0; n < N; n++)
+            {
+                var imOffSetB = im.DimensionOffSets[0] * n;
+                var outputIndex = im2Col.DimensionOffSets[0] * n;
+
+                for (int c = 0; c < channels_col; ++c)
+                {
+                    int offsetW = c % filterW;
+                    int offsetH = (c / filterW) % filterH;
+                    int imC = c / filterH / filterW;
+
+                    var imOffSetC = imOffSetB + im.DimensionOffSets[1] * imC;
+
+                    for (int h = 0; h < filterGridHeight; ++h)
+                    {
+                        for (int w = 0; w < filterGridWidth; ++w)
+                        {
+                            int h_pad = h * strideH - padH + offsetH;
+                            int w_pad = w * strideW - padW + offsetW;
+
+                            if (h_pad >= 0 && h_pad < H && w_pad >= 0 && w_pad < W)
+                            {
+                                var inputIndex = imOffSetC + h_pad * W + w_pad;
+                                imData[inputIndex] += im2ColData[outputIndex];
+                            }
+                            outputIndex++;
                         }
                     }
                 }
