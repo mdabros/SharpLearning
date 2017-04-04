@@ -74,6 +74,7 @@
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
     <Compile Include="LayersNew\ClassificationNeuralNetLearner2.cs" />
     <Compile Include="LayersNew\ClassificationNeuralNetModel2.cs" />
+    <Compile Include="LayersNew\ConvolutionDescriptor.cs" />
     <Compile Include="LayersNew\Data.cs" />
     <Compile Include="LayersNew\DenseLayer.cs" />
     <Compile Include="LayersNew\DropoutLayer.cs" />
