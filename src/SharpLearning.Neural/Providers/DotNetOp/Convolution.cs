@@ -20,14 +20,65 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="desc"></param>
         /// <param name="weights"></param>
         /// <param name="bias"></param>
+        /// <param name="borderMode"></param>
         /// <param name="output"></param>
+        /// <param name="storage"></param>
         public static void Forward(Variable input, 
-            Variable im2Col, ConvolutionDescriptor desc, 
-            Variable weights, Variable bias,
-            Variable output)
+            Variable im2Col, Conv2DDescriptor desc, 
+            Variable weights, Variable bias, BorderMode borderMode,
+            Variable output, NeuralNetStorage storage)
         {
-            
-            
+            var src = storage.GetTensor(input);
+            var dst = storage.GetTensor(output);
+            var i2c = storage.GetTensor(im2Col);
+
+            var w = storage.GetTensor(weights);
+            var b = storage.GetTensor(bias);
+
+            // Arrange input item for GEMM version of convolution.
+            Im2Col(src, desc, borderMode, i2c);
+
+            // matrix multiplication for convolution
+            w.Multiply(i2c, dst);
+            dst.AddColumnWise(b.Data, dst);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="im2Col"></param>
+        /// <param name="desc"></param>
+        /// <param name="weights"></param>
+        /// <param name="bias"></param>
+        /// <param name="borderMode"></param>
+        /// <param name="output"></param>
+        /// <param name="storage"></param>
+        public static void Backward(Variable input,
+            Variable im2Col, Conv2DDescriptor desc,
+            Variable weights, Variable bias, BorderMode borderMode,
+            Variable output, NeuralNetStorage storage)
+        {
+            var src = storage.GetTensor(input);
+            var srcDiff = storage.GetGradient(input);
+            var dst = storage.GetTensor(output);
+            var dstDiff = storage.GetGradient(output);
+
+            var i2c = storage.GetTensor(im2Col);
+
+            var w = storage.GetTensor(weights);
+            var wDiff = storage.GetGradient(weights);
+            var b = storage.GetTensor(bias);
+            var bDiff = storage.GetGradient(bias);
+
+            // Calculate gradients for weights and biases
+            dstDiff.TransposeAndMultiply(i2c, wDiff);
+            dstDiff.SumRows(bDiff.Data);
+
+            // calcualte delta for next layer.
+            w.TransposeThisAndMultiply(dstDiff, i2c);
+            // convert back to original layout
+            Col2Im(i2c, desc, borderMode, srcDiff);
         }
 
         /// <summary>
@@ -37,7 +88,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="desc"></param>
         /// <param name="borderMode"></param>
         /// <param name="im2Col"></param>
-        public static void Im2Col(Tensor<double> im, ConvolutionDescriptor desc, BorderMode borderMode, Tensor<double> im2Col)
+        public static void Im2Col(Tensor<double> im, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im2Col)
         {
             var N = im.Dimensions[0];
             var C = im.Dimensions[1];
@@ -101,7 +152,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="desc"></param>
         /// <param name="borderMode"></param>
         /// <param name="im"></param>
-        public static void Col2Im(Tensor<double> im2Col, ConvolutionDescriptor desc, BorderMode borderMode, Tensor<double> im)
+        public static void Col2Im(Tensor<double> im2Col, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im)
         {
             var N = im.Dimensions[0];
             var C = im.Dimensions[1];

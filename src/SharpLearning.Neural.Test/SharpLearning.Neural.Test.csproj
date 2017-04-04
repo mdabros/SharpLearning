@@ -77,6 +77,7 @@
     <Compile Include="GradientCheckerTool.cs" />
     <Compile Include="LayersNew\ActivationLayerTest.cs" />
     <Compile Include="LayersNew\ClassificationNeuralNetLearner2Test.cs" />
+    <Compile Include="LayersNew\Conv2DLayerTest.cs" />
     <Compile Include="LayersNew\DenseLayerTest.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayerTest.cs" />
     <Compile Include="LayersNew\MaxPool2DLayerTest.cs" />

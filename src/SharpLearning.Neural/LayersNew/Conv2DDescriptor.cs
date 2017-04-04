@@ -5,7 +5,7 @@ namespace SharpLearning.Neural.LayersNew
     /// <summary>
     /// 
     /// </summary>
-    public struct ConvolutionDescriptor
+    public struct Conv2DDescriptor
     {
         /// <summary>
         /// 
@@ -46,7 +46,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="strideW">The horizontal stride of the filter</param>
         /// <param name="padH">Zero padding at the top and bottom</param>
         /// <param name="padW">Zero padding to the left and right</param>
-        public ConvolutionDescriptor(int filterCount, int filterH, int filterW,
+        public Conv2DDescriptor(int filterCount, int filterH, int filterW,
             int strideH, int strideW,
             int padH, int padW)
         {

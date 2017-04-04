@@ -18,7 +18,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var im = Tensor<double>.Build(imData, 1, 3, 3, 3);
 
             var actual = Tensor<double>.Build(1, 3, 4, 4);
-            var convDescriptor = new ConvolutionDescriptor(2, 2, 2, 1, 1, 0, 0);
+            var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
             Convolution.Im2Col(im, convDescriptor, BorderMode.Valid, actual);
 
@@ -39,7 +39,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var im = Tensor<double>.Build(imData, 2, 3, 3, 3);
 
             var actual = Tensor<double>.Build(2, 3, 4, 4);
-            var convDescriptor = new ConvolutionDescriptor(2, 2, 2, 1, 1, 0, 0);
+            var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
             Convolution.Im2Col(im, convDescriptor, BorderMode.Valid, actual);
 
@@ -61,7 +61,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             im.Map(v => random.Next());
 
             var initalExpected = Tensor<double>.Build(batchSize, 3, 4, 4);
-            var convDescriptor = new ConvolutionDescriptor(2, 2, 2, 1, 1, 0, 0);
+            var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
             Convolution.Im2Col(im, convDescriptor, BorderMode.Valid, initalExpected);
 
@@ -80,7 +80,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var col2Im = Tensor<double>.Build(col2ImData, 2, 3, 4, 4);
 
             var actual = Tensor<double>.Build(2, 3, 3, 3);            
-            var convDescriptor = new ConvolutionDescriptor(2, 2, 2, 1, 1, 0, 0);
+            var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
             Convolution.Col2Im(col2Im, convDescriptor, BorderMode.Valid, actual);
 
