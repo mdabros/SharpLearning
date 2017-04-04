@@ -151,7 +151,7 @@ namespace SharpLearning.Neural.LayersNew
             Weights = Variable.CreateTrainable(m_descriptor.FilterCount, filterCubeSize);
             storage.AssignTensor(Weights, () => (float)distribution.Sample());
 
-            Bias = Variable.CreateTrainable(fans.FanOut);
+            Bias = Variable.CreateTrainable(m_descriptor.FilterCount);
         }
 
         /// <summary>

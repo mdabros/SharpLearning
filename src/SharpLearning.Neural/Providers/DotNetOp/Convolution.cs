@@ -28,6 +28,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Variable weights, Variable bias, BorderMode borderMode,
             Variable output, NeuralNetStorage storage)
         {
+            var N = input.Dimensions[0];
+            var C = input.Dimensions[1];
+            var H = input.Dimensions[2];
+            var W = input.Dimensions[3];
+
             var src = storage.GetTensor(input);
             var dst = storage.GetTensor(output);
             var i2c = storage.GetTensor(im2Col);
@@ -37,10 +42,21 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             // Arrange input item for GEMM version of convolution.
             Im2Col(src, desc, borderMode, i2c);
+            
+            var filterGridWidth = ConvUtils.GetFilterGridLength(W, desc.FilterW, desc.StrideW, desc.PadW, borderMode);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(H, desc.FilterH, desc.StrideH, desc.PadH, borderMode);
+            var filterCubeSize = C * desc.FilterW * desc.FilterH;
+            var filterGridSize = filterGridWidth * filterGridHeight;
+
+            var dstShape = dst.Shape;
+            dst.Reshape(new TensorShape(desc.FilterCount, filterGridSize * N));
 
             // matrix multiplication for convolution
             w.Multiply(i2c, dst);
             dst.AddColumnWise(b.Data, dst);
+
+            // reshape for output
+            dst.Reshape(dstShape);
         }
 
         /// <summary>
@@ -59,6 +75,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Variable weights, Variable bias, BorderMode borderMode,
             Variable output, NeuralNetStorage storage)
         {
+            var N = input.Dimensions[0];
+            var C = input.Dimensions[1];
+            var H = input.Dimensions[2];
+            var W = input.Dimensions[3];
+
             var src = storage.GetTensor(input);
             var srcDiff = storage.GetGradient(input);
             var dst = storage.GetTensor(output);
@@ -71,14 +92,27 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var b = storage.GetTensor(bias);
             var bDiff = storage.GetGradient(bias);
 
+            // Arrange input item for GEMM version of convolution.
+            var filterGridWidth = ConvUtils.GetFilterGridLength(W, desc.FilterW, desc.StrideW, desc.PadW, borderMode);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(H, desc.FilterH, desc.StrideH, desc.PadH, borderMode);
+            var filterCubeSize = C * desc.FilterW * desc.FilterH;
+            var filterGridSize = filterGridWidth * filterGridHeight;
+
+            var dstDiffShape = dstDiff.Shape;
+            dstDiff.Reshape(new TensorShape(desc.FilterCount, filterGridSize * N));
+            
             // Calculate gradients for weights and biases
             dstDiff.TransposeAndMultiply(i2c, wDiff);
             dstDiff.SumRows(bDiff.Data);
 
             // calcualte delta for next layer.
             w.TransposeThisAndMultiply(dstDiff, i2c);
+
             // convert back to original layout
             Col2Im(i2c, desc, borderMode, srcDiff);
+
+            // reshape dstDiff to original layout.
+            dstDiff.Reshape(dstDiffShape);
         }
 
         /// <summary>

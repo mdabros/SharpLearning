@@ -54,7 +54,7 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
-        public TensorShape Shape { get; }
+        public TensorShape Shape { get; private set; }
 
         /// <summary>
         /// 
@@ -89,13 +89,27 @@ namespace SharpLearning.Containers.Tensors
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="shape"></param>
+        public void Reshape(TensorShape shape)
+        {
+            if(Shape.ElementCount != shape.ElementCount)
+            {
+                throw new ArgumentException($"Current element count {shape.ElementCount} differs from new element count {shape.ElementCount}");
+            }
+
+            Shape = shape;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="interval"></param>
         /// <returns></returns>
         public Tensor<T> SliceCopy(Interval1D interval)
         {
             return SliceCopy(interval.FromInclusive, interval.Length);
         }
-
+        
         /// <summary>
         /// 
         /// </summary>
