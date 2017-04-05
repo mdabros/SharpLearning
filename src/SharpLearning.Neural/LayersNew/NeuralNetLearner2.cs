@@ -106,8 +106,6 @@ namespace SharpLearning.Neural.LayersNew
             var parameters = new List<Data<double>>();
             Net.GetTrainableParameters(parameters);
 
-            var lossFunc = new LogLoss();
-
             var batcher = new Batcher();
             batcher.Initialize(observations.Shape, 
                 indices, m_random.Next());
@@ -127,7 +125,7 @@ namespace SharpLearning.Neural.LayersNew
                     Net.Forward();
                     Net.Backward();
 
-                    var batchLoss = lossFunc.Loss(batchTargets, Net.BatchPredictions());
+                    var batchLoss = m_loss.Loss(batchTargets, Net.BatchPredictions());
                     accumulatedLoss += batchLoss * m_batchSize;
 
                     m_optimizer.UpdateParameters(parameters);
