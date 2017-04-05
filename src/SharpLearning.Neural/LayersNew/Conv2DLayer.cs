@@ -132,14 +132,9 @@ namespace SharpLearning.Neural.LayersNew
             var h = inputVariable.Dimensions[2];
             var w = inputVariable.Dimensions[3];
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(w, m_descriptor.FilterW, 
-                m_descriptor.StrideW, m_descriptor.PadW, m_borderMode);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(h, m_descriptor.FilterH,
-                m_descriptor.StrideH, m_descriptor.PadW, m_borderMode);
-
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
-            var filterCubeSize = c * filterGridWidth * filterGridHeight;
+            var filterCubeSize = c * m_descriptor.FilterW * m_descriptor.FilterH;
 
             var receptiveFieldSize = m_descriptor.FilterW * m_descriptor.FilterH;
 
@@ -174,7 +169,7 @@ namespace SharpLearning.Neural.LayersNew
 
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
-            var filterCubeSize = c * filterGridWidth * filterGridHeight;
+            var filterCubeSize = c * m_descriptor.FilterW * m_descriptor.FilterH;
             var filterGridSize = filterGridWidth * filterGridHeight;
 
             Im2Col = Variable.Create(filterCubeSize, filterGridSize * batchSize);
