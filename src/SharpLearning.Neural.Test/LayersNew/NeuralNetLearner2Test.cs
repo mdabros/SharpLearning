@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,6 +35,11 @@ namespace SharpLearning.Neural.Test.LayersNew
             var sut = new NeuralNet2();
 
             sut.Add(new InputLayer(width, height, channels));
+
+            sut.Add(new Conv2DLayer(5, 2, 2));
+            sut.Add(new BatchNormalizationLayer());
+            sut.Add(new ActivationLayer(Neural.Activations.Activation.Relu));
+
             sut.Add(new MaxPool2DLayer(2, 2));
             sut.Add(new DenseLayer(100));
             sut.Add(new BatchNormalizationLayer());

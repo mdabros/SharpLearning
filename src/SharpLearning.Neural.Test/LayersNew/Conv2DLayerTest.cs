@@ -22,7 +22,6 @@ namespace SharpLearning.Neural.Test.LayersNew
         }
 
         [TestMethod]
-        //[Ignore] // gradient seems off
         public void Conv2DLayer_GradientCheck_Batch_5()
         {
             var storage = new NeuralNetStorage();
@@ -47,7 +46,6 @@ namespace SharpLearning.Neural.Test.LayersNew
         }
 
         [TestMethod]
-       // [Ignore] // gradient seems off
         public void Conv2DLayer_ParameterGradientCheck_Batch_5()
         {
             var storage = new NeuralNetStorage();
@@ -70,7 +68,7 @@ namespace SharpLearning.Neural.Test.LayersNew
 
             var sut = new Conv2DLayer(20, 3, 3, 1, 1, 1, 1);
             sut.Initialize(input, storage, new Random());
-            
+
             sut.Forward(storage);
             Trace.WriteLine(string.Join(",", storage.GetTensor(sut.Output).Data));
 

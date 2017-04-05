@@ -143,11 +143,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var imData = im.Data;
             var im2ColData = im2Col.Data;
 
-            Parallel.For(0, N, n =>
-            //for (int n = 0; n  < N; n ++)
+            var outputIndex = 0;
+            //Parallel.For(0, N, n =>
+            for (int n = 0; n  < N; n ++)
             {
                 var imOffSetB = im.DimensionOffSets[0] * n;
-                var outputIndex = im2Col.DimensionOffSets[0] * n;
+                //var outputIndex = im2Col.DimensionOffSets[0] * n;
 
                 for (int c = 0; c < channels_col; ++c)
                 {
@@ -176,7 +177,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         }
                     }
                 }
-            });
+            }//);
         }
 
         /// <summary>
@@ -209,11 +210,14 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             imData.Clear();
 
-            Parallel.For(0, N, n =>
-            //for (int n = 0; n < N; n++)
+
+            var outputIndex = 0;
+
+            //Parallel.For(0, N, n =>
+            for (int n = 0; n < N; n++)
             {
                 var imOffSetB = im.DimensionOffSets[0] * n;
-                var outputIndex = im2Col.DimensionOffSets[0] * n;
+                //var outputIndex = im2Col.DimensionOffSets[0] * n;
 
                 for (int c = 0; c < channels_col; ++c)
                 {
@@ -239,7 +243,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         }
                     }
                 }
-            });
+            }//);
         }
     }
 }
