@@ -79,6 +79,7 @@ namespace SharpLearning.Neural.LayersNew
             storage.AssignTensor(Weights, () => (float)distribution.Sample());
 
             Bias = Variable.CreateTrainable(fans.FanOut);
+            storage.AssignTensor(Bias, () => 0.0);
         }
 
         /// <summary>

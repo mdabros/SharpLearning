@@ -43,7 +43,7 @@ namespace SharpLearning.Neural.Test.LayersNew
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.75, actual);
+            Assert.AreEqual(0.76, actual);
         }
 
         void CreateData(int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random, out F64Matrix observations, out double[] targets)
