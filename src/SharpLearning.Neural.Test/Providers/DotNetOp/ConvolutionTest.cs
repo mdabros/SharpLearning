@@ -89,5 +89,45 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             Assert.AreEqual(expected, actual);
         }
+
+
+        [TestMethod]
+        public void SwitchDimensionOneAndTwo_FilterMajorToBatchMajor()
+        {
+            /// transform from tensor: [filterCount, BatchSize, GridsizeH, GridSizeW)]
+            /// to tensor:             [BatchSize, filterCount, GridSizeH, GridSizeW)]
+            var src = Tensor<double>.Build(new double[] { 1, 1, 1, 1, 10, 10, 10, 10,
+                                                          2, 2, 2, 2, 20, 20, 20, 20,
+                                                          3, 3, 3, 3, 30, 30, 30, 30, }, 3, 2, 2, 2); 
+            var dst = Tensor<double>.Build(2, 3, 2, 2);
+
+            Convolution.SwitchDimensionOneAndTwo(src, dst);
+
+            Trace.WriteLine(string.Join(",", dst.Data));
+
+            var expected = Tensor<double>.Build(new double[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
+                                                               10, 10, 10, 10, 20, 20, 20, 20, 30, 30, 30, 30, }, 2, 3, 2, 2);
+            Assert.AreEqual(expected, dst);            
+        }
+
+        [TestMethod]
+        public void SwitchDimensionOneAndTwo_BatchMajorToFilterMajor()
+        {
+            /// transform from tensor: [BatchSize, filterCount, GridSizeH, GridSizeW)]
+            /// to tensor:             [filterCount, BatchSize, GridsizeH, GridSizeW)]
+            var src = Tensor<double>.Build(new double[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
+                                                          10, 10, 10, 10, 20, 20, 20, 20, 30, 30, 30, 30, }, 2, 3, 2, 2);
+
+            var dst = Tensor<double>.Build(3, 2, 2, 2);
+
+            Convolution.SwitchDimensionOneAndTwo(src, dst);
+
+            Trace.WriteLine(string.Join(",", dst.Data));
+
+            var expected = Tensor<double>.Build(new double[] { 1, 1, 1, 1, 10, 10, 10, 10,
+                                                               2, 2, 2, 2, 20, 20, 20, 20,
+                                                               3, 3, 3, 3, 30, 30, 30, 30, }, 3, 2, 2, 2); 
+            Assert.AreEqual(expected, dst);
+        }
     }
 }

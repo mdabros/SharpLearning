@@ -76,7 +76,7 @@ namespace SharpLearning.Neural.LayersNew
             var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
                         
             Weights = Variable.CreateTrainable(fans.FanIn, fans.FanOut);
-            storage.AssignTensor(Weights, () => (float)distribution.Sample());
+            storage.AssignTensor(Weights, () => distribution.Sample());
 
             Bias = Variable.CreateTrainable(fans.FanOut);
             storage.AssignTensor(Bias, () => 0.0);

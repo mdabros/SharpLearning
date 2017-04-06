@@ -1,7 +1,4 @@
-﻿using System;
-using System.Numerics;
-using System.Threading.Tasks;
-using SharpLearning.Containers.Extensions;
+﻿using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.LayersNew;
 
@@ -113,6 +110,46 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             // reshape dstDiff to original layout.
             dstDiff.Reshape(dstDiffShape);
+        }
+
+        /// <summary>
+        /// transform from tensor: [filterCount, BatchSize, GridsizeH, GridSizeW)]
+        /// to tensor:             [batchSize, filterCount, GridSizeH, GridSizeW)]
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="dst"></param>
+        public static void SwitchDimensionOneAndTwo(Tensor<double> src, Tensor<double> dst)
+        {
+            var N = dst.Dimensions[0]; // BatchSize
+            var C = dst.Dimensions[1]; // filterCount
+            var H = dst.Dimensions[2]; // GridsizeH
+            var W = dst.Dimensions[3]; // GridsizeW
+
+            var dstData = dst.Data;
+            var srcData = src.Data;
+
+            for (int n = 0; n < N; n++)
+            {
+                for (int c = 0; c < C; c++)
+                {
+                    for (int h = 0; h < H; h++)
+                    {
+                        for (int w = 0; w < W; w++)
+                        {
+                            var srcIndex = Index(c, n, h, w, src);
+                            var dstIndex = Index(n, c, h, w, dst);
+
+                            dstData[dstIndex] = srcData[srcIndex];
+                        }
+                    }
+                }
+            }
+        }
+
+        static int Index(int n, int c, int h, int w, Tensor<double> t)
+        {
+            var index = t.DimensionOffSets[0] * n + t.DimensionOffSets[1] * c + t.DimensionOffSets[2] * h + w;
+            return index;
         }
 
         /// <summary>

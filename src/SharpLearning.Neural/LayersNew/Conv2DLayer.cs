@@ -144,10 +144,10 @@ namespace SharpLearning.Neural.LayersNew
             var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
 
             Weights = Variable.CreateTrainable(m_descriptor.FilterCount, filterCubeSize);
-            storage.AssignTensor(Weights, () => (float)distribution.Sample());
+            storage.AssignTensor(Weights, () => distribution.Sample());
 
             Bias = Variable.CreateTrainable(m_descriptor.FilterCount);
-            storage.AssignTensor(Weights, () => 0.0);
+            storage.AssignTensor(Bias, () => 0.0);
         }
 
         /// <summary>
