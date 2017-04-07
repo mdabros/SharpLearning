@@ -17,6 +17,7 @@ namespace SharpLearning.Neural.LayersNew
         Variable Weights;
         Variable Bias;
         Variable Im2Col;
+        Variable Conv;
 
         /// <summary>
         /// 2D Convolutional layer using GEMM implementation 
@@ -78,7 +79,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="training"></param>
         public void Forward(NeuralNetStorage storage, bool training = true)
         {
-            Convolution.Forward(Input, Im2Col, m_descriptor,
+            Convolution.Forward(Input, Im2Col, Conv, m_descriptor,
                Weights, Bias, m_borderMode, Output, storage);
         }
 
@@ -88,7 +89,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <param name="storage"></param>
         public void Backward(NeuralNetStorage storage)
         {
-            Convolution.Backward(Input, Im2Col, m_descriptor,
+            Convolution.Backward(Input, Im2Col, Conv, m_descriptor,
                 Weights, Bias, m_borderMode, Output, storage);
         }
 
@@ -174,6 +175,9 @@ namespace SharpLearning.Neural.LayersNew
             var filterGridSize = filterGridWidth * filterGridHeight;
 
             Im2Col = Variable.Create(filterCubeSize, filterGridSize * batchSize);
+
+            Conv = Variable.Create(m_descriptor.FilterCount, batchSize, 
+                filterGridHeight, filterGridWidth);
 
             Output = Variable.Create(batchSize, m_descriptor.FilterCount,
                 filterGridWidth, filterGridHeight);

@@ -14,6 +14,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// </summary>
         /// <param name="input"></param>
         /// <param name="im2Col"></param>
+        /// <param name="conv"></param>
         /// <param name="desc"></param>
         /// <param name="weights"></param>
         /// <param name="bias"></param>
@@ -21,7 +22,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="output"></param>
         /// <param name="storage"></param>
         public static void Forward(Variable input, 
-            Variable im2Col, Conv2DDescriptor desc, 
+            Variable im2Col, Variable conv,
+            Conv2DDescriptor desc, 
             Variable weights, Variable bias, BorderMode borderMode,
             Variable output, NeuralNetStorage storage)
         {
@@ -33,27 +35,20 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var src = storage.GetTensor(input);
             var dst = storage.GetTensor(output);
             var i2c = storage.GetTensor(im2Col);
+            var co = storage.GetTensor(conv);
 
             var w = storage.GetTensor(weights);
             var b = storage.GetTensor(bias);
 
             // Arrange input item for GEMM version of convolution.
-            Im2Col(src, desc, borderMode, i2c);
-            
-            var filterGridWidth = ConvUtils.GetFilterGridLength(W, desc.FilterW, desc.StrideW, desc.PadW, borderMode);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(H, desc.FilterH, desc.StrideH, desc.PadH, borderMode);
-            var filterCubeSize = C * desc.FilterW * desc.FilterH;
-            var filterGridSize = filterGridWidth * filterGridHeight;
-
-            var dstShape = dst.Shape;
-            dst.Reshape(new TensorShape(desc.FilterCount, filterGridSize * N));
+            Im2Col(src, desc, borderMode, i2c);           
 
             // matrix multiplication for convolution
-            w.Multiply(i2c, dst);
-            dst.AddColumnWise(b.Data, dst);
+            w.Multiply(i2c, co);
+            co.AddColumnWise(b.Data, co);
 
-            // reshape for output
-            dst.Reshape(dstShape);
+            // switch dimension one and two to get correct layout for next layer.
+            SwitchDimensionOneAndTwo(co, dst);
         }
 
         /// <summary>
@@ -61,6 +56,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// </summary>
         /// <param name="input"></param>
         /// <param name="im2Col"></param>
+        /// <param name="conv"></param>
         /// <param name="desc"></param>
         /// <param name="weights"></param>
         /// <param name="bias"></param>
@@ -68,7 +64,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="output"></param>
         /// <param name="storage"></param>
         public static void Backward(Variable input,
-            Variable im2Col, Conv2DDescriptor desc,
+            Variable im2Col, Variable conv,
+            Conv2DDescriptor desc,
             Variable weights, Variable bias, BorderMode borderMode,
             Variable output, NeuralNetStorage storage)
         {
@@ -83,47 +80,39 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var dstDiff = storage.GetGradient(output);
 
             var i2c = storage.GetTensor(im2Col);
+            var co = storage.GetTensor(conv);
 
             var w = storage.GetTensor(weights);
             var wDiff = storage.GetGradient(weights);
             var b = storage.GetTensor(bias);
             var bDiff = storage.GetGradient(bias);
 
-            // Arrange input item for GEMM version of convolution.
-            var filterGridWidth = ConvUtils.GetFilterGridLength(W, desc.FilterW, desc.StrideW, desc.PadW, borderMode);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(H, desc.FilterH, desc.StrideH, desc.PadH, borderMode);
-            var filterCubeSize = C * desc.FilterW * desc.FilterH;
-            var filterGridSize = filterGridWidth * filterGridHeight;
+            // Switch dimension one and two to have correct layout for GEMM version of convolution
+            SwitchDimensionOneAndTwo(dstDiff, co);
 
-            var dstDiffShape = dstDiff.Shape;
-            dstDiff.Reshape(new TensorShape(desc.FilterCount, filterGridSize * N));
-            
             // Calculate gradients for weights and biases
-            dstDiff.TransposeAndMultiply(i2c, wDiff);
-            dstDiff.SumRows(bDiff.Data);
+            co.TransposeAndMultiply(i2c, wDiff);
+            co.SumRows(bDiff.Data);
 
             // calcualte delta for next layer.
-            w.TransposeThisAndMultiply(dstDiff, i2c);
+            w.TransposeThisAndMultiply(co, i2c);
 
             // convert back to original layout
             Col2Im(i2c, desc, borderMode, srcDiff);
-
-            // reshape dstDiff to original layout.
-            dstDiff.Reshape(dstDiffShape);
         }
 
         /// <summary>
-        /// transform from tensor: [filterCount, BatchSize, GridsizeH, GridSizeW)]
-        /// to tensor:             [batchSize, filterCount, GridSizeH, GridSizeW)]
+        /// transform from tensor: [C, N, H, W)]
+        /// to tensor:             [N, C, H, W)]
         /// </summary>
         /// <param name="src"></param>
         /// <param name="dst"></param>
         public static void SwitchDimensionOneAndTwo(Tensor<double> src, Tensor<double> dst)
         {
-            var N = dst.Dimensions[0]; // BatchSize
-            var C = dst.Dimensions[1]; // filterCount
-            var H = dst.Dimensions[2]; // GridsizeH
-            var W = dst.Dimensions[3]; // GridsizeW
+            var N = dst.Dimensions[0]; 
+            var C = dst.Dimensions[1];
+            var H = dst.Dimensions[2]; 
+            var W = dst.Dimensions[3]; 
 
             var dstData = dst.Data;
             var srcData = src.Data;
