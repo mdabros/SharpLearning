@@ -142,7 +142,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         }
 
         /// <summary>
-        /// 
+        /// Based on https://github.com/NVIDIA/torch-cunn/blob/master/lib/THCUNN/im2col.h
         /// </summary>
         /// <param name="im"></param>
         /// <param name="desc"></param>
@@ -207,7 +207,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         }
 
         /// <summary>
-        /// 
+        /// Based on https://github.com/NVIDIA/torch-cunn/blob/master/lib/THCUNN/im2col.h
         /// </summary>
         /// <param name="im2Col"></param>
         /// <param name="desc"></param>

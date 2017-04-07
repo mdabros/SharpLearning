@@ -180,7 +180,7 @@ namespace SharpLearning.Neural.LayersNew
                 filterGridHeight, filterGridWidth);
 
             Output = Variable.Create(batchSize, m_descriptor.FilterCount,
-                filterGridWidth, filterGridHeight);
+                filterGridHeight, filterGridWidth);
         }
     }
 }
