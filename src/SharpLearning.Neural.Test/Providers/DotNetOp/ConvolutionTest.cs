@@ -91,6 +91,25 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         }
 
         [TestMethod]
+        public void Im2Col_Col2Im()
+        {
+            var descr = new Conv2DDescriptor(1, 1, 5, 1, 1, 0, 0);
+            var im = Tensor<double>.Build(Enumerable.Range(1, 25).Select(v => (double)v).ToArray(), 1, 1, 5, 5);
+            var im2Col = Tensor<double>.Build(1, 1, 5, 5);
+
+            Convolution.Im2Col(im, descr, BorderMode.Valid, im2Col);
+
+            var expectedIm2Col = Tensor<double>.Build(new double[] { 1, 6, 11, 16, 21, 2, 7, 12, 17, 22, 3, 8, 13, 18, 23, 4, 9, 14, 19, 24, 5, 10, 15, 20, 25 }, 1, 1, 5, 5);
+            Assert.AreEqual(expectedIm2Col, im2Col);
+
+            var col2Im = Tensor<double>.Build(1, 1, 5, 5);
+            Convolution.Col2Im(im2Col, descr, BorderMode.Valid, col2Im);
+
+            var expectedCol2Im = im;
+            Assert.AreEqual(expectedCol2Im, col2Im);
+        }
+
+        [TestMethod]
         public void Convolution_Simple()
         {
             // example from: https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/making_faster.html
