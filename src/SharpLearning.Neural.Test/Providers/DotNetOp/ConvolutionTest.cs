@@ -90,6 +90,25 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        public void Convolution_Simple()
+        {
+            // example from: https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/making_faster.html
+            var desc = new Conv2DDescriptor(1, 2, 2, 1, 1, 0, 0);
+            var im = Tensor<double>.Build(new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 1, 1, 3, 3);
+            var im2Col = Tensor<double>.Build(4, 4);
+
+            Convolution.Im2Col(im, desc, BorderMode.Valid, im2Col);
+            var expectedIm2Col = Tensor<double>.Build(new double[] { 1, 2, 4, 5, 2, 3, 5, 6, 4, 5, 7, 8, 5,6 ,8, 9 }, 4, 4);
+            Assert.AreEqual(expectedIm2Col, im2Col);
+
+            var w = Tensor<double>.Build(new double[] { 4, 3, 2, 1 }, 1, 4);
+            var actualConv = Tensor<double>.Build(1, 4);
+            w.Multiply(im2Col, actualConv);
+            var expectedConv = Tensor<double>.Build(new double[] { 23, 33, 53, 63 }, 1, 4);
+
+            Assert.AreEqual(expectedConv, actualConv);
+        }
 
         [TestMethod]
         public void SwitchDimensionOneAndTwo_FilterMajorToBatchMajor()

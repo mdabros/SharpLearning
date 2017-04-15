@@ -14,7 +14,7 @@ namespace SharpLearning.Neural.LayersNew
         readonly Conv2DDescriptor m_descriptor;
         readonly BorderMode m_borderMode;
 
-        Variable Weights;
+        public Variable Weights;
         Variable Bias;
         Variable Im2Col;
         Variable Conv;
