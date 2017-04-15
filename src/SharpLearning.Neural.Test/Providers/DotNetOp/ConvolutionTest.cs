@@ -93,6 +93,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
         [TestMethod]
         public void Im2Col_Col2Im()
         {
+            // based on https://se.mathworks.com/help/images/ref/col2im.html
             var descr = new Conv2DDescriptor(1, 1, 5, 1, 1, 0, 0);
             var im = Tensor<double>.Build(Enumerable.Range(1, 25).Select(v => (double)v).ToArray(), 1, 1, 5, 5);
             var im2Col = Tensor<double>.Build(1, 1, 5, 5);
