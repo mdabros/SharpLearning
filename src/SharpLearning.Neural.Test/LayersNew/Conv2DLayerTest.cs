@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.LayersNew;
@@ -76,7 +77,6 @@ namespace SharpLearning.Neural.Test.LayersNew
             Assert.AreEqual(expectedConv, actualConv);
         }
 
-
         [TestMethod]
         public void Conv2DLayer_Forward_Backward()
         {
@@ -95,6 +95,60 @@ namespace SharpLearning.Neural.Test.LayersNew
             storage.AssignGradient(sut.Output, () => 1);
             sut.Backward(storage);
             Trace.WriteLine(string.Join(",", storage.GetGradient(sut.Input).Data));
+        }
+
+        [TestMethod]
+        public void Conv2DLayer_MultipleForwardsPasses()
+        {
+            var random = new Random(232);
+            var storage = new NeuralNetStorage();
+
+            var input = Variable.Create(10, 3, 10, 10);
+            storage.AssignTensor(input, () => random.Next(256));
+
+            var sut = new Conv2DLayer(2, 2, 2);
+            sut.Initialize(input, storage, random);
+
+            sut.Forward(storage);
+            var ouput = storage.GetTensor(sut.Output);
+            var expected = Tensor<double>.Build(ouput.Data.ToArray(), 
+                ouput.Dimensions.ToArray());
+
+            for (int i = 0; i < 20; i++)
+            {
+                sut.Forward(storage);
+                var actual = storage.GetTensor(sut.Output);
+                Assert.AreEqual(expected, actual);
+            }
+        }
+
+        [TestMethod]
+        public void Conv2DLayer_MultipleBackwardsPasses()
+        {
+            var random = new Random(232);
+            var storage = new NeuralNetStorage();
+
+            var input = Variable.Create(10, 3, 10, 10);
+            storage.AssignTensor(input, () => random.Next(256));
+
+            var sut = new Conv2DLayer(2, 2, 2);
+            sut.Initialize(input, storage, random);
+
+            sut.Forward(storage);
+            storage.AssignGradient(sut.Output, () => 1.0);
+
+            sut.Backward(storage);
+            var inputGradient = storage.GetGradient(sut.Input);
+
+            var expected = Tensor<double>.Build(inputGradient.Data.ToArray(),
+                inputGradient.Dimensions.ToArray());
+
+            for (int i = 0; i < 20; i++)
+            {
+                sut.Backward(storage);
+                var actual = storage.GetGradient(sut.Input);
+                Assert.AreEqual(expected, actual);
+            }
         }
     }
 }

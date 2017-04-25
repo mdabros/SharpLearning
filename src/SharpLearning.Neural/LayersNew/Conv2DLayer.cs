@@ -14,6 +14,9 @@ namespace SharpLearning.Neural.LayersNew
         readonly Conv2DDescriptor m_descriptor;
         readonly BorderMode m_borderMode;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Variable Weights;
         Variable Bias;
         Variable Im2Col;
@@ -136,10 +139,9 @@ namespace SharpLearning.Neural.LayersNew
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
             var filterCubeSize = c * m_descriptor.FilterW * m_descriptor.FilterH;
-
             var receptiveFieldSize = m_descriptor.FilterW * m_descriptor.FilterH;
 
-            var fanIn = c * receptiveFieldSize;
+            var fanIn = filterCubeSize;
             var fanOut = m_descriptor.FilterCount * receptiveFieldSize;
             var fans = new FanInFanOut(fanIn, fanOut);
             var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
@@ -171,7 +173,7 @@ namespace SharpLearning.Neural.LayersNew
 
             // Calculations of dimensions based on:
             // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
-            var filterCubeSize = c * m_descriptor.FilterW * m_descriptor.FilterH;
+            var filterCubeSize = c * m_descriptor.FilterH * m_descriptor.FilterW;
             var filterGridSize = filterGridWidth * filterGridHeight;
 
             Im2Col = Variable.Create(filterCubeSize, filterGridSize * batchSize);
