@@ -39,7 +39,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var actual = Tensor<double>.Build(1, 3, 4, 4);
             var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
-            Convolution.im2col_cpu(im, convDescriptor, BorderMode.Valid, actual);
+            Convolution.Im2Col_Cpu(im, convDescriptor, BorderMode.Valid, actual);
 
             Trace.WriteLine(string.Join(",", actual.Data));
 
@@ -60,7 +60,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var actual = Tensor<double>.Build(2, 3, 4, 4);
             var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
-            Convolution.im2col_cpu(im, convDescriptor, BorderMode.Valid, actual);
+            Convolution.Im2Col_Cpu(im, convDescriptor, BorderMode.Valid, actual);
 
             Trace.WriteLine(string.Join(",", actual.Data));
 
@@ -139,7 +139,7 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var actual = Tensor<double>.Build(2, 3, 3, 3);
             var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
-            Convolution.col2im_cpu(col2Im, convDescriptor, BorderMode.Valid, actual);
+            Convolution.Col2Im_Cpu(col2Im, convDescriptor, BorderMode.Valid, actual);
 
             var expected = Tensor<double>.Build(new double[] { 0, 2, 2, 6, 16, 10, 6, 14, 8, 10, 22, 12, 26, 56, 30, 16, 34, 18, 20, 42, 22, 46, 96, 50, 26, 54, 28, 100, 202, 102, 206, 416, 210, 106, 214, 108, 110, 222, 112, 226, 456, 230, 116, 234, 118, 120, 242, 122, 246, 496, 250, 126, 254, 128 },
                 actual.Dimensions.ToArray());

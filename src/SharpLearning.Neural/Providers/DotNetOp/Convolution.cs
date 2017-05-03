@@ -154,7 +154,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="desc"></param>
         /// <param name="borderMode"></param>
         /// <param name="im2Col"></param>
-        public static void im2col_cpu(Tensor<double> im, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im2Col)
+        public static void Im2Col_Cpu(Tensor<double> im, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im2Col)
         {
             int N = im.Dimensions[0];
             int channels = im.Dimensions[1];
@@ -302,7 +302,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="desc"></param>
         /// <param name="borderMode"></param>
         /// <param name="im"></param>
-        public static void col2im_cpu(Tensor<double> im2Col, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im)
+        public static void Col2Im_Cpu(Tensor<double> im2Col, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im)
         {
 
             int N = im.Dimensions[0];
