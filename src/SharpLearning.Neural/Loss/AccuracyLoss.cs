@@ -118,7 +118,7 @@ namespace SharpLearning.Neural.Loss
                 }
 
                 var targetMaxIndex = rowOffSet + maxIndex;
-                if (targetsData[maxIndex] == 1.0)
+                if (targetsData[targetMaxIndex] == 1.0)
                 {
                     correctCount++;
                 }

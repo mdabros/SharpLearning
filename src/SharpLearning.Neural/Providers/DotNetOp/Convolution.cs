@@ -189,9 +189,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     var imOffSetC = imOffSetB + im.DimensionOffSets[1] * imC;
                     for (int h = 0; h < filterGridHeight; h++)
                     {
+                        int h_pad = h * strideH - padH + offsetH;
+
                         for (int w = 0; w < filterGridWidth; w++)
                         {
-                            int h_pad = h * strideH - padH + offsetH;
                             int w_pad = w * strideW - padW + offsetW;
 
                             var inputIndex = imOffSetC + h_pad * W + w_pad;
@@ -261,9 +262,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                     for (int h = 0; h < filterGridHeight; ++h)
                     {
+                        int h_pad = h * strideH - padH + offsetH;
+
                         for (int w = 0; w < filterGridWidth; ++w)
                         {
-                            int h_pad = h * strideH - padH + offsetH;
                             int w_pad = w * strideW - padW + offsetW;
 
                             if (h_pad >= 0 && h_pad < H && w_pad >= 0 && w_pad < W)
