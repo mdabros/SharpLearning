@@ -91,7 +91,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             SwitchDimensionOneAndTwo(dstDiff, co);
 
             // Calculate gradients for weights and biases
-
             co.TransposeAndMultiply(i2c, wDiff);
             co.SumRows(bDiff.Data);
 
@@ -120,14 +119,21 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             for (int n = 0; n < N; n++)
             {
+                var dstOffSetB = dst.DimensionOffSets[0] * n;                
                 for (int c = 0; c < C; c++)
                 {
+                    var srcOffSetC = src.DimensionOffSets[0] * c + src.DimensionOffSets[1] * n;
+                    var dstOffSetC = dstOffSetB + dst.DimensionOffSets[1] * c;
+
                     for (int h = 0; h < H; h++)
                     {
+                        var srcOffSetH = srcOffSetC + src.DimensionOffSets[2] * h;
+                        var dstOffSetH = dstOffSetC + dst.DimensionOffSets[2] * h;
+
                         for (int w = 0; w < W; w++)
                         {
-                            var srcIndex = Index(c, n, h, w, src);
-                            var dstIndex = Index(n, c, h, w, dst);
+                            var srcIndex = srcOffSetH + w;//Index(c, n, h, w, src);
+                            var dstIndex = dstOffSetH + w;//Index(n, c, h, w, dst);
 
                             dstData[dstIndex] = srcData[srcIndex];
                         }
@@ -135,19 +141,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 }
             }
         }
-
-        static int Index(int n, int c, int h, int w, Tensor<double> t)
-        {
-            var index = t.DimensionOffSets[0] * n + t.DimensionOffSets[1] * c + t.DimensionOffSets[2] * h + w;
-            return index;
-        }
-
-        static bool is_a_ge_zero_and_a_lt_b(int a, int b)
-        {
-            return (uint)(a) < (uint)(b);
-            //return static_cast<unsigned>(a) < static_cast<unsigned>(b);
-        }
-
 
         /// <summary>
         /// Based on https://github.com/NVIDIA/torch-cunn/blob/master/lib/THCUNN/im2col.h
