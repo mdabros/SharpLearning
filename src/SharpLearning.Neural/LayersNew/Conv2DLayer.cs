@@ -176,7 +176,7 @@ namespace SharpLearning.Neural.LayersNew
             var filterCubeSize = c * m_descriptor.FilterH * m_descriptor.FilterW;
             var filterGridSize = filterGridWidth * filterGridHeight;
 
-            Im2Col = Variable.Create(filterCubeSize, filterGridSize * batchSize);
+            Im2Col = Variable.Create(filterGridSize * batchSize, filterCubeSize);
 
             Conv = Variable.Create(m_descriptor.FilterCount, batchSize, 
                 filterGridHeight, filterGridWidth);

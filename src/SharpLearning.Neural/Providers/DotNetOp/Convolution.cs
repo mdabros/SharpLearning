@@ -44,7 +44,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             Im2Col(src, desc, borderMode, i2c);
 
             // matrix multiplication for convolution
-            w.Multiply(i2c, co);
+            w.TransposeAndMultiply(i2c, co);
             co.AddColumnWise(b.Data, co);
 
             // switch dimension one and two to get correct layout for next layer.
@@ -91,11 +91,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             SwitchDimensionOneAndTwo(dstDiff, co);
 
             // Calculate gradients for weights and biases
-            co.TransposeAndMultiply(i2c, wDiff);
+            co.Multiply(i2c, wDiff);
             co.SumRows(bDiff.Data);
 
             // calcualte delta for next layer.
-            w.TransposeThisAndMultiply(co, i2c);
+            co.TransposeThisAndMultiply(w, i2c);
 
             // convert back to original layout
             Col2Im(i2c, desc, borderMode, srcDiff);
@@ -198,34 +198,17 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                             if (h_pad >= 0 && h_pad < H && w_pad >= 0 && w_pad < W)
                             {
-                                im2ColData[RowMajorIndexFromColumnMajorIndex(outputIndex++, im2ColWidth, im2ColHeight)] = imData[inputIndex];
+                                im2ColData[outputIndex++] = imData[inputIndex];
                             }
                             else
                             {
-                                im2ColData[RowMajorIndexFromColumnMajorIndex(outputIndex++, im2ColWidth, im2ColHeight)] = 0;
+                                im2ColData[outputIndex++] = 0;
                             }
                         }
                     }
                 }
             }//);
         }
-
-        /// <summary>
-        /// Switch from row major to col major.
-        /// This is used to correct the layout of im2col.
-        /// Something is wrong with initial layout.
-        /// </summary>
-        /// <param name="columnmajorindex"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
-        static int RowMajorIndexFromColumnMajorIndex(int columnmajorindex, int width, int height)
-        {
-            int row = columnmajorindex % height;
-            int column = columnmajorindex / height;
-            return row * width + column;
-        }
-
 
         /// <summary>
         /// Based on https://github.com/NVIDIA/torch-cunn/blob/master/lib/THCUNN/im2col.h
@@ -286,7 +269,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             if (h_pad >= 0 && h_pad < H && w_pad >= 0 && w_pad < W)
                             {
                                 var inputIndex = imOffSetC + h_pad * W + w_pad;
-                                imData[inputIndex] += im2ColData[RowMajorIndexFromColumnMajorIndex(outputIndex, im2ColWidth, im2ColHeight)];
+                                imData[inputIndex] += im2ColData[outputIndex];
                             }
                             outputIndex++;
                         }

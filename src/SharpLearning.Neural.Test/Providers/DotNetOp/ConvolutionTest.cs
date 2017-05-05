@@ -22,8 +22,6 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             Convolution.Im2Col(im, convDescriptor, BorderMode.Valid, actual);
 
-            Trace.WriteLine(string.Join(",", actual.Data));
-
             var expected = Tensor<double>.Build(new double[] { 0, 1, 3, 4, 1, 2, 4, 5, 3, 4, 6, 7, 4, 5, 7, 8, 10, 11, 13, 14, 11, 12, 14, 15, 13, 14, 16, 17, 14, 15, 17, 18, 20, 21, 23, 24, 21, 22, 24, 25, 23, 24, 26, 27, 24, 25, 27, 28 }, 
                 actual.Dimensions.ToArray());
 
@@ -39,18 +37,13 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             var im = Tensor<double>.Build(imData, 2, 3, 3, 3);
 
-            var actual = Tensor<double>.Build(3 * 2 * 2, 2 * 2 * 2);
+            var actual = Tensor<double>.Build(2 * 2 * 2, 3 * 2 * 2);
             var convDescriptor = new Conv2DDescriptor(2, 2, 2, 1, 1, 0, 0);
 
             Convolution.Im2Col(im, convDescriptor, BorderMode.Valid, actual);
 
-            var expected = Tensor<double>.Build(new double[] { 0, 4, 13, 21, 100, 104, 113, 121, 1, 5, 14, 22, 101, 105, 114, 122, 3, 7, 16, 24, 103, 107, 116, 124, 4, 8, 17, 25, 104, 108, 117, 125, 1, 10, 14, 23, 101, 110, 114, 123, 2, 11, 15, 24, 102, 111, 115, 124, 4, 13, 17, 26, 104, 113, 117, 126, 5, 14, 18, 27, 105, 114, 118, 127, 3, 11, 20, 24, 103, 111, 120, 124, 4, 12, 21, 25, 104, 112, 121, 125, 6, 14, 23, 27, 106, 114, 123, 127, 7, 15, 24, 28, 107, 115, 124, 128 }, 
+            var expected = Tensor<double>.Build(new double[] { 0, 1, 3, 4, 1, 2, 4, 5, 3, 4, 6, 7, 4, 5, 7, 8, 10, 11, 13, 14, 11, 12, 14, 15, 13, 14, 16, 17, 14, 15, 17, 18, 20, 21, 23, 24, 21, 22, 24, 25, 23, 24, 26, 27, 24, 25, 27, 28, 100, 101, 103, 104, 101, 102, 104, 105, 103, 104, 106, 107, 104, 105, 107, 108, 110, 111, 113, 114, 111, 112, 114, 115, 113, 114, 116, 117, 114, 115, 117, 118, 120, 121, 123, 124, 121, 122, 124, 125, 123, 124, 126, 127, 124, 125, 127, 128 },
                 actual.Dimensions.ToArray());
-
-            // original non-transposed result.
-            //var expected = Tensor<double>.Build(new double[] { 0, 1, 3, 4, 1, 2, 4, 5, 3, 4, 6, 7, 4, 5, 7, 8, 10, 11, 13, 14, 11, 12, 14, 15, 13, 14, 16, 17, 14, 15, 17, 18, 20, 21, 23, 24, 21, 22, 24, 25, 23, 24, 26, 27, 24, 25, 27, 28, 100, 101, 103, 104, 101, 102, 104, 105, 103, 104, 106, 107, 104, 105, 107, 108, 110, 111, 113, 114, 111, 112, 114, 115, 113, 114, 116, 117, 114, 115, 117, 118, 120, 121, 123, 124, 121, 122, 124, 125, 123, 124, 126, 127, 124, 125, 127, 128 },
-            //    actual.Dimensions.ToArray());
-
 
             Assert.AreEqual(expected, actual);
         }
@@ -88,12 +81,8 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             Convolution.Col2Im(col2Im, convDescriptor, BorderMode.Valid, actual);
 
-            var expected = Tensor<double>.Build(new double[] { 0, 7, 2, 2, 14, 8, 2, 8, 6, 3, 13, 5, 8, 26, 18, 5, 18, 13, 10, 27, 12, 22, 54, 28, 12, 28, 16, 13, 33, 15, 28, 66, 38, 15, 38, 23, 20, 47, 22, 42, 94, 48, 22, 48, 26, 23, 53, 25, 48, 106, 128, 25, 128, 103 },
+            var expected = Tensor<double>.Build(new double[] { 0, 2, 2, 6, 16, 10, 6, 14, 8, 10, 22, 12, 26, 56, 30, 16, 34, 18, 20, 42, 22, 46, 96, 50, 26, 54, 28, 100, 202, 102, 206, 416, 210, 106, 214, 108, 110, 222, 112, 226, 456, 230, 116, 234, 118, 120, 242, 122, 246, 496, 250, 126, 254, 128 },
                 actual.Dimensions.ToArray());
-
-            // original non-transposed
-            //var expected = Tensor<double>.Build(new double[] { 0, 2, 2, 6, 16, 10, 6, 14, 8, 10, 22, 12, 26, 56, 30, 16, 34, 18, 20, 42, 22, 46, 96, 50, 26, 54, 28, 100, 202, 102, 206, 416, 210, 106, 214, 108, 110, 222, 112, 226, 456, 230, 116, 234, 118, 120, 242, 122, 246, 496, 250, 126, 254, 128 },
-            //    actual.Dimensions.ToArray());
 
             Assert.AreEqual(expected, actual);
         }
@@ -129,12 +118,9 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
 
             Convolution.Im2Col(im, descr, BorderMode.Valid, im2Col);
 
-            var expectedIm2Col = Tensor<double>.Build(new double[] { 1,2,3,4,5,1,2,3,4,5,6,7,8,9,10,6,7,8,9,10,11,12,13,14,15,11,12,13,
-                                                                     14,15,16,17,18,19,20,16,17,18,19,20,21,22,23,24,25,21,22,23,24,25 }, 5, 2 * 5);
+            var expectedIm2Col = Tensor<double>.Build(new double[] { 1, 6, 11, 16, 21, 2, 7, 12, 17, 22, 3, 8, 13, 18, 23, 4, 9, 14, 19, 24, 5, 10, 15, 20, 25,
+                                                                     1, 6, 11, 16, 21, 2, 7, 12, 17, 22, 3, 8, 13, 18, 23, 4, 9, 14, 19, 24, 5, 10, 15, 20, 25 }, 5, 10);
 
-            // original non-transpose exptected 
-            //var expectedIm2Col = Tensor<double>.Build(new double[] { 1, 6, 11, 16, 21, 2, 7, 12, 17, 22, 3, 8, 13, 18, 23, 4, 9, 14, 19, 24, 5, 10, 15, 20, 25,
-            //                                                         1, 6, 11, 16, 21, 2, 7, 12, 17, 22, 3, 8, 13, 18, 23, 4, 9, 14, 19, 24, 5, 10, 15, 20, 25 }, 2, 1, 5, 5);
             Assert.AreEqual(expectedIm2Col, im2Col);
 
             var col2Im = Tensor<double>.Build(2, 1, 5, 5);
