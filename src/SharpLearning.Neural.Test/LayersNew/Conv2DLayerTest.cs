@@ -59,12 +59,14 @@ namespace SharpLearning.Neural.Test.LayersNew
         }
 
         [TestMethod]
-        public void Conv2DLayer_Forward_Simple()
+        public void Conv2DLayer_Forward_Simple_Batch_2()
         {
             // example from: https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/making_faster.html
             var storage = new NeuralNetStorage();
-            var inputData = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var input = Variable.Create(1, 1, 3, 3);
+            var inputData = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9,
+                                           1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            var input = Variable.Create(2, 1, 3, 3);
 
             storage.AssignTensor(input, inputData);
             var sut = new Conv2DLayer(1, 2, 2);
@@ -72,7 +74,8 @@ namespace SharpLearning.Neural.Test.LayersNew
             storage.AssignTensor(sut.Weights, new double[] { 4, 3, 2, 1 }); // weights reversed.
             sut.Forward(storage);
 
-            var expectedConv = Tensor<double>.Build(new double[] { 23, 33, 53, 63 }, 1, 1, 2, 2);
+            var expectedConv = Tensor<double>.Build(new double[] { 23, 33, 53, 63,
+                                                                   23, 33, 53, 63}, 2, 1, 2, 2);
             var actualConv = storage.GetTensor(sut.Output);
             Assert.AreEqual(expectedConv, actualConv);
         }

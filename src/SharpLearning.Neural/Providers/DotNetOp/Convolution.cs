@@ -41,7 +41,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var b = storage.GetTensor(bias);
 
             // Arrange input item for GEMM version of convolution.
-            Im2Col(src, desc, borderMode, i2c);           
+            Im2Col(src, desc, borderMode, i2c);
 
             // matrix multiplication for convolution
             w.Multiply(i2c, co);
@@ -91,6 +91,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             SwitchDimensionOneAndTwo(dstDiff, co);
 
             // Calculate gradients for weights and biases
+
             co.TransposeAndMultiply(i2c, wDiff);
             co.SumRows(bDiff.Data);
 
@@ -147,88 +148,6 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             //return static_cast<unsigned>(a) < static_cast<unsigned>(b);
         }
 
-        /// <summary>
-        /// based on https://github.com/BVLC/caffe/blob/master/src/caffe/util/im2col.cpp
-        /// </summary>
-        /// <param name="im"></param>
-        /// <param name="desc"></param>
-        /// <param name="borderMode"></param>
-        /// <param name="im2Col"></param>
-        public static void Im2Col_Cpu(Tensor<double> im, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im2Col)
-        {
-            int N = im.Dimensions[0];
-            int channels = im.Dimensions[1];
-            int height = im.Dimensions[2];
-            int width = im.Dimensions[3];
-            int kernel_h = desc.FilterH;
-            int kernel_w = desc.FilterW;
-            int pad_h = desc.PadH;
-            int pad_w = desc.PadW;
-            int stride_h = desc.StrideH;
-            int stride_w = desc.StrideW;
-            int dilation_h = 1;
-            int dilation_w = 1;
-
-            var data_im = im.Data;
-            var data_col = im2Col.Data;
-
-            int output_h = ConvUtils.GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
-            int output_w = ConvUtils.GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
-
-            //int output_h = (height + 2 * pad_h - (dilation_h * (kernel_h - 1) + 1)) / stride_h + 1;
-            //int output_w = (width + 2 * pad_w - (dilation_w * (kernel_w - 1) + 1)) / stride_w + 1;
-            int channel_size = height * width;
-
-            var outputIndex = 0;
-
-            for (int n = 0; n < N; n++)
-            {
-                var nOffSet = im.DimensionOffSets[0] * n;
-                for (int channel = 0; channel < channels; channel++)//data_im += channel_size)
-                {
-                    var cOffSet = nOffSet + im.DimensionOffSets[1] * channel;
-                    for (int kernel_row = 0; kernel_row < kernel_h; kernel_row++)
-                    {
-                        //var hOffSet = cOffSet + im.DimensionOffSets[2] * kernel_row;
-                        for (int kernel_col = 0; kernel_col < kernel_w; kernel_col++)
-                        {
-                            //var wOffSet = hOffSet + kernel_row;
-                            var input_row = -pad_h + kernel_row * dilation_h;
-                            for (int output_rows = output_h - 1; output_rows >= 0; output_rows--)
-                            {
-                                if (!is_a_ge_zero_and_a_lt_b(input_row, height))
-                                {
-                                    for (int output_cols = output_w - 1; output_cols >= 0; output_cols--)
-                                    {
-                                        //*(data_col++) = 0;
-                                        data_col[outputIndex++] = 0;
-                                    }
-                                }
-                                else
-                                {
-                                    int input_col = -pad_w + kernel_col * dilation_w;
-                                    for (int output_col = output_w - 1; output_col >= 0; output_col--)
-                                    {
-                                        if (is_a_ge_zero_and_a_lt_b(input_col, width))
-                                        {
-                                            //*(data_col++) = data_im[input_row * width + input_col];
-                                            data_col[outputIndex++] = data_im[cOffSet + input_row * width + input_col];
-                                        }
-                                        else
-                                        {
-                                            //*(data_col++) = 0;
-                                            data_col[outputIndex++] = 0;
-                                        }
-                                        input_col += stride_w;
-                                    }
-                                }
-                                input_row += stride_h;
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Based on https://github.com/NVIDIA/torch-cunn/blob/master/lib/THCUNN/im2col.h
@@ -258,6 +177,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var imData = im.Data;
             var im2ColData = im2Col.Data;
 
+            var im2ColHeight = im2Col.Dimensions[0];
+            var im2ColWidth = im2Col.Dimensions[1];
+
             var outputIndex = 0;
             //Parallel.For(0, N, n =>
             for (int n = 0; n  < N; n ++)
@@ -283,11 +205,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
                             if (h_pad >= 0 && h_pad < H && w_pad >= 0 && w_pad < W)
                             {
-                                im2ColData[outputIndex++] = imData[inputIndex];
+                                im2ColData[RowMajorIndexFromColumnMajorIndex(outputIndex++, im2ColWidth, im2ColHeight)] = imData[inputIndex];
                             }
                             else
                             {
-                                im2ColData[outputIndex++] = 0;
+                                im2ColData[RowMajorIndexFromColumnMajorIndex(outputIndex++, im2ColWidth, im2ColHeight)] = 0;
                             }
                         }
                     }
@@ -296,80 +218,21 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         }
 
         /// <summary>
-        /// based on https://github.com/BVLC/caffe/blob/master/src/caffe/util/im2col.cpp
+        /// Switch from row major to col major.
+        /// This is used to correct the layout of im2col.
+        /// Something is wrong with initial layout.
         /// </summary>
-        /// <param name="im2Col"></param>
-        /// <param name="desc"></param>
-        /// <param name="borderMode"></param>
-        /// <param name="im"></param>
-        public static void Col2Im_Cpu(Tensor<double> im2Col, Conv2DDescriptor desc, BorderMode borderMode, Tensor<double> im)
+        /// <param name="columnmajorindex"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        static int RowMajorIndexFromColumnMajorIndex(int columnmajorindex, int width, int height)
         {
-
-            int N = im.Dimensions[0];
-            int channels = im.Dimensions[1];
-            int height = im.Dimensions[2];
-            int width = im.Dimensions[3];
-            int kernel_h = desc.FilterH;
-            int kernel_w = desc.FilterW;
-            int pad_h = desc.PadH;
-            int pad_w = desc.PadW;
-            int stride_h = desc.StrideH;
-            int stride_w = desc.StrideW;
-            int dilation_h = 1;
-            int dilation_w = 1;
-
-            var data_im = im.Data;
-            var data_col = im2Col.Data;
-
-            int output_h = ConvUtils.GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
-            int output_w = ConvUtils.GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
-            //caffe_set(height * width * channels, Dtype(0), data_im);
-
-            //int output_h = (height + 2 * pad_h - (dilation_h * (kernel_h - 1) + 1)) / stride_h + 1;
-            //int output_w = (width + 2 * pad_w - (dilation_w * (kernel_w - 1) + 1)) / stride_w + 1;
-            int channel_size = height * width;
-
-            var im2ColIndex = 0;
-            for (int n = 0; n < N; n++)
-            {
-                var nOffSet = im.DimensionOffSets[0] * n;
-                for (int channel = 0; channel < channels; channel++)//data_im += channel_size)
-                //for (int channel = channels; channel--; data_im += channel_size)
-                {
-                    var cOffSet = nOffSet + im.DimensionOffSets[1] * channel;
-                    for (int kernel_row = 0; kernel_row < kernel_h; kernel_row++)
-                    {
-                        for (int kernel_col = 0; kernel_col < kernel_w; kernel_col++)
-                        {
-                            int input_row = -pad_h + kernel_row * dilation_h;
-                            for (int output_rows = output_h - 1; output_rows >= 0; output_rows--)
-                            //for (int output_rows = output_h; output_rows; output_rows--)
-                            {
-                                if (!is_a_ge_zero_and_a_lt_b(input_row, height))
-                                {
-                                    im2ColIndex += output_w;
-                                }
-                                else
-                                {
-                                    int input_col = -pad_w + kernel_col * dilation_w;
-                                    for (int output_col = output_w - 1; output_col >= 0; output_col--)
-                                    //for (int output_col = output_w; output_col; output_col--)
-                                    {
-                                        if (is_a_ge_zero_and_a_lt_b(input_col, width))
-                                        {
-                                            data_im[cOffSet + input_row * width + input_col] += data_col[im2ColIndex];
-                                        }
-                                        im2ColIndex++;
-                                        input_col += stride_w;
-                                    }
-                                }
-                                input_row += stride_h;
-                            }
-                        }
-                    }
-                }
-            }
+            int row = columnmajorindex % height;
+            int column = columnmajorindex / height;
+            return row * width + column;
         }
+
 
         /// <summary>
         /// Based on https://github.com/NVIDIA/torch-cunn/blob/master/lib/THCUNN/im2col.h
@@ -401,6 +264,8 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             imData.Clear();
 
+            var im2ColHeight = im2Col.Dimensions[0];
+            var im2ColWidth = im2Col.Dimensions[1];
 
             var outputIndex = 0;
 
@@ -428,7 +293,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                             if (h_pad >= 0 && h_pad < H && w_pad >= 0 && w_pad < W)
                             {
                                 var inputIndex = imOffSetC + h_pad * W + w_pad;
-                                imData[inputIndex] += im2ColData[outputIndex];
+                                imData[inputIndex] += im2ColData[RowMajorIndexFromColumnMajorIndex(outputIndex, im2ColWidth, im2ColHeight)];
                             }
                             outputIndex++;
                         }
