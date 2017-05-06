@@ -1,4 +1,5 @@
-﻿using SharpLearning.Containers.Extensions;
+﻿using System.Threading.Tasks;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Tensors;
 using SharpLearning.Neural.LayersNew;
 
@@ -21,9 +22,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="borderMode"></param>
         /// <param name="output"></param>
         /// <param name="storage"></param>
-        public static void Forward(Variable input, 
+        public static void Forward(Variable input,
             Variable im2Col, Variable conv,
-            Conv2DDescriptor desc, 
+            Conv2DDescriptor desc,
             Variable weights, Variable bias, BorderMode borderMode,
             Variable output, NeuralNetStorage storage)
         {
@@ -109,17 +110,17 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="dst"></param>
         public static void SwitchDimensionOneAndTwo(Tensor<double> src, Tensor<double> dst)
         {
-            var N = dst.Dimensions[0]; 
+            var N = dst.Dimensions[0];
             var C = dst.Dimensions[1];
-            var H = dst.Dimensions[2]; 
-            var W = dst.Dimensions[3]; 
+            var H = dst.Dimensions[2];
+            var W = dst.Dimensions[3];
 
             var dstData = dst.Data;
             var srcData = src.Data;
 
             for (int n = 0; n < N; n++)
             {
-                var dstOffSetB = dst.DimensionOffSets[0] * n;                
+                var dstOffSetB = dst.DimensionOffSets[0] * n;
                 for (int c = 0; c < C; c++)
                 {
                     var srcOffSetC = src.DimensionOffSets[0] * c + src.DimensionOffSets[1] * n;
@@ -170,15 +171,15 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var imData = im.Data;
             var im2ColData = im2Col.Data;
 
-            var im2ColHeight = im2Col.Dimensions[0];
-            var im2ColWidth = im2Col.Dimensions[1];
+            var filterCubeSize = C * filterH * filterW;
+            var filterGridSize = filterGridWidth * filterGridHeight;
 
-            var outputIndex = 0;
-            //Parallel.For(0, N, n =>
-            for (int n = 0; n  < N; n ++)
+            var im2ColBatchSize = filterGridSize * filterCubeSize;
+
+            Parallel.For(0, N, n =>
             {
                 var imOffSetB = im.DimensionOffSets[0] * n;
-                //var outputIndex = im2Col.DimensionOffSets[0] * n;
+                var outputIndex = im2ColBatchSize * n;
 
                 for (int c = 0; c < channels_col; ++c)
                 {
@@ -208,7 +209,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         }
                     }
                 }
-            }//);
+            });
         }
 
         /// <summary>
@@ -241,16 +242,14 @@ namespace SharpLearning.Neural.Providers.DotNetOp
 
             imData.Clear();
 
-            var im2ColHeight = im2Col.Dimensions[0];
-            var im2ColWidth = im2Col.Dimensions[1];
+            var filterCubeSize = C * filterH * filterW;
+            var filterGridSize = filterGridWidth * filterGridHeight;
+            var im2ColBatchSize = filterGridSize * filterCubeSize;
 
-            var outputIndex = 0;
-
-            //Parallel.For(0, N, n =>
-            for (int n = 0; n < N; n++)
+            Parallel.For(0, N, n =>
             {
                 var imOffSetB = im.DimensionOffSets[0] * n;
-                //var outputIndex = im2Col.DimensionOffSets[0] * n;
+                var outputIndex = im2ColBatchSize * n;
 
                 for (int c = 0; c < channels_col; ++c)
                 {
@@ -277,7 +276,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                         }
                     }
                 }
-            }//);
+            });
         }
     }
 }
