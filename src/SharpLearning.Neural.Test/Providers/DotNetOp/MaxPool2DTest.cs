@@ -13,10 +13,10 @@ using SharpLearning.Neural.LayersNew;
 namespace SharpLearning.Neural.Test.Providers.DotNetOp
 {
     [TestClass]
-    public class MaxPoolTest
+    public class MaxPool2DTest
     {
         [TestMethod]
-        public void MaxPool_Forward()
+        public void MaxPool2D_Forward()
         {
             const int batchSize = 1;
             const int inputDepth = 2;
