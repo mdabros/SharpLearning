@@ -19,5 +19,10 @@
         /// SoftMax activation.
         /// </summary>
         SoftMax,
+
+        /// <summary>
+        /// MeanSquareError activation.
+        /// </summary>
+        MeanSquareError,
     }
 }

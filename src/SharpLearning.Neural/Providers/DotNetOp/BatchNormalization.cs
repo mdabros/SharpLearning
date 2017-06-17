@@ -23,31 +23,31 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="MovingAverageMeans"></param>
         /// <param name="MovingAverageVariance"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         /// <param name="training"></param>
         public static void Forward(Variable input,
             Variable Scale, Variable Bias,
             Variable BatchColumnMeans, Variable BatchcolumnVars,
             Variable MovingAverageMeans, Variable MovingAverageVariance,
-            NeuralNetStorage executor, bool training, Variable output)
+            NeuralNetStorage storage, bool training, Variable output)
         {
-            var src = executor.GetTensor(input);
-            var dst = executor.GetTensor(output);
+            var src = storage.GetTensor(input);
+            var dst = storage.GetTensor(output);
 
-            var scaleData = executor.GetTensor(Scale).Data;
-            var biasData = executor.GetTensor(Bias).Data;
+            var scaleData = storage.GetTensor(Scale).Data;
+            var biasData = storage.GetTensor(Bias).Data;
 
             double[] bColumnMeans = null;
             double[] bcolumnVars = null;
 
             if (training)
             {
-                bColumnMeans = executor.GetTensor(BatchColumnMeans).Data;
-                bcolumnVars = executor.GetTensor(BatchcolumnVars).Data;
+                bColumnMeans = storage.GetTensor(BatchColumnMeans).Data;
+                bcolumnVars = storage.GetTensor(BatchcolumnVars).Data;
             }
 
-            var movingAverageMeans = executor.GetTensor(MovingAverageMeans).Data;
-            var movingAverageVariance = executor.GetTensor(MovingAverageVariance).Data;
+            var movingAverageMeans = storage.GetTensor(MovingAverageMeans).Data;
+            var movingAverageVariance = storage.GetTensor(MovingAverageVariance).Data;
 
             if(input.Rank == 4)
             {
@@ -229,25 +229,25 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="Bias"></param>
         /// <param name="BatchColumnMeans"></param>
         /// <param name="BatchcolumnVars"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         /// <param name="output"></param>
         public static void Backward(Variable input,
             Variable Scale, Variable Bias,
             Variable BatchColumnMeans, Variable BatchcolumnVars,
-            NeuralNetStorage executor, Variable output)
+            NeuralNetStorage storage, Variable output)
         {
-            var src = executor.GetTensor(input);
-            var diff_src = executor.GetGradient(input);
+            var src = storage.GetTensor(input);
+            var diff_src = storage.GetGradient(input);
 
-            var scaleData = executor.GetTensor(Scale).Data;
+            var scaleData = storage.GetTensor(Scale).Data;
 
-            var scaleGradientData = executor.GetGradient(Scale).Data;
-            var biasGradientData = executor.GetGradient(Bias).Data;
+            var scaleGradientData = storage.GetGradient(Scale).Data;
+            var biasGradientData = storage.GetGradient(Bias).Data;
 
-            var meanData = executor.GetTensor(BatchColumnMeans).Data;
-            var varianceData = executor.GetTensor(BatchcolumnVars).Data;
+            var meanData = storage.GetTensor(BatchColumnMeans).Data;
+            var varianceData = storage.GetTensor(BatchcolumnVars).Data;
 
-            var diff_dst = executor.GetGradient(output);
+            var diff_dst = storage.GetGradient(output);
 
             if (input.Rank == 4)
             {

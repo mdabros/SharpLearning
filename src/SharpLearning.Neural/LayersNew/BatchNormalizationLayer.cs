@@ -33,25 +33,25 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         /// <param name="training"></param>
-        public void Forward(NeuralNetStorage executor, bool training = true)
+        public void Forward(NeuralNetStorage storage, bool training = true)
         {
             BatchNormalization.Forward(Input, Scale, Bias,
                 BatchColumnMeans, BatchcolumnVars,
                 MovingAverageMeans, MovingAverageVariance,
-                executor, training, Output);
+                storage, training, Output);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="executor"></param>
-        public void Backward(NeuralNetStorage executor)
+        /// <param name="storage"></param>
+        public void Backward(NeuralNetStorage storage)
         {
             BatchNormalization.Backward(Input, Scale, Bias,
                 BatchColumnMeans, BatchcolumnVars,
-                executor, Output);
+                storage, Output);
         }
 
         /// <summary>

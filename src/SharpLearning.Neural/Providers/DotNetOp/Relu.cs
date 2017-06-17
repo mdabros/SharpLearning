@@ -13,11 +13,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// </summary>
         /// <param name="input"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
-        public static void Forward(Variable input, Variable output, NeuralNetStorage executor)
+        /// <param name="storage"></param>
+        public static void Forward(Variable input, Variable output, NeuralNetStorage storage)
         {
-            var src = executor.GetTensor(input).Data;
-            var dst = executor.GetTensor(output).Data;
+            var src = storage.GetTensor(input).Data;
+            var dst = storage.GetTensor(output).Data;
 
             for (int j = 0; j < src.Length; j++)
             {
@@ -30,12 +30,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// </summary>
         /// <param name="input"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
-        public static void Backward(Variable input, Variable output, NeuralNetStorage executor)
+        /// <param name="strorage"></param>
+        public static void Backward(Variable input, Variable output, NeuralNetStorage strorage)
         {
-            var dst = executor.GetTensor(output).Data;
-            var dstDiff = executor.GetGradient(output).Data;
-            var srcDiff = executor.GetGradient(input).Data;
+            var dst = strorage.GetTensor(output).Data;
+            var dstDiff = strorage.GetGradient(output).Data;
+            var srcDiff = strorage.GetGradient(input).Data;
 
             for (int j = 0; j < dst.Length; j++)
             {

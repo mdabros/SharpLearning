@@ -19,17 +19,17 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="weights"></param>
         /// <param name="bias"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         public static void Forward(Variable input,
             Variable weights, Variable bias,
-            Variable output, NeuralNetStorage executor)
+            Variable output, NeuralNetStorage storage)
         {
-            var src = executor.GetTensor(input);
+            var src = storage.GetTensor(input);
 
-            var w = executor.GetTensor(weights);
-            var b = executor.GetTensor(bias).Data;
+            var w = storage.GetTensor(weights);
+            var b = storage.GetTensor(bias).Data;
 
-            var dst = executor.GetTensor(output);
+            var dst = storage.GetTensor(output);
 
             src.Multiply(w, dst);
             dst.AddRowWise(b, dst);
@@ -42,19 +42,19 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="weights"></param>
         /// <param name="bias"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         public static void Backward(Variable input,
             Variable weights, Variable bias,
-            Variable output, NeuralNetStorage executor)
+            Variable output, NeuralNetStorage storage)
         {
-            var src = executor.GetTensor(input);
-            var srcDiff = executor.GetGradient(input);
+            var src = storage.GetTensor(input);
+            var srcDiff = storage.GetGradient(input);
 
-            var w = executor.GetTensor(weights);
-            var wDiff = executor.GetGradient(weights);
+            var w = storage.GetTensor(weights);
+            var wDiff = storage.GetGradient(weights);
 
-            var bDiff = executor.GetGradient(bias).Data;           
-            var dstDiff = executor.GetGradient(output);
+            var bDiff = storage.GetGradient(bias).Data;           
+            var dstDiff = storage.GetGradient(output);
 
             // calculate gradients
             src.TransposeThisAndMultiply(dstDiff, wDiff);

@@ -17,16 +17,16 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="dropoutMask"></param>
         /// <param name="random"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         public static void Forward(Variable input,
             Variable dropoutMask, Random random,
-            Variable output, NeuralNetStorage executor)
+            Variable output, NeuralNetStorage storage)
         {
-            var src = executor.GetTensor(input);
-            var mask = executor.GetTensor(dropoutMask);
+            var src = storage.GetTensor(input);
+            var mask = storage.GetTensor(dropoutMask);
             mask.Data.Shuffle(random);
 
-            var dst = executor.GetTensor(output);
+            var dst = storage.GetTensor(output);
             src.PointwiseMultiply(mask, dst);
         }
 
@@ -36,16 +36,16 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="input"></param>
         /// <param name="dropoutMask"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         public static void Backward(Variable input,
             Variable dropoutMask,
-            Variable output, NeuralNetStorage executor)
+            Variable output, NeuralNetStorage storage)
         {
-            var src = executor.GetTensor(input);
-            var mask = executor.GetTensor(dropoutMask);
-            var srcDiff = executor.GetGradient(input);
-            var dst = executor.GetTensor(output);
-            var dstDiff = executor.GetGradient(output);
+            var src = storage.GetTensor(input);
+            var mask = storage.GetTensor(dropoutMask);
+            var srcDiff = storage.GetGradient(input);
+            var dst = storage.GetTensor(output);
+            var dstDiff = storage.GetGradient(output);
 
             dstDiff.PointwiseMultiply(mask, srcDiff);
         }

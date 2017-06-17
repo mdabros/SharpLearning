@@ -19,14 +19,14 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="m_switchX"></param>
         /// <param name="m_switchY"></param>
         /// <param name="training"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         public static void Forward(Variable input,
             Variable output, MaxPool2DDescriptor desc,
             int[][] m_switchX, int[][] m_switchY, bool training,
-            NeuralNetStorage executor)
+            NeuralNetStorage storage)
         {
-            var src = executor.GetTensor(input);
-            var dst = executor.GetTensor(output);
+            var src = storage.GetTensor(input);
+            var dst = storage.GetTensor(output);
 
             int MB = src.Dimensions[0];
             var IC = src.Dimensions[1];
@@ -112,13 +112,13 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="output"></param>
         /// <param name="m_switchX"></param>
         /// <param name="m_switchY"></param>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         public static void Backward(Variable input, Variable output,
             int[][] m_switchX, int[][] m_switchY,
-            NeuralNetStorage executor)
+            NeuralNetStorage storage)
         {
-            var inputGradient = executor.GetGradient(input);
-            var outputGradient = executor.GetGradient(output);
+            var inputGradient = storage.GetGradient(input);
+            var outputGradient = storage.GetGradient(output);
 
             int MB = inputGradient.Dimensions[0];
             var IH = inputGradient.Dimensions[2];

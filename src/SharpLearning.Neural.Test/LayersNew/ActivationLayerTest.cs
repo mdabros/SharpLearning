@@ -10,26 +10,39 @@ namespace SharpLearning.Neural.Test.LayersNew
         [TestMethod]
         public void ActivationLayer_Relu_GradientCheck()
         {
-            var executor = new NeuralNetStorage();
+            var storage = new NeuralNetStorage();
 
             var input = Variable.Create(10, 2, 5, 5);
             var sut = new ActivationLayer(Neural.Activations.Activation.Relu);
-            sut.Initialize(input, executor, new Random());
+            sut.Initialize(input, storage, new Random());
 
-            GradientCheckTools.CheckLayer(sut, executor, input, new Random(21));
+            GradientCheckTools.CheckLayer(sut, storage, input, new Random(21));
         }
-
+        
         [TestMethod]
         [Ignore] // gradient check seems off.
         public void ActivationLayer_SoftMax_GradientCheck()
         {
-            var executor = new NeuralNetStorage();
+            var storage = new NeuralNetStorage();
 
             var input = Variable.Create(10, 5, 1, 1);
             var sut = new ActivationLayer(Neural.Activations.Activation.SoftMax);
-            sut.Initialize(input, executor, new Random());
+            sut.Initialize(input, storage, new Random());
 
-            GradientCheckTools.CheckLayer(sut, executor, input, new Random(21));
+            GradientCheckTools.CheckLayer(sut, storage, input, new Random(21));
+        }
+
+        [TestMethod]
+        [Ignore] // gradient check seems off.
+        public void ActivationLayer_MeanSquareError_GradientCheck()
+        {
+            var storage = new NeuralNetStorage();
+
+            var input = Variable.Create(10, 2, 5, 5);
+            var sut = new ActivationLayer(Neural.Activations.Activation.MeanSquareError);
+            sut.Initialize(input, storage, new Random());
+
+            GradientCheckTools.CheckLayer(sut, storage, input, new Random(21));
         }
     }
 }

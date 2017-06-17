@@ -18,11 +18,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// </summary>
         /// <param name="input"></param>
         /// <param name="output"></param>
-        /// <param name="executor"></param>
-        public static void Forward(Variable input, Variable output, NeuralNetStorage executor)
+        /// <param name="storage"></param>
+        public static void Forward(Variable input, Variable output, NeuralNetStorage storage)
         {
-            var src = executor.GetTensor(input);
-            var dst = executor.GetTensor(output);
+            var src = storage.GetTensor(input);
+            var dst = storage.GetTensor(output);
 
             // Assumes 2D and collapse to 2D.
             // assumes src and dst has same dimension.
@@ -68,12 +68,12 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// </summary>
         /// <param name="input"></param>
         /// <param name="output">In softmax output gradient will be the original target values</param>
-        /// <param name="executor"></param>
-        public static void Backward(Variable input, Variable output, NeuralNetStorage executor)
+        /// <param name="storage"></param>
+        public static void Backward(Variable input, Variable output, NeuralNetStorage storage)
         {
-            var dst = executor.GetTensor(output); // softmax outputs, predictions
-            var dstDiff = executor.GetGradient(output); // target values are storred in output gradient.
-            var srcDiff = executor.GetGradient(input);
+            var dst = storage.GetTensor(output); // softmax outputs, predictions
+            var dstDiff = storage.GetGradient(output); // target values are storred in output gradient.
+            var srcDiff = storage.GetGradient(input);
 
             dstDiff.Subtract(dst, srcDiff);
             srcDiff.Map(v => v * -1);

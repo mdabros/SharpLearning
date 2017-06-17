@@ -40,13 +40,13 @@ namespace SharpLearning.Neural.Test.Providers.DotNetOp
             var switchX = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
             var switchY = Enumerable.Range(0, batchSize).Select(v => new int[fanOut]).ToArray();
 
-            var executor = new NeuralNetStorage();
-            executor.AssignTensor(input, inputData);
+            var storage = new NeuralNetStorage();
+            storage.AssignTensor(input, inputData);
 
             MaxPool2D.Forward(input, output, descriptor,
-                switchX, switchY, true, executor);
+                switchX, switchY, true, storage);
 
-            var actual = executor.GetTensor(output);
+            var actual = storage.GetTensor(output);
 
             var expected = Tensor<double>.Build(new double[] { 3, 6, 8, 10, 8, 5, 10, 12 }, batchSize, outputC, outputH, outputW);
             Assert.AreEqual(expected, actual);

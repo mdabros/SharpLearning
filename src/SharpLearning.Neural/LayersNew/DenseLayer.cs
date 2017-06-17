@@ -39,22 +39,22 @@ namespace SharpLearning.Neural.LayersNew
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="executor"></param>
+        /// <param name="storage"></param>
         /// <param name="training"></param>
-        public void Forward(NeuralNetStorage executor, bool training = true)
+        public void Forward(NeuralNetStorage storage, bool training = true)
         {
             Dense.Forward(Input, Weights, Bias,
-                Output, executor);
+                Output, storage);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="executor"></param>
-        public void Backward(NeuralNetStorage executor)
+        /// <param name="storage"></param>
+        public void Backward(NeuralNetStorage storage)
         {
             Dense.Backward(Input, Weights, Bias,
-                Output, executor);
+                Output, storage);
         }
 
         /// <summary>

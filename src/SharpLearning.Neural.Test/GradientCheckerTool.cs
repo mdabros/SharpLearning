@@ -61,24 +61,24 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayer(ILayerNew layer, NeuralNetStorage executor, Variable inputVariable, Random random)
+        public static void CheckLayer(ILayerNew layer, NeuralNetStorage storage, Variable inputVariable, Random random)
         {
             var maxAllowedRelativeError = 1e-7;
             var epsilon = 1e-5;
             var batchSize = inputVariable.Dimensions[0];
 
-            var input = executor.GetTensor(inputVariable);
+            var input = storage.GetTensor(inputVariable);
             input.Map(v => random.NextDouble());
 
-            layer.Forward(executor);
+            layer.Forward(storage);
 
             // set output gradients to 1
-            executor.GetGradient(layer.Output).Map(v => 1.0); 
+            storage.GetGradient(layer.Output).Map(v => 1.0); 
 
-            layer.Backward(executor);
+            layer.Backward(storage);
 
-            var parameters = executor.GetTensor(inputVariable).Data;
-            var gradients = executor.GetGradient(inputVariable).Data;
+            var parameters = storage.GetTensor(inputVariable).Data;
+            var gradients = storage.GetGradient(inputVariable).Data;
 
             var output1 = new double[layer.Output.ElementCount];
             var output2 = new double[layer.Output.ElementCount];
@@ -88,12 +88,12 @@ namespace SharpLearning.Neural.Test
                 var oldValue = parameters[i];
 
                 parameters[i] = oldValue + epsilon;
-                layer.Forward(executor);
-                executor.GetTensor(layer.Output).Data.CopyTo(output1, 0);
+                layer.Forward(storage);
+                storage.GetTensor(layer.Output).Data.CopyTo(output1, 0);
 
                 parameters[i] = oldValue - epsilon;
-                layer.Forward(executor);
-                executor.GetTensor(layer.Output).Data.CopyTo(output2, 0);
+                layer.Forward(storage);
+                storage.GetTensor(layer.Output).Data.CopyTo(output2, 0);
 
                 parameters[i] = oldValue;
 
@@ -113,28 +113,28 @@ namespace SharpLearning.Neural.Test
             }
         }
 
-        public static void CheckLayerParameters(ILayerNew layer, NeuralNetStorage executor, Variable inputVariable, Random random)
+        public static void CheckLayerParameters(ILayerNew layer, NeuralNetStorage storage, Variable inputVariable, Random random)
         {
             var maxAllowedRelativeError = 1e-7;
             var epsilon = 1e-5;
             var batchSize = inputVariable.Dimensions[0];
 
             // set input to 1
-            var input = executor.GetTensor(inputVariable);
+            var input = storage.GetTensor(inputVariable);
             input.Map(v => 1.0);
 
-            layer.Forward(executor);
+            layer.Forward(storage);
 
             // set output gradients to 1
-            executor.GetGradient(layer.Output).Map(v => 1.0);
+            storage.GetGradient(layer.Output).Map(v => 1.0);
 
-            layer.Backward(executor);
+            layer.Backward(storage);
 
             var output1 = new double[layer.Output.ElementCount];
             var output2 = new double[layer.Output.ElementCount];
 
             var trainableParameters = new List<Data<double>>();
-            executor.GetTrainableParameters(trainableParameters);
+            storage.GetTrainableParameters(trainableParameters);
 
             foreach (var data in trainableParameters)
             {
@@ -146,12 +146,12 @@ namespace SharpLearning.Neural.Test
                     var oldValue = parameters[i];
 
                     parameters[i] = oldValue + epsilon;
-                    layer.Forward(executor);
-                    executor.GetTensor(layer.Output).Data.CopyTo(output1, 0);
+                    layer.Forward(storage);
+                    storage.GetTensor(layer.Output).Data.CopyTo(output1, 0);
 
                     parameters[i] = oldValue - epsilon;
-                    layer.Forward(executor);
-                    executor.GetTensor(layer.Output).Data.CopyTo(output2, 0);
+                    layer.Forward(storage);
+                    storage.GetTensor(layer.Output).Data.CopyTo(output2, 0);
 
                     parameters[i] = oldValue;
 
