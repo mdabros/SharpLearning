@@ -1,5 +1,6 @@
 ﻿using System;
 using SharpLearning.Neural.LayersNew;
+using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
@@ -56,6 +57,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var targetsData = dstDiff.Data;
             var predictionsData = dst.Data;
             var srcDiffData = srcDiff.Data;
+            srcDiffData.Clear(); // clear results in case of re-use,
 
             for (int batchItem = 0; batchItem < rows; batchItem++)
             {
