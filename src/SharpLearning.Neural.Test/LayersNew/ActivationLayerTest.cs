@@ -44,5 +44,18 @@ namespace SharpLearning.Neural.Test.LayersNew
 
             GradientCheckTools.CheckLayer(sut, storage, input, new Random(21));
         }
+
+        [TestMethod]
+        [Ignore] // gradient check seems off.
+        public void ActivationLayer_Svm_GradientCheck()
+        {
+            var storage = new NeuralNetStorage();
+
+            var input = Variable.Create(10, 2, 1, 1);
+            var sut = new ActivationLayer(Neural.Activations.Activation.Svm);
+            sut.Initialize(input, storage, new Random());
+
+            GradientCheckTools.CheckLayer(sut, storage, input, new Random(21));
+        }
     }
 }

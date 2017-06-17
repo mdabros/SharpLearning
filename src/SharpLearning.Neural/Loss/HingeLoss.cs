@@ -77,7 +77,7 @@ namespace SharpLearning.Neural.Loss
                 var rowOffSet = batchItem * cols;
                 for (int col = 0; col < cols; col++)
                 {
-                    var index = rowOffSet + cols;
+                    var index = rowOffSet + col;
                     var targetValue = targetsData[index];
                     if (targetValue > maxTarget)
                     {

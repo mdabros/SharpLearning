@@ -24,6 +24,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var src = storage.GetTensor(input);
             var dst = storage.GetTensor(output);
 
+            if (src.Shape != dst.Shape)
+            {
+                throw new ArgumentException($"output shape: {dst.Shape} differs from input shape {src.Shape}");
+            }
+
             // Assumes 2D and collapse to 2D.
             // assumes src and dst has same dimension.
             var srcData = src.Data;
@@ -74,6 +79,11 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             var dst = storage.GetTensor(output); // softmax outputs, predictions
             var dstDiff = storage.GetGradient(output); // target values are storred in output gradient.
             var srcDiff = storage.GetGradient(input);
+
+            if (dst.Shape != srcDiff.Shape)
+            {
+                throw new ArgumentException($"output shape: {dst.Shape} differs from input shape {srcDiff.Shape}");
+            }
 
             dstDiff.Subtract(dst, srcDiff);
             srcDiff.Map(v => v * -1);

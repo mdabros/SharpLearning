@@ -24,5 +24,10 @@
         /// MeanSquareError activation.
         /// </summary>
         MeanSquareError,
+
+        /// <summary>
+        /// Svm activation (also caleed hinge).
+        /// </summary>
+        Svm,
     }
 }

@@ -31,6 +31,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 case Activations.Activation.MeanSquareError:
                     MeanSquareError.Forward(input, output, storage);
                     break;
+                case Activations.Activation.Svm:
+                    Svm.Forward(input, output, storage);
+                    break;
                 default:
                     throw new ArgumentException($"Unsupported activation type {activation}");
             }
@@ -59,6 +62,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     break;
                 case Activations.Activation.MeanSquareError:
                     MeanSquareError.Backward(input, output, storage);
+                    break;
+                case Activations.Activation.Svm:
+                    Svm.Backward(input, output, storage);
                     break;
                 default:
                     throw new ArgumentException($"Unsupported activation type {activation}");
