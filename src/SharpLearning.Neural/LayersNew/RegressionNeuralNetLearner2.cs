@@ -60,7 +60,7 @@ namespace SharpLearning.Neural.LayersNew
         /// <returns></returns>
         public RegressionNeuralNetModel2 Learn(F64Matrix observations, double[] targets, int[] indices)
         {
-            var tensorTargets = Tensor<double>.Build(targets.Length, 1); // assume single target value for regression.
+            var tensorTargets = Tensor<double>.Build(targets, targets.Length, 1); // assume single target value for regression.
 
             var observationsShape = new List<int> { observations.RowCount };
             observationsShape.AddRange(m_learner.Net.Input.Dimensions.Skip(1).ToArray());

@@ -47,7 +47,7 @@ namespace SharpLearning.Neural.Test.LayersNew
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.34822374919397991, actual, 0.00001);
+            Assert.AreEqual(0.10205001787749961, actual, 0.00001);
         }
 
         void CreateData(int numberOfObservations, int numberOfFeatures, Random random, out F64Matrix observations, out double[] targets)
