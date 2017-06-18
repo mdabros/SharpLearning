@@ -39,7 +39,7 @@ namespace SharpLearning.Containers.Tensors
         {
             if (data == null) { throw new ArgumentNullException(nameof(data)); }
             if (data.Length != shape.ElementCount)
-            { throw new ArgumentNullException($"data length: {data.Length} does not match shape size: {shape.ElementCount}"); }
+            { throw new ArgumentException($"data length: {data.Length} does not match shape size: {shape.ElementCount}"); }
             
             Shape = shape;
             Layout = layout;

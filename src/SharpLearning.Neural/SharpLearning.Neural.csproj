@@ -72,7 +72,9 @@
     <Compile Include="LayersNew\ActivationLayer.cs" />
     <Compile Include="LayersNew\Batcher.cs" />
     <Compile Include="LayersNew\BatchNormalizationLayer.cs" />
+    <Compile Include="LayersNew\RegressionNeuralNetLearner2.cs" />
     <Compile Include="LayersNew\ClassificationNeuralNetLearner2.cs" />
+    <Compile Include="LayersNew\RegressionNeuralNetModel2.cs" />
     <Compile Include="LayersNew\ClassificationNeuralNetModel2.cs" />
     <Compile Include="LayersNew\Conv2DLayer.cs" />
     <Compile Include="LayersNew\Conv2DDescriptor.cs" />

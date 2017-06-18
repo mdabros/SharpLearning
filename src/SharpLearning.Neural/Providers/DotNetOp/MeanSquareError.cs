@@ -49,7 +49,7 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 throw new ArgumentException($"output shape: {dst.Shape} differs from target shape {dstDiff.Shape}");
             }
 
-            dstDiff.Subtract(dst, srcDiff);
+            dst.Subtract(dstDiff, srcDiff);
         }
     }
 }
