@@ -25,6 +25,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                 case Activations.Activation.Relu:
                     Relu.Forward(input, output, storage);
                     break;
+                case Activations.Activation.Sigmoid:
+                    Sigmoid.Forward(input, output, storage);
+                    break;
                 case Activations.Activation.SoftMax:
                     SoftMax.Forward(input, output, storage);
                     break;
@@ -56,6 +59,9 @@ namespace SharpLearning.Neural.Providers.DotNetOp
                     break;
                 case Activations.Activation.Relu:
                     Relu.Backward(input, output, storage);
+                    break;
+                case Activations.Activation.Sigmoid:
+                    Sigmoid.Backward(input, output, storage);
                     break;
                 case Activations.Activation.SoftMax:
                     SoftMax.Backward(input, output, storage);

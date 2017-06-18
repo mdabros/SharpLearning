@@ -127,6 +127,7 @@
     <Compile Include="Providers\DotNetOp\Dense.cs" />
     <Compile Include="Providers\DotNetOp\Dropout.cs" />
     <Compile Include="Providers\DotNetOp\MaxPool2D.cs" />
+    <Compile Include="Providers\DotNetOp\Sigmoid.cs" />
     <Compile Include="Providers\DotNetOp\Svm.cs" />
     <Compile Include="Providers\DotNetOp\MeanSquareError.cs" />
     <Compile Include="Providers\DotNetOp\Relu.cs" />

@@ -16,6 +16,11 @@
         Relu,
 
         /// <summary>
+        /// Sigmoid activation.
+        /// </summary>
+        Sigmoid,
+
+        /// <summary>
         /// SoftMax activation.
         /// </summary>
         SoftMax,
