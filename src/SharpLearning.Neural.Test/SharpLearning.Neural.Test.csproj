@@ -116,6 +116,7 @@
     <Compile Include="Providers\DotNetOp\DenseTest.cs" />
     <Compile Include="Providers\DotNetOp\BatchNormalizationTest.cs" />
     <Compile Include="Providers\DotNetOp\MeanSquareErrorTest.cs" />
+    <Compile Include="Providers\DotNetOp\ReluTest.cs" />
     <Compile Include="Providers\DotNetOp\UtilTest.cs" />
     <Compile Include="TargetEncoders\CopyTargetEncoderTest.cs" />
     <Compile Include="TargetEncoders\OneOfNTargetEncoderTest.cs" />

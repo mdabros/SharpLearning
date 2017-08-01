@@ -1,5 +1,6 @@
 ﻿using System;
 using SharpLearning.Neural.LayersNew;
+using SharpLearning.Containers.Tensors;
 
 namespace SharpLearning.Neural.Providers.DotNetOp
 {
@@ -16,12 +17,25 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="storage"></param>
         public static void Forward(Variable input, Variable output, NeuralNetStorage storage)
         {
-            var src = storage.GetTensor(input).Data;
-            var dst = storage.GetTensor(output).Data;
+            var inputTensor = storage.GetTensor(input);
+            var outputTensor = storage.GetTensor(output);
 
-            for (int j = 0; j < src.Length; j++)
+            Forward(inputTensor, outputTensor);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
+        public static void Forward(Tensor<double> input, Tensor<double> output)
+        {
+            var inputData = input.Data;
+            var outputData = output.Data;
+
+            for (int j = 0; j < inputData.Length; j++)
             {
-                dst[j] = ReluMax(src[j]);
+                outputData[j] = ReluMax(inputData[j]);
             }
         }
 
@@ -33,13 +47,28 @@ namespace SharpLearning.Neural.Providers.DotNetOp
         /// <param name="strorage"></param>
         public static void Backward(Variable input, Variable output, NeuralNetStorage strorage)
         {
-            var dst = strorage.GetTensor(output).Data;
-            var dstDiff = strorage.GetGradient(output).Data;
-            var srcDiff = strorage.GetGradient(input).Data;
+            var outputTensor = strorage.GetTensor(output);
+            var outputGradient = strorage.GetGradient(output);
+            var inputGradient = strorage.GetGradient(input);
 
-            for (int j = 0; j < dst.Length; j++)
+            Backward(outputTensor, outputGradient, inputGradient);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="output"></param>
+        /// <param name="outputGradient"></param>
+        /// <param name="inputGradient"></param>
+        public static void Backward(Tensor<double> output, Tensor<double> outputGradient, Tensor<double> inputGradient)
+        {
+            var outputData = output.Data;
+            var outputGradientData = outputGradient.Data;
+            var inputGradientData = inputGradient.Data;
+
+            for (int j = 0; j < outputData.Length; j++)
             {
-                srcDiff[j] = Derivative(dst[j], dstDiff[j]);
+                inputGradientData[j] = Derivative(outputData[j], outputGradientData[j]);
             }
         }
 
@@ -48,10 +77,10 @@ namespace SharpLearning.Neural.Providers.DotNetOp
             return Math.Max(0, input);
         }
 
-        static double Derivative(double dst, double dstGradient)
+        static double Derivative(double output, double outputGradient)
         {
-            if (dst > 0.0)
-                return dstGradient;
+            if (output > 0.0)
+                return outputGradient;
             else
                 return 0.0f;
         }
