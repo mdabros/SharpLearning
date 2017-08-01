@@ -7,14 +7,14 @@ using SharpLearning.Neural.Providers.DotNetOp;
 namespace SharpLearning.Neural.LayersNew
 {
     /// <summary>
-    /// 
+    /// Activation layer. Adds activation functions to a neural net.
     /// </summary>
     public sealed class ActivationLayer : ILayerNew
     {
         readonly Activations.Activation m_activation;
 
         /// <summary>
-        /// 
+        /// Activation layer. Adds activation functions to a neural net.
         /// </summary>
         /// <param name="activation"></param>
         public ActivationLayer(Activations.Activation activation)
@@ -68,7 +68,7 @@ namespace SharpLearning.Neural.LayersNew
         }
 
         /// <summary>
-        /// 
+        /// Updates the input and output dimensions of the layer
         /// </summary>
         /// <param name="input"></param>
         public void UpdateDimensions(Variable input)
@@ -78,7 +78,7 @@ namespace SharpLearning.Neural.LayersNew
         }
 
         /// <summary>
-        /// 
+        /// Copies a minimal version of the layer to be used in a model for predictions.
         /// </summary>
         /// <param name="inputVariable"></param>
         /// <param name="storage"></param>
