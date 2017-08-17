@@ -72,10 +72,6 @@
       <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
       <Name>SharpLearning.InputOutput</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
-      <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>
-      <Name>SharpLearning.Metrics</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
