@@ -6,17 +6,17 @@ using System.Linq;
 namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 {
     [TestClass]
-    public class GiniClasificationImpurityCalculatorTest
+    public class GiniClassificationImpurityCalculatorTest
     {
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_ImpurityImprovement()
+        public void GiniClassificationImpurityCalculator_ImpurityImprovement()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
             var unique = values.Distinct().ToArray();
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator();
+            var sut = new GiniClassificationImpurityCalculator();
             sut.Init(unique, values, new double[0], parentInterval);
 
             var impurity = sut.NodeImpurity();
@@ -31,7 +31,7 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_ImpurityImprovement_Weighted()
+        public void GiniClassificationImpurityCalculator_ImpurityImprovement_Weighted()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
             var unique = values.Distinct().ToArray();
@@ -39,7 +39,7 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator();
+            var sut = new GiniClassificationImpurityCalculator();
             sut.Init(unique, values, weights, parentInterval);
 
             var impurity = sut.NodeImpurity();
@@ -54,14 +54,14 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_ChildImpurities()
+        public void GiniClassificationImpurityCalculator_ChildImpurities()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
             var unique = values.Distinct().ToArray();
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator();
+            var sut = new GiniClassificationImpurityCalculator();
             sut.Init(unique, values, new double[0], parentInterval);
 
             var impurity = sut.NodeImpurity();
@@ -74,14 +74,14 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_NodeImpurity()
+        public void GiniClassificationImpurityCalculator_NodeImpurity()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
             var unique = values.Distinct().ToArray();
 
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator();
+            var sut = new GiniClassificationImpurityCalculator();
             sut.Init(unique, values, new double[0], parentInterval);
 
             sut.UpdateIndex(50);
@@ -91,14 +91,14 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
         }
 
         [TestMethod]
-        public void GiniClasificationImpurityCalculator_LeafValue_Weighted()
+        public void GiniClassificationImpurityCalculator_LeafValue_Weighted()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
             var unique = values.Distinct().ToArray();
             var weights = values.Select(t => Weight(t)).ToArray();
             var parentInterval = Interval1D.Create(0, values.Length);
 
-            var sut = new GiniClasificationImpurityCalculator();
+            var sut = new GiniClassificationImpurityCalculator();
             sut.Init(unique, values, weights, parentInterval);
 
             var impurity = sut.NodeImpurity();

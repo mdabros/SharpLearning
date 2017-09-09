@@ -21,7 +21,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         {
             new BestFirstTreeBuilder(0, 2, 1, 0.1, 42,
                 new LinearSplitSearcher(1),
-                new GiniClasificationImpurityCalculator());
+                new GiniClassificationImpurityCalculator());
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         {
             new BestFirstTreeBuilder(1, 1, 1, 0.1, 42,
                 new LinearSplitSearcher(1),
-                new GiniClasificationImpurityCalculator());
+                new GiniClassificationImpurityCalculator());
         }
 
 
@@ -40,7 +40,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         {
             new BestFirstTreeBuilder(1, 2, -1, 0.1, 42,
                 new LinearSplitSearcher(1),
-                new GiniClasificationImpurityCalculator());
+                new GiniClassificationImpurityCalculator());
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         {
             new BestFirstTreeBuilder(1, 2, 1, 0, 42,
                 new LinearSplitSearcher(1),
-                new GiniClasificationImpurityCalculator());
+                new GiniClassificationImpurityCalculator());
         }
 
         [TestMethod]
@@ -61,7 +61,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
             var rows = targets.Length;
 
             var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 2000, observations.ColumnCount, 0.000001, 42,
-                new OnlyUniqueThresholdsSplitSearcher(1), new GiniClasificationImpurityCalculator()));
+                new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));
 
             var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));
 
@@ -83,7 +83,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
             var rows = targets.Length;
 
             var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 4, observations.ColumnCount, 0.000001, 42,
-                new OnlyUniqueThresholdsSplitSearcher(1), new GiniClasificationImpurityCalculator()));
+                new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));
 
             var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));
 

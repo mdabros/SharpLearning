@@ -30,7 +30,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
 
             Array.Sort(feature, targets);
 
-            var impurityCalculator = new GiniClasificationImpurityCalculator();
+            var impurityCalculator = new GiniClassificationImpurityCalculator();
             impurityCalculator.Init(targets.Distinct().ToArray(), targets, new double[0], interval);
             var impurity = impurityCalculator.NodeImpurity();
 

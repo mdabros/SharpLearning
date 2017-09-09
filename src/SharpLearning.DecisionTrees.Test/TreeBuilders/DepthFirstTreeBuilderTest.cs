@@ -15,7 +15,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         {
             new DepthFirstTreeBuilder(0, 1, 0.1, 42,
                 new LinearSplitSearcher(1),
-                new GiniClasificationImpurityCalculator());
+                new GiniClassificationImpurityCalculator());
         }
 
         [TestMethod]
@@ -24,7 +24,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         {
             new DepthFirstTreeBuilder(1, -1, 0.1, 42,
                 new LinearSplitSearcher(1),
-                new GiniClasificationImpurityCalculator());
+                new GiniClassificationImpurityCalculator());
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         {
             new DepthFirstTreeBuilder(1, 1, 0, 42,
                 new LinearSplitSearcher(1),
-                new GiniClasificationImpurityCalculator());
+                new GiniClassificationImpurityCalculator());
         }
     }
 }

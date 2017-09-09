@@ -188,7 +188,7 @@ namespace SharpLearning.RandomForest.Learners
                     m_minimumInformationGain,
                     m_random.Next(),
                     new RandomSplitSearcher(m_minimumSplitSize, m_random.Next()),
-                    new GiniClasificationImpurityCalculator()));
+                    new GiniClassificationImpurityCalculator()));
 
             var treeIndicesLength = (int)Math.Round(m_subSampleRatio * (double)indices.Length);
             var treeIndices = new int[treeIndicesLength];
