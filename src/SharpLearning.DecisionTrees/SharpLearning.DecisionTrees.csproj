@@ -52,8 +52,8 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ImpurityCalculators\ChildImpurities.cs" />
-    <Compile Include="ImpurityCalculators\ClasificationImpurityCalculator.cs" />
-    <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculator.cs" />
+    <Compile Include="ImpurityCalculators\ClassificationImpurityCalculator.cs" />
+    <Compile Include="ImpurityCalculators\GiniClassificationImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\IImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\RegressionImpurityCalculator.cs" />
     <Compile Include="ImpurityCalculators\TargetCounts.cs" />

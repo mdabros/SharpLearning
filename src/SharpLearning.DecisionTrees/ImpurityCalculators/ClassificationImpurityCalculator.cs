@@ -8,7 +8,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// <summary>
     /// Base class for classifiction impurity calculators
     /// </summary>
-    public abstract class ClasificationImpurityCalculator
+    public abstract class ClassificationImpurityCalculator
     {
         /// <summary>
         /// 
@@ -77,7 +77,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <summary>
         /// 
         /// </summary>
-        public ClasificationImpurityCalculator()
+        public ClassificationImpurityCalculator()
         {
         }
 

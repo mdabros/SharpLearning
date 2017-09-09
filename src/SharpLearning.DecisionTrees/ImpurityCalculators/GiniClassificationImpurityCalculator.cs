@@ -6,7 +6,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// <summary>
     /// Classifiction impurity calculator using the gini impurity.
     /// </summary>
-    public sealed class GiniClasificationImpurityCalculator : ClasificationImpurityCalculator, IImpurityCalculator
+    public sealed class GiniClassificationImpurityCalculator : ClassificationImpurityCalculator, IImpurityCalculator
     {
         /// <summary>
         /// Gets the unique target names
@@ -19,7 +19,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <summary>
         /// 
         /// </summary>
-        public GiniClasificationImpurityCalculator()
+        public GiniClassificationImpurityCalculator()
         {
         }
 

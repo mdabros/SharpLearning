@@ -58,7 +58,7 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="ImpurityCalculators\ChildImpuritiesTest.cs" />
-    <Compile Include="ImpurityCalculators\GiniClasificationImpurityCalculatorTest.cs" />
+    <Compile Include="ImpurityCalculators\GiniClassificationImpurityCalculatorTest.cs" />
     <Compile Include="ImpurityCalculators\RegressionImpurityCalculatorTest.cs" />
     <Compile Include="Learners\DecisionTreeLearnerTest.cs" />
     <Compile Include="Learners\ClassificationDecisionTreeLearnerTest.cs" />
