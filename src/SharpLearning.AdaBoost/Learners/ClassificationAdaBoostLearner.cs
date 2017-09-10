@@ -84,7 +84,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        /// <param name="indices"></param>
+        /// <param name="indices">The indices, from observations and targets, that the learner should use consider during training.</param>
         /// <returns></returns>
         public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
@@ -96,7 +96,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        /// <param name="weights"></param>
+        /// <param name="weights">Sample weights, enabling individual weighting of each sample during training.</param>
         /// <returns></returns>
         public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, double[] weights)
         {
@@ -109,8 +109,8 @@ namespace SharpLearning.AdaBoost.Learners
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <param name="weigths"></param>
+        /// <param name="indices">The indices, from observations and targets, that the learner should use consider during training.</param>
+        /// <param name="weigths">Sample weights, enabling individual weighting of each sample during training.</param>
         /// <returns></returns>
         public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weigths)
         {
