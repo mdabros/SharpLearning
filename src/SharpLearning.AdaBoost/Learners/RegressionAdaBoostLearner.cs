@@ -97,6 +97,33 @@ namespace SharpLearning.AdaBoost.Learners
         /// <returns></returns>
         public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            return Learn(observations, targets, indices, null);
+        }
+
+        /// <summary>
+        /// Learns an adaboost regression model
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets, double[] weights)
+        {
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices, weights);
+        }
+
+
+        /// <summary>
+        /// Learns an adaboost regression model
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <param name="weigths"></param>
+        /// <returns></returns>
+        public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weigths)
+        {
             if (m_maximumTreeDepth == 0)
             {
                 m_maximumTreeDepth = 3;
@@ -118,11 +145,23 @@ namespace SharpLearning.AdaBoost.Learners
             indices.IndexedCopy(targets, Interval1D.Create(0, indices.Length),
                 m_indexedTargets);
 
-            var initialWeight = 1.0 / indices.Length;
-            for (int i = 0; i < indices.Length; i++)
+            if (weigths != null)
             {
-                var index = indices[i];
-                m_sampleWeights[index] = initialWeight;
+                var weightSum = weigths.Sum(indices);
+                for (int i = 0; i < indices.Length; i++)
+                {
+                    var index = indices[i];
+                    m_sampleWeights[index] = weigths[index] / weightSum;
+                }
+            }
+            else
+            {
+                var initialWeight = 1.0 / indices.Length;
+                for (int i = 0; i < indices.Length; i++)
+                {
+                    var index = indices[i];
+                    m_sampleWeights[index] = initialWeight;
+                }
             }
 
             for (int i = 0; i < m_iterations; i++)

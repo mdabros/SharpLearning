@@ -8,6 +8,7 @@ using SharpLearning.Containers.Extensions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 
 namespace SharpLearning.AdaBoost.Test.Learners
 {
@@ -110,5 +111,40 @@ namespace SharpLearning.AdaBoost.Test.Learners
 
             Assert.AreEqual(0.22181054803405248, actual);
         }
+
+        [TestMethod]
+        public void RegressionAdaBoostLearner_Learn_Glass_Weighted()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var classSizes = targets.GroupBy(v => v).ToDictionary(v => v.Key, v => v.Count());
+            var weights = targets.Select(v => (double)targets.Length / (double)classSizes[v]).ToArray(); // balanced
+            //var weights = targets.Select(v => v == 6.0 ? 10.0 : 1.0).ToArray(); // specific
+            //var weights = targets.Select(v => v > 4 ? 10.0 : 1.0).ToArray(); // prioritize large targets
+
+            var sut = new RegressionAdaBoostLearner(10);
+
+            var model = sut.Learn(observations, targets, weights);
+            var predictions = model.Predict(observations);
+
+            var targetPredictions = targets.Zip(predictions, (t, p) => new { Target = t, Prediction = p })
+                .GroupBy(v => v.Target)
+                .ToArray();
+
+            var evaluator = new MeanSquaredErrorRegressionMetric();
+
+            foreach (var pair in targetPredictions)
+            {
+                Trace.WriteLine($"Target: {pair.Key}, Samples: {pair.Count()},  Error: {evaluator.Error(pair.Select(v => v.Target).ToArray(), pair.Select(v => v.Prediction).ToArray())}");
+            }
+
+            Trace.WriteLine($"Overall Error: {evaluator.Error(targets, predictions)}");
+
+            var actual = evaluator.Error(targets, predictions);
+            Assert.AreEqual(0.50901425532981959, actual, 0.0001);
+        }
+
     }
 }

@@ -8,6 +8,7 @@ using SharpLearning.Containers.Extensions;
 using System;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 
 namespace SharpLearning.AdaBoost.Test.Learners
 {
@@ -95,5 +96,30 @@ namespace SharpLearning.AdaBoost.Test.Learners
 
             Assert.AreEqual(0.0, actual);
         }
+
+        [TestMethod]
+        public void ClassificationAdaBoostLearner_Learn_Glass_Weighted()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var classSizes = targets.GroupBy(v => v).ToDictionary(v => v.Key, v => v.Count());
+            var weights = targets.Select(v => (double)targets.Length / (double)classSizes[v]).ToArray(); // balanced
+            //var weights = targets.Select(v => v == 1.0 ? 30.0 : 1.0).ToArray(); // specific
+            //var weights = targets.Select(v => v > 4 ? 10 : 1.0).ToArray(); // prioritize large targets
+
+            var sut = new ClassificationAdaBoostLearner(10, 1, 2);
+
+            var model = sut.Learn(observations, targets, weights);
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var actual = evaluator.Error(targets, predictions);
+
+            Trace.WriteLine(evaluator.ErrorString(targets, predictions));
+
+            Assert.AreEqual(0.31775700934579437, actual, 0.0001);
+        }
+
     }
 }
