@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace SharpLearning.AdaBoost.Test.Learners
 {
@@ -119,10 +120,9 @@ namespace SharpLearning.AdaBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
+            // using sample weights to balance the learning based on the frequency of each class in the targets. 
             var classSizes = targets.GroupBy(v => v).ToDictionary(v => v.Key, v => v.Count());
             var weights = targets.Select(v => (double)targets.Length / (double)classSizes[v]).ToArray(); // balanced
-            //var weights = targets.Select(v => v == 6.0 ? 10.0 : 1.0).ToArray(); // specific
-            //var weights = targets.Select(v => v > 4 ? 10.0 : 1.0).ToArray(); // prioritize large targets
 
             var sut = new RegressionAdaBoostLearner(10);
 
@@ -135,16 +135,23 @@ namespace SharpLearning.AdaBoost.Test.Learners
 
             var evaluator = new MeanSquaredErrorRegressionMetric();
 
+            // Target value to expected error.
+            var expected = new Dictionary<double, double>
+            {
+                { 1.0, 0.784748226475244 },
+                { 2.0, 0.297493796640741 },
+                { 3.0, 0.841924472070148 },
+                { 5.0, 0.461313761452482 },
+                { 6.0, 0.0830894026464948 },
+                { 7.0, 0.356191265335339 },
+            };
+
+            // Assert the error of each individual target value.
             foreach (var pair in targetPredictions)
             {
-                Trace.WriteLine($"Target: {pair.Key}, Samples: {pair.Count()},  Error: {evaluator.Error(pair.Select(v => v.Target).ToArray(), pair.Select(v => v.Prediction).ToArray())}");
+                var actual = evaluator.Error(pair.Select(v => v.Target).ToArray(), pair.Select(v => v.Prediction).ToArray());
+                Assert.AreEqual(expected[pair.Key], actual, 0.000001);
             }
-
-            Trace.WriteLine($"Overall Error: {evaluator.Error(targets, predictions)}");
-
-            var actual = evaluator.Error(targets, predictions);
-            Assert.AreEqual(0.50901425532981959, actual, 0.0001);
         }
-
     }
 }

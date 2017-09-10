@@ -103,10 +103,10 @@ namespace SharpLearning.AdaBoost.Test.Learners
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            // using sample weights to balance the learning based on the frequency of each class in the targets. 
             var classSizes = targets.GroupBy(v => v).ToDictionary(v => v.Key, v => v.Count());
-            var weights = targets.Select(v => (double)targets.Length / (double)classSizes[v]).ToArray(); // balanced
-            //var weights = targets.Select(v => v == 1.0 ? 30.0 : 1.0).ToArray(); // specific
-            //var weights = targets.Select(v => v > 4 ? 10 : 1.0).ToArray(); // prioritize large targets
+            var weights = targets.Select(v => (double)targets.Length / (double)classSizes[v]).ToArray(); 
 
             var sut = new ClassificationAdaBoostLearner(10, 1, 2);
 
@@ -114,12 +114,12 @@ namespace SharpLearning.AdaBoost.Test.Learners
             var predictions = model.Predict(observations);
 
             var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(targets, predictions);
+            var actual = evaluator.ErrorString(targets, predictions);
 
-            Trace.WriteLine(evaluator.ErrorString(targets, predictions));
+            // use classification matrix string to ensure all class scores are equal.
+            var expected = ";1;2;3;5;6;7;1;2;3;5;6;7\r\n1;40.000;10.000;20.000;0.000;0.000;0.000;57.143;14.286;28.571;0.000;0.000;0.000\r\n2;18.000;49.000;6.000;2.000;1.000;0.000;23.684;64.474;7.895;2.632;1.316;0.000\r\n3;2.000;0.000;15.000;0.000;0.000;0.000;11.765;0.000;88.235;0.000;0.000;0.000\r\n5;0.000;0.000;0.000;13.000;0.000;0.000;0.000;0.000;0.000;100.000;0.000;0.000\r\n6;0.000;4.000;0.000;0.000;5.000;0.000;0.000;44.444;0.000;0.000;55.556;0.000\r\n7;0.000;3.000;0.000;1.000;1.000;24.000;0.000;10.345;0.000;3.448;3.448;82.759\r\nError: 31.776\r\n";
 
-            Assert.AreEqual(0.31775700934579437, actual, 0.0001);
+            Assert.AreEqual(expected, actual);
         }
-
     }
 }
