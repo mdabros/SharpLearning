@@ -9,12 +9,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpLearning.GradientBoost</RootNamespace>
     <AssemblyName>SharpLearning.GradientBoost</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -87,10 +88,10 @@
     </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj">
       <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
-      <Name>SharpLearning.Learners.Interfaces</Name>
+      <Name>SharpLearning.Common.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
-      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
+      <Project>{d283d41e-aa14-44c5-afb0-ebe6b34f3b7d}</Project>
       <Name>SharpLearning.InputOutput</Name>
     </ProjectReference>
   </ItemGroup>

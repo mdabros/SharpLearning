@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpLearning.RandomForest.Test</RootNamespace>
     <AssemblyName>SharpLearning.RandomForest.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -20,6 +20,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -75,13 +76,13 @@
       <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
       <Name>SharpLearning.Containers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
-      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
-      <Name>SharpLearning.InputOutput</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj">
       <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
-      <Name>SharpLearning.Learners.Interfaces</Name>
+      <Name>SharpLearning.Common.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
+      <Project>{d283d41e-aa14-44c5-afb0-ebe6b34f3b7d}</Project>
+      <Name>SharpLearning.InputOutput</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj">
       <Project>{43b1ccc0-dfbf-427c-9147-e47a4263326b}</Project>

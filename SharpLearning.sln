@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput", "src\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput.Test", "src\SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Containers", "src\SharpLearning.Containers\SharpLearning.Containers.csproj", "{C42002B6-1844-4618-8778-222160C42992}"
@@ -53,16 +51,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural.Test", "src\SharpLearning.Neural.Test\SharpLearning.Neural.Test.csproj", "{2A2218BD-357B-40C4-B72A-BD70B0136B5B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput", "src\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01C8F4FE-3D1E-4C21-8EC3-B8EF7FDFE4D3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9B29211D-9211-4C36-872D-5747D6C51878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B29211D-9211-4C36-872D-5747D6C51878}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B29211D-9211-4C36-872D-5747D6C51878}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -159,8 +155,15 @@ Global
 		{2A2218BD-357B-40C4-B72A-BD70B0136B5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A2218BD-357B-40C4-B72A-BD70B0136B5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A2218BD-357B-40C4-B72A-BD70B0136B5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B854EDA-1866-4A42-90A1-E2A327B8CD7A}
 	EndGlobalSection
 EndGlobal

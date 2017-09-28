@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpLearning.Neural</RootNamespace>
     <AssemblyName>SharpLearning.Neural</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -113,7 +113,7 @@
       <Name>SharpLearning.Containers</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
-      <Project>{01c8f4fe-3d1e-4c21-8ec3-b8ef7fdfe4d3}</Project>
+      <Project>{d283d41e-aa14-44c5-afb0-ebe6b34f3b7d}</Project>
       <Name>SharpLearning.InputOutput</Name>
     </ProjectReference>
   </ItemGroup>
