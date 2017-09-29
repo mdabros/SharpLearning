@@ -1,86 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpLearning.RandomForest</RootNamespace>
-    <AssemblyName>SharpLearning.RandomForest</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\Build\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\Build\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\SharpLearning.RandomForest.XML</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs" Link="Properties\AssemblyVersion.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
-    </Compile>
-    <Compile Include="Learners\RegressionExtremelyRandomizedTreesLearner.cs" />
-    <Compile Include="Learners\ClassificationExtremelyRandomizedTreesLearner.cs" />
-    <Compile Include="Learners\RegressionRandomForestLearner.cs" />
-    <Compile Include="Learners\ClassificationRandomForestLearner.cs" />
-    <Compile Include="Models\RegressionForestModel.cs" />
-    <Compile Include="Models\ClassificationForestModel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
+    <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj" />
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj">
-      <Project>{c42002b6-1844-4618-8778-222160c42992}</Project>
-      <Name>SharpLearning.Containers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj">
-      <Project>{8efe2f3f-779d-46d3-bea4-6f04a52f52e1}</Project>
-      <Name>SharpLearning.DecisionTrees</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj">
-      <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
-      <Name>SharpLearning.Common.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj">
-      <Project>{d283d41e-aa14-44c5-afb0-ebe6b34f3b7d}</Project>
-      <Name>SharpLearning.InputOutput</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

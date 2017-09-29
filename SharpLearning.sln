@@ -3,53 +3,53 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.InputOutput.Test", "src\SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput.Test", "src\SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Containers", "src\SharpLearning.Containers\SharpLearning.Containers.csproj", "{C42002B6-1844-4618-8778-222160C42992}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Containers", "src\SharpLearning.Containers\SharpLearning.Containers.csproj", "{C42002B6-1844-4618-8778-222160C42992}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Containers.Test", "src\SharpLearning.Containers.Test\SharpLearning.Containers.Test.csproj", "{27819CEA-B582-419B-8169-D1AD3DE3B1E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Containers.Test", "src\SharpLearning.Containers.Test\SharpLearning.Containers.Test.csproj", "{27819CEA-B582-419B-8169-D1AD3DE3B1E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Metrics", "src\SharpLearning.Metrics\SharpLearning.Metrics.csproj", "{43B1CCC0-DFBF-427C-9147-E47A4263326B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Metrics", "src\SharpLearning.Metrics\SharpLearning.Metrics.csproj", "{43B1CCC0-DFBF-427C-9147-E47A4263326B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Metrics.Test", "src\SharpLearning.Metrics.Test\SharpLearning.Metrics.Test.csproj", "{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Metrics.Test", "src\SharpLearning.Metrics.Test\SharpLearning.Metrics.Test.csproj", "{62D4C9DD-7CD8-4A05-9BF8-149F787370AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.DecisionTrees", "src\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj", "{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.DecisionTrees", "src\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj", "{8EFE2F3F-779D-46D3-BEA4-6F04A52F52E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.DecisionTrees.Test", "src\SharpLearning.DecisionTrees.Test\SharpLearning.DecisionTrees.Test.csproj", "{0AC6C985-1733-4083-8188-999FF7986861}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.DecisionTrees.Test", "src\SharpLearning.DecisionTrees.Test\SharpLearning.DecisionTrees.Test.csproj", "{0AC6C985-1733-4083-8188-999FF7986861}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.CrossValidation", "src\SharpLearning.CrossValidation\SharpLearning.CrossValidation.csproj", "{86038CEF-F3B5-45C5-BBBC-8F700A1CFB86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.CrossValidation", "src\SharpLearning.CrossValidation\SharpLearning.CrossValidation.csproj", "{86038CEF-F3B5-45C5-BBBC-8F700A1CFB86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.CrossValidation.Test", "src\SharpLearning.CrossValidation.Test\SharpLearning.CrossValidation.Test.csproj", "{3EE06D66-F60E-472C-B999-4D46BAC18D0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.CrossValidation.Test", "src\SharpLearning.CrossValidation.Test\SharpLearning.CrossValidation.Test.csproj", "{3EE06D66-F60E-472C-B999-4D46BAC18D0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.RandomForest", "src\SharpLearning.RandomForest\SharpLearning.RandomForest.csproj", "{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.RandomForest", "src\SharpLearning.RandomForest\SharpLearning.RandomForest.csproj", "{F7A2F7BE-4418-40C8-A058-9FC8C6AECEE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.RandomForest.Test", "src\SharpLearning.RandomForest.Test\SharpLearning.RandomForest.Test.csproj", "{D7C8B7B5-2BBC-4C10-BB26-696AFC1407A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.RandomForest.Test", "src\SharpLearning.RandomForest.Test\SharpLearning.RandomForest.Test.csproj", "{D7C8B7B5-2BBC-4C10-BB26-696AFC1407A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.AdaBoost", "src\SharpLearning.AdaBoost\SharpLearning.AdaBoost.csproj", "{1D2CB02C-820C-4D92-927C-46A948859B02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.AdaBoost", "src\SharpLearning.AdaBoost\SharpLearning.AdaBoost.csproj", "{1D2CB02C-820C-4D92-927C-46A948859B02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.AdaBoost.Test", "src\SharpLearning.AdaBoost.Test\SharpLearning.AdaBoost.Test.csproj", "{59594AF9-135B-4B55-A2A8-5B4CF6F08579}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.AdaBoost.Test", "src\SharpLearning.AdaBoost.Test\SharpLearning.AdaBoost.Test.csproj", "{59594AF9-135B-4B55-A2A8-5B4CF6F08579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.GradientBoost", "src\SharpLearning.GradientBoost\SharpLearning.GradientBoost.csproj", "{1ECD7C6A-5902-480A-9D39-7780DEF8B543}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.GradientBoost", "src\SharpLearning.GradientBoost\SharpLearning.GradientBoost.csproj", "{1ECD7C6A-5902-480A-9D39-7780DEF8B543}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.GradientBoost.Test", "src\SharpLearning.GradientBoost.Test\SharpLearning.GradientBoost.Test.csproj", "{8C71C15C-5E86-49A0-9A40-25409E9B9A2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.GradientBoost.Test", "src\SharpLearning.GradientBoost.Test\SharpLearning.GradientBoost.Test.csproj", "{8C71C15C-5E86-49A0-9A40-25409E9B9A2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Common.Interfaces", "src\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj", "{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Common.Interfaces", "src\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj", "{F3BE678F-47BF-4B56-9D4C-31A2E47AFAB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Optimization", "src\SharpLearning.Optimization\SharpLearning.Optimization.csproj", "{B8FCEC40-0D0D-457B-93EB-572EE1F621BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Optimization", "src\SharpLearning.Optimization\SharpLearning.Optimization.csproj", "{B8FCEC40-0D0D-457B-93EB-572EE1F621BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Optimization.Test", "src\SharpLearning.Optimization.Test\SharpLearning.Optimization.Test.csproj", "{2CBF54DE-577B-461E-9069-329EC82D3FC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Optimization.Test", "src\SharpLearning.Optimization.Test\SharpLearning.Optimization.Test.csproj", "{2CBF54DE-577B-461E-9069-329EC82D3FC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.FeatureTransformations", "src\SharpLearning.FeatureTransformations\SharpLearning.FeatureTransformations.csproj", "{72D0249C-2896-4263-8F6F-D7B413404408}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.FeatureTransformations", "src\SharpLearning.FeatureTransformations\SharpLearning.FeatureTransformations.csproj", "{72D0249C-2896-4263-8F6F-D7B413404408}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.FeatureTransformations.Test", "src\SharpLearning.FeatureTransformations.Test\SharpLearning.FeatureTransformations.Test.csproj", "{0BA3CC0B-CC4A-4B17-9C89-F60582E0087B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.FeatureTransformations.Test", "src\SharpLearning.FeatureTransformations.Test\SharpLearning.FeatureTransformations.Test.csproj", "{0BA3CC0B-CC4A-4B17-9C89-F60582E0087B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Ensemble", "src\SharpLearning.Ensemble\SharpLearning.Ensemble.csproj", "{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Ensemble", "src\SharpLearning.Ensemble\SharpLearning.Ensemble.csproj", "{1DEB50A8-6A51-4FC6-8BF4-480D97382A55}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Ensemble.Test", "src\SharpLearning.Ensemble.Test\SharpLearning.Ensemble.Test.csproj", "{2837DF0A-49F0-4EE8-BE39-96489E639ACC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Ensemble.Test", "src\SharpLearning.Ensemble.Test\SharpLearning.Ensemble.Test.csproj", "{2837DF0A-49F0-4EE8-BE39-96489E639ACC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural", "src\SharpLearning.Neural\SharpLearning.Neural.csproj", "{9E2B10B3-6FC9-4828-B5F8-BA3020B9D869}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Neural", "src\SharpLearning.Neural\SharpLearning.Neural.csproj", "{9E2B10B3-6FC9-4828-B5F8-BA3020B9D869}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural.Test", "src\SharpLearning.Neural.Test\SharpLearning.Neural.Test.csproj", "{2A2218BD-357B-40C4-B72A-BD70B0136B5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Neural.Test", "src\SharpLearning.Neural.Test\SharpLearning.Neural.Test.csproj", "{2A2218BD-357B-40C4-B72A-BD70B0136B5B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput", "src\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}"
 EndProject

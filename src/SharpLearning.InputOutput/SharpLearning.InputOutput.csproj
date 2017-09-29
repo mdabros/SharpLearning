@@ -1,9 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Provides CsvParser and serialization for SharpLearning.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs" Link="Properties\AssemblyVersion.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
