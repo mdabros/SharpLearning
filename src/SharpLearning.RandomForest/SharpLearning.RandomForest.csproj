@@ -1,16 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Authors>Mads Dabros</Authors>
+    <PackageId>SharpLearning.RandomForest</PackageId>
+    <Version>0.26.0.0</Version>
+    <AssemblyVersion>0.26.0.0</AssemblyVersion>
+    <FileVersion>0.26.0.0</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Description>Provides learning algorithms and models for RandomForest and ExtraTrees regression and classification.</Description>
+    <Copyright>Copyright © Mads Dabros 2014</Copyright>
+    <PackageLicenseUrl>https://github.com/mdabros/SharpLearning/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/mdabros/SharpLearning</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mdabros/SharpLearning</RepositoryUrl>
+    <PackageTags>randomforest extratrees machinelearning classification regression machine learning</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs" Link="Properties\AssemblyVersion.cs" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\Build\Release\netstandard2.0\SharpLearning.RandomForest.xml</DocumentationFile>
+    <OutputPath>..\..\Build\Release\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Build\Debug\</OutputPath>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />

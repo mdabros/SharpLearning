@@ -1,16 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Authors>Mads Dabros</Authors>
+    <PackageId>SharpLearning.Optimization</PackageId>
+    <Version>0.26.0.0</Version>
+    <AssemblyVersion>0.26.0.0</AssemblyVersion>
+    <FileVersion>0.26.0.0</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Description>Provides optimization algorithms.</Description>
+    <Copyright>Copyright © Mads Dabros 2014</Copyright>
+    <PackageLicenseUrl>https://github.com/mdabros/SharpLearning/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/mdabros/SharpLearning</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mdabros/SharpLearning</RepositoryUrl>
+    <PackageTags>optimization machinelearning grid search random particle swarm neldermead nelder mead smo machine learning</PackageTags>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="..\SharpLearning.Containers\Properties\AssemblyVersion.cs" Link="Properties\AssemblyVersion.cs" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\Build\Release\netstandard2.0\SharpLearning.Optimization.xml</DocumentationFile>
+    <OutputPath>..\..\Build\Release\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Build\Debug\</OutputPath>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
