@@ -34,7 +34,7 @@ namespace SharpLearning.Containers
         {
             VerifyObservations(observationsRowCount, observationsColumnCount);
             VerifyTargets(targetLength);
-            VerifyObservationsRowCountAndTargetsLengthMatch(observationsRowCount, targetLength);
+            VerifyObservationsAndTargetsDimensions(observationsRowCount, targetLength);
         }
 
         /// <summary>
@@ -71,11 +71,11 @@ namespace SharpLearning.Containers
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        public static void VerifyObservationsRowCountAndTargetsLengthMatch(int observationRowCount, int targetLength)
+        public static void VerifyObservationsAndTargetsDimensions(int observationRowCount, int targetLength)
         {
             if(observationRowCount != targetLength)
             {
-                throw new ArgumentException($"Observation row count: {observationRowCount} and target length: {targetLength} does not match");
+                throw new ArgumentException($"Observations and targets mismatch. Observations row count: {observationRowCount}, targets row count: {targetLength}");
             }           
         }
 

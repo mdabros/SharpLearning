@@ -78,11 +78,11 @@ namespace SharpLearning.Containers.Test
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Checks_VerifyObservationsAndTargetsDimensionMatch()
+        public void Checks_VerifyRowCountAndTargetsDimensions()
         {
             var observationRowCount = 112;
             var targetLength = 100;
-            Checks.VerifyObservationsRowCountAndTargetsLengthMatch(observationRowCount, targetLength);
+            Checks.VerifyObservationsAndTargetsDimensions(observationRowCount, targetLength);
         }
 
         [TestMethod]

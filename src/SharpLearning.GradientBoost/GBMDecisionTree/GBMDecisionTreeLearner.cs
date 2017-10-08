@@ -310,8 +310,8 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             var orderedIndices = orderedElements[featureIndex];
             var j = NextAllowedIndex(0, orderedIndices, parentInSample);
 
-            // no allowed sample left
-            if (j >= orderedIndices.Length)
+            // No allowed sample or valid split left.
+            if (j >= orderedIndices.Length || orderedIndices.Length == 1)
             {
                 return;
             }
