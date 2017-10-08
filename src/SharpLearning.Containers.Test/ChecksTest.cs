@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Test
 {
@@ -9,74 +8,46 @@ namespace SharpLearning.Containers.Test
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Checks_VerifyAllLearnerInputs_Observations_Rows_Not_Valid()
+        public void Checks_VerifyObservationsAndTargets_Observations_Rows_Not_Valid()
         {
             var rowCount = 0;
             var columnCount = 10;
             var targetLength = 10;
-            var indices = new int[] { 1, 3, 5, 6 };
 
-            Checks.VerifyAllLearnerInputs(rowCount, columnCount, targetLength, indices);
+            Checks.VerifyObservationsAndTargets(rowCount, columnCount, targetLength);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Checks_VerifyAllLearnerInputs_Observations_Cols_Not_Valid()
+        public void Checks_VerifyObservationsAndTargets_Observations_Cols_Not_Valid()
         {
             var rowCount = 10;
             var columnCount = 0;
             var targetLength = 10;
-            var indices = new int[] { 1, 3, 5, 6 };
 
-            Checks.VerifyAllLearnerInputs(rowCount, columnCount, targetLength, indices);
+            Checks.VerifyObservationsAndTargets(rowCount, columnCount, targetLength);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Checks_VerifyAllLearnerInputs_Target_Length_Not_Valid()
+        public void Checks_VerifyObservationsAndTargets_Target_Length_Not_Valid()
         {
             var rowCount = 10;
             var columnCount = 5;
             var targetLength = 0;
-            var indices = new int[] { 1, 3, 5, 6 };
 
-            Checks.VerifyAllLearnerInputs(rowCount, columnCount, targetLength, indices);
+            Checks.VerifyObservationsAndTargets(rowCount, columnCount, targetLength);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void Checks_VerifyAllLearnerInputs_ObservationRows_And_Target_Length_Not_Valid()
+        public void Checks_VerifyObservationsAndTargets_ObservationRows_And_Target_Length_Not_Valid()
         {
             var rowCount = 10;
             var columnCount = 5;
             var targetLength = 100;
-            var indices = new int[] { 1, 3, 5, 6 };
 
-            Checks.VerifyAllLearnerInputs(rowCount, columnCount, targetLength, indices);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Checks_VerifyAllLearnerInputs_Indices_Contains_Negative_Values()
-        {
-            var rowCount = 10;
-            var columnCount = 5;
-            var targetLength = 10;
-            var indices = new int[] { 1, 3, 5, -8, 6, -10 };
-
-            Checks.VerifyAllLearnerInputs(rowCount, columnCount, targetLength, indices);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void Checks_VerifyAllLearnerInputs_Indices_Max_Exceeds_RowCount_And_Targets()
-        {
-            var rowCount = 10;
-            var columnCount = 5;
-            var targetLength = 10;
-            var indices = new int[] { 1, 3, 5, 6, 100 };
-
-            Checks.VerifyAllLearnerInputs(rowCount, columnCount, targetLength, indices);
+            Checks.VerifyObservationsAndTargets(rowCount, columnCount, targetLength);
         }
 
         [TestMethod]

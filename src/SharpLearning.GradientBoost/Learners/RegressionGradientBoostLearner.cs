@@ -1,12 +1,13 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.GradientBoost.GBMDecisionTree;
 using SharpLearning.GradientBoost.Loss;
 using SharpLearning.GradientBoost.Models;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.GradientBoost.Learners
 {
@@ -103,6 +104,9 @@ namespace SharpLearning.GradientBoost.Learners
         /// <returns></returns>
         public RegressionGradientBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
             var rows = observations.RowCount;
             var orderedElements = CreateOrderedElements(observations, rows);
 
@@ -170,6 +174,9 @@ namespace SharpLearning.GradientBoost.Learners
             {
                 throw new ArgumentException("Number of iterations " + m_iterations + " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
             }
+
+            Checks.VerifyObservationsAndTargets(trainingObservations, trainingTargets);
+            Checks.VerifyObservationsAndTargets(validationObservations, validationTargets);
 
             var rows = trainingObservations.RowCount;
             var orderedElements = CreateOrderedElements(trainingObservations, rows);

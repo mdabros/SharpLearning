@@ -1,11 +1,12 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.CrossValidators;
 using SharpLearning.Ensemble.Models;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Learners
 {
@@ -94,6 +95,9 @@ namespace SharpLearning.Ensemble.Learners
         /// <returns></returns>
         public RegressionStackingEnsembleModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
             var metaObservations = LearnMetaFeatures(observations, targets, indices);
 
             var metaModelTargets = targets.GetIndices(indices);

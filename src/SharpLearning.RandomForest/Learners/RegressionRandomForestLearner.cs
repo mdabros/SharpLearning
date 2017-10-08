@@ -1,13 +1,13 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Common.Interfaces;
-using SharpLearning.RandomForest.Models;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.DecisionTrees.Models;
+using SharpLearning.RandomForest.Models;
 
 namespace SharpLearning.RandomForest.Learners
 {
@@ -81,6 +81,9 @@ namespace SharpLearning.RandomForest.Learners
         /// <returns></returns>
         public RegressionForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
             if (m_featuresPrSplit == 0)
             {
                 var count = (int)(observations.ColumnCount / 3.0);

@@ -1,13 +1,14 @@
-﻿using MathNet.Numerics;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Neural.Loss;
 using SharpLearning.Neural.Optimizers;
 using SharpLearning.Neural.TargetEncoders;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.Neural
 {
@@ -138,6 +139,15 @@ namespace SharpLearning.Neural
         public NeuralNet Learn(F64Matrix observations, double[] targets, int[] indices,
             F64Matrix validationObservations, double[] validationTargets)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
+            // Only check validation data if in use.
+            if (validationObservations != null && validationTargets != null)
+            {
+                Checks.VerifyObservationsAndTargets(validationObservations, validationTargets);
+            }
+
             // targetEncoder 
             var oneOfNTargets = m_targetEncoder.Encode(targets);
 

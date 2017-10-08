@@ -11,41 +11,30 @@ namespace SharpLearning.Containers
     public static class Checks
     {
         /// <summary>
-        /// Verify all learner inputs by calling all verify methods from this class.
+        /// Verify that observations and targets are valid.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        public static void VerifyAllLearnerInputs(F64MatrixView observations, double[] targets, int[] indices)
+        public static void VerifyObservationsAndTargets(F64MatrixView observations, double[] targets)
         {
-            VerifyAllLearnerInputs(observations.RowCount, observations.ColumnCount, targets.Length, indices);
+            VerifyObservationsAndTargets(observations.RowCount, observations.ColumnCount, targets.Length);
         }
 
         /// <summary>
-        /// Verify all learner inputs by calling all verify methods from this class.
+        /// Verify that observations and targets are valid.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        public static void VerifyAllLearnerInputs(F64Matrix observations, double[] targets, int[] indices)
+        public static void VerifyObservationsAndTargets(F64Matrix observations, double[] targets)
         {
-            VerifyAllLearnerInputs(observations.RowCount, observations.ColumnCount, targets.Length, indices);
+            VerifyObservationsAndTargets(observations.RowCount, observations.ColumnCount, targets.Length);
         }
 
-
-        /// <summary>
-        /// Verify all learner inputs by calling all verify methods from this class.
-        /// </summary>
-        /// <param name="observationsRowCount"></param>
-        /// <param name="observationsColumnCount"></param>
-        /// <param name="targetLength"></param>
-        /// <param name="indices"></param>
-        public static void VerifyAllLearnerInputs(int observationsRowCount, int observationsColumnCount, int targetLength, int[] indices)
+        public static void VerifyObservationsAndTargets(int observationsRowCount, int observationsColumnCount, int targetLength)
         {
             VerifyObservations(observationsRowCount, observationsColumnCount);
             VerifyTargets(targetLength);
             VerifyObservationsRowCountAndTargetsLengthMatch(observationsRowCount, targetLength);
-            VerifyIndices(indices, observationsRowCount, targetLength);
         }
 
         /// <summary>
@@ -88,6 +77,28 @@ namespace SharpLearning.Containers
             {
                 throw new ArgumentException($"Observation row count: {observationRowCount} and target length: {targetLength} does not match");
             }           
+        }
+
+        /// <summary>
+        /// Verify that indices match observations and targets. 
+        /// </summary>
+        /// <param name="indices"></param>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        public static void VerifyIndices(int[] indices, F64MatrixView observations, double[] targets)
+        {
+            VerifyIndices(indices, observations.RowCount, targets.Length);
+        }
+
+        /// <summary>
+        /// Verify that indices match observations and targets. 
+        /// </summary>
+        /// <param name="indices"></param>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        public static void VerifyIndices(int[] indices, F64Matrix observations, double[] targets)
+        {
+            VerifyIndices(indices, observations.RowCount, targets.Length);
         }
 
         /// <summary>
