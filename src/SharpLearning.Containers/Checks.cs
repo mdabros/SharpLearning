@@ -9,6 +9,12 @@ namespace SharpLearning.Containers
     /// </summary>
     public static class Checks
     {
+        /// <summary>
+        /// Verify all learner inputs by calling all verify methods from this class.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
         public static void VerifyAllLearnerInputs(F64Matrix observations, double[] targets, int[] indices)
         {
             VerifyObservations(observations);
