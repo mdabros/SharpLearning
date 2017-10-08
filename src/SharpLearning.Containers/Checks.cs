@@ -80,7 +80,7 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
-        /// Verify that indices match observations and targets. 
+        /// Verify that indices are valid and match observations and targets.
         /// </summary>
         /// <param name="indices"></param>
         /// <param name="observations"></param>
@@ -91,7 +91,7 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
-        /// Verify that indices match observations and targets. 
+        /// Verify that indices are valid and match observations and targets.
         /// </summary>
         /// <param name="indices"></param>
         /// <param name="observations"></param>
@@ -102,7 +102,7 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
-        /// Verify that indices match observations and targets.
+        /// Verify that indices are valid and match observations and targets.
         /// </summary>
         /// <param name="indices"></param>
         /// <param name="observations"></param>
