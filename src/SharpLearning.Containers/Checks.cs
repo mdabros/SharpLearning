@@ -47,7 +47,7 @@ namespace SharpLearning.Containers
         }
 
         /// <summary>
-        /// Verify that observations and targets match.
+        /// Verify that observations and targets dimensions match.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -68,7 +68,7 @@ namespace SharpLearning.Containers
         public static void VerifyIndices(int[] indices, F64Matrix observations, double[] targets)
         {
             var min = indices.Min();
-            if(min > 0)
+            if(min < 0)
             {
                 throw new ArgumentException($"Indices contains elements below zero: {min}");
             }
