@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers
 {
@@ -15,26 +16,50 @@ namespace SharpLearning.Containers
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
+        public static void VerifyAllLearnerInputs(F64MatrixView observations, double[] targets, int[] indices)
+        {
+            VerifyAllLearnerInputs(observations.RowCount, observations.ColumnCount, targets.Length, indices);
+        }
+
+        /// <summary>
+        /// Verify all learner inputs by calling all verify methods from this class.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
         public static void VerifyAllLearnerInputs(F64Matrix observations, double[] targets, int[] indices)
         {
-            VerifyObservations(observations);
-            VerifyTargets(targets);
-            VerifyObservationsAndTargetsDimensionMatch(observations, targets);
-            VerifyIndices(indices, observations, targets);
+            VerifyAllLearnerInputs(observations.RowCount, observations.ColumnCount, targets.Length, indices);
+        }
+
+
+        /// <summary>
+        /// Verify all learner inputs by calling all verify methods from this class.
+        /// </summary>
+        /// <param name="observationsRowCount"></param>
+        /// <param name="observationsColumnCount"></param>
+        /// <param name="targetLength"></param>
+        /// <param name="indices"></param>
+        public static void VerifyAllLearnerInputs(int observationsRowCount, int observationsColumnCount, int targetLength, int[] indices)
+        {
+            VerifyObservations(observationsRowCount, observationsColumnCount);
+            VerifyTargets(targetLength);
+            VerifyObservationsRowCountAndTargetsLengthMatch(observationsRowCount, targetLength);
+            VerifyIndices(indices, observationsRowCount, targetLength);
         }
 
         /// <summary>
         /// Verify that the observation matrix is valid.
         /// </summary>
         /// <param name="observations"></param>
-        public static void VerifyObservations(F64Matrix observations)
+        public static void VerifyObservations(int rowCount, int columnCount)
         {
-            if(observations.RowCount == 0)
+            if(rowCount == 0)
             {
                 throw new ArgumentException("Observations does not contain any rows");
             }
 
-            if (observations.ColumnCount== 0)
+            if (columnCount == 0)
             {
                 throw new ArgumentException("Observations does not contain any columns");
             }
@@ -44,9 +69,9 @@ namespace SharpLearning.Containers
         /// Verify that the target vector is valid.
         /// </summary>
         /// <param name="targets"></param>
-        public static void VerifyTargets(double[] targets)
+        public static void VerifyTargets(int targetLength)
         {
-            if (targets.Length == 0)
+            if (targetLength == 0)
             {
                 throw new ArgumentException("Targets does not contain any rows");
             }
@@ -57,11 +82,11 @@ namespace SharpLearning.Containers
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        public static void VerifyObservationsAndTargetsDimensionMatch(F64Matrix observations, double[] targets)
+        public static void VerifyObservationsRowCountAndTargetsLengthMatch(int observationRowCount, int targetLength)
         {
-            if(observations.RowCount != targets.Length)
+            if(observationRowCount != targetLength)
             {
-                throw new ArgumentException($"Observation row count: {observations.RowCount} and target length: {targets.Length} does not math");
+                throw new ArgumentException($"Observation row count: {observationRowCount} and target length: {targetLength} does not match");
             }           
         }
 
@@ -71,18 +96,18 @@ namespace SharpLearning.Containers
         /// <param name="indices"></param>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
-        public static void VerifyIndices(int[] indices, F64Matrix observations, double[] targets)
+        public static void VerifyIndices(int[] indices, int observationRowCount, int targetLength)
         {
             var min = indices.Min();
             if(min < 0)
             {
-                throw new ArgumentException($"Indices contains elements below zero: {min}");
+                throw new ArgumentException($"Indices contains negative values: {string.Join(",", indices.Where(v => v < 0))}");
             }
 
             var max = indices.Max();
-            if (max >= observations.ColumnCount || max >= targets.Length)
+            if (max >= observationRowCount || max >= targetLength)
             {
-                throw new ArgumentException($"Indices contains elements larger than the rows of observations. Indices Max: {max}, observations row count: {observations.RowCount}, target length: {targets.Length}");
+                throw new ArgumentException($"Indices contains elements exceeding the row count of observations and targets. Indices Max: {max}, observations row count: {observationRowCount}, target length: {targetLength}");
             }
         }
     }

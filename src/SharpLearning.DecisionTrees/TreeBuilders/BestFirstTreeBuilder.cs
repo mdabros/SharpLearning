@@ -93,7 +93,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
             Array.Resize(ref m_workFeature, indices.Length);
             Array.Resize(ref m_workIndices, indices.Length);
 
-            var numberOfFeatures = observations.GetNumberOfColumns();
+            var numberOfFeatures = observations.ColumnCount;
 
             if (m_featuresPrSplit == 0)
             {

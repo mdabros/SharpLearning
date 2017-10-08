@@ -7,28 +7,8 @@ namespace SharpLearning.Containers.Views
     public unsafe struct F64MatrixView
     {
         const int SizeOfType = sizeof(double);
-        readonly int m_rows;
-        readonly int m_cols;
         readonly int m_strideInBytes;
         readonly double* m_dataPtr;
-
-        /// <summary>
-        /// Gets the number of columns
-        /// </summary>
-        /// <returns></returns>
-        public int GetNumberOfColumns()
-        {
-            return m_cols;
-        }
-
-        /// <summary>
-        /// Gets the number of rows
-        /// </summary>
-        /// <returns></returns>
-        public int GetNumberOfRows()
-        {
-            return m_rows;
-        }
 
         /// <summary>
         /// Creates a view over an F64Matrix
@@ -51,8 +31,8 @@ namespace SharpLearning.Containers.Views
         public F64MatrixView(double* dataPtr, int rows, int cols, int strideInBytes)
         {
             m_dataPtr = dataPtr;
-            m_rows = rows;
-            m_cols = cols;
+            RowCount = rows;
+            ColumnCount = cols;
             m_strideInBytes = strideInBytes;
         }
 
@@ -67,7 +47,7 @@ namespace SharpLearning.Containers.Views
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        public double GetItemAt(int row, int col)
+        public double At(int row, int col)
         {
             return this[row][col];
         }
@@ -89,7 +69,7 @@ namespace SharpLearning.Containers.Views
         /// <returns></returns>
         public F64MatrixColumnView ColumnView(int col)
         {
-            return new F64MatrixColumnView(m_dataPtr + col, m_rows, m_strideInBytes);
+            return new F64MatrixColumnView(m_dataPtr + col, RowCount, m_strideInBytes);
         }
 
         /// <summary>
@@ -101,5 +81,17 @@ namespace SharpLearning.Containers.Views
         {
             return new F64MatrixView(GetSubViewDataPointer(subView), subView.Rows.Length, subView.Cols.Length, m_strideInBytes);
         }
+
+        /// <summary>
+        /// Gets the number of columns
+        /// </summary>
+        /// <value></value>
+        public int ColumnCount { get; private set; }
+
+        /// <summary>
+        /// Gets the number of rows
+        /// </summary>
+        /// <value></value>
+        public int RowCount { get; private set; }
     }
 }
