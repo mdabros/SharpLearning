@@ -30,6 +30,12 @@ namespace SharpLearning.Containers
             VerifyObservationsAndTargets(observations.RowCount, observations.ColumnCount, targets.Length);
         }
 
+        /// <summary>
+        /// Verify that observations and targets are valid.
+        /// </summary>
+        /// <param name="observationsRowCount"></param>
+        /// <param name="observationsColumnCount"></param>
+        /// <param name="targetLength"></param>
         public static void VerifyObservationsAndTargets(int observationsRowCount, int observationsColumnCount, int targetLength)
         {
             VerifyObservations(observationsRowCount, observationsColumnCount);
@@ -40,7 +46,8 @@ namespace SharpLearning.Containers
         /// <summary>
         /// Verify that the observation matrix is valid.
         /// </summary>
-        /// <param name="observations"></param>
+        /// <param name="rowCount"></param>
+        /// <param name="columnCount"></param>
         public static void VerifyObservations(int rowCount, int columnCount)
         {
             if(rowCount == 0)
@@ -57,7 +64,7 @@ namespace SharpLearning.Containers
         /// <summary>
         /// Verify that the target vector is valid.
         /// </summary>
-        /// <param name="targets"></param>
+        /// <param name="targetLength"></param>
         public static void VerifyTargets(int targetLength)
         {
             if (targetLength == 0)
@@ -69,8 +76,8 @@ namespace SharpLearning.Containers
         /// <summary>
         /// Verify that observations and targets dimensions match.
         /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
+        /// <param name="observationRowCount"></param>
+        /// <param name="targetLength"></param>
         public static void VerifyObservationsAndTargetsDimensions(int observationRowCount, int targetLength)
         {
             if(observationRowCount != targetLength)
@@ -105,8 +112,8 @@ namespace SharpLearning.Containers
         /// Verify that indices are valid and match observations and targets.
         /// </summary>
         /// <param name="indices"></param>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
+        /// <param name="observationRowCount"></param>
+        /// <param name="targetLength"></param>
         public static void VerifyIndices(int[] indices, int observationRowCount, int targetLength)
         {
             var min = indices.Min();
