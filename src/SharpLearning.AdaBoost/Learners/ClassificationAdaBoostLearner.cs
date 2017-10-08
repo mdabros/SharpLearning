@@ -1,15 +1,15 @@
-﻿using SharpLearning.AdaBoost.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SharpLearning.AdaBoost.Models;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Common.Interfaces;
 using SharpLearning.Metrics.Classification;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.AdaBoost.Learners
 {
@@ -88,6 +88,9 @@ namespace SharpLearning.AdaBoost.Learners
         /// <returns></returns>
         public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
             var uniques = new HashSet<double>();
 
             for (int i = 0; i < indices.Length; i++)

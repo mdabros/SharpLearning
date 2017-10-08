@@ -1,9 +1,10 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using System;
+using System.Linq;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.DecisionTrees.TreeBuilders;
-using System;
-using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Learners
 {
@@ -104,6 +105,18 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <returns></returns>
         public BinaryTree Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
+            // Verify weights dimensions. Currently sample weights is supported by DecisionTreeLearner.
+            // Hence, the check is not added to the general checks.
+            if (weights.Length != 0)
+            {
+                if (weights.Length != targets.Length || weights.Length != observations.RowCount)
+                {
+                    throw new ArgumentException($"Weights length differ from observation row count and target length. Weights: {weights.Length}, observation: {observations.RowCount}, targets: {targets.Length}");
+                }
+            }
             return m_treeBuilder.Build(observations, targets, indices, weights);
         }
     }
