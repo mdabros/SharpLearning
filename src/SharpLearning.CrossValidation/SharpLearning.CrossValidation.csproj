@@ -10,9 +10,9 @@
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>Mads Dabros</Authors>
     <PackageId>SharpLearning.CrossValidation</PackageId>
-    <Version>0.26.0.0</Version>
-    <AssemblyVersion>0.26.0.0</AssemblyVersion>
-    <FileVersion>0.26.0.0</FileVersion>
+    <Version>0.26.2.0</Version>
+    <AssemblyVersion>0.26.2.0</AssemblyVersion>
+    <FileVersion>0.26.2.0</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>Provides cross-validation, training/test set samplers and learning curves for SharpLearning.</Description>
     <Copyright>Copyright © Mads Dabros 2014</Copyright>
