@@ -128,7 +128,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         }
 
         [TestMethod]
-        public void CsvRowExtensions_MergeFilesUsingKey_KeepRepeatedColumns()
+        public void CsvRowExtensions_KeyCombine_KeepRepeatedColumns()
         {
             var keyName = "Date";
 
@@ -153,7 +153,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         }
 
         [TestMethod]
-        public void CsvRowExtensions_MergeFilesUsingKey()
+        public void CsvRowExtensions_KeyCombine()
         {
             var keyName = "Date";
 
@@ -178,7 +178,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         }
 
         [TestMethod]
-        public void CsvRowExtensions_MergeFilesUsingKey_KeepRepeatedColumns_Dict()
+        public void CsvRowExtensions_KeyCombine_KeepRepeatedColumns_Dict()
         {
             var keyName = "Date";
 
@@ -203,7 +203,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         }
 
         [TestMethod]
-        public void CsvRowExtensions_MergeFilesUsingKey_Dict()
+        public void CsvRowExtensions_KeyCombine_Dict()
         {
             var keyName = "Date";
 
