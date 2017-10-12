@@ -12,6 +12,73 @@ namespace SharpLearning.InputOutput.Csv
     /// </summary>
     public static class CsvRowExtensions
     {
+        /// <summary>
+        /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on. 
+        /// </summary>
+        /// <param name="thisRows"></param>
+        /// <param name="otherRows"></param>
+        /// <param name="key1"></param>
+        /// <param name="key2"></param>
+        /// <param name="removeRepeatedColumns">Should repeated columns be removed</param>
+        /// <returns></returns>
+        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, string key1, string key2, bool removeRepeatedColumns = true)
+        {
+            var newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
+            var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
+            var columnIndicesToRemove = new List<int>();
+
+            foreach (var kvp in otherColumnNameToIndex)
+            {
+                if (newColumnNameToIndex.ContainsKey(kvp.Key))
+                {
+                    if (!removeRepeatedColumns)
+                    {
+                        newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
+                    }
+                    else
+                    {
+                        columnIndicesToRemove.Add(kvp.Value);
+                    }
+                }
+                else
+                {
+                    newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
+                }
+            }
+
+            var columnIndicesToKeep = otherColumnNameToIndex.Values.Except(columnIndicesToRemove).ToArray();
+
+            var dictThisRows = thisRows.ToDictionary(p => p.GetValue(key1));
+            var dictOtherRows = otherRows.ToDictionary(p => p.GetValue(key2));
+
+            foreach (var key in dictThisRows.Keys)
+            {
+                if (!dictOtherRows.ContainsKey(key)) continue;
+
+                var thisValues = dictThisRows[key].Values;
+                var otherValues = dictOtherRows[key].Values;
+
+                if (!removeRepeatedColumns)
+                {
+                    var newValues = new string[thisValues.Length + otherValues.Length];
+
+                    thisValues.CopyTo(newValues, 0);
+                    otherValues.CopyTo(newValues, thisValues.Length);
+
+                    yield return new CsvRow(newColumnNameToIndex, newValues);
+                }
+                else
+                {
+                    var newValues = new string[newColumnNameToIndex.Count];
+                    var reducedOtherValues = otherValues.GetIndices(columnIndicesToKeep);
+
+                    thisValues.CopyTo(newValues, 0);
+                    reducedOtherValues.CopyTo(newValues, thisValues.Length);
+
+                    yield return new CsvRow(newColumnNameToIndex, newValues);
+                }
+            }
+        }
 
         /// <summary>
         /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on. 
