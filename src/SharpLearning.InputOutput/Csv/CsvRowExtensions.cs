@@ -23,30 +23,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, string key1, string key2, bool removeRepeatedColumns = true)
         {
-            var newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
-            var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
-            var columnIndicesToRemove = new List<int>();
-
-            foreach (var kvp in otherColumnNameToIndex)
-            {
-                if (newColumnNameToIndex.ContainsKey(kvp.Key))
-                {
-                    if (!removeRepeatedColumns)
-                    {
-                        newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
-                    }
-                    else
-                    {
-                        columnIndicesToRemove.Add(kvp.Value);
-                    }
-                }
-                else
-                {
-                    newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
-                }
-            }
-
-            var columnIndicesToKeep = otherColumnNameToIndex.Values.Except(columnIndicesToRemove).ToArray();
+            CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns, out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep);
 
             var dictThisRows = thisRows.ToDictionary(p => p.GetValue(key1));
             var dictOtherRows = otherRows.ToDictionary(p => p.GetValue(key2));
@@ -90,31 +67,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, Func<CsvRow, CsvRow, bool> rowMatcher, bool removeRepeatedColumns=true)
         {
-            var newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
-            var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
-            var columnIndicesToRemove = new List<int>();
-           
-            foreach (var kvp in otherColumnNameToIndex)
-            {
-                if (newColumnNameToIndex.ContainsKey(kvp.Key))
-                {
-                    if (!removeRepeatedColumns)
-                    {
-                        newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
-                    }
-                    else
-                    {
-                        columnIndicesToRemove.Add(kvp.Value);
-                    }
-                }
-                else
-                {
-                    newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
-                }
-            }
-
-            var columnIndicesToKeep = otherColumnNameToIndex.Values
-                .Except(columnIndicesToRemove).ToArray();
+            CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns, out Dictionary<string, int> newColumnNameToIndex, out int [] columnIndicesToKeep);
 
             foreach (var thisRow in thisRows)
             {
@@ -149,6 +102,34 @@ namespace SharpLearning.InputOutput.Csv
                     }
                 }
             }
+        }
+
+        static void CreateNewColumnNameToIndex(IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, bool removeRepeatedColumns, out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep)
+        {
+            newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
+            var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
+            var columnIndicesToRemove = new List<int>();
+
+            foreach (var kvp in otherColumnNameToIndex)
+            {
+                if (newColumnNameToIndex.ContainsKey(kvp.Key))
+                {
+                    if (!removeRepeatedColumns)
+                    {
+                        newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
+                    }
+                    else
+                    {
+                        columnIndicesToRemove.Add(kvp.Value);
+                    }
+                }
+                else
+                {
+                    newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
+                }
+            }
+
+            columnIndicesToKeep = otherColumnNameToIndex.Values.Except(columnIndicesToRemove).ToArray();
         }
 
         static string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
