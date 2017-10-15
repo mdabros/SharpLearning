@@ -1,4 +1,6 @@
 ﻿
+using SharpLearning.Containers.Matrices;
+
 namespace SharpLearning.Common.Interfaces
 {
     /// <summary>
@@ -13,5 +15,7 @@ namespace SharpLearning.Common.Interfaces
         /// <param name="observation"></param>
         /// <returns></returns>
         TPrediction Predict(double[] observation);
+
+        TPrediction[] Predict(F64Matrix observations);
     }
 }

@@ -69,6 +69,23 @@ namespace SharpLearning.Ensemble.Models
         }
 
         /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            var rows = observations.RowCount;
+            var predictions = new ProbabilityPrediction[rows];
+            for (int i = 0; i < rows; i++)
+            {
+                predictions[i] = PredictProbability(observations.Row(i));
+            }
+
+            return predictions;
+        }
+
+        /// <summary>
         /// Predicts a single observation using the ensembled probabilities
         /// </summary>
         /// <param name="observation"></param>
