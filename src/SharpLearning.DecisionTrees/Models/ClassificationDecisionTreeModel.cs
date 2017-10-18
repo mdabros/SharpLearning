@@ -100,7 +100,7 @@ namespace SharpLearning.DecisionTrees.Models
             var predictions = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = Tree.PredictProbability(observations.Row(i));
+                predictions[i] = PredictProbability(observations.Row(i));
             }
 
             return predictions;
