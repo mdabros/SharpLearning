@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using CNTK;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Metrics.Classification;
@@ -22,6 +23,9 @@ namespace SharpLearning.Neural.Test.Cntk
             double[] targets;
             CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out observations, out targets);
 
+            // set global device.
+            CntkLayers.Device = DeviceDescriptor.CPUDevice;
+
             var net = CntkLayers.Input(numberOfFeatures);
             net = CntkLayers.Dense(net, 10);
             net = CntkLayers.Activation(net, Activation.ReLU);
@@ -35,7 +39,7 @@ namespace SharpLearning.Neural.Test.Cntk
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.762, actual);
+            Assert.AreEqual(0.79, actual);
         }
 
         void CreateData(int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random, out F64Matrix observations, out double[] targets)

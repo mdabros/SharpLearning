@@ -47,7 +47,7 @@ namespace SharpLearning.Neural.Cntk
             var inputDimensions = m_network.Arguments[0].Shape.Dimensions.ToArray();
             int numberOfClasses = encodedTargets.ColumnCount;
 
-            var featureVariable = Variable.InputVariable(inputDimensions, DataType.Float);
+            var featureVariable = m_network.Arguments[0];
             var targetVariable = Variable.InputVariable(new int[] { numberOfClasses }, DataType.Float);
 
             // setup network
