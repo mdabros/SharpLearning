@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.Linq;
 using CNTK;
 using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Neural.Cntk
 {
-    public class CntkNeuralNetLearner : ILearner<double>, IIndexedLearner<double>
+    public class CntkNeuralNetLearner : ILearner<double>, IIndexedLearner<double>,
+        ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>
     {
         readonly Function m_network;
         readonly DeviceDescriptor m_device;
@@ -117,6 +119,16 @@ namespace SharpLearning.Neural.Cntk
             return Learn(observations, targets, indices);
         }
 
+        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
+        }
+
+        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
+        }
+        
         static float[] CopyBatch(F64Matrix observations, int[] indices)
         {
             var batch = observations.Rows(indices);
