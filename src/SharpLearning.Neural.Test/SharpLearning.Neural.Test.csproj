@@ -43,6 +43,10 @@
     </DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cntk.Core.Managed-2.2">
+      <HintPath>..\..\packages\CNTK.GPU.2.2.0\lib\net45\x64\Cntk.Core.Managed-2.2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MathNet.Numerics, Version=3.17.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MathNet.Numerics.3.17.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
@@ -170,7 +174,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\MathNet.Numerics.MKL.Win.2.2.0\build\MathNet.Numerics.MKL.Win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MathNet.Numerics.MKL.Win.2.2.0\build\MathNet.Numerics.MKL.Win.targets'))" />
+    <Error Condition="!Exists('..\..\packages\CNTK.GPU.2.2.0\build\net45\CNTK.GPU.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CNTK.GPU.2.2.0\build\net45\CNTK.GPU.targets'))" />
   </Target>
+  <Import Project="..\..\packages\CNTK.GPU.2.2.0\build\net45\CNTK.GPU.targets" Condition="Exists('..\..\packages\CNTK.GPU.2.2.0\build\net45\CNTK.GPU.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

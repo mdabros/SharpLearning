@@ -11,7 +11,7 @@
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("0.25.0.0")]
 [assembly: AssemblyFileVersion("0.25.0.6")]
-[assembly: AssemblyInformationalVersion("0.25.0.6")]
+[assembly: AssemblyInformationalVersion("0.25.0.6-cntk")]
 // SharpLearning
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("mdabros")]
