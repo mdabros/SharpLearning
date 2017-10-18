@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Metrics.Classification;
 using SharpLearning.Neural.Cntk;
 
 namespace SharpLearning.Neural.Test.Cntk
@@ -21,12 +22,12 @@ namespace SharpLearning.Neural.Test.Cntk
             double[] targets;
             CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out observations, out targets);
 
-            var net = CntkLayers.
-            net.Add(new InputLayer(numberOfFeatures));
-            net.Add(new DenseLayer(10));
-            net.Add(new SvmLayer(numberOfClasses));
+            var net = CntkLayers.Input(numberOfFeatures);
+            net = CntkLayers.Dense(net, 10);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Dense(net, numberOfClasses);
 
-            var sut = new ClassificationNeuralNetLearner(net, new AccuracyLoss());
+            var sut = new CntkNeuralNetLearner(net, CntkLayers.Device);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);

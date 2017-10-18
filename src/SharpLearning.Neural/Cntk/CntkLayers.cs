@@ -19,6 +19,11 @@ namespace SharpLearning.Neural.Cntk
     {
         public static DeviceDescriptor Device = DeviceDescriptor.UseDefaultDevice();
 
+        public static Function Input(params int[] inputDim)
+        {
+            return Variable.InputVariable(inputDim, DataType.Float);
+        }
+
         public static Function Dense(Variable input, int units, string outputName = "")
         {
             if (input.Shape.Rank != 1)
