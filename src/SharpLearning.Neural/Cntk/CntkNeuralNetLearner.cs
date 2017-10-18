@@ -58,7 +58,7 @@ namespace SharpLearning.Neural.Cntk
             Trace.WriteLine($"Using device: {device.Type}");
 
             // setup learner
-            var learningRatePerSample = new CNTK.TrainingParameterScheduleDouble(0.0003125, 1);
+            var learningRatePerSample = new CNTK.TrainingParameterScheduleDouble(m_learningRate, 1);
             var parameterLearners = new List<Learner>() { Learner.SGDLearner(m_network.Parameters(), learningRatePerSample) };
             var trainer = Trainer.CreateTrainer(m_network, loss, evalError, parameterLearners);
 
