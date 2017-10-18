@@ -19,20 +19,24 @@ namespace SharpLearning.Neural.Cntk
         readonly double m_learningRate;
         readonly int m_epochs;
         readonly int m_batchSize;
+        readonly double m_momentum;
 
         public CntkNeuralNetLearner(Function network,  DeviceDescriptor device,
-            double learningRate = 0.001, int epochs = 100, int batchSize = 128)
+            double learningRate = 0.001, int epochs = 100, int batchSize = 128,
+            double momentum = 0.9)
         {
             if (network == null) { throw new ArgumentNullException("network"); }
             if (device == null) { throw new ArgumentNullException("device"); }
             if (learningRate <= 0) { throw new ArgumentNullException("learning rate must be larger than 0. Was: " + learningRate); }
             if (epochs <= 0) { throw new ArgumentNullException("Iterations must be larger than 0. Was: " + epochs); }
             if (batchSize <= 0) { throw new ArgumentNullException("batchSize must be larger than 0. Was: " + batchSize); }
+            if (momentum <= 0) { throw new ArgumentNullException("momentum must be larger than 0. Was: " + momentum); }
             m_network = network;
             m_device = device;
             m_learningRate = learningRate;
             m_epochs = epochs;
             m_batchSize = batchSize;
+            m_momentum = momentum;
         }
 
         public CntkNeuralNetModel Learn(F64Matrix observations, double[] targets)
@@ -60,8 +64,13 @@ namespace SharpLearning.Neural.Cntk
             Trace.WriteLine($"Using device: {device.Type}");
 
             // setup learner
+            
             var learningRatePerSample = new CNTK.TrainingParameterScheduleDouble(m_learningRate, 1);
-            var parameterLearners = new List<Learner>() { Learner.SGDLearner(m_network.Parameters(), learningRatePerSample) };
+            var momentumRatePerSample = new CNTK.TrainingParameterScheduleDouble(m_momentum, 1);
+            //var parameterLearners = new List<Learner>() { Learner.SGDLearner(m_network.Parameters(), learningRatePerSample) };
+            var parameterLearners = new List<Learner>() { Learner.MomentumSGDLearner(m_network.Parameters(), 
+                learningRatePerSample, momentumRatePerSample, false) };
+
             var trainer = Trainer.CreateTrainer(m_network, loss, evalError, parameterLearners);
 
             // train the model
