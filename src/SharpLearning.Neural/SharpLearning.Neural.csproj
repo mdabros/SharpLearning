@@ -65,6 +65,7 @@
     <Compile Include="Cntk\CntkLayers.cs" />
     <Compile Include="Cntk\CntkNeuralNetLearner.cs" />
     <Compile Include="Cntk\CntkNeuralNetModel.cs" />
+    <Compile Include="Cntk\CntkUtils.cs" />
     <Compile Include="Initializations\FanInFanOut.cs" />
     <Compile Include="Initializations\WeightInitialization.cs" />
     <Compile Include="Activations\Activiation.cs" />

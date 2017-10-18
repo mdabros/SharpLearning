@@ -9,25 +9,28 @@ using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Neural.Cntk
 {
-    public class CntkNeuralNetLearner : ILearner<double>
+    public class CntkNeuralNetLearner : ILearner<double>, IIndexedLearner<double>
     {
         readonly Function m_network;
         readonly DeviceDescriptor m_device;
+        readonly int[] m_inputDimensions;
 
         readonly double m_learningRate;
         readonly int m_epochs;
         readonly int m_batchSize;
 
-        public CntkNeuralNetLearner(Function network, DeviceDescriptor device,
+        public CntkNeuralNetLearner(Function network,  DeviceDescriptor device, int[] inputDimensions,
             double learningRate = 0.001, int epochs = 100, int batchSize = 128)
         {
             if (network == null) { throw new ArgumentNullException("network"); }
             if (device == null) { throw new ArgumentNullException("device"); }
+            if (inputDimensions == null) { throw new ArgumentNullException("inputDimensions"); }
             if (learningRate <= 0) { throw new ArgumentNullException("learning rate must be larger than 0. Was: " + learningRate); }
             if (epochs <= 0) { throw new ArgumentNullException("Iterations must be larger than 0. Was: " + epochs); }
             if (batchSize <= 0) { throw new ArgumentNullException("batchSize must be larger than 0. Was: " + batchSize); }
             m_network = network;
             m_device = device;
+            m_inputDimensions = inputDimensions;
             m_learningRate = learningRate;
             m_epochs = epochs;
             m_batchSize = batchSize;
@@ -35,14 +38,18 @@ namespace SharpLearning.Neural.Cntk
 
         public IPredictorModel<double> Learn(F64Matrix observations, double[] targets)
         {
+            return Learn(observations, targets, Enumerable.Range(0, targets.Length).ToArray());
+        }
+
+        public IPredictorModel<double> Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
             var encodedTargets = Encode(targets);
-            var learningIndices = Enumerable.Range(0, targets.Length).ToArray();
+            var learningIndices = indices.ToArray();
 
             // get from network or ctor
-            var inputDim = new int[] { 28, 28, 1 };
             int numberOfClasses = encodedTargets.ColumnCount;
 
-            var featureVariable = Variable.InputVariable(inputDim, DataType.Float);
+            var featureVariable = Variable.InputVariable(m_inputDimensions, DataType.Float);
             var targetVariable = Variable.InputVariable(new int[] { numberOfClasses }, DataType.Float);
 
             // setup network
@@ -81,7 +88,7 @@ namespace SharpLearning.Neural.Cntk
                     var features = CopyBatch(observations, workIndices);
                     var batchLabels = CopyBatch(encodedTargets, workIndices);
 
-                    using (var batchObservations = Value.CreateBatch<float>(inputDim, features, device))
+                    using (var batchObservations = Value.CreateBatch<float>(m_inputDimensions, features, device))
                     using (var batchTarget = Value.CreateBatch<float>(new int[] { numberOfClasses }, batchLabels, device))
                     {
                         batchContainer.Add(featureVariable, batchObservations);
@@ -98,7 +105,7 @@ namespace SharpLearning.Neural.Cntk
                 Trace.WriteLine($"Epoch: {epoch + 1}: Loss = {currentLoss}");
             }
 
-            return new CntkNeuralNetModel(m_network, m_device);
+            return new CntkNeuralNetModel(m_network.Clone(ParameterCloningMethod.Clone), m_device);
         }
 
         static float[] CopyBatch(F64Matrix observations, int[] indices)
