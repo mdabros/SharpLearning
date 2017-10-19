@@ -77,14 +77,7 @@ namespace SharpLearning.Neural.Models
         /// <returns></returns>
         ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
         {
-            var rows = observations.RowCount;
-            var predictions = new ProbabilityPrediction[rows];
-            for (int i = 0; i < rows; i++)
-            {
-                predictions[i] = PredictProbability(observations.Row(i));
-            }
-
-            return predictions;
+            return PredictProbability(observations);
         }
 
         /// <summary>
