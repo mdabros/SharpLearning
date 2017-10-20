@@ -70,6 +70,15 @@ namespace SharpLearning.Neural.Models
             return PredictProbability(observation);
         }
 
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            return PredictProbability(observations);
+        }
 
         /// <summary>
         /// Predicts a set of observations
