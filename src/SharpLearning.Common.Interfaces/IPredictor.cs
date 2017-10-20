@@ -10,12 +10,17 @@ namespace SharpLearning.Common.Interfaces
     public interface IPredictor<TPrediction>
     {
         /// <summary>
-        /// 
+        /// Predicts a single observation
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
         TPrediction Predict(double[] observation);
 
+        /// <summary>
+        /// Predicts a set of observations
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
         TPrediction[] Predict(F64Matrix observations);
     }
 }
