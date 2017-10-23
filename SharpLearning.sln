@@ -66,6 +66,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Backend.Tenso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Backend.TensorFlow.Test", "src\SharpLearning.Backend.TensorFlow.Test\SharpLearning.Backend.TensorFlow.Test.csproj", "{34EBB004-F70B-4B52-896A-56521DECD981}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Backend.Cntk", "src\SharpLearning.Backend.Cntk\SharpLearning.Backend.Cntk.csproj", "{232A2C96-2438-4168-9ABE-AAD79B4B3442}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Backend.Cntk.Test", "src\SharpLearning.Backend.Cntk.Test\SharpLearning.Backend.Cntk.Test.csproj", "{B1773CA2-FD30-4905-AC53-E336E845C4BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -188,6 +192,14 @@ Global
 		{34EBB004-F70B-4B52-896A-56521DECD981}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34EBB004-F70B-4B52-896A-56521DECD981}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34EBB004-F70B-4B52-896A-56521DECD981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{232A2C96-2438-4168-9ABE-AAD79B4B3442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{232A2C96-2438-4168-9ABE-AAD79B4B3442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{232A2C96-2438-4168-9ABE-AAD79B4B3442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{232A2C96-2438-4168-9ABE-AAD79B4B3442}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
