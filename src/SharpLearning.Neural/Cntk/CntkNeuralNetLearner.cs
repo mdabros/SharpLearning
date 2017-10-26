@@ -78,6 +78,9 @@ namespace SharpLearning.Neural.Cntk
             var random = new Random(23);
             var numberOfBatches = targets.Length / m_batchSize;
 
+            var batchFeatures = new float[observations.ColumnCount * m_batchSize];
+            var batchTargets = new float[observations.ColumnCount * m_batchSize];
+
             for (int epoch = 0; epoch < m_epochs; epoch++)
             {
                 var accumulatedLoss = 0.0;
@@ -94,11 +97,11 @@ namespace SharpLearning.Neural.Cntk
                         continue; // only train with full batch size
                     }
 
-                    var features = CopyBatch(observations, workIndices);
-                    var batchLabels = CopyBatch(encodedTargets, workIndices);
+                    CopyRows(observations, batchFeatures, workIndices);
+                    CopyRows(encodedTargets, batchTargets, workIndices);
 
-                    using (var batchObservations = Value.CreateBatch<float>(inputDimensions, features, device))
-                    using (var batchTarget = Value.CreateBatch<float>(new int[] { numberOfClasses }, batchLabels, device))
+                    using (var batchObservations = Value.CreateBatch<float>(inputDimensions, batchFeatures, device))
+                    using (var batchTarget = Value.CreateBatch<float>(new int[] { numberOfClasses }, batchTargets, device))
                     {
                         batchContainer.Add(featureVariable, batchObservations);
                         batchContainer.Add(targetVariable, batchTarget);
@@ -205,11 +208,21 @@ namespace SharpLearning.Neural.Cntk
         {
             return Learn(observations, targets, indices);
         }
-        
-        static float[] CopyBatch(F64Matrix observations, int[] indices)
+
+        void CopyRows(F64Matrix observations, float[] batch, int[] indices)
         {
-            var batch = observations.Rows(indices);
-            return batch.Data().Select(v => (float)v).ToArray();
+            var columnCount = observations.ColumnCount;
+            var rowCount = indices.Length;
+
+            for (int i = 0; i < indices.Length; i++)
+            {
+                var rowOffSet = columnCount * indices[i];
+                var subRowOffSet = columnCount * i;
+                for (int j = 0; j < columnCount; j++)
+                {
+                    batch[subRowOffSet + j] = (float)observations.Data()[rowOffSet + j];
+                }
+            }
         }
 
         static double[] GetOrderedTargetNames(double[] targets)
