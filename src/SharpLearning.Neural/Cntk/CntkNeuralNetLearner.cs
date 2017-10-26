@@ -79,7 +79,7 @@ namespace SharpLearning.Neural.Cntk
             var numberOfBatches = targets.Length / m_batchSize;
 
             var batchFeatures = new float[observations.ColumnCount * m_batchSize];
-            var batchTargets = new float[observations.ColumnCount * m_batchSize];
+            var batchTargets = new float[encodedTargets.ColumnCount * m_batchSize];
 
             for (int epoch = 0; epoch < m_epochs; epoch++)
             {
