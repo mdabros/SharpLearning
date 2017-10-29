@@ -114,5 +114,52 @@ namespace SharpLearning.Neural.Cntk
             return CNTKLib.BatchNormalization(input, scaleParams, biasParams, runningMean, runningInvStd, runningCount,
                 spatial, (double)bnTimeConst, 0.0, 1e-5 /* epsilon */);
         }
+
+        /// <summary>
+        /// Resnet blocks from
+        /// https://github.com/fchollet/keras/blob/master/keras/applications/resnet50.py
+        /// </summary>
+        public static class ResNet
+        {
+            public static Function IdentityBlock(Variable input, int filterW, int filterH, 
+                int filterCount1, int filterCount2, int filterCount3)
+            {
+                var layer = CntkLayers.Conv2D(input, 1, 1, filterCount1);
+                layer = CntkLayers.BatchNormalizationLayer(layer, true);
+                layer = CntkLayers.Activation(layer, Cntk.Activation.ReLU);
+
+                layer = CntkLayers.Conv2D(layer, filterW, filterH, filterCount2);
+                layer = CntkLayers.BatchNormalizationLayer(layer, true);
+                layer = CntkLayers.Activation(layer, Cntk.Activation.ReLU);
+
+                layer = CntkLayers.Conv2D(layer, 1, 1, filterCount3);
+                layer = CntkLayers.BatchNormalizationLayer(layer, true);
+
+                layer = CNTKLib.Plus(layer, input);
+                return CntkLayers.Activation(layer, Cntk.Activation.ReLU);
+            }
+
+            public static Function ConvolutionBlock(Variable input, int filterW, int filterH,
+                int filterCount1, int filterCount2, int filterCount3,
+                int strideW = 2, int strideH = 2)
+            {
+                var layer = CntkLayers.Conv2D(input, 1, 1, filterCount1, strideW, strideH);
+                layer = CntkLayers.BatchNormalizationLayer(layer, true);
+                layer = CntkLayers.Activation(layer, Cntk.Activation.ReLU);
+
+                layer = CntkLayers.Conv2D(layer, filterW, filterH, filterCount2);
+                layer = CntkLayers.BatchNormalizationLayer(layer, true);
+                layer = CntkLayers.Activation(layer, Cntk.Activation.ReLU);
+
+                layer = CntkLayers.Conv2D(layer, 1, 1, filterCount3);
+                layer = CntkLayers.BatchNormalizationLayer(layer, true);
+                
+                var shortcut = CntkLayers.Conv2D(input, 1, 1, filterCount3, strideW, strideH);
+                shortcut = CntkLayers.BatchNormalizationLayer(shortcut, true);
+
+                layer = CNTKLib.Plus(layer, shortcut);
+                return CNTKLib.ReLU(layer);
+            }
+        }
     }
 }
