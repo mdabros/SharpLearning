@@ -22,13 +22,28 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
             var initialTrainingSize = 5;
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize);
+
             var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
-            var timeSeriesTargets = targets.Skip(initialTrainingSize).ToArray();
+            var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
             var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
 
             Assert.AreEqual(0.097833163747046217, error, 0.00001);
+        }
+
+        [TestMethod]
+        public void TimeSeriesCrossValidation_GetValidationTargets()
+        {
+            var targets = Enumerable.Range(0, 100).Select(v => (double)v).ToArray();
+            var initialTrainingSize = 5;
+
+            var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize);
+
+            var actual = sut.GetValidationTargets(targets);
+            var expected = targets.Skip(initialTrainingSize).ToArray();
+
+            CollectionAssert.AreEqual(expected, actual);
         }
     }
 }
