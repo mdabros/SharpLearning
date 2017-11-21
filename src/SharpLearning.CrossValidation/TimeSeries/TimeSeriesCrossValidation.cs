@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 
