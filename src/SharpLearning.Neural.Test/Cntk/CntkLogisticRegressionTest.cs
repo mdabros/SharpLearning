@@ -10,40 +10,94 @@ namespace SharpLearning.Neural.Test.Cntk
     { 
 
         [TestMethod]
-        public void Run_Cntk_Logistic_Regression()
+        public void Run_Cntk_Logistic_Regression_Using()
         {
-            // select execution device
+            // select execution device.
             var device = DeviceDescriptor.CPUDevice;
 
-            // setup problem dimensions
+            // setup problem dimensions.
             var inputDim = 3;
             var numOutputClasses = 2;
 
-            // setup variables for handling input to the model
+            // setup variables for handling input to the model.
             Variable featureVariable = Variable.InputVariable(new int[] { inputDim }, DataType.Float);
             Variable targetVariable = Variable.InputVariable(new int[] { numOutputClasses }, DataType.Float);
             
-            // create a logistic regression model
+            // create a logistic regression model.
             Function lr = CreateLogisticRegression(featureVariable, numOutputClasses, device);
 
-            // setup loss and eval error
+            // setup loss and eval error.
             Function loss = CNTKLib.CrossEntropyWithSoftmax(lr, targetVariable);
             Function evalError = CNTKLib.ClassificationError(lr, targetVariable);
 
-            // setup learner
+            // learning hyper-parameters.
+            int minibatchSize = 64;
+            int numMinibatchesToTrain = 10000;
+            double learningRate = 0.01;
+
+            // how often to report progress.
+            int updatePerMinibatches = 50;
+
+            // mini batch training loop.
+            for (int minibatchCount = 0; minibatchCount < numMinibatchesToTrain; minibatchCount++)
+            {
+                // generate next minibatch.
+                Dictionary<Variable, Value> miniBatch = GenerateBatchData(minibatchSize, inputDim, numOutputClasses,
+                    featureVariable, targetVariable, device);
+
+                // forward pass.
+                var batchOutput = new Dictionary<Variable, Value>() { { lr.Output, null } };
+                lr.Evaluate(miniBatch, batchOutput, device);
+
+                // calculate loss.
+                var lossOutput = new Dictionary<Variable, Value>() { { loss.Output, null } };
+                loss.Evaluate(batchOutput, lossOutput, device);
+
+                // backward pass. Calculate gradients.
+                var parameterGradients = new Dictionary<Variable, Value>();
+             
+                
+                // Update parameters.
+            }
+        }
+
+        [TestMethod]
+        public void Run_Cntk_Logistic_Regression_Using_Cntk_Learner()
+        {
+            // select execution device.
+            var device = DeviceDescriptor.CPUDevice;
+
+            // setup problem dimensions.
+            var inputDim = 3;
+            var numOutputClasses = 2;
+
+            // setup variables for handling input to the model.
+            Variable featureVariable = Variable.InputVariable(new int[] { inputDim }, DataType.Float);
+            Variable targetVariable = Variable.InputVariable(new int[] { numOutputClasses }, DataType.Float);
+
+            // create a logistic regression model.
+            Function lr = CreateLogisticRegression(featureVariable, numOutputClasses, device);
+
+            // setup loss and eval error.
+            Function loss = CNTKLib.CrossEntropyWithSoftmax(lr, targetVariable);
+            Function evalError = CNTKLib.ClassificationError(lr, targetVariable);
+
+            // setup learner.
             TrainingParameterScheduleDouble learningRatePerSample = new CNTK.TrainingParameterScheduleDouble(0.02, 1);
             var parameterLearners = new List<Learner>() { Learner.SGDLearner(lr.Parameters(), learningRatePerSample) };
             var trainer = Trainer.CreateTrainer(lr, loss, evalError, parameterLearners);
 
-            // learning hyper-parameters
+            // learning hyper-parameters.
             int minibatchSize = 64;
-            int numMinibatchesToTrain = 10000;
+            int numMinibatchesToTrain = 1000;
+
+            // how often to report progress.
             int updatePerMinibatches = 50;
 
-            // mini batch training loop
+            // mini batch training loop.
             for (int minibatchCount = 0; minibatchCount < numMinibatchesToTrain; minibatchCount++)
             {
-                // generate next minibatch
+                // generate next minibatch.
                 Dictionary<Variable, Value> miniBatch = GenerateBatchData(minibatchSize, inputDim, numOutputClasses,
                     featureVariable, targetVariable, device);
 
