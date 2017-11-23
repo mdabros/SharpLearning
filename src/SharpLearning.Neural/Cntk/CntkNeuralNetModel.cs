@@ -18,7 +18,7 @@ namespace SharpLearning.Neural.Cntk
             double[] targetNames)
         {
             if (network == null) { throw new ArgumentNullException("network"); }
-            if (device== null) { throw new ArgumentNullException("device"); }
+            if (device == null) { throw new ArgumentNullException("device"); }
             if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
             m_network = network;
             m_device = device;
@@ -62,6 +62,7 @@ namespace SharpLearning.Neural.Cntk
 
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
+            // not actually probabilities, in case a softmax is not used as final layer.
             var probabilities = EvaluteProbabilities(observation);
             var probabilityDictionary = new Dictionary<double, double>();
 

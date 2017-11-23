@@ -8,6 +8,7 @@ namespace SharpLearning.Neural.Cntk
     {
         None,
         ReLU,
+        LeakyReLU,
         Sigmoid,
         Tanh
     }
@@ -24,7 +25,12 @@ namespace SharpLearning.Neural.Cntk
             return Variable.InputVariable(inputDim, DataType.Float);
         }
 
-        public static Function Dense(Variable input, int units, string outputName = "")
+        public static Function SoftMax(Variable input)
+        {
+            return CNTKLib.Softmax(input);
+        }
+
+        public static Function Dense(Variable input, int units, uint seed = 32, string outputName = "")
         {
             if (input.Shape.Rank != 1)
             {
@@ -40,7 +46,7 @@ namespace SharpLearning.Neural.Cntk
                 CNTKLib.GlorotUniformInitializer(
                     CNTKLib.DefaultParamInitScale,
                     CNTKLib.SentinelValueForInferParamInitRank,
-                    CNTKLib.SentinelValueForInferParamInitRank, 1),
+                    CNTKLib.SentinelValueForInferParamInitRank, seed),
                 Device, "timesParam");
 
             var timesFunction = CNTKLib.Times(weights, input, "times");
@@ -60,6 +66,8 @@ namespace SharpLearning.Neural.Cntk
                     return input;
                 case Cntk.Activation.ReLU:
                     return CNTKLib.ReLU(input);
+                case Cntk.Activation.LeakyReLU:
+                    return CNTKLib.LeakyReLU(input);
                 case Cntk.Activation.Sigmoid:
                     return CNTKLib.Sigmoid(input);
                 case Cntk.Activation.Tanh:
@@ -68,7 +76,7 @@ namespace SharpLearning.Neural.Cntk
         }
 
         public static Function Conv2D(Variable input, int filterW, int filterH, int filterCount,
-             int strideW = 1, int strideH = 1, string outputName = "")
+             int strideW = 1, int strideH = 1, uint seed = 34, string outputName = "")
         {
             if (input.Shape.Rank != 3)
             {
@@ -79,12 +87,12 @@ namespace SharpLearning.Neural.Cntk
 
             var convWScale = 0.26;
             var convParams = new Parameter(new int[] { filterW, filterH, inputChannels, filterCount }, DataType.Float,
-                CNTKLib.GlorotUniformInitializer(convWScale, -1, 2), Device);
+                CNTKLib.GlorotUniformInitializer(convWScale, -1, 2, seed), Device);
 
             return CNTKLib.Convolution(convParams, input, new int[] { strideW, strideH, inputChannels });
         }
 
-        public static Function Pool2D(Variable input, int poolW, int poolH, 
+        public static Function Pool2D(Variable input, int poolW, int poolH,
             PoolingType poolingType = PoolingType.Max,
             int strideW = 1, int strideH = 1, string outputName = "")
         {
@@ -94,15 +102,15 @@ namespace SharpLearning.Neural.Cntk
             }
 
             return CNTKLib.Pooling(input, PoolingType.Max,
-                new int[] { poolW, poolH}, new int[] { strideW, strideH});
+                new int[] { poolW, poolH }, new int[] { strideW, strideH });
         }
 
-        public static Function Dropout(Variable input, double dropoutRate, uint seed)
+        public static Function Dropout(Variable input, double dropoutRate, uint seed = 465)
         {
             return CNTKLib.Dropout(input, dropoutRate, seed);
         }
 
-        public static Function BatchNormalizationLayer(Variable input, bool spatial, 
+        public static Function BatchNormalizationLayer(Variable input, bool spatial,
             double initialScaleValue = 1, double initialBiasValue = 0, int bnTimeConst = 5000)
         {
             var biasParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialBiasValue, Device, "");
@@ -121,7 +129,7 @@ namespace SharpLearning.Neural.Cntk
         /// </summary>
         public static class ResNet
         {
-            public static Function IdentityBlock(Variable input, int filterW, int filterH, 
+            public static Function IdentityBlock(Variable input, int filterW, int filterH,
                 int filterCount1, int filterCount2, int filterCount3)
             {
                 var layer = CntkLayers.Conv2D(input, 1, 1, filterCount1);
@@ -153,7 +161,7 @@ namespace SharpLearning.Neural.Cntk
 
                 layer = CntkLayers.Conv2D(layer, 1, 1, filterCount3);
                 layer = CntkLayers.BatchNormalizationLayer(layer, true);
-                
+
                 var shortcut = CntkLayers.Conv2D(input, 1, 1, filterCount3, strideW, strideH);
                 shortcut = CntkLayers.BatchNormalizationLayer(shortcut, true);
 

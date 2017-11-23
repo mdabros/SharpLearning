@@ -32,6 +32,7 @@ namespace SharpLearning.Neural.Test.Cntk
             net = CntkLayers.Dense(net, 10);
             net = CntkLayers.Activation(net, Activation.ReLU);
             net = CntkLayers.Dense(net, numberOfClasses);
+            net = CntkLayers.SoftMax(net);
 
             var sut = new CntkNeuralNetLearner(net, CntkLayers.Device);
             var model = sut.Learn(observations, targets);
@@ -41,7 +42,7 @@ namespace SharpLearning.Neural.Test.Cntk
             var evaluator = new TotalErrorClassificationMetric<double>();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.79, actual);
+            Assert.AreEqual(0.76, actual);
         }
 
         void CreateData(int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random, out F64Matrix observations, out double[] targets)
@@ -65,6 +66,7 @@ namespace SharpLearning.Neural.Test.Cntk
             net = CntkLayers.Dropout(net, 0.2, 123);
             net = CntkLayers.Activation(net, Activation.ReLU);
             net = CntkLayers.Dense(net, numberOfClasses);
+            net = CntkLayers.SoftMax(net);
             var sut = new CntkNeuralNetLearner(net, CntkLayers.Device, 0.001, epochs, batchSize: 64);
 
             var cifarDirectory = @"K:\Git\CNTK\Examples\Image\DataSets\CIFAR-10\";

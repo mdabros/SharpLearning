@@ -21,7 +21,7 @@ namespace SharpLearning.Neural.Cntk
         readonly int m_batchSize;
         readonly double m_momentum;
 
-        public CntkNeuralNetLearner(Function network,  DeviceDescriptor device,
+        public CntkNeuralNetLearner(Function network, DeviceDescriptor device,
             double learningRate = 0.001, int epochs = 100, int batchSize = 128,
             double momentum = 0.9)
         {
@@ -57,19 +57,28 @@ namespace SharpLearning.Neural.Cntk
             var targetVariable = Variable.InputVariable(new int[] { numberOfClasses }, DataType.Float);
 
             // setup network
+            // todo: add loss as input
             var loss = CNTKLib.CrossEntropyWithSoftmax(m_network, targetVariable);
+            // todo: add error as input
             var evalError = CNTKLib.ClassificationError(m_network, targetVariable);
 
             var device = CntkLayers.Device;
             Trace.WriteLine($"Using device: {device.Type}");
 
             // setup learner
-            
+            // todo: add learner type as input
             var learningRatePerSample = new CNTK.TrainingParameterScheduleDouble(m_learningRate, 1);
             var momentumRatePerSample = new CNTK.TrainingParameterScheduleDouble(m_momentum, 1);
             //var parameterLearners = new List<Learner>() { Learner.SGDLearner(m_network.Parameters(), learningRatePerSample) };
-            var parameterLearners = new List<Learner>() { Learner.MomentumSGDLearner(m_network.Parameters(), 
-                learningRatePerSample, momentumRatePerSample, false) };
+            //var parameterLearners = new List<Learner>() { Learner.MomentumSGDLearner(m_network.Parameters(), 
+            //    learningRatePerSample, momentumRatePerSample, false) };
+
+            var parameterLearners = new List<Learner>() { CntkUtils.AdamLearner(m_network.Parameters(),
+                new TrainingParameterScheduleDouble(m_learningRate, 1),
+                new TrainingParameterScheduleDouble(0.9, 1),
+                new TrainingParameterScheduleDouble(0.999, 1))
+            };
+
 
             var trainer = Trainer.CreateTrainer(m_network, loss, evalError, parameterLearners);
 
@@ -117,6 +126,11 @@ namespace SharpLearning.Neural.Cntk
                 Trace.WriteLine($"Epoch: {epoch + 1}: Loss = {currentLoss}");
             }
 
+            // sometimes it seems the GC is too busy to collect.
+            // Might be caused by native memory not visible for the managed gc
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
             var orderedTargetNames = GetOrderedTargetNames(targets);
             return new CntkNeuralNetModel(m_network.Clone(ParameterCloningMethod.Clone), m_device, orderedTargetNames);
         }
@@ -126,8 +140,8 @@ namespace SharpLearning.Neural.Cntk
         {
             var inputDimensions = m_network.Arguments[0].Shape.Dimensions.ToArray();
 
-            var imageStreamInfo = minibatchSource.StreamInfo("features");
-            var labelStreamInfo = minibatchSource.StreamInfo("labels");
+            var imageStreamInfo = minibatchSource.StreamInfo(observationsId);
+            var labelStreamInfo = minibatchSource.StreamInfo(targetsId);
 
 
             // build a model
@@ -156,9 +170,10 @@ namespace SharpLearning.Neural.Cntk
             var miniBatchCount = 0;
             var outputFrequencyInMinibatches = 1;
 
-            while (true)
+            uint numEpochs = (uint)m_epochs;
+            while (numEpochs > 0)
             {
-                var minibatchData = minibatchSource.GetNextMinibatch(uBatchSize, m_device);
+                var minibatchData = minibatchSource.GetNextMinibatch((uint)m_batchSize, m_device);
 
                 // Stop training once max epochs is reached.
                 if (minibatchData.empty())
@@ -166,26 +181,34 @@ namespace SharpLearning.Neural.Cntk
                     break;
                 }
 
-                trainer.TrainMinibatch(new Dictionary<Variable, MinibatchData>()
-                    {
-                        { imageInput, minibatchData[imageStreamInfo] },
-                        { targetVariable, minibatchData[labelStreamInfo] }
-                    }, 
-                    m_device);
+                var minibatchValues = new Dictionary<Variable, MinibatchData>()
+                {
+                    { imageInput, minibatchData[imageStreamInfo] },
+                    { targetVariable, minibatchData[labelStreamInfo] }
+                };
 
-                if ((miniBatchCount++ % outputFrequencyInMinibatches) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
+                trainer.TrainMinibatch(minibatchValues, m_device);
+
+                var minibatchIdx = miniBatchCount++;
+                if ((minibatchIdx % outputFrequencyInMinibatches) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                 {
                     float trainLossValue = (float)trainer.PreviousMinibatchLossAverage();
                     float evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
-                    Trace.WriteLine($"Minibatch: {miniBatchCount} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                    Trace.WriteLine($"Minibatch: {minibatchIdx} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                }
+
+                // Because minibatchSource is created with MinibatchSource.InfinitelyRepeat, 
+                // batching will not end. Each time minibatchSource completes an sweep (epoch),
+                // the last minibatch data will be marked as end of a sweep. We use this flag
+                // to count number of epochs.
+                if (minibatchData.Values.Any(a => a.sweepEnd))
+                {
+                    Trace.WriteLine("Epoch: " + (m_epochs - numEpochs));
+                    numEpochs--;
                 }
             }
 
-            // save the model
-            //var imageClassifier = Function.Combine(new List<Variable>() { trainingLoss, prediction, classifierOutput }, "ImageClassifier");
-            //imageClassifier.Save(modelFile);
-
-            return new CntkNeuralNetModel(m_network.Clone(ParameterCloningMethod.Clone), m_device, 
+            return new CntkNeuralNetModel(m_network.Clone(ParameterCloningMethod.Clone), m_device,
                 Enumerable.Range(0, numberOfClasses).Select(v => (double)v).ToArray()); // Hack. only works for zero-based consequtives class names.
         }
 
