@@ -91,7 +91,9 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Activations\ReluActivationTest.cs" />
+    <Compile Include="Cntk\CntkLogisticRegressionTest.cs" />
     <Compile Include="Cntk\CntkNeuralNetLearnerTest.cs" />
+    <Compile Include="Cntk\DataGenerator.cs" />
     <Compile Include="ConvUtilsTest.cs" />
     <Compile Include="GradientCheckerTool.cs" />
     <Compile Include="Layers\ActivationLayerTest.cs" />
