@@ -94,7 +94,7 @@ namespace SharpLearning.Neural.Cntk
 
         public static Function Pool2D(Variable input, int poolW, int poolH,
             PoolingType poolingType = PoolingType.Max,
-            int strideW = 1, int strideH = 1, string outputName = "")
+            int strideW = 2, int strideH = 2, string outputName = "")
         {
             if (input.Shape.Rank != 3)
             {
