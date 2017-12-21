@@ -31,5 +31,5 @@ Pull requests are usually created against the master branch, unless the pull req
     3. When the pull request has been approved, and author will merge the changes to the master.
  
 ## Coding standard
-SharpLearning follows the [microsoft C# coding conventions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions)
+SharpLearning follows the microsoft C# [naming](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/naming-guidelines) and [coding](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions) guidelines
 relatively closely. In general, try to write code in similar style to what is already present in the existing files/projects.
