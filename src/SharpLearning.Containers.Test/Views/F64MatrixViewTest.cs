@@ -45,6 +45,50 @@ namespace SharpLearning.Containers.Test.Views
             }
         }
 
+        [TestMethod]
+        public unsafe void F64MatrixView_LargePointerOffset()
+        {
+            const double testValue = 45;
+            var largeMatrix = LargeMatrix();
+
+            largeMatrix[largeMatrix.RowCount - 1, 0] = testValue;
+
+            using (var pinnedMatrix = largeMatrix.GetPinnedPointer())
+            {
+                var matrixView = pinnedMatrix.View();
+
+                var lastValue = *matrixView[largeMatrix.RowCount - 1];
+
+                Assert.AreEqual(lastValue, testValue);
+            }
+        }
+
+        /// <remarks>A matrix which needs a byte pointer offset larger than
+        /// int.MaxValue to access all records in the backing array</remarks>
+        private static F64Matrix LargeMatrix()
+        {
+            return new F64Matrix(int.MaxValue / sizeof(double) + 2, 1);
+        }
+
+        [TestMethod]
+        public void F64MatrixView_ColumnLargePointerOffset()
+        {
+            const double testValue = 45;
+            var largeMatrix = LargeMatrix();
+
+            largeMatrix[largeMatrix.RowCount - 1, 0] = testValue;
+
+            using (var pinnedMatrix = largeMatrix.GetPinnedPointer())
+            {
+                var columnView = pinnedMatrix.View().ColumnView(0);
+
+                var lastValue = columnView[largeMatrix.RowCount - 1];
+
+                Assert.AreEqual(lastValue, testValue);
+            }
+        }
+
+
         F64Matrix Matrix()
         {
             var features = new double[9] { 1, 2, 3,
