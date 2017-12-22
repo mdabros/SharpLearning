@@ -9,7 +9,7 @@ using SharpLearning.Containers.Extensions;
 namespace SharpLearning.Optimization
 {
     /// <summary>
-    /// Sequential Model-based optimization (SMBO). SMBO learns a model based on the initial parameter sets and scores.
+    /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
     /// This model is used to sample new promising parameter candiates which are evaluated and added to the existing paramter sets.
     /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
     /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
@@ -19,7 +19,7 @@ namespace SharpLearning.Optimization
     /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
     /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
     /// </summary>
-    public sealed class SequentialModelBasedOptimizer : IOptimizer
+    public sealed class BayesianOptimizer : IOptimizer
     {
         readonly double[][] m_parameters;
         readonly int m_maxIterations;
@@ -34,10 +34,10 @@ namespace SharpLearning.Optimization
         // m_random.NextDouble() * (max - min) + min; 
         // instead of: (currentValue + prevValue) * 0.5; like in random forest.
         readonly RegressionExtremelyRandomizedTreesLearner m_learner;
-        readonly RandomSearchOptimizer m_optimizer;
+        readonly IOptimizer m_optimizer;
 
         /// <summary>
-        /// Sequential Model-based optimization (SMBO). SMBO learns a model based on the initial parameter sets and scores.
+        /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
         /// This model is used to sample new promising parameter candiates which are evaluated and added to the existing paramter sets.
         /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
         /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
@@ -53,7 +53,7 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 3)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public SequentialModelBasedOptimizer(double[][] parameters, int maxIterations, int numberOfStartingPoints = 10, int numberOfCandidatesEvaluatedPrIteration = 3, int seed = 42)
+        public BayesianOptimizer(double[][] parameters, int maxIterations, int numberOfStartingPoints = 10, int numberOfCandidatesEvaluatedPrIteration = 3, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -67,7 +67,7 @@ namespace SharpLearning.Optimization
             m_random = new Random(seed);
             
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
-            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter much.
+            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
             m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
 
             // optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
@@ -76,7 +76,7 @@ namespace SharpLearning.Optimization
 
 
         /// <summary>
-        /// Sequential Model-based optimization (SMBO). SMBO learns a model based on the initial parameter sets and scores.
+        /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
         /// This model is used to sample new promising parameter candiates which are evaluated and added to the existing paramter sets.
         /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
         /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
@@ -93,7 +93,7 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 3)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public SequentialModelBasedOptimizer(double[][] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+        public BayesianOptimizer(double[][] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
             int numberOfCandidatesEvaluatedPrIteration = 3, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
@@ -113,7 +113,7 @@ namespace SharpLearning.Optimization
             m_random = new Random(seed);
 
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
-            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter much.
+            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
             m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
 
             // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model

@@ -7,13 +7,13 @@ using System.Collections.Generic;
 namespace SharpLearning.Optimization.Test
 {
     [TestClass]
-    public class SequentialModelBasedOptimizerTest
+    public class BayesianOptimizerTest
     {
         [TestMethod]
-        public void SequentialModelBasedOptimizer_Optimize()
+        public void BayesianOptimizer_Optimize()
         {
             var parameters = new double[][] { new double[] { 0.0, 100.0 } };
-            var sut = new SequentialModelBasedOptimizer(parameters, 60, 5, 1);
+            var sut = new BayesianOptimizer(parameters, 60, 5, 1);
             var results = sut.Optimize(Minimize2);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
