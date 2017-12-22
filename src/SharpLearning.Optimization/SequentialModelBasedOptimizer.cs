@@ -30,7 +30,10 @@ namespace SharpLearning.Optimization
         readonly List<double[]> m_previousParameterSets;
         readonly List<double> m_previousParameterSetScores;
 
-        readonly RegressionRandomForestLearner m_learner;
+        // Important to use extra trees learner to have split bestween features calculated as: 
+        // m_random.NextDouble() * (max - min) + min; 
+        // instead of: (currentValue + prevValue) * 0.5; like in random forest.
+        readonly RegressionExtremelyRandomizedTreesLearner m_learner;
         readonly ParticleSwarmOptimizer m_optimizer;
 
         /// <summary>
@@ -62,9 +65,12 @@ namespace SharpLearning.Optimization
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
             m_random = new Random(seed);
-            // hyper parameters for regression random forest learner
-            m_learner = new RegressionRandomForestLearner(20, 1, 2000, parameters.Length, 1e-6, 1.0, 42, false);
-            // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
+            
+            // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
+            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter much.
+            m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
+            
+            // optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
             m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
         }
 
@@ -105,8 +111,11 @@ namespace SharpLearning.Optimization
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
             m_random = new Random(seed);
-            // hyper parameters for regression random forest learner
-            m_learner = new RegressionRandomForestLearner(20, 1, 2000, parameters.Length, 1e-6, 1.0, 42, false);
+
+            // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
+            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter much.
+            m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
+            
             // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
             m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
 
