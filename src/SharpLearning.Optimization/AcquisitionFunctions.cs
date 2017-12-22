@@ -3,6 +3,16 @@
 namespace SharpLearning.Optimization
 {
     /// <summary>
+    /// Delegate for acquisition functions.
+    /// </summary>
+    /// <param name="currentScore">Current best score.</param>
+    /// <param name="mean">Predicted score.</param>
+    /// <param name="variance">Predicted variance.</param>
+    /// <param name="xi">Controls the balance between exploration and exploitation. Default is 0.0.</param>
+    /// <returns>Expected Improvement.</returns>
+    public delegate double AcquisitionFunction(double currentScore, double mean, double variance, double xi = 0.0);
+
+    /// <summary>
     /// Acquisition functions for bayesian optimization
     /// </summary>
     public static class AcquisitionFunctions

@@ -34,7 +34,12 @@ namespace SharpLearning.Optimization
         // m_random.NextDouble() * (max - min) + min; 
         // instead of: (currentValue + prevValue) * 0.5; like in random forest.
         readonly RegressionExtremelyRandomizedTreesLearner m_learner;
-        readonly IOptimizer m_optimizer;
+
+        // Optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
+        readonly IOptimizer m_maximizer;
+
+        // Acquisition function to maximize
+        readonly AcquisitionFunction m_acquisitionFunc;
 
         /// <summary>
         /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
@@ -49,11 +54,11 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="parameters">Each row is a series of values for a specific parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
-        /// <param name="numberOfStartingPoints">Number of randomly created starting points to use for the initial model in the first iteration (default is 10)</param>
+        /// <param name="numberOfStartingPoints">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
-        /// The parameter sets are inlcuded in order of most promissing outcome (default is 3)</param>
+        /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(double[][] parameters, int maxIterations, int numberOfStartingPoints = 10, int numberOfCandidatesEvaluatedPrIteration = 3, int seed = 42)
+        public BayesianOptimizer(double[][] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -68,10 +73,13 @@ namespace SharpLearning.Optimization
             
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
-            m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
+            m_learner = new RegressionExtremelyRandomizedTreesLearner(30, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
 
             // optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
-            m_optimizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
+            m_maximizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
+
+            // acquisition function to maximize,
+            m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
         }
 
 
@@ -91,10 +99,10 @@ namespace SharpLearning.Optimization
         /// <param name="previousParameterSets">Parameter sets from previous run</param>
         /// <param name="previousParameterSetScores">Scores from from previous run corresponding to each parameter set</param>
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
-        /// The parameter sets are inlcuded in order of most promissing outcome (default is 3)</param>
+        /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
         public BayesianOptimizer(double[][] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
-            int numberOfCandidatesEvaluatedPrIteration = 3, int seed = 42)
+            int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -114,10 +122,13 @@ namespace SharpLearning.Optimization
 
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
-            m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
+            m_learner = new RegressionExtremelyRandomizedTreesLearner(30, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
 
             // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
-            m_optimizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
+            m_maximizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
+
+            // acquisition function to maximize,
+            m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
 
             m_previousParameterSets = previousParameterSets;
             m_previousParameterSetScores = previousParameterSetScores;
@@ -159,7 +170,7 @@ namespace SharpLearning.Optimization
 
             var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
 
-            int interations = 0;
+            int iterations = 0;
 
             if (usePreviousResults)
             {
@@ -186,7 +197,7 @@ namespace SharpLearning.Optimization
                 {
                     var set = CreateParameterSet();
                     var score = functionToMinimize(set).Error;
-                    interations++;
+                    iterations++;
 
                     if (!double.IsNaN(score))
                     {
@@ -233,7 +244,7 @@ namespace SharpLearning.Optimization
                     }
 
                     var result = functionToMinimize(parameterSet);
-                    interations++;
+                    iterations++;
 
                     if (!double.IsNaN(result.Error))
                     {
@@ -242,14 +253,12 @@ namespace SharpLearning.Optimization
                         {
                             bestParameterSetScore = result.Error;
                             bestParameterSet = result.ParameterSet;
-                            //Console.WriteLine("New Best: " + result.Error + " : " + string.Join(", ", result.ParameterSet));
+                            //System.Diagnostics.Trace.WriteLine(iterations + ";" + result.Error);
                         }
 
                         // add point to parameter set list for next iterations model
                         parameterSets.Add(result.ParameterSet);
-                        parameterSetScores.Add(result.Error);
-
-                        System.Diagnostics.Trace.WriteLine(iteration + ";" + result.Error);
+                        parameterSetScores.Add(result.Error);                       
                     }
 
                     lastSet = parameterSet;
@@ -276,10 +285,10 @@ namespace SharpLearning.Optimization
 
                 return new OptimizerResult(param,
                     // negative, since we want to "maximize" the acquisition function.
-                    -AcquisitionFunctions.ExpectedImprovement(bestScore, p.Prediction, p.Variance));
+                    -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
             };
 
-            return m_optimizer.Optimize(minimize).Take(m_numberOfCandidatesEvaluatedPrIteration).ToArray();
+            return m_maximizer.Optimize(minimize).Take(m_numberOfCandidatesEvaluatedPrIteration).ToArray();
         }
 
         bool Equals(double[] p1, double[] p2)
