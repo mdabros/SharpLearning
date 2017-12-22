@@ -13,14 +13,14 @@ namespace SharpLearning.Optimization.Test
         public void SequentialModelBasedOptimizer_Optimize()
         {
             var parameters = new double[][] { new double[] { 0.0, 100.0 } };
-            var sut = new SequentialModelBasedOptimizer(parameters, 20, 5);
+            var sut = new SequentialModelBasedOptimizer(parameters, 60, 5, 1);
             var results = sut.Optimize(Minimize2);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 38.437223516833988 }, 130.86756109943934),
-                new OptimizerResult(new double[] { 97.1670285319756 }, 145222.72635616461)
+                new OptimizerResult(new double[] { 37.7045709349702 }, 109.34683224130575),
+                new OptimizerResult(new double[] { 96.685282092860575 }, 142880.58737826956)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);

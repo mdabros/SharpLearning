@@ -34,7 +34,7 @@ namespace SharpLearning.Optimization
         // m_random.NextDouble() * (max - min) + min; 
         // instead of: (currentValue + prevValue) * 0.5; like in random forest.
         readonly RegressionExtremelyRandomizedTreesLearner m_learner;
-        readonly ParticleSwarmOptimizer m_optimizer;
+        readonly RandomSearchOptimizer m_optimizer;
 
         /// <summary>
         /// Sequential Model-based optimization (SMBO). SMBO learns a model based on the initial parameter sets and scores.
@@ -69,9 +69,9 @@ namespace SharpLearning.Optimization
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter much.
             m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
-            
+
             // optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
-            m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
+            m_optimizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
         }
 
 
@@ -115,9 +115,9 @@ namespace SharpLearning.Optimization
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter much.
             m_learner = new RegressionExtremelyRandomizedTreesLearner(10, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
-            
+
             // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
-            m_optimizer = new ParticleSwarmOptimizer(m_parameters, 100, 40);
+            m_optimizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
 
             m_previousParameterSets = previousParameterSets;
             m_previousParameterSetScores = previousParameterSetScores;
@@ -159,6 +159,8 @@ namespace SharpLearning.Optimization
 
             var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
 
+            int interations = 0;
+
             if (usePreviousResults)
             {
                 parameterSets.AddRange(m_previousParameterSets);
@@ -184,6 +186,7 @@ namespace SharpLearning.Optimization
                 {
                     var set = CreateParameterSet();
                     var score = functionToMinimize(set).Error;
+                    interations++;
 
                     if (!double.IsNaN(score))
                     {
@@ -208,7 +211,7 @@ namespace SharpLearning.Optimization
                 var model = m_learner.Learn(observations, targets);
 
                 var bestScore = parameterSetScores.Min();
-                var candidates = FindMinimumCandidates(model, bestScore);
+                var candidates = FindNextCandidates(model, bestScore);
                 
                 var first = true;
 
@@ -216,7 +219,7 @@ namespace SharpLearning.Optimization
                 {
                     var parameterSet = candidate.ParameterSet;
 
-                    if(Equals(lastSet, parameterSet) && !first)
+                    if (Equals(lastSet, parameterSet) && !first)
                     {
                         // skip evaluation if parameters have not changed.
                         continue;
@@ -230,8 +233,9 @@ namespace SharpLearning.Optimization
                     }
 
                     var result = functionToMinimize(parameterSet);
-                    
-                    if(!double.IsNaN(result.Error))
+                    interations++;
+
+                    if (!double.IsNaN(result.Error))
                     {
                         // update best
                         if (result.Error < bestParameterSetScore)
@@ -244,6 +248,8 @@ namespace SharpLearning.Optimization
                         // add point to parameter set list for next iterations model
                         parameterSets.Add(result.ParameterSet);
                         parameterSetScores.Add(result.Error);
+
+                        System.Diagnostics.Trace.WriteLine(iteration + ";" + result.Error);
                     }
 
                     lastSet = parameterSet;
@@ -261,99 +267,19 @@ namespace SharpLearning.Optimization
             return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
         }
 
-        OptimizerResult[] FindMinimumCandidates(RegressionForestModel model, double bestScore)
+        OptimizerResult[] FindNextCandidates(RegressionForestModel model, double bestScore)
         {
             Func<double[], OptimizerResult> minimize = (param) =>
             {
+                // use the model to predict the expected performance, mean and variance, of the parameter set.
+                var p = model.PredictCertainty(param);
+
                 return new OptimizerResult(param,
-                    ExpectedImprovementCriterion(param, model, bestScore));
+                    // negative, since we want to "maximize" the acquisition function.
+                    -AcquisitionFunctions.ExpectedImprovement(bestScore, p.Prediction, p.Variance));
             };
 
             return m_optimizer.Optimize(minimize).Take(m_numberOfCandidatesEvaluatedPrIteration).ToArray();
-        }
-
-        double ExpectedImprovementCriterion(double[] observation, RegressionForestModel model, double bestScore, double xi = 0.0)
-        {
-            var certaintyPrediction = model.PredictCertainty(observation);
-
-            // Avoid points with zero variance
-            var variance = Math.Max(certaintyPrediction.Variance, 1e-9);
-            var mean = certaintyPrediction.Prediction;
-
-            var z = (mean - bestScore - xi) / Math.Sqrt(variance);
-
-            var ei = (mean - bestScore - xi) * CumulativeDensityFunction(z)
-                + Math.Sqrt(variance) * ProbabilityDensityFunction(z);
-            return ei;
-        }
-
-        /// <summary>
-        /// Alternative to ExpectedImprovementCriterion
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <param name="model"></param>
-        /// <param name="yMax"></param>
-        /// <param name="xi"></param>
-        /// <returns></returns>
-        double PExpectedImprovementCriterion(double[] observation, RegressionForestModel model, double yMax, double xi = 0.0)
-        {
-            var certaintyPrediction = model.PredictCertainty(observation);
-
-            // Avoid points with zero variance
-            var variance = Math.Max(certaintyPrediction.Variance, 1e-9);
-            var mean = certaintyPrediction.Prediction;
-
-            var z = (mean - yMax - xi) / Math.Sqrt(variance);
-
-            var ei = CumulativeDensityFunction(z);                
-            return ei;
-        }
-
-        /// <summary>
-        /// Alternative to ExpectedImprovementCriterion
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <param name="model"></param>
-        /// <param name="kappa"></param>
-        /// <returns></returns>
-        double UpperConfidenceBound(double[] observation, RegressionForestModel model, double kappa = 2.56)
-        {
-            var certaintyPrediction = model.PredictCertainty(observation);
-
-            // Avoid points with zero variance
-            var variance = Math.Max(certaintyPrediction.Variance, 1e-9);
-            var mean = certaintyPrediction.Prediction;
-
-            var ucb = mean + kappa * Math.Sqrt(variance);
-            return ucb;
-        }
-
-        double ProbabilityDensityFunction(double x)
-        {
-            return Math.Exp(-x * x / 2.0) / Math.Sqrt(2 * Math.PI);
-        }
-
-        double CumulativeDensityFunction(double x)
-        {
-            // constants
-            double a1 = 0.254829592;
-            double a2 = -0.284496736;
-            double a3 = 1.421413741;
-            double a4 = -1.453152027;
-            double a5 = 1.061405429;
-            double p = 0.3275911;
-
-            // Save the sign of x
-            int sign = 1;
-            if (x < 0)
-                sign = -1;
-            x = Math.Abs(x) / Math.Sqrt(2.0);
-
-            // A&S formula 7.1.26
-            double t = 1.0 / (1.0 + p * x);
-            double y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.Exp(-x * x);
-
-            return 0.5 * (1.0 + sign * y);
         }
 
         bool Equals(double[] p1, double[] p2)
