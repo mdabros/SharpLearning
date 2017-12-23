@@ -45,7 +45,50 @@ namespace SharpLearning.Containers.Test.Views
             }
         }
 
-        F64Matrix Matrix()
+        [TestMethod]
+        public unsafe void F64MatrixView_LargePointerOffset()
+        {
+            const double testValue = 45;
+            var largeMatrix = LargeMatrix();
+
+            largeMatrix[largeMatrix.RowCount - 1, 0] = testValue;
+
+            using (var pinnedMatrix = largeMatrix.GetPinnedPointer())
+            {
+                var matrixView = pinnedMatrix.View();
+
+                var lastValue = *matrixView[largeMatrix.RowCount - 1];
+
+                Assert.AreEqual(lastValue, testValue);
+            }
+        }
+
+        [TestMethod]
+        public void F64MatrixView_ColumnLargePointerOffset()
+        {
+            const double testValue = 45;
+            var largeMatrix = LargeMatrix();
+
+            largeMatrix[largeMatrix.RowCount - 1, 0] = testValue;
+
+            using (var pinnedMatrix = largeMatrix.GetPinnedPointer())
+            {
+                var columnView = pinnedMatrix.View().ColumnView(0);
+
+                var lastValue = columnView[largeMatrix.RowCount - 1];
+
+                Assert.AreEqual(lastValue, testValue);
+            }
+        }
+
+        /// <remarks>A matrix which needs a byte pointer offset larger than
+        /// int.MaxValue to access all records in the backing array</remarks>
+        private F64Matrix LargeMatrix()
+        {
+            return new F64Matrix(int.MaxValue / sizeof(double) + 2, 1);
+        }
+
+        private F64Matrix Matrix()
         {
             var features = new double[9] { 1, 2, 3,
                                         10, 20, 30,
@@ -54,7 +97,7 @@ namespace SharpLearning.Containers.Test.Views
             return new F64Matrix(features, 3, 3);
         }
 
-        unsafe void AssertColumnView(double[] column, F64MatrixColumnView columnView)
+        private unsafe void AssertColumnView(double[] column, F64MatrixColumnView columnView)
         {
             for (int i = 0; i < column.Length; i++)
             {
@@ -63,7 +106,7 @@ namespace SharpLearning.Containers.Test.Views
         }
 
 
-        unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
+        private unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
         {
             for (int i = 0; i < matrix.RowCount; i++)
             {
