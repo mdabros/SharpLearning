@@ -47,7 +47,7 @@ However, several optimization methods are availible for hyperparameter tuning:
 * RandomSearch
 * ParticleSwarm
 * GlobalizedBoundedNelderMead
-* SequentialModelBased  
+* BayesianOptimization  
 
 License
 -------
@@ -94,4 +94,12 @@ Container/IO packages:
 - **SharpLearning.InputOutput** - Provides csv parsing and serialization for SharpLearning.
 - **SharpLearning.FeatureTransformations** - Provides CsvRow transforms like missing value replacement and matrix transforms like MinMaxNormalization.
 
+Contributing
+------------
+Contributions are welcome in the following areas:
 
+ 1. Add new issues with bug descriptions or feature suggestions.
+ 2. Add more examples to [SharpLearning.Examples](https://github.com/mdabros/SharpLearning.Examples).
+ 3. Solve existing issues by forking SharpLearning and creating a pull request.
+
+When contributing, please follow the [contribution guide](https://github.com/mdabros/SharpLearning/blob/master/CONTRIBUTING.md).
