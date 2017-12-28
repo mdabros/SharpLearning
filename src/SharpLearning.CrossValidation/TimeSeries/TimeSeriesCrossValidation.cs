@@ -23,25 +23,20 @@ namespace SharpLearning.CrossValidation.TimeSeries
         /// Time series cross-validation. Based on rolling validation.
         /// </summary>
         /// <param name="initialTrainingSize">The initial size of the training set.</param>
-        /// <param name="maxTrainingSetSize">The maximum size of the training set. When the max is reached, 
-        /// the training set size will be kept constant, but move forward in time, 
-        /// using the data closest to the test period as training data. Default is 0, which indicate no maximum size</param>
+        /// <param name="maxTrainingSetSize">The maximum size of the training set. Default is 0, which indicate no maximum size, 
+        /// resulting in an expanding training interval. If a max is chosen, and the max size is reached, 
+        /// this will result in a sliding training interval, moving forward in time, 
+        /// always using the data closest to the test period as training data. </param>
         public TimeSeriesCrossValidation(int initialTrainingSize, int maxTrainingSetSize = 0)
         {
             if (initialTrainingSize <= 0)
-            {
-                throw new ArgumentException($"{nameof(initialTrainingSize)} much be larger than 0, was {initialTrainingSize}");
-            }
+            { throw new ArgumentException($"{nameof(initialTrainingSize)} much be larger than 0, was {initialTrainingSize}"); }
 
             if (maxTrainingSetSize < 0)
-            {
-                throw new ArgumentException($"{nameof(maxTrainingSetSize)} much be larger than 0, was {maxTrainingSetSize}");
-            }
+            { throw new ArgumentException($"{nameof(maxTrainingSetSize)} much be larger than 0, was {maxTrainingSetSize}"); }
 
             if ((maxTrainingSetSize != 0) && (initialTrainingSize > maxTrainingSetSize))
-            {
-                throw new ArgumentException($"{nameof(initialTrainingSize)} = {initialTrainingSize} is larger than {nameof(maxTrainingSetSize)} = {maxTrainingSetSize}");
-            }
+            { throw new ArgumentException($"{nameof(initialTrainingSize)} = {initialTrainingSize} is larger than {nameof(maxTrainingSetSize)} = {maxTrainingSetSize}"); }
 
             m_initialTrainingSize = initialTrainingSize;
             m_maxTrainingSetSize = maxTrainingSetSize;
