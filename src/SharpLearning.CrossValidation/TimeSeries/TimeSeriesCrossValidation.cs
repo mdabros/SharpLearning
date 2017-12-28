@@ -104,13 +104,25 @@ namespace SharpLearning.CrossValidation.TimeSeries
 
         /// <summary>
         /// Takes as input the original array of targets used as input for the validation,
-        /// and returns the subset of targets corresponding to the validation prediction.
+        /// and returns the subset of targets corresponding to the validation predictions.
         /// </summary>
         /// <param name="targets">The original array of targets used as input for the validation</param>
-        /// <returns>The subset of targets corresponding to the validation prediction</returns>
+        /// <returns>The subset of targets corresponding to the validation predictions</returns>
         public double[] GetValidationTargets(double[] targets)
         {
             return targets.Skip(m_initialTrainingSize).ToArray();
+        }
+
+        /// <summary>
+        /// Takes as input the original array of targets used as input for the validation,
+        /// and returns the indices used for the validation predictions.
+        /// </summary>
+        /// <param name="targets">The original array of targets used as input for the validation</param>
+        /// <returns>The subset of indices used for the validation predictions</returns>
+        public int[] GetValidationIndices(double[] targets)
+        {
+            return Enumerable.Range(0, targets.Length)
+                .Skip(m_initialTrainingSize).ToArray();
         }
     }
 }

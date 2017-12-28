@@ -92,13 +92,28 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
         [TestMethod]
         public void TimeSeriesCrossValidation_GetValidationTargets()
         {
-            var targets = Enumerable.Range(0, 100).Select(v => (double)v).ToArray();
+            var random = new Random(23);
+            var targets = Enumerable.Range(0, 100).Select(v => (double)random.Next()).ToArray();
             var initialTrainingSize = 5;
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize);
 
             var actual = sut.GetValidationTargets(targets);
             var expected = targets.Skip(initialTrainingSize).ToArray();
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TimeSeriesCrossValidation_GetValidationIndices()
+        {
+            var targets = Enumerable.Range(0, 100).Select(v => (double)v).ToArray();
+            var initialTrainingSize = 5;
+
+            var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize);
+
+            var actual = sut.GetValidationIndices(targets);
+            var expected = targets.Skip(initialTrainingSize).Select(v => (int)v).ToArray();
 
             CollectionAssert.AreEqual(expected, actual);
         }
