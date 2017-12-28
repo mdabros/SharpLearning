@@ -9,7 +9,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>SharpLearning.Optimization</PackageId>
     <Description>Provides optimization algorithms.</Description>
-    <PackageTags>optimization machinelearning grid search random particle swarm neldermead nelder mead smo machine learning</PackageTags>
+    <PackageTags>optimization grid search random particle swarm neldermead nelder mead bayesian bayesianoptimization machine learning machinelearning</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
