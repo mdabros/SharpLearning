@@ -17,15 +17,34 @@ namespace SharpLearning.CrossValidation.TimeSeries
     public sealed class TimeSeriesCrossValidation<TPrediction>
     {
         readonly int m_initialTrainingSize;
+        readonly int m_maxTrainingSetSize;
 
         /// <summary>
         /// Time series cross-validation. Based on rolling validation.
         /// </summary>
         /// <param name="initialTrainingSize">The initial size of the training set.</param>
-        public TimeSeriesCrossValidation(int initialTrainingSize)
+        /// <param name="maxTrainingSetSize">The maximum size of the training set. When the max is reached, 
+        /// the training set size will be kept constant, but move forward in time, 
+        /// using the data closest to the test period as training data. Default is 0, which indicate no maximum size</param>
+        public TimeSeriesCrossValidation(int initialTrainingSize, int maxTrainingSetSize = 0)
         {
-            if (initialTrainingSize <= 0) throw new ArgumentException($"initialTrainingSize much be larger than 0, was {initialTrainingSize}");
+            if (initialTrainingSize <= 0)
+            {
+                throw new ArgumentException($"{nameof(initialTrainingSize)} much be larger than 0, was {initialTrainingSize}");
+            }
+
+            if (maxTrainingSetSize < 0)
+            {
+                throw new ArgumentException($"{nameof(maxTrainingSetSize)} much be larger than 0, was {maxTrainingSetSize}");
+            }
+
+            if ((maxTrainingSetSize != 0) && (initialTrainingSize > maxTrainingSetSize))
+            {
+                throw new ArgumentException($"{nameof(initialTrainingSize)} = {initialTrainingSize} is larger than {nameof(maxTrainingSetSize)} = {maxTrainingSetSize}");
+            }
+
             m_initialTrainingSize = initialTrainingSize;
+            m_maxTrainingSetSize = maxTrainingSetSize;
         }
 
         /// <summary>
@@ -62,7 +81,12 @@ namespace SharpLearning.CrossValidation.TimeSeries
                 predictions[i] = model.Predict(observation);
 
                 currentObservationIndex++;
-                trainingIndices = Enumerable.Range(0, currentObservationIndex).ToArray();
+                
+                // determine start index and length of the training period, if maxTrainingSetSize is specified. 
+                var startIndex = m_maxTrainingSetSize != 0 ? Math.Max(0, (currentObservationIndex + 1) - m_maxTrainingSetSize) : 0;
+                var lenght = m_maxTrainingSetSize != 0 ? Math.Min(m_maxTrainingSetSize, currentObservationIndex) : currentObservationIndex;
+
+                trainingIndices = Enumerable.Range(startIndex, lenght).ToArray();
             }
 
             return predictions;
