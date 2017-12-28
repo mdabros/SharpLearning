@@ -41,7 +41,7 @@ Currently SharpLearning supports the following machine learning algorithms and m
 * Ensemble Learning
 
 All the machine learning algorithms have sensible default hyperparameters for easy usage. 
-However, several optimization methods are availible for hyperparameter tuning:
+However, several optimization methods are available for hyperparameter tuning:
 
 * GridSearch
 * RandomSearch
@@ -78,7 +78,7 @@ Learner and model packages:
 - **SharpLearning.AdaBoost** - Provides learning algorithms and models for AdaBoost regression and classification.
 - **SharpLearning.RandomForest** - Provides learning algorithms and models for RandomForest and ExtraTrees regression and classification.
 - **SharpLearning.GradientBoost** - Provides learning algorithms and models for GradientBoost regression and classification.
-- **SharpLearning.Neural** - Provides learning algorithms and models for neural net regression and classification. Layers availible for fully connected and covolutional nets.
+- **SharpLearning.Neural** - Provides learning algorithms and models for neural net regression and classification. Layers available for fully connected and covolutional nets.
 - **SharpLearning.Ensemble** - Provides ensemble learning for regression and classification. Makes it possible to combine the other learners/models from SharpLearning.
 - **SharpLearning.Common.Interfaces** - Provides common interfaces for SharpLearning.
 
