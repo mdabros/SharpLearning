@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
@@ -18,6 +19,7 @@ namespace SharpLearning.CrossValidation.TimeSeries
     {
         readonly int m_initialTrainingSize;
         readonly int m_maxTrainingSetSize;
+        readonly int m_retrainInterval;
 
         /// <summary>
         /// Time series cross-validation. Based on rolling validation.
@@ -27,7 +29,9 @@ namespace SharpLearning.CrossValidation.TimeSeries
         /// resulting in an expanding training interval. If a max is chosen, and the max size is reached, 
         /// this will result in a sliding training interval, moving forward in time, 
         /// always using the data closest to the test period as training data. </param>
-        public TimeSeriesCrossValidation(int initialTrainingSize, int maxTrainingSetSize = 0)
+        /// <param name="retrainInterval">How often should the model be retrained. Default is 1, which will retrain the model at all time steps.
+        /// Setting the interval to 5 will retrain the model at every fifth time step and use the current model for all time steps in between.</param>
+        public TimeSeriesCrossValidation(int initialTrainingSize, int maxTrainingSetSize = 0, int retrainInterval = 1)
         {
             if (initialTrainingSize <= 0)
             { throw new ArgumentException($"{nameof(initialTrainingSize)} much be larger than 0, was {initialTrainingSize}"); }
@@ -38,8 +42,12 @@ namespace SharpLearning.CrossValidation.TimeSeries
             if ((maxTrainingSetSize != 0) && (initialTrainingSize > maxTrainingSetSize))
             { throw new ArgumentException($"{nameof(initialTrainingSize)} = {initialTrainingSize} is larger than {nameof(maxTrainingSetSize)} = {maxTrainingSetSize}"); }
 
+            if (retrainInterval < 1)
+            { throw new ArgumentException($"{nameof(retrainInterval)} much be larger than 1, was {retrainInterval}"); }
+            
             m_initialTrainingSize = initialTrainingSize;
             m_maxTrainingSetSize = maxTrainingSetSize;
+            m_retrainInterval = retrainInterval;
         }
 
         /// <summary>
@@ -69,9 +77,16 @@ namespace SharpLearning.CrossValidation.TimeSeries
             var observation = new double[observations.ColumnCount];
             var currentObservationIndex = trainingIndices.Length;
 
+            var model = learner.Learn(observations, targets, trainingIndices);
+
             for (int i = 0; i < predictions.Length; i++)
             {
-                var model = learner.Learn(observations, targets, trainingIndices);
+                // Only train a new model at each retrain interval.
+                if((m_retrainInterval == 1 || i % m_retrainInterval == 0) && i != 0)
+                {
+                    model = learner.Learn(observations, targets, trainingIndices);
+                }
+                
                 observations.Row(currentObservationIndex, observation);
                 predictions[i] = model.Predict(observation);
 

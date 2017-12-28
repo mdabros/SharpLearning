@@ -31,7 +31,7 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             Assert.AreEqual(0.097833163747046217, error, 0.00001);
         }
-
+        
         [TestMethod]
         public void TimeSeriesCrossValidation_Validate_MaxTrainingSetSize()
         {
@@ -49,6 +49,44 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
             var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
 
             Assert.AreEqual(0.01203243827648333, error, 0.00001);
+        }
+
+        [TestMethod]
+        public void TimeSeriesCrossValidation_Validate_RetrainInterval()
+        {
+            var targetName = "T";
+            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
+            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
+            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+
+            var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, retrainInterval: 5);
+
+            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var timeSeriesTargets = sut.GetValidationTargets(targets);
+
+            var metric = new MeanSquaredErrorRegressionMetric();
+            var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
+
+            Assert.AreEqual(0.09701682683694364, error, 0.00001);
+        }
+
+        [TestMethod]
+        public void TimeSeriesCrossValidation_Validate_MaxTrainingSetSize_And_RetrainInterval()
+        {
+            var targetName = "T";
+            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
+            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
+            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+
+            var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, maxTrainingSetSize: 30, retrainInterval: 5);
+
+            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var timeSeriesTargets = sut.GetValidationTargets(targets);
+
+            var metric = new MeanSquaredErrorRegressionMetric();
+            var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
+
+            Assert.AreEqual(0.11347313000447182, error, 0.00001);
         }
 
         [TestMethod]
