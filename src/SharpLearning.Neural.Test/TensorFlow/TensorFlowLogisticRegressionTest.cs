@@ -12,21 +12,20 @@ namespace SharpLearning.Neural.Test.TensorFlow
         [TestMethod]
         public void Run_TensorFlow_Logistic_Regression()
         {
-            Trace.WriteLine("Linear regression");
+            Trace.WriteLine("Logistic regression");
             // Parameters
             var learning_rate = 0.001f;
-            var training_epochs = 100;
-            var display_step = 5;
+            var training_epochs = 1000;
+            var display_step = 50;
 
             // Training data
             var train_x = new float[] {
                 3.3f, 4.4f, 5.5f, 6.71f, 6.93f, 4.168f, 9.779f, 6.182f, 7.59f, 2.167f,
                 7.042f, 10.791f, 5.313f, 7.997f, 5.654f, 9.27f, 3.1f
             };
-            var train_y = new float[] {
-                1.7f,2.76f,2.09f,3.19f,1.694f,1.573f,3.366f,2.596f,2.53f,1.221f,
-                 2.827f,3.465f,1.65f,2.904f,2.42f,2.94f,1.3f
-            };
+
+            var rnd = new Random(23);
+            var train_y = train_x.Select(v => (float)rnd.Next(2)).ToArray();
 
             var n_samples = train_x.Length;
 
@@ -48,17 +47,16 @@ namespace SharpLearning.Neural.Test.TensorFlow
                 var initb = g.Assign(b, g.Const(1f));
                 var param = new [] { W, b };
 
-                var pred = g.Add(g.Mul(X, W), b);
+                var pred = g.Sigmoid(g.Add(g.Mul(X, W), b));
 
                 // [WIP] Tensorflow c++ API still missing full gradient support.
                 //var loss = g.Div(g.ReduceSum(g.Pow(g.Sub(pred, Y), g.Const(2f))), g.Mul(g.Const(2f), g.Const((float)n_samples)));               
-                // using mean square loss instead.
-                var loss = g.ReduceMean(g.Square(g.Sub(pred, Y)));              
+                var loss = g.ReduceMean(g.SigmoidCrossEntropyWithLogits(pred, Y));              
                 var gradients = g.AddGradients(new [] {loss}, param);
                 
                 // figure out how to do updates on lists of params and gradients.
-                var updateW = g.Assign(W, g.Add(W, g.Mul(g.Const(learning_rate), gradients[0])));
-                var updateB = g.Assign(b, g.Add(b, g.Mul(g.Const(learning_rate), gradients[1])));
+                var updateW = g.Assign(W, g.Add(W, g.Mul(g.Const(-learning_rate), gradients[0])));
+                var updateB = g.Assign(b, g.Add(b, g.Mul(g.Const(-learning_rate), gradients[1])));
                                                               
                 // initialize variables
                 s.GetRunner().AddTarget(initW.Operation).Run();
