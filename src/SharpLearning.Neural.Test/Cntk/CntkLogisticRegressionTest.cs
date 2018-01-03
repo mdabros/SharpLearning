@@ -141,7 +141,7 @@ namespace SharpLearning.Neural.Test.Cntk
                 float trainLossValue = (float)trainer.PreviousMinibatchLossAverage();
                 float evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
 
-                Trace.WriteLine($"Minibatch: {minibatchCount} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                Trace.WriteLine("Minibatch: " + minibatchCount + " CrossEntropyLoss = " + trainLossValue + ", EvaluationCriterion = " + evaluationValue);
             }
         }
     }

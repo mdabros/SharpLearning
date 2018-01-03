@@ -28,21 +28,23 @@ namespace SharpLearning.Neural.Test.TensorFlow
             };
             var n_samples = train_x.Length;
 
+            var dataType = TFDataType.Float;
+
             using (var g = new TFGraph())
             {
                 var s = new TFSession(g);
-                var rng = new Random();
+                var rng = new Random(21);
                 // tf Graph Input
 
-                var X = g.Placeholder(TFDataType.Float);
-                var Y = g.Placeholder(TFDataType.Float);
-                var W = g.Variable(g.Const(rng.Next()), operName: "weight");
-                var b = g.Variable(g.Const(rng.Next()), operName: "bias");
-                var pred = g.Add(g.Mul(X, W), b);
+                var X = g.Placeholder(dataType);
+                var Y = g.Placeholder(dataType);
+                var W = g.Variable(g.Const((float)rng.Next()), operName: "weight");
+                var b = g.Variable(g.Const((float)rng.Next()), operName: "bias");
 
-                var cost = g.Div(g.ReduceSum(g.Pow(g.Sub(pred, Y), g.Const(2))), g.Mul(g.Const(2), g.Const(n_samples)));
+                var pred = g.Add(g.Mul(X, W.Read), b.Read);
+                var loss = g.Div(g.ReduceSum(g.Pow(g.Sub(pred, Y), g.Const(2f))), g.Mul(g.Const(2f), g.Const((float)n_samples)));
 
-                // STuck here: TensorFlow bindings need to surface gradient support
+                // Stuck here: TensorFlow bindings need to surface gradient support
                 // waiting on Google for this
                 // https://github.com/migueldeicaza/TensorFlowSharp/issues/25
 
@@ -72,9 +74,9 @@ namespace SharpLearning.Neural.Test.TensorFlow
                         var c = runner
                             .AddInput(X, train_x)
                             .AddInput(Y, train_y)
-                            .Run(cost);
+                            .Run(loss);
 
-                        Console.WriteLine($"Epoch: {epoch + 1}, cost={c}, W={runner.Run(W)}, b={runner.Run(b)}");
+                        Console.WriteLine("Epoch: " + (epoch + 1) + ", cost=" + c + ", W=" + runner.Run(W) + ", b=" + runner.Run(b));
                     }
                 }
 
