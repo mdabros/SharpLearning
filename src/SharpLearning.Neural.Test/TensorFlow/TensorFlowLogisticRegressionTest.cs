@@ -25,6 +25,7 @@ namespace SharpLearning.Neural.Test.TensorFlow
             };
 
             var rnd = new Random(23);
+            // random 0 or 1 for logistic regression targets.
             var train_y = train_x.Select(v => (float)rnd.Next(2)).ToArray();
 
             var n_samples = train_x.Length;
@@ -34,23 +35,21 @@ namespace SharpLearning.Neural.Test.TensorFlow
             using (var g = new TFGraph())
             {
                 var s = new TFSession(g);
-                var rng = new Random(21);
-                // tf Graph Input
 
                 var X = g.Placeholder(dataType);
                 var Y = g.Placeholder(dataType);
 
                 var W = g.VariableV2(TFShape.Scalar, dataType, operName: "W");
-                var initW = g.Assign(W, g.Const(0.1f));
+                var initW = g.Assign(W, g.Const((float)rnd.NextDouble()));
 
                 var b = g.VariableV2(TFShape.Scalar, dataType, operName: "b");
-                var initb = g.Assign(b, g.Const(1f));
+                var initb = g.Assign(b, g.Const((float)rnd.NextDouble()));
                 var param = new [] { W, b };
 
                 var pred = g.Sigmoid(g.Add(g.Mul(X, W), b));
 
                 // [WIP] Tensorflow c++ API still missing full gradient support.
-                //var loss = g.Div(g.ReduceSum(g.Pow(g.Sub(pred, Y), g.Const(2f))), g.Mul(g.Const(2f), g.Const((float)n_samples)));               
+                // BinaryCrossEntropy loss.
                 var loss = g.ReduceMean(g.SigmoidCrossEntropyWithLogits(pred, Y));              
                 var gradients = g.AddGradients(new [] {loss}, param);
                 
@@ -68,7 +67,7 @@ namespace SharpLearning.Neural.Test.TensorFlow
                     foreach (var observation in observations)
                     {
 
-                        // run optimization loop.
+                        // run optimization loop. Minimization does not seem to work properly [WIP].
                         s.GetRunner()
                         .Fetch(updateB)
                         .Fetch(updateW)
