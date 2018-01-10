@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>SharpLearning.Optimization</PackageId>
     <Description>Provides optimization algorithms.</Description>
-    <PackageTags>optimization machinelearning grid search random particle swarm neldermead nelder mead smo machine learning</PackageTags>
+    <PackageTags>optimization grid search random particle swarm neldermead nelder mead bayesian bayesianoptimization machine learning machinelearning</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

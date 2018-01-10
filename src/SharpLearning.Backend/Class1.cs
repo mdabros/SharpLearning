@@ -15,7 +15,7 @@ namespace SharpLearning.Backend
 
         void test()
         {
-            using (var backend = new CntkBackend(defaultDevice))
+            //using (var backend = new CntkBackend(defaultDevice))
             //using (var backend = new TensorFlowBackend(defaultDevice))
             // Create data source
             //IDataSource source = CreateSource();
@@ -59,36 +59,36 @@ namespace SharpLearning.Backend
 
     interface IOperatorSymbol { }
 
-    IGraph DefineGraph(int[] shape, IBackend backend)
-    {
-        using (var graph = backend.CreateGraph())
-        {
-            IPlaceholderSymbol placeholder = graph.Placeholder(asdada);
+    //IGraph DefineGraph(int[] shape, IBackend backend)
+    //{
+    //    using (var graph = backend.CreateGraph())
+    //    {
+    //        IPlaceholderSymbol placeholder = graph.Placeholder(asdada);
 
-            IParametersTensorSymbol w = graph.Parameters(shape, init);
-            IParametersTensorSymbol b = graph.Parameters(shape, init);
+    //        IParametersTensorSymbol w = graph.Parameters(shape, init);
+    //        IParametersTensorSymbol b = graph.Parameters(shape, init);
 
-            graph.Operators.Dense(w, b)
+    //        graph.Operators.Dense(w, b)
 
-            IParametersTensorSymbol convolutionParameters = graph.Parameters();
+    //        IParametersTensorSymbol convolutionParameters = graph.Parameters();
 
-            var convOperator = graph.Convolution(w, b);
+    //        var convOperator = graph.Convolution(w, b);
 
 
-            graph.Operators.ReLU(convOperator, shape)
+    //        graph.Operators.ReLU(convOperator, shape)
 
             
 
-            var pooling = graph.Operators.Pooling(convOperator, shape, "average");
+    //        var pooling = graph.Operators.Pooling(convOperator, shape, "average");
 
 
-        }
+    //    }
 
-        using (var graph = backend.CreateLayers())
-        {
-            graph.Layers().
-            layers.
-            }
-        return null;
-    }
+    //    using (var graph = backend.CreateLayers())
+    //    {
+    //        graph.Layers().
+    //        layers.
+    //        }
+    //    return null;
+    //}
 }

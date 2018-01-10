@@ -140,6 +140,16 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            return PredictProbability(observations);
+        }
+
+        /// <summary>
         /// Predicts a set of obervations using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
         /// Usally this will be a more accurate predictions

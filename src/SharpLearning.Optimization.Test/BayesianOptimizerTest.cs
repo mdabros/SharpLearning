@@ -1,26 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
-using System.Collections.Generic;
 
 namespace SharpLearning.Optimization.Test
 {
     [TestClass]
-    public class SequentialModelBasedOptimizerTest
+    public class BayesianOptimizerTest
     {
         [TestMethod]
-        public void SequentialModelBasedOptimizer_Optimize()
+        public void BayesianOptimizer_OptimizeBest()
+        {
+            var parameters = new double[][]
+            {
+                new double[] { -10.0, 10.0 },
+                new double[] { -10.0, 10.0 },
+                new double[] { -10.0, 10.0 }
+            };
+            var sut = new BayesianOptimizer(parameters, 100, 5, 1);
+            var actual = sut.OptimizeBest(Minimize);
+
+            Assert.AreEqual(actual.Error, -0.92327107866106661, 0.0001);
+            Assert.AreEqual(actual.ParameterSet.Length, 3);
+
+            Assert.AreEqual(actual.ParameterSet[0], 8.1239613509382878, 0.0001);
+            Assert.AreEqual(actual.ParameterSet[1], -9.2896384835660637, 0.0001);
+            Assert.AreEqual(actual.ParameterSet[2], -0.03435398919245003, 0.0001);
+        }
+
+        [TestMethod]
+        public void BayesianOptimizer_Optimize()
         {
             var parameters = new double[][] { new double[] { 0.0, 100.0 } };
-            var sut = new SequentialModelBasedOptimizer(parameters, 20, 5);
+            var sut = new BayesianOptimizer(parameters, 120, 5, 1);
             var results = sut.Optimize(Minimize2);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.712345696964071 }, 109.34384021647092),
-                new OptimizerResult(new double[] { 66.810646591154239}, 34867.634010511123)
+                new OptimizerResult(new double[] { 37.710969353891429 }, 109.34400835405613),
+                new OptimizerResult(new double[] { 99.646240426062718 }, 157577.44222424511)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);
