@@ -24,7 +24,7 @@ namespace SharpLearning.Backend
 
         void Suggestion1()
         {
-            // This will probably not possible with current CNTK and TensorFlowSharp C# API state.
+            // This will probably not be possible with current CNTK and TensorFlowSharp C# API state.
             // Might also increase back and forth copying between CPU/GPU.
 
             // var graph = DefineGraph(int[] shape, IBackend backend)
@@ -45,8 +45,9 @@ namespace SharpLearning.Backend
 
             //          ITensorSymbol cost = loss(batch.Targets, predictions); // calculate loss
             //          ITensorSymbol accuracy = metric(batch.Targets, predictions); // optional
-            //          ITensorSymbol gradients = session.Backward(graph, batch); // back probabagate gradients
-            //          optimizer.Update(graph, gradients) // update parameters
+
+            //          ITensorSymbol gradients = session.Backward(graph, cost); // back propagate to get gradients
+            //          optimizer.Update(graph, gradients) // update parameters using gradients
 
             //    Trace.WriteLine($"Epoch {e}: Cost {cost.GetValue()}, Metric {metric.GetValue()}")
 
