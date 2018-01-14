@@ -29,7 +29,7 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
             var metric = new MeanSquaredErrorRegressionMetric();
             var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
 
-            Assert.AreEqual(0.097833163747046217, error, 0.00001);
+            Assert.AreEqual(0.098690664447830825, error, 0.00001);
         }
         
         [TestMethod]
@@ -48,7 +48,7 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
             var metric = new MeanSquaredErrorRegressionMetric();
             var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
 
-            Assert.AreEqual(0.01203243827648333, error, 0.00001);
+            Assert.AreEqual(0.27296549371962692, error, 0.00001);
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
             var metric = new MeanSquaredErrorRegressionMetric();
             var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
 
-            Assert.AreEqual(0.09701682683694364, error, 0.00001);
+            Assert.AreEqual(0.096346937132994928, error, 0.00001);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
             var metric = new MeanSquaredErrorRegressionMetric();
             var error = metric.Error(timeSeriesTargets, timeSeriesPredictions);
 
-            Assert.AreEqual(0.11347313000447182, error, 0.00001);
+            Assert.AreEqual(0.13010151998135897, error, 0.00001);
         }
 
         [TestMethod]
