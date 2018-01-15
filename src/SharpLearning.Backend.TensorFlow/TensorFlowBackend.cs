@@ -17,7 +17,8 @@ namespace SharpLearning.Backend
 
         private void DisposeManagedResources()
         {
-            // TODO: Insert managed dispose here
+            m_graph.Dispose();
+            m_graph = null;
         }
 
         #region Dispose
