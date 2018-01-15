@@ -1,30 +1,26 @@
 ﻿using System;
-using TensorFlow;
+using CNTK;
 
-namespace SharpLearning.Backend.TensorFlow
+namespace SharpLearning.Backend.Cntk
 {
-    internal class TensorFlowGraph : IGraph
+    internal class CntkVariableOutputTensorSymbol : IOutputTensorSymbol
     {
-        TFGraph m_graph;
+        readonly Variable m_variable;
+        readonly DataType m_dataType;
+        readonly int[] m_shape; // For debugging
+        readonly string m_name;
 
-        public TensorFlowGraph(DeviceType defaultDeviceType)
+        public CntkVariableOutputTensorSymbol(Variable variable, DataType dataType, ReadOnlySpan<int> shape, string name)
         {
-            DefaultDeviceType = defaultDeviceType;
-            // How do we specify device via TensorFlowSharp
-            m_graph = new TFGraph();
-        }
-
-        public DeviceType DefaultDeviceType { get; }
-
-        public IOutputTensorSymbol Placeholder(DataType dataType, ReadOnlySpan<int> shape, string name, DeviceType deviceType)
-        {
-            return new TensorFlowPlaceholderOutputTensorSymbol(m_graph, dataType, shape, name);
+            m_variable = variable ?? throw new ArgumentNullException(nameof(variable));
+            m_dataType = dataType;
+            m_shape = shape.ToArray();
+            m_name = name;
         }
 
         private void DisposeManagedResources()
         {
-            m_graph.Dispose();
-            m_graph = null;
+            m_variable.Dispose();
         }
 
         #region Dispose

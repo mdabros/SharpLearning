@@ -6,6 +6,8 @@ namespace SharpLearning.Backend
     public interface IGraph : IDisposable
     {
         DeviceType DefaultDeviceType { get; }
+
+        IOutputTensorSymbol Placeholder(DataType dataType, ReadOnlySpan<int> shape, string name, DeviceType deviceType);
     }
 
     //IGraph DefineGraph(int[] shape, IBackend backend)

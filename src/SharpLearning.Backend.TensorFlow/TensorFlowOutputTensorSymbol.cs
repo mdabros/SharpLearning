@@ -3,28 +3,24 @@ using TensorFlow;
 
 namespace SharpLearning.Backend.TensorFlow
 {
-    internal class TensorFlowGraph : IGraph
+    internal class TensorFlowOutputTensorSymbol : IOutputTensorSymbol
     {
-        TFGraph m_graph;
+        readonly TFOutput m_output;
+        readonly DataType m_dataType;
+        readonly int[] m_shape; // For debugging
+        readonly string m_name;
 
-        public TensorFlowGraph(DeviceType defaultDeviceType)
+        public TensorFlowOutputTensorSymbol(TFOutput output, DataType dataType, ReadOnlySpan<int> shape, string name)
         {
-            DefaultDeviceType = defaultDeviceType;
-            // How do we specify device via TensorFlowSharp
-            m_graph = new TFGraph();
-        }
-
-        public DeviceType DefaultDeviceType { get; }
-
-        public IOutputTensorSymbol Placeholder(DataType dataType, ReadOnlySpan<int> shape, string name, DeviceType deviceType)
-        {
-            return new TensorFlowPlaceholderOutputTensorSymbol(m_graph, dataType, shape, name);
+            m_output = output;
+            m_dataType = dataType;
+            m_shape = shape.ToArray();
+            m_name = name;
         }
 
         private void DisposeManagedResources()
         {
-            m_graph.Dispose();
-            m_graph = null;
+            // Nothing to dispose?
         }
 
         #region Dispose

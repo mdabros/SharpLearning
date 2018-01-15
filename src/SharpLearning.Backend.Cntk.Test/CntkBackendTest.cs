@@ -24,5 +24,16 @@ namespace SharpLearning.Backend.Cntk.Test
                 Assert.AreEqual(g.DefaultDeviceType, deviceType);
             }
         }
+
+        [TestMethod]
+        public void CntkBackendTest_CreateGraph_Placeholder()
+        {
+            var deviceType = DeviceType.Automatic;
+            using (var b = new CntkBackend(deviceType))
+            using (var g = b.CreateGraph())
+            {
+                g.Placeholder(DataType.Single, new int[] { 1, 2, 3 }, "p");
+            }
+        }
     }
 }

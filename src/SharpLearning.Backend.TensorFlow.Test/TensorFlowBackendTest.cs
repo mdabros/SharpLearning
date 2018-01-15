@@ -25,5 +25,16 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 Assert.AreEqual(g.DefaultDeviceType, deviceType);
             }
         }
+
+        [TestMethod]
+        public void TensorFlowBackendTest_CreateGraph_Placeholder()
+        {
+            var deviceType = DeviceType.Automatic;
+            using (var b = new TensorFlowBackend(deviceType))
+            using (var g = b.CreateGraph())
+            {
+                g.Placeholder(DataType.Single, new int[] { 1, 2, 3 }, "p");
+            }
+        }
     }
 }

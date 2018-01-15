@@ -46,14 +46,6 @@ namespace SharpLearning.Backend
         }
     }
 
-    interface ISymbol { }
-
-    interface ITensorSymbol { }
-
-    interface IParametersTensorSymbol { }
-
-    interface IOperatorSymbol { }
-
     //IGraph DefineGraph(int[] shape, IBackend backend)
     //{
     //    using (var graph = backend.CreateGraph())

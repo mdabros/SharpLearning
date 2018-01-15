@@ -1,4 +1,7 @@
-﻿namespace SharpLearning.Backend.Cntk
+﻿using System;
+using CNTK;
+
+namespace SharpLearning.Backend.Cntk
 {
     internal class CntkGraph : IGraph
     {
@@ -10,6 +13,11 @@
         }
 
         public DeviceType DefaultDeviceType { get; }
+
+        public IOutputTensorSymbol Placeholder(DataType dataType, ReadOnlySpan<int> shape, string name, DeviceType deviceType)
+        {
+            return new CntkPlaceholderOutputTensorSymbol(dataType, shape, name);
+        }
 
         private void DisposeManagedResources()
         {
