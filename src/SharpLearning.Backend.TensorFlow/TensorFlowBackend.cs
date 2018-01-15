@@ -1,24 +1,20 @@
 ﻿using System;
-using TensorFlow;
 
-namespace SharpLearning.Backend
+namespace SharpLearning.Backend.TensorFlow
 {
     public class TensorFlowBackend : IBackend
     {
-        TFGraph m_graph;
-
         public TensorFlowBackend(DeviceType defaultDeviceType)
         {
             DefaultDeviceType = defaultDeviceType;
-            m_graph = new TFGraph();
         }
 
         public DeviceType DefaultDeviceType { get; }
 
+        public IGraph CreateGraph() => new TensorFlowGraph(DefaultDeviceType);
+
         private void DisposeManagedResources()
         {
-            m_graph.Dispose();
-            m_graph = null;
         }
 
         #region Dispose

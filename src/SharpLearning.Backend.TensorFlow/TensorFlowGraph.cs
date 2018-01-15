@@ -1,23 +1,24 @@
-﻿using System;
+﻿using TensorFlow;
 
-namespace SharpLearning.Backend.Cntk
+namespace SharpLearning.Backend.TensorFlow
 {
-    public class CntkBackend : IBackend
+    internal class TensorFlowGraph : IGraph
     {
-        public CntkBackend(DeviceType defaultDeviceType)
-        {
-            // CNTK doesn't really have a concept of a graph or similar
-            // "Function"s are chained, should we keep a list of all these???
+        TFGraph m_graph;
 
+        public TensorFlowGraph(DeviceType defaultDeviceType)
+        {
             DefaultDeviceType = defaultDeviceType;
+            m_graph = new TFGraph();
         }
 
         public DeviceType DefaultDeviceType { get; }
 
-        public IGraph CreateGraph() => new CntkGraph(DefaultDeviceType);
 
         private void DisposeManagedResources()
         {
+            m_graph.Dispose();
+            m_graph = null;
         }
 
         #region Dispose

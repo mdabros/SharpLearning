@@ -1,23 +1,19 @@
-﻿using System;
-
-namespace SharpLearning.Backend.Cntk
+﻿namespace SharpLearning.Backend.Cntk
 {
-    public class CntkBackend : IBackend
+    internal class CntkGraph : IGraph
     {
-        public CntkBackend(DeviceType defaultDeviceType)
-        {
-            // CNTK doesn't really have a concept of a graph or similar
-            // "Function"s are chained, should we keep a list of all these???
+        readonly DeviceType m_defaultDeviceType;
 
-            DefaultDeviceType = defaultDeviceType;
+        public CntkGraph(DeviceType defaultDeviceType)
+        {
+            m_defaultDeviceType = defaultDeviceType;
         }
 
         public DeviceType DefaultDeviceType { get; }
 
-        public IGraph CreateGraph() => new CntkGraph(DefaultDeviceType);
-
         private void DisposeManagedResources()
         {
+
         }
 
         #region Dispose

@@ -46,11 +46,6 @@ namespace SharpLearning.Backend
         }
     }
 
-
-    interface IGraph
-    {
-    }
-
     interface ISymbol { }
 
     interface ITensorSymbol { }
