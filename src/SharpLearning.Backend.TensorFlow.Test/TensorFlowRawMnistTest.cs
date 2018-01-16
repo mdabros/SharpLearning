@@ -17,17 +17,143 @@ namespace SharpLearning.Backend.TensorFlow.Test
     {
         const string DownloadPath = "MnistTest";
 
-        //[TestMethod]
+        [TestMethod]
         public void MnistTest()
         {
-            var mnist = Mnist.Load(DownloadPath);
 
-            var trainReader = mnist.GetTrainReader();
-            var batchSize = 64;
-            var (inputBatch, labelBatch) = trainReader.NextBatch(batchSize);
+            const int featureCount = 28 * 28;
+            Assert.AreEqual(784, featureCount);
+            const int classCount = 10;
 
+            using (var g = new TFGraph())
+            {
+                var x = g.Placeholder(TFDataType.Float, new TFShape(-1, featureCount));
+                // Only why to simply set zeros??
+                var W = //g.ZerosLike( // Does not work with ApplyGradientDescent, how do we inialize??
+                    g.VariableV2(new TFShape(featureCount, classCount), TFDataType.Float)
+                    //)
+                    ;
+                var W_zero = g.Const(new float[featureCount, classCount]);
+                g.Assign(W, W_zero);
 
+                var b = //g.ZerosLike(
+                    g.VariableV2(new TFShape(classCount), TFDataType.Float)
+                    //)
+                    ;
+                var b_zero = g.Const(new float[classCount]);
+                g.Assign(b, b_zero);
+
+                var m = g.MatMul(x, W);
+                var y = g.Add(m, b);
+
+                var expectedY = g.Placeholder(TFDataType.Float, new TFShape(-1, classCount));
+
+                var (loss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY);
+                var crossEntropy = g.ReduceMean(loss);
+
+                var learningRate = g.Const(new TFTensor(0.5f));
+                // Need to do this in loop, can't do it before we have actual variables...
+                // TODO: Is this how to do it???
+                // https://www.tensorflow.org/api_docs/cc/class/tensorflow/ops/apply-gradient-descent
+                var adjustedW = g.ApplyGradientDescent(W, learningRate, backprop);
+                // How to adjust bias?
+                //var adjustedB = g.ApplyGradientDescent(b, learningRate, backprop);
+                // https://github.com/tensorflow/tensorflow/tree/master/tensorflow/cc/gradients
+
+                // See https://blog.manash.me/implementation-of-gradient-descent-in-tensorflow-using-tf-gradients-c111d783c78b
+
+                //var mnist = Mnist.Load(DownloadPath);
+                //var trainReader = mnist.GetTrainReader();
+                //var batchSize = 64;
+                //var (inputBatch, labelBatch) = trainReader.NextBatch(batchSize);
+            }
+
+            //nist = input_data.read_data_sets(FLAGS.data_dir, one_hot = True)
+
+            //  # Create the model
+            //            x = tf.placeholder(tf.float32, [None, 784])
+            //  W = tf.Variable(tf.zeros([784, 10]))
+            //  b = tf.Variable(tf.zeros([10]))
+            //  y = tf.matmul(x, W) + b
+
+            //  # Define loss and optimizer
+            //            y_ = tf.placeholder(tf.float32, [None, 10])
+
+            //  # The raw formulation of cross-entropy,
+            //#
+            //# tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(tf.nn.softmax(y)),
+            //# reduction_indices=[1]))
+            //#
+            //# can be numerically unstable.
+            //#
+            //# So here we use tf.nn.softmax_cross_entropy_with_logits on the raw
+            //# outputs of 'y', and then average across the batch.
+            //            cross_entropy = tf.reduce_mean(
+            //      tf.nn.softmax_cross_entropy_with_logits(labels = y_, logits = y))
+            //  train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+
+            //  sess = tf.InteractiveSession()
+            //  tf.global_variables_initializer().run()
+            //  # Train
+            //  for _ in range(1000):
+            //    batch_xs, batch_ys = mnist.train.next_batch(100)
+            //    sess.run(train_step, feed_dict ={ x: batch_xs, y_: batch_ys})
+
+            //  # Test trained model
+            //  correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+            //  accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+            //  print(sess.run(accuracy, feed_dict ={
+            //                x: mnist.test.images,
+            //                                      y_: mnist.test.labels}))
         }
+
+
+
+        //# Construct model
+        //pred = tf.nn.softmax(tf.matmul(x, W) + b) # Softmax
+
+        //# Minimize error using cross entropy
+        //cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))
+
+        //grad_W, grad_b = tf.gradients(xs=[W, b], ys=cost)
+
+
+        //new_W = W.assign(W - learning_rate * grad_W)
+        //new_b = b.assign(b - learning_rate * grad_b)
+
+        //# Initialize the variables (i.e. assign their default value)
+        //init = tf.global_variables_initializer()
+
+        //# Start training
+        //with tf.Session() as sess:
+        //    sess.run(init)
+
+        //    # Training cycle
+        //    for epoch in range(training_epochs):
+        //        avg_cost = 0.
+        //        total_batch = int(mnist.train.num_examples/batch_size)
+        //        # Loop over all batches
+        //        for i in range(total_batch):
+        //            batch_xs, batch_ys = mnist.train.next_batch(batch_size)
+        //            # Fit training using batch data
+        //            _, _,  c = sess.run([new_W, new_b ,cost], feed_dict={x: batch_xs,
+        //                                                       y: batch_ys})
+            
+        //            # Compute average loss
+        //            avg_cost += c / total_batch
+        //        # Display logs per epoch step
+        //        if (epoch+1) % display_step == 0:
+        //#             print(sess.run(W))
+        //            print ("Epoch:", '%04d' % (epoch+1), "cost=", "{:.9f}".format(avg_cost))
+
+        //    print ("Optimization Finished!")
+
+        //    # Test model
+        //    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+        //    # Calculate accuracy for 3000 examples
+        //    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+        //    print ("Accuracy:", accuracy.eval({x: mnist.test.images[:3000], y: mnist.test.labels[:3000]}))
+    
 
         // NOT SURE WHAT THE HELL THE BELOW DOES, 
         // but mainly as code to see how TF works! Do not use for any real training.
