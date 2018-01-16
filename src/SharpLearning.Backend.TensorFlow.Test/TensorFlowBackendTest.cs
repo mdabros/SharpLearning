@@ -1,11 +1,16 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SharpLearning.Backend.TensorFlow.Test
 {
     [TestClass]
     public class TensorFlowBackendTest
     {
-        // Only works for 64-bit
+        [TestInitialize]
+        public void Check64Bit()
+        {
+            Assert.IsTrue(Environment.Is64BitProcess, "Must execute as 64-bit");
+        }
 
         [TestMethod]
         public void TensorFlowBackendTest_CtorAndDispose()

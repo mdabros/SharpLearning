@@ -9,6 +9,12 @@ namespace SharpLearning.Backend.TensorFlow.Test
     [TestClass]
     public class TensorFlowRawTest
     {
+        [TestInitialize]
+        public void Check64Bit()
+        {
+            Assert.IsTrue(Environment.Is64BitProcess, "Must execute as 64-bit");
+        }
+
         [TestMethod]
         public void TensorFlowRawTest_Simple()
         {
