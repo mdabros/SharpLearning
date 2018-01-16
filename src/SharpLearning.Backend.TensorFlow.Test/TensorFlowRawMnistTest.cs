@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TensorFlow;
 
@@ -27,6 +24,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
             using (var g = new TFGraph())
             {
+                //var scope = g.WithScope("tst");
+
                 var x = g.Placeholder(TFDataType.Float, new TFShape(-1, featureCount));
                 // Only why to simply set zeros??
                 var W = //g.ZerosLike( // Does not work with ApplyGradientDescent, how do we inialize??
@@ -51,14 +50,42 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 var (loss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY);
                 var crossEntropy = g.ReduceMean(loss);
 
+
+
+                //g.variab(().Select(v => v.VariableOp).ToArray();
+
+                // Is this right??
+                //var b_gradient = g.BiasAddGrad(backprop);
+                // Is this right??
+                var variables = new TFOutput[] { W, b };
+                var gradients = g.AddGradients(new TFOutput[] { y }, variables);
+
                 var learningRate = g.Const(new TFTensor(0.5f));
+
+                var adjusteds = new TFOutput[gradients.Length];
+                for (int i = 0; i < gradients.Length; i++)
+                {
+                    adjusteds[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
+                }
+
                 // Need to do this in loop, can't do it before we have actual variables...
                 // TODO: Is this how to do it???
                 // https://www.tensorflow.org/api_docs/cc/class/tensorflow/ops/apply-gradient-descent
                 var adjustedW = g.ApplyGradientDescent(W, learningRate, backprop);
+                // See https://github.com/tensorflow/tensorflow/pull/11377#issuecomment-324546254
+                // use ResourceApplyGradientDescent
+
+                //var ops = g.GetEnumerator();
+                //foreach(var op in ops)
+                //{
+                    
+                //}
+
                 // How to adjust bias?
                 //var adjustedB = g.ApplyGradientDescent(b, learningRate, backprop);
                 // https://github.com/tensorflow/tensorflow/tree/master/tensorflow/cc/gradients
+
+                // https://github.com/tensorflow/tensorflow/pull/11377
 
                 // See https://blog.manash.me/implementation-of-gradient-descent-in-tensorflow-using-tf-gradients-c111d783c78b
 
@@ -108,60 +135,121 @@ namespace SharpLearning.Backend.TensorFlow.Test
         }
 
 
+            // TEST_F(OptimizerTest, OneMatMul)
+            //        {
+            //        +  for (const bool expected : { false, true}) {
+            //            +    const Scope&scope = expected ? scope_expected_ : scope_test_;
+            //            +
+            //            +    // the forward node should be the same for the test and expected scope
+            //            +    // TODO(theflofly): merge Const and Assign using one
+            //            +    // constructor as in python
+            //            +auto x = Variable(scope.WithOpName("x"), { 2, 2}, DT_FLOAT);
+            //            +auto const_x = Const(scope, { { 1.0f, 2.0f}, { 3.0f, 4.0f}
+            //            });
+            //            +auto assign_x = Assign(scope.WithOpName("Assign_x"), x, const_x);
+            //            +
+            //            +auto y = Variable(scope.WithOpName("y"), { 2, 2}, DT_FLOAT);
+            //            +auto const_y = Const(scope, { { 1.0f, 0.0f}, { 0.0f, 1.0f}
+            //            });
+            //            +auto assign_y = Assign(scope.WithOpName("Assign_y"), y, const_y);
+            //            +
+            //            +    // the assign node is only used once, it should not be used in the graph
+            //            +auto z = MatMul(scope.WithOpName("z"), x, y);
+            //            +
+            //            +TF_ASSERT_OK(scope.status());
+            //            +CHECK_NOTNULL(z.node());
+            //            +
+            //            +    if (expected)
+            //            {
+            //                +      // we manually add the gradient node to the expected scope
+            //                +Scope scope_gradient = scope.NewSubScope("Gradients");
+            //                +Scope scope_optimizer = scope.NewSubScope("GradientDescent");
+            //                +
+            //                +      // gradients
+            //                +auto dz = ops::OnesLike(scope_gradient, z);
+            //                +auto dx = MatMul(scope_gradient, dz, y, MatMul::TransposeB(true));
+            //                +auto dy = MatMul(scope_gradient, x, dz, MatMul::TransposeA(true));
+            //                +
+            //                +      // update
+            //                +auto learning_rate1 =
+            //            +Cast(scope_optimizer.NewSubScope("learning_rate"), 0.01f,
+            //            +static_cast<DataType>(Output{ x}.type() - 100));
+            //                +
+            //                +ApplyGradientDescent(scope_optimizer.NewSubScope("update"), { x},
+            //+learning_rate1, { dx});
+            //                +
+            //                +auto learning_rate2 =
+            //            +Cast(scope_optimizer.NewSubScope("learning_rate"), 0.01f,
+            //            +static_cast<DataType>(Output{ x}.type() - 100));
+            //                +
+            //                +ApplyGradientDescent(scope_optimizer.NewSubScope("update"), { y},
+            //+learning_rate2, { dy});
+            //                +    }
+            //            else
+            //            {
+            //                +      // the gradient nodes and update nodes are added to the graph
+            //                +auto train = GradientDescentOptimizer(0.01).Minimize(scope, { z});
+            //                +
+            //                +TF_ASSERT_OK(scope.status());
+            //                +
+            //                +ClientSession session(scope);
+            //                +
+            //                +      // TODO(theflofly): a global initializer would be nice
+            //                +TF_CHECK_OK(session.Run({ assign_x, assign_y}, nullptr));
 
-        //# Construct model
-        //pred = tf.nn.softmax(tf.matmul(x, W) + b) # Softmax
+                    //# Construct model
+                    //pred = tf.nn.softmax(tf.matmul(x, W) + b) # Softmax
 
-        //# Minimize error using cross entropy
-        //cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))
+                    //# Minimize error using cross entropy
+                    //cost = tf.reduce_mean(-tf.reduce_sum(y*tf.log(pred), reduction_indices=1))
 
-        //grad_W, grad_b = tf.gradients(xs=[W, b], ys=cost)
+                    //grad_W, grad_b = tf.gradients(xs=[W, b], ys=cost)
 
 
-        //new_W = W.assign(W - learning_rate * grad_W)
-        //new_b = b.assign(b - learning_rate * grad_b)
+                    //new_W = W.assign(W - learning_rate * grad_W)
+                    //new_b = b.assign(b - learning_rate * grad_b)
 
-        //# Initialize the variables (i.e. assign their default value)
-        //init = tf.global_variables_initializer()
+                    //# Initialize the variables (i.e. assign their default value)
+                    //init = tf.global_variables_initializer()
 
-        //# Start training
-        //with tf.Session() as sess:
-        //    sess.run(init)
+                    //# Start training
+                    //with tf.Session() as sess:
+                    //    sess.run(init)
 
-        //    # Training cycle
-        //    for epoch in range(training_epochs):
-        //        avg_cost = 0.
-        //        total_batch = int(mnist.train.num_examples/batch_size)
-        //        # Loop over all batches
-        //        for i in range(total_batch):
-        //            batch_xs, batch_ys = mnist.train.next_batch(batch_size)
-        //            # Fit training using batch data
-        //            _, _,  c = sess.run([new_W, new_b ,cost], feed_dict={x: batch_xs,
-        //                                                       y: batch_ys})
-            
-        //            # Compute average loss
-        //            avg_cost += c / total_batch
-        //        # Display logs per epoch step
-        //        if (epoch+1) % display_step == 0:
-        //#             print(sess.run(W))
-        //            print ("Epoch:", '%04d' % (epoch+1), "cost=", "{:.9f}".format(avg_cost))
+                    //    # Training cycle
+                    //    for epoch in range(training_epochs):
+                    //        avg_cost = 0.
+                    //        total_batch = int(mnist.train.num_examples/batch_size)
+                    //        # Loop over all batches
+                    //        for i in range(total_batch):
+                    //            batch_xs, batch_ys = mnist.train.next_batch(batch_size)
+                    //            # Fit training using batch data
+                    //            _, _,  c = sess.run([new_W, new_b ,cost], feed_dict={x: batch_xs,
+                    //                                                       y: batch_ys})
 
-        //    print ("Optimization Finished!")
+                    //            # Compute average loss
+                    //            avg_cost += c / total_batch
+                    //        # Display logs per epoch step
+                    //        if (epoch+1) % display_step == 0:
+                    //#             print(sess.run(W))
+                    //            print ("Epoch:", '%04d' % (epoch+1), "cost=", "{:.9f}".format(avg_cost))
 
-        //    # Test model
-        //    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
-        //    # Calculate accuracy for 3000 examples
-        //    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        //    print ("Accuracy:", accuracy.eval({x: mnist.test.images[:3000], y: mnist.test.labels[:3000]}))
-    
+                    //    print ("Optimization Finished!")
 
-        // NOT SURE WHAT THE HELL THE BELOW DOES, 
-        // but mainly as code to see how TF works! Do not use for any real training.
-        // BUG has been fixed by fixing loading
-        // This sample has a bug, I suspect the data loaded is incorrect, because the returned
-        // values in distance is wrong, and so is the prediction computed from it.
-        //[TestMethod]
-        public void NearestNeighbor()
+                    //    # Test model
+                    //    correct_prediction = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
+                    //    # Calculate accuracy for 3000 examples
+                    //    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+                    //    print ("Accuracy:", accuracy.eval({x: mnist.test.images[:3000], y: mnist.test.labels[:3000]}))
+
+
+                    // NOT SURE WHAT THE HELL THE BELOW DOES, 
+                    // but mainly as code to see how TF works! Do not use for any real training.
+                    // BUG has been fixed by fixing loading
+                    // This sample has a bug, I suspect the data loaded is incorrect, because the returned
+                    // values in distance is wrong, and so is the prediction computed from it.
+                    //[TestMethod]
+                    public void NearestNeighbor()
         {
             // Get the Mnist data
 
