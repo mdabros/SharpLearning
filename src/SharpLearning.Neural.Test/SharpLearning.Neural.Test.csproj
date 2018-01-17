@@ -62,8 +62,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Cntk.Core.Managed-2.3, Version=1.0.0.0, Culture=neutral, PublicKeyToken=21fff2ec8197defe, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\CNTK.CPUOnly.2.3.0\lib\net45\x64\Cntk.Core.Managed-2.3.dll</HintPath>
+    <Reference Include="Cntk.Core.Managed-2.3.1">
+      <HintPath>..\..\packages\CNTK.GPU.2.3.1\lib\net45\x64\Cntk.Core.Managed-2.3.1.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MathNet.Numerics, Version=3.17.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -205,11 +205,11 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\MathNet.Numerics.MKL.Win.2.2.0\build\MathNet.Numerics.MKL.Win.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MathNet.Numerics.MKL.Win.2.2.0\build\MathNet.Numerics.MKL.Win.targets'))" />
-    <Error Condition="!Exists('..\..\packages\CNTK.CPUOnly.2.3.0\build\net45\CNTK.CPUOnly.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CNTK.CPUOnly.2.3.0\build\net45\CNTK.CPUOnly.targets'))" />
     <Error Condition="!Exists('..\..\packages\TensorFlowSharp.1.4.0\build\TensorFlowSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\TensorFlowSharp.1.4.0\build\TensorFlowSharp.targets'))" />
+    <Error Condition="!Exists('..\..\packages\CNTK.GPU.2.3.1\build\net45\CNTK.GPU.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\CNTK.GPU.2.3.1\build\net45\CNTK.GPU.targets'))" />
   </Target>
-  <Import Project="..\..\packages\CNTK.CPUOnly.2.3.0\build\net45\CNTK.CPUOnly.targets" Condition="Exists('..\..\packages\CNTK.CPUOnly.2.3.0\build\net45\CNTK.CPUOnly.targets')" />
   <Import Project="..\..\packages\TensorFlowSharp.1.4.0\build\TensorFlowSharp.targets" Condition="Exists('..\..\packages\TensorFlowSharp.1.4.0\build\TensorFlowSharp.targets')" />
+  <Import Project="..\..\packages\CNTK.GPU.2.3.1\build\net45\CNTK.GPU.targets" Condition="Exists('..\..\packages\CNTK.GPU.2.3.1\build\net45\CNTK.GPU.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
