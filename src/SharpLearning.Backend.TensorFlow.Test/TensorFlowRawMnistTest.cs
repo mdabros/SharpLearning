@@ -80,9 +80,11 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 var learningRate = g.Const(new TFTensor(0.5f));
 
                 var applieds = new TFOutput[gradients.Length];
+                //var assigns = new TFOutput[gradients.Length];
                 for (int i = 0; i < gradients.Length; i++)
                 {
                     applieds[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
+                    //assigns[i] = g.Assign(variables[i], applieds[i]);
                 }
                 //var applieds = new TFOperation[gradients.Length];
                 //for (int i = 0; i < gradients.Length; i++)
@@ -120,9 +122,6 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 using (var status = new TFStatus())
                 using (var s = new TFSession(g))
                 {
-                    // initialize variables
-                    s.GetRunner().AddTarget(W_init.Operation).Run();
-                    s.GetRunner().AddTarget(b_init.Operation).Run();
 
                     // https://stackoverflow.com/questions/46760202/how-to-initialize-variables-in-tensorflow-c-api
                     // This C API
@@ -146,12 +145,16 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     //s.GetRunner().AddTarget(x).Run(status);
                     //Assert(status);
 
-                    // Can this be used to inialize all variables...
+                    // initialize variables
+                    s.GetRunner().AddTarget(W_init.Operation).Run();
+                    s.GetRunner().AddTarget(b_init.Operation).Run();
+                    // Can this be used to inialize all variables... NO!
                     //TFOperation[] globalVariables = g.GetGlobalVariablesInitializer();
                     //for (int i = 0; i < globalVariables.Length; i++)
                     //{
                     //    s.GetRunner().AddTarget(globalVariables[i]).Run();
                     //}
+
                     for (int epoch = 0; epoch < trainingEpochs; epoch++)
                     {
                         //s.Run(ops, new TFTensor[] { x, expectedY }, null);
@@ -163,12 +166,25 @@ namespace SharpLearning.Backend.TensorFlow.Test
                         //}
                         var (inputBatch, labelBatch) = trainReader.NextBatch(batchSize);
 
-                        var c = s.GetRunner()
+                        var runner = s.GetRunner();
+                        var c = runner
                             .AddInput(x, inputBatch)
                             .AddInput(expectedY, labelBatch)
+                            // Fetching doesn't help with regard to updating
+                            //.Fetch(applieds)
+                            //.Fetch(gradients)
+                            //.Fetch(backprop)
+                            //.Fetch(W)
+                            //.Fetch(b)
                             .Run(crossEntropy);
+
                         AssertStatus(status);
 
+                        //.Fetch(applieds)
+                        //.Fetch(gradients)
+                        //.Fetch(W)
+                        //.Fetch(b)
+                        //.Run(crossEntropy);
 
                         // Display logs per epoch step
                         //if ((epoch + 1) % display_step == 0)
@@ -178,7 +194,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                             //    .AddInput(Y, train_y)
                             //    .Run(cost);
                             // , W={runner.Run(W)}, b={runner.Run(b)}
-                            Log($"Epoch: {epoch + 1}, cost={c}");
+                            Log($"Epoch: {epoch + 1, 4} cost={c}");
                         }
                     }
                 }
