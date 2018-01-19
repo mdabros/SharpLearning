@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput.Test", "src\SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
 EndProject
@@ -70,7 +70,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Backend.Tenso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Backend.Cntk", "src\SharpLearning.Backend.Cntk\SharpLearning.Backend.Cntk.csproj", "{232A2C96-2438-4168-9ABE-AAD79B4B3442}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Backend.Cntk.Test", "src\SharpLearning.Backend.Cntk.Test\SharpLearning.Backend.Cntk.Test.csproj", "{B1773CA2-FD30-4905-AC53-E336E845C4BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Backend.Cntk.Test", "src\SharpLearning.Backend.Cntk.Test\SharpLearning.Backend.Cntk.Test.csproj", "{F5A4C66B-DDF0-45C5-9E4A-B2B0CEB28F72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -198,10 +198,10 @@ Global
 		{232A2C96-2438-4168-9ABE-AAD79B4B3442}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{232A2C96-2438-4168-9ABE-AAD79B4B3442}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{232A2C96-2438-4168-9ABE-AAD79B4B3442}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1773CA2-FD30-4905-AC53-E336E845C4BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A4C66B-DDF0-45C5-9E4A-B2B0CEB28F72}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{F5A4C66B-DDF0-45C5-9E4A-B2B0CEB28F72}.Debug|Any CPU.Build.0 = Debug|x64
+		{F5A4C66B-DDF0-45C5-9E4A-B2B0CEB28F72}.Release|Any CPU.ActiveCfg = Release|x64
+		{F5A4C66B-DDF0-45C5-9E4A-B2B0CEB28F72}.Release|Any CPU.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
