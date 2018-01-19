@@ -167,18 +167,16 @@ namespace SharpLearning.Backend.TensorFlow.Test
                         var (inputBatch, labelBatch) = trainReader.NextBatch(batchSize);
 
                         var runner = s.GetRunner();
-                        var c = runner
+                        var ag = runner
                             .AddInput(x, inputBatch)
                             .AddInput(expectedY, labelBatch)
                             // Fetching doesn't help with regard to updating
                             //.Fetch(applieds)
                             //.Fetch(gradients)
-                            //.Fetch(backprop)
-                            //.Fetch(W)
-                            //.Fetch(b)
-                            .Run(crossEntropy);
-
-                        AssertStatus(status);
+                            .Fetch(applieds[0]) // This then updates
+                            .Fetch(applieds[1])
+                            .Run();
+                        var c = runner.Run(crossEntropy);
 
                         //.Fetch(applieds)
                         //.Fetch(gradients)
