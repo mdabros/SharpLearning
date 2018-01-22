@@ -295,6 +295,16 @@ namespace SharpLearning.Backend.Cntk.Test
                 new int[] { poolW, poolH }, new int[] { strideW, strideH });
         }
 
+        public static Function Reshape(Variable layer, int[] targetShape)
+        {
+            return CNTKLib.Reshape(layer, targetShape);
+        }
+
+        public static Function GlobalAveragePool2D(Variable layer)
+        {
+            return CNTKLib.Pooling(layer, PoolingType.Average, new int[] { layer.Shape[0], layer.Shape[1] });
+        }
+
         public static Function Dropout(Variable input, double dropoutRate, uint seed = 465)
         {
             return CNTKLib.Dropout(input, dropoutRate, seed);
