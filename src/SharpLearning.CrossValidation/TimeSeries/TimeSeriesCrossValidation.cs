@@ -75,7 +75,7 @@ namespace SharpLearning.CrossValidation.TimeSeries
             var predictions = new TPrediction[predictionLength];
 
             var observation = new double[observations.ColumnCount];
-            var currentObservationIndex = trainingIndices.Length;
+            var lastTrainingIndex = trainingIndices.Last();
 
             var model = learner.Learn(observations, targets, trainingIndices);
 
@@ -86,17 +86,18 @@ namespace SharpLearning.CrossValidation.TimeSeries
                 {
                     model = learner.Learn(observations, targets, trainingIndices);
                 }
-                
-                observations.Row(currentObservationIndex, observation);
+
+                var predictionIndex = lastTrainingIndex + 1;
+                observations.Row(predictionIndex, observation);
                 predictions[i] = model.Predict(observation);
 
-                currentObservationIndex++;
+                lastTrainingIndex++;
                 
                 // determine start index and length of the training period, if maxTrainingSetSize is specified. 
-                var startIndex = m_maxTrainingSetSize != 0 ? Math.Max(0, (currentObservationIndex + 1) - m_maxTrainingSetSize) : 0;
-                var lenght = m_maxTrainingSetSize != 0 ? Math.Min(m_maxTrainingSetSize, currentObservationIndex) : currentObservationIndex;
+                var startIndex = m_maxTrainingSetSize != 0 ? Math.Max(0, (lastTrainingIndex + 1) - m_maxTrainingSetSize) : 0;
+                var lenght = m_maxTrainingSetSize != 0 ? Math.Min(m_maxTrainingSetSize, lastTrainingIndex) : lastTrainingIndex;
 
-                trainingIndices = Enumerable.Range(startIndex, lenght).ToArray();
+                trainingIndices = Enumerable.Range(startIndex, lenght).ToArray();                
             }
 
             return predictions;
