@@ -117,6 +117,9 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 var trainReader = mnist.GetTrainReader();
                 const int batchSize = 64;
                 const int trainingEpochs = 20;
+                var trainingSampleCount = mnist.TrainImages.Length;
+                var numberOfBatchesPrEpoch = trainingSampleCount / batchSize; // rough calculation of how many batches pr. epoch
+                var random = new Random(23);
 
                 //g.AddInitVariable(W);
                 using (var status = new TFStatus())
@@ -157,43 +160,57 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                     for (int epoch = 0; epoch < trainingEpochs; epoch++)
                     {
-                        //s.Run(ops, new TFTensor[] { x, expectedY }, null);
+                        var accumulatedLoss = 0.0;
+                        trainReader.Reset();
 
-                        //foreach (var observation in observations)
-                        //{
 
-                        //    s.Run(ops, new TFTensor[] { observation.X, observation.Y }, null);
-                        //}
-                        var (inputBatch, labelBatch) = trainReader.NextBatch(batchSize);
+                        for (int i = 0; i < numberOfBatchesPrEpoch; i++)
+                        {
+                            //s.Run(ops, new TFTensor[] { x, expectedY }, null);
 
-                        var runner = s.GetRunner();
-                        var ag = runner
-                            .AddInput(x, inputBatch)
-                            .AddInput(expectedY, labelBatch)
-                            // Fetching doesn't help with regard to updating
+                            //foreach (var observation in observations)
+                            //{
+
+                            //    s.Run(ops, new TFTensor[] { observation.X, observation.Y }, null);
+                            //}
+                            // After each epoch, the training data must be shuffled.
+                            // Emulate this by starting the batch at a random index. This is not optimal.
+                            var randomBatchStart = random.Next(0, trainingSampleCount - batchSize);
+                            // the batch images and targets arrays should be reused to reduce allocations.
+                            (var inputBatch, var labelBatch) = trainReader.NextBatch(batchSize);
+
+                            var runner = s.GetRunner();
+                            var ag = runner
+                                .AddInput(x, inputBatch)
+                                .AddInput(expectedY, labelBatch)
+                                // Fetching doesn't help with regard to updating
+                                //.Fetch(applieds)
+                                //.Fetch(gradients)
+                                .Fetch(applieds[0]) // This then updates
+                                .Fetch(applieds[1])
+                                .Run();
+                            var c = runner.Run(crossEntropy);
+
                             //.Fetch(applieds)
                             //.Fetch(gradients)
-                            .Fetch(applieds[0]) // This then updates
-                            .Fetch(applieds[1])
-                            .Run();
-                        var c = runner.Run(crossEntropy);
+                            //.Fetch(W)
+                            //.Fetch(b)
+                            //.Run(crossEntropy);
 
-                        //.Fetch(applieds)
-                        //.Fetch(gradients)
-                        //.Fetch(W)
-                        //.Fetch(b)
-                        //.Run(crossEntropy);
+                            accumulatedLoss += (float)c.GetValue();
 
-                        // Display logs per epoch step
-                        //if ((epoch + 1) % display_step == 0)
-                        {
-                            //var c = runner
-                            //    .AddInput(X, train_x)
-                            //    .AddInput(Y, train_y)
-                            //    .Run(cost);
-                            // , W={runner.Run(W)}, b={runner.Run(b)}
-                            Log($"Epoch: {epoch + 1, 4} cost={c}");
+                            // Display logs per epoch step
+                            //if ((epoch + 1) % display_step == 0)
+                            {
+                                //var c = runner
+                                //    .AddInput(X, train_x)
+                                //    .AddInput(Y, train_y)
+                                //    .Run(cost);
+                                // , W={runner.Run(W)}, b={runner.Run(b)}
+                            }
                         }
+                        var currentLoss = accumulatedLoss / trainingSampleCount;
+                        Log($"Epoch: {epoch + 1,4} Accumulated loss={currentLoss}");
                     }
                 }
             }
@@ -609,6 +626,11 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 this.oneHotLabels = oneHotLabels;
             }
 
+            public void Reset()
+            {
+                start = 0;
+            }
+
             public (float[,], float[,]) NextBatch(int batchSize)
             {
                 // TODO: Remove consts and allocs...
@@ -628,6 +650,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 return (imageData, labelData);
             }
         }
+
 
         int Read32(Stream s)
         {
