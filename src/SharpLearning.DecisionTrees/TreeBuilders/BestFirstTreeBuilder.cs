@@ -101,6 +101,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
             }
 
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
+            m_bestSplitWorkIndices.Clear();
             Array.Resize(ref m_variableImportance, numberOfFeatures);
             Array.Resize(ref m_allFeatureIndices, numberOfFeatures);
             Array.Resize(ref m_featureCandidates, m_featuresPrSplit);

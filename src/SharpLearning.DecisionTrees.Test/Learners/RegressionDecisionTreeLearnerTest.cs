@@ -16,6 +16,33 @@ namespace SharpLearning.DecisionTrees.Test.Learners
     public class RegressionDecisionTreeLearnerTest
     {
         [TestMethod]
+        public void RegressionDecisionTreeLearner_Learn_Reuse_No_Valid_Split()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
+            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
+            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var rows = targets.Length;
+
+            var sut = new RegressionDecisionTreeLearner();
+
+            // train initial model.
+            sut.Learn(observations, targets);
+
+            // reuse learner, with smaller data that provides no valid split.
+            var onlyUniqueTargetValue = 1.0;
+            var onlyOneUniqueObservations = (F64Matrix)observations.Rows(0, 1, 2, 3, 4);
+            var onlyOneUniquetargets = Enumerable.Range(0, onlyOneUniqueObservations.RowCount).Select(v => onlyUniqueTargetValue).ToArray();
+            var model = sut.Learn(onlyOneUniqueObservations, onlyOneUniquetargets);
+                
+            var predictions = model.Predict(onlyOneUniqueObservations);
+            // no valid split, so should result in the model always returning the onlyUniqueTargetValue.
+            for (int i = 0; i < predictions.Length; i++)
+            {
+                Assert.AreEqual(onlyUniqueTargetValue, predictions[i], 0.0001);
+            }
+        }
+
+        [TestMethod]
         public void RegressionDecisionTreeLearner_Learn_Depth_100()
         {
             var error = RegressionDecisionTreeLearner_Learn(100);
