@@ -31,42 +31,41 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Set global data and device types. 
             var dataType = CntkDataType.Float;
-            var device = DeviceDescriptor.UseDefaultDevice();
-            Trace.WriteLine("Using device: " + device.Type);
-            // These are just hardcoded in the helper class.
-            CntkLayers.DataType = dataType;
-            CntkLayers.Device = device;
+            DeviceDescriptor device = DeviceDescriptor.UseDefaultDevice();
+            Trace.WriteLine("Using device: " + device.Type + " with data type: " + dataType);
 
-            // Define small convolutional neural network.
-            var net = CntkLayers.Input(dataShape);
+            // Define  GlorotUniform initialization for weights.
+            CNTKDictionary initializer = CNTKLib.GlorotUniformInitializer(
+                CNTKLib.DefaultParamInitScale,
+                CNTKLib.SentinelValueForInferParamInitRank,
+                CNTKLib.SentinelValueForInferParamInitRank, seed: 23);
 
-            net = CntkLayers.Conv2D(net, 3, 3, 32);
-            net = CntkLayers.ActivationFunction(net, Activation.ReLU);
+            // Logistic regression.
 
-            net = CntkLayers.Pool2D(net, 2, 2);
+            // Define input. Variables for setting features and targets while training the network.
+            Variable featureVariable = Variable.InputVariable(dataShape, dataType); ;
+            Variable targetVariable = Variable.InputVariable(new int[] { numberOfClasses }, dataType);
 
-            net = CntkLayers.Dense(net, 256);
-            net = CntkLayers.ActivationFunction(net, Activation.ReLU);
+            // Define model parameters.
+            var inputDimensions = dataShape.Aggregate((d1, d2) => d1 * d2);
+            Parameter weights = new Parameter(new int[] { numberOfClasses, inputDimensions }, dataType, initializer, device, "W");
+            Parameter bias = new Parameter(new int[] { numberOfClasses }, dataType, 0.0f, device, "B"); // initialize bias to zero.
 
-            net = CntkLayers.Dropout(net, 0.5);
-
-            net = CntkLayers.Dense(net, numberOfClasses);
-            net = CntkLayers.SoftMax(net);
-
-            // Variables for setting features and targets while training the network.
-            var featureVariable = net.Arguments[0];
-            var targetVariable = Variable.InputVariable(new int[] { numberOfClasses }, dataType);
+            // Define model
+            Function reshape = CNTKLib.Reshape(featureVariable, new int[] { inputDimensions }); // flatten input.
+            Function model = CNTKLib.Times(weights, reshape) + bias; // variable and function are implicitly convertable
+            model = CNTKLib.Softmax(model);
 
             // Training loss and eval error. Eval error is only for reporting and not used for training.
-            var loss = CNTKLib.CrossEntropyWithSoftmax(net, targetVariable);
-            var evalError = CNTKLib.ClassificationError(net, targetVariable);
+            Function loss = CNTKLib.CrossEntropyWithSoftmax(model, targetVariable);
+            Function evalError = CNTKLib.ClassificationError(model, targetVariable);
 
-            // Setup stochastic gradient descent learner
+            // Setup stochastic gradient descent learner.
             var learningRatePerSample = new TrainingParameterScheduleDouble(0.01, 1);
-            var parameterLearners = new List<Learner>() { Learner.SGDLearner(net.Parameters(), learningRatePerSample) };
+            var parameterLearners = new List<Learner>() { Learner.SGDLearner(model.Parameters(), learningRatePerSample) };
 
             // Setup trainer with the defined network, loss and optimizer.
-            var trainer = Trainer.CreateTrainer(net, loss, evalError, parameterLearners);
+            Trainer trainer = Trainer.CreateTrainer(model, loss, evalError, parameterLearners);
 
             var epochs = 100; // how many epochs to train.
             var batchSize = 64; // size of each training batch
@@ -96,8 +95,8 @@ namespace SharpLearning.Backend.Cntk.Test
 
                     // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
                     // However, unsure how to handle random shuffling in this case.
-                    using (var batchImages = Value.CreateBatch<float>(dataShape, trainingImages, device))
-                    using (var batchTarget = Value.CreateBatch<float>(new int[] { numberOfClasses }, trainingTargets, device))
+                    using (Value batchImages = Value.CreateBatch<float>(dataShape, trainingImages, device))
+                    using (Value batchTarget = Value.CreateBatch<float>(new int[] { numberOfClasses }, trainingTargets, device))
                     {
                         batchContainer.Add(featureVariable, batchImages);
                         batchContainer.Add(targetVariable, batchTarget);
@@ -125,7 +124,7 @@ namespace SharpLearning.Backend.Cntk.Test
                 if (outputValidationError)
                 {
                     timer.Restart();
-                    var validationError = Validate(net, mnist, targetVariable, featureVariable);
+                    var validationError = Validate(model, mnist, targetVariable, featureVariable);
                     timer.Stop();
                     var totalValidationTime_ms = timer.ElapsedMilliseconds;
                     output.AppendLine($"   Valid: Error: {validationError:F12}, Samples: {mnist.ValidationImages.Length}, Time (ms): {totalValidationTime_ms}");
@@ -153,17 +152,18 @@ namespace SharpLearning.Backend.Cntk.Test
                 (var image, var target) = reader.NextBatchArray(1);
                 var inputDimensions = model.Arguments[0].Shape;
 
-                using (var batch = Value.CreateBatch<float>(inputDimensions, image, CntkLayers.Device))
+                using (Value batch = Value.CreateBatch<float>(inputDimensions, image, CntkLayers.Device))
                 {
-                    var actualVariable = CNTKLib.InputVariable(labelVariable.Shape, CntkLayers.DataType);
-                    var evalMetricFunc = CNTKLib.ClassificationError(labelVariable, actualVariable);
+                    Variable actualVariable = CNTKLib.InputVariable(labelVariable.Shape, CntkLayers.DataType);
+                    Function evalMetricFunc = CNTKLib.ClassificationError(labelVariable, actualVariable);
                     Value actual = Evaluate(model, featureVariable, image, inputDimensions);
                     Value expected = Value.CreateBatch(new int[] { target.Length }, target, CntkLayers.Device);
 
                     var inputDataMap = new Dictionary<Variable, Value>() { { labelVariable, expected }, { actualVariable, actual } };
                     var outputDataMap = new Dictionary<Variable, Value>() { { evalMetricFunc.Output, null } };
                     evalMetricFunc.Evaluate(inputDataMap, outputDataMap, CntkLayers.Device);
-                    var evalMetric = outputDataMap[evalMetricFunc.Output].GetDenseData<float>(evalMetricFunc.Output).Select(x => x.First()).ToList();
+
+                    List<float> evalMetric = outputDataMap[evalMetricFunc.Output].GetDenseData<float>(evalMetricFunc.Output).Select(x => x.First()).ToList();
                     validationError += evalMetric.Average();
                 }
             }
@@ -175,7 +175,7 @@ namespace SharpLearning.Backend.Cntk.Test
         Value Evaluate(Function model, Variable featureVariable,
             float[] image, NDShape imageDimensions)
         {
-            var features = Value.CreateBatch(imageDimensions, image, CntkLayers.Device);
+            Value features = Value.CreateBatch(imageDimensions, image, CntkLayers.Device);
 
             var inputDataMap = new Dictionary<Variable, Value>() { { featureVariable, features } };
             var outputDataMap = new Dictionary<Variable, Value>() { { model.Output, null } };
