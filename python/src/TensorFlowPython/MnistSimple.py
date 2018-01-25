@@ -71,8 +71,9 @@ def main(_):
   sess = tf.InteractiveSession()
   tf.global_variables_initializer().run()
   # Train
-  for _ in range(100):
-    batch_xs, batch_ys = mnist.train.next_batch(100)
+  train = mnist.train
+  for _ in range(200):
+    batch_xs, batch_ys = train.next_batch(100)
     batchRun = sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
   # Test trained model
