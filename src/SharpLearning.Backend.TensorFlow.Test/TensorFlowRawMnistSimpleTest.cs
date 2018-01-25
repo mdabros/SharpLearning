@@ -30,7 +30,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             using (var g = new TFGraph())
             {
                 TFOutput x = g.Placeholder(TFDataType.Float, new TFShape(-1, featureCount), "x");
-                TFOutput expectedY = g.Placeholder(TFDataType.Float, new TFShape(-1, classCount), "y_");
+                TFOutput y_ = g.Placeholder(TFDataType.Float, new TFShape(-1, classCount), "y_");
 
                 TFOutput W_zero = g.Const(new float[featureCount, classCount]);
                 TFOutput b_zero = g.Const(new float[classCount]);
@@ -49,7 +49,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 // SoftmaxCrossEntropyWithLogits: gradient for this is not yet supported
                 // see: https://github.com/tensorflow/tensorflow/pull/14727
                 //var (perOutputLoss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY, "softmax");
-                TFOutput perOutputLoss = g.SquaredDifference(y, expectedY, "softmax");
+                TFOutput perOutputLoss = g.SquaredDifference(y, y_, "softmax");
                 TFOutput loss = g.ReduceMean(perOutputLoss, operName: "reducemean");
 
                 TFOutput learningRate = g.Const(new TFTensor(0.01f));
@@ -78,7 +78,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                     // Train (note that by using session.Run directly
                     //        we get a much more efficient loop, and it is easy to see what actually happens)
-                    TFOutput[] inputs = new[] { x, expectedY };
+                    TFOutput[] inputs = new[] { x, y_ };
                     TFOutput[] outputs = updates; // Gradient updates are currently the outputs ensuring these are applied
                     TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
                     
@@ -100,7 +100,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     // Test trained model
                     TFOutput one = g.Const(new TFTensor(1));
                     TFOutput argMaxActual = g.ArgMax(y, one);
-                    TFOutput argMaxExpected = g.ArgMax(expectedY, one);
+                    TFOutput argMaxExpected = g.ArgMax(y_, one);
                     TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
                     TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
                     TFOutput accuracy = g.ReduceMean(castCorrectPrediction);
@@ -110,7 +110,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                     TFTensor evaluatedAccuracy = session.GetRunner()
                         .AddInput(x, testImages)
-                        .AddInput(expectedY, testLabels)
+                        .AddInput(y_, testLabels)
                         .Run(accuracy);
 
                     float acc = (float)evaluatedAccuracy.GetValue();
