@@ -17,187 +17,112 @@ namespace SharpLearning.Backend.TensorFlow.Test
         const string DownloadPath = "MnistTest";
         static readonly Action<string> Log = t => { Trace.WriteLine(t); Console.WriteLine(t); };
 
-        [TestMethod]
-        public void MnistTest()
-        {
+        // https://www.tensorflow.org/api_docs/cc/class/tensorflow/ops/apply-gradient-descent
+        // See https://github.com/tensorflow/tensorflow/pull/11377#issuecomment-324546254
+        // https://github.com/tensorflow/tensorflow/tree/master/tensorflow/cc/gradients
+        // https://github.com/tensorflow/tensorflow/pull/11377
+        // See https://blog.manash.me/implementation-of-gradient-descent-in-tensorflow-using-tf-gradients-c111d783c78b
 
-            const int featureCount = 28 * 28;
+        [TestMethod]
+        public void MnistSimple()
+        {
+            const int imageSize = 28;
+            const int featureCount = imageSize * imageSize;
             Assert.AreEqual(784, featureCount);
             const int classCount = 10;
 
             using (var g = new TFGraph())
             {
-                //var scope = g.WithScope("tst");
-
                 TFOutput x = g.Placeholder(TFDataType.Float, new TFShape(-1, featureCount), "x");
                 TFOutput expectedY = g.Placeholder(TFDataType.Float, new TFShape(-1, classCount), "y_");
 
                 TFOutput W_zero = g.Const(new float[featureCount, classCount]);
                 TFOutput b_zero = g.Const(new float[classCount]);
 
+                TFOutput W = g.VariableV2(new TFShape(featureCount, classCount), TFDataType.Float, "W");
                 // Only way to simply set zeros??
-                var W = g.VariableV2(new TFShape(featureCount, classCount), TFDataType.Float, "W");
-                var W_init = g.Assign(W, W_zero);
-                //TFOperation W_op_init;
-                //TFOutput W_out_value;
-                //var W = g.Variable(W_zero, out W_op_init, out W_out_value,  operName: "W");
-                //g.ZerosLike( // Does not work with ApplyGradientDescent, how do we inialize??
-                //g.Variable(new TFShape(featureCount, classCount), TFDataType.Float, "W")
-                //)
-                //;
-                //g.Assign(W, w_zero);
+                TFOutput W_init = g.Assign(W, W_zero);
 
-                //TFOperation b_op_init;
-                //TFOutput b_out_value;
-                //Variable b = g.Variable(b_zero, out b_op_init, out b_out_value, operName: "b");
-                //g.ZerosLike(
-                //g.Variable(new TFShape(classCount), TFDataType.Float, "b")
-                //)
-                //;
-                //g.Assign(b, b_zero);
-
-                var b = g.VariableV2(new TFShape(classCount), TFDataType.Float, "b");
-                var b_init = g.Assign(b, b_zero);
+                TFOutput b = g.VariableV2(new TFShape(classCount), TFDataType.Float, "b");
+                TFOutput b_init = g.Assign(b, b_zero);
 
 
-                var m = g.MatMul(x, W, operName: "xW");
-                var y = g.Add(m, b, operName: "y");
+                TFOutput m = g.MatMul(x, W, operName: "xW");
+                TFOutput y = g.Add(m, b, operName: "y");
+
+                // SoftmaxCrossEntropyWithLogits: gradient for this is not yet supported
+                // see: https://github.com/tensorflow/tensorflow/pull/14727
+                //var (perOutputLoss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY, "softmax");
+                TFOutput perOutputLoss = g.SquaredDifference(y, expectedY, "softmax");
+                TFOutput loss = g.ReduceMean(perOutputLoss, operName: "reducemean");
+
+                TFOutput learningRate = g.Const(new TFTensor(0.01f));
+
+                // TODO: How to get variables dynamically?
+                TFOutput[] variables = new TFOutput[] { W, b };
+                TFOutput[] gradients = g.AddGradients(new TFOutput[] { loss }, variables);
 
 
-                var (loss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY, "softmax");
-                var crossEntropy = g.ReduceMean(loss, operName: "reducemean");
-
-
-
-                //g.variab(().Select(v => v.VariableOp).ToArray();
-
-                // Is this right??
-                //var b_gradient = g.BiasAddGrad(backprop);
-                // Is this right??
-                var variables = new TFOutput[] { W, b };
-                var gradients = g.AddGradients(new TFOutput[] { y }, variables);
-
-                var learningRate = g.Const(new TFTensor(0.5f));
-
-                var applieds = new TFOutput[gradients.Length];
-                //var assigns = new TFOutput[gradients.Length];
+                TFOutput[] updates = new TFOutput[gradients.Length];
                 for (int i = 0; i < gradients.Length; i++)
                 {
-                    applieds[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
-                    //assigns[i] = g.Assign(variables[i], applieds[i]);
+                    updates[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
                 }
-                //var applieds = new TFOperation[gradients.Length];
-                //for (int i = 0; i < gradients.Length; i++)
-                //{
-                //    applieds[i] = g.ResourceApplyGradientDescent(variables[i], learningRate, gradients[i]);
-                //}
-
-                // Need to do this in loop, can't do it before we have actual variables...
-                // TODO: Is this how to do it???
-                // https://www.tensorflow.org/api_docs/cc/class/tensorflow/ops/apply-gradient-descent
-                //var adjustedW = g.ApplyGradientDescent(W, learningRate, backprop);
-                // See https://github.com/tensorflow/tensorflow/pull/11377#issuecomment-324546254
-                // use ResourceApplyGradientDescent
-
-                //var ops = g.GetEnumerator();
-                //foreach(var op in ops)
-                //{
-
-                //}
-
-                // How to adjust bias?
-                //var adjustedB = g.ApplyGradientDescent(b, learningRate, backprop);
-                // https://github.com/tensorflow/tensorflow/tree/master/tensorflow/cc/gradients
-
-                // https://github.com/tensorflow/tensorflow/pull/11377
-
-                // See https://blog.manash.me/implementation-of-gradient-descent-in-tensorflow-using-tf-gradients-c111d783c78b
 
                 var mnist = Mnist.Load(DownloadPath);
-                var trainReader = mnist.GetTrainReader();
-                const int batchSize = 64;
-                const int trainingEpochs = 20;
+                const int batchSize = 100;
+                const int iterations = 200;
 
-                //g.AddInitVariable(W);
                 using (var status = new TFStatus())
-                using (var s = new TFSession(g))
+                using (var session = new TFSession(g))
                 {
+                    // Initialize variables
+                    session.GetRunner().AddTarget(W_init.Operation).Run();
+                    session.GetRunner().AddTarget(b_init.Operation).Run();
 
-                    // https://stackoverflow.com/questions/46760202/how-to-initialize-variables-in-tensorflow-c-api
-                    // This C API
-                    //TF_Operation* init_op = TF_GraphGetOperationByName(graph, "init");
-                    //TF_SessionRun(sess, NULL,
-                    //              NULL, NULL, 0,  // inputs
-                    //              NULL, NULL, 0,  // outputs
-                    //              &init_op, 1,    // targets
-                    //              NULL,
-                    //              status);
+                    // Train (note that by using session.Run directly
+                    //        we get a much more efficient loop, and it is easy to see what actually happens)
+                    TFOutput[] inputs = new[] { x, expectedY };
+                    TFOutput[] outputs = updates; // Gradient updates are currently the outputs ensuring these are applied
+                    TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
+                    
+                    TFBuffer runMetaData = null;
+                    TFBuffer runOptions = null;
+                    TFStatus trainStatus = new TFStatus();
 
-                    // https://github.com/migueldeicaza/TensorFlowSharp/issues/170
-
-                    //var initValue = g.Const(1.5);
-                    //var increment = g.Const(0.5);
-                    //TFOperation init;
-                    //TFOutput value;
-                    //var handle = g.Variable(initValue, out init, out value);
-
-                    // Must first initialize all the variables.
-                    //s.GetRunner().AddTarget(x).Run(status);
-                    //Assert(status);
-
-                    // initialize variables
-                    s.GetRunner().AddTarget(W_init.Operation).Run();
-                    s.GetRunner().AddTarget(b_init.Operation).Run();
-                    // Can this be used to inialize all variables... NO!
-                    //TFOperation[] globalVariables = g.GetGlobalVariablesInitializer();
-                    //for (int i = 0; i < globalVariables.Length; i++)
-                    //{
-                    //    s.GetRunner().AddTarget(globalVariables[i]).Run();
-                    //}
-
-                    for (int epoch = 0; epoch < trainingEpochs; epoch++)
+                    var trainReader = mnist.GetTrainReader();
+                    for (int i = 0; i < iterations; i++)
                     {
-                        //s.Run(ops, new TFTensor[] { x, expectedY }, null);
+                        (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
 
-                        //foreach (var observation in observations)
-                        //{
+                        TFTensor[] inputValues = new [] { new TFTensor(inputBatch), new TFTensor(labelBatch) };
 
-                        //    s.Run(ops, new TFTensor[] { observation.X, observation.Y }, null);
-                        //}
-                        var (inputBatch, labelBatch) = trainReader.NextBatch(batchSize);
-
-                        var runner = s.GetRunner();
-                        var ag = runner
-                            .AddInput(x, inputBatch)
-                            .AddInput(expectedY, labelBatch)
-                            // Fetching doesn't help with regard to updating
-                            //.Fetch(applieds)
-                            //.Fetch(gradients)
-                            .Fetch(applieds[0]) // This then updates
-                            .Fetch(applieds[1])
-                            .Run();
-                        var c = runner.Run(crossEntropy);
-
-                        //.Fetch(applieds)
-                        //.Fetch(gradients)
-                        //.Fetch(W)
-                        //.Fetch(b)
-                        //.Run(crossEntropy);
-
-                        // Display logs per epoch step
-                        //if ((epoch + 1) % display_step == 0)
-                        {
-                            //var c = runner
-                            //    .AddInput(X, train_x)
-                            //    .AddInput(Y, train_y)
-                            //    .Run(cost);
-                            // , W={runner.Run(W)}, b={runner.Run(b)}
-                            Log($"Epoch: {epoch + 1, 4} cost={c}");
-                        }
+                        TFTensor[] outputValues = session.Run(inputs, inputValues, outputs, 
+                            targets, runMetaData, runOptions, trainStatus);
                     }
+
+                    // Test trained model
+                    TFOutput one = g.Const(new TFTensor(1));
+                    TFOutput argMaxActual = g.ArgMax(y, one);
+                    TFOutput argMaxExpected = g.ArgMax(expectedY, one);
+                    TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
+                    TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
+                    TFOutput accuracy = g.ReduceMean(castCorrectPrediction);
+
+                    var testReader = mnist.GetTestReader();
+                    var (testImages, testLabels) = testReader.All();
+
+                    TFTensor evaluatedAccuracy = session.GetRunner()
+                        .AddInput(x, testImages)
+                        .AddInput(expectedY, testLabels)
+                        .Run(accuracy);
+
+                    float acc = (float)evaluatedAccuracy.GetValue();
+
+                    Log($"Accuracy {acc}");
+                    Assert.AreEqual(acc, 0.797);
                 }
             }
-
         }
 
         [TestMethod]
@@ -609,7 +534,17 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 this.oneHotLabels = oneHotLabels;
             }
 
-            public (float[,], float[,]) NextBatch(int batchSize)
+            public void Reset()
+            {
+                start = 0;
+            }
+
+            public (float[,] imageData, float[,] labelData) All()
+            {
+                return NextBatch(labels.Length);
+            }
+
+            public (float[,] imageData, float[,] labelData) NextBatch(int batchSize)
             {
                 // TODO: Remove consts and allocs...
                 var imageData = new float[batchSize, 784];
@@ -628,6 +563,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 return (imageData, labelData);
             }
         }
+
 
         int Read32(Stream s)
         {
