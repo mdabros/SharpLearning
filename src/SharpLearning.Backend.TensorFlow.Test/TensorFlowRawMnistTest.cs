@@ -36,8 +36,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 TFOutput b_zero = g.Const(new float[classCount]);
 
                 // Only way to simply set zeros??
-                var W = g.VariableV2(new TFShape(featureCount, classCount), TFDataType.Float, "W");
-                var W_init = g.Assign(W, W_zero);
+                TFOutput W = g.VariableV2(new TFShape(featureCount, classCount), TFDataType.Float, "W");
+                TFOutput W_init = g.Assign(W, W_zero);
                 //TFOperation W_op_init;
                 //TFOutput W_out_value;
                 //var W = g.Variable(W_zero, out W_op_init, out W_out_value,  operName: "W");
@@ -56,17 +56,20 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 //;
                 //g.Assign(b, b_zero);
 
-                var b = g.VariableV2(new TFShape(classCount), TFDataType.Float, "b");
-                var b_init = g.Assign(b, b_zero);
+                TFOutput b = g.VariableV2(new TFShape(classCount), TFDataType.Float, "b");
+                TFOutput b_init = g.Assign(b, b_zero);
 
 
-                var m = g.MatMul(x, W, operName: "xW");
-                var y = g.Add(m, b, operName: "y");
+                TFOutput m = g.MatMul(x, W, operName: "xW");
+                TFOutput y = g.Add(m, b, operName: "y");
 
+                // SoftmaxCrossEntropyWithLogits: gradient for this is not yet supported
+                // see: https://github.com/tensorflow/tensorflow/pull/14727
+                //var (perOutputLoss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY, "softmax");
+                TFOutput perOutputLoss = g.SquaredDifference(y, expectedY, "softmax");
+                TFOutput loss = g.ReduceMean(perOutputLoss, operName: "reducemean");
 
-                var (loss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY, "softmax");
-                var crossEntropy = g.ReduceMean(loss, operName: "reducemean");
-
+                TFOutput learningRate = g.Const(new TFTensor(0.01f));
 
 
                 //g.variab(().Select(v => v.VariableOp).ToArray();
@@ -74,16 +77,15 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 // Is this right??
                 //var b_gradient = g.BiasAddGrad(backprop);
                 // Is this right??
-                var variables = new TFOutput[] { W, b };
-                var gradients = g.AddGradients(new TFOutput[] { y }, variables);
+                TFOutput[] variables = new TFOutput[] { W, b };
+                TFOutput[] gradients = g.AddGradients(new TFOutput[] { loss }, variables);
 
-                var learningRate = g.Const(new TFTensor(0.5f));
 
-                var applieds = new TFOutput[gradients.Length];
+                TFOutput[] updates = new TFOutput[gradients.Length];
                 //var assigns = new TFOutput[gradients.Length];
                 for (int i = 0; i < gradients.Length; i++)
                 {
-                    applieds[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
+                    updates[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
                     //assigns[i] = g.Assign(variables[i], applieds[i]);
                 }
                 //var applieds = new TFOperation[gradients.Length];
@@ -115,11 +117,11 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                 var mnist = Mnist.Load(DownloadPath);
                 var trainReader = mnist.GetTrainReader();
-                const int batchSize = 64;
-                const int trainingEpochs = 20;
+                const int batchSize = 100;
+                //const int trainingEpochs = 20;
                 var trainingSampleCount = mnist.TrainImages.Length;
-                var numberOfBatchesPrEpoch = trainingSampleCount / batchSize; // rough calculation of how many batches pr. epoch
-                var random = new Random(23);
+                //var numberOfBatchesPrEpoch = trainingSampleCount / batchSize; // rough calculation of how many batches pr. epoch
+                //var random = new Random(23);
 
                 //g.AddInitVariable(W);
                 using (var status = new TFStatus())
@@ -158,14 +160,17 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     //    s.GetRunner().AddTarget(globalVariables[i]).Run();
                     //}
 
-                    for (int epoch = 0; epoch < trainingEpochs; epoch++)
+                    //for (int epoch = 0; epoch < trainingEpochs; epoch++)
                     {
                         var accumulatedLoss = 0.0;
                         trainReader.Reset();
 
 
-                        for (int i = 0; i < numberOfBatchesPrEpoch; i++)
-                        {
+                        //for (int i = 0; i < numberOfBatchesPrEpoch; i++)
+                        //{
+                        // Same as tensorflow python example
+                        for (int i = 0; i < 100; i++)
+                        { 
                             //s.Run(ops, new TFTensor[] { x, expectedY }, null);
 
                             //foreach (var observation in observations)
@@ -175,21 +180,21 @@ namespace SharpLearning.Backend.TensorFlow.Test
                             //}
                             // After each epoch, the training data must be shuffled.
                             // Emulate this by starting the batch at a random index. This is not optimal.
-                            var randomBatchStart = random.Next(0, trainingSampleCount - batchSize);
+                            //var randomBatchStart = random.Next(0, trainingSampleCount - batchSize);
                             // the batch images and targets arrays should be reused to reduce allocations.
-                            (var inputBatch, var labelBatch) = trainReader.NextBatch(batchSize);
+                            (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
 
                             var runner = s.GetRunner();
-                            var ag = runner
+                            TFTensor[] ag = runner
                                 .AddInput(x, inputBatch)
                                 .AddInput(expectedY, labelBatch)
                                 // Fetching doesn't help with regard to updating
                                 //.Fetch(applieds)
                                 //.Fetch(gradients)
-                                .Fetch(applieds[0]) // This then updates
-                                .Fetch(applieds[1])
+                                .Fetch(updates[0]) // This then updates
+                                .Fetch(updates[1])
                                 .Run();
-                            var c = runner.Run(crossEntropy);
+                            TFTensor c = runner.Run(loss);
 
                             //.Fetch(applieds)
                             //.Fetch(gradients)
@@ -209,9 +214,34 @@ namespace SharpLearning.Backend.TensorFlow.Test
                                 // , W={runner.Run(W)}, b={runner.Run(b)}
                             }
                         }
+                        // TODO: This doesn't seem correct, too small
                         var currentLoss = accumulatedLoss / trainingSampleCount;
-                        Log($"Epoch: {epoch + 1,4} Accumulated loss={currentLoss}");
+                        //Log($"Epoch: {epoch + 1,4} Accumulated loss={currentLoss}");
+                        //Log($"It: {epoch + 1,4} Accumulated loss={currentLoss}");
                     }
+
+                    // Test trained model
+                    //correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+                    //accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+                    //print(sess.run(accuracy, feed_dict ={
+                    //    x: mnist.test.images,
+                    //    y_: mnist.test.labels}))
+                    TFOutput one = g.Const(new TFTensor(1));
+                    TFOutput argMaxActual = g.ArgMax(y, one);
+                    TFOutput argMaxExpected = g.ArgMax(expectedY, one);
+                    TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
+                    TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
+                    TFOutput accuracy = g.ReduceMean(castCorrectPrediction);
+
+                    var testReader = mnist.GetTestReader();
+                    var (testImages, testLabels) = testReader.All();
+                    TFTensor evaluatedAccuracy = s.GetRunner()
+                     .AddInput(x, testImages)
+                     .AddInput(expectedY, testLabels)
+                     .Run(accuracy);
+                    float acc = (float)evaluatedAccuracy.GetValue();
+                    Log($"Accuracy {acc}");
+                    Assert.AreEqual(acc, 0.7763);
                 }
             }
 
@@ -631,7 +661,12 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 start = 0;
             }
 
-            public (float[,], float[,]) NextBatch(int batchSize)
+            public (float[,] imageData, float[,] labelData) All()
+            {
+                return NextBatch(labels.Length);
+            }
+
+            public (float[,] imageData, float[,] labelData) NextBatch(int batchSize)
             {
                 // TODO: Remove consts and allocs...
                 var imageData = new float[batchSize, 784];

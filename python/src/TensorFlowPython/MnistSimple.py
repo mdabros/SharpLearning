@@ -1,4 +1,7 @@
 # https://www.tensorflow.org/get_started/mnist/beginners
+# Modified slightly to have intermediate variables
+# And currently new cost since SoftmaxCrossEntropyWithLogits
+# is not supported via C++ API yet
 
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
@@ -42,7 +45,8 @@ def main(_):
   x = tf.placeholder(tf.float32, [None, 784])
   W = tf.Variable(tf.zeros([784, 10]))
   b = tf.Variable(tf.zeros([10]))
-  y = tf.matmul(x, W) + b
+  m = tf.matmul(x, W)
+  y = m + b
 
   # Define loss and optimizer
   y_ = tf.placeholder(tf.float32, [None, 10])
@@ -56,15 +60,18 @@ def main(_):
   #
   # So here we use tf.nn.softmax_cross_entropy_with_logits on the raw
   # outputs of 'y', and then average across the batch.
-  cross_entropy = tf.reduce_mean(
-      tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
-  optimizer = tf.train.GradientDescentOptimizer(0.5)
+  # softmax_cross_entropy_with_logits is not supported in C++ API yet
+  #perOutputLoss = tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y)
+  perOutputLoss = tf.squared_difference(x=y, y=y_) # Note order is reversed
+  cross_entropy = tf.reduce_mean(perOutputLoss)
+  learningRate = 0.01
+  optimizer = tf.train.GradientDescentOptimizer(learningRate)
   train_step = optimizer.minimize(cross_entropy)
 
   sess = tf.InteractiveSession()
   tf.global_variables_initializer().run()
   # Train
-  for _ in range(1000):
+  for _ in range(100):
     batch_xs, batch_ys = mnist.train.next_batch(100)
     batchRun = sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
