@@ -1,4 +1,5 @@
 # https://www.tensorflow.org/get_started/mnist/pros
+# Modified slightly to have intermediate variables
 
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
@@ -62,7 +63,9 @@ def deepnn(x):
   with tf.name_scope('conv1'):
     W_conv1 = weight_variable([5, 5, 1, 32])
     b_conv1 = bias_variable([32])
-    h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+    c_conv1 = conv2d(x_image, W_conv1)
+    a_conv1 = c_conv1 + b_conv1
+    h_conv1 = tf.nn.relu(a_conv1)
 
   # Pooling layer - downsamples by 2X.
   with tf.name_scope('pool1'):
@@ -72,7 +75,9 @@ def deepnn(x):
   with tf.name_scope('conv2'):
     W_conv2 = weight_variable([5, 5, 32, 64])
     b_conv2 = bias_variable([64])
-    h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
+    c_conv2 = conv2d(h_pool1, W_conv2)
+    a_conv2 = c_conv2 + b_conv2
+    h_conv2 = tf.nn.relu(a_conv2)
 
   # Second pooling layer.
   with tf.name_scope('pool2'):
@@ -158,7 +163,8 @@ def main(_):
 
   with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for i in range(20000):
+    #for i in range(20000):
+    for i in range(200):
       batch = mnist.train.next_batch(50)
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={

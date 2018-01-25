@@ -12,7 +12,7 @@ using TensorFlow;
 namespace SharpLearning.Backend.TensorFlow.Test
 {
     [TestClass]
-    public class TensorFlowRawMnistTest
+    public class TensorFlowRawMnistSimpleTest
     {
         const string DownloadPath = "MnistTest";
         static readonly Action<string> Log = t => { Trace.WriteLine(t); Console.WriteLine(t); };
