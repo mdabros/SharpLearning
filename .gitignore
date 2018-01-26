@@ -43,6 +43,7 @@ _TeamCity*
 *.opendb
 *.cachefile
 *.swp
+*.txt
 
 # Upgrades
 _UpgradeReport_Files/
