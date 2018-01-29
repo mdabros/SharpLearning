@@ -132,19 +132,24 @@ if __name__=='__main__':
     # use the best available one, e.g.
     # try_set_default_device(cpu())
 
-    os.chdir(os.path.abspath(os.path.dirname(__file__)))
-    train = ut.load('http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz',
-        'http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz', 60000)
-    print ('Writing train text file...')
-    ut.savetxt(r'./Train-28x28_cntk_text.txt', train)
-    print ('Done.')
-    test = ut.load('http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
-        'http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz', 10000)
-    print ('Writing test text file...')
-    ut.savetxt(r'./Test-28x28_cntk_text.txt', test)
-    print ('Done.')
 
+    trainPath = r'./Train-28x28_cntk_text.txt' 
+    if not os.path.isfile(trainPath):
+        os.chdir(os.path.abspath(os.path.dirname(__file__)))
+        train = ut.load('http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz',
+            'http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz', 60000)
+        print ('Writing train text file...')
+        ut.savetxt(trainPath, train)
+        print ('Done.')
 
+    testPath = r'./Test-28x28_cntk_text.txt'
+    if not os.path.isfile(testPath):
+        test = ut.load('http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz',
+            'http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz', 10000)
+        print ('Writing test text file...')
+        ut.savetxt(testPath, test)
+        print ('Done.')
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('-tensorboard_logdir', '--tensorboard_logdir',
                         help='Directory where TensorBoard logs should be created', required=False, default=None)
