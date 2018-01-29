@@ -44,6 +44,7 @@ _TeamCity*
 *.cachefile
 *.swp
 *.txt
+*.dnn
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
