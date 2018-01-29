@@ -45,6 +45,10 @@ _TeamCity*
 *.swp
 *.txt
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
 # Upgrades
 _UpgradeReport_Files/
 Backup*/
