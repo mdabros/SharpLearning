@@ -132,7 +132,6 @@ if __name__=='__main__':
     # use the best available one, e.g.
     # try_set_default_device(cpu())
 
-
     trainPath = r'./Train-28x28_cntk_text.txt' 
     if not os.path.isfile(trainPath):
         os.chdir(os.path.abspath(os.path.dirname(__file__)))
