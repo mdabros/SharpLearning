@@ -17,12 +17,10 @@ Install cntk packages:
  * For GPU/CPU (v. 2.3.1): Search for `https://cntk.ai/PythonWheel/GPU/cntk-2.3.1-cp36-cp36m-win_amd64.whl`
  * For CPU-Only (v. 2.3.1): Search for `https://cntk.ai/PythonWheel/CPU-Only/cntk-2.3.1-cp36-cp36m-win_amd64.whl`
 
-The above will install cntk, and the scripts will work with cntk from the python or anaconda command line.
-However, visual studio does not recognize cntk for some reason, even though the environment seems to be the same.
-Some discussion is going on here: [cntk python from visual studio](https://github.com/Microsoft/CNTK/issues/1587). The conclusion seems to be that you have to launch
-visual studio from the python enviroment prompt...
-
-So currently the examples can only run from the prompt and not visual studio. Which means no debugging.
+Add python environment path to the `PATH` environment variable
+ * Locate the path to the selected python environment (CNTK must be installed)
+   * For instance `C:\Users\User\AppData\Local\Continuum\anaconda3`
+ * Open System environment variables and add the location to `PATH`
 
  # Running
  Right click a `py` file and select **Start with Debugging** for example, or set as startup file and press F5.
