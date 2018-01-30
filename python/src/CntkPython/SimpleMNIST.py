@@ -1,4 +1,5 @@
 # Modified to include the mnist download code.
+# Modified to use the raw API and be more similar to the corresponding tensorflow example.
 
 # Copyright (c) Microsoft. All rights reserved.
 
@@ -17,7 +18,7 @@ from cntk.train import Trainer, minibatch_size_schedule
 from cntk.io import MinibatchSource, CTFDeserializer, StreamDef, StreamDefs, INFINITELY_REPEAT
 from cntk.device import cpu, try_set_default_device
 from cntk.learners import adadelta, learning_parameter_schedule_per_sample
-from cntk.ops import relu, element_times, constant
+from cntk.ops import relu, element_times, constant, times
 from cntk.layers import Dense, Sequential, For
 from cntk.losses import cross_entropy_with_softmax
 from cntk.metrics import classification_error
@@ -45,23 +46,22 @@ def create_reader(path, is_training, input_dim, label_dim):
 def simple_mnist(tensorboard_logdir=None):
     input_dim = 784
     num_output_classes = 10
-    num_hidden_layers = 1
-    hidden_layers_dim = 200
-
+    
     # Input variables denoting the features and label data
-    feature = C.input_variable(input_dim, np.float32)
-    label = C.input_variable(num_output_classes, np.float32)
-        
-    # Instantiate the feedforward classification model
-    scaled_input = element_times(constant(0.00390625), feature)
+    x = C.input_variable(input_dim, np.float32)
+    y = C.input_variable(num_output_classes, np.float32) # Ideally input should be scaled, like the original example.
 
-    z = Sequential([For(range(num_hidden_layers), lambda i: Dense(hidden_layers_dim, activation=relu)),
-                    Dense(num_output_classes)])(scaled_input)
+    # Model Parameters
+    W = C.Parameter([input_dim, num_output_classes], init=0.0, name='W')
+    b = C.Parameter(num_output_classes, init=0.0, name='b')
+    m = times(x, W)         
+    # Linear Model
+    z = m + b
 
-    ce = cross_entropy_with_softmax(z, label)
-    pe = classification_error(z, label)
+    # Define loss and optimizer
+    ce = cross_entropy_with_softmax(z, y)
+    pe = classification_error(z, y)
 
-    #data_dir = os.path.join(abs_path, "..", "..", "..", "DataSets", "MNIST")
     data_dir = abs_path
 
     path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))
@@ -70,8 +70,8 @@ def simple_mnist(tensorboard_logdir=None):
     reader_train = create_reader(path, True, input_dim, num_output_classes)
 
     input_map = {
-        feature  : reader_train.streams.features,
-        label  : reader_train.streams.labels
+        x  : reader_train.streams.features,
+        y  : reader_train.streams.labels
     }
 
     # Training config
@@ -91,7 +91,7 @@ def simple_mnist(tensorboard_logdir=None):
 
     # Instantiate the trainer object to drive the model training
     lr = learning_parameter_schedule_per_sample(1)
-    trainer = Trainer(z, (ce, pe), adadelta(z.parameters, lr), progress_writers)
+    trainer = Trainer(z, (ce, pe), adadelta(z.parameters, lr), progress_writers)  
 
     training_session(
         trainer=trainer,
@@ -109,8 +109,8 @@ def simple_mnist(tensorboard_logdir=None):
     reader_test = create_reader(path, False, input_dim, num_output_classes)
 
     input_map = {
-        feature  : reader_test.streams.features,
-        label  : reader_test.streams.labels
+        x  : reader_test.streams.features,
+        y  : reader_test.streams.labels
     }
 
     # Test data for trained model
