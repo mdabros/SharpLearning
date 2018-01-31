@@ -17,7 +17,7 @@ import mnist_utils as ut
 from cntk.train import Trainer, minibatch_size_schedule 
 from cntk.io import MinibatchSource, CTFDeserializer, StreamDef, StreamDefs, INFINITELY_REPEAT
 from cntk.device import cpu, try_set_default_device
-from cntk.learners import adadelta, learning_parameter_schedule_per_sample
+from cntk.learners import sgd, adadelta, learning_parameter_schedule_per_sample
 from cntk.ops import relu, element_times, constant, times
 from cntk.layers import Dense, Sequential, For
 from cntk.losses import cross_entropy_with_softmax
@@ -44,23 +44,42 @@ def create_reader(path, is_training, input_dim, label_dim):
 # Creates and trains a feedforward classification model for MNIST images
 
 def simple_mnist(tensorboard_logdir=None):
+    
+    # Define data.
     input_dim = 784
     num_output_classes = 10
     
-    # Input variables denoting the features and label data
+    # Input variables denoting the features and label data.
     x = C.input_variable(input_dim, np.float32)
     y = C.input_variable(num_output_classes, np.float32) # Ideally input should be scaled, like the original example.
 
-    # Model Parameters
+    # Model Parameters.
     W = C.Parameter([input_dim, num_output_classes], init=0.0, name='W')
     b = C.Parameter(num_output_classes, init=0.0, name='b')
     m = times(x, W)         
+    
     # Linear Model
-    z = m + b
+    model = m + b
 
-    # Define loss and optimizer
-    ce = cross_entropy_with_softmax(z, y)
-    pe = classification_error(z, y)
+    # Define loss and error metric.
+    loss = cross_entropy_with_softmax(model, y)
+    error_metric = classification_error(model, y)
+
+    # Training config.
+    minibatch_size = 64
+    minibatch_iterations = 200
+
+    # Instantiate progress writers.
+    training_progress_output_freq = 100
+    progress_writers = [ProgressPrinter(
+        freq=training_progress_output_freq,
+        tag='Training',
+        num_epochs=minibatch_iterations)]
+
+    # Instantiate the trainer object to drive the model training.
+    lr = learning_parameter_schedule_per_sample(0.01)
+    trainer = Trainer(model, (loss, error_metric), 
+                      sgd(model.parameters, lr), progress_writers)  
 
     # Load train data
     path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))
@@ -72,29 +91,12 @@ def simple_mnist(tensorboard_logdir=None):
         y  : reader_train.streams.labels
     }
 
-    # Training config
-    minibatch_size = 100
-    minibatch_iterations = 200
-
-    ## Instantiate progress writers.
-    training_progress_output_freq = 100
-    progress_writers = [ProgressPrinter(
-        freq=training_progress_output_freq,
-        tag='Training',
-        num_epochs=minibatch_iterations)]
-
-    # Instantiate the trainer object to drive the model training
-    lr = learning_parameter_schedule_per_sample(1)
-    trainer = Trainer(z, (ce, pe), adadelta(z.parameters, lr), progress_writers)  
-
-    # Train the model
-    minibatch_size = 100
-    minibatch_iterations = 200
+    # Train model.
     for i in range(0, int(minibatch_iterations)):
         mb = reader_train.next_minibatch(minibatch_size, input_map=input_map)
         trainer.train_minibatch(mb)
     
-    # Load test data
+    # Load test data.
     path = os.path.normpath(os.path.join(data_dir, "Test-28x28_cntk_text.txt"))
     check_path(path)
     reader_test = create_reader(path, False, input_dim, num_output_classes)
@@ -104,10 +106,10 @@ def simple_mnist(tensorboard_logdir=None):
         y  : reader_test.streams.labels
     }
 
-    # Test data for trained model
+    # Test data for trained model.
     test_minibatch_size = 1024
-    num_samples = 10000
-    num_minibatches_to_test = num_samples / test_minibatch_size
+    num_test_samples = 10000
+    num_minibatches_to_test = num_test_samples / test_minibatch_size
     test_result = 0.0
     for i in range(0, int(num_minibatches_to_test)):
         mb = reader_test.next_minibatch(test_minibatch_size, input_map=input_map)
@@ -146,4 +148,4 @@ if __name__=='__main__':
     args = vars(parser.parse_args())
 
     error = simple_mnist(args['tensorboard_logdir'])
-    print("Error: %f" % error)
+    print("Test Error: %f" % error)
