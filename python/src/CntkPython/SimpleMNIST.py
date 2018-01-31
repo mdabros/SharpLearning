@@ -25,7 +25,7 @@ from cntk.metrics import classification_error
 from cntk.train.training_session import *
 from cntk.logging import ProgressPrinter, TensorBoardProgressWriter
 
-abs_path = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.dirname(os.path.abspath(__file__))
 
 def check_path(path):
     if not os.path.exists(path):
@@ -62,11 +62,9 @@ def simple_mnist(tensorboard_logdir=None):
     ce = cross_entropy_with_softmax(z, y)
     pe = classification_error(z, y)
 
-    data_dir = abs_path
-
+    # Load train data
     path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))
     check_path(path)
-
     reader_train = create_reader(path, True, input_dim, num_output_classes)
 
     input_map = {
@@ -75,37 +73,30 @@ def simple_mnist(tensorboard_logdir=None):
     }
 
     # Training config
-    minibatch_size = 64
-    num_samples_per_sweep = 60000
-    num_sweeps_to_train_with = 10
+    minibatch_size = 100
+    minibatch_iterations = 200
 
-    # Instantiate progress writers.
-    #training_progress_output_freq = 100
+    ## Instantiate progress writers.
+    training_progress_output_freq = 100
     progress_writers = [ProgressPrinter(
-        #freq=training_progress_output_freq,
+        freq=training_progress_output_freq,
         tag='Training',
-        num_epochs=num_sweeps_to_train_with)]
-
-    if tensorboard_logdir is not None:
-        progress_writers.append(TensorBoardProgressWriter(freq=10, log_dir=tensorboard_logdir, model=z))
+        num_epochs=minibatch_iterations)]
 
     # Instantiate the trainer object to drive the model training
     lr = learning_parameter_schedule_per_sample(1)
     trainer = Trainer(z, (ce, pe), adadelta(z.parameters, lr), progress_writers)  
 
-    training_session(
-        trainer=trainer,
-        mb_source = reader_train,
-        mb_size = minibatch_size,
-        model_inputs_to_streams = input_map,
-        max_samples = num_samples_per_sweep * num_sweeps_to_train_with,
-        progress_frequency=num_samples_per_sweep
-    ).train()
+    # Train the model
+    minibatch_size = 100
+    minibatch_iterations = 200
+    for i in range(0, int(minibatch_iterations)):
+        mb = reader_train.next_minibatch(minibatch_size, input_map=input_map)
+        trainer.train_minibatch(mb)
     
     # Load test data
     path = os.path.normpath(os.path.join(data_dir, "Test-28x28_cntk_text.txt"))
     check_path(path)
-
     reader_test = create_reader(path, False, input_dim, num_output_classes)
 
     input_map = {
