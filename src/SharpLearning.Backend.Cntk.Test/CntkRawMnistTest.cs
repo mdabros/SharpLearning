@@ -49,7 +49,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Training config.
             var minibatchSize = 64;
-            var minibatchIterations = 2000;
+            var minibatchIterations = 200;
 
             // Instantiate progress writers.
             var trainingProgressOutputFreq = 100;
@@ -133,7 +133,11 @@ namespace SharpLearning.Backend.Cntk.Test
                 }
             }
 
-            Trace.WriteLine($"Test Error: {testResult / numMinibatchesToTest}");
+            var csharpError = testResult / numMinibatchesToTest;
+            Trace.WriteLine($"Test Error: {csharpError}");
+
+            var pythonError = 0.124; // Most likely from diffent observations, both in training and in test.
+            Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
         [TestMethod]
