@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CntkBackendTest.cs" />
+    <Compile Include="CntkLayers.cs" />
     <Compile Include="CntkRawMnistTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
