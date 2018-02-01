@@ -85,6 +85,8 @@ namespace SharpLearning.Backend.Cntk.Test
             init = init ?? m_getDefaultInitializer();
             var w = new Parameter(wShape, m_dataType, init, m_device, "w");
 
+            // Weights and input is in reversed order compared to the original python code.
+            // Same goes for the dimensions.
             var r = CNTKLib.Times(w, x, (uint)outputRank, inferInputRankToMap);
 
             if(bias)
