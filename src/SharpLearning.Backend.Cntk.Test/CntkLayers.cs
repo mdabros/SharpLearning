@@ -44,16 +44,20 @@ namespace SharpLearning.Backend.Cntk.Test
 
         /// <summary>
         /// From Dense in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// 
+        /// Input description is from pyton, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="shape"></param>
-        /// <param name="activation"></param>
-        /// <param name="init"></param>
-        /// <param name="inputRank"></param>
-        /// <param name="mapRank"></param>
-        /// <param name="bias"></param>
-        /// <param name="initBias"></param>
-        /// <returns></returns>
+        /// <param name="x">Input to the dense layer</param>
+        /// <param name="shape">Shape (`int` or `tuple` of `ints`): vector or tensor dimension of the output of this layer</param>
+        /// <param name="activation">Activation (:class:`~cntk.ops.functions.Function`, defaults to identity): optional function to apply at the end, e.g. `relu`</param>
+        /// <param name="init">init (scalar or NumPy array or :mod:`cntk.initializer`, defaults to :func:`~cntk.initializer.glorot_uniform` ): initial value of weights `W`</param>
+        /// <param name="inputRank">input_rank (int, defaults to `None`): number of inferred axes to add to W (`map_rank` must not be given)</param>
+        /// <param name="mapRank"> map_rank (int, defaults to `None`): expand W to leave exactly `map_rank` axes (`input_rank` must not be given)</param>
+        /// <param name="bias">bias (bool, optional, defaults to `True`): the layer will have no bias if `False` is passed here</param>
+        /// <param name="initBias">init_bias (scalar or NumPy array or :mod:`cntk.initializer`, defaults to 0): initial value of weights `b`</param>
+        /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the operation to it</returns>
         public Function Dense(Variable x, int shape, Func<Variable, Function> activation = null, CNTKDictionary init = null,
             int inputRank = 0, int mapRank = 0, bool bias = true, CNTKDictionary initBias = null)
         {
