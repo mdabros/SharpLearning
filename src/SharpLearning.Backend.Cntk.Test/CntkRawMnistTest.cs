@@ -160,10 +160,12 @@ namespace SharpLearning.Backend.Cntk.Test
             Variable labelVar = Variable.InputVariable(new int[] { numOutputClasses }, dataType);
 
             // Instantiate the feedforward classification model
-            var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
+            //var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
 
             var layers = new CntkLayers(device, dataType);
-            Function z = layers.Dense(scaledInput, numOutputClasses);
+            Function f4    = layers.Dense(inputVar, 96, (v) => CNTKLib.ReLU(v));
+            Function drop4 = layers.Dropout(f4, 0.5);
+            Function z     = layers.Dense(drop4, numOutputClasses);
 
             // Define loss and error metric.
             Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
@@ -171,7 +173,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Set learning parameters
             var lrSchedule = new TrainingParameterScheduleDouble(0.01, 1);
-            var mmSchedule = new TrainingParameterScheduleDouble(0.9990239141819757, 1);
+            var mmSchedule = new TrainingParameterScheduleDouble(0.9, 1);
 
             // Instantiate the trainer object to drive the model training
             var learner = new List<Learner>() { Learner.MomentumSGDLearner(z.Parameters(), lrSchedule, mmSchedule, false) };

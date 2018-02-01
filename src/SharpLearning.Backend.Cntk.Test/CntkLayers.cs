@@ -45,11 +45,11 @@ namespace SharpLearning.Backend.Cntk.Test
         /// <summary>
         /// From Dense in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// 
-        /// Input description is from pyton, so might not match this implementation completely. 
+        /// Input description is from python, so might not match this implementation completely. 
         /// But is included to provide the itension of each input.
         /// 
         /// </summary>
-        /// <param name="x">Input to the dense layer</param>
+        /// <param name="x">Input to the dense operation</param>
         /// <param name="shape">Shape (`int` or `tuple` of `ints`): vector or tensor dimension of the output of this layer</param>
         /// <param name="activation">Activation (:class:`~cntk.ops.functions.Function`, defaults to identity): optional function to apply at the end, e.g. `relu`</param>
         /// <param name="init">init (scalar or NumPy array or :mod:`cntk.initializer`, defaults to :func:`~cntk.initializer.glorot_uniform` ): initial value of weights `W`</param>
@@ -86,7 +86,7 @@ namespace SharpLearning.Backend.Cntk.Test
             wDimensions.AddRange(inputShape.Dimensions);
             var wShape = NDShape.CreateNDShape(wDimensions);
 
-            init = init ?? m_getDefaultInitializer();
+            init = init ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
             var w = new Parameter(wShape, m_dataType, init, m_device, "w");
 
             // Weights and input is in reversed order compared to the original python code.
@@ -106,6 +106,34 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             return r;
+        }
+
+        /// <summary>
+        /// From Dropout in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x">Input to the dropout operation</param>
+        /// <param name="dropOutRate">Probability of dropping out an element, mutually exclusive with ``keep_prob``</param>
+        /// <param name="keepProb">Probability of keeping an element, mutually exclusive with ``dropout_rate``</param>
+        /// <param name="seed">random seed</param>
+        /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the operation to it</returns>
+        public Function Dropout(Variable x, double dropOutRate, double keepProb = 0.0, uint seed = 34)
+        {
+            if (dropOutRate == 0.0 && keepProb == 0.0)
+                throw new ArgumentException("Dropout: either dropout_rate or keep_prob must be specified.");
+            else if (dropOutRate != 0.0 && keepProb != 0.0)
+                throw new ArgumentException("Dropout: dropout_rate and keep_prob cannot be specified at the same time.");
+            else if (keepProb != 0.0)
+            {
+                if (keepProb < 0.0 || keepProb >= 1.0)
+                    throw new ArgumentException("Dropout: keep_prob must be in the interval [0,1]");
+
+                dropOutRate = 1 - keepProb;
+            }
+
+            return CNTKLib.Dropout(x, dropOutRate, seed);
         }
         
         static CNTKDictionary DefaultInitializer(uint seed)
