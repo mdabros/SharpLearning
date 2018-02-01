@@ -15,16 +15,6 @@ namespace SharpLearning.Backend.Cntk.Test
         public static DeviceDescriptor Device = DeviceDescriptor.UseDefaultDevice();
         public static CntkDataType DataType = CntkDataType.Float;
 
-        public static Function Input(params int[] inputDim)
-        {
-            return Variable.InputVariable(inputDim, DataType);
-        }
-
-        public static Function SoftMax(Variable input)
-        {
-            return CNTKLib.Softmax(input);
-        }
-
         public static Function Dense(Variable input, int units, uint seed = 32, string outputName = "")
         {
             if (input.Shape.Rank != 1)
