@@ -143,164 +143,86 @@ namespace SharpLearning.Backend.Cntk.Test
         [TestMethod]
         public void MnistCnnExampleTest()
         {
-            // Data set
-            var mnist = Mnist.Load(DownloadPath);
-            var trainingSampleCount = mnist.TrainImages.Length;
-            var dataShape = new int[] { 28, 28, 1 };
-            var numberOfClasses = 10;
-            var outputValidationError = false;
-
-            // Set global data and device types. 
+            // Define data.
+            var imageHeight = 28;
+            var imageWidth = 28;
+            var numChannels = 1;
+            var input_dim = imageHeight * imageWidth * numChannels;
+            var numOutputClasses = 10;
             var dataType = CntkDataType.Float;
+            var inputDimensions = new int[] { numChannels, imageHeight, imageWidth };
+
+            // Set device.
             var device = DeviceDescriptor.UseDefaultDevice();
-            Trace.WriteLine("Using device: " + device.Type);
-            // These are just hardcoded in the helper class.
-            CntkLayers.DataType = dataType;
-            CntkLayers.Device = device;
-           
-            // Variables for setting features and targets while training the network.
-            var featureVariable = Variable.InputVariable(dataShape, dataType);
-            var targetVariable = Variable.InputVariable(new int[] { numberOfClasses }, dataType);
 
-            // Define small convolutional neural network.
-            Function conv2d = CntkLayers.Conv2D(featureVariable, 3, 3, 32);
-            Function conv2dActivation = CntkLayers.ActivationFunction(conv2d, Activation.ReLU);
+            // Input variables denoting the features and label data.
+            Variable inputVar = Variable.InputVariable(inputDimensions, dataType); ;
+            Variable labelVar = Variable.InputVariable(new int[] { numOutputClasses }, dataType);
 
-            Function pool2d = CntkLayers.Pool2D(conv2dActivation, 2, 2);
+            // Instantiate the feedforward classification model
+            var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
 
-            Function dense = CntkLayers.Dense(pool2d, 256);
-            Function denseActivation = CntkLayers.ActivationFunction(dense, Activation.ReLU);
+            var layers = new CntkLayers(device, dataType);
+            Function z = layers.Dense(scaledInput, numOutputClasses);
 
-            Function dropout = CntkLayers.Dropout(denseActivation, 0.5);
+            // Define loss and error metric.
+            Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
+            Function errorMetric = CNTKLib.ClassificationError(z, labelVar);
 
-            Function cnn = CntkLayers.Dense(dropout, numberOfClasses);
+            // Set learning parameters
+            var lrSchedule = new TrainingParameterScheduleDouble(0.01, 1);
+            var mmSchedule = new TrainingParameterScheduleDouble(0.9990239141819757, 1);
 
-            // Training loss and eval error. Eval error is only for reporting and not used for training.
-            var loss = CNTKLib.CrossEntropyWithSoftmax(cnn, targetVariable);
-            var evalError = CNTKLib.ClassificationError(cnn, targetVariable);
+            // Instantiate the trainer object to drive the model training
+            var learner = new List<Learner>() { Learner.MomentumSGDLearner(z.Parameters(), lrSchedule, mmSchedule, false) };
+            //var learner = new List<Learner>() { Learner.SGDLearner(z.Parameters(), lrSchedule) };
+            var trainingProgressOutputFreq = 100;
+            var trainer = Trainer.CreateTrainer(z, loss, errorMetric, learner);
 
-            // Setup stochastic gradient descent learner
-            var learningRatePerSample = new TrainingParameterScheduleDouble(0.01, 1);
-            var parameterLearners = new List<Learner>() { Learner.SGDLearner(cnn.Parameters(), learningRatePerSample) };
+            // Training config.
+            var mnist = Mnist.Load(DownloadPath);
+            var readerTrain = mnist.GetTrainReader();
 
-            // Setup trainer with the defined network, loss and optimizer.
-            Trainer trainer = Trainer.CreateTrainer(cnn, loss, evalError, parameterLearners);
+            var minibatchSize = 64;
+            var epochSize = mnist.TrainImages.Count();
+            var maxEpochs = 40;
+            var minibatchIterations = 2000;
 
-            var epochs = 100; // how many epochs to train.
-            var batchSize = 64; // size of each training batch
-            var numberOfBatchesPrEpoch = trainingSampleCount / batchSize; // rough calculation of how many batches pr. epoch
-            var random = new Random(232);
-            var timer = new Stopwatch();
-
-            // Train the model
-            var batchContainer = new Dictionary<Variable, Value>();
-            for (int epoch = 0; epoch < epochs; epoch++)
+            // Train model.
+            var inputMap = new Dictionary<Variable, Value>();
+            for (int i = 0; i < minibatchIterations; i++)
             {
-                // Reset accumulations for loss and error metric for each epoch
-                var accumulatedLoss = 0.0;
-                var accumulatedClassificationError = 0.0;
+                // Using mnist.GetTrainReader().NextBatchArray(batchSize), which return the data as a single dim array.
+                // the batch images and targets arrays should be reused to reduce allocations.
+                (var trainingImages, var trainingTargets) = readerTrain.NextBatchArray(minibatchSize);
 
-                timer.Restart();
-
-                for (int i = 0; i < numberOfBatchesPrEpoch; i++)
+                // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
+                // However, unsure how to handle random shuffling in this case.
+                using (Value batchImages = Value.CreateBatch<float>(inputDimensions, trainingImages, device))
+                using (Value batchTarget = Value.CreateBatch<float>(new int[] { numOutputClasses }, trainingTargets, device))
                 {
-                    // Using mnist.GetTrainReader().NextBatchArray(batchSize), which return the data as a single dim array.
-                    // After each epoch, the training data must be shuffled.
-                    // Emulate this by starting the batch at a random index. This is not optimal.
-                    var randomBatchStart = random.Next(0, trainingSampleCount - batchSize);
-                    // the batch images and targets arrays should be reused to reduce allocations.
-                    (var trainingImages, var trainingTargets) = mnist.GetTrainReader(readFromItem: randomBatchStart)
-                        .NextBatchArray(batchSize);
+                    inputMap.Add(inputVar, batchImages);
+                    inputMap.Add(labelVar, batchTarget);
 
-                    // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
-                    // However, unsure how to handle random shuffling in this case.
-                    using (Value batchImages = Value.CreateBatch<float>(dataShape, trainingImages, device))
-                    using (Value batchTarget = Value.CreateBatch<float>(new int[] { numberOfClasses }, trainingTargets, device))
+                    // There seems to be a memory-leak of some kind, like the batches are not properly released.
+                    // This is most noticable with GPU training, since batches are being processed quicker.
+                    trainer.TrainMinibatch(inputMap, false, device);
+                    inputMap.Clear();
+
+                    if ((i % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                     {
-                        batchContainer.Add(featureVariable, batchImages);
-                        batchContainer.Add(targetVariable, batchTarget);
+                        var batchLoss = (float)trainer.PreviousMinibatchLossAverage();
+                        var batchError = (float)trainer.PreviousMinibatchEvaluationAverage();
+                        Trace.WriteLine($"Minibatch: {i} CrossEntropyLoss = {batchLoss}, EvaluationCriterion = {batchError}");
+                    }
 
-                        // There seems to be a memory-leak of some kind, like the batches are not properly released.
-                        // This is most noticable with GPU training, since batches are being processed quicker.
-                        trainer.TrainMinibatch(batchContainer, false, device);
-                        batchContainer.Clear();
-
-                        accumulatedLoss += trainer.PreviousMinibatchSampleCount() * trainer.PreviousMinibatchLossAverage();
-                        accumulatedClassificationError += trainer.PreviousMinibatchSampleCount() * trainer.PreviousMinibatchEvaluationAverage();
+                    var samplesSeenNextBatch = (i + 2) * minibatchSize;
+                    if (samplesSeenNextBatch >= epochSize)
+                    {
+                        readerTrain.Reset();
                     }
                 }
-                timer.Stop();
-
-                var currentLoss = accumulatedLoss / (double)trainingSampleCount;
-                var currentError = accumulatedClassificationError / (double)trainingSampleCount;
-                var epochTime_ms = timer.ElapsedMilliseconds;
-
-                // report results.
-                var output = new StringBuilder();
-                output.AppendLine($"Epoch { epoch + 1:000}:");
-                output.AppendLine($"   Train: Error: {currentError:F12}, Loss: {currentLoss:F12}, Time (ms): {epochTime_ms}");
-
-                if (outputValidationError)
-                {
-                    timer.Restart();
-                    var validationError = Validate(cnn, mnist, targetVariable, featureVariable);
-                    timer.Stop();
-                    var totalValidationTime_ms = timer.ElapsedMilliseconds;
-                    output.AppendLine($"   Valid: Error: {validationError:F12}, Samples: {mnist.ValidationImages.Length}, Time (ms): {totalValidationTime_ms}");
-                }
-
-                Trace.Write(output);
-
-                // Sometimes it seems the GC is too busy to collect.
-                // Might be caused by native memory not visible for the managed gc
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
             }
-        }
-
-        public double Validate(Function model, Mnist mnist,
-            Variable labelVariable, Variable featureVariable)
-        {
-            var samples = mnist.ValidationImages.Length;
-            var reader = mnist.GetValidationReader();
-
-            var validationError = 0.0;
-            // More efficient to batch samples, however, run separate to get worst case.
-            for (int i = 0; i < samples; i++)
-            {
-                (var image, var target) = reader.NextBatchArray(1);
-                var inputDimensions = model.Arguments[0].Shape;
-
-                using (Value batch = Value.CreateBatch<float>(inputDimensions, image, CntkLayers.Device))
-                {
-                    Variable actualVariable = CNTKLib.InputVariable(labelVariable.Shape, CntkLayers.DataType);
-                    Function evalMetricFunc = CNTKLib.ClassificationError(labelVariable, actualVariable);
-                    Value actual = Evaluate(model, featureVariable, image, inputDimensions);
-                    Value expected = Value.CreateBatch(new int[] { target.Length }, target, CntkLayers.Device);
-
-                    var inputDataMap = new Dictionary<Variable, Value>() { { labelVariable, expected }, { actualVariable, actual } };
-                    var outputDataMap = new Dictionary<Variable, Value>() { { evalMetricFunc.Output, null } };
-                    evalMetricFunc.Evaluate(inputDataMap, outputDataMap, CntkLayers.Device);
-
-                    List<float> evalMetric = outputDataMap[evalMetricFunc.Output].GetDenseData<float>(evalMetricFunc.Output).Select(x => x.First()).ToList();
-                    validationError += evalMetric.Average();
-                }
-            }
-
-            validationError = validationError / (double)samples;
-            return validationError;
-        }
-
-        Value Evaluate(Function model, Variable featureVariable,
-            float[] image, NDShape imageDimensions)
-        {
-            Value features = Value.CreateBatch(imageDimensions, image, CntkLayers.Device);
-
-            var inputDataMap = new Dictionary<Variable, Value>() { { featureVariable, features } };
-            var outputDataMap = new Dictionary<Variable, Value>() { { model.Output, null } };
-
-            model.Evaluate(inputDataMap, outputDataMap, CntkLayers.Device);
-            return outputDataMap[model.Output];
         }
     }
 

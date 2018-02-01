@@ -8,122 +8,106 @@ using CntkDataType = CNTK.DataType;
 namespace SharpLearning.Backend.Cntk.Test
 {
     /// <summary>
-    /// Helper class to make CNTK operator creation more simple.
+    /// Helper class based on: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+    /// 
+    /// Note that this class is not meant to be part of the backend project.
+    /// The implementation of each method should help illustrate 
+    /// which base operators and concept are necesarry to support in the low-level api of the backend project.
     /// </summary>
-    public static class CntkLayers
+    public class CntkLayers
     {
-        public static DeviceDescriptor Device = DeviceDescriptor.UseDefaultDevice();
-        public static CntkDataType DataType = CntkDataType.Float;
+        readonly DeviceDescriptor m_device;
+        readonly CntkDataType m_dataType;
+        readonly Func<CNTKDictionary> m_getDefaultInitializer;
 
-        public static Function Dense(Variable input, int units, uint seed = 32, string outputName = "")
+        public CntkLayers()
+            : this(DeviceDescriptor.UseDefaultDevice(), CntkDataType.Float, 
+                    () => DefaultInitializer(seed: 42))
         {
-            if (input.Shape.Rank != 1)
+        }
+
+        public CntkLayers(DeviceDescriptor device, CntkDataType dataType)
+            : this(device, dataType, () => DefaultInitializer(seed: 42))
+        {
+        }
+
+        public CntkLayers(DeviceDescriptor device, CntkDataType dataType, 
+            Func<CNTKDictionary> getDefaultInitializer)
+        {
+            if (device == null) { throw new ArgumentNullException("device"); }
+            if (getDefaultInitializer == null) { throw new ArgumentNullException("getDefaultInitializer"); }
+
+            m_device = device;
+            m_dataType = dataType;
+            m_getDefaultInitializer = getDefaultInitializer;
+        }
+
+        /// <summary>
+        /// From Dense in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="shape"></param>
+        /// <param name="activation"></param>
+        /// <param name="init"></param>
+        /// <param name="inputRank"></param>
+        /// <param name="mapRank"></param>
+        /// <param name="bias"></param>
+        /// <param name="initBias"></param>
+        /// <returns></returns>
+        public Function Dense(Variable x, int shape, Func<Variable, Function> activation = null, CNTKDictionary init = null,
+            int inputRank = 0, int mapRank = 0, bool bias = true, CNTKDictionary initBias = null)
+        {
+            if(inputRank != 0 && mapRank != 0)
             {
-                // Flatten dimensions.
-                var newDim = input.Shape.Dimensions.Aggregate((d1, d2) => d1 * d2);
-                input = CNTKLib.Reshape(input, new int[] { newDim });
+                throw new ArgumentException("Dense: inputRank and mapRank cannot be specified at the same time.");
             }
 
-            // Use GlorotUniform for weight initialization.
-            var initializer = CNTKLib.GlorotUniformInitializer(
+            var outputShape = NDShape.CreateNDShape(new int[] { shape });
+            var outputRank = outputShape.Dimensions.Count;
+
+            var inputRanks = (inputRank != 0) ? inputRank : 1;
+            var dimensions = Enumerable.Range(0, inputRanks).Select(v => NDShape.InferredDimension).ToArray(); // infer all dimensions.
+            var inputShape = NDShape.CreateNDShape(dimensions);
+            
+            int inferInputRankToMap;
+
+            if (inputRank != 0)
+                inferInputRankToMap = -1; // means map_rank is not specified; input_rank rules.
+            else if (mapRank == 0)
+                inferInputRankToMap = 0;  // neither given: default to 'infer W to use all input dims'.
+            else
+                inferInputRankToMap = mapRank;  // infer W to use all input dims except the first static 'map_rank' ones.
+
+            var wDimensions = outputShape.Dimensions.ToList();
+            wDimensions.AddRange(inputShape.Dimensions);
+            var wShape = NDShape.CreateNDShape(wDimensions);
+
+            init = init ?? m_getDefaultInitializer();
+            var w = new Parameter(wShape, m_dataType, init, m_device, "w");
+
+            var r = CNTKLib.Times(w, x, (uint)outputRank, inferInputRankToMap);
+
+            if(bias)
+            {
+                initBias = initBias ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
+                var b = new Parameter(outputShape, m_dataType, initBias, m_device, "b");
+                r = r + b;
+            }
+
+            if(activation != null)
+            {
+                r = activation(r);
+            }
+
+            return r;
+        }
+        
+        static CNTKDictionary DefaultInitializer(uint seed)
+        {
+            return CNTKLib.GlorotUniformInitializer(
                 CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, seed);
-
-            var inputDim = input.Shape[0];
-
-            var weights = new Parameter(new int[] { units, inputDim },
-                DataType, initializer, Device, "timesParam");
-
-            // Bias is initialized to 0.0.
-            var bias = new Parameter(new int[] { units }, 0.0f, Device, "plusParam");
-
-            return CNTKLib.Times(weights, input) + bias;
-        }
-
-        public static Function ActivationFunction(Variable input, Activation activation)
-        {
-            switch (activation)
-            {
-                default:
-                case Activation.None:
-                    return input;
-                case Activation.ReLU:
-                    return CNTKLib.ReLU(input);
-                case Activation.LeakyReLU:
-                    return CNTKLib.LeakyReLU(input);
-                case Activation.Sigmoid:
-                    return CNTKLib.Sigmoid(input);
-                case Activation.Tanh:
-                    return CNTKLib.Tanh(input);
-            }
-        }
-
-        public static Function Conv2D(Variable input, int filterW, int filterH, int filterCount,
-             int strideW = 1, int strideH = 1, uint seed = 34, string outputName = "")
-        {
-            if (input.Shape.Rank != 3)
-            {
-                throw new ArgumentException("Conv2D layer requires shape rank 3, got rank " + input.Shape.Rank);
-            }
-
-            // Assumes specific layout.
-            var inputChannels = input.Shape[2];
-
-            // Use GlorotUniform for weight initialization.
-            var intializer = CNTKLib.GlorotUniformInitializer(
-                    CNTKLib.DefaultParamInitScale,
-                    CNTKLib.SentinelValueForInferParamInitRank,
-                    CNTKLib.SentinelValueForInferParamInitRank, seed);
-
-            var convParams = new Parameter(new int[] { filterW, filterH, inputChannels, filterCount },
-                    DataType, intializer, Device);
-            var conv = CNTKLib.Convolution(convParams, input, new int[] { strideW, strideH, inputChannels });
-
-            // Bias is initialized to 0.0.
-            var bias = new Parameter(conv.Output.Shape, DataType, 0.0, Device);
-            return CNTKLib.Plus(bias, conv);
-        }
-
-        public static Function Pool2D(Variable input, int poolW, int poolH,
-            PoolingType poolingType = PoolingType.Max,
-            int strideW = 2, int strideH = 2, string outputName = "")
-        {
-            if (input.Shape.Rank != 3)
-            {
-                throw new ArgumentException("Pool2D layer requires shape rank 3, got rank " + input.Shape.Rank);
-            }
-
-            return CNTKLib.Pooling(input, PoolingType.Max,
-                new int[] { poolW, poolH }, new int[] { strideW, strideH });
-        }
-
-        public static Function Reshape(Variable layer, int[] targetShape)
-        {
-            return CNTKLib.Reshape(layer, targetShape);
-        }
-
-        public static Function GlobalAveragePool2D(Variable layer)
-        {
-            return CNTKLib.Pooling(layer, PoolingType.Average, new int[] { layer.Shape[0], layer.Shape[1] });
-        }
-
-        public static Function Dropout(Variable input, double dropoutRate, uint seed = 465)
-        {
-            return CNTKLib.Dropout(input, dropoutRate, seed);
-        }
-
-        public static Function BatchNormalizationLayer(Variable input, bool spatial,
-            double initialScaleValue = 1, double initialBiasValue = 0, int bnTimeConst = 5000)
-        {
-            var biasParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialBiasValue, Device, "");
-            var scaleParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialScaleValue, Device, "");
-            var runningMean = new Constant(new int[] { NDShape.InferredDimension }, 0.0f, Device);
-            var runningInvStd = new Constant(new int[] { NDShape.InferredDimension }, 0.0f, Device);
-            var runningCount = Constant.Scalar(0.0f, Device);
-
-            return CNTKLib.BatchNormalization(input, scaleParams, biasParams, runningMean, runningInvStd, runningCount,
-                spatial, (double)bnTimeConst, 0.0, 1e-5 /* epsilon */);
         }
     }
 }
