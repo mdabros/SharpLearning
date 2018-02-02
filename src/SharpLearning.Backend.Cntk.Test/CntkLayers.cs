@@ -135,6 +135,57 @@ namespace SharpLearning.Backend.Cntk.Test
 
             return CNTKLib.Dropout(x, dropOutRate, seed);
         }
+
+
+        /// <summary>
+        /// From Convolution in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x">Input to the dense operation</param>
+        /// <param name="filterShape">(`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
+        /// <param name="numFilters">(int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
+        /// <param name="sequential">(bool, defaults to `False`): if `True`, also convolve along the dynamic axis. ``filter_shape[0]`` corresponds to dynamic axis.</param>
+        /// <param name="activation">(:class:`~cntk.ops.functions.Function`, defaults to `identity`): optional function to apply at the end, e.g. `relu`</param>
+        /// <param name="init">(scalar or NumPy array or :mod:`cntk.initializer`, defaults to :func:`~cntk.initializer.glorot_uniform` ): initial value of weights `W`</param>
+        /// <param name="pad">(`bool` or `tuple` of `bools`, defaults to `False`): if `False`, then the filter will be shifted over the "valid"
+        /// area of input, that is, no value outside the area is used.If ``pad=True`` on the other hand,
+        /// the filter will be applied to all input positions, and positions outside the valid region will be considered containing zero.
+        /// Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="strides">(`int` or `tuple` of `ints`, defaults to 1): stride of the convolution (increment when sliding the filter over the input). Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="sharing">sharing (bool, defaults to `True`): When `True`, every position uses the same Convolution kernel.  When `False`, you can have a different Convolution kernel per position, but `False` is not supported.</param>
+        /// <param name="bias">bias (bool, optional, defaults to `True`): the layer will have no bias if `False` is passed here</param>
+        /// <param name="initBias">init_bias (scalar or NumPy array or :mod:`cntk.initializer`, defaults to 0): initial value of weights `b`</param>
+        /// <param name="reductionRank">(`int`, defaults to 1): set to 0 if input items are scalars (input has no depth axis), e.g. an audio signal or a black-and-white image
+        /// that is stored with tensor shape(H, W) instead of(1, H, W)</param>
+        /// <param name="transposeWeights">(bool, defaults to `False`): When this is `True` this is convolution, otherwise this is correlation (which is common for most toolkits)</param>
+        /// <param name="dilation">(tuple, optional): the dilation value along each axis, default 1 mean no dilation.</param>
+        /// <param name="groups">(`int`, default 1): number of groups during convolution, that controls the connections between input and output channels. Deafult value is 1, 
+        /// which means that all input channels are convolved to produce all output channels.A value of N would mean that the input(and output) channels are
+        /// divided into N groups with the input channels in one group(say i-th input group) contributing to output channels in only one group(i-th output group).
+        /// Number of input and output channels must be divisble by value of groups argument.Also, value of this argument must be strictly positive, i.e.groups > 0.</param>
+        /// <param name="maxTempMemSizeInSamples"> max_temp_mem_size_in_samples (int, defaults to 0): Limits the amount of memory for intermediate convolution results.  A value of 0 means, memory is automatically managed.</param>
+        /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the convolution operation to it</returns>
+        Function Convolution(Variable x, NDShape filterShape, int numFilters, 
+            bool sequential = false, 
+            Func<Variable, Function> activation = null, 
+            CNTKDictionary init = null, 
+            bool pad = false,
+            NDShape strides = null,
+            bool sharing = true,
+            bool bias = true, 
+            CNTKDictionary initBias = null,
+            int reductionRank = 1, 
+            bool transposeWeights = 
+            false, int dilation = 1, 
+            int groups = 1, 
+            int maxTempMemSizeInSamples = 0)
+        {
+            if (pad) { throw new ArgumentException("Padding not supported"); }
+
+            return null;
+        }
         
         static CNTKDictionary DefaultInitializer(uint seed)
         {
