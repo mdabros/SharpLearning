@@ -167,22 +167,34 @@ namespace SharpLearning.Backend.Cntk.Test
         /// Number of input and output channels must be divisble by value of groups argument.Also, value of this argument must be strictly positive, i.e.groups > 0.</param>
         /// <param name="maxTempMemSizeInSamples"> max_temp_mem_size_in_samples (int, defaults to 0): Limits the amount of memory for intermediate convolution results.  A value of 0 means, memory is automatically managed.</param>
         /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the convolution operation to it</returns>
-        Function Convolution(Variable x, NDShape filterShape, int numFilters, 
-            bool sequential = false, 
-            Func<Variable, Function> activation = null, 
-            CNTKDictionary init = null, 
+        Function Convolution(Variable x, NDShape filterShape, int numFilters,
+            bool sequential = false,
+            Func<Variable, Function> activation = null,
+            CNTKDictionary init = null,
             bool pad = false,
             NDShape strides = null,
             bool sharing = true,
-            bool bias = true, 
+            bool bias = true,
             CNTKDictionary initBias = null,
-            int reductionRank = 1, 
-            bool transposeWeights = 
-            false, int dilation = 1, 
-            int groups = 1, 
+            int reductionRank = 1,
+            bool transposeWeights =
+            false, int dilation = 1,
+            int groups = 1,
             int maxTempMemSizeInSamples = 0)
         {
-            if (pad) { throw new ArgumentException("Padding not supported"); }
+            if (pad)
+                throw new ArgumentException("Padding not supported"); 
+            if (reductionRank != 0  && reductionRank != 1)
+                throw new ArgumentException("Convolution: reduction_rank must be 0 or 1");
+            if (transposeWeights)
+                throw new ArgumentException("Convolution: transpose_weight option currently not supported");
+            if (!sharing)
+                throw new ArgumentException("Convolution: sharing option currently must be True");
+            if (groups <= 0)
+                throw new ArgumentException("Convolution: groups must be strictly positive, i.e. groups > 0.");
+            if (groups > 1)
+                throw new ArgumentException("Convolution: groups > 1, is not currently supported by Convolution layer. For group convolution with groups > 1, use CNTK's low-level convolution node (cntk.convolution).");
+
 
             return null;
         }
