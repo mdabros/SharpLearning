@@ -72,15 +72,17 @@ def main(_):
   tf.global_variables_initializer().run()
   # Train
   train = mnist.train
+  batchSize = 100
   for _ in range(200):
-    batch_xs, batch_ys = train.next_batch(100)
+    batch_xs, batch_ys = train.next_batch(batchSize, shuffle=False)
     batchRun = sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 
   # Test trained model
   correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
   accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-  print(sess.run(accuracy, feed_dict={x: mnist.test.images,
-                                      y_: mnist.test.labels}))
+  r = sess.run(accuracy, feed_dict={x: mnist.test.images,
+                                      y_: mnist.test.labels})
+  print('{:.16f}'.format(r))
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()

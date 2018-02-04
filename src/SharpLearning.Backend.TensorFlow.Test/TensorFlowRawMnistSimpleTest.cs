@@ -116,7 +116,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     float acc = (float)evaluatedAccuracy.GetValue();
 
                     Log($"Accuracy {acc}");
-                    Assert.AreEqual(acc, 0.797);
+                    Assert.AreEqual(0.8000000119209290, acc);
                 }
             }
         }
