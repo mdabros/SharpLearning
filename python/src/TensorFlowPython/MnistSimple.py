@@ -68,6 +68,10 @@ def main(_):
   optimizer = tf.train.GradientDescentOptimizer(learningRate)
   train_step = optimizer.minimize(cross_entropy)
 
+  graph_location = '../../outputs/tf/MnistSimple/'
+  print('Saving graph to: %s' % graph_location)
+  train_writer = tf.summary.FileWriter(graph_location, tf.get_default_graph())
+  
   sess = tf.InteractiveSession()
   tf.global_variables_initializer().run()
   # Train

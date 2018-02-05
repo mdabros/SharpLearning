@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -64,6 +65,22 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 {
                     updates[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
                 }
+
+                // Save graph definition
+                using (var buffer = new TFBuffer())
+                {
+                    g.ToGraphDef(buffer);
+                    var bytes = buffer.ToArray();
+                    var dir = "../../../outputs/MnistSimple/";
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    // This can't be used with TensorBoard, it is just the graph def
+                    var filePath = dir + "graph.pb";
+                    File.WriteAllBytes(filePath, bytes);
+                }
+
 
                 var mnist = Mnist.Load(DownloadPath);
                 const int batchSize = 100;

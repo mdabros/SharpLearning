@@ -25,9 +25,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MnistSimple.py" />
+    <Compile Include="mnist_with_summaries.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="mnist-with-summaries-run.png" />
     <Content Include="README.md" />
+    <Content Include="tensorboard-command-prompt.png" />
+    <Content Include="tensorboard.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

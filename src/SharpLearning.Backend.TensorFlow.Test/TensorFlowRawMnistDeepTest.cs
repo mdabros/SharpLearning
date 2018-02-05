@@ -196,16 +196,22 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 //     x_image = tf.reshape(x, [-1, 28, 28, 1])
             }
 
-            const int FeatureMapsCount = 32;
+            long[] strides = new long[] { 1, 1, 1, 1 };
+            const string Padding = "SAME";
+            const int FeatureMapsCount1 = 32;
             //  # First convolutional layer - maps one grayscale image to 32 feature maps.
             //  with tf.name_scope('conv1'):
             TFOutput h_conv1;
             using (g.WithScope("conv1"))
             {
-                Variable W_conv1 = WeightVariable(g, new TFShape(5, 5, 1, FeatureMapsCount));
+                Variable W_conv1 = WeightVariable(g, new TFShape(5, 5, 1, FeatureMapsCount1));
+                Variable b_conv1 = BiasVariable(g, 0.1f, FeatureMapsCount1);
+                TFOutput c_conv1 = Conv2D(g, x_image, W_conv1, strides, Padding);
+                TFOutput a_conv1 = g.Add(c_conv1, b_conv1);
+                h_conv1 = g.Relu(a_conv1);
             }
             //     W_conv1 = weight_variable([5, 5, 1, 32])
-            //                b_conv1 = bias_variable([32])
+            //   b_conv1 = bias_variable([32])
             //    c_conv1 = conv2d(x_image, W_conv1)
             //    a_conv1 = c_conv1 + b_conv1
             //    h_conv1 = tf.nn.relu(a_conv1)
@@ -213,8 +219,19 @@ namespace SharpLearning.Backend.TensorFlow.Test
             //  # Pooling layer - downsamples by 2X.
             //            with tf.name_scope('pool1'):
             //    h_pool1 = max_pool_2x2(h_conv1)
+            TFOutput h_pool1 = MaxPool2x2(g, h_conv1);
 
             //  # Second convolutional layer -- maps 32 feature maps to 64.
+            const int FeatureMapsCount2 = 64;
+            TFOutput h_conv2;
+            using (g.WithScope("conv2"))
+            {
+                Variable W_conv2 = WeightVariable(g, new TFShape(5, 5, FeatureMapsCount1, FeatureMapsCount2));
+                Variable b_conv2 = BiasVariable(g, 0.1f, FeatureMapsCount2);
+                TFOutput c_conv2 = Conv2D(g, h_pool1, W_conv2, strides, Padding);
+                TFOutput a_conv2 = g.Add(c_conv2, b_conv2);
+                h_conv2 = g.Relu(a_conv2);
+            }
             //            with tf.name_scope('conv2'):
             //    W_conv2 = weight_variable([5, 5, 32, 64])
             //    b_conv2 = bias_variable([64])
@@ -225,9 +242,25 @@ namespace SharpLearning.Backend.TensorFlow.Test
             //  # Second pooling layer.
             //            with tf.name_scope('pool2'):
             //    h_pool2 = max_pool_2x2(h_conv2)
+            TFOutput h_pool2 = MaxPool2x2(g, h_conv2);
 
             //  # Fully connected layer 1 -- after 2 round of downsampling, our 28x28 image
             //# is down to 7x7x64 feature maps -- maps this to 1024 features.
+            const int FullyConnectedFeatures = 1024;
+            TFOutput h_fc1;
+            using (g.WithScope("conv2"))
+            {
+                var poolSizeDims = ImageSize / (2 * 2);
+                var poolSize2 = poolSizeDims * poolSizeDims * FeatureMapsCount2;
+                Variable W_fc1 = WeightVariable(g, new TFShape(poolSize2, FullyConnectedFeatures));
+                Variable b_fc1 = BiasVariable(g, 0.1f, FullyConnectedFeatures);
+                TFOutput flatShape = g.Const(new TFShape(-1, poolSize2).AsTensor());
+                TFOutput h_pool2_flat = g.Reshape(h_pool2, flatShape);
+                TFOutput h_matmul = g.MatMul(h_pool2_flat, W_fc1);
+                TFOutput h_matmulbias = g.Add(h_matmul, b_fc1);
+                h_fc1 = g.Relu(h_matmulbias);
+            }
+
             //            with tf.name_scope('fc1'):
             //    W_fc1 = weight_variable([7 * 7 * 64, 1024])
             //    b_fc1 = bias_variable([1024])
@@ -255,12 +288,22 @@ namespace SharpLearning.Backend.TensorFlow.Test
         //def conv2d(x, W):
         //  """conv2d returns a 2d convolution layer with full stride."""
         //  return tf.nn.conv2d(x, W, strides =[1, 1, 1, 1], padding = 'SAME')
-
+        public static TFOutput Conv2D(TFGraph g, TFOutput x, TFOutput W, long[] strides, string padding="SAME")
+        {
+            return g.Conv2D(x, W, strides, padding);
+        }
 
         //def max_pool_2x2(x):
         //  """max_pool_2x2 downsamples a feature map by 2X."""
         //  return tf.nn.max_pool(x, ksize =[1, 2, 2, 1],
         //                        strides =[1, 2, 2, 1], padding = 'SAME')
+        const string MaxPool2x2Padding = "SAME";
+        static readonly long[] MaxPool2x2KernelSize = new long[] { 1, 2, 2, 1 };
+        static readonly long[] MaxPool2x2Strides = new long[] { 1, 2, 2, 1 };
+        private TFOutput MaxPool2x2(TFGraph g, TFOutput x)
+        {
+            return g.MaxPool(x, MaxPool2x2KernelSize, MaxPool2x2Strides, MaxPool2x2Padding);
+        }
 
 
         //def weight_variable(shape):

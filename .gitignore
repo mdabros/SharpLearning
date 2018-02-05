@@ -7,6 +7,9 @@ bin/
 obj/
 out/
 
+outputs/
+python/outputs/
+
 # User-specific Files
 *.user
 *.suo
