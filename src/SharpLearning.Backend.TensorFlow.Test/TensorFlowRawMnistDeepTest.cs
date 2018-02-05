@@ -163,7 +163,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             }
         }
 
-        private (TFOutput, TFOutput) DeepNeuralNet(TFGraph g, TFOutput x)
+        private (TFOutput y_conv, TFOutput keep_prob) DeepNeuralNet(TFGraph g, TFOutput x)
         {
 
             //            """deepnn builds the graph for a deep net for classifying digits.
@@ -244,7 +244,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             //    h_pool2 = max_pool_2x2(h_conv2)
             TFOutput h_pool2 = MaxPool2x2(g, h_conv2);
 
-            //  # Fully connected layer 1 -- after 2 round of downsampling, our 28x28 image
+            //# Fully connected layer 1 -- after 2 round of downsampling, our 28x28 image
             //# is down to 7x7x64 feature maps -- maps this to 1024 features.
             const int FullyConnectedFeatures = 1024;
             TFOutput h_fc1;
@@ -268,21 +268,34 @@ namespace SharpLearning.Backend.TensorFlow.Test
             //    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
             //    h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, W_fc1) + b_fc1)
 
-            //  # Dropout - controls the complexity of the model, prevents co-adaptation of
+            //# Dropout - controls the complexity of the model, prevents co-adaptation of
             //# features.
+            TFOutput h_fc1_drop;
+            TFOutput keep_prob;
+            using (g.WithScope("dropout"))
+            {
+                keep_prob = g.Placeholder(TFDataType.Float);
+                h_fc1_drop = g.Dropout(h_fc1, keep_prob);
+            }
             //            with tf.name_scope('dropout'):
             //    keep_prob = tf.placeholder(tf.float32)
             //    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
 
             //  # Map the 1024 features to 10 classes, one for each digit
+            TFOutput y_conv;
+            using (g.WithScope("fc2"))
+            {
+                Variable W_fc2 = WeightVariable(g, new TFShape(FullyConnectedFeatures, ClassCount));
+                Variable b_fc2 = BiasVariable(g, 0.1f, ClassCount);
+                TFOutput y_matmul = g.MatMul(h_fc1_drop, W_fc2);
+                y_conv = g.Add(y_matmul, b_fc2);
+            }
             //            with tf.name_scope('fc2'):
             //    W_fc2 = weight_variable([1024, 10])
             //    b_fc2 = bias_variable([10])
 
             //    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
-            //  return y_conv, keep_prob
-
-            throw new NotImplementedException();
+            return (y_conv, keep_prob);
         }
 
         //def conv2d(x, W):
