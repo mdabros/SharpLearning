@@ -293,7 +293,6 @@ namespace SharpLearning.Backend.TensorFlow.Test
             //            with tf.name_scope('fc2'):
             //    W_fc2 = weight_variable([1024, 10])
             //    b_fc2 = bias_variable([10])
-
             //    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
             return (y_conv, keep_prob);
         }
