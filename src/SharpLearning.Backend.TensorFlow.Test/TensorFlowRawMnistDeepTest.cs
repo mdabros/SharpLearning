@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TensorFlow;
 
@@ -19,6 +14,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
         const int ImageSize = 28;
         const int FeatureCount = ImageSize * ImageSize;
         const int ClassCount = 10;
+        const int GlobalSeed = 42;
 
         [TestMethod]
         public void MnistDeep()
@@ -30,160 +26,165 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 TFOutput x = g.Placeholder(TFDataType.Float, new TFShape(-1, FeatureCount), "x");
                 TFOutput y_ = g.Placeholder(TFDataType.Float, new TFShape(-1, ClassCount), "y_");
 
-                //mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot = True)
-
-                //# Create the model
-                //x = tf.placeholder(tf.float32, [None, 784])
-
-                //# Define loss and optimizer
-                //y_ = tf.placeholder(tf.float32, [None, 10])
-
                 //# Build the graph for the deep net
-                //y_conv, keep_prob = deepnn(x)
-                var (y_conv, keep_prob) = DeepNeuralNet(g, x);
+                var (variablesList, y_conv, keep_prob) = DeepNeuralNet(g, x);
 
                 //with tf.name_scope('loss'):
+                TFOutput perOutputLoss = g.SquaredDifference(y_conv, y_, "diff");
+                TFOutput loss = g.ReduceMean(perOutputLoss, operName: "reducemean");
                 //cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels = y_,
                 //                                            logits = y_conv)
                 //cross_entropy = tf.reduce_mean(cross_entropy)
 
-                //with tf.name_scope('adam_optimizer'):
-                //train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+                // with tf.name_scope('optimizer'):
+                TFOutput learningRate = g.Const(new TFTensor(0.01f));
+                // TODO: How to get variables dynamically from graph?
+                TFOutput[] variablesOutputs = GetVariableOutputs(variablesList);
+                TFOutput[] gradients = g.AddGradients(new TFOutput[] { loss }, variablesOutputs);
 
+                TFOutput[] updates = new TFOutput[gradients.Length];
+                for (int i = 0; i < gradients.Length; i++)
+                {
+                    updates[i] = g.ApplyGradientDescent(variablesOutputs[i], learningRate, gradients[i]);
+                }
+                //learningRate = 0.01
+                //optimizer = tf.train.GradientDescentOptimizer(learningRate)
+                //# We do not have AdamOptimizer in C# yet
+                //#optimizer = tf.train.AdamOptimizer(1e-4)
+                //train_step = optimizer.minimize(cross_entropy)
+
+                TFOperation[] variablesAssignOps = GetVariableAssignOps(variablesList);
+
+                TFOutput accuracy;
                 //with tf.name_scope('accuracy'):
-                //correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
-                //correct_prediction = tf.cast(correct_prediction, tf.float32)
-                //accuracy = tf.reduce_mean(correct_prediction)
-
+                using (g.WithScope("accuracy"))
+                {
+                    TFOutput one = g.Const(new TFTensor(1));
+                    g.ArgMax(y_conv, one);
+                    TFOutput argMaxActual = g.ArgMax(y_conv, one);
+                    TFOutput argMaxExpected = g.ArgMax(y_, one);
+                    TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
+                    TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
+                    accuracy = g.ReduceMean(castCorrectPrediction);
+                    //correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
+                    //correct_prediction = tf.cast(correct_prediction, tf.float32)
+                    //accuracy = tf.reduce_mean(correct_prediction)
+                }
                 //graph_location = tempfile.mkdtemp()
                 //print('Saving graph to: %s' % graph_location)
                 //train_writer = tf.summary.FileWriter(graph_location)
                 //train_writer.add_graph(tf.get_default_graph())
 
-                //with tf.Session() as sess:
-                //sess.run(tf.global_variables_initializer())
-                //#for i in range(20000):
-                //for i in range(200):
-                //batch = mnist.train.next_batch(50)
-                //if i % 100 == 0:
-                //train_accuracy = accuracy.eval(feed_dict ={
-                //    x: batch[0], y_: batch[1], keep_prob: 1.0})
-                //print('step %d, training accuracy %g' % (i, train_accuracy))
-                //train_step.run(feed_dict ={ x: batch[0], y_: batch[1], keep_prob: 0.5})
+                var mnist = Mnist.Load(DownloadPath);
+                const int batchSize = 64;
+                const int iterations = 2; // 100;
 
-                //print('test accuracy %g' % accuracy.eval(feed_dict ={
-                //    x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+                using (var status = new TFStatus())
+                using (var session = new TFSession(g))
+                {
+                    // Initialize variables
+                    session.GetRunner().AddTarget(variablesAssignOps).Run();
 
-                //TFOutput W_zero = g.Const(new float[FeatureCount, ClassCount]);
-                //TFOutput b_zero = g.Const(new float[ClassCount]);
+                    TFTensor train_dropout_keep_prob = new TFTensor(0.5f);
+                    TFTensor test_dropout_keep_prob = new TFTensor(1f);
 
-                //TFOutput W = g.VariableV2(new TFShape(FeatureCount, ClassCount), TFDataType.Float, "W");
-                //// Only way to simply set zeros??
-                //TFOutput W_init = g.Assign(W, W_zero);
+                    // Train (note that by using session.Run directly
+                    //        we get a much more efficient loop, and it is easy to see what actually happens)
+                    TFOutput[] inputs = new[] { x, y_, keep_prob };
+                    TFOutput[] outputs = updates; // Gradient updates are currently the outputs ensuring these are applied
+                    TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
 
-                //TFOutput b = g.VariableV2(new TFShape(ClassCount), TFDataType.Float, "b");
-                //TFOutput b_init = g.Assign(b, b_zero);
+                    TFOutput[] accuracyInputs = new[] { x, y_, keep_prob };
+                    TFOutput[] accuracyOutputs = new[] { accuracy };
 
+                    TFBuffer runMetaData = null;
+                    TFBuffer runOptions = null;
+                    TFStatus trainStatus = new TFStatus();
 
-                //TFOutput m = g.MatMul(x, W, operName: "xW");
-                //TFOutput y = g.Add(m, b, operName: "y");
+                    var trainReader = mnist.GetTrainReader();
+                    for (int i = 0; i < iterations; i++)
+                    {
+                        (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
 
-                //// SoftmaxCrossEntropyWithLogits: gradient for this is not yet supported
-                //// see: https://github.com/tensorflow/tensorflow/pull/14727
-                ////var (perOutputLoss, backprop) = g.SoftmaxCrossEntropyWithLogits(y, expectedY, "softmax");
-                //TFOutput perOutputLoss = g.SquaredDifference(y, expectedY, "softmax");
-                //TFOutput loss = g.ReduceMean(perOutputLoss, operName: "reducemean");
+                        if (false)//i % 100 == 0)
+                        {
+                            TFTensor[] accuracyInputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch), test_dropout_keep_prob };
+                            TFTensor[] accuracyOutputValues = session.Run(accuracyInputs, accuracyInputValues, accuracyOutputs,
+                                targets, runMetaData, runOptions, trainStatus);
 
-                //TFOutput learningRate = g.Const(new TFTensor(0.01f));
+                            trainStatus.Raise();
 
-                //// TODO: How to get variables dynamically?
-                //TFOutput[] variables = new TFOutput[] { W, b };
-                //TFOutput[] gradients = g.AddGradients(new TFOutput[] { loss }, variables);
+                            var train_accuracy = accuracyOutputValues[0];
+                            float train_acc = (float)train_accuracy.GetValue();
 
+                            Log($"Step {i} Accuracy {train_acc}");
+                        }
 
-                //TFOutput[] updates = new TFOutput[gradients.Length];
-                //for (int i = 0; i < gradients.Length; i++)
-                //{
-                //    updates[i] = g.ApplyGradientDescent(variables[i], learningRate, gradients[i]);
-                //}
+                        TFTensor[] inputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch), train_dropout_keep_prob };
+                        TFTensor[] outputValues = session.Run(inputs, inputValues, outputs,
+                            targets, runMetaData, runOptions, trainStatus);
 
-                //var mnist = Mnist.Load(DownloadPath);
-                //const int batchSize = 100;
-                //const int iterations = 200;
+                        trainStatus.Raise();
+                    }
 
-                //using (var status = new TFStatus())
-                //using (var session = new TFSession(g))
-                //{
-                //    // Initialize variables
-                //    session.GetRunner().AddTarget(W_init.Operation).Run();
-                //    session.GetRunner().AddTarget(b_init.Operation).Run();
+                    // Test trained model
+                    var testReader = mnist.GetTestReader();
+                    var (testImages, testLabels) = testReader.All();
 
-                //    // Train (note that by using session.Run directly
-                //    //        we get a much more efficient loop, and it is easy to see what actually happens)
-                //    TFOutput[] inputs = new[] { x, expectedY };
-                //    TFOutput[] outputs = updates; // Gradient updates are currently the outputs ensuring these are applied
-                //    TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
-                    
-                //    TFBuffer runMetaData = null;
-                //    TFBuffer runOptions = null;
-                //    TFStatus trainStatus = new TFStatus();
+                    TFTensor evaluatedAccuracy = session.GetRunner()
+                        .AddInput(x, testImages)
+                        .AddInput(y_, testLabels)
+                        .AddInput(keep_prob, test_dropout_keep_prob) // DOESN*T WORK!??!
+                        .Run(accuracy);
 
-                //    var trainReader = mnist.GetTrainReader();
-                //    for (int i = 0; i < iterations; i++)
-                //    {
-                //        (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
+                    float acc = (float)evaluatedAccuracy.GetValue();
 
-                //        TFTensor[] inputValues = new [] { new TFTensor(inputBatch), new TFTensor(labelBatch) };
-
-                //        TFTensor[] outputValues = session.Run(inputs, inputValues, outputs, 
-                //            targets, runMetaData, runOptions, trainStatus);
-                //    }
-
-                //    // Test trained model
-                //    TFOutput one = g.Const(new TFTensor(1));
-                //    TFOutput argMaxActual = g.ArgMax(y, one);
-                //    TFOutput argMaxExpected = g.ArgMax(expectedY, one);
-                //    TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
-                //    TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
-                //    TFOutput accuracy = g.ReduceMean(castCorrectPrediction);
-
-                //    var testReader = mnist.GetTestReader();
-                //    var (testImages, testLabels) = testReader.All();
-
-                //    TFTensor evaluatedAccuracy = session.GetRunner()
-                //        .AddInput(x, testImages)
-                //        .AddInput(expectedY, testLabels)
-                //        .Run(accuracy);
-
-                //    float acc = (float)evaluatedAccuracy.GetValue();
-
-                //    Log($"Accuracy {acc}");
-                //    Assert.AreEqual(acc, 0.797);
-                //}
+                    Log($"Accuracy {acc}");
+                    Assert.AreEqual(0.2029999941587448, acc);
+                }
             }
         }
 
-        private (TFOutput y_conv, TFOutput keep_prob) DeepNeuralNet(TFGraph g, TFOutput x)
+        private TFOutput[] GetVariableOutputs(List<(TFOutput assign, TFOutput variable)> variablesList)
         {
+            var outputs = new TFOutput[variablesList.Count];
+            for (int i = 0; i < variablesList.Count; i++)
+            {
+                outputs[i] = variablesList[i].variable;
+            }
+            return outputs;
+        }
 
-            //            """deepnn builds the graph for a deep net for classifying digits.
+        private TFOperation[] GetVariableAssignOps(List<(TFOutput assign, TFOutput variable)> variablesList)
+        {
+            var ops = new TFOperation[variablesList.Count];
+            for (int i = 0; i < variablesList.Count; i++)
+            {
+                ops[i] = variablesList[i].assign.Operation;
+            }
+            return ops;
+        }
 
+        private (List<(TFOutput assign, TFOutput variable)> variables, TFOutput y_conv, TFOutput keep_prob) DeepNeuralNet(TFGraph g, TFOutput x)
+        {
+            //  """deepnn builds the graph for a deep net for classifying digits.
             //  Args:
             //            x: an input tensor with the dimensions(N_examples, 784), where 784 is the
             //           number of pixels in a standard MNIST image.
-
             //  Returns:
             //            A tuple(y, keep_prob). y is a tensor of shape(N_examples, 10), with values
             //    equal to the logits of classifying the digit into one of 10 classes(the
             //    digits 0 - 9).keep_prob is a scalar placeholder for the probability of
-
             //     dropout.
-
             //  """
             // Reshape to use within a convolutional neural net.
             // Last dimension is for "features" - there is only one here, since images are
             // grayscale -- it would be 3 for an RGB image, 4 for RGBA, etc.
             //  with tf.name_scope('reshape'):
+
+            var variables = new List<(TFOutput assign, TFOutput variable)>();
+
+            const float bias = 0.1f;
 
             // Scope usage is weird in C#...
             TFOutput x_image;
@@ -204,10 +205,12 @@ namespace SharpLearning.Backend.TensorFlow.Test
             TFOutput h_conv1;
             using (g.WithScope("conv1"))
             {
-                Variable W_conv1 = WeightVariable(g, new TFShape(5, 5, 1, FeatureMapsCount1));
-                Variable b_conv1 = BiasVariable(g, 0.1f, FeatureMapsCount1);
-                TFOutput c_conv1 = Conv2D(g, x_image, W_conv1, strides, Padding);
-                TFOutput a_conv1 = g.Add(c_conv1, b_conv1);
+                var W_conv1 = WeightVariable(g, new TFShape(5, 5, 1, FeatureMapsCount1));
+                var b_conv1 = BiasVariable(g, bias, FeatureMapsCount1);
+                variables.Add(W_conv1);
+                variables.Add(b_conv1);
+                TFOutput c_conv1 = Conv2D(g, x_image, W_conv1.variable, strides, Padding);
+                TFOutput a_conv1 = g.Add(c_conv1, b_conv1.variable);
                 h_conv1 = g.Relu(a_conv1);
             }
             //     W_conv1 = weight_variable([5, 5, 1, 32])
@@ -226,10 +229,12 @@ namespace SharpLearning.Backend.TensorFlow.Test
             TFOutput h_conv2;
             using (g.WithScope("conv2"))
             {
-                Variable W_conv2 = WeightVariable(g, new TFShape(5, 5, FeatureMapsCount1, FeatureMapsCount2));
-                Variable b_conv2 = BiasVariable(g, 0.1f, FeatureMapsCount2);
-                TFOutput c_conv2 = Conv2D(g, h_pool1, W_conv2, strides, Padding);
-                TFOutput a_conv2 = g.Add(c_conv2, b_conv2);
+                var W_conv2 = WeightVariable(g, new TFShape(5, 5, FeatureMapsCount1, FeatureMapsCount2));
+                var b_conv2 = BiasVariable(g, bias, FeatureMapsCount2);
+                variables.Add(W_conv2);
+                variables.Add(b_conv2);
+                TFOutput c_conv2 = Conv2D(g, h_pool1, W_conv2.variable, strides, Padding);
+                TFOutput a_conv2 = g.Add(c_conv2, b_conv2.variable);
                 h_conv2 = g.Relu(a_conv2);
             }
             //            with tf.name_scope('conv2'):
@@ -248,19 +253,20 @@ namespace SharpLearning.Backend.TensorFlow.Test
             //# is down to 7x7x64 feature maps -- maps this to 1024 features.
             const int FullyConnectedFeatures = 1024;
             TFOutput h_fc1;
-            using (g.WithScope("conv2"))
+            using (g.WithScope("fc1"))
             {
                 var poolSizeDims = ImageSize / (2 * 2);
                 var poolSize2 = poolSizeDims * poolSizeDims * FeatureMapsCount2;
-                Variable W_fc1 = WeightVariable(g, new TFShape(poolSize2, FullyConnectedFeatures));
-                Variable b_fc1 = BiasVariable(g, 0.1f, FullyConnectedFeatures);
+                var W_fc1 = WeightVariable(g, new TFShape(poolSize2, FullyConnectedFeatures));
+                var b_fc1 = BiasVariable(g, bias, FullyConnectedFeatures);
+                variables.Add(W_fc1);
+                variables.Add(b_fc1);
                 TFOutput flatShape = g.Const(new TFShape(-1, poolSize2).AsTensor());
                 TFOutput h_pool2_flat = g.Reshape(h_pool2, flatShape);
-                TFOutput h_matmul = g.MatMul(h_pool2_flat, W_fc1);
-                TFOutput h_matmulbias = g.Add(h_matmul, b_fc1);
+                TFOutput h_matmul = g.MatMul(h_pool2_flat, W_fc1.variable);
+                TFOutput h_matmulbias = g.Add(h_matmul, b_fc1.variable);
                 h_fc1 = g.Relu(h_matmulbias);
             }
-
             //            with tf.name_scope('fc1'):
             //    W_fc1 = weight_variable([7 * 7 * 64, 1024])
             //    b_fc1 = bias_variable([1024])
@@ -274,8 +280,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
             TFOutput keep_prob;
             using (g.WithScope("dropout"))
             {
-                keep_prob = g.Placeholder(TFDataType.Float);
-                h_fc1_drop = g.Dropout(h_fc1, keep_prob);
+                keep_prob = g.Placeholder(TFDataType.Float, new TFShape(1));
+                h_fc1_drop = g.Dropout(h_fc1, keep_prob, seed: GlobalSeed);
             }
             //            with tf.name_scope('dropout'):
             //    keep_prob = tf.placeholder(tf.float32)
@@ -285,24 +291,26 @@ namespace SharpLearning.Backend.TensorFlow.Test
             TFOutput y_conv;
             using (g.WithScope("fc2"))
             {
-                Variable W_fc2 = WeightVariable(g, new TFShape(FullyConnectedFeatures, ClassCount));
-                Variable b_fc2 = BiasVariable(g, 0.1f, ClassCount);
-                TFOutput y_matmul = g.MatMul(h_fc1_drop, W_fc2);
-                y_conv = g.Add(y_matmul, b_fc2);
+                var W_fc2 = WeightVariable(g, new TFShape(FullyConnectedFeatures, ClassCount));
+                var b_fc2 = BiasVariable(g, 0.1f, ClassCount);
+                variables.Add(W_fc2);
+                variables.Add(b_fc2);
+                TFOutput y_matmul = g.MatMul(h_fc1_drop, W_fc2.variable);
+                y_conv = g.Add(y_matmul, b_fc2.variable);
             }
             //            with tf.name_scope('fc2'):
             //    W_fc2 = weight_variable([1024, 10])
             //    b_fc2 = bias_variable([10])
             //    y_conv = tf.matmul(h_fc1_drop, W_fc2) + b_fc2
-            return (y_conv, keep_prob);
+            return (variables, y_conv, keep_prob);
         }
 
         //def conv2d(x, W):
         //  """conv2d returns a 2d convolution layer with full stride."""
         //  return tf.nn.conv2d(x, W, strides =[1, 1, 1, 1], padding = 'SAME')
-        public static TFOutput Conv2D(TFGraph g, TFOutput x, TFOutput W, long[] strides, string padding="SAME")
+        public static TFOutput Conv2D(TFGraph g, TFOutput input, TFOutput filter, long[] strides, string padding="SAME")
         {
-            return g.Conv2D(x, W, strides, padding);
+            return g.Conv2D(input, filter, strides, padding, data_format: "NHWC");
         }
 
         //def max_pool_2x2(x):
@@ -322,20 +330,45 @@ namespace SharpLearning.Backend.TensorFlow.Test
         //  """weight_variable generates a weight variable of a given shape."""
         //  initial = tf.truncated_normal(shape, stddev = 0.1)
         //  return tf.Variable(initial)
-        public static Variable WeightVariable(TFGraph g, TFShape shape)
+        public static (TFOutput assign, TFOutput variable) WeightVariable(TFGraph g, TFShape shape)
         {
+            const float mean = 0.0f;
+            const float stddev = 0.1f;
             TFOutput shape_output = g.Const(shape.AsTensor());
-            TFOutput initial = g.TruncatedNormal(shape_output, TFDataType.Float);
+            TFOutput rnd = g.TruncatedNormal(shape_output, TFDataType.Float);
+            TFTensor mean_tensor = new TFTensor(mean);
+            TFTensor stddev_tensor = new TFTensor(stddev);
+            TFOutput mean_output = g.Const(mean_tensor);
+            TFOutput stddev_output = g.Const(stddev_tensor);
+            TFOutput mul = g.Mul(rnd, stddev_output);
+            TFOutput value = g.Add(mul, mean_output);
+            TFOutput initial = value;
+            //TFOutput initial = g.ParameterizedTruncatedNormal(shape_output, TFDataType.Float, seed: GlobalSeed);
+            //with ops.name_scope(name, "truncated_normal", [shape, mean, stddev]) as name:
+            //shape_tensor = _ShapeTensor(shape)
+            //mean_tensor = ops.convert_to_tensor(mean, dtype = dtype, name = "mean")
+            //stddev_tensor = ops.convert_to_tensor(stddev, dtype = dtype, name = "stddev")
+            //seed1, seed2 = random_seed.get_seed(seed)
+            //rnd = gen_random_ops._truncated_normal(
+            //    shape_tensor, dtype, seed = seed1, seed2 = seed2)
+            //mul = rnd * stddev_tensor
+            //value = math_ops.add(mul, mean_tensor, name = name)
+            //return value
+
             // What about std dev???
-            Variable variable = g.Variable(initial);
-            return variable;
+            //Variable variable = g.Variable(initial);
+
+            TFOutput w = g.VariableV2(shape, TFDataType.Float);
+            TFOutput w_init = g.Assign(w, initial);
+            
+            return (w_init, w);
         }
 
         //def bias_variable(shape):
         //  """bias_variable generates a bias variable of a given shape."""
         //  initial = tf.constant(0.1, shape = shape)
         //  return tf.Variable(initial)
-        public static Variable BiasVariable(TFGraph g, float bias, int length)
+        public static (TFOutput assign, TFOutput variable) BiasVariable(TFGraph g, float bias, int length)
         {
             // Const initialization is so weird...
             var array = new float[length];
@@ -344,9 +377,15 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 array[i] = bias;
             }
             TFTensor tensor = new TFTensor(array);
-            TFOutput output = g.Const(tensor);
-            Variable variable = g.Variable(output);
-            return variable;
+            TFOutput initial = g.Const(tensor);
+
+            TFShape shape = new TFShape(tensor.Shape);
+            TFOutput b = g.VariableV2(shape, TFDataType.Float);
+            TFOutput b_init = g.Assign(b, initial);
+
+            return (b_init, b);
+            //Variable variable = g.Variable(initial);
+            //return variable;
         }
     }
 }

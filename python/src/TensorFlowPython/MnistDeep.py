@@ -152,7 +152,7 @@ def main(_):
     #                                                        logits=y_conv)
   cross_entropy = tf.reduce_mean(cross_entropy)
 
-  with tf.name_scope('adam_optimizer'):
+  with tf.name_scope('optimizer'):
     # GradientDescent works really poorly, but it's just for testing
     learningRate = 0.01
     optimizer = tf.train.GradientDescentOptimizer(learningRate)

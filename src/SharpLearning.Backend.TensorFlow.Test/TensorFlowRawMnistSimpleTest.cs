@@ -112,6 +112,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                         TFTensor[] outputValues = session.Run(inputs, inputValues, outputs, 
                             targets, runMetaData, runOptions, trainStatus);
+
+                        trainStatus.Raise();
                     }
 
                     // Test trained model
