@@ -74,19 +74,19 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 //print('test accuracy %g' % accuracy.eval(feed_dict ={
                 //    x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
 
-                TFOutput W_zero = g.Const(new float[FeatureCount, ClassCount]);
-                TFOutput b_zero = g.Const(new float[ClassCount]);
+                //TFOutput W_zero = g.Const(new float[FeatureCount, ClassCount]);
+                //TFOutput b_zero = g.Const(new float[ClassCount]);
 
-                TFOutput W = g.VariableV2(new TFShape(FeatureCount, ClassCount), TFDataType.Float, "W");
-                // Only way to simply set zeros??
-                TFOutput W_init = g.Assign(W, W_zero);
+                //TFOutput W = g.VariableV2(new TFShape(FeatureCount, ClassCount), TFDataType.Float, "W");
+                //// Only way to simply set zeros??
+                //TFOutput W_init = g.Assign(W, W_zero);
 
-                TFOutput b = g.VariableV2(new TFShape(ClassCount), TFDataType.Float, "b");
-                TFOutput b_init = g.Assign(b, b_zero);
+                //TFOutput b = g.VariableV2(new TFShape(ClassCount), TFDataType.Float, "b");
+                //TFOutput b_init = g.Assign(b, b_zero);
 
 
-                TFOutput m = g.MatMul(x, W, operName: "xW");
-                TFOutput y = g.Add(m, b, operName: "y");
+                //TFOutput m = g.MatMul(x, W, operName: "xW");
+                //TFOutput y = g.Add(m, b, operName: "y");
 
                 //// SoftmaxCrossEntropyWithLogits: gradient for this is not yet supported
                 //// see: https://github.com/tensorflow/tensorflow/pull/14727

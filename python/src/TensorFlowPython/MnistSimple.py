@@ -76,7 +76,7 @@ def main(_):
   tf.global_variables_initializer().run()
   # Train
   train = mnist.train
-  batchSize = 100
+  batchSize = 64
   for _ in range(200):
     batch_xs, batch_ys = train.next_batch(batchSize, shuffle=False)
     batchRun = sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})

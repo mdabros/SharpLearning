@@ -83,7 +83,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
 
                 var mnist = Mnist.Load(DownloadPath);
-                const int batchSize = 100;
+                const int batchSize = 64;
                 const int iterations = 200;
 
                 using (var status = new TFStatus())

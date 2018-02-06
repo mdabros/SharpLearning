@@ -162,7 +162,7 @@ def main(_):
 
   with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    batchSize = 50
+    batchSize = 64
     #for i in range(20000):
     for i in range(100):
       batch = mnist.train.next_batch(batchSize)
