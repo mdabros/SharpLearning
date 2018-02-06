@@ -145,12 +145,20 @@ def main(_):
   y_conv, keep_prob = deepnn(x)
 
   with tf.name_scope('loss'):
-    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_,
-                                                            logits=y_conv)
+    cross_entropy = tf.squared_difference(x=y_conv, y=y_) # Note order is reversed
+  
+    # We do not have softmax in C# yet, due to missing gradient
+    #cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_,
+    #                                                        logits=y_conv)
   cross_entropy = tf.reduce_mean(cross_entropy)
 
   with tf.name_scope('adam_optimizer'):
-    train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+    # GradientDescent works really poorly, but it's just for testing
+    learningRate = 0.01
+    optimizer = tf.train.GradientDescentOptimizer(learningRate)
+    # We do not have AdamOptimizer in C# yet
+    #optimizer = tf.train.AdamOptimizer(1e-4)
+    train_step = optimizer.minimize(cross_entropy)
 
   with tf.name_scope('accuracy'):
     correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
@@ -177,7 +185,7 @@ def main(_):
       x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
 
     print('test accuracy {:.16f}'.format(r))
-    # test accuracy 0.8356999754905701
+    # test accuracy expected 0.2029999941587448
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
