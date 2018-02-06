@@ -39,6 +39,7 @@ import tensorflow as tf
 
 FLAGS = None
 
+GlobalSeed = 42
 
 def deepnn(x):
   """deepnn builds the graph for a deep net for classifying digits.
@@ -96,7 +97,7 @@ def deepnn(x):
   # features.
   with tf.name_scope('dropout'):
     keep_prob = tf.placeholder(tf.float32)
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, seed=GlobalSeed)
 
   # Map the 1024 features to 10 classes, one for each digit
   with tf.name_scope('fc2'):
@@ -120,7 +121,7 @@ def max_pool_2x2(x):
 
 def weight_variable(shape):
   """weight_variable generates a weight variable of a given shape."""
-  initial = tf.truncated_normal(shape, stddev=0.1)
+  initial = tf.truncated_normal(shape, stddev=0.1, seed=GlobalSeed)
   return tf.Variable(initial)
 
 
@@ -165,7 +166,7 @@ def main(_):
     batchSize = 64
     #for i in range(20000):
     for i in range(100):
-      batch = mnist.train.next_batch(batchSize)
+      batch = mnist.train.next_batch(batchSize, shuffle=False)
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
             x: batch[0], y_: batch[1], keep_prob: 1.0})
@@ -176,6 +177,7 @@ def main(_):
       x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
 
     print('test accuracy {:.16f}'.format(r))
+    # test accuracy 0.8356999754905701
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
