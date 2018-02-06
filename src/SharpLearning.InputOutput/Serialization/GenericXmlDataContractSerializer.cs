@@ -14,22 +14,40 @@ namespace SharpLearning.InputOutput.Serialization
     public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     {
         readonly Type[] m_knownTypes;
+        readonly bool m_preserveObjectReferences;
+
 
         /// <summary>
-        /// 
+        /// Generic xml serializer using DataContractSerializer
         /// </summary>
-        /// <param name="knownTypes"></param>
-        public GenericXmlDataContractSerializer(Type[] knownTypes)
+        /// <param name="knownTypes">If the serializer fails with an unknown type exception. 
+        /// The necesarry types can be provided in the cosntructer.</param>
+        /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true). 
+        /// This adds extra information to the xml which is needed when serializing some model types. 
+        /// Currently only the SharpLearning.Neural models require this.</param>
+        public GenericXmlDataContractSerializer(Type[] knownTypes, bool preserveObjectReferences = true)
         {
             if (knownTypes == null) { throw new ArgumentNullException("knownTypes"); }
             m_knownTypes = knownTypes;
+            m_preserveObjectReferences = preserveObjectReferences;
         }
 
         /// <summary>
-        /// 
+        /// Generic xml serializer using DataContractSerializer
+        /// </summary>
+        /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true). 
+        /// This adds extra information to the xml which is needed when serializing some model types. 
+        /// Currently only the SharpLearning.Neural models require this.</param>
+        public GenericXmlDataContractSerializer(bool preserveObjectReferences = true)
+           : this(new Type[0], preserveObjectReferences)
+        {
+        }
+
+        /// <summary>
+        /// Generic xml serializer using DataContractSerializer
         /// </summary>
         public GenericXmlDataContractSerializer()
-           : this(new Type[0])
+           : this(new Type[0], true)
         {
         }
 
@@ -52,7 +70,7 @@ namespace SharpLearning.InputOutput.Serialization
 						KnownTypes = m_knownTypes,
 						MaxItemsInObjectGraph = int.MaxValue,
 						IgnoreExtensionDataObject = false,
-						PreserveObjectReferences = true,
+						PreserveObjectReferences = m_preserveObjectReferences,
 						DataContractResolver = new GenericResolver()
 					});
 
@@ -78,7 +96,7 @@ namespace SharpLearning.InputOutput.Serialization
 						KnownTypes = m_knownTypes,
 						MaxItemsInObjectGraph = int.MaxValue,
 						IgnoreExtensionDataObject = false,
-						PreserveObjectReferences = true,
+						PreserveObjectReferences = m_preserveObjectReferences,
 						DataContractResolver = new GenericResolver()
 					});
 
