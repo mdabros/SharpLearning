@@ -77,7 +77,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                 var mnist = Mnist.Load(DownloadPath);
                 const int batchSize = 64;
-                const int iterations = 2; // 100;
+                const int iterations = 100;
 
                 using (var status = new TFStatus())
                 using (var session = new TFSession(g))
@@ -106,7 +106,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     {
                         (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
 
-                        if (false)//i % 100 == 0)
+                        if (i % 100 == 0)
                         {
                             TFTensor[] accuracyInputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch), test_dropout_keep_prob };
                             TFTensor[] accuracyOutputValues = session.Run(accuracyInputs, accuracyInputValues, accuracyOutputs,
@@ -281,7 +281,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
             using (g.WithScope("dropout"))
             {
                 keep_prob = g.Placeholder(TFDataType.Float, new TFShape(1));
-                h_fc1_drop = g.Dropout(h_fc1, keep_prob, seed: GlobalSeed);
+                var shape = new TFShape(FullyConnectedFeatures);
+                h_fc1_drop = g.Dropout(h_fc1, keep_prob, shape, seed: GlobalSeed);
             }
             //            with tf.name_scope('dropout'):
             //    keep_prob = tf.placeholder(tf.float32)
@@ -325,6 +326,29 @@ namespace SharpLearning.Backend.TensorFlow.Test
             return g.MaxPool(x, MaxPool2x2KernelSize, MaxPool2x2Strides, MaxPool2x2Padding);
         }
 
+        // From TFS
+        //public TFOutput DropoutImpl(TFOutput x, TFOutput keep_prob, TFShape noise_shape = null, int? seed = null, string operName = null)
+        //{
+        //    var scopeName = MakeName("dropout", operName);
+
+        //    using (var newScope = WithScope(scopeName))
+        //    {
+        //        if (noise_shape == null)
+        //            noise_shape = new TFShape(GetShape(x));
+
+        //        TFOutput shapeTensor = ShapeTensorOutput(noise_shape);
+
+        //        // uniform [keep_prob, 1.0 + keep_prob)
+        //        TFOutput random_tensor = keep_prob;
+        //        random_tensor = Add(random_tensor, RandomUniform(shapeTensor, seed: seed, dtype: x.OutputType));
+
+        //        // 0. if [keep_prob, 1.0) and 1. if [1.0, 1.0 + keep_prob)
+        //        TFOutput binary_tensor = Floor(random_tensor);
+        //        TFOutput ret = Mul(Div(x, keep_prob), binary_tensor);
+        //        SetTensorShape(ret, GetShape(x));
+        //        return ret;
+        //    }
+        //}
 
         //def weight_variable(shape):
         //  """weight_variable generates a weight variable of a given shape."""
