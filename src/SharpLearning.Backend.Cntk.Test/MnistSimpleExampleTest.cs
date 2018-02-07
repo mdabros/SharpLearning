@@ -136,7 +136,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(pythonError, csharpError, 0.00001);
 
             // Save model.
-            var modelPath = "lr.dnn";
+            var modelPath = "lr_mnist_csharp_loader.dnn";
             model.Save(modelPath);
 
             var loadedModelError = LoadAndTestModel_Mnist_Loader(modelPath, device, mnist);
@@ -313,7 +313,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(pythonError, csharpError, 0.00001);
 
             // Save model.
-            var modelPath = "lr.dnn";
+            var modelPath = "lr_minibatch_source.dnn";
             model.Save(modelPath);
 
             // Evaluate the C# Mnist test set. This should be changed to the minibatch source dataset.
