@@ -90,7 +90,9 @@ namespace SharpLearning.Backend.Cntk.Test
             var w = new Parameter(wShape, m_dataType, init, m_device, "w");
 
             // Weights and input is in reversed order compared to the original python code.
-            // Same goes for the dimensions.
+            // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
+            // The python API was made in this way to be similar to other deep learning toolkits. 
+            // The C# and the C++ share the same column major layout.
             var r = CNTKLib.Times(w, x, (uint)outputRank, inferInputRankToMap);
 
             if(bias)
