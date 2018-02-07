@@ -38,7 +38,7 @@ def create_reader(path, is_training, input_dim, label_dim):
     return MinibatchSource(CTFDeserializer(path, StreamDefs(
         features  = StreamDef(field='features', shape=input_dim, is_sparse=False),
         labels    = StreamDef(field='labels',   shape=label_dim, is_sparse=False)
-    )), randomize=is_training, max_sweeps = INFINITELY_REPEAT if is_training else 1)
+    )), randomize=False, max_sweeps = INFINITELY_REPEAT if is_training else 1)
 
 
 # Creates and trains a feedforward classification model for MNIST images
