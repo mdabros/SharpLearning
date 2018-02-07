@@ -182,14 +182,15 @@ namespace SharpLearning.Backend.Cntk.Test
                 new List<Learner>() { Learner.SGDLearner(model.Parameters(), lr) });
 
             // Load train data.
-            var path = Path.Combine(dataDirectoryPath, "Train-28x28_cntk_text.txt");
-            if (!File.Exists(path))
+            var trainPath = Path.Combine(dataDirectoryPath, "Train-28x28_cntk_text.txt");
+            if (!File.Exists(trainPath))
             { throw new FileNotFoundException("Data not present. Use MNIST CNTK python example to download data"); }
 
-            var readerTrain = CreateReader(path,
+            var readerTrain = CreateReader(trainPath,
                 epochSize: 60000,
                 inputDimensions: inputDimensions,
-                numberOfClasses: numberOfClasses);
+                numberOfClasses: numberOfClasses,
+                randomize: false);
 
             var featureStreamInfo = readerTrain.StreamInfo(FeatureId);
             var labelStreamInfo = readerTrain.StreamInfo(LabelsId);
@@ -221,7 +222,8 @@ namespace SharpLearning.Backend.Cntk.Test
             var readerTest = CreateReader(testPath,
                 epochSize: 10000,
                 inputDimensions: inputDimensions,
-                numberOfClasses: numberOfClasses);
+                numberOfClasses: numberOfClasses,
+                randomize: false);
 
             featureStreamInfo = readerTest.StreamInfo(FeatureId);
             labelStreamInfo = readerTest.StreamInfo(LabelsId);
@@ -248,12 +250,12 @@ namespace SharpLearning.Backend.Cntk.Test
             var csharpError = testResult / numMinibatchesToTest;
             Trace.WriteLine($"Test Error: {csharpError}");
 
-            var pythonError = 0.186500; // Most likely from diffent observations, both in training and in test.
+            var pythonError = 0.186500; // Most likely from diffent observations during training.
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
         MinibatchSource CreateReader(string path, ulong epochSize,
-            int inputDimensions, int numberOfClasses, bool randomize = false)
+            int inputDimensions, int numberOfClasses, bool randomize)
         {
             var streamConfigurations = new StreamConfiguration[]
             {
