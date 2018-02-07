@@ -83,7 +83,9 @@
   <ItemGroup>
     <Compile Include="CntkBackendTest.cs" />
     <Compile Include="CntkLayers.cs" />
-    <Compile Include="CntkRawMnistTest.cs" />
+    <Compile Include="MnistCnnExampleTest.cs" />
+    <Compile Include="Mnist.cs" />
+    <Compile Include="MnistSimpleExampleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
