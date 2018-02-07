@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using CNTK;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -96,7 +97,7 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             // Load test data.
-            var readerTest = mnist.GetTrainReader();
+            var readerTest = mnist.GetTestReader();
 
             // Test data for trained model.
             var testMinibatchSize = 1024;
@@ -133,6 +134,64 @@ namespace SharpLearning.Backend.Cntk.Test
 
             var pythonError = 0.186500; // Most likely from diffent observations, both in training and in test.
             Assert.AreEqual(pythonError, csharpError, 0.00001);
+
+            // Save model.
+            var modelPath = "lr.dnn";
+            model.Save(modelPath);
+
+            var loadedModelError = LoadAndTestModel_Mnist_Loader(modelPath, device, mnist);
+
+            Trace.WriteLine("Loaded Model Error: " + loadedModelError);
+
+            Assert.AreEqual(csharpError, loadedModelError, 0.00001);
+        }
+
+        double LoadAndTestModel_Mnist_Loader(string modelPath, DeviceDescriptor device, Mnist mnist)
+        {
+            var loadedModel = Function.Load(modelPath, device);
+
+            // Test loaded model.
+            var numberOfTestSamples = mnist.TestImages.Count();
+            var readerTest = mnist.GetTestReader(); // renew test reader.
+
+            var inputVar = loadedModel.Arguments.Single();
+            var inputShape = inputVar.Shape;
+            var inputMap = new Dictionary<Variable, Value>();
+
+            var outputVar = loadedModel.Output;
+            var outputMap = new Dictionary<Variable, Value>();
+
+            int errorCount = 0;
+            for (int i = 0; i < numberOfTestSamples; i++)
+            {
+                (var testImages, var testTargets) = readerTest.NextBatch(1); // 1 example at a time.
+
+                using (Value batchImages = Value.CreateBatch<float>(inputShape, testImages, device))
+                {
+                    inputMap.Add(inputVar, batchImages);
+                    outputMap.Add(outputVar, null);
+
+                    // Start eveluation on device.
+                    loadedModel.Evaluate(inputMap, outputMap, device);
+
+                    // Get evaluate result as dense output
+                    var outputVal = outputMap[outputVar];
+                    var outputData = outputVal.GetDenseData<float>(outputVar).Single(); // expect only one prediction with batch size 1.
+
+                    var correctIndex = testTargets.ToList().IndexOf(1);
+                    var max = outputData.Max();
+                    var predictedIndex = outputData.IndexOf(max);
+                    if (correctIndex != predictedIndex)
+                    {
+                        errorCount++;
+                    }
+
+                    inputMap.Clear();
+                    outputMap.Clear();
+                }
+            }
+
+            return errorCount / numberOfTestSamples;
         }
 
         const string FeatureId = "features";
@@ -252,6 +311,17 @@ namespace SharpLearning.Backend.Cntk.Test
 
             var pythonError = 0.186500; // Most likely from diffent observations during training.
             Assert.AreEqual(pythonError, csharpError, 0.00001);
+
+            // Save model.
+            var modelPath = "lr.dnn";
+            model.Save(modelPath);
+
+            // Evaluate the C# Mnist test set. This should be changed to the minibatch source dataset.
+            var loadedModelError = LoadAndTestModel_Mnist_Loader(modelPath, device, Mnist.Load(DownloadPath));
+
+            Trace.WriteLine("Loaded Model Error: " + loadedModelError);
+
+            Assert.AreEqual(csharpError, loadedModelError, 0.00001);
         }
 
         MinibatchSource CreateReader(string path, ulong epochSize,
