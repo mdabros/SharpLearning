@@ -107,17 +107,16 @@ def simple_mnist(tensorboard_logdir=None):
     }
 
     # Test data for trained model.
-    test_minibatch_size = 1024
+    test_minibatch_size = 1
     num_test_samples = 10000
-    num_minibatches_to_test = num_test_samples / test_minibatch_size
     test_result = 0.0
-    for i in range(0, int(num_minibatches_to_test)):
+    for i in range(0, int(num_test_samples)):
         mb = reader_test.next_minibatch(test_minibatch_size, input_map=input_map)
         eval_error = trainer.test_minibatch(mb)
         test_result = test_result + eval_error
 
     # Average of evaluation errors of all test minibatches
-    return test_result / num_minibatches_to_test
+    return test_result / num_test_samples
 
 
 if __name__=='__main__':
