@@ -1,4 +1,5 @@
 # https://www.tensorflow.org/get_started/mnist/pros
+# Modified slightly to have intermediate variables
 
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
 #
@@ -38,6 +39,7 @@ import tensorflow as tf
 
 FLAGS = None
 
+GlobalSeed = 42
 
 def deepnn(x):
   """deepnn builds the graph for a deep net for classifying digits.
@@ -62,7 +64,9 @@ def deepnn(x):
   with tf.name_scope('conv1'):
     W_conv1 = weight_variable([5, 5, 1, 32])
     b_conv1 = bias_variable([32])
-    h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1) + b_conv1)
+    c_conv1 = conv2d(x_image, W_conv1)
+    a_conv1 = c_conv1 + b_conv1
+    h_conv1 = tf.nn.relu(a_conv1)
 
   # Pooling layer - downsamples by 2X.
   with tf.name_scope('pool1'):
@@ -72,7 +76,9 @@ def deepnn(x):
   with tf.name_scope('conv2'):
     W_conv2 = weight_variable([5, 5, 32, 64])
     b_conv2 = bias_variable([64])
-    h_conv2 = tf.nn.relu(conv2d(h_pool1, W_conv2) + b_conv2)
+    c_conv2 = conv2d(h_pool1, W_conv2)
+    a_conv2 = c_conv2 + b_conv2
+    h_conv2 = tf.nn.relu(a_conv2)
 
   # Second pooling layer.
   with tf.name_scope('pool2'):
@@ -91,7 +97,7 @@ def deepnn(x):
   # features.
   with tf.name_scope('dropout'):
     keep_prob = tf.placeholder(tf.float32)
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, seed=GlobalSeed)
 
   # Map the 1024 features to 10 classes, one for each digit
   with tf.name_scope('fc2'):
@@ -115,7 +121,7 @@ def max_pool_2x2(x):
 
 def weight_variable(shape):
   """weight_variable generates a weight variable of a given shape."""
-  initial = tf.truncated_normal(shape, stddev=0.1)
+  initial = tf.truncated_normal(shape, stddev=0.1, seed=GlobalSeed)
   return tf.Variable(initial)
 
 
@@ -139,35 +145,47 @@ def main(_):
   y_conv, keep_prob = deepnn(x)
 
   with tf.name_scope('loss'):
-    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_,
-                                                            logits=y_conv)
+    cross_entropy = tf.squared_difference(x=y_conv, y=y_) # Note order is reversed
+  
+    # We do not have softmax in C# yet, due to missing gradient
+    #cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_,
+    #                                                        logits=y_conv)
   cross_entropy = tf.reduce_mean(cross_entropy)
 
-  with tf.name_scope('adam_optimizer'):
-    train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+  with tf.name_scope('optimizer'):
+    # GradientDescent works really poorly, but it's just for testing
+    learningRate = 0.01
+    optimizer = tf.train.GradientDescentOptimizer(learningRate)
+    # We do not have AdamOptimizer in C# yet
+    #optimizer = tf.train.AdamOptimizer(1e-4)
+    train_step = optimizer.minimize(cross_entropy)
 
   with tf.name_scope('accuracy'):
     correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
     correct_prediction = tf.cast(correct_prediction, tf.float32)
   accuracy = tf.reduce_mean(correct_prediction)
 
-  graph_location = tempfile.mkdtemp()
+  graph_location = '../../outputs/tf/MnistDeep/'
   print('Saving graph to: %s' % graph_location)
-  train_writer = tf.summary.FileWriter(graph_location)
-  train_writer.add_graph(tf.get_default_graph())
+  train_writer = tf.summary.FileWriter(graph_location, tf.get_default_graph())
 
   with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    for i in range(20000):
-      batch = mnist.train.next_batch(50)
+    batchSize = 64
+    #for i in range(20000):
+    for i in range(100):
+      batch = mnist.train.next_batch(batchSize, shuffle=False)
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
             x: batch[0], y_: batch[1], keep_prob: 1.0})
         print('step %d, training accuracy %g' % (i, train_accuracy))
       train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
-    print('test accuracy %g' % accuracy.eval(feed_dict={
-        x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0}))
+    r = accuracy.eval(feed_dict={
+      x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
+
+    print('test accuracy {:.16f}'.format(r))
+    # test accuracy expected 0.2029999941587448
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
