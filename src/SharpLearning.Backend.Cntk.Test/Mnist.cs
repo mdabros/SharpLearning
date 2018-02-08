@@ -26,7 +26,7 @@ namespace SharpLearning.Backend.Cntk.Test
             DataFloat = new float[data.Length];
             for (int i = 0; i < data.Length; i++)
             {
-                DataFloat[i] = Data[i] / 255f;
+                DataFloat[i] = Data[i];// / 255f;
             }
         }
     }
@@ -37,14 +37,12 @@ namespace SharpLearning.Backend.Cntk.Test
         // 
         // The loaded results
         //
-        public MnistImage[] TrainImages, TestImages, ValidationImages;
-        public byte[] TrainLabels, TestLabels, ValidationLabels;
-        public byte[,] OneHotTrainLabels, OneHotTestLabels, OneHotValidationLabels;
+        public MnistImage[] TrainImages, TestImages;
+        public byte[] TrainLabels, TestLabels;
+        public byte[,] OneHotTrainLabels, OneHotTestLabels;
 
-        public BatchReader GetTrainReader(int readFromItem) => new BatchReader(TrainImages, TrainLabels, OneHotTrainLabels, readFromItem);
         public BatchReader GetTrainReader() => new BatchReader(TrainImages, TrainLabels, OneHotTrainLabels);
         public BatchReader GetTestReader() => new BatchReader(TestImages, TestLabels, OneHotTestLabels);
-        public BatchReader GetValidationReader() => new BatchReader(ValidationImages, ValidationLabels, OneHotValidationLabels);
 
         public class BatchReader
         {
@@ -208,15 +206,12 @@ namespace SharpLearning.Backend.Cntk.Test
             TrainLabels = ExtractLabels(Helper.MaybeDownload(SourceUrl, trainDir, TrainLabelsName), TrainLabelsName);
             TestLabels = ExtractLabels(Helper.MaybeDownload(SourceUrl, trainDir, TestLabelsName), TestLabelsName);
 
-            ValidationImages = Pick(TrainImages, 0, validationSize);
-            ValidationLabels = Pick(TrainLabels, 0, validationSize);
-            TrainImages = Pick(TrainImages, validationSize, 0);
-            TrainLabels = Pick(TrainLabels, validationSize, 0);
+            TrainImages = Pick(TrainImages, 0, 0);
+            TrainLabels = Pick(TrainLabels, 0, 0);
 
             if (numClasses != -1)
             {
                 OneHotTrainLabels = OneHot(TrainLabels, numClasses);
-                OneHotValidationLabels = OneHot(ValidationLabels, numClasses);
                 OneHotTestLabels = OneHot(TestLabels, numClasses);
             }
         }
