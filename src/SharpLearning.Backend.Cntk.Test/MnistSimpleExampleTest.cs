@@ -96,102 +96,24 @@ namespace SharpLearning.Backend.Cntk.Test
                 }
             }
 
-            // Load test data.
-            var readerTest = mnist.GetTestReader();
-
-            // Test data for trained model.
-            var testMinibatchSize = 1024;
-            var numberOfTestSamples = mnist.TestImages.Length;
-            var numMinibatchesToTest = numberOfTestSamples / testMinibatchSize;
-            var testResult = 0.0;
-
-            var testInputMap = new UnorderedMapVariableMinibatchData();
-            for (int i = 0; i < numMinibatchesToTest; i++)
-            {
-                // Using mnist.GetTrainReader().NextBatchArray(batchSize), which return the data as a single dim array.
-                // the batch images and targets arrays should be reused to reduce allocations.
-                (var testImages, var testTargets) = readerTest.NextBatch(minibatchSize);
-
-                // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
-                // However, unsure how to handle random shuffling in this case.
-                using (Value batchImages = Value.CreateBatch<float>(new int[] { inputDimensions }, testImages, device))
-                using (Value batchTarget = Value.CreateBatch<float>(new int[] { numberOfClasses }, testTargets, device))
-                {
-                    testInputMap.Add(x, new MinibatchData(batchImages));
-                    testInputMap.Add(y, new MinibatchData(batchTarget));
-
-                    // There seems to be a memory-leak of some kind, like the batches are not properly released.
-                    // This is most noticable with GPU training, since batches are being processed quicker.
-                    var evalError = trainer.TestMinibatch(testInputMap);
-                    testInputMap.Clear();
-
-                    testResult += evalError;
-                }
-            }
-
-            var csharpError = testResult / numMinibatchesToTest;
+            // Test model.
+            var csharpError = TestModel_Mnist_Loader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
-
-            var pythonError = 0.186500; // Most likely from diffent observations, both in training and in test.
-            Assert.AreEqual(pythonError, csharpError, 0.00001);
 
             // Save model.
             var modelPath = "lr_mnist_csharp_loader.dnn";
             model.Save(modelPath);
 
-            var loadedModelError = LoadAndTestModel_Mnist_Loader(modelPath, device, mnist);
+            // Test loaded model.
+            var loadedModel = Function.Load(modelPath, device);
+            var loadedModelError = TestModel_Mnist_Loader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
-
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
-        }
 
-        double LoadAndTestModel_Mnist_Loader(string modelPath, DeviceDescriptor device, Mnist mnist)
-        {
-            var loadedModel = Function.Load(modelPath, device);
-
-            // Test loaded model.
-            var numberOfTestSamples = mnist.TestImages.Count();
-            var readerTest = mnist.GetTestReader(); // renew test reader.
-
-            var inputVar = loadedModel.Arguments.Single();
-            var inputShape = inputVar.Shape;
-            var inputMap = new Dictionary<Variable, Value>();
-
-            var outputVar = loadedModel.Output;
-            var outputMap = new Dictionary<Variable, Value>();
-
-            int errorCount = 0;
-            for (int i = 0; i < numberOfTestSamples; i++)
-            {
-                (var testImages, var testTargets) = readerTest.NextBatch(1); // 1 example at a time.
-
-                using (Value batchImages = Value.CreateBatch<float>(inputShape, testImages, device))
-                {
-                    inputMap.Add(inputVar, batchImages);
-                    outputMap.Add(outputVar, null);
-
-                    // Start eveluation on device.
-                    loadedModel.Evaluate(inputMap, outputMap, device);
-
-                    // Get evaluate result as dense output
-                    var outputVal = outputMap[outputVar];
-                    var outputData = outputVal.GetDenseData<float>(outputVar).Single(); // expect only one prediction with batch size 1.
-
-                    var correctIndex = testTargets.ToList().IndexOf(1);
-                    var max = outputData.Max();
-                    var predictedIndex = outputData.IndexOf(max);
-                    if (correctIndex != predictedIndex)
-                    {
-                        errorCount++;
-                    }
-
-                    inputMap.Clear();
-                    outputMap.Clear();
-                }
-            }
-
-            return errorCount / numberOfTestSamples;
+            // Test against python example.
+            var pythonError = 0.186500; // Most likely from diffent observations, both in training and in test.
+            Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
         const string FeatureId = "features";
@@ -273,55 +195,26 @@ namespace SharpLearning.Backend.Cntk.Test
                 }
             }
 
-            // Load test data.
-            var testPath = Path.Combine(dataDirectoryPath, "Test-28x28_cntk_text.txt");
-            if (!File.Exists(testPath))
-            { throw new FileNotFoundException("Data not present. Use MNIST CNTK python example to download data"); }
+            // Test model.
+            var mnist = Mnist.Load(DownloadPath);
 
-            var readerTest = CreateReader(testPath,
-                epochSize: 10000,
-                inputDimensions: inputDimensions,
-                numberOfClasses: numberOfClasses,
-                randomize: false);
-
-            featureStreamInfo = readerTest.StreamInfo(FeatureId);
-            labelStreamInfo = readerTest.StreamInfo(LabelsId);
-
-            // Test data for trained model.
-            var testMinibatchSize = 1024;
-            var numberOfTestSamples = 10000;
-            var numMinibatchesToTest = numberOfTestSamples / testMinibatchSize;
-            var testResult = 0.0;
-
-            for (int i = 0; i < numMinibatchesToTest; i++)
-            {
-                var mb = readerTest.GetNextMinibatch(minibatchSize);
-                var arguments = new UnorderedMapVariableMinibatchData
-                {
-                    { x, mb[featureStreamInfo] },
-                    { y, mb[labelStreamInfo] }
-                };
-                var evalError = trainer.TestMinibatch(arguments, device);
-
-                testResult += evalError;
-            }
-
-            var csharpError = testResult / numMinibatchesToTest;
+            var csharpError = TestModel_Mnist_Loader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
-            var pythonError = 0.186500; // Most likely from diffent observations during training.
-            Assert.AreEqual(pythonError, csharpError, 0.00001);
-
             // Save model.
-            var modelPath = "lr_minibatch_source.dnn";
+            var modelPath = "lr_mnist_csharp_loader.dnn";
             model.Save(modelPath);
 
-            // Evaluate the C# Mnist test set. This should be changed to the minibatch source dataset.
-            var loadedModelError = LoadAndTestModel_Mnist_Loader(modelPath, device, Mnist.Load(DownloadPath));
+            // Test loaded model.
+            var loadedModel = Function.Load(modelPath, device);
+            var loadedModelError = TestModel_Mnist_Loader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
-
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
+
+            // Test against python example.
+            var pythonError = 0.186500; // Most likely from diffent observations, both in training and in test.
+            Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
         MinibatchSource CreateReader(string path, ulong epochSize,
@@ -334,6 +227,52 @@ namespace SharpLearning.Backend.Cntk.Test
             };
 
             return MinibatchSource.TextFormatMinibatchSource(path, streamConfigurations, epochSize, randomize);
+        }
+
+        double TestModel_Mnist_Loader(Function model, DeviceDescriptor device, Mnist mnist)
+        {
+            var numberOfTestSamples = mnist.TestImages.Count();
+            var readerTest = mnist.GetTestReader(); // renew test reader.
+
+            var inputVar = model.Arguments.Single();
+            var inputShape = inputVar.Shape;
+            var inputMap = new Dictionary<Variable, Value>();
+
+            var outputVar = model.Output;
+            var outputMap = new Dictionary<Variable, Value>();
+
+            int errorCount = 0;
+            for (int i = 0; i < numberOfTestSamples; i++)
+            {
+                (var testImages, var testTargets) = readerTest.NextBatch(1); // 1 example at a time.
+
+                using (Value batchImages = Value.CreateBatch<float>(inputShape, testImages, device))
+                {
+                    inputMap.Add(inputVar, batchImages);
+                    outputMap.Add(outputVar, null);
+
+                    // Start eveluation on device.
+                    model.Evaluate(inputMap, outputMap, device);
+
+                    // Get evaluation result as dense output.
+                    var outputVal = outputMap[outputVar];
+                    var outputData = outputVal.GetDenseData<float>(outputVar).Single(); // expect only one prediction with batch size 1.
+
+                    var correctIndex = testTargets.ToList().IndexOf(1);
+                    var max = outputData.Max();
+                    var predictedIndex = outputData.IndexOf(max);
+
+                    if (correctIndex != predictedIndex)
+                    {
+                        errorCount++;
+                    }
+
+                    inputMap.Clear();
+                    outputMap.Clear();
+                }
+            }
+
+            return (double)errorCount / (double)numberOfTestSamples;
         }
     }
 }
