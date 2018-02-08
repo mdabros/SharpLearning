@@ -112,7 +112,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.186500; // Most likely from diffent observations, both in training and in test.
+            var pythonError = 0.202800; // Most likely from diffent observations, both in training and in test.
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
@@ -213,7 +213,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.186500; // Most likely from diffent observations, both in training and in test.
+            var pythonError = 0.202800; // Most likely from diffent observations, both in training and in test.
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
