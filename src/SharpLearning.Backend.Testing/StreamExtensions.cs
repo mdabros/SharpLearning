@@ -14,8 +14,8 @@ namespace SharpLearning.Backend.Testing
                 { throw new EndOfStreamException(); }
                 bytes[i] = (byte)r;
             }
-            int bigEndian = *(int*)bytes;
-            return bigEndian;
+            int v = *(int*)bytes;
+            return v;
         }
     }
 }
