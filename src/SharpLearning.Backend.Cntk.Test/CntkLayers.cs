@@ -197,6 +197,9 @@ namespace SharpLearning.Backend.Cntk.Test
             if (groups > 1)
                 throw new ArgumentException("Convolution: groups > 1, is not currently supported by Convolution layer. For group convolution with groups > 1, use CNTK's low-level convolution node (cntk.convolution).");
 
+            var emulatingOutputDepth = numFilters == 0; // if no filters specified.
+            var emulatingInputDepth = reductionRank == 0;
+
 
             return null;
         }
