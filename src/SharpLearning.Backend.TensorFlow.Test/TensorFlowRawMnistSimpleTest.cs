@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Backend.Testing;
 using TensorFlow;
 
 namespace SharpLearning.Backend.TensorFlow.Test
@@ -81,8 +82,9 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     File.WriteAllBytes(filePath, bytes);
                 }
 
+                var data = DataSets.Mnist.Load(DownloadPath);
+                //var mnist = Mnist.Load(DownloadPath);
 
-                var mnist = Mnist.Load(DownloadPath);
                 const int batchSize = 64;
                 const int iterations = 200;
 
@@ -103,10 +105,13 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     TFBuffer runOptions = null;
                     TFStatus trainStatus = new TFStatus();
 
-                    var trainReader = mnist.GetTrainReader();
-                    for (int i = 0; i < iterations; i++)
+                    //var trainReader = mnist.GetTrainReader();
+                    var trainBatchEnumerator = data.CreateTrainBatchEnumerator(batchSize);
+                    for (int i = 0; i < iterations && trainBatchEnumerator.MoveNext(); i++)
                     {
-                        (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
+                        //(float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
+                        var (inputBatch, labelBatch) = trainBatchEnumerator.CurrentBatch();
+                        // TODO: Add conversion from byte to float...
 
                         TFTensor[] inputValues = new [] { new TFTensor(inputBatch), new TFTensor(labelBatch) };
 
@@ -124,8 +129,10 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
                     TFOutput accuracy = g.ReduceMean(castCorrectPrediction);
 
-                    var testReader = mnist.GetTestReader();
-                    var (testImages, testLabels) = testReader.All();
+                    //var testReader = mnist.GetTestReader();
+                    //var (testImages, testLabels) = testReader.All();
+                    var (testImages, testLabels) = (data.TestFeatures.Data, data.TestTargets.Data);
+                    // TODO: Add conversion
 
                     TFTensor evaluatedAccuracy = session.GetRunner()
                         .AddInput(x, testImages)

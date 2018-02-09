@@ -53,6 +53,16 @@ namespace SharpLearning.Backend.Testing
     {
         // Note all parse operations move the stream ahead
 
+        public static (int[] shape, T[] data) ReadAll<T>(Stream s)
+            where T : struct
+        {
+            var (idxType, shape) = ParseHeader(s);
+            CheckTypeMatches<T>(idxType);
+            var data = new T[shape.Product()];
+            ReadData(s, data);
+            return (shape, data);
+        }
+
         public static (IdxDataType type, int[] shape) ParseHeader(Stream s)
         {
             var (type, dimensions) = ParseFormat(s);
@@ -109,20 +119,19 @@ namespace SharpLearning.Backend.Testing
             return totalBytesRead;
         }
 
-            public static int ReadBigEndianInt32(Stream s)
+        public static int ReadBigEndianInt32(Stream s)
         {
             int bigEndian = s.ReadInt32();
             return BitOps.BigEndianToInt32(bigEndian);// DataConverter.BigEndian.GetInt32(x, 0);
         }
-    }
 
-    public enum IdxDataType : byte
-    {
-        Byte   = 0x08, //: unsigned byte 
-        SByte  = 0x09, //: signed byte 
-        Short  = 0x0B, //: short (2 bytes) 
-        Int    = 0x0C, //: int (4 bytes) 
-        Float  = 0x0D, //: float (4 bytes) 
-        Double = 0x0E, //: double (8 bytes)
+        static void CheckTypeMatches<T>(IdxDataType idxType) where T : struct
+        {
+            if (idxType.ToType() != typeof(T))
+            {
+                throw new ArgumentException($"Idx type '{idxType}' does not match generic type {typeof(T).Name}");
+            }
+        }
+
     }
 }

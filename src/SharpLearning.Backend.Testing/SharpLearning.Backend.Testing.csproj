@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-  
-  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <OutputPath>..\..\Build\$(Configuration)\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.4.0-preview2-25405-01" />
+  </ItemGroup>
+  
 </Project>
