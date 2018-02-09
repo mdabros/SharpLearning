@@ -23,7 +23,7 @@ namespace SharpLearning.Backend.Testing.Test
                 IdxDataType.Byte, new int[] { 10000, 28, 28 });
             ParseHeaderAndAssert(
                 new byte[] { 0x00, 0x00, 0x08, 0x01, 0x00, 0x00, 0x27, 0x10 },
-                IdxDataType.Byte, new int[] { 60000 });
+                IdxDataType.Byte, new int[] { 10000 });
         }
 
         [TestMethod]
@@ -44,23 +44,34 @@ namespace SharpLearning.Backend.Testing.Test
             ParseSizeAndAssert(new byte[] { 0x00, 0x00, 0x00, 0x1C }, 28);
         }
 
-        private void ParseHeaderAndAssert(byte[] bytes, IdxDataType expectedType, int[] expectedShape)
+        [TestMethod]
+        public void IdxParserTest_ReadData()
+        {
+            ReadDataAndAssert(new byte[] { 0x12, 0x34, 0x56, 0x78 }, new byte[] { 0x12, 0x34, 0x56, 0x78 });
+            // NOTE: If more that requested data we only read that and do not fail, this is intentional,
+            //       allowing for batch reading.
+            ReadDataAndAssert(new byte[] { 0x12, 0x34, 0x56, 0x78, 0x90 }, new byte[] { 0x12, 0x34, 0x56, 0x78 });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void IdxParserTest_ReadData_LessDataThanRequestedThrows()
+        {
+            ReadDataAndAssert(new byte[] { 0x12, 0x34, 0x56 }, new byte[] { 0x12, 0x34, 0x56, 0x78 });
+        }
+
+        void ParseHeaderAndAssert(byte[] bytes, IdxDataType expectedType, int[] expectedShape)
         {
             using (var s = new MemoryStream(bytes))
             {
                 var (type, shape) = IdxParser.ParseHeader(s);
 
                 Assert.AreEqual(expectedType, type);
-                Assert.AreEqual(expectedShape.Length, shape.Length);
-                for (int i = 0; i < expectedShape.Length; i++)
-                {
-                    Assert.AreEqual(expectedShape[i], shape[i]);
-                }
+                CollectionAssert.AreEqual(expectedShape, shape);
             }
-
         }
 
-        private static void ParseFormatAndAssert(IdxDataType expectedType, int expectedDims)
+        static void ParseFormatAndAssert(IdxDataType expectedType, int expectedDims)
         {
             using (var s = new MemoryStream(new byte[] { 0x00, 0x00, (byte)expectedType, (byte)expectedDims }))
             {
@@ -70,12 +81,22 @@ namespace SharpLearning.Backend.Testing.Test
             }
         }
 
-        private static void ParseSizeAndAssert(byte[] bytes, int expectedSize)
+        static void ParseSizeAndAssert(byte[] bytes, int expectedSize)
         {
             using (var s = new MemoryStream(bytes))
             {
                 var size = IdxParser.ParseSize(s);
                 Assert.AreEqual(expectedSize, size);
+            }
+        }
+
+        void ReadDataAndAssert(byte[] bytes, byte[] expectedData)
+        {
+            using (var s = new MemoryStream(bytes))
+            {
+                var data = new byte[expectedData.Length];
+                IdxParser.ReadData(s, data);
+                CollectionAssert.AreEqual(expectedData, data);
             }
         }
     }

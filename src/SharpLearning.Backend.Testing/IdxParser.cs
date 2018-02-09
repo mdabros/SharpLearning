@@ -51,6 +51,8 @@ namespace SharpLearning.Backend.Testing
     // a new Matrix object with 1 row and 60000 columns.Each cell will contain a number in the interval from 0 to 9.
     public static class IdxParser
     {
+        // Note all parse operations move the stream ahead
+
         public static (IdxDataType type, int[] shape) ParseHeader(Stream s)
         {
             var (type, dimensions) = ParseFormat(s);
@@ -70,34 +72,44 @@ namespace SharpLearning.Backend.Testing
             return (type, dimensions);
         }
 
-        public static int ParseSize(Stream s)
+        public static int ParseSize(Stream s) => ReadBigEndianInt32(s);
+
+        public static void ReadData<T>(Stream s, T[] data)
+            where T : struct
         {
-            return ReadBigEndianInt32(s);
+            var read = TryReadData(s, data);
+            if (read != data.Length)
+            {
+                throw new ArgumentException($"Read of '{data.Length}' items failed, only read '{read}' items.");
+            }
         }
 
-        //public static int ParseSize1(Stream s)
-        //{
-        //    return ReadBigEndianInt32(s);
-        //}
+        // data should be pre-allocated according to shape
+        public static int TryReadData<T>(Stream s, T[] data)
+            where T : struct
+        {
+            if (typeof(T) == typeof(byte))
+            {
+                return TryReadData(s, (byte[])(object)data);
+            }
+            // TODO: Other types, and be sure to handle endianness and length etc.
+            else
+            {
+                throw new NotSupportedException(typeof(T).Name);
+            }
+        }
 
-        //public static (int count, int rows, int cols) ParseIdx3Header(Stream s)
-        //{
-        //    const int MagicNumber = 0x00000803; // 2051;
-        //    ReadAndCheckMagicNumber(s, MagicNumber);
-        //    var count = ReadBigEndianInt32(s);
-        //    var rows = ReadBigEndianInt32(s);
-        //    var cols = ReadBigEndianInt32(s);
-        //    return (count, rows, cols);
-        //}
+        public static int TryReadData(Stream s, byte[] data)
+        {
+            int bytesRead = 0;
+            int totalBytesRead = 0;
+            while ((bytesRead = s.Read(data, totalBytesRead, data.Length - totalBytesRead)) > 0 &&
+                   (totalBytesRead += bytesRead) < data.Length)
+            { }
+            return totalBytesRead;
+        }
 
-        //public static void ReadAndCheckMagicNumber(Stream s, int expectedMagicNumber)
-        //{
-        //    var magicNumber = ReadBigEndianInt32(s);
-        //    if (magicNumber != expectedMagicNumber)
-        //    { throw new ArgumentException($"Invalid magic number found '{magicNumber}'"); }
-        //}
-
-        public static int ReadBigEndianInt32(Stream s)
+            public static int ReadBigEndianInt32(Stream s)
         {
             int bigEndian = s.ReadInt32();
             return BitOps.BigEndianToInt32(bigEndian);// DataConverter.BigEndian.GetInt32(x, 0);
