@@ -106,7 +106,11 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     TFStatus trainStatus = new TFStatus();
 
                     //var trainReader = mnist.GetTrainReader();
-                    var trainBatchEnumerator = data.CreateTrainBatchEnumerator(batchSize).From().To(fb => (float)fb, tb => (int)tb);
+                    var trainBatchEnumerator = data.CreateTrainBatchEnumerator(batchSize)
+                        //.From().To(fb => (float)fb, tb => (int)tb);
+                        .Feature().To(fb => (float)fb)
+                        //.Target().OneHot(classCount, 1.0f)
+                        ;
 
                     for (int i = 0; i < iterations && trainBatchEnumerator.MoveNext(); i++)
                     {
