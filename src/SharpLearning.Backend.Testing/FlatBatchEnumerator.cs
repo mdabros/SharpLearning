@@ -6,6 +6,18 @@ namespace SharpLearning.Backend.Testing
 {
     public interface IFunc<T, TResult> { TResult Invoke(T value); }
 
+    public struct DelegateFunc<T, TResult> : IFunc<T, TResult>
+    {
+        readonly Func<T, TResult> m_func;
+
+        public DelegateFunc(Func<T, TResult> func)
+        {
+            m_func = func ?? throw new ArgumentNullException(nameof(func));
+        }
+
+        public TResult Invoke(T value) => m_func(value);
+    }
+
     public static class Transforms
     {
         public static void Transform<T, TResult, TFunc>(Span<T> src, TFunc func, Span<TResult> dst)
@@ -20,9 +32,9 @@ namespace SharpLearning.Backend.Testing
     }
 
     public class ConvertFlatBatchFeaturesTargetEnumerator<TFeature, TTarget, TFeatureResult, TTargetResult, TFeatureConverter, TTargetConverter>
-        : IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget>
+        : IFlatBatchFeaturesTargetEnumerator<TFeatureResult, TTargetResult>
         where TFeatureConverter : IFunc<TFeature, TFeatureResult>
-        where TTargetConverter : IFunc<TTarget, TTarget>
+        where TTargetConverter : IFunc<TTarget, TTargetResult>
     {
         readonly IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> m_enumerator;
         readonly TFeatureConverter m_featureConverter;
@@ -31,9 +43,14 @@ namespace SharpLearning.Backend.Testing
         readonly TFeatureResult[] m_batchFeatures;
         readonly TTargetResult[] m_batchTargets;
 
-        public ConvertFlatBatchFeaturesTargetEnumerator(IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> enumerator)
+        public ConvertFlatBatchFeaturesTargetEnumerator(
+            IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> enumerator,
+            TFeatureConverter featureConverter,
+            TTargetConverter targetConverter)
         {
             m_enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
+            m_featureConverter = featureConverter;
+            m_targetConverter = targetConverter;
             m_batchFeatures = new TFeatureResult[enumerator.TotalBatchSize];
             m_batchTargets = new TTargetResult[enumerator.TotalBatchSize];
         }
@@ -42,10 +59,12 @@ namespace SharpLearning.Backend.Testing
 
         public bool MoveNext() => m_enumerator.MoveNext();
 
-        public (TFeature[] batchFeatures, TTarget[] batchTargets) CurrentBatch()
+        public (TFeatureResult[] batchFeatures, TTargetResult[] batchTargets) CurrentBatch()
         {
             var (fs, ts) = m_enumerator.CurrentBatch();
-            // TODO: Do conversion
+            Transforms.Transform<TFeature, TFeatureResult, TFeatureConverter>(fs, m_featureConverter, m_batchFeatures);
+            Transforms.Transform<TTarget, TTargetResult, TTargetConverter>(ts, m_targetConverter, m_batchTargets);
+            return (m_batchFeatures, m_batchTargets);
         }
 
         public void Reset() => m_enumerator.Reset();
@@ -95,6 +114,41 @@ namespace SharpLearning.Backend.Testing
         public void Reset()
         {
             m_index = -1;
+        }
+    }
+
+    // TODO: The dual generic type params of all this gets really annoying and long...
+    //       create api where converting one at a time, easier...
+    //       one about one hot encodings etc.?
+    public static class FlatBatchFeaturesTargetEnumeratorExtensions
+    {
+        public struct Capture<TFeature, TTarget>
+        {
+            public Capture(IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> enumerator)
+            {
+                Enumerator = enumerator;
+            }
+            IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> Enumerator { get; }
+
+            public IFlatBatchFeaturesTargetEnumerator<TFeatureResult, TTargetResult> To<TFeatureResult, TTargetResult, TFeatureConverter, TTargetConverter>(
+                TFeatureConverter featureConverter, TTargetConverter targetConverter)
+                where TFeatureConverter : IFunc<TFeature, TFeatureResult>
+                where TTargetConverter : IFunc<TTarget, TTargetResult>
+            {
+                return new ConvertFlatBatchFeaturesTargetEnumerator<TFeature, TTarget, TFeatureResult, TTargetResult, TFeatureConverter, TTargetConverter>(
+                    Enumerator, featureConverter, targetConverter);
+            }
+            public IFlatBatchFeaturesTargetEnumerator<TFeatureResult, TTargetResult> To<TFeatureResult, TTargetResult>(
+                Func<TFeature, TFeatureResult> featureConverter, Func<TTarget, TTargetResult> targetConverter)
+            {
+                return To<TFeatureResult, TTargetResult, DelegateFunc<TFeature, TFeatureResult> , DelegateFunc<TTarget, TTargetResult>>(
+                    new DelegateFunc<TFeature, TFeatureResult>(featureConverter), new DelegateFunc<TTarget, TTargetResult>(targetConverter));
+            }
+        }
+
+        public static Capture<TFeature,TTarget> From<TFeature, TTarget>(this IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> enumerator)
+        {
+            return new Capture<TFeature, TTarget>(enumerator);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace SharpLearning.Backend.Testing
             var sum = Shape.Product();
             if (sum != Data.Length)
             {
-                throw new ArgumentException($"Shape sum {sum} not equal")
+                throw new ArgumentException($"Shape sum {sum} not equal");
             }
         }
 
