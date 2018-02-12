@@ -20,10 +20,9 @@ namespace SharpLearning.Backend.Cntk.Test
             var imageHeight = 28;
             var imageWidth = 28;
             var numChannels = 1;
-            var input_dim = imageHeight * imageWidth * numChannels;
             var numOutputClasses = 10;
             var dataType = CntkDataType.Float;
-            var inputDimensions = new int[] { numChannels, imageHeight, imageWidth };
+            var inputDimensions = new int[] { imageWidth, imageHeight, numChannels };
 
             // Set device.
             var device = DeviceDescriptor.UseDefaultDevice();
@@ -33,10 +32,10 @@ namespace SharpLearning.Backend.Cntk.Test
             Variable labelVar = Variable.InputVariable(new int[] { numOutputClasses }, dataType);
 
             // Instantiate the feedforward classification model
-            //var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
+            var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
 
             var layers = new CntkLayers(device, dataType);
-            Function conv1 = layers.Convolution2D(inputVar, new int[] { 5, 5 }, 32, (v) => CNTKLib.ReLU(v));
+            Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, (v) => CNTKLib.ReLU(v));
             Function f4    = layers.Dense(conv1, 96, (v) => CNTKLib.ReLU(v));
             Function drop4 = layers.Dropout(f4, 0.5);
             Function z     = layers.Dense(drop4, numOutputClasses);
