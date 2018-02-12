@@ -324,10 +324,8 @@ namespace SharpLearning.Backend.Cntk.Test
             var kernel_shape = actualFilterShape.Dimensions.ToList();
             kernel_shape.Add(actualReductionShape); // kernel := filter plus reductionDims;
 
-            var fShape = actualFilterShape.Dimensions.ToList();
             var wShape = kernel_shape.ToList();
-            fShape.ForEach(d => wShape.Add(d));
-
+            wShape.Add(actualOutputChannelsShape);
             init = init ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
             var w = new Parameter(wShape.ToArray(), m_dataType, init, m_device, "w");
 
