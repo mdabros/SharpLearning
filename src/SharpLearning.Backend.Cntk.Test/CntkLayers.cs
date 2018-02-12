@@ -1,5 +1,6 @@
 ﻿using CNTK;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // To avoid name-clash with SharpLearning.Backend.DataType.
@@ -175,13 +176,13 @@ namespace SharpLearning.Backend.Cntk.Test
             CNTKDictionary init = null,
             bool pad = false,
             NDShape strides = null,
-            bool sharing = true,
+            bool sharing = true, // must be true currently
             bool bias = true,
             CNTKDictionary initBias = null,
-            int reductionRank = 1,
-            bool transposeWeights =
-            false, int dilation = 1,
-            int groups = 1,
+            uint reductionRank = 1,
+            bool transposeWeights = false, 
+            int dilation = 1,
+            uint groups = 1,
             int maxTempMemSizeInSamples = 0)
         {
             if (pad)
@@ -200,8 +201,57 @@ namespace SharpLearning.Backend.Cntk.Test
             var emulatingOutputDepth = numFilters == 0; // if no filters specified.
             var emulatingInputDepth = reductionRank == 0;
 
+            var actualOutputChannelsShape = emulatingOutputDepth ? 1 : numFilters; // might need to be a shape/dimensions array.              
+            var actualReductionShape = NDShape.InferredDimension;
+            var actualFilterShape = filterShape;
+            
+            // add the dimension to the options as well
+            var numEmulatedAxes = emulatingInputDepth;
+            var sharings = new List<bool> { sharing };
+            var pads = new List<bool> { pad };
 
-            return null;
+            if (numEmulatedAxes)
+            {
+                strides.Dimensions.Add(1); // strides = (1,) * num_emulated_axes + strides
+                sharings.Add(true); // sharing = (True,) * num_emulated_axes + sharing
+                pads.Add(false); // pad = (False,) * num_emulated_axes + pad
+            }
+
+            var kernel_shape = actualFilterShape.Dimensions.ToList();
+            kernel_shape.Add(actualReductionShape); // kernel := filter plus reductionDims;
+
+            var fShape = actualFilterShape.Dimensions.ToList();
+            var wShape = kernel_shape.ToList();
+            fShape.ForEach(d => wShape.Add(d));
+
+            init = init ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
+            var w = new Parameter(wShape.ToArray(), m_dataType, init, m_device, "w");
+
+            // Weights and input is in reversed order compared to the original python code.
+            // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
+            // The python API was made in this way to be similar to other deep learning toolkits. 
+            // The C# and the C++ share the same column major layout.
+            var r = CNTKLib.Convolution(w, x, 
+                strides, 
+                new BoolVector(sharings),
+                new BoolVector(pads),
+                new int[] { dilation },
+                reductionRank,
+                groups);
+
+            if (bias)
+            {
+                initBias = initBias ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
+                var b = new Parameter(r.Output.Shape, m_dataType, initBias, m_device, "b");
+                r = r + b;
+            }
+
+            if (activation != null)
+            {
+                r = activation(r);
+            }
+
+            return r;
         }
         
         static CNTKDictionary DefaultInitializer(uint seed)
