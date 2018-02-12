@@ -169,7 +169,57 @@ namespace SharpLearning.Backend.Cntk.Test
             Func<Variable, Function> activation = null,
             CNTKDictionary init = null,
             bool pad = false,
+            bool bias = true,
+            CNTKDictionary initBias = null,
+            uint reductionRank = 1,
+            int dilation = 1,
+            uint groups = 1)
+        {
+            return Convolution2D(x,
+                filterShape,
+                numFilters,
+                new int[] { 1, 1 },
+                activation,
+                init,
+                pad,
+                bias,
+                initBias,
+                reductionRank,
+                dilation,
+                groups);
+        }
+
+        /// <summary>
+        /// From Convolution2D in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// Simplified compared to python version.
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x">Input to the dense operation</param>
+        /// <param name="filterShape">filter_shape (`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
+        /// <param name="numFilters">num_filters (int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
+        /// <param name="strides">strides (`int` or `tuple` of `ints`, defaults to 1): stride of the convolution (increment when sliding the filter over the input). Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="activation"> activation (:class:`~cntk.ops.functions.Function`, defaults to `identity`): optional function to apply at the end, e.g. `relu`</param>
+        /// <param name="init">init (scalar or NumPy array or :mod:`cntk.initializer`, defaults to :func:`~cntk.initializer.glorot_uniform` ): initial value of weights `W`</param>
+        /// <param name="pad"> pad (`bool` or `tuple` of `bools`, defaults to `False`): if `False`, then the filter will be shifted over the "valid"
+        /// area of input, that is, no value outside the area is used.If ``pad=True`` on the other hand,
+        /// the filter will be applied to all input positions, and positions outside the valid region will be considered containing zero.
+        /// Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="bias"> bias (bool, defaults to `True`): the layer will have no bias if `False` is passed here</param>
+        /// <param name="initBias"> init_bias (scalar or NumPy array or :mod:`cntk.initializer`, defaults to 0): initial value of weights `b`</param>
+        /// <param name="reductionRank">reduction_rank (`int`, defaults to 1): set to 0 if input items are scalars (input has no depth axis), e.g. an audio signal or a black-and-white image</param>
+        /// <param name="dilation">dilation (tuple, optional): the dilation value along each axis, default 1 mean no dilation.</param>
+        /// <param name="groups">groups (`int`, default 1): number of groups during convolution, that controls the connections between input and output channels. Deafult value is 1, 
+        /// which means that all input channels are convolved to produce all output channels.A value of N would mean that the input(and output) channels are
+        /// divided into N groups with the input channels in one group(say i-th input group) contributing to output channels in only one group(i-th output group).
+        /// Number of input and output channels must be divisble by value of groups argument.Also, value of this argument must be strictly positive, i.e.groups > 0.</param>
+        /// <returns></returns>
+        public Function Convolution2D(Variable x, NDShape filterShape, int numFilters,
             NDShape strides = null,
+            Func<Variable, Function> activation = null,
+            CNTKDictionary init = null,
+            bool pad = false,
             bool bias = true,
             CNTKDictionary initBias = null,
             uint reductionRank = 1,
