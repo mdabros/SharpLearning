@@ -132,8 +132,6 @@ namespace SharpLearning.Backend.Cntk.Test
             var inputDimensions = 784;
             var numberOfClasses = 10;
 
-            Trace.Write(Directory.GetCurrentDirectory());
-
             // Input variables denoting the features and label data.
             Variable x = Variable.InputVariable(new int[] { inputDimensions }, dataType); ;
             Variable y = Variable.InputVariable(new int[] { numberOfClasses }, dataType);
