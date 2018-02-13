@@ -370,7 +370,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// pooling will be applied to all input positions, and positions outside the valid region will be considered containing zero.
         /// Use a `tuple` to specify a per-axis value</param>
         /// <returns></returns>
-        public static Function MaxPooling(Variable x, NDShape shape, NDShape strides, bool pad = false)
+        public Function MaxPooling(Variable x, NDShape shape, NDShape strides, bool pad = false)
         {
             return Pooling(x, PoolingType.Max, shape, false, strides, pad);
         }

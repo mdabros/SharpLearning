@@ -35,8 +35,12 @@ namespace SharpLearning.Backend.Cntk.Test
             var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
 
             var layers = new CntkLayers(device, dataType);
-            Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, (v) => CNTKLib.ReLU(v));
-            Function f4    = layers.Dense(conv1, 96, (v) => CNTKLib.ReLU(v));
+            Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, (v) => CNTKLib.ReLU(v), pad: true);
+            Function pool1 = layers.MaxPooling(conv1, new int[] { 3, 3 }, new int[] { 2, 2 });
+            Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, (v) => CNTKLib.ReLU(v));
+            Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
+            Function conv3 = layers.Convolution2D(pool2, new int[] { 3, 3 }, 64, (v) => CNTKLib.ReLU(v));
+            Function f4    = layers.Dense(conv3, 96, (v) => CNTKLib.ReLU(v));
             Function drop4 = layers.Dropout(f4, 0.5);
             Function z     = layers.Dense(drop4, numOutputClasses);
 
