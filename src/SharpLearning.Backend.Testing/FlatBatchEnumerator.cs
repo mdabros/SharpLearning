@@ -93,6 +93,50 @@ namespace SharpLearning.Backend.Testing
         public void Reset() => m_enumerator.Reset();
     }
 
+    public class OneHotTargetConvertFlatBatchFeaturesTargetEnumerator<TFeature, TTarget, TTargetResult, TTargetIndexer>
+        : IFlatBatchFeaturesTargetEnumerator<TFeature, TTargetResult>
+        where TTargetIndexer : IFunc<TTarget, int>
+    {
+        readonly IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> m_enumerator;
+        readonly TTargetIndexer m_indexer;
+        readonly TTargetResult m_one;
+        readonly int m_targetCount;
+        // NOTE: This reuses these!
+        readonly TTargetResult[] m_batchTargets;
+
+        public OneHotTargetConvertFlatBatchFeaturesTargetEnumerator(
+            IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> enumerator,
+            TTargetIndexer indexer,
+            TTargetResult one,
+            int targetCount)
+        {
+            m_enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
+            m_indexer = indexer;
+            m_one = one;
+            m_targetCount = targetCount;
+            m_batchTargets = new TTargetResult[enumerator.TotalBatchSize * m_targetCount];
+        }
+
+        public int TotalBatchSize => m_enumerator.TotalBatchSize;
+
+        public bool MoveNext() => m_enumerator.MoveNext();
+
+        public (TFeature[] batchFeatures, TTargetResult[] batchTargets) CurrentBatch()
+        {
+            var (fs, ts) = m_enumerator.CurrentBatch();
+            Array.Clear(m_batchTargets, 0, m_batchTargets.Length);
+            for (int i = 0; i < ts.Length; i++)
+            {
+                var index = m_indexer.Invoke(ts[i]);
+                m_batchTargets[i * m_targetCount + index] = m_one;
+            }
+            return (fs, m_batchTargets);
+        }
+
+        public void Reset() => m_enumerator.Reset();
+    }
+
+
     public class ConvertFlatBatchFeaturesTargetEnumerator<TFeature, TTarget, TFeatureResult, TTargetResult, TFeatureConverter, TTargetConverter>
         : IFlatBatchFeaturesTargetEnumerator<TFeatureResult, TTargetResult>
         where TFeatureConverter : IFunc<TFeature, TFeatureResult>
@@ -253,10 +297,19 @@ namespace SharpLearning.Backend.Testing
                     new DelegateFunc<TTarget, TTargetResult>(targetConverter));
             }
 
-            //public IFlatBatchFeaturesTargetEnumerator<TFeature, TTargetResult> ToOneHot<TTargetResult>(int oneHotLength)
-            //{
-            //    // TODO
-            //}
+            public IFlatBatchFeaturesTargetEnumerator<TFeature, TTargetResult> ToOneHot<TTargetResult, TTargetIndexer>(
+                TTargetIndexer indexer, TTargetResult one, int targetCount)
+                where TTargetIndexer : IFunc<TTarget, int>
+            {
+                return new OneHotTargetConvertFlatBatchFeaturesTargetEnumerator<TFeature, TTarget, TTargetResult, TTargetIndexer>(
+                    Enumerator, indexer, one, targetCount);
+            }
+            public IFlatBatchFeaturesTargetEnumerator<TFeature, TTargetResult> ToOneHot<TTargetResult>(
+                Func<TTarget, int> indexer, TTargetResult one, int targetCount)
+            {
+                return new OneHotTargetConvertFlatBatchFeaturesTargetEnumerator<TFeature, TTarget, TTargetResult, DelegateFunc<TTarget, int>>(
+                    Enumerator, new DelegateFunc<TTarget,int>(indexer), one, targetCount);
+            }
         }
 
         public static Capture<TFeature,TTarget> From<TFeature, TTarget>(this IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> enumerator)

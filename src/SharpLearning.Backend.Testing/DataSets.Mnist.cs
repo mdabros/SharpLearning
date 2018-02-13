@@ -22,8 +22,9 @@
             private static FlatData<byte> DownloadAndLoad(string fileName, string downloadDirectory)
             {
                 using (var s = Downloader.MaybeDownload(SourceUrl, fileName, downloadDirectory))
+                using (var z = s.Decompress())
                 {
-                    var (shape, data) = IdxParser.ReadAll<byte>(s);
+                    var (shape, data) = IdxParser.ReadAll<byte>(z);
                     return new FlatData<byte>(shape, data);
                 }
             }

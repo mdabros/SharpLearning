@@ -199,7 +199,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
         public static Mnist Load(string downloadPath)
         {
             var x = new Mnist();
-            x.ReadDataSets(downloadPath);
+            x.ReadDataSets(downloadPath, validationSize: 0);
             return x;
         }
     }

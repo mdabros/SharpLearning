@@ -39,7 +39,7 @@ FLAGS = None
 
 def main(_):
   # Import data
-  mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
+  mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True, validation_size=0)
 
   # Create the model
   x = tf.placeholder(tf.float32, [None, 784])

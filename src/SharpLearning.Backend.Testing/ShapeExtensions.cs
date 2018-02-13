@@ -22,7 +22,7 @@
             int product = 1;
             for (int i = 1; i < shape.Length; i++)
             {
-                product *= i;
+                product *= shape[i];
 
             }
             return product;

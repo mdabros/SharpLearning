@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define USE_OLD_READER
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -82,8 +83,11 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     File.WriteAllBytes(filePath, bytes);
                 }
 
+#if USE_OLD_READER
+                var mnist = Mnist.Load(DownloadPath);
+#else
                 var data = DataSets.Mnist.Load(DownloadPath);
-                //var mnist = Mnist.Load(DownloadPath);
+#endif
 
                 const int batchSize = 64;
                 const int iterations = 200;
@@ -100,27 +104,28 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     TFOutput[] inputs = new[] { x, y_ };
                     TFOutput[] outputs = updates; // Gradient updates are currently the outputs ensuring these are applied
                     TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
-                    
+
                     TFBuffer runMetaData = null;
                     TFBuffer runOptions = null;
                     TFStatus trainStatus = new TFStatus();
 
-                    //var trainReader = mnist.GetTrainReader();
-                    var trainBatchEnumerator = data.CreateTrainBatchEnumerator(batchSize)
-                        //.From().To(fb => (float)fb, tb => (int)tb);
-                        .Feature().To(fb => (float)fb)
-                        //.Target().OneHot(classCount, 1.0f)
-                        ;
-
+#if USE_OLD_READER
+                    var trainReader = mnist.GetTrainReader();
+                    for (int i = 0; i < iterations; i++)
+                    {
+                        (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
+                        TFTensor[] inputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch) };
+#else
+                    var rawTrainBatchEnumerator = data.CreateTrainBatchEnumerator(batchSize);
+                    var trainBatchEnumerator = Convert(rawTrainBatchEnumerator, classCount);
                     for (int i = 0; i < iterations && trainBatchEnumerator.MoveNext(); i++)
                     {
-                        //(float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
                         var (inputBatch, labelBatch) = trainBatchEnumerator.CurrentBatch();
-                        // TODO: Add conversion from byte to float...
-
-                        TFTensor[] inputValues = new [] { new TFTensor(inputBatch), new TFTensor(labelBatch) };
-
-                        TFTensor[] outputValues = session.Run(inputs, inputValues, outputs, 
+                        TFTensor[] inputValues = new[] {
+                            TFTensor.FromBuffer(new TFShape(batchSize, featureCount), inputBatch, 0, inputBatch.Length),
+                            TFTensor.FromBuffer(new TFShape(batchSize, classCount), labelBatch, 0, labelBatch.Length) };
+#endif
+                        TFTensor[] outputValues = session.Run(inputs, inputValues, outputs,
                             targets, runMetaData, runOptions, trainStatus);
 
                         trainStatus.Raise();
@@ -134,22 +139,49 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
                     TFOutput accuracy = g.ReduceMean(castCorrectPrediction);
 
-                    //var testReader = mnist.GetTestReader();
-                    //var (testImages, testLabels) = testReader.All();
-                    var (testImages, testLabels) = (data.TestFeatures.Data, data.TestTargets.Data);
-                    // TODO: Add conversion
-
+#if USE_OLD_READER
+                    var testReader = mnist.GetTestReader();
+                    var (testImages, testLabels) = testReader.All();
                     TFTensor evaluatedAccuracy = session.GetRunner()
                         .AddInput(x, testImages)
                         .AddInput(y_, testLabels)
                         .Run(accuracy);
+#else
+                    var (testImages, testLabels) = (data.TestFeatures.Data, data.TestTargets.Data);
+
+                    var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(10000);
+                    var testBatchEnumerator = Convert(rawTestBatchEnumerator, classCount);
+                    testBatchEnumerator.MoveNext();
+                    var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
+
+                    TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(batchSize, featureCount), testInputBatch, 0, testInputBatch.Length);
+                    TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(batchSize, classCount), testLabelBatch, 0, testLabelBatch.Length);
+
+                    TFTensor evaluatedAccuracy = session.GetRunner()
+                        .AddInput(x, testInputBatchTensor)
+                        .AddInput(y_, testLabelBatchTensor)
+                        .Run(accuracy);
+#endif
 
                     float acc = (float)evaluatedAccuracy.GetValue();
 
                     Log($"Accuracy {acc}");
-                    Assert.AreEqual(0.7882000207901001, acc);
+                    //Assert.AreEqual(0.7882000207901001, acc); // With validation set of 5000 of tests 10000
+                    Assert.AreEqual(0.7839999794960022, acc);// With no validation set
                 }
             }
+        }
+
+        private static IFlatBatchFeaturesTargetEnumerator<float, float> Convert(
+            IFlatBatchFeaturesTargetEnumerator<byte, byte> rawTrainBatchEnumerator, int classCount)
+        {
+            var trainBatchEnumerator = rawTrainBatchEnumerator
+                // TODO: We really want to do this before batch enumerator so same as for tests..
+                //.From().To(fb => (float)fb, tb => (int)tb);
+                //.Feature().To(fb => (float)fb)
+                .Feature().To(fb => fb * (1.0f / byte.MaxValue))
+                .Target().ToOneHot(t => t, 1.0f, classCount);
+            return trainBatchEnumerator;
         }
 
         [TestMethod]
