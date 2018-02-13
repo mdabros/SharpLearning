@@ -146,7 +146,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// Input description is from python, so might not match this implementation completely. 
         /// But is included to provide the itension of each input.
         /// </summary>
-        /// <param name="x">Input to the dense operation</param>
+        /// <param name="x">Input to the convolution operation</param>
         /// <param name="filterShape">filter_shape (`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
         /// <param name="numFilters">num_filters (int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
         /// <param name="activation"> activation (:class:`~cntk.ops.functions.Function`, defaults to `identity`): optional function to apply at the end, e.g. `relu`</param>
@@ -196,7 +196,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// Input description is from python, so might not match this implementation completely. 
         /// But is included to provide the itension of each input.
         /// </summary>
-        /// <param name="x">Input to the dense operation</param>
+        /// <param name="x">Input to the convolution operation</param>
         /// <param name="filterShape">filter_shape (`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
         /// <param name="numFilters">num_filters (int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
         /// <param name="strides">strides (`int` or `tuple` of `ints`, defaults to 1): stride of the convolution (increment when sliding the filter over the input). Use a `tuple` to specify a per-axis value.</param>
@@ -250,7 +250,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// Input description is from python, so might not match this implementation completely. 
         /// But is included to provide the itension of each input.
         /// </summary>
-        /// <param name="x">Input to the dense operation</param>
+        /// <param name="x">Input to the convolution operation</param>
         /// <param name="filterShape">(`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
         /// <param name="numFilters">(int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
         /// <param name="sequential">(bool, defaults to `False`): if `True`, also convolve along the dynamic axis. ``filter_shape[0]`` corresponds to dynamic axis.</param>
@@ -354,6 +354,49 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             return r;
+        }
+
+        /// <summary>
+        /// From MaxPooling in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="shape">filter_shape (`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
+        /// <param name="strides"> strides (`int` or `tuple` of `ints`, defaults to 1): stride (increment when sliding over the input). Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="pad">pad (`bool` or `tuple` of `bools`, defaults to `False`): if `False`, then the pooling operation will be shifted over the "valid"
+        /// area of input, that is, no value outside the area is used.If ``pad=True`` on the other hand,
+        /// pooling will be applied to all input positions, and positions outside the valid region will be considered containing zero.
+        /// Use a `tuple` to specify a per-axis value</param>
+        /// <returns></returns>
+        public static Function MaxPooling(Variable x, NDShape shape, NDShape strides, bool pad = false)
+        {
+            return Pooling(x, PoolingType.Max, shape, false, strides, pad);
+        }
+
+        /// <summary>
+        /// From _Pooling in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x">Input to the pooling operation</param>
+        /// <param name="type"></param>
+        /// <param name="shape"></param>
+        /// <param name="sequential"></param>
+        /// <param name="strides"></param>
+        /// <param name="pad"></param>
+        /// <returns></returns>
+        static Function Pooling(Variable x, PoolingType type, NDShape shape, bool sequential, NDShape strides, bool pad)
+        {
+            if (sequential)
+            {
+                throw new ArgumentException("Pooling: sequential option not implemented yet");
+            }
+
+            var pads = new BoolVector(shape.Dimensions.Select(d => pad).ToArray());
+            return CNTKLib.Pooling(x, type, shape, strides, pads);
         }
         
         static CNTKDictionary DefaultInitializer(uint seed)
