@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using CNTK;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -120,6 +121,125 @@ namespace SharpLearning.Backend.Cntk.Test
             // Test against python example.
             var pythonError = 0.89;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
+        }
+
+        const string FeatureId = "features";
+        const string LabelsId = "labels";
+
+        [TestMethod]
+        public void MnistCnnTest_MinibatchSource()
+        {
+            // Set global data and device type. 
+            var dataType = CntkDataType.Float;
+            DeviceDescriptor device = DeviceDescriptor.UseDefaultDevice();
+            Trace.WriteLine("Using device: " + device.Type + " with data type: " + dataType);
+
+            // Define data.
+            var dataDirectoryPath = @"..\..\..\python\src\CntkPython\";
+            var imageHeight = 28;
+            var imageWidth = 28;
+            var numChannels = 1;
+            var numOutputClasses = 10;
+            var inputDimensions = new int[] { imageWidth, imageHeight, numChannels };
+
+            // Input variables denoting the features and label data.
+            Variable inputVar = Variable.InputVariable(inputDimensions, dataType); ;
+            Variable labelVar = Variable.InputVariable(new int[] { numOutputClasses }, dataType);
+
+            // Instantiate the feedforward classification model
+            var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
+
+            var layers = new CntkLayers(device, dataType);
+            Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, (v) => CNTKLib.ReLU(v), pad: true);
+            Function pool1 = layers.MaxPooling(conv1, new int[] { 3, 3 }, new int[] { 2, 2 });
+            Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, (v) => CNTKLib.ReLU(v));
+            Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
+            Function conv3 = layers.Convolution2D(pool2, new int[] { 3, 3 }, 64, (v) => CNTKLib.ReLU(v));
+            Function f4 = layers.Dense(conv3, 96, (v) => CNTKLib.ReLU(v));
+            Function drop4 = layers.Dropout(f4, 0.5);
+            Function z = layers.Dense(drop4, numOutputClasses);
+
+            // Define loss and error metric.
+            Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
+            Function errorMetric = CNTKLib.ClassificationError(z, labelVar);
+
+            // Training config.
+            uint minibatchSize = 64;
+            var minibatchIterations = 200;
+
+            // Instantiate progress writers.
+            var trainingProgressOutputFreq = 100;
+
+            // Instantiate the trainer object to drive the model training.
+            var lrSchedule = new TrainingParameterScheduleDouble(0.01, 1);
+            var learner = new List<Learner>() { Learner.SGDLearner(z.Parameters(), lrSchedule) };
+            var trainer = Trainer.CreateTrainer(z, loss, errorMetric, learner);
+
+            // Load train data.
+            var trainPath = Path.Combine(dataDirectoryPath, "Train-28x28_cntk_text.txt");
+            if (!File.Exists(trainPath))
+            { throw new FileNotFoundException("Data not present. Use MNIST CNTK python example to download data"); }
+
+            var readerTrain = CreateReader(trainPath,
+                epochSize: 60000,
+                inputDimensions: inputDimensions.Aggregate((d1, d2) => d1 * d2),
+                numberOfClasses: numOutputClasses,
+                randomize: false);
+
+            var featureStreamInfo = readerTrain.StreamInfo(FeatureId);
+            var labelStreamInfo = readerTrain.StreamInfo(LabelsId);
+
+            // Train model.
+            for (int i = 0; i < minibatchIterations; i++)
+            {
+                var mb = readerTrain.GetNextMinibatch(minibatchSize, device);
+                var arguments = new Dictionary<Variable, MinibatchData>
+                {
+                    { inputVar, mb[featureStreamInfo] },
+                    { labelVar, mb[labelStreamInfo] }
+                };
+                trainer.TrainMinibatch(arguments, device);
+
+                if ((i % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
+                {
+                    var trainLossValue = (float)trainer.PreviousMinibatchLossAverage();
+                    var evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
+                    Trace.WriteLine($"Minibatch: {i} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                }
+            }
+
+            // Test model.
+            var mnist = Mnist.Load(DownloadPath);
+
+            var csharpError = MnistSimpleExampleTest.TestModel_Mnist_Loader(z, device, mnist);
+            Trace.WriteLine($"Test Error: {csharpError}");
+
+            // Save model.
+            var modelPath = "lr_mnist_csharp_loader.dnn";
+            z.Save(modelPath);
+
+            // Test loaded model.
+            var loadedModel = Function.Load(modelPath, device);
+            var loadedModelError = MnistSimpleExampleTest.TestModel_Mnist_Loader(z, device, mnist);
+
+            Trace.WriteLine("Loaded Model Error: " + loadedModelError);
+            Assert.AreEqual(csharpError, loadedModelError, 0.00001);
+
+            // Test against python example.
+            var pythonError = 0.202800;
+            Assert.AreEqual(pythonError, csharpError, 0.00001);
+        }
+
+        MinibatchSource CreateReader(string path, ulong epochSize,
+            int inputDimensions, int numberOfClasses, bool randomize)
+        {
+            var streamConfigurations = new StreamConfiguration[]
+            {
+                new StreamConfiguration(FeatureId, inputDimensions),
+                new StreamConfiguration(LabelsId, numberOfClasses)
+            };
+
+            return MinibatchSource.TextFormatMinibatchSource(path, streamConfigurations, epochSize, randomize);
         }
     }
 }
