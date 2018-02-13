@@ -112,7 +112,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.202800; // Most likely from diffent observations, both in training and in test.
+            var pythonError = 0.202800;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
@@ -213,7 +213,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.202800; // Most likely from diffent observations, both in training and in test.
+            var pythonError = 0.202800;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
@@ -229,7 +229,7 @@ namespace SharpLearning.Backend.Cntk.Test
             return MinibatchSource.TextFormatMinibatchSource(path, streamConfigurations, epochSize, randomize);
         }
 
-        double TestModel_Mnist_Loader(Function model, DeviceDescriptor device, Mnist mnist)
+        public static double TestModel_Mnist_Loader(Function model, DeviceDescriptor device, Mnist mnist)
         {
             var numberOfTestSamples = mnist.TestImages.Count();
             var readerTest = mnist.GetTestReader(); // renew test reader.
