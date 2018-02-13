@@ -147,15 +147,13 @@ namespace SharpLearning.Backend.TensorFlow.Test
                         .AddInput(y_, testLabels)
                         .Run(accuracy);
 #else
-                    var (testImages, testLabels) = (data.TestFeatures.Data, data.TestTargets.Data);
-
                     var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(10000);
                     var testBatchEnumerator = Convert(rawTestBatchEnumerator, classCount);
                     testBatchEnumerator.MoveNext();
                     var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
 
-                    TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(batchSize, featureCount), testInputBatch, 0, testInputBatch.Length);
-                    TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(batchSize, classCount), testLabelBatch, 0, testLabelBatch.Length);
+                    TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(10000, featureCount), testInputBatch, 0, testInputBatch.Length);
+                    TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(10000, classCount), testLabelBatch, 0, testLabelBatch.Length);
 
                     TFTensor evaluatedAccuracy = session.GetRunner()
                         .AddInput(x, testInputBatchTensor)
