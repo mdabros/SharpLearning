@@ -289,8 +289,12 @@ namespace SharpLearning.Backend.Cntk.Test
             uint groups = 1,
             int maxTempMemSizeInSamples = 0)
         {
-            if (pad)
-                throw new ArgumentException("Padding not supported"); 
+            var sharings = filterShape.Dimensions.Select(d => sharing).ToList();
+            var pads = filterShape.Dimensions.Select(d => pad).ToList();
+            var dilations = filterShape.Dimensions.Select(d => dilation).ToList();
+
+            if (filterShape.Dimensions.Count != strides.Dimensions.Count)
+                throw new ArgumentException($"FilterShape rank: {filterShape.Dimensions.Count} differs from strides ranks: {strides.Dimensions.Count}");
             if (reductionRank != 0  && reductionRank != 1)
                 throw new ArgumentException("Convolution: reduction_rank must be 0 or 1");
             if (transposeWeights)
@@ -311,9 +315,6 @@ namespace SharpLearning.Backend.Cntk.Test
             
             // add the dimension to the options as well
             var numEmulatedAxes = emulatingInputDepth;
-            var sharings = new List<bool> { sharing };
-            var pads = new List<bool> { pad };
-
             if (numEmulatedAxes)
             {
                 strides.Dimensions.Add(1); // strides = (1,) * num_emulated_axes + strides
