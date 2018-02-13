@@ -92,12 +92,18 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 const int batchSize = 64;
                 const int iterations = 200;
 
+                var s = new Stopwatch();
+                s.Start();
+
                 using (var status = new TFStatus())
                 using (var session = new TFSession(g))
                 {
                     // Initialize variables
                     session.GetRunner().AddTarget(W_init.Operation).Run();
                     session.GetRunner().AddTarget(b_init.Operation).Run();
+
+                    var initializeTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
 
                     // Train (note that by using session.Run directly
                     //        we get a much more efficient loop, and it is easy to see what actually happens)
@@ -131,12 +137,17 @@ namespace SharpLearning.Backend.TensorFlow.Test
                         trainStatus.Raise();
                     }
 
+                    var trainTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
+
                     // Test trained model
                     TFOutput one = g.Const(new TFTensor(1));
                     TFOutput argMaxActual = g.ArgMax(y, one);
                     TFOutput argMaxExpected = g.ArgMax(y_, one);
                     TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
+                    
                     TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
+                    TFOutput correctSum = g.ReduceSum(castCorrectPrediction);
                     TFOutput accuracy = g.ReduceMean(castCorrectPrediction);
 
 #if USE_OLD_READER
@@ -146,24 +157,69 @@ namespace SharpLearning.Backend.TensorFlow.Test
                         .AddInput(x, testImages)
                         .AddInput(y_, testLabels)
                         .Run(accuracy);
-#else
-                    var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(10000);
-                    var testBatchEnumerator = Convert(rawTestBatchEnumerator, classCount);
-                    testBatchEnumerator.MoveNext();
-                    var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
-
-                    TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(10000, featureCount), testInputBatch, 0, testInputBatch.Length);
-                    TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(10000, classCount), testLabelBatch, 0, testLabelBatch.Length);
-
-                    TFTensor evaluatedAccuracy = session.GetRunner()
-                        .AddInput(x, testInputBatchTensor)
-                        .AddInput(y_, testLabelBatchTensor)
-                        .Run(accuracy);
-#endif
-
                     float acc = (float)evaluatedAccuracy.GetValue();
+#else
+                    //var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(10000);
+                    //var testBatchEnumerator = Convert(rawTestBatchEnumerator, classCount);
+                    //testBatchEnumerator.MoveNext();
+                    //var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
 
-                    Log($"Accuracy {acc}");
+                    //TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(10000, featureCount), testInputBatch, 0, testInputBatch.Length);
+                    //TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(10000, classCount), testLabelBatch, 0, testLabelBatch.Length);
+
+                    //TFTensor evaluatedCorrectPrediction = session.GetRunner()
+                    //    .AddInput(x, testInputBatchTensor)
+                    //    .AddInput(y_, testLabelBatchTensor)
+                    //    .Run(correctPrediction);
+
+                    //var ps = (bool[])evaluatedCorrectPrediction.GetValue();
+
+                    //var correctCount = ps.Count(p => p);
+                    //var incorrectCount = ps.Length - correctCount;
+                    //var acc = correctCount / (float)ps.Length;
+
+                    //TFTensor evaluatedAccuracy = session.GetRunner()
+                    //    .AddInput(x, testInputBatchTensor)
+                    //    .AddInput(y_, testLabelBatchTensor)
+                    //    .Run(accuracy);
+                    //float acc = (float)evaluatedAccuracy.GetValue();
+
+                    // Batch evaluation is faster
+
+                    var testBatchSize = 100;
+                    Debug.Assert(data.TestTargets.Data.Length % testBatchSize == 0); // Or we need to do something that handles remaining samples
+                    var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(testBatchSize);
+                    var testBatchEnumerator = Convert(rawTestBatchEnumerator, classCount);
+                    var totalCount = 0;
+                    var correctCount = 0;
+                    while (testBatchEnumerator.MoveNext())
+                    {
+                        var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
+
+                        TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, featureCount), testInputBatch, 0, testInputBatch.Length);
+                        TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, classCount), testLabelBatch, 0, testLabelBatch.Length);
+
+                        TFTensor evaluatedCorrectPrediction = session.GetRunner()
+                            .AddInput(x, testInputBatchTensor)
+                            .AddInput(y_, testLabelBatchTensor)
+                            .Run(correctPrediction);
+
+                        var ps = (bool[])evaluatedCorrectPrediction.GetValue();
+
+                        totalCount += ps.Length;
+                        foreach (var p in ps)
+                        {
+                            if (p) { ++correctCount; }
+                        }
+                    }
+
+                    var incorrectCount = totalCount - correctCount;
+                    var acc = correctCount / (float)totalCount;
+#endif
+                    var testTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
+
+                    Log($"Accuracy {acc} Initialize {initializeTime_ms,6:F1} Train {trainTime_ms,6:F1} Test {testTime_ms,6:F1} ");
                     //Assert.AreEqual(0.7882000207901001, acc); // With validation set of 5000 of tests 10000
                     Assert.AreEqual(0.7839999794960022, acc);// With no validation set
                 }

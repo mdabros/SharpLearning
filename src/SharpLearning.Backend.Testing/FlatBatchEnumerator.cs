@@ -207,7 +207,7 @@ namespace SharpLearning.Backend.Testing
 
         public int TotalBatchSize => m_batchFeatures.Length;
 
-        public bool MoveNext() => ++m_index < (m_count - m_batchSize + 1);
+        public bool MoveNext() => (++m_index) * m_batchSize < (m_count - m_batchSize + 1);
 
         // FUTURE: Make Span<T> version without memory copying, unfortunately no Backend supports span yet...
         public (TFeature[] batchFeatures, TTarget[] batchTargets) CurrentBatch()
