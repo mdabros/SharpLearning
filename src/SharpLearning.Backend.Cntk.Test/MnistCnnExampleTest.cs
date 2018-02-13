@@ -16,16 +16,17 @@ namespace SharpLearning.Backend.Cntk.Test
         [TestMethod]
         public void MnistCnnTest()
         {
+            // Set global data and device type. 
+            var dataType = CntkDataType.Float;
+            DeviceDescriptor device = DeviceDescriptor.UseDefaultDevice();
+            Trace.WriteLine("Using device: " + device.Type + " with data type: " + dataType);
+
             // Define data.
             var imageHeight = 28;
             var imageWidth = 28;
             var numChannels = 1;
             var numOutputClasses = 10;
-            var dataType = CntkDataType.Float;
             var inputDimensions = new int[] { imageWidth, imageHeight, numChannels };
-
-            // Set device.
-            var device = DeviceDescriptor.UseDefaultDevice();
 
             // Input variables denoting the features and label data.
             Variable inputVar = Variable.InputVariable(inputDimensions, dataType); ;
@@ -48,24 +49,22 @@ namespace SharpLearning.Backend.Cntk.Test
             Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
             Function errorMetric = CNTKLib.ClassificationError(z, labelVar);
 
-            // Set learning parameters
-            var lrSchedule = new TrainingParameterScheduleDouble(0.01, 1);
-            var mmSchedule = new TrainingParameterScheduleDouble(0.9, 1);
+            // Training config.
+            var minibatchSize = 64;
+            var minibatchIterations = 200;
 
-            // Instantiate the trainer object to drive the model training
-            var learner = new List<Learner>() { Learner.MomentumSGDLearner(z.Parameters(), lrSchedule, mmSchedule, false) };
-            //var learner = new List<Learner>() { Learner.SGDLearner(z.Parameters(), lrSchedule) };
+            // Instantiate progress writers.
             var trainingProgressOutputFreq = 100;
+
+            // Instantiate the trainer object to drive the model training.
+            var lrSchedule = new TrainingParameterScheduleDouble(0.01, 1);
+            var learner = new List<Learner>() { Learner.SGDLearner(z.Parameters(), lrSchedule) };
             var trainer = Trainer.CreateTrainer(z, loss, errorMetric, learner);
 
-            // Training config.
+            // Load train data.
             var mnist = Mnist.Load(DownloadPath);
+            var numberOftrainingSamples = mnist.TrainImages.Length;
             var readerTrain = mnist.GetTrainReader();
-
-            var minibatchSize = 64;
-            var epochSize = mnist.TrainImages.Count();
-            var maxEpochs = 40;
-            var minibatchIterations = 2000;
 
             // Train model.
             var inputMap = new Dictionary<Variable, Value>();
@@ -96,12 +95,31 @@ namespace SharpLearning.Backend.Cntk.Test
                     }
 
                     var samplesSeenNextBatch = (i + 2) * minibatchSize;
-                    if (samplesSeenNextBatch >= epochSize)
+                    if (samplesSeenNextBatch >= numberOftrainingSamples)
                     {
                         readerTrain.Reset();
                     }
                 }
             }
+
+            // Test model.
+            var csharpError = MnistSimpleExampleTest.TestModel_Mnist_Loader(z, device, mnist);
+            Trace.WriteLine($"Test Error: {csharpError}");
+
+            // Save model.
+            var modelPath = "cnn_mnist_csharp_loader.dnn";
+            z.Save(modelPath);
+
+            // Test loaded model.
+            var loadedModel = Function.Load(modelPath, device);
+            var loadedModelError = MnistSimpleExampleTest.TestModel_Mnist_Loader(loadedModel, device, mnist);
+
+            Trace.WriteLine("Loaded Model Error: " + loadedModelError);
+            Assert.AreEqual(csharpError, loadedModelError, 0.00001);
+
+            // Test against python example.
+            var pythonError = 0.89;
+            Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
     }
 }
