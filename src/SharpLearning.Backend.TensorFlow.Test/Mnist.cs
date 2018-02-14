@@ -170,7 +170,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
         /// <param name="trainDir">Directory where the training data is downlaoded to.</param>
         /// <param name="numClasses">Number classes to use for one-hot encoding, or zero if this is not desired</param>
         /// <param name="validationSize">Validation size.</param>
-        public void ReadDataSets(string trainDir, int numClasses = 10, int validationSize = 5000)
+        public void ReadDataSets(string trainDir, int numClasses, int validationSize)
         {
             const string SourceUrl = "http://yann.lecun.com/exdb/mnist/";
             const string TrainImagesName = "train-images-idx3-ubyte.gz";
@@ -199,7 +199,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
         public static Mnist Load(string downloadPath)
         {
             var x = new Mnist();
-            x.ReadDataSets(downloadPath, validationSize: 0);
+            x.ReadDataSets(downloadPath, numClasses: 10, validationSize: 0);
             return x;
         }
     }

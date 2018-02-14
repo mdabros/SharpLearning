@@ -25,24 +25,24 @@ namespace SharpLearning.Backend.TensorFlow.Test
         [TestMethod]
         public void MnistSimple()
         {
-            const int imageSize = 28;
-            const int featureCount = imageSize * imageSize;
-            Assert.AreEqual(784, featureCount);
-            const int classCount = 10;
+            const int ImageSize = 28;
+            const int FeatureCount = ImageSize * ImageSize;
+            Assert.AreEqual(784, FeatureCount);
+            const int ClassCount = 10;
 
             using (var g = new TFGraph())
             {
-                TFOutput x = g.Placeholder(TFDataType.Float, new TFShape(-1, featureCount), "x");
-                TFOutput y_ = g.Placeholder(TFDataType.Float, new TFShape(-1, classCount), "y_");
+                TFOutput x = g.Placeholder(TFDataType.Float, new TFShape(-1, FeatureCount), "x");
+                TFOutput y_ = g.Placeholder(TFDataType.Float, new TFShape(-1, ClassCount), "y_");
 
-                TFOutput W_zero = g.Const(new float[featureCount, classCount]);
-                TFOutput b_zero = g.Const(new float[classCount]);
+                TFOutput W_zero = g.Const(new float[FeatureCount, ClassCount]);
+                TFOutput b_zero = g.Const(new float[ClassCount]);
 
-                TFOutput W = g.VariableV2(new TFShape(featureCount, classCount), TFDataType.Float, "W");
+                TFOutput W = g.VariableV2(new TFShape(FeatureCount, ClassCount), TFDataType.Float, "W");
                 // Only way to simply set zeros??
                 TFOutput W_init = g.Assign(W, W_zero);
 
-                TFOutput b = g.VariableV2(new TFShape(classCount), TFDataType.Float, "b");
+                TFOutput b = g.VariableV2(new TFShape(ClassCount), TFDataType.Float, "b");
                 TFOutput b_init = g.Assign(b, b_zero);
 
 
@@ -123,13 +123,13 @@ namespace SharpLearning.Backend.TensorFlow.Test
                         TFTensor[] inputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch) };
 #else
                     var rawTrainBatchEnumerator = data.CreateTrainBatchEnumerator(batchSize);
-                    var trainBatchEnumerator = Convert(rawTrainBatchEnumerator, classCount);
+                    var trainBatchEnumerator = Convert(rawTrainBatchEnumerator, ClassCount);
                     for (int i = 0; i < iterations && trainBatchEnumerator.MoveNext(); i++)
                     {
                         var (inputBatch, labelBatch) = trainBatchEnumerator.CurrentBatch();
                         TFTensor[] inputValues = new[] {
-                            TFTensor.FromBuffer(new TFShape(batchSize, featureCount), inputBatch, 0, inputBatch.Length),
-                            TFTensor.FromBuffer(new TFShape(batchSize, classCount), labelBatch, 0, labelBatch.Length) };
+                            TFTensor.FromBuffer(new TFShape(batchSize, FeatureCount), inputBatch, 0, inputBatch.Length),
+                            TFTensor.FromBuffer(new TFShape(batchSize, ClassCount), labelBatch, 0, labelBatch.Length) };
 #endif
                         TFTensor[] outputValues = session.Run(inputs, inputValues, outputs,
                             targets, runMetaData, runOptions, trainStatus);
@@ -189,15 +189,15 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     var testBatchSize = 100;
                     Debug.Assert(data.TestTargets.Data.Length % testBatchSize == 0); // Or we need to do something that handles remaining samples
                     var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(testBatchSize);
-                    var testBatchEnumerator = Convert(rawTestBatchEnumerator, classCount);
+                    var testBatchEnumerator = Convert(rawTestBatchEnumerator, ClassCount);
                     var totalCount = 0;
                     var correctCount = 0;
                     while (testBatchEnumerator.MoveNext())
                     {
                         var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
 
-                        TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, featureCount), testInputBatch, 0, testInputBatch.Length);
-                        TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, classCount), testLabelBatch, 0, testLabelBatch.Length);
+                        TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, FeatureCount), testInputBatch, 0, testInputBatch.Length);
+                        TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, ClassCount), testLabelBatch, 0, testLabelBatch.Length);
 
                         TFTensor evaluatedCorrectPrediction = session.GetRunner()
                             .AddInput(x, testInputBatchTensor)

@@ -1,7 +1,9 @@
-﻿using System;
+﻿//#define USE_OLD_READER
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Backend.Testing;
 using TensorFlow;
 
 namespace SharpLearning.Backend.TensorFlow.Test
@@ -55,6 +57,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                 TFOperation[] variablesAssignOps = GetVariableAssignOps(variablesList);
 
+                TFOutput correctPrediction;
                 TFOutput accuracy;
                 //with tf.name_scope('accuracy'):
                 using (g.WithScope("accuracy"))
@@ -63,8 +66,9 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     g.ArgMax(y_conv, one);
                     TFOutput argMaxActual = g.ArgMax(y_conv, one);
                     TFOutput argMaxExpected = g.ArgMax(y_, one);
-                    TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
+                    correctPrediction = g.Equal(argMaxActual, argMaxExpected);
                     TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
+                    TFOutput correctSum = g.ReduceSum(castCorrectPrediction);
                     accuracy = g.ReduceMean(castCorrectPrediction);
                     //correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
                     //correct_prediction = tf.cast(correct_prediction, tf.float32)
@@ -75,15 +79,25 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 //train_writer = tf.summary.FileWriter(graph_location)
                 //train_writer.add_graph(tf.get_default_graph())
 
+#if USE_OLD_READER
                 var mnist = Mnist.Load(DownloadPath);
+#else
+                var data = DataSets.Mnist.Load(DownloadPath);
+#endif
                 const int batchSize = 64;
                 const int iterations = 100;
+
+                var s = new Stopwatch();
+                s.Start();
 
                 using (var status = new TFStatus())
                 using (var session = new TFSession(g))
                 {
                     // Initialize variables
                     session.GetRunner().AddTarget(variablesAssignOps).Run();
+
+                    var initializeTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
 
                     TFTensor train_dropout_keep_prob = new TFTensor(0.5f);
                     TFTensor test_dropout_keep_prob = new TFTensor(1f);
@@ -101,14 +115,29 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     TFBuffer runOptions = null;
                     TFStatus trainStatus = new TFStatus();
 
+#if USE_OLD_READER
                     var trainReader = mnist.GetTrainReader();
                     for (int i = 0; i < iterations; i++)
                     {
                         (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
-
+#else
+                    var rawTrainBatchEnumerator = data.CreateTrainBatchEnumerator(batchSize);
+                    var trainBatchEnumerator = Convert(rawTrainBatchEnumerator, ClassCount);
+                    for (int i = 0; i < iterations && trainBatchEnumerator.MoveNext(); i++)
+                    {
+                        var (inputBatch, labelBatch) = trainBatchEnumerator.CurrentBatch();
+#endif
                         if (i % 100 == 0)
                         {
+#if USE_OLD_READER
                             TFTensor[] accuracyInputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch), test_dropout_keep_prob };
+#else
+                            TFTensor[] accuracyInputValues = new[] {
+                                TFTensor.FromBuffer(new TFShape(batchSize, FeatureCount), inputBatch, 0, inputBatch.Length),
+                                TFTensor.FromBuffer(new TFShape(batchSize, ClassCount), labelBatch, 0, labelBatch.Length),
+                                train_dropout_keep_prob
+                            };
+#endif
                             TFTensor[] accuracyOutputValues = session.Run(accuracyInputs, accuracyInputValues, accuracyOutputs,
                                 targets, runMetaData, runOptions, trainStatus);
 
@@ -119,30 +148,85 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                             Log($"Step {i} Accuracy {train_acc}");
                         }
-
+#if USE_OLD_READER
                         TFTensor[] inputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch), train_dropout_keep_prob };
+#else
+                        TFTensor[] inputValues = new[] {
+                            TFTensor.FromBuffer(new TFShape(batchSize, FeatureCount), inputBatch, 0, inputBatch.Length),
+                            TFTensor.FromBuffer(new TFShape(batchSize, ClassCount), labelBatch, 0, labelBatch.Length),
+                            train_dropout_keep_prob};
+#endif
                         TFTensor[] outputValues = session.Run(inputs, inputValues, outputs,
                             targets, runMetaData, runOptions, trainStatus);
 
                         trainStatus.Raise();
                     }
+                    var trainTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
 
                     // Test trained model
+#if USE_OLD_READER
                     var testReader = mnist.GetTestReader();
                     var (testImages, testLabels) = testReader.All();
-
                     TFTensor evaluatedAccuracy = session.GetRunner()
                         .AddInput(x, testImages)
                         .AddInput(y_, testLabels)
-                        .AddInput(keep_prob, test_dropout_keep_prob) // DOESN*T WORK!??!
+                        .AddInput(keep_prob, test_dropout_keep_prob)
                         .Run(accuracy);
-
                     float acc = (float)evaluatedAccuracy.GetValue();
+#else
+                    // Batch evaluation is faster (2x) and uses A LOT less memory, not batched == 6GB, batched == 240MB!
+                    var testBatchSize = 100;
+                    Debug.Assert(data.TestTargets.Data.Length % testBatchSize == 0); // Or we need to do something that handles remaining samples
+                    var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(testBatchSize);
+                    var testBatchEnumerator = Convert(rawTestBatchEnumerator, ClassCount);
+                    var totalCount = 0;
+                    var correctCount = 0;
+                    while (testBatchEnumerator.MoveNext())
+                    {
+                        var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
 
-                    Log($"Accuracy {acc}");
-                    Assert.AreEqual(0.2029999941587448, acc);
+                        TFTensor testInputBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, FeatureCount), testInputBatch, 0, testInputBatch.Length);
+                        TFTensor testLabelBatchTensor = TFTensor.FromBuffer(new TFShape(testBatchSize, ClassCount), testLabelBatch, 0, testLabelBatch.Length);
+
+                        TFTensor evaluatedCorrectPrediction = session.GetRunner()
+                            .AddInput(x, testInputBatchTensor)
+                            .AddInput(y_, testLabelBatchTensor)
+                            .AddInput(keep_prob, test_dropout_keep_prob)
+                            .Run(correctPrediction);
+
+                        var ps = (bool[])evaluatedCorrectPrediction.GetValue();
+
+                        totalCount += ps.Length;
+                        foreach (var p in ps)
+                        {
+                            if (p) { ++correctCount; }
+                        }
+                    }
+
+                    var incorrectCount = totalCount - correctCount;
+                    var acc = correctCount / (float)totalCount;
+#endif
+                    var testTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
+
+                    Log($"Accuracy {acc} Initialize {initializeTime_ms,6:F1} Train {trainTime_ms,6:F1} Test {testTime_ms,6:F1} ");
+                    Assert.AreEqual(0.0979999974370003, acc, 0.00000001); // This is what C# currently computes
+                    Assert.AreEqual(0.2461999952793121, acc); // This is what equivalent python computes
                 }
             }
+        }
+
+        private static IFlatBatchFeaturesTargetEnumerator<float, float> Convert(
+            IFlatBatchFeaturesTargetEnumerator<byte, byte> rawTrainBatchEnumerator, int classCount)
+        {
+            var trainBatchEnumerator = rawTrainBatchEnumerator
+                // TODO: We really want to do this before batch enumerator so same as for tests..
+                //.From().To(fb => (float)fb, tb => (int)tb);
+                //.Feature().To(fb => (float)fb)
+                .Feature().To(fb => fb * (1.0f / byte.MaxValue))
+                .Target().ToOneHot(t => t, 1.0f, classCount);
+            return trainBatchEnumerator;
         }
 
         private TFOutput[] GetVariableOutputs(List<(TFOutput assign, TFOutput variable)> variablesList)

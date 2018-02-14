@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>561c987c-7c37-4d7c-ac1b-2f1e6138c3be</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MnistSimple.py</StartupFile>
+    <StartupFile>MnistDeep.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
