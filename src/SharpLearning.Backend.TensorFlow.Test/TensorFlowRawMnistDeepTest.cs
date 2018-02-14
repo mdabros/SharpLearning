@@ -111,8 +111,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                             var array = (Array)v.GetValue();
                             w.WriteLine(vText);
                             w.WriteLine(array.ToDebugText());
-                            Log(vText);
-                            //Log(array.ToDebugText());
+                            Log(vText + " Initialize Logged");
                         }
                     }
 
@@ -458,7 +457,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             const float mean = 0.0f;
             const float stddev = 0.1f;
             TFOutput shape_output = g.Const(shape.AsTensor());
-            TFOutput rnd = g.TruncatedNormal(shape_output, TFDataType.Float);
+            TFOutput rnd = g.TruncatedNormal(shape_output, TFDataType.Float, seed: GlobalSeed);
             TFTensor mean_tensor = new TFTensor(mean);
             TFTensor stddev_tensor = new TFTensor(stddev);
             TFOutput mean_output = g.Const(mean_tensor);
