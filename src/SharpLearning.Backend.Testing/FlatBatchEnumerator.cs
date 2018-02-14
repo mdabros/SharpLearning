@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace SharpLearning.Backend.Testing
 {
@@ -44,10 +45,12 @@ namespace SharpLearning.Backend.Testing
         {
             m_enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
             m_featureConverter = featureConverter;
-            m_batchFeatures = new TFeatureResult[enumerator.TotalBatchSize];
+            m_batchFeatures = new TFeatureResult[enumerator.BatchFeaturesSize()];
         }
 
-        public int TotalBatchSize => m_enumerator.TotalBatchSize;
+        public int BatchSize => m_enumerator.BatchSize;
+        public int FeaturesSize => m_enumerator.FeaturesSize;
+        public int TargetsSize => m_enumerator.TargetsSize;
 
         public bool MoveNext() => m_enumerator.MoveNext();
 
@@ -76,10 +79,12 @@ namespace SharpLearning.Backend.Testing
         {
             m_enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
             m_targetConverter = targetConverter;
-            m_batchTargets = new TTargetResult[enumerator.TotalBatchSize];
+            m_batchTargets = new TTargetResult[enumerator.BatchTargetsSize()];
         }
 
-        public int TotalBatchSize => m_enumerator.TotalBatchSize;
+        public int BatchSize => m_enumerator.BatchSize;
+        public int FeaturesSize => m_enumerator.FeaturesSize;
+        public int TargetsSize => m_enumerator.TargetsSize;
 
         public bool MoveNext() => m_enumerator.MoveNext();
 
@@ -114,10 +119,13 @@ namespace SharpLearning.Backend.Testing
             m_indexer = indexer;
             m_one = one;
             m_targetCount = targetCount;
-            m_batchTargets = new TTargetResult[enumerator.TotalBatchSize * m_targetCount];
+            m_batchTargets = new TTargetResult[enumerator.BatchTargetsSize() * m_targetCount];
+            Debug.Assert(m_batchTargets.Length == this.BatchTargetsSize());
         }
 
-        public int TotalBatchSize => m_enumerator.TotalBatchSize;
+        public int BatchSize => m_enumerator.BatchSize;
+        public int FeaturesSize => m_enumerator.FeaturesSize;
+        public int TargetsSize => m_enumerator.TargetsSize * m_targetCount;
 
         public bool MoveNext() => m_enumerator.MoveNext();
 
@@ -157,11 +165,13 @@ namespace SharpLearning.Backend.Testing
             m_enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
             m_featureConverter = featureConverter;
             m_targetConverter = targetConverter;
-            m_batchFeatures = new TFeatureResult[enumerator.TotalBatchSize];
-            m_batchTargets = new TTargetResult[enumerator.TotalBatchSize];
+            m_batchFeatures = new TFeatureResult[enumerator.BatchFeaturesSize()];
+            m_batchTargets = new TTargetResult[enumerator.BatchTargetsSize()];
         }
 
-        public int TotalBatchSize => m_enumerator.TotalBatchSize;
+        public int BatchSize => m_enumerator.BatchSize;
+        public int FeaturesSize => m_enumerator.FeaturesSize;
+        public int TargetsSize => m_enumerator.TargetsSize;
 
         public bool MoveNext() => m_enumerator.MoveNext();
 
@@ -183,6 +193,8 @@ namespace SharpLearning.Backend.Testing
         readonly FlatData<TTarget> m_targets;
         readonly int m_count;
         readonly int m_batchSize;
+        readonly int m_featuresSize;
+        readonly int m_targetsSize;
         // NOTE: This reuses these!
         readonly TFeature[] m_batchFeatures;
         readonly TTarget[] m_batchTargets;
@@ -201,11 +213,15 @@ namespace SharpLearning.Backend.Testing
                 throw new ArgumentException($"Features sample count {featuresSampleCount} not equal to target sample count {targetsSampleCount}");
             }
             m_count = featuresSampleCount;
-            m_batchFeatures = new TFeature[m_features.Shape.FeatureSize() * batchSize];
-            m_batchTargets = new TTarget[m_targets.Shape.FeatureSize() * batchSize];
+            m_featuresSize = m_features.Shape.SampleSize();
+            m_targetsSize = m_targets.Shape.SampleSize();
+            m_batchFeatures = new TFeature[m_featuresSize * batchSize];
+            m_batchTargets = new TTarget[m_targetsSize * batchSize];
         }
 
-        public int TotalBatchSize => m_batchFeatures.Length;
+        public int BatchSize => m_batchSize;
+        public int FeaturesSize => m_featuresSize;
+        public int TargetsSize => m_targetsSize;
 
         public bool MoveNext() => (++m_index) * m_batchSize < (m_count - m_batchSize + 1);
 
@@ -324,5 +340,10 @@ namespace SharpLearning.Backend.Testing
         {
             return new TargetCapture<TFeature, TTarget>(enumerator);
         }
+
+        public static int BatchFeaturesSize<TFeature, TTarget>(this IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> e) =>
+            e.BatchSize * e.FeaturesSize;
+        public static int BatchTargetsSize<TFeature, TTarget>(this IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget> e) =>
+            e.BatchSize * e.TargetsSize;
     }
 }

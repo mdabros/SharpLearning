@@ -219,7 +219,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     var testTime_ms = s.Elapsed.TotalMilliseconds;
                     s.Restart();
 
-                    Log($"Accuracy {acc} Initialize {initializeTime_ms,6:F1} Train {trainTime_ms,6:F1} Test {testTime_ms,6:F1} ");
+                    Log($"Accuracy {acc} Initialize {initializeTime_ms,6:F1} Train {trainTime_ms,6:F1} Test {testTime_ms,6:F1} [ms]");
                     //Assert.AreEqual(0.7882000207901001, acc); // With validation set of 5000 of tests 10000
                     Assert.AreEqual(0.7839999794960022, acc);// With no validation set
                 }

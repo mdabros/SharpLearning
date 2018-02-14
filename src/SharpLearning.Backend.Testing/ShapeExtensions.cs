@@ -17,7 +17,7 @@
         {
             return shape[0];
         }
-        public static int FeatureSize(this int[] shape)
+        public static int SampleSize(this int[] shape)
         {
             int product = 1;
             for (int i = 1; i < shape.Length; i++)

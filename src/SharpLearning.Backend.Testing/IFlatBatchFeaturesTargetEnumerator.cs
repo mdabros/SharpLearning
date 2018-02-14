@@ -17,7 +17,19 @@
 
     public interface IFlatBatchFeaturesTargetEnumerator<TFeature, TTarget>
     {
-        int TotalBatchSize { get; }
+        /// <summary>
+        /// Size of batch in number of "samples"/observations.
+        /// </summary>
+        int BatchSize { get; }
+        /// <summary>
+        /// A single feature sample size in number of elements. NOT accounting for batch size.
+        /// </summary>
+        int FeaturesSize { get; }
+        /// <summary>
+        /// A single targets size in number of elements. NOT accounting for batch size.
+        /// </summary>
+        int TargetsSize { get; }
+
         bool MoveNext();
         // TODO: This doesn't scale well...! Need something else... dictionary?? FeatureTarget enum??
         (TFeature[] batchFeatures, TTarget[] batchTargets) CurrentBatch();
