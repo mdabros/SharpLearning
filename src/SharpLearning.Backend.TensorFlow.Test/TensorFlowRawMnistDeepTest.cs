@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Backend.Testing;
@@ -90,8 +91,30 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 using (var status = new TFStatus())
                 using (var session = new TFSession(g))
                 {
+                    TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
+                    TFBuffer runMetaData = null;
+                    TFBuffer runOptions = null;
+                    TFStatus trainStatus = new TFStatus();
+
                     // Initialize variables
                     session.GetRunner().AddTarget(variablesAssignOps).Run();
+
+                    // Dump initial assigns to see random initializes are identical
+                    TFTensor[] variablesInitialized = session.Run(new TFOutput[] { }, new TFTensor[] { }, variablesOutputs,
+                        targets, runMetaData, runOptions, trainStatus);
+
+                    using (var w = new StreamWriter("MnistDeepVariablesInitial.txt"))
+                    {
+                        foreach (var v in variablesInitialized)
+                        {
+                            var vText = v.ToString();
+                            var array = (Array)v.GetValue();
+                            w.WriteLine(vText);
+                            w.WriteLine(array.ToDebugText());
+                            Log(vText);
+                            //Log(array.ToDebugText());
+                        }
+                    }
 
                     var initializeTime_ms = s.Elapsed.TotalMilliseconds;
                     s.Restart();
@@ -103,16 +126,12 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     //        we get a much more efficient loop, and it is easy to see what actually happens)
                     TFOutput[] inputs = new[] { x, y_, keep_prob };
                     TFOutput[] trainOutputs = updates; // Gradient updates are currently the outputs ensuring these are applied
-                    TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
 
                     TFOutput[] accuracyOutputs = new[] { accuracy };
                     TFOutput[] correctPredictionOutputs = new[] { correctPrediction };
 
                     TFTensor[] inputValues = new TFTensor[inputs.Length];
 
-                    TFBuffer runMetaData = null;
-                    TFBuffer runOptions = null;
-                    TFStatus trainStatus = new TFStatus();
 
                     // Pre-allocate train tensors
                     TFTensor trainInputBatchTensor = new TFTensor(TFDataType.Float,
@@ -362,7 +381,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             {
                 keep_prob = g.Placeholder(TFDataType.Float, new TFShape(1));
                 var shape = new TFShape(FullyConnectedFeatures);
-                h_fc1_drop = g.Dropout(h_fc1, keep_prob, shape, seed: GlobalSeed);
+                h_fc1_drop = g.Dropout(h_fc1, keep_prob, shape, seed: GlobalSeed, operName: "dropOut");
             }
             //            with tf.name_scope('dropout'):
             //    keep_prob = tf.placeholder(tf.float32)
@@ -462,7 +481,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             // What about std dev???
             //Variable variable = g.Variable(initial);
 
-            TFOutput w = g.VariableV2(shape, TFDataType.Float);
+            TFOutput w = g.VariableV2(shape, TFDataType.Float, operName: "W");
             TFOutput w_init = g.Assign(w, initial);
             
             return (w_init, w);
@@ -484,7 +503,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             TFOutput initial = g.Const(tensor);
 
             TFShape shape = new TFShape(tensor.Shape);
-            TFOutput b = g.VariableV2(shape, TFDataType.Float);
+            TFOutput b = g.VariableV2(shape, TFDataType.Float, operName: "b");
             TFOutput b_init = g.Assign(b, initial);
 
             return (b_init, b);
