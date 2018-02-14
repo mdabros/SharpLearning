@@ -170,7 +170,15 @@ def main(_):
   train_writer = tf.summary.FileWriter(graph_location, tf.get_default_graph())
 
   with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
+    initializeOutpu = sess.run(tf.global_variables_initializer())
+
+    globalVariables = tf.global_variables()
+    for g in globalVariables:
+        # .initial_value()
+        gp = tf.Print(g, [g])
+        print(gp.eval())
+
+
     batchSize = 64
     #for i in range(20000):
     for i in range(100):
