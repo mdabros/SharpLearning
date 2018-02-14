@@ -103,17 +103,18 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     TFTensor[] variablesInitialized = session.Run(new TFOutput[] { }, new TFTensor[] { }, variablesOutputs,
                         targets, runMetaData, runOptions, trainStatus);
 
-                    using (var w = new StreamWriter("MnistDeepVariablesInitial.txt"))
-                    {
-                        foreach (var v in variablesInitialized)
-                        {
-                            var vText = v.ToString();
-                            var array = (Array)v.GetValue();
-                            w.WriteLine(vText);
-                            w.WriteLine(array.ToDebugText());
-                            Log(vText + " Initialize Logged");
-                        }
-                    }
+                    // Can be used for debugging initialization of all variables
+                    //using (var w = new StreamWriter("MnistDeepVariablesInitial.txt"))
+                    //{
+                    //    foreach (var v in variablesInitialized)
+                    //    {
+                    //        var vText = v.ToString();
+                    //        var array = (Array)v.GetValue();
+                    //        w.WriteLine(vText);
+                    //        w.WriteLine(array.ToDebugText());
+                    //        Log(vText + " Initialize Logged");
+                    //    }
+                    //}
 
                     var initializeTime_ms = s.Elapsed.TotalMilliseconds;
                     s.Restart();
