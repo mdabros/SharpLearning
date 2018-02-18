@@ -2,34 +2,35 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using SharpLearning.Optimization.ParameterSamplers;
 
 namespace SharpLearning.Optimization
 {
     /// <summary>
-    /// Random search optimizer initializes random parameters between min and max of the provided.
+    /// Random search optimizer initializes random parameters between min and max of the provided parameters.
     /// Roughly based on: http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf
-    /// parameters.
     /// </summary>
     public sealed class RandomSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly double[][] m_parameters;
+        readonly ParameterBounds[] m_parameters;
         readonly int m_iterations;
-        readonly Random m_random;
+        readonly IParameterSampler m_sampler;
 
         /// <summary>
-        /// 
+        /// Random search optimizer initializes random parameters between min and max of the provided parameters.
+        /// Roughly based on: http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf
         /// </summary>
-        /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>        
+        /// <param name="parameterRanges">A list of parameter bounds for each optimization parameter</param>        
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public RandomSearchOptimizer(double[][] parameterRanges, int iterations, int seed=42, bool runParallel = true)
+        public RandomSearchOptimizer(ParameterBounds[] parameterRanges, int iterations, int seed=42, bool runParallel = true)
         {
             if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
             m_parameters = parameterRanges;
             m_runParallel = runParallel;
-            m_random = new Random(seed);
+            m_sampler = new RandomUniform(seed);
             m_iterations = iterations;
         }
 
@@ -85,7 +86,7 @@ namespace SharpLearning.Optimization
         }
 
 
-        double[][] CreateNewSearchSpace(double[][] parameters)
+        double[][] CreateNewSearchSpace(ParameterBounds[] parameters)
         {
             var newSearchSpace = new double[m_iterations][];
             for (int i = 0; i < newSearchSpace.Length; i++)
@@ -94,18 +95,13 @@ namespace SharpLearning.Optimization
                 var index = 0;
                 foreach (var param in parameters)
                 {
-                    newParameters[index] = NewParameter(param.Min(), param.Max());
+                    newParameters[index] = param.NextValue(m_sampler);
                     index++;
                 }
                 newSearchSpace[i] = newParameters;
 			}
 
             return newSearchSpace;
-        }
-
-        double NewParameter(double min, double max)
-        {
-            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }

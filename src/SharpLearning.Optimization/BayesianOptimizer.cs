@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Optimization.ParameterSamplers;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
-using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.Optimization
 {
@@ -21,11 +22,11 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class BayesianOptimizer : IOptimizer
     {
-        readonly double[][] m_parameters;
+        readonly ParameterBounds[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfStartingPoints;
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
-        readonly Random m_random;
+        readonly IParameterSampler m_sampler;
 
         readonly List<double[]> m_previousParameterSets;
         readonly List<double> m_previousParameterSetScores;
@@ -52,13 +53,13 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="numberOfStartingPoints">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(double[][] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
+        public BayesianOptimizer(ParameterBounds[] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -69,7 +70,7 @@ namespace SharpLearning.Optimization
             m_numberOfStartingPoints = numberOfStartingPoints;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
-            m_random = new Random(seed);
+            m_sampler = new RandomUniform(seed);
             
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
@@ -94,14 +95,14 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="previousParameterSets">Parameter sets from previous run</param>
         /// <param name="previousParameterSetScores">Scores from from previous run corresponding to each parameter set</param>
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(double[][] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+        public BayesianOptimizer(ParameterBounds[] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
             int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
@@ -118,7 +119,7 @@ namespace SharpLearning.Optimization
             m_maxIterations = maxIterations;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
-            m_random = new Random(seed);
+            m_sampler = new RandomUniform(seed);
 
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
@@ -155,15 +156,6 @@ namespace SharpLearning.Optimization
         {
             var bestParameterSet = new double[m_parameters.Length];
             var bestParameterSetScore = double.MaxValue;
-
-            // initialize max and min parameter bounds
-            var maxParameters = new double[m_parameters.Length];
-            var minParameters = new double[m_parameters.Length];
-            for (int i = 0; i < m_parameters.Length; i++)
-            {
-                maxParameters[i] = m_parameters[i].Max();
-                minParameters[i] = m_parameters[i].Min();
-            }
 
             var parameterSets = new List<double[]>();
             var parameterSetScores = new List<double>();
@@ -323,16 +315,11 @@ namespace SharpLearning.Optimization
 
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                var range = m_parameters[i];
-                newPoint[i] = NewParameter(range.Min(), range.Max());
+                var parameter = m_parameters[i];
+                newPoint[i] = parameter.NextValue(m_sampler);
             }
 
             return newPoint;
-        }
-
-        double NewParameter(double min, double max)
-        {
-            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }

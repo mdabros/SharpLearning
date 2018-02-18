@@ -1,7 +1,8 @@
-﻿using SharpLearning.Containers.Arithmetic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers.Arithmetic;
+using SharpLearning.Optimization.ParameterSamplers;
 
 namespace SharpLearning.Optimization
 {
@@ -15,12 +16,13 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class ParticleSwarmOptimizer : IOptimizer
     {
-        readonly double[][] m_parameters;
+        readonly ParameterBounds[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfParticles;
         readonly double m_c1;
         readonly double m_c2;
         readonly Random m_random;
+        readonly IParameterSampler m_sampler;
 
         /// <summary>
         /// Particle Swarm optimizer (PSO). PSO is initialized with a group of random particles
@@ -28,13 +30,13 @@ namespace SharpLearning.Optimization
         /// The first one is the best solution found by the specific particle so far. 
         /// The other "best" value is the global best value obtained by any particle in the population so far.
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
         /// <param name="numberOfParticles">The number of particles to use (default is 10). MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
         /// <param name="c1">Learning factor weigting local particle best solution. (default is 2)</param>
         /// <param name="c2">Learning factor weigting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        public ParticleSwarmOptimizer(double[][] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
+        public ParticleSwarmOptimizer(ParameterBounds[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -47,6 +49,7 @@ namespace SharpLearning.Optimization
             m_c2 = c2;
             
             m_random = new Random(seed);
+            m_sampler = new RandomUniform();
         }
 
         /// <summary>
@@ -79,7 +82,7 @@ namespace SharpLearning.Optimization
             var minParticleVelocities = new double[m_parameters.Length];
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                maxParticleVelocities[i] = Math.Abs(m_parameters[i].Max() - m_parameters[i].Min());
+                maxParticleVelocities[i] = Math.Abs(m_parameters[i].Max - m_parameters[i].Min);
                 minParticleVelocities[i] = -maxParticleVelocities[i];
             }
 
@@ -88,8 +91,8 @@ namespace SharpLearning.Optimization
             var minParameters = new double[m_parameters.Length];
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                maxParameters[i] = m_parameters[i].Max();
-                minParameters[i] = m_parameters[i].Min();
+                maxParameters[i] = m_parameters[i].Max;
+                minParameters[i] = m_parameters[i].Min;
             }
 
             var pBest = Enumerable.Range(0, m_numberOfParticles)
@@ -165,16 +168,11 @@ namespace SharpLearning.Optimization
 
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                var range = m_parameters[i];
-                newPoint[i] = NewParameter(range.Min(), range.Max());
+                var parameter = m_parameters[i];
+                newPoint[i] = parameter.NextValue(m_sampler);
             }
 
             return newPoint;
-        }
-
-        double NewParameter(double min, double max)
-        {
-            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }
