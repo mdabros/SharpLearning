@@ -5,6 +5,7 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization
 {
@@ -21,7 +22,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class BayesianOptimizer : IOptimizer
     {
-        readonly double[][] m_parameters;
+        readonly OptimizerParameter[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfStartingPoints;
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
@@ -58,7 +59,7 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(double[][] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
+        public BayesianOptimizer(OptimizerParameter[] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -101,7 +102,7 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(double[][] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+        public BayesianOptimizer(OptimizerParameter[] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
             int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
@@ -155,15 +156,6 @@ namespace SharpLearning.Optimization
         {
             var bestParameterSet = new double[m_parameters.Length];
             var bestParameterSetScore = double.MaxValue;
-
-            // initialize max and min parameter bounds
-            var maxParameters = new double[m_parameters.Length];
-            var minParameters = new double[m_parameters.Length];
-            for (int i = 0; i < m_parameters.Length; i++)
-            {
-                maxParameters[i] = m_parameters[i].Max();
-                minParameters[i] = m_parameters[i].Min();
-            }
 
             var parameterSets = new List<double[]>();
             var parameterSetScores = new List<double>();
@@ -323,16 +315,11 @@ namespace SharpLearning.Optimization
 
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                var range = m_parameters[i];
-                newPoint[i] = NewParameter(range.Min(), range.Max());
+                var parameter = m_parameters[i];
+                newPoint[i] = parameter.Sample(m_random);
             }
 
             return newPoint;
-        }
-
-        double NewParameter(double min, double max)
-        {
-            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }

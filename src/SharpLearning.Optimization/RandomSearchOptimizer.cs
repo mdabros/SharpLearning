@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization
 {
@@ -13,7 +14,7 @@ namespace SharpLearning.Optimization
     public sealed class RandomSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly double[][] m_parameters;
+        readonly OptimizerParameter[] m_parameters;
         readonly int m_iterations;
         readonly Random m_random;
 
@@ -24,7 +25,7 @@ namespace SharpLearning.Optimization
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public RandomSearchOptimizer(double[][] parameterRanges, int iterations, int seed=42, bool runParallel = true)
+        public RandomSearchOptimizer(OptimizerParameter[] parameterRanges, int iterations, int seed=42, bool runParallel = true)
         {
             if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
             m_parameters = parameterRanges;
@@ -85,7 +86,7 @@ namespace SharpLearning.Optimization
         }
 
 
-        double[][] CreateNewSearchSpace(double[][] parameters)
+        double[][] CreateNewSearchSpace(OptimizerParameter[] parameters)
         {
             var newSearchSpace = new double[m_iterations][];
             for (int i = 0; i < newSearchSpace.Length; i++)
@@ -94,18 +95,13 @@ namespace SharpLearning.Optimization
                 var index = 0;
                 foreach (var param in parameters)
                 {
-                    newParameters[index] = NewParameter(param.Min(), param.Max());
+                    newParameters[index] = param.Sample(m_random);
                     index++;
                 }
                 newSearchSpace[i] = newParameters;
 			}
 
             return newSearchSpace;
-        }
-
-        double NewParameter(double min, double max)
-        {
-            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }

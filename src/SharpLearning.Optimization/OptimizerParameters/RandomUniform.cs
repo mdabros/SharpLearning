@@ -12,13 +12,13 @@ namespace SharpLearning.Optimization.OptimizerParameters
         /// </summary>
         /// <param name="parameterSamplerType"></param>
         /// <returns></returns>
-        public static ParameterSampler Create(ParameterSamplerType parameterSamplerType)
+        public static ParameterSampler Create(SamplerScale parameterSamplerType)
         {
             switch (parameterSamplerType)
             {
-                case ParameterSamplerType.Linear:
+                case SamplerScale.Linear:
                     return (min, max, random) => Linear(min, max, random);
-                case ParameterSamplerType.Logarithmic:
+                case SamplerScale.Logarithmic:
                     return (min, max, random) => Logarithmic(min, max, random);
                 default:
                     throw new ArgumentException("Unsupported ParameterSamplerType: " + parameterSamplerType);

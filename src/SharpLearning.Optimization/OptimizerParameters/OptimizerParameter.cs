@@ -9,7 +9,7 @@ namespace SharpLearning.Optimization.OptimizerParameters
     {
         public readonly double Min;
         public readonly double Max;
-        public readonly ParameterSampler Sampler;
+        readonly ParameterSampler m_sampler;
 
         /// <summary>
         /// Contains the bounds and sampling type for an optimizer parameter.
@@ -24,7 +24,7 @@ namespace SharpLearning.Optimization.OptimizerParameters
 
             Min = min;
             Max = max;
-            Sampler = sampler;
+            m_sampler = sampler;
         }
 
         /// <summary>
@@ -32,11 +32,16 @@ namespace SharpLearning.Optimization.OptimizerParameters
         /// </summary>
         /// <param name="min">minimum bound.</param>
         /// <param name="max">maximum bound.</param>
-        /// <param name="samplerType">Selects between predefined sample types for controlling how to sample between the specified min and max bounds.
+        /// <param name="samplerScale">Selects between predefined sample scales for controlling how to sample between the specified min and max bounds.
         /// Default is Linear.</param>
-        public OptimizerParameter(double min, double max, ParameterSamplerType samplerType = ParameterSamplerType.Linear)
-            : this(min, max, RandomUniform.Create(samplerType))
+        public OptimizerParameter(double min, double max, SamplerScale samplerScale = SamplerScale.Linear)
+            : this(min, max, RandomUniform.Create(samplerScale))
         {
+        }
+
+        public double Sample(Random random)
+        {
+            return m_sampler(Min, Max, random);
         }
     }
 }

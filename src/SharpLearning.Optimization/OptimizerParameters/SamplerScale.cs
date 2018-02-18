@@ -3,7 +3,7 @@
     /// <summary>
     /// Enum for specifying predefined sampler types
     /// </summary>
-    public enum ParameterSamplerType
+    public enum SamplerScale
     {
         /// <summary>
         /// Linear. Samples random uniform on the linear scale.
