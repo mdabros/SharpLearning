@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SharpLearning.Optimization.Test
+namespace SharpLearning.Optimization.Test.OptimizerParameters
 {
     [TestClass]
     public class RandomUniformTest
