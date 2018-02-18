@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Optimization.ParameterSamplers;
 using SharpLearning.Optimization.Transforms;
 
@@ -25,6 +26,42 @@ namespace SharpLearning.Optimization.Test.Transforms
             {
                 Assert.AreEqual(expected[i], actual[i], 0.000001);
             }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void LogarithmicTransform_Throw_On_Min_equal_Zero()
+        {
+            var sut = new LogarithmicTransform();
+            var sampler = new RandomUniform(seed: 32);
+            sut.Transform(min: 0, max: 1, sampler: sampler);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void LogarithmicTransform_Throw_On_Max_equal_Zero()
+        {
+            var sut = new LogarithmicTransform();
+            var sampler = new RandomUniform(seed: 32);
+            sut.Transform(min: 0.01, max: 0, sampler: sampler);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void LogarithmicTransform_Throw_On_Min_below_Zero()
+        {
+            var sut = new LogarithmicTransform();
+            var sampler = new RandomUniform(seed: 32);
+            sut.Transform(min: -0.1, max: 1, sampler: sampler);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void LogarithmicTransform_Throw_On_Max_below_Zero()
+        {
+            var sut = new LogarithmicTransform();
+            var sampler = new RandomUniform(seed: 32);
+            sut.Transform(min: 0.1, max: -0.1, sampler: sampler);
         }
     }
 }
