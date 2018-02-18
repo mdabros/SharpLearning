@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization
 {
@@ -15,7 +16,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class ParticleSwarmOptimizer : IOptimizer
     {
-        readonly double[][] m_parameters;
+        readonly OptimizerParameter[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfParticles;
         readonly double m_c1;
@@ -34,7 +35,7 @@ namespace SharpLearning.Optimization
         /// <param name="c1">Learning factor weigting local particle best solution. (default is 2)</param>
         /// <param name="c2">Learning factor weigting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        public ParticleSwarmOptimizer(double[][] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
+        public ParticleSwarmOptimizer(OptimizerParameter[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -79,7 +80,7 @@ namespace SharpLearning.Optimization
             var minParticleVelocities = new double[m_parameters.Length];
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                maxParticleVelocities[i] = Math.Abs(m_parameters[i].Max() - m_parameters[i].Min());
+                maxParticleVelocities[i] = Math.Abs(m_parameters[i].Max - m_parameters[i].Min);
                 minParticleVelocities[i] = -maxParticleVelocities[i];
             }
 
@@ -88,8 +89,8 @@ namespace SharpLearning.Optimization
             var minParameters = new double[m_parameters.Length];
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                maxParameters[i] = m_parameters[i].Max();
-                minParameters[i] = m_parameters[i].Min();
+                maxParameters[i] = m_parameters[i].Max;
+                minParameters[i] = m_parameters[i].Min;
             }
 
             var pBest = Enumerable.Range(0, m_numberOfParticles)
@@ -165,16 +166,11 @@ namespace SharpLearning.Optimization
 
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                var range = m_parameters[i];
-                newPoint[i] = NewParameter(range.Min(), range.Max());
+                var parameter = m_parameters[i];
+                newPoint[i] = parameter.Sample(m_random);
             }
 
             return newPoint;
-        }
-
-        double NewParameter(double min, double max)
-        {
-            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }
