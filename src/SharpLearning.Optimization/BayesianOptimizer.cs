@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
-using SharpLearning.Containers.Extensions;
-using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization
 {
@@ -22,7 +21,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class BayesianOptimizer : IOptimizer
     {
-        readonly OptimizerParameter[] m_parameters;
+        readonly ParameterBounds[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfStartingPoints;
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
@@ -53,13 +52,13 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="numberOfStartingPoints">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(OptimizerParameter[] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
+        public BayesianOptimizer(ParameterBounds[] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -95,14 +94,14 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="previousParameterSets">Parameter sets from previous run</param>
         /// <param name="previousParameterSetScores">Scores from from previous run corresponding to each parameter set</param>
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(OptimizerParameter[] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+        public BayesianOptimizer(ParameterBounds[] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
             int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }

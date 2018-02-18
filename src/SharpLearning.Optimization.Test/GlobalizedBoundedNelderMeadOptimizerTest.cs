@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -12,11 +10,11 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void GlobalizedBoundedNelderMeadOptimizer_OptimizeBest()
         {
-            var parameters = new OptimizerParameter[]
+            var parameters = new ParameterBounds[]
             {
-                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
-                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
-                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
+                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
+                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
+                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
             };
             var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
             var actual = sut.OptimizeBest(Minimize);
@@ -32,9 +30,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void GlobalizedBoundedNelderMeadOptimizer_Optimize()
         {
-            var parameters = new OptimizerParameter[]
+            var parameters = new ParameterBounds[]
             {
-                new OptimizerParameter(min: 0.0, max: 100.0, samplerScale: SamplerScale.Linear)
+                new ParameterBounds(0.0, 100.0, ParameterSamplerType.RandomUniformLinear)
             };
             var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
             var results = sut.Optimize(Minimize2);

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -12,11 +11,11 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void BayesianOptimizer_OptimizeBest()
         {
-            var parameters = new OptimizerParameter[]
+            var parameters = new ParameterBounds[]
             {
-                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
-                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
-                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
+                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
+                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
+                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
             };
             var sut = new BayesianOptimizer(parameters, 100, 5, 1);
             var actual = sut.OptimizeBest(Minimize);
@@ -32,9 +31,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void BayesianOptimizer_Optimize()
         {
-            var parameters = new OptimizerParameter[]
+            var parameters = new ParameterBounds[]
             {
-                new OptimizerParameter(min: 0.0, max: 100.0, samplerScale: SamplerScale.Linear)
+                new ParameterBounds(0.0, 100.0, ParameterSamplerType.RandomUniformLinear)
             };
             var sut = new BayesianOptimizer(parameters, 120, 5, 1);
             var results = sut.Optimize(Minimize2);

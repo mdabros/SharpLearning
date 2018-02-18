@@ -1,7 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Linq;
-using SharpLearning.Optimization.OptimizerParameters;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -11,9 +10,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void RandomSearchOptimizer_OptimizeBest()
         {
-            var parameters = new OptimizerParameter[] 
+            var parameters = new ParameterBounds[] 
             {
-                new OptimizerParameter(min: 0.0, max: 100.0, samplerScale: SamplerScale.Linear)
+                new ParameterBounds(0.0, 100.0, ParameterSamplerType.RandomUniformLinear)
             };
             var sut = new RandomSearchOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
@@ -25,9 +24,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void RandomSearchOptimizer_Optimize()
         {
-            var parameters = new OptimizerParameter[] 
+            var parameters = new ParameterBounds[] 
             {
-                new OptimizerParameter(min: 10.0, max: 37.5, samplerScale: SamplerScale.Linear)
+                new ParameterBounds(10.0, 37.5, ParameterSamplerType.RandomUniformLinear)
             };
             var sut = new RandomSearchOptimizer(parameters, 2);
             var actual = sut.Optimize(Minimize);

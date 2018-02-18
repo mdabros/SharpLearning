@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Containers.Arithmetic;
-using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization
 {
@@ -26,7 +25,7 @@ namespace SharpLearning.Optimization
         readonly double m_rho;
         readonly double m_sigma;
         readonly double m_noImprovementThreshold;
-        readonly OptimizerParameter[] m_parameters;
+        readonly ParameterBounds[] m_parameters;
         readonly Random m_random;
         readonly int m_maxFunctionEvaluations;
         int m_totalFunctionEvaluations;
@@ -51,7 +50,7 @@ namespace SharpLearning.Optimization
         /// <param name="gamma">Coefficient for expansion part of the algorithm (default is 2)</param>
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
-        public GlobalizedBoundedNelderMeadOptimizer(OptimizerParameter[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
+        public GlobalizedBoundedNelderMeadOptimizer(ParameterBounds[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5)
         {

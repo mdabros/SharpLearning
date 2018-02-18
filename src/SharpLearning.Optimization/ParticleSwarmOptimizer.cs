@@ -1,8 +1,7 @@
-﻿using SharpLearning.Containers.Arithmetic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SharpLearning.Optimization.OptimizerParameters;
+using SharpLearning.Containers.Arithmetic;
 
 namespace SharpLearning.Optimization
 {
@@ -16,7 +15,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class ParticleSwarmOptimizer : IOptimizer
     {
-        readonly OptimizerParameter[] m_parameters;
+        readonly ParameterBounds[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfParticles;
         readonly double m_c1;
@@ -29,13 +28,13 @@ namespace SharpLearning.Optimization
         /// The first one is the best solution found by the specific particle so far. 
         /// The other "best" value is the global best value obtained by any particle in the population so far.
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
         /// <param name="numberOfParticles">The number of particles to use (default is 10). MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
         /// <param name="c1">Learning factor weigting local particle best solution. (default is 2)</param>
         /// <param name="c2">Learning factor weigting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        public ParticleSwarmOptimizer(OptimizerParameter[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
+        public ParticleSwarmOptimizer(ParameterBounds[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
