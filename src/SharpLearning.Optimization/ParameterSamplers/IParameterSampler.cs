@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SharpLearning.Optimization.ParameterSamplers
+﻿namespace SharpLearning.Optimization.ParameterSamplers
 {
     /// <summary>
     /// Defines the interface for a parameter samplers. 
@@ -14,6 +12,6 @@ namespace SharpLearning.Optimization.ParameterSamplers
         /// <param name="max">Maximum bound</param>
         /// <param name="random"></param>
         /// <returns></returns>
-        double Sample(double min, double max, Random random);
+        double Sample(double min, double max);
     }
 }

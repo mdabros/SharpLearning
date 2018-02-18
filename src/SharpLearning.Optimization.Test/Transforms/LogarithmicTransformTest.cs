@@ -1,22 +1,22 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Optimization.ParameterSamplers;
+using SharpLearning.Optimization.Transforms;
 
-namespace SharpLearning.Optimization.Test.ParameterSamplers
+namespace SharpLearning.Optimization.Test.Transforms
 {
     [TestClass]
-    public class RandomUniformLogarithmicTest
+    public class LogarithmicTransformTest
     {
         [TestMethod]
-        public void RandomUniformLogarithmic_Sample()
+        public void LogarithmicTransform_Transform()
         {
-            var sut = new RandomUniformLogarithmic();
+            var sut = new LogarithmicTransform();
+            var sampler = new RandomUniform(seed: 32);
 
-            var random = new Random(32);
             var actual = new double[10];
             for (int i = 0; i < actual.Length; i++)
             {
-                actual[i] = sut.Sample(min: 0.0001, max: 1, random: random);
+                actual[i] = sut.Transform(min: 0.0001, max: 1, sampler: sampler);
             }
 
             var expected = new double[] { 0.00596229274859676, 0.000671250295495889, 0.000348781578382963, 0.00357552550811494, 0.0411440752926137, 0.012429636665806, 0.000944855847942692, 0.00964528475124291, 0.557104498829374, 0.000197223348905772, };

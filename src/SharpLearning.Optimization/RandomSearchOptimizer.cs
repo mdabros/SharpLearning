@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using SharpLearning.Optimization.ParameterSamplers;
 
 namespace SharpLearning.Optimization
 {
@@ -14,7 +15,7 @@ namespace SharpLearning.Optimization
         readonly bool m_runParallel;
         readonly ParameterBounds[] m_parameters;
         readonly int m_iterations;
-        readonly Random m_random;
+        readonly IParameterSampler m_sampler;
 
         /// <summary>
         /// Random search optimizer initializes random parameters between min and max of the provided parameters.
@@ -29,7 +30,7 @@ namespace SharpLearning.Optimization
             if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
             m_parameters = parameterRanges;
             m_runParallel = runParallel;
-            m_random = new Random(seed);
+            m_sampler = new RandomUniform(seed);
             m_iterations = iterations;
         }
 
@@ -94,7 +95,7 @@ namespace SharpLearning.Optimization
                 var index = 0;
                 foreach (var param in parameters)
                 {
-                    newParameters[index] = param.Sample(m_random);
+                    newParameters[index] = param.NextValue(m_sampler);
                     index++;
                 }
                 newSearchSpace[i] = newParameters;

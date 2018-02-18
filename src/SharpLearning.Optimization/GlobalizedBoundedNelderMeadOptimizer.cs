@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Containers.Arithmetic;
+using SharpLearning.Optimization.ParameterSamplers;
 
 namespace SharpLearning.Optimization
 {
@@ -27,6 +28,7 @@ namespace SharpLearning.Optimization
         readonly double m_noImprovementThreshold;
         readonly ParameterBounds[] m_parameters;
         readonly Random m_random;
+        readonly IParameterSampler m_sampler;
         readonly int m_maxFunctionEvaluations;
         int m_totalFunctionEvaluations;
         
@@ -70,6 +72,7 @@ namespace SharpLearning.Optimization
             m_maxFunctionEvaluations = maxFunctionEvaluations;
 
             m_random = new Random(324);
+            m_sampler = new RandomUniform();
         }
         /// <summary>
         /// Optimization using Globalized bounded Nelder-Mead method.
@@ -287,7 +290,7 @@ namespace SharpLearning.Optimization
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 var parameter = m_parameters[i];
-                newPoint[i] = parameter.Sample(m_random);
+                newPoint[i] = parameter.NextValue(m_sampler);
             }
         }
     }

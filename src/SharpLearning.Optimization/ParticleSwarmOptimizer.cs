@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Containers.Arithmetic;
+using SharpLearning.Optimization.ParameterSamplers;
 
 namespace SharpLearning.Optimization
 {
@@ -21,6 +22,7 @@ namespace SharpLearning.Optimization
         readonly double m_c1;
         readonly double m_c2;
         readonly Random m_random;
+        readonly IParameterSampler m_sampler;
 
         /// <summary>
         /// Particle Swarm optimizer (PSO). PSO is initialized with a group of random particles
@@ -47,6 +49,7 @@ namespace SharpLearning.Optimization
             m_c2 = c2;
             
             m_random = new Random(seed);
+            m_sampler = new RandomUniform();
         }
 
         /// <summary>
@@ -166,7 +169,7 @@ namespace SharpLearning.Optimization
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 var parameter = m_parameters[i];
-                newPoint[i] = parameter.Sample(m_random);
+                newPoint[i] = parameter.NextValue(m_sampler);
             }
 
             return newPoint;

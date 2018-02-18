@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Optimization.ParameterSamplers;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
 
@@ -25,7 +26,7 @@ namespace SharpLearning.Optimization
         readonly int m_maxIterations;
         readonly int m_numberOfStartingPoints;
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
-        readonly Random m_random;
+        readonly IParameterSampler m_sampler;
 
         readonly List<double[]> m_previousParameterSets;
         readonly List<double> m_previousParameterSetScores;
@@ -69,7 +70,7 @@ namespace SharpLearning.Optimization
             m_numberOfStartingPoints = numberOfStartingPoints;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
-            m_random = new Random(seed);
+            m_sampler = new RandomUniform(seed);
             
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
@@ -118,7 +119,7 @@ namespace SharpLearning.Optimization
             m_maxIterations = maxIterations;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
-            m_random = new Random(seed);
+            m_sampler = new RandomUniform(seed);
 
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
@@ -315,7 +316,7 @@ namespace SharpLearning.Optimization
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 var parameter = m_parameters[i];
-                newPoint[i] = parameter.Sample(m_random);
+                newPoint[i] = parameter.NextValue(m_sampler);
             }
 
             return newPoint;

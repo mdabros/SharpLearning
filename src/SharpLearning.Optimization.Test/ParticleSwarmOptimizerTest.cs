@@ -12,19 +12,19 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new ParameterBounds[]
             {
-                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
-                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
-                new ParameterBounds(-10.0, 10.0, ParameterSamplerType.RandomUniformLinear),
+                new ParameterBounds(-10.0, 10.0, Transform.Linear),
+                new ParameterBounds(-10.0, 10.0, Transform.Linear),
+                new ParameterBounds(-10.0, 10.0, Transform.Linear),
             };
             var sut = new ParticleSwarmOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.38111188515223809, 0.0000001);
+            Assert.AreEqual(actual.Error, -0.45484916939206588, 0.0000001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], 10, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[1], 0.003223641308240488, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[2], 0.42745032466778454, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[0], -10, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[1], -10, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[2], 0.0035692182837614439, 0.0000001);
         }
 
         [TestMethod]
@@ -32,7 +32,7 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new ParameterBounds[]
             {
-                new ParameterBounds(0.0, 100.0, ParameterSamplerType.RandomUniformLinear)
+                new ParameterBounds(0.0, 100.0, Transform.Linear)
             };
             var sut = new ParticleSwarmOptimizer(parameters, 100);
             var results = sut.Optimize(Minimize2);
@@ -40,8 +40,8 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.635959742891046 }, 109.58839344747747),
-                new OptimizerResult(new double[] { 38.891904333594624 }, 166.38611320480345)
+                new OptimizerResult(new double[] { 37.804275358363732 }, 109.68474734728727),
+                new OptimizerResult(new double[] { 35.942821697748165 }, 238.00642904844648)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);

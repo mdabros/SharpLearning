@@ -12,7 +12,7 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new ParameterBounds[] 
             {
-                new ParameterBounds(0.0, 100.0, ParameterSamplerType.RandomUniformLinear)
+                new ParameterBounds(0.0, 100.0, Transform.Linear)
             };
             var sut = new RandomSearchOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
@@ -26,7 +26,7 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new ParameterBounds[] 
             {
-                new ParameterBounds(10.0, 37.5, ParameterSamplerType.RandomUniformLinear)
+                new ParameterBounds(10.0, 37.5, Transform.Linear)
             };
             var sut = new RandomSearchOptimizer(parameters, 2);
             var actual = sut.Optimize(Minimize);
