@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization.Test.OptimizerParameters
 {
