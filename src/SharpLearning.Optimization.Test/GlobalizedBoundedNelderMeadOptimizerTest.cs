@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -11,11 +12,11 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void GlobalizedBoundedNelderMeadOptimizer_OptimizeBest()
         {
-            var parameters = new double[][] 
+            var parameters = new OptimizerParameter[]
             {
-                new double[] { -10.0, 10.0 },
-                new double[] { -10.0, 10.0 },
-                new double[] { -10.0, 10.0 }
+                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
+                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
+                new OptimizerParameter(min: -10.0, max: 10.0, samplerScale: SamplerScale.Linear),
             };
             var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
             var actual = sut.OptimizeBest(Minimize);
@@ -31,7 +32,10 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void GlobalizedBoundedNelderMeadOptimizer_Optimize()
         {
-            var parameters = new double[][] { new double[] { 0.0, 100.0 } };
+            var parameters = new OptimizerParameter[]
+            {
+                new OptimizerParameter(min: 0.0, max: 100.0, samplerScale: SamplerScale.Linear)
+            };
             var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
             var results = sut.Optimize(Minimize2);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
@@ -48,7 +52,6 @@ namespace SharpLearning.Optimization.Test
             Assert.AreEqual(expected.Last().Error, actual.Last().Error, 0.0001);
             Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), 0.0001);
         }
-
 
         OptimizerResult Minimize(double[] x)
         {

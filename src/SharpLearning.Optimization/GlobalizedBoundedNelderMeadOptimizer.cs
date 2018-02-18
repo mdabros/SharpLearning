@@ -1,7 +1,8 @@
-﻿using SharpLearning.Containers.Arithmetic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers.Arithmetic;
+using SharpLearning.Optimization.OptimizerParameters;
 
 namespace SharpLearning.Optimization
 {
@@ -25,7 +26,7 @@ namespace SharpLearning.Optimization
         readonly double m_rho;
         readonly double m_sigma;
         readonly double m_noImprovementThreshold;
-        readonly double[][] m_parameters;
+        readonly OptimizerParameter[] m_parameters;
         readonly Random m_random;
         readonly int m_maxFunctionEvaluations;
         int m_totalFunctionEvaluations;
@@ -50,7 +51,7 @@ namespace SharpLearning.Optimization
         /// <param name="gamma">Coefficient for expansion part of the algorithm (default is 2)</param>
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
-        public GlobalizedBoundedNelderMeadOptimizer(double[][] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
+        public GlobalizedBoundedNelderMeadOptimizer(OptimizerParameter[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5)
         {
@@ -107,7 +108,7 @@ namespace SharpLearning.Optimization
 
                 for (int i = 0; i < dim; i++)
                 {
-                    var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max() - m_parameters[i].Min()); // % simplex size between 2%-8% of min(xrange)
+                    var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max - m_parameters[i].Min); // % simplex size between 2%-8% of min(xrange)
 
                     var p = a * (Math.Sqrt(dim + 1) + dim - 1) / (dim * Math.Sqrt(2));
                     var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
@@ -271,8 +272,8 @@ namespace SharpLearning.Optimization
         {
             for (int i = 0; i < parameters.Length; i++)
             {
-                var range = m_parameters[i];
-                parameters[i] = Math.Max(range.Min(), Math.Min(parameters[i], range.Max()));
+                var parameter = m_parameters[i];
+                parameters[i] = Math.Max(parameter.Min, Math.Min(parameters[i], parameter.Max));
             }
         }
 
@@ -286,20 +287,9 @@ namespace SharpLearning.Optimization
             // look at: https://github.com/ojdo/gbnm/blob/master/gbnm.m
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                var range = m_parameters[i];
-                newPoint[i] = NewParameter(range.Min(), range.Max());
+                var parameter = m_parameters[i];
+                newPoint[i] = parameter.Sample(m_random);
             }
-        }
-
-        /// <summary>
-        /// Randomly select a parameter within the specified range
-        /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        /// <returns></returns>
-        double NewParameter(double min, double max)
-        {
-            return m_random.NextDouble() * (max - min) + min;
         }
     }
 }
