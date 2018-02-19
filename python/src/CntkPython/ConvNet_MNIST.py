@@ -67,8 +67,8 @@ def convnet_mnist():
         #conv2 = C.layers.Convolution2D((3,3), 48, init=init, bias=False)(pool1)
         #pool2 = C.layers.MaxPooling((3,3), (2,2))(conv2)
         #conv3 = C.layers.Convolution2D((3,3), 64, init=init, bias=False)(scaled_input)
-        #f4    = C.layers.Dense(96, init=init, bias=False)(scaled_input)
-        drop4 = C.layers.Dropout(0.5, seed=32)(scaled_input)
+        f4    = C.layers.Dense(96, init=init, bias=False)(scaled_input)
+        drop4 = C.layers.Dropout(0.5, seed=32)(f4)
         z     = C.layers.Dense(num_output_classes, activation=None, init=init, bias=False)(drop4)
     
     # Define loss and error metric.
