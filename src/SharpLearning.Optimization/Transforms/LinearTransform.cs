@@ -3,12 +3,12 @@
 namespace SharpLearning.Optimization.Transforms
 {
     /// <summary>
-    /// Linear scale. For smaller ranges like min: 64 and max: 256.
+    /// Linear scale. For ranges with a small difference in numerical scale, like min: 64 and max: 256.
     /// </summary>
     public class LinearTransform : ITransform
     {
         /// <summary>
-        /// Linear scale. For smaller ranges like min: 64 and max: 256.
+        /// Linear scale. For ranges with a small difference in numerical scale, like min: 64 and max: 256.
         /// Returns the samplers value directly.
         /// </summary>
         /// <param name="min"></param>
