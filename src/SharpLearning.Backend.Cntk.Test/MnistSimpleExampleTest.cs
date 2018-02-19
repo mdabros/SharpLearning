@@ -81,11 +81,11 @@ namespace SharpLearning.Backend.Cntk.Test
                     trainer.TrainMinibatch(inputMap, false, device);
                     inputMap.Clear();
 
-                    if ((i % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
+                    if (((i + 1) % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                     {
-                        var batchLoss = (float)trainer.PreviousMinibatchLossAverage();
-                        var batchError = (float)trainer.PreviousMinibatchEvaluationAverage();
-                        Trace.WriteLine($"Minibatch: {i} CrossEntropyLoss = {batchLoss}, EvaluationCriterion = {batchError}");
+                        var trainLossValue = trainer.PreviousMinibatchLossAverage();
+                        var evaluationValue = trainer.PreviousMinibatchEvaluationAverage();
+                        Trace.WriteLine($"Minibatch: {i + 1} CrossEntropyLoss = {trainLossValue:F16}, EvaluationCriterion = {evaluationValue:F16}");
                     }
 
                     var samplesSeenNextBatch = (i + 2) * minibatchSize;
@@ -185,11 +185,11 @@ namespace SharpLearning.Backend.Cntk.Test
                 };
                 trainer.TrainMinibatch(arguments, device);
 
-                if ((i % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
+                if (((i + 1) % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                 {
-                    var trainLossValue = (float)trainer.PreviousMinibatchLossAverage();
-                    var evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
-                    Trace.WriteLine($"Minibatch: {i} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                    var trainLossValue = trainer.PreviousMinibatchLossAverage();
+                    var evaluationValue = trainer.PreviousMinibatchEvaluationAverage();
+                    Trace.WriteLine($"Minibatch: {i + 1} CrossEntropyLoss = {trainLossValue:F16}, EvaluationCriterion = {evaluationValue:F16}");
                 }
             }
 
