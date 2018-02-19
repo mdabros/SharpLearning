@@ -19,7 +19,7 @@ namespace SharpLearning.Backend.Cntk.Test
         {
             // Set global data and device type. 
             var dataType = CntkDataType.Float;
-            DeviceDescriptor device = DeviceDescriptor.UseDefaultDevice();
+            DeviceDescriptor device = DeviceDescriptor.CPUDevice;
             Trace.WriteLine("Using device: " + device.Type + " with data type: " + dataType);
 
             // Define data.
@@ -36,15 +36,19 @@ namespace SharpLearning.Backend.Cntk.Test
             // Instantiate the feedforward classification model
             var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
 
+            // setup initializer
+            var init = CNTKLib.UniformInitializer(
+                scale: 0.1, seed: 32);
+
             var layers = new CntkLayers(device, dataType);
-            Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, Activation.Relu, pad: true);
+            Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, Activation.Relu, init: init, bias: false, pad: true);
             Function pool1 = layers.MaxPooling(conv1, new int[] { 3, 3 }, new int[] { 2, 2 });
-            Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, Activation.Relu);
+            Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, Activation.Relu, init: init, bias: false);
             Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
-            Function conv3 = layers.Convolution2D(pool2, new int[] { 3, 3 }, 64, Activation.Relu);
-            Function f4    = layers.Dense(conv3, 96, Activation.Relu);
-            Function drop4 = layers.Dropout(f4, 0.5);
-            Function z     = layers.Dense(drop4, numOutputClasses);
+            Function conv3 = layers.Convolution2D(pool2, new int[] { 3, 3 }, 64, Activation.Relu, init: init, bias: false);
+            Function f4 = layers.Dense(conv3, 96, Activation.Relu, init: init, bias: false);
+            Function drop4 = layers.Dropout(f4, 0.5, seed: 32);
+            Function z = layers.Dense(drop4, numOutputClasses, init: init, bias: false);
 
             // Define loss and error metric.
             Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
@@ -88,11 +92,11 @@ namespace SharpLearning.Backend.Cntk.Test
                     trainer.TrainMinibatch(inputMap, false, device);
                     inputMap.Clear();
 
-                    if ((i % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
+                    if (((i + 1) % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                     {
-                        var batchLoss = (float)trainer.PreviousMinibatchLossAverage();
-                        var batchError = (float)trainer.PreviousMinibatchEvaluationAverage();
-                        Trace.WriteLine($"Minibatch: {i} CrossEntropyLoss = {batchLoss}, EvaluationCriterion = {batchError}");
+                        var trainLossValue = trainer.PreviousMinibatchLossAverage();
+                        var evaluationValue = trainer.PreviousMinibatchEvaluationAverage();
+                        Trace.WriteLine($"Minibatch: {i + 1} CrossEntropyLoss = {trainLossValue:F16}, EvaluationCriterion = {evaluationValue:F16}");
                     }
 
                     var samplesSeenNextBatch = (i + 2) * minibatchSize;
@@ -119,7 +123,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.89;
+            var pythonError = 0.884;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
