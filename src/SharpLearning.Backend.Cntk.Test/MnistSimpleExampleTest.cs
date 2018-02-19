@@ -97,7 +97,7 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             // Test model.
-            var csharpError = TestModel_Mnist_Loader(model, device, mnist);
+            var csharpError = TestModelMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -106,7 +106,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = TestModel_Mnist_Loader(loadedModel, device, mnist);
+            var loadedModelError = TestModelMnistLoader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
@@ -196,7 +196,7 @@ namespace SharpLearning.Backend.Cntk.Test
             // Test model.
             var mnist = Mnist.Load(DownloadPath);
 
-            var csharpError = TestModel_Mnist_Loader(model, device, mnist);
+            var csharpError = TestModelMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -205,7 +205,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = TestModel_Mnist_Loader(loadedModel, device, mnist);
+            var loadedModelError = TestModelMnistLoader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
@@ -227,7 +227,7 @@ namespace SharpLearning.Backend.Cntk.Test
             return MinibatchSource.TextFormatMinibatchSource(path, streamConfigurations, epochSize, randomize);
         }
 
-        public static double TestModel_Mnist_Loader(Function model, DeviceDescriptor device, Mnist mnist)
+        public static double TestModelMnistLoader(Function model, DeviceDescriptor device, Mnist mnist)
         {
             var numberOfTestSamples = mnist.TestImages.Count();
             var readerTest = mnist.GetTestReader(); // renew test reader.

@@ -104,7 +104,7 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             // Test model.
-            var csharpError = MnistSimpleExampleTest.TestModel_Mnist_Loader(z, device, mnist);
+            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(z, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -113,7 +113,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = MnistSimpleExampleTest.TestModel_Mnist_Loader(loadedModel, device, mnist);
+            var loadedModelError = MnistSimpleExampleTest.TestModelMnistLoader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
@@ -215,7 +215,7 @@ namespace SharpLearning.Backend.Cntk.Test
             // Test model.
             var mnist = Mnist.Load(DownloadPath);
 
-            var csharpError = MnistSimpleExampleTest.TestModel_Mnist_Loader(z, device, mnist);
+            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(z, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -224,13 +224,13 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = MnistSimpleExampleTest.TestModel_Mnist_Loader(z, device, mnist);
+            var loadedModelError = MnistSimpleExampleTest.TestModelMnistLoader(z, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.202800;
+            var pythonError = 0.1081;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
