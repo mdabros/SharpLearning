@@ -25,6 +25,7 @@ from cntk.losses import cross_entropy_with_softmax
 from cntk.metrics import classification_error
 from cntk.train.training_session import *
 from cntk.logging import ProgressPrinter, TensorBoardProgressWriter
+from cntk.initializer import glorot_uniform
 
 # Paths relative to current python file.
 data_dir = os.path.dirname(os.path.abspath(__file__))
@@ -57,15 +58,18 @@ def convnet_mnist():
     # Instantiate the feedforward classification model
     scaled_input = C.ops.element_times(C.ops.constant(0.00390625), input_var)
 
+    # setup initializer
+    init = glorot_uniform(seed=32)
+
     with C.layers.default_options(activation=C.ops.relu, pad=False):
-        conv1 = C.layers.Convolution2D((5,5), 32, pad=True)(scaled_input)
-        pool1 = C.layers.MaxPooling((3,3), (2,2))(conv1)
-        conv2 = C.layers.Convolution2D((3,3), 48)(pool1)
-        pool2 = C.layers.MaxPooling((3,3), (2,2))(conv2)
-        conv3 = C.layers.Convolution2D((3,3), 64)(pool2)
-        f4    = C.layers.Dense(96)(conv3)
-        drop4 = C.layers.Dropout(0.5)(f4)
-        z     = C.layers.Dense(num_output_classes, activation=None)(drop4)
+        #conv1 = C.layers.Convolution2D((5,5), 32, init=init, bias=False, pad=True)(scaled_input)
+        #pool1 = C.layers.MaxPooling((3,3), (2,2))(conv1)
+        #conv2 = C.layers.Convolution2D((3,3), 48, init=init, bias=False)(pool1)
+        #pool2 = C.layers.MaxPooling((3,3), (2,2))(conv2)
+        conv3 = C.layers.Convolution2D((3,3), 64, init=init, bias=False)(scaled_input)
+        f4    = C.layers.Dense(96, init=init, bias=False)(conv3)
+        #drop4 = C.layers.Dropout(0.5, seed=32)(scaled_input)
+        z     = C.layers.Dense(num_output_classes, activation=None, init=init, bias=False)(f4)
     
     # Define loss and error metric.
     ce = C.losses.cross_entropy_with_softmax(z, label_var)
@@ -123,6 +127,7 @@ def convnet_mnist():
 
     # Average of evaluation errors of all test minibatches
     return test_result / num_test_samples
+
 
 if __name__=='__main__':
 
