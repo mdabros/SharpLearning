@@ -45,6 +45,12 @@ def create_reader(path, is_training, input_dim, label_dim):
 
 # Creates and trains a feedforward classification model for MNIST images
 def convnet_mnist():
+    
+    # Set global device type.
+    cpu = C.DeviceDescriptor.cpu_device()
+    try_set_default_device(cpu, acquire_device_lock=False)
+    
+    # Define data.
     image_height = 28
     image_width  = 28
     num_channels = 1
@@ -62,12 +68,12 @@ def convnet_mnist():
     init = uniform(scale= 0.1, seed=32)
 
     with C.layers.default_options(activation=C.ops.relu, pad=False):
-        #conv1 = C.layers.Convolution2D((5,5), 32, init=init, bias=False, pad=True)(scaled_input)
-        #pool1 = C.layers.MaxPooling((3,3), (2,2))(conv1)
-        #conv2 = C.layers.Convolution2D((3,3), 48, init=init, bias=False)(pool1)
-        #pool2 = C.layers.MaxPooling((3,3), (2,2))(conv2)
-        #conv3 = C.layers.Convolution2D((3,3), 64, init=init, bias=False)(scaled_input)
-        f4    = C.layers.Dense(96, init=init, bias=False)(scaled_input)
+        conv1 = C.layers.Convolution2D((5,5), 32, init=init, bias=False, pad=True)(scaled_input)
+        pool1 = C.layers.MaxPooling((3,3), (2,2))(conv1)
+        conv2 = C.layers.Convolution2D((3,3), 48, init=init, bias=False)(pool1)
+        pool2 = C.layers.MaxPooling((3,3), (2,2))(conv2)
+        conv3 = C.layers.Convolution2D((3,3), 64, init=init, bias=False)(pool2)
+        f4    = C.layers.Dense(96, init=init, bias=False)(conv3)
         drop4 = C.layers.Dropout(0.5, seed=32)(f4)
         z     = C.layers.Dense(num_output_classes, activation=None, init=init, bias=False)(drop4)
     

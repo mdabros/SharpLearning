@@ -131,7 +131,7 @@ namespace SharpLearning.Backend.Cntk.Test
         {
             // Set global data and device type. 
             var dataType = CntkDataType.Float;
-            DeviceDescriptor device = DeviceDescriptor.GPUDevice(0);
+            DeviceDescriptor device = DeviceDescriptor.CPUDevice;
             Trace.WriteLine("Using device: " + device.Type + " with data type: " + dataType);
 
             // Define data.
@@ -154,12 +154,12 @@ namespace SharpLearning.Backend.Cntk.Test
                 scale: 0.1, seed: 32);
 
             var layers = new CntkLayers(device, dataType);
-            //Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, (v) => CNTKLib.ReLU(v), init: init, bias: false, pad: true);
-            //Function pool1 = layers.MaxPooling(conv1, new int[] { 3, 3 }, new int[] { 2, 2 });
-            //Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, (v) => CNTKLib.ReLU(v), init: init, bias: false);
-            //Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
-            //Function conv3 = layers.Convolution2D(scaledInput, new int[] { 3, 3 }, 64, (v) => CNTKLib.ReLU(v), init: init, bias: false);
-            Function f4 = layers.Dense(scaledInput, 96, Activation.Relu, init: init, bias: false);
+            Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, Activation.Relu, init: init, bias: false, pad: true);
+            Function pool1 = layers.MaxPooling(conv1, new int[] { 3, 3 }, new int[] { 2, 2 });
+            Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, Activation.Relu, init: init, bias: false);
+            Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
+            Function conv3 = layers.Convolution2D(pool2, new int[] { 3, 3 }, 64, Activation.Relu, init: init, bias: false);
+            Function f4 = layers.Dense(conv3, 96, Activation.Relu, init: init, bias: false);
             Function drop4 = layers.Dropout(f4, 0.5, seed: 32);
             Function z = layers.Dense(drop4, numOutputClasses, init: init, bias: false);
 
@@ -230,7 +230,7 @@ namespace SharpLearning.Backend.Cntk.Test
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.1081;
+            var pythonError = 0.884;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
