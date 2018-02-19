@@ -73,13 +73,13 @@ def convnet_mnist():
         conv2 = C.layers.Convolution2D((3,3), 48, init=init, bias=False)(pool1)
         pool2 = C.layers.MaxPooling((3,3), (2,2))(conv2)
         conv3 = C.layers.Convolution2D((3,3), 64, init=init, bias=False)(pool2)
-        f4    = C.layers.Dense(96, init=init, bias=False)(conv3)
-        drop4 = C.layers.Dropout(0.5, seed=32)(f4)
-        z     = C.layers.Dense(num_output_classes, activation=None, init=init, bias=False)(drop4)
+        dense4 = C.layers.Dense(96, init=init, bias=False)(conv3)
+        drop4 = C.layers.Dropout(0.5, seed=32)(dense4)
+        model = C.layers.Dense(num_output_classes, activation=None, init=init, bias=False)(drop4)
     
     # Define loss and error metric.
-    ce = C.losses.cross_entropy_with_softmax(z, label_var)
-    pe = C.metrics.classification_error(z, label_var)
+    ce = C.losses.cross_entropy_with_softmax(model, label_var)
+    pe = C.metrics.classification_error(model, label_var)
 
     # Training config.
     minibatch_size = 64
@@ -90,8 +90,8 @@ def convnet_mnist():
 
     # Instantiate the trainer object to drive the model training.
     lr_schedule      = C.learning_parameter_schedule_per_sample(0.01)
-    learner = C.learners.sgd(z.parameters, lr_schedule)
-    trainer = C.Trainer(z, (ce, pe), learner)
+    learner = C.learners.sgd(model.parameters, lr_schedule)
+    trainer = C.Trainer(model, (ce, pe), learner)
 
     # Load train data
     path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))

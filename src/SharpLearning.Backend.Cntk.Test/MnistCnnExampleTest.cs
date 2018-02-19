@@ -46,13 +46,13 @@ namespace SharpLearning.Backend.Cntk.Test
             Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, Activation.Relu, init: init, bias: false);
             Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
             Function conv3 = layers.Convolution2D(pool2, new int[] { 3, 3 }, 64, Activation.Relu, init: init, bias: false);
-            Function f4 = layers.Dense(conv3, 96, Activation.Relu, init: init, bias: false);
-            Function drop4 = layers.Dropout(f4, 0.5, seed: 32);
-            Function z = layers.Dense(drop4, numOutputClasses, init: init, bias: false);
+            Function dense4 = layers.Dense(conv3, 96, Activation.Relu, init: init, bias: false);
+            Function drop4 = layers.Dropout(dense4, 0.5, seed: 32);
+            Function model = layers.Dense(drop4, numOutputClasses, init: init, bias: false);
 
             // Define loss and error metric.
-            Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
-            Function errorMetric = CNTKLib.ClassificationError(z, labelVar);
+            Function loss = CNTKLib.CrossEntropyWithSoftmax(model, labelVar);
+            Function errorMetric = CNTKLib.ClassificationError(model, labelVar);
 
             // Training config.
             var minibatchSize = 64;
@@ -63,8 +63,8 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Instantiate the trainer object to drive the model training.
             var lrSchedule = new TrainingParameterScheduleDouble(0.01, 1);
-            var learner = new List<Learner>() { Learner.SGDLearner(z.Parameters(), lrSchedule) };
-            var trainer = Trainer.CreateTrainer(z, loss, errorMetric, learner);
+            var learner = new List<Learner>() { Learner.SGDLearner(model.Parameters(), lrSchedule) };
+            var trainer = Trainer.CreateTrainer(model, loss, errorMetric, learner);
 
             // Load train data.
             var mnist = Mnist.Load(DownloadPath);
@@ -108,12 +108,12 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             // Test model.
-            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(z, device, mnist);
+            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
             var modelPath = "cnn_mnist_csharp_loader.dnn";
-            z.Save(modelPath);
+            model.Save(modelPath);
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
@@ -163,13 +163,13 @@ namespace SharpLearning.Backend.Cntk.Test
             Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, Activation.Relu, init: init, bias: false);
             Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
             Function conv3 = layers.Convolution2D(pool2, new int[] { 3, 3 }, 64, Activation.Relu, init: init, bias: false);
-            Function f4 = layers.Dense(conv3, 96, Activation.Relu, init: init, bias: false);
-            Function drop4 = layers.Dropout(f4, 0.5, seed: 32);
-            Function z = layers.Dense(drop4, numOutputClasses, init: init, bias: false);
+            Function dense4 = layers.Dense(conv3, 96, Activation.Relu, init: init, bias: false);
+            Function drop4 = layers.Dropout(dense4, 0.5, seed: 32);
+            Function model = layers.Dense(drop4, numOutputClasses, init: init, bias: false);
 
             // Define loss and error metric.
-            Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
-            Function errorMetric = CNTKLib.ClassificationError(z, labelVar);
+            Function loss = CNTKLib.CrossEntropyWithSoftmax(model, labelVar);
+            Function errorMetric = CNTKLib.ClassificationError(model, labelVar);
 
             // Training config.
             uint minibatchSize = 64;
@@ -180,8 +180,8 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Instantiate the trainer object to drive the model training.
             var lrSchedule = new TrainingParameterScheduleDouble(0.01, 1);
-            var learner = new List<Learner>() { Learner.SGDLearner(z.Parameters(), lrSchedule) };
-            var trainer = Trainer.CreateTrainer(z, loss, errorMetric, learner);
+            var learner = new List<Learner>() { Learner.SGDLearner(model.Parameters(), lrSchedule) };
+            var trainer = Trainer.CreateTrainer(model, loss, errorMetric, learner);
 
             // Load train data.
             var trainPath = Path.Combine(dataDirectoryPath, "Train-28x28_cntk_text.txt");
@@ -219,16 +219,16 @@ namespace SharpLearning.Backend.Cntk.Test
             // Test model.
             var mnist = Mnist.Load(DownloadPath);
 
-            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(z, device, mnist);
+            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
             var modelPath = "lr_mnist_csharp_loader.dnn";
-            z.Save(modelPath);
+            model.Save(modelPath);
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = MnistSimpleExampleTest.TestModelMnistLoader(z, device, mnist);
+            var loadedModelError = MnistSimpleExampleTest.TestModelMnistLoader(model, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
