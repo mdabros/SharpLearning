@@ -25,7 +25,7 @@ from cntk.losses import cross_entropy_with_softmax
 from cntk.metrics import classification_error
 from cntk.train.training_session import *
 from cntk.logging import ProgressPrinter, TensorBoardProgressWriter
-from cntk.initializer import glorot_uniform
+from cntk.initializer import glorot_uniform, uniform
 
 # Paths relative to current python file.
 data_dir = os.path.dirname(os.path.abspath(__file__))
@@ -59,7 +59,7 @@ def convnet_mnist():
     scaled_input = C.ops.element_times(C.ops.constant(0.00390625), input_var)
 
     # setup initializer
-    init = glorot_uniform(seed=32)
+    init = uniform(scale= 0.1, seed=32)
 
     with C.layers.default_options(activation=C.ops.relu, pad=False):
         #conv1 = C.layers.Convolution2D((5,5), 32, init=init, bias=False, pad=True)(scaled_input)
@@ -81,15 +81,11 @@ def convnet_mnist():
 
     # Instantiate progress writers.
     training_progress_output_freq = 100
-    progress_writers = [ProgressPrinter(
-        freq=training_progress_output_freq,
-        tag='Training',
-        num_epochs=minibatch_iterations)]
 
     # Instantiate the trainer object to drive the model training.
     lr_schedule      = C.learning_parameter_schedule_per_sample(0.01)
     learner = C.learners.sgd(z.parameters, lr_schedule)
-    trainer = C.Trainer(z, (ce, pe), learner, progress_writers)
+    trainer = C.Trainer(z, (ce, pe), learner)
 
     # Load train data
     path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))
@@ -105,6 +101,11 @@ def convnet_mnist():
     for i in range(0, int(minibatch_iterations)):
         mb = reader_train.next_minibatch(minibatch_size, input_map=input_map)
         trainer.train_minibatch(mb)
+        if (((i + 1) % training_progress_output_freq) == 0 and trainer.previous_minibatch_sample_count != 0):
+            trainLossValue = trainer.previous_minibatch_loss_average
+            evaluationValue = trainer.previous_minibatch_evaluation_average
+            print("Minibatch:", i + 1, "CrossEntropyLoss = ", trainLossValue, "EvaluationCriterion = ", evaluationValue)
+
     
     # Load test data.
     path = os.path.normpath(os.path.join(data_dir, "Test-28x28_cntk_text.txt"))
