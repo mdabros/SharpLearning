@@ -131,7 +131,7 @@ namespace SharpLearning.Backend.Cntk.Test
         {
             // Set global data and device type. 
             var dataType = CntkDataType.Float;
-            DeviceDescriptor device = DeviceDescriptor.UseDefaultDevice();
+            DeviceDescriptor device = DeviceDescriptor.GPUDevice(0);
             Trace.WriteLine("Using device: " + device.Type + " with data type: " + dataType);
 
             // Define data.
@@ -150,10 +150,8 @@ namespace SharpLearning.Backend.Cntk.Test
             var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVar);
 
             // setup initializer
-            var init = CNTKLib.GlorotUniformInitializer(
-                CNTKLib.DefaultParamInitScale,
-                CNTKLib.SentinelValueForInferParamInitRank,
-                CNTKLib.SentinelValueForInferParamInitRank, seed: 32);
+            var init = CNTKLib.UniformInitializer(
+                scale: 0.1, seed: 32);
 
             var layers = new CntkLayers(device, dataType);
             //Function conv1 = layers.Convolution2D(scaledInput, new int[] { 5, 5 }, 32, (v) => CNTKLib.ReLU(v), init: init, bias: false, pad: true);
@@ -208,9 +206,9 @@ namespace SharpLearning.Backend.Cntk.Test
 
                 if (((i + 1) % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                 {
-                    var trainLossValue = (float)trainer.PreviousMinibatchLossAverage();
-                    var evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
-                    Trace.WriteLine($"Minibatch: {i + 1} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                    var trainLossValue = trainer.PreviousMinibatchLossAverage();
+                    var evaluationValue = trainer.PreviousMinibatchEvaluationAverage();
+                    Trace.WriteLine($"Minibatch: {i + 1} CrossEntropyLoss = {trainLossValue:F16}, EvaluationCriterion = {evaluationValue:F16}");
                 }
             }
 
