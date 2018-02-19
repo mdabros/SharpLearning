@@ -71,15 +71,11 @@ def simple_mnist(tensorboard_logdir=None):
 
     # Instantiate progress writers.
     training_progress_output_freq = 100
-    progress_writers = [ProgressPrinter(
-        freq=training_progress_output_freq,
-        tag='Training',
-        num_epochs=minibatch_iterations)]
 
     # Instantiate the trainer object to drive the model training.
     lr = learning_parameter_schedule_per_sample(0.01)
     trainer = Trainer(model, (loss, error_metric), 
-                      sgd(model.parameters, lr), progress_writers)  
+                      sgd(model.parameters, lr))  
 
     # Load train data
     path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))
@@ -95,6 +91,10 @@ def simple_mnist(tensorboard_logdir=None):
     for i in range(0, int(minibatch_iterations)):
         mb = reader_train.next_minibatch(minibatch_size, input_map=input_map)
         trainer.train_minibatch(mb)
+        if (((i + 1) % training_progress_output_freq) == 0 and trainer.previous_minibatch_sample_count != 0):
+            trainLossValue = trainer.previous_minibatch_loss_average
+            evaluationValue = trainer.previous_minibatch_evaluation_average
+            print("Minibatch:", i + 1, "CrossEntropyLoss = ", trainLossValue, "EvaluationCriterion = ", evaluationValue)
     
     # Load test data.
     path = os.path.normpath(os.path.join(data_dir, "Test-28x28_cntk_text.txt"))
