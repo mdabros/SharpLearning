@@ -160,10 +160,10 @@ namespace SharpLearning.Backend.Cntk.Test
             //Function pool1 = layers.MaxPooling(conv1, new int[] { 3, 3 }, new int[] { 2, 2 });
             //Function conv2 = layers.Convolution2D(pool1, new int[] { 3, 3 }, 48, (v) => CNTKLib.ReLU(v), init: init, bias: false);
             //Function pool2 = layers.MaxPooling(conv2, new int[] { 3, 3 }, new int[] { 2, 2 });
-            Function conv3 = layers.Convolution2D(scaledInput, new int[] { 3, 3 }, 64, (v) => CNTKLib.ReLU(v), init: init, bias: false);
-            Function f4 = layers.Dense(conv3, 96, (v) => CNTKLib.ReLU(v), init: init, bias: false);
-            //Function drop4 = layers.Dropout(scaledInput, 0.5, seed: 32);
-            Function z = layers.Dense(f4, numOutputClasses, init: init, bias: false);
+            //Function conv3 = layers.Convolution2D(scaledInput, new int[] { 3, 3 }, 64, (v) => CNTKLib.ReLU(v), init: init, bias: false);
+            //Function f4 = layers.Dense(scaledInput, 96, (v) => CNTKLib.ReLU(v), init: init, bias: false);
+            Function drop4 = layers.Dropout(scaledInput, 0.5, seed: 32);
+            Function z = layers.Dense(drop4, numOutputClasses, init: init, bias: false);
 
             // Define loss and error metric.
             Function loss = CNTKLib.CrossEntropyWithSoftmax(z, labelVar);
