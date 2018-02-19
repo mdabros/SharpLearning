@@ -20,6 +20,8 @@ namespace SharpLearning.Optimization.Transforms
                     return new LinearTransform();
                 case Transform.Logarithmic:
                     return new LogarithmicTransform();
+                case Transform.ExponentialAverage:
+                    return new ExponentialAverageTransform();
                 default:
                     throw new ArgumentException("Unsupported transform: " + transform);
             }
