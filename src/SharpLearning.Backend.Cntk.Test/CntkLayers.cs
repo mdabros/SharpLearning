@@ -59,7 +59,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// <param name="bias">bias (bool, optional, defaults to `True`): the layer will have no bias if `False` is passed here</param>
         /// <param name="initBias">init_bias (scalar or NumPy array or :mod:`cntk.initializer`, defaults to 0): initial value of weights `b`</param>
         /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the operation to it</returns>
-        public Function Dense(Variable x, int shape, Func<Variable, Function> activation = null, CNTKDictionary init = null,
+        public Function Dense(Variable x, int shape, Activation activation = Test.Activation.Identity, CNTKDictionary init = null,
             int inputRank = 0, int mapRank = 0, bool bias = true, CNTKDictionary initBias = null)
         {
             if(inputRank != 0 && mapRank != 0)
@@ -89,7 +89,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             init = init ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
             var w = new Parameter(wShape, m_dataType, init, m_device, "w");
-
+            
             // Weights and input is in reversed order compared to the original python code.
             // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
             // The python API was made in this way to be similar to other deep learning toolkits. 
@@ -103,12 +103,7 @@ namespace SharpLearning.Backend.Cntk.Test
                 r = r + b;
             }
 
-            if(activation != null)
-            {
-                r = activation(r);
-            }
-
-            return r;
+            return Activation(r, activation);
         }
 
         /// <summary>
@@ -166,7 +161,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// Number of input and output channels must be divisble by value of groups argument.Also, value of this argument must be strictly positive, i.e.groups > 0.</param>
         /// <returns></returns>
         public Function Convolution2D(Variable x, NDShape filterShape, int numFilters,
-            Func<Variable, Function> activation = null,
+            Activation activation = Test.Activation.Identity,
             CNTKDictionary init = null,
             bool pad = false,
             bool bias = true,
@@ -217,7 +212,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// <returns></returns>
         public Function Convolution2D(Variable x, NDShape filterShape, int numFilters,
             NDShape strides = null,
-            Func<Variable, Function> activation = null,
+            Activation activation = Test.Activation.Identity,
             CNTKDictionary init = null,
             bool pad = false,
             bool bias = true,
@@ -276,7 +271,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the convolution operation to it</returns>
         Function Convolution(Variable x, NDShape filterShape, int numFilters,
             bool sequential = false,
-            Func<Variable, Function> activation = null,
+            Activation activation = Test.Activation.Identity,
             CNTKDictionary init = null,
             bool pad = false,
             NDShape strides = null,
@@ -349,12 +344,7 @@ namespace SharpLearning.Backend.Cntk.Test
                 r = r + b;
             }
 
-            if (activation != null)
-            {
-                r = activation(r);
-            }
-
-            return r;
+            return Activation(r, activation);
         }
 
         /// <summary>
@@ -374,6 +364,29 @@ namespace SharpLearning.Backend.Cntk.Test
         public Function MaxPooling(Variable x, NDShape shape, NDShape strides, bool pad = false)
         {
             return Pooling(x, PoolingType.Max, shape, false, strides, pad);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="activation"></param>
+        /// <returns></returns>
+        public Function Activation(Variable x, Activation activation)
+        {
+            switch (activation)
+            {
+                case Test.Activation.Identity:
+                    return x; // do nothing
+                case Test.Activation.Relu:
+                    return CNTKLib.ReLU(x);
+                case Test.Activation.Sigmoid:
+                    return CNTKLib.Sigmoid(x);
+                case Test.Activation.Tanh:
+                    return CNTKLib.Tanh(x);
+                default:
+                    throw new ArgumentException("Unsupported Activation: " + activation);
+            }
         }
 
         /// <summary>
@@ -407,5 +420,13 @@ namespace SharpLearning.Backend.Cntk.Test
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, seed);
         }
+    }
+
+    public enum Activation
+    {
+        Identity,
+        Relu,
+        Sigmoid,
+        Tanh
     }
 }
