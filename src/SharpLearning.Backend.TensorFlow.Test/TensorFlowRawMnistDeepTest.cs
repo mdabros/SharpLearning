@@ -86,7 +86,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 var data = DataSets.Mnist.Load(DownloadPath);
 
                 const int trainBatchSize = 64;
-                const int iterations = 2; // 100;
+                const int iterations = 1; // 100;
 
                 var s = new Stopwatch();
                 s.Start();
@@ -170,13 +170,51 @@ namespace SharpLearning.Backend.TensorFlow.Test
                                 Assert.AreEqual(train_acc, 0.03125f);
                             }
                             Log($"Step {i} Accuracy {train_acc}");
+
+                            TFTensor[] variablesAfterEval = session.Run(new TFOutput[] { }, new TFTensor[] { }, variablesOutputs,
+                                targets, runMetaData, runOptions, trainStatus);
+                            trainStatus.Raise();
+                            using (var w = new StreamWriter("MnistDeepVariablesAfterTrainEval.txt"))
+                            {
+                                foreach (var v in variablesAfterEval)
+                                {
+                                    var vText = v.ToString();
+                                    var array = (Array)v.GetValue();
+                                    w.WriteLine(vText);
+                                    w.WriteLine(array.ToDebugText());
+                                }
+                            }
                         }
 
                         inputValues[2] = train_dropout_keep_prob;
                         TFTensor[] outputValues = session.Run(inputs, inputValues, trainOutputs,
                             targets, runMetaData, runOptions, trainStatus);
-
                         trainStatus.Raise();
+                        using (var w = new StreamWriter($"MnistDeepTrainOutputs_{i}.txt"))
+                        {
+                            foreach (var v in outputValues)
+                            {
+                                var vText = v.ToString();
+                                var array = (Array)v.GetValue();
+                                w.WriteLine(vText);
+                                w.WriteLine(array.ToDebugText());
+                                //Log(vText + " Initialize Logged");
+                            }
+                        }
+
+                        TFTensor[] variablesAfterTrain = session.Run(new TFOutput[] { }, new TFTensor[] { }, variablesOutputs,
+                            targets, runMetaData, runOptions, trainStatus);
+                        trainStatus.Raise();
+                        using (var w = new StreamWriter($"MnistDeepVariablesAfterTrain_{i}.txt"))
+                        {
+                            foreach (var v in variablesAfterTrain)
+                            {
+                                var vText = v.ToString();
+                                var array = (Array)v.GetValue();
+                                w.WriteLine(vText);
+                                w.WriteLine(array.ToDebugText());
+                            }
+                        }
                     }
                     var trainTime_ms = s.Elapsed.TotalMilliseconds;
                     s.Restart();

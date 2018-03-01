@@ -149,12 +149,11 @@ def main(_):
   y_conv, keep_prob = deepnn(x)
 
   with tf.name_scope('loss'):
-    cross_entropy = tf.squared_difference(x=y_conv, y=y_) # Note order is reversed
-  
+    perOutputLoss = tf.squared_difference(x=y_conv, y=y_) # Note order is reversed
     # We do not have softmax in C# yet, due to missing gradient
     #cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_,
     #                                                        logits=y_conv)
-  cross_entropy = tf.reduce_mean(cross_entropy)
+    cross_entropy = tf.reduce_mean(perOutputLoss)
 
   with tf.name_scope('optimizer'):
     # GradientDescent works really poorly, but it's just for testing
@@ -178,25 +177,36 @@ def main(_):
 
     globalVariables = tf.global_variables()
     for g in globalVariables:
-        # .initial_value()
         gp = tf.Print(g, [g])
         print(gp.eval())
 
 
     batchSize = 64
     #for i in range(20000):
-    for i in range(2):
+    for i in range(1):
       batch = mnist.train.next_batch(batchSize, shuffle=False)
 
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
             x: batch[0], y_: batch[1], keep_prob: 1.0})
+
+        for g in globalVariables:
+          gp = tf.Print(g, [g])
+          print(gp.eval())
+
         print('step %d, training accuracy %g' % (i, train_accuracy))
 
       train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
+      for g in globalVariables:
+        gp = tf.Print(g, [g])
+        print(gp.eval())
+
+      print(i)
+
     r = accuracy.eval(feed_dict={
       x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
+
 
     print('test accuracy {:.16f}'.format(r))
     # test accuracy expected 0.2029999941587448
