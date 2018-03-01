@@ -23,10 +23,10 @@ namespace SharpLearning.Backend.TensorFlow.Test
         {
             using (var g = new TFGraph())
             {
-                var variables = WeightVariable(g, new TFShape(2, 3));
+                (TFOutput wAssign, TFOutput wVariable) = WeightVariable(g, new TFShape(2, 3));
 
-                TFOutput[] variablesOutputs = new TFOutput[] { variables.variable };
-                TFOperation[] variablesAssignOps = new TFOperation[] { variables.variable.Operation };
+                TFOperation[] variablesAssignOps = new TFOperation[] { wAssign.Operation };
+                TFOutput[] variablesOutputs = new TFOutput[] { wVariable };
 
                 using (var session = new TFSession(g))
                 {
