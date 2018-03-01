@@ -11,6 +11,8 @@
     <OutputPath>.</OutputPath>
     <Name>TensorFlowPython</Name>
     <RootNamespace>TensorFlowPython</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>

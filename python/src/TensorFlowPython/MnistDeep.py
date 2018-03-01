@@ -169,9 +169,9 @@ def main(_):
     correct_prediction = tf.cast(correct_prediction, tf.float32)
   accuracy = tf.reduce_mean(correct_prediction)
 
-  graph_location = '../../outputs/tf/MnistDeep/'
-  print('Saving graph to: %s' % graph_location)
-  train_writer = tf.summary.FileWriter(graph_location, tf.get_default_graph())
+  #graph_location = '../../outputs/tf/MnistDeep/'
+  #print('Saving graph to: %s' % graph_location)
+  #train_writer = tf.summary.FileWriter(graph_location, tf.get_default_graph())
 
   with tf.Session() as sess:
     initializeOutpu = sess.run(tf.global_variables_initializer())
@@ -185,12 +185,14 @@ def main(_):
 
     batchSize = 64
     #for i in range(20000):
-    for i in range(100):
+    for i in range(2):
       batch = mnist.train.next_batch(batchSize, shuffle=False)
+
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
             x: batch[0], y_: batch[1], keep_prob: 1.0})
         print('step %d, training accuracy %g' % (i, train_accuracy))
+
       train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
 
     r = accuracy.eval(feed_dict={
