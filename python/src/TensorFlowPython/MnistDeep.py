@@ -39,7 +39,9 @@ import tensorflow as tf
 
 FLAGS = None
 
-GlobalSeed = 42
+# There are two seeds, a graph level seed and a op level seed
+GraphGlobalSeed = 17
+OpGlobalSeed = 42
 
 def deepnn(x):
   """deepnn builds the graph for a deep net for classifying digits.
@@ -97,7 +99,7 @@ def deepnn(x):
   # features.
   with tf.name_scope('dropout'):
     keep_prob = tf.placeholder(tf.float32)
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, seed=GlobalSeed)
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, seed=OpGlobalSeed)
 
   # Map the 1024 features to 10 classes, one for each digit
   with tf.name_scope('fc2'):
@@ -121,7 +123,7 @@ def max_pool_2x2(x):
 
 def weight_variable(shape):
   """weight_variable generates a weight variable of a given shape."""
-  initial = tf.truncated_normal(shape, stddev=0.1, seed=GlobalSeed)
+  initial = tf.truncated_normal(shape, stddev=0.1, seed=OpGlobalSeed)
   return tf.Variable(initial)
 
 
@@ -134,6 +136,8 @@ def bias_variable(shape):
 def main(_):
   # Import data
   mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True, validation_size=0)
+
+  tf.set_random_seed(GraphGlobalSeed)
 
   # Create the model
   x = tf.placeholder(tf.float32, [None, 784])

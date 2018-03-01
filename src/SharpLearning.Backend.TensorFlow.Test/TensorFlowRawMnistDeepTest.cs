@@ -17,7 +17,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
         const int ImageSize = 28;
         const int FeatureCount = ImageSize * ImageSize;
         const int ClassCount = 10;
-        const int GlobalSeed = 42;
+        const int GraphGlobalSeed = 17;
+        const int OpGlobalSeed = 42;
 
         [TestMethod]
         public void MnistDeep()
@@ -227,7 +228,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     // NOTE: That for even this simple CNN and for very small images the test time is about 1ms per image. I.e. 10000 ms. Depending on machine/CPU.
                     Log($"Accuracy {acc} Initialize {initializeTime_ms,6:F1} Train {trainTime_ms,6:F1} Test {testTime_ms,6:F1} [ms]");
                     Assert.AreEqual(0.0979999974370003, acc, 0.00000001); // This is what C# currently computes
-                    Assert.AreEqual(0.2461999952793121, acc); // This is what equivalent python computes
+                    Assert.AreEqual(0.2066999971866608, acc); // This is what equivalent python computes
                 }
             }
         }
@@ -381,7 +382,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             {
                 keep_prob = g.Placeholder(TFDataType.Float, new TFShape(1));
                 var shape = new TFShape(FullyConnectedFeatures);
-                h_fc1_drop = g.Dropout(h_fc1, keep_prob, shape, seed: GlobalSeed, operName: "dropOut");
+                h_fc1_drop = g.Dropout(h_fc1, keep_prob, shape, seed: OpGlobalSeed, operName: "dropOut");
             }
             //            with tf.name_scope('dropout'):
             //    keep_prob = tf.placeholder(tf.float32)
@@ -458,7 +459,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             const float mean = 0.0f;
             const float stddev = 0.1f;
             TFOutput shape_output = g.Const(shape.AsTensor());
-            TFOutput rnd = g.TruncatedNormal(shape_output, TFDataType.Float, seed: GlobalSeed);
+            TFOutput rnd = g.TruncatedNormal(shape_output, TFDataType.Float, seed: GraphGlobalSeed, seed2: OpGlobalSeed);
             TFTensor mean_tensor = new TFTensor(mean);
             TFTensor stddev_tensor = new TFTensor(stddev);
             TFOutput mean_output = g.Const(mean_tensor);

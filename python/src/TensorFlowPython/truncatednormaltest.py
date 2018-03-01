@@ -31,14 +31,17 @@ import tempfile
 from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
+from tensorflow.python.ops import gen_random_ops
 
 FLAGS = None
 
-GlobalSeed = 42
+# There are two seeds, a graph level seed and a op level seed
+GraphGlobalSeed = 17
+OpGlobalSeed = 42
 
 def weight_variable(shape):
   """weight_variable generates a weight variable of a given shape."""
-  initial = tf.truncated_normal(shape, stddev=0.1, seed=GlobalSeed)
+  initial = tf.truncated_normal(shape, stddev=0.1, seed=OpGlobalSeed)
   return tf.Variable(initial)
 
 
@@ -49,13 +52,22 @@ def bias_variable(shape):
 
 
 def main(_):
-  w = weight_variable([2, 3])
+  shape = [2, 3]
+  tf.set_random_seed(GraphGlobalSeed)
+  truncatedNormalDirect = gen_random_ops._truncated_normal(shape, tf.float32, seed=GraphGlobalSeed, seed2=OpGlobalSeed)
+  
+  w = weight_variable(shape)
 
   with tf.Session() as sess:
-    initializeOutpu = sess.run(tf.global_variables_initializer())
+    truncatedNormalDirectPrint = tf.Print(truncatedNormalDirect, [truncatedNormalDirect])
+    print(truncatedNormalDirectPrint.eval())
 
-    globalVariables = tf.global_variables()
-    for g in globalVariables:
+    globalVars = tf.global_variables()
+    initializor = tf.variables_initializer(globalVars)
+    initializeOutpu = sess.run(initializor)
+
+    #globalVariables = tf.global_variables()
+    for g in globalVars:
         # .initial_value()
         gp = tf.Print(g, [g])
         print(gp.eval())
