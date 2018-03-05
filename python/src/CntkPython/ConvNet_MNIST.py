@@ -54,11 +54,12 @@ def convnet_mnist():
     image_height = 28
     image_width  = 28
     num_channels = 1
-    input_dim = image_height * image_width * num_channels
+    input_shape = (num_channels, image_height, image_width)
+    input_dimensions = image_height * image_width * num_channels
     num_output_classes = 10
 
     # Input variables denoting the features and label data
-    input_var = C.ops.input_variable((num_channels, image_height, image_width), np.float32)
+    input_var = C.ops.input_variable(input_shape, np.float32)
     label_var = C.ops.input_variable(num_output_classes, np.float32)
 
     # Instantiate the feedforward classification model
@@ -96,7 +97,7 @@ def convnet_mnist():
     # Load train data
     path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))
     check_path(path)
-    reader_train = create_reader(path, True, input_dim, num_output_classes)
+    reader_train = create_reader(path, True, input_dimensions, num_output_classes)
 
     input_map = {
         input_var  : reader_train.streams.features,
@@ -116,7 +117,7 @@ def convnet_mnist():
     # Load test data.
     path = os.path.normpath(os.path.join(data_dir, "Test-28x28_cntk_text.txt"))
     check_path(path)
-    reader_test = create_reader(path, False, input_dim, num_output_classes)
+    reader_test = create_reader(path, False, input_dimensions, num_output_classes)
 
     input_map = {
         input_var : reader_test.streams.features,

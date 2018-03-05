@@ -27,10 +27,11 @@ namespace SharpLearning.Backend.Cntk.Test
             var imageWidth = 28;
             var numChannels = 1;
             var numOutputClasses = 10;
-            var inputDimensions = new int[] { imageWidth, imageHeight, numChannels };
+            var inputShape = new int[] { imageWidth, imageHeight, numChannels };
+            var inputDimensions = inputShape.Aggregate((d1, d2) => d1 * d2);
 
             // Input variables denoting the features and label data.
-            Variable inputVar = Variable.InputVariable(inputDimensions, dataType); ;
+            Variable inputVar = Variable.InputVariable(inputShape, dataType); ;
             Variable labelVar = Variable.InputVariable(new int[] { numOutputClasses }, dataType);
 
             // Instantiate the feedforward classification model
@@ -81,7 +82,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
                 // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
                 // However, unsure how to handle random shuffling in this case.
-                using (Value batchImages = Value.CreateBatch<float>(inputDimensions, trainingImages, device))
+                using (Value batchImages = Value.CreateBatch<float>(inputShape, trainingImages, device))
                 using (Value batchTarget = Value.CreateBatch<float>(new int[] { numOutputClasses }, trainingTargets, device))
                 {
                     inputMap.Add(inputVar, batchImages);
@@ -108,7 +109,7 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             // Test model.
-            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(model, device, mnist);
+            var csharpError = MnistSimpleExampleTest.TestModelUsingMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -117,7 +118,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = MnistSimpleExampleTest.TestModelMnistLoader(loadedModel, device, mnist);
+            var loadedModelError = MnistSimpleExampleTest.TestModelUsingMnistLoader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
@@ -144,10 +145,11 @@ namespace SharpLearning.Backend.Cntk.Test
             var imageWidth = 28;
             var numChannels = 1;
             var numOutputClasses = 10;
-            var inputDimensions = new int[] { imageWidth, imageHeight, numChannels };
+            var inputShape = new int[] { imageWidth, imageHeight, numChannels };
+            var inputDimensions = inputShape.Aggregate((d1, d2) => d1 * d2);
 
             // Input variables denoting the features and label data.
-            Variable inputVar = Variable.InputVariable(inputDimensions, dataType); ;
+            Variable inputVar = Variable.InputVariable(inputShape, dataType); ;
             Variable labelVar = Variable.InputVariable(new int[] { numOutputClasses }, dataType);
 
             // Instantiate the feedforward classification model
@@ -186,11 +188,13 @@ namespace SharpLearning.Backend.Cntk.Test
             // Load train data.
             var trainPath = Path.Combine(dataDirectoryPath, "Train-28x28_cntk_text.txt");
             if (!File.Exists(trainPath))
-            { throw new FileNotFoundException("Data not present. Use MNIST CNTK python example to download data"); }
+            {
+                throw new FileNotFoundException("Data not present. Use MNIST CNTK python example to download data");
+            }
 
             var readerTrain = CreateReader(trainPath,
                 epochSize: 60000,
-                inputDimensions: inputDimensions.Aggregate((d1, d2) => d1 * d2),
+                inputDimensions: inputDimensions,
                 numberOfClasses: numOutputClasses,
                 randomize: false);
 
@@ -219,7 +223,7 @@ namespace SharpLearning.Backend.Cntk.Test
             // Test model.
             var mnist = Mnist.Load(DownloadPath);
 
-            var csharpError = MnistSimpleExampleTest.TestModelMnistLoader(model, device, mnist);
+            var csharpError = MnistSimpleExampleTest.TestModelUsingMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -228,7 +232,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = MnistSimpleExampleTest.TestModelMnistLoader(model, device, mnist);
+            var loadedModelError = MnistSimpleExampleTest.TestModelUsingMnistLoader(model, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
