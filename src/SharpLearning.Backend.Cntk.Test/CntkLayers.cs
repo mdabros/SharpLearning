@@ -1,5 +1,6 @@
 ﻿using CNTK;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // To avoid name-clash with SharpLearning.Backend.DataType.
@@ -58,7 +59,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// <param name="bias">bias (bool, optional, defaults to `True`): the layer will have no bias if `False` is passed here</param>
         /// <param name="initBias">init_bias (scalar or NumPy array or :mod:`cntk.initializer`, defaults to 0): initial value of weights `b`</param>
         /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the operation to it</returns>
-        public Function Dense(Variable x, int shape, Func<Variable, Function> activation = null, CNTKDictionary init = null,
+        public Function Dense(Variable x, int shape, Activation activation = Test.Activation.Identity, CNTKDictionary init = null,
             int inputRank = 0, int mapRank = 0, bool bias = true, CNTKDictionary initBias = null)
         {
             if(inputRank != 0 && mapRank != 0)
@@ -88,7 +89,7 @@ namespace SharpLearning.Backend.Cntk.Test
 
             init = init ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
             var w = new Parameter(wShape, m_dataType, init, m_device, "w");
-
+            
             // Weights and input is in reversed order compared to the original python code.
             // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
             // The python API was made in this way to be similar to other deep learning toolkits. 
@@ -102,12 +103,7 @@ namespace SharpLearning.Backend.Cntk.Test
                 r = r + b;
             }
 
-            if(activation != null)
-            {
-                r = activation(r);
-            }
-
-            return r;
+            return Activation(r, activation);
         }
 
         /// <summary>
@@ -138,6 +134,110 @@ namespace SharpLearning.Backend.Cntk.Test
             return CNTKLib.Dropout(x, dropOutRate, seed);
         }
 
+        /// <summary>
+        /// From Convolution2D in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// Simplified compared to python version.
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x">Input to the convolution operation</param>
+        /// <param name="filterShape">filter_shape (`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
+        /// <param name="numFilters">num_filters (int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
+        /// <param name="activation"> activation (:class:`~cntk.ops.functions.Function`, defaults to `identity`): optional function to apply at the end, e.g. `relu`</param>
+        /// <param name="init">init (scalar or NumPy array or :mod:`cntk.initializer`, defaults to :func:`~cntk.initializer.glorot_uniform` ): initial value of weights `W`</param>
+        /// <param name="pad"> pad (`bool` or `tuple` of `bools`, defaults to `False`): if `False`, then the filter will be shifted over the "valid"
+        /// area of input, that is, no value outside the area is used.If ``pad=True`` on the other hand,
+        /// the filter will be applied to all input positions, and positions outside the valid region will be considered containing zero.
+        /// Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="strides">strides (`int` or `tuple` of `ints`, defaults to 1): stride of the convolution (increment when sliding the filter over the input). Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="bias"> bias (bool, defaults to `True`): the layer will have no bias if `False` is passed here</param>
+        /// <param name="initBias"> init_bias (scalar or NumPy array or :mod:`cntk.initializer`, defaults to 0): initial value of weights `b`</param>
+        /// <param name="reductionRank">reduction_rank (`int`, defaults to 1): set to 0 if input items are scalars (input has no depth axis), e.g. an audio signal or a black-and-white image</param>
+        /// <param name="dilation">dilation (tuple, optional): the dilation value along each axis, default 1 mean no dilation.</param>
+        /// <param name="groups">groups (`int`, default 1): number of groups during convolution, that controls the connections between input and output channels. Deafult value is 1, 
+        /// which means that all input channels are convolved to produce all output channels.A value of N would mean that the input(and output) channels are
+        /// divided into N groups with the input channels in one group(say i-th input group) contributing to output channels in only one group(i-th output group).
+        /// Number of input and output channels must be divisble by value of groups argument.Also, value of this argument must be strictly positive, i.e.groups > 0.</param>
+        /// <returns></returns>
+        public Function Convolution2D(Variable x, NDShape filterShape, int numFilters,
+            Activation activation = Test.Activation.Identity,
+            CNTKDictionary init = null,
+            bool pad = false,
+            bool bias = true,
+            CNTKDictionary initBias = null,
+            uint reductionRank = 1,
+            int dilation = 1,
+            uint groups = 1)
+        {
+            return Convolution2D(x,
+                filterShape,
+                numFilters,
+                new int[] { 1, 1 },
+                activation,
+                init,
+                pad,
+                bias,
+                initBias,
+                reductionRank,
+                dilation,
+                groups);
+        }
+
+        /// <summary>
+        /// From Convolution2D in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// Simplified compared to python version.
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x">Input to the convolution operation</param>
+        /// <param name="filterShape">filter_shape (`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
+        /// <param name="numFilters">num_filters (int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
+        /// <param name="strides">strides (`int` or `tuple` of `ints`, defaults to 1): stride of the convolution (increment when sliding the filter over the input). Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="activation"> activation (:class:`~cntk.ops.functions.Function`, defaults to `identity`): optional function to apply at the end, e.g. `relu`</param>
+        /// <param name="init">init (scalar or NumPy array or :mod:`cntk.initializer`, defaults to :func:`~cntk.initializer.glorot_uniform` ): initial value of weights `W`</param>
+        /// <param name="pad"> pad (`bool` or `tuple` of `bools`, defaults to `False`): if `False`, then the filter will be shifted over the "valid"
+        /// area of input, that is, no value outside the area is used.If ``pad=True`` on the other hand,
+        /// the filter will be applied to all input positions, and positions outside the valid region will be considered containing zero.
+        /// Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="bias"> bias (bool, defaults to `True`): the layer will have no bias if `False` is passed here</param>
+        /// <param name="initBias"> init_bias (scalar or NumPy array or :mod:`cntk.initializer`, defaults to 0): initial value of weights `b`</param>
+        /// <param name="reductionRank">reduction_rank (`int`, defaults to 1): set to 0 if input items are scalars (input has no depth axis), e.g. an audio signal or a black-and-white image</param>
+        /// <param name="dilation">dilation (tuple, optional): the dilation value along each axis, default 1 mean no dilation.</param>
+        /// <param name="groups">groups (`int`, default 1): number of groups during convolution, that controls the connections between input and output channels. Deafult value is 1, 
+        /// which means that all input channels are convolved to produce all output channels.A value of N would mean that the input(and output) channels are
+        /// divided into N groups with the input channels in one group(say i-th input group) contributing to output channels in only one group(i-th output group).
+        /// Number of input and output channels must be divisble by value of groups argument.Also, value of this argument must be strictly positive, i.e.groups > 0.</param>
+        /// <returns></returns>
+        public Function Convolution2D(Variable x, NDShape filterShape, int numFilters,
+            NDShape strides = null,
+            Activation activation = Test.Activation.Identity,
+            CNTKDictionary init = null,
+            bool pad = false,
+            bool bias = true,
+            CNTKDictionary initBias = null,
+            uint reductionRank = 1,
+            int dilation = 1,
+            uint groups = 1)
+        {
+            if (filterShape.Dimensions.Count != 2)
+            { throw new ArgumentException($"Convolution2D requires a 2D filter, e.g. (3,3). Got {filterShape.Dimensions.Count}D."); }
+
+            return Convolution(x: x,
+                filterShape: filterShape,
+                numFilters: numFilters,
+                activation: activation,
+                init: init,
+                pad: pad,
+                strides: strides,
+                sharing: true,
+                bias: bias,
+                initBias: initBias,
+                reductionRank: reductionRank,
+                dilation: dilation,
+                groups: groups);
+        }
 
         /// <summary>
         /// From Convolution in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
@@ -145,7 +245,7 @@ namespace SharpLearning.Backend.Cntk.Test
         /// Input description is from python, so might not match this implementation completely. 
         /// But is included to provide the itension of each input.
         /// </summary>
-        /// <param name="x">Input to the dense operation</param>
+        /// <param name="x">Input to the convolution operation</param>
         /// <param name="filterShape">(`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
         /// <param name="numFilters">(int, defaults to `None`): number of filters (output feature-map depth), or ``()`` to denote scalar output items (output shape will have no depth axis).</param>
         /// <param name="sequential">(bool, defaults to `False`): if `True`, also convolve along the dynamic axis. ``filter_shape[0]`` corresponds to dynamic axis.</param>
@@ -171,21 +271,25 @@ namespace SharpLearning.Backend.Cntk.Test
         /// <returns>cntk.ops.functions.Function: A function that accepts one argument and applies the convolution operation to it</returns>
         Function Convolution(Variable x, NDShape filterShape, int numFilters,
             bool sequential = false,
-            Func<Variable, Function> activation = null,
+            Activation activation = Test.Activation.Identity,
             CNTKDictionary init = null,
             bool pad = false,
             NDShape strides = null,
-            bool sharing = true,
+            bool sharing = true, // must be true currently
             bool bias = true,
             CNTKDictionary initBias = null,
-            int reductionRank = 1,
-            bool transposeWeights =
-            false, int dilation = 1,
-            int groups = 1,
+            uint reductionRank = 1,
+            bool transposeWeights = false, 
+            int dilation = 1,
+            uint groups = 1,
             int maxTempMemSizeInSamples = 0)
         {
-            if (pad)
-                throw new ArgumentException("Padding not supported"); 
+            var sharings = filterShape.Dimensions.Select(d => sharing).ToList();
+            var pads = filterShape.Dimensions.Select(d => pad).ToList();
+            var dilations = filterShape.Dimensions.Select(d => dilation).ToList();
+
+            if (filterShape.Dimensions.Count != strides.Dimensions.Count)
+                throw new ArgumentException($"FilterShape rank: {filterShape.Dimensions.Count} differs from strides ranks: {strides.Dimensions.Count}");
             if (reductionRank != 0  && reductionRank != 1)
                 throw new ArgumentException("Convolution: reduction_rank must be 0 or 1");
             if (transposeWeights)
@@ -197,8 +301,116 @@ namespace SharpLearning.Backend.Cntk.Test
             if (groups > 1)
                 throw new ArgumentException("Convolution: groups > 1, is not currently supported by Convolution layer. For group convolution with groups > 1, use CNTK's low-level convolution node (cntk.convolution).");
 
+            var emulatingOutputDepth = numFilters == 0; // if no filters specified.
+            var emulatingInputDepth = reductionRank == 0;
 
-            return null;
+            var actualOutputChannelsShape = emulatingOutputDepth ? 1 : numFilters; // might need to be a shape/dimensions array.              
+            var actualReductionShape = NDShape.InferredDimension;
+            var actualFilterShape = filterShape;
+            
+            // add the dimension to the options as well
+            var numEmulatedAxes = emulatingInputDepth;
+            if (numEmulatedAxes)
+            {
+                strides.Dimensions.Add(1); // strides = (1,) * num_emulated_axes + strides
+                sharings.Add(true); // sharing = (True,) * num_emulated_axes + sharing
+                pads.Add(false); // pad = (False,) * num_emulated_axes + pad
+            }
+
+            var kernel_shape = actualFilterShape.Dimensions.ToList();
+            kernel_shape.Add(actualReductionShape); // kernel := filter plus reductionDims;
+
+            var wShape = kernel_shape.ToList();
+            wShape.Add(actualOutputChannelsShape);
+            init = init ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
+            var w = new Parameter(wShape.ToArray(), m_dataType, init, m_device, "w");
+
+            // Weights and input is in reversed order compared to the original python code.
+            // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
+            // The python API was made in this way to be similar to other deep learning toolkits. 
+            // The C# and the C++ share the same column major layout.
+            var r = CNTKLib.Convolution(w, x, 
+                strides, 
+                new BoolVector(sharings),
+                new BoolVector(pads),
+                new int[] { dilation },
+                reductionRank,
+                groups);
+
+            if (bias)
+            {
+                initBias = initBias ?? m_getDefaultInitializer(); // should also be possible to provide a fixed value.
+                var b = new Parameter(r.Output.Shape, m_dataType, initBias, m_device, "b");
+                r = r + b;
+            }
+
+            return Activation(r, activation);
+        }
+
+        /// <summary>
+        /// From MaxPooling in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="shape">filter_shape (`int` or `tuple` of `ints`): shape (spatial extent) of the receptive field, *not* including the input feature-map depth. E.g. (3,3) for a 2D convolution.</param>
+        /// <param name="strides"> strides (`int` or `tuple` of `ints`, defaults to 1): stride (increment when sliding over the input). Use a `tuple` to specify a per-axis value.</param>
+        /// <param name="pad">pad (`bool` or `tuple` of `bools`, defaults to `False`): if `False`, then the pooling operation will be shifted over the "valid"
+        /// area of input, that is, no value outside the area is used.If ``pad=True`` on the other hand,
+        /// pooling will be applied to all input positions, and positions outside the valid region will be considered containing zero.
+        /// Use a `tuple` to specify a per-axis value</param>
+        /// <returns></returns>
+        public Function MaxPooling(Variable x, NDShape shape, NDShape strides, bool pad = false)
+        {
+            return Pooling(x, PoolingType.Max, shape, false, strides, pad);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="activation"></param>
+        /// <returns></returns>
+        public Function Activation(Variable x, Activation activation)
+        {
+            switch (activation)
+            {
+                case Test.Activation.Identity:
+                    return x; // do nothing
+                case Test.Activation.Relu:
+                    return CNTKLib.ReLU(x);
+                case Test.Activation.Sigmoid:
+                    return CNTKLib.Sigmoid(x);
+                case Test.Activation.Tanh:
+                    return CNTKLib.Tanh(x);
+                default:
+                    throw new ArgumentException("Unsupported Activation: " + activation);
+            }
+        }
+
+        /// <summary>
+        /// From _Pooling in: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// 
+        /// Input description is from python, so might not match this implementation completely. 
+        /// But is included to provide the itension of each input.
+        /// </summary>
+        /// <param name="x">Input to the pooling operation</param>
+        /// <param name="type"></param>
+        /// <param name="shape"></param>
+        /// <param name="sequential"></param>
+        /// <param name="strides"></param>
+        /// <param name="pad"></param>
+        /// <returns></returns>
+        static Function Pooling(Variable x, PoolingType type, NDShape shape, bool sequential, NDShape strides, bool pad)
+        {
+            if (sequential)
+            {
+                throw new ArgumentException("Pooling: sequential option not implemented yet");
+            }
+
+            var pads = new BoolVector(shape.Dimensions.Select(d => pad).ToArray());
+            return CNTKLib.Pooling(x, type, shape, strides, pads);
         }
         
         static CNTKDictionary DefaultInitializer(uint seed)
@@ -208,5 +420,13 @@ namespace SharpLearning.Backend.Cntk.Test
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank, seed);
         }
+    }
+
+    public enum Activation
+    {
+        Identity,
+        Relu,
+        Sigmoid,
+        Tanh
     }
 }

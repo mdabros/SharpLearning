@@ -81,11 +81,11 @@ namespace SharpLearning.Backend.Cntk.Test
                     trainer.TrainMinibatch(inputMap, false, device);
                     inputMap.Clear();
 
-                    if ((i % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
+                    if (((i + 1) % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                     {
-                        var batchLoss = (float)trainer.PreviousMinibatchLossAverage();
-                        var batchError = (float)trainer.PreviousMinibatchEvaluationAverage();
-                        Trace.WriteLine($"Minibatch: {i} CrossEntropyLoss = {batchLoss}, EvaluationCriterion = {batchError}");
+                        var trainLossValue = trainer.PreviousMinibatchLossAverage();
+                        var evaluationValue = trainer.PreviousMinibatchEvaluationAverage();
+                        Trace.WriteLine($"Minibatch: {i + 1} CrossEntropyLoss = {trainLossValue:F16}, EvaluationCriterion = {evaluationValue:F16}");
                     }
 
                     var samplesSeenNextBatch = (i + 2) * minibatchSize;
@@ -97,7 +97,7 @@ namespace SharpLearning.Backend.Cntk.Test
             }
 
             // Test model.
-            var csharpError = TestModel_Mnist_Loader(model, device, mnist);
+            var csharpError = TestModelUsingMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -106,13 +106,13 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = TestModel_Mnist_Loader(loadedModel, device, mnist);
+            var loadedModelError = TestModelUsingMnistLoader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.202800; // Most likely from diffent observations, both in training and in test.
+            var pythonError = 0.202800;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
@@ -131,8 +131,6 @@ namespace SharpLearning.Backend.Cntk.Test
             var dataDirectoryPath = @"..\..\..\python\src\CntkPython\";
             var inputDimensions = 784;
             var numberOfClasses = 10;
-
-            Trace.Write(Directory.GetCurrentDirectory());
 
             // Input variables denoting the features and label data.
             Variable x = Variable.InputVariable(new int[] { inputDimensions }, dataType); ;
@@ -187,18 +185,18 @@ namespace SharpLearning.Backend.Cntk.Test
                 };
                 trainer.TrainMinibatch(arguments, device);
 
-                if ((i % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
+                if (((i + 1) % trainingProgressOutputFreq) == 0 && trainer.PreviousMinibatchSampleCount() != 0)
                 {
-                    var trainLossValue = (float)trainer.PreviousMinibatchLossAverage();
-                    var evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
-                    Trace.WriteLine($"Minibatch: {i} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                    var trainLossValue = trainer.PreviousMinibatchLossAverage();
+                    var evaluationValue = trainer.PreviousMinibatchEvaluationAverage();
+                    Trace.WriteLine($"Minibatch: {i + 1} CrossEntropyLoss = {trainLossValue:F16}, EvaluationCriterion = {evaluationValue:F16}");
                 }
             }
 
             // Test model.
             var mnist = Mnist.Load(DownloadPath);
 
-            var csharpError = TestModel_Mnist_Loader(model, device, mnist);
+            var csharpError = TestModelUsingMnistLoader(model, device, mnist);
             Trace.WriteLine($"Test Error: {csharpError}");
 
             // Save model.
@@ -207,13 +205,13 @@ namespace SharpLearning.Backend.Cntk.Test
 
             // Test loaded model.
             var loadedModel = Function.Load(modelPath, device);
-            var loadedModelError = TestModel_Mnist_Loader(loadedModel, device, mnist);
+            var loadedModelError = TestModelUsingMnistLoader(loadedModel, device, mnist);
 
             Trace.WriteLine("Loaded Model Error: " + loadedModelError);
             Assert.AreEqual(csharpError, loadedModelError, 0.00001);
 
             // Test against python example.
-            var pythonError = 0.202800; // Most likely from diffent observations, both in training and in test.
+            var pythonError = 0.202800;
             Assert.AreEqual(pythonError, csharpError, 0.00001);
         }
 
@@ -229,7 +227,7 @@ namespace SharpLearning.Backend.Cntk.Test
             return MinibatchSource.TextFormatMinibatchSource(path, streamConfigurations, epochSize, randomize);
         }
 
-        double TestModel_Mnist_Loader(Function model, DeviceDescriptor device, Mnist mnist)
+        public static double TestModelUsingMnistLoader(Function model, DeviceDescriptor device, Mnist mnist)
         {
             var numberOfTestSamples = mnist.TestImages.Count();
             var readerTest = mnist.GetTestReader(); // renew test reader.

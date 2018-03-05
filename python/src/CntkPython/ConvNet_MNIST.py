@@ -1,5 +1,6 @@
 
 # Modified to include the mnist download code.
+# Modified to be more similar to simple mnist.
 
 # Copyright (c) Microsoft. All rights reserved.
 
@@ -7,122 +8,134 @@
 # for full license information.
 # ==============================================================================
 
-from __future__ import print_function
+import argparse
 import numpy as np
 import sys
 import os
 import cntk as C
+import mnist_utils as ut
+
+from cntk.train import Trainer, minibatch_size_schedule 
+from cntk.io import MinibatchSource, CTFDeserializer, StreamDef, StreamDefs, INFINITELY_REPEAT
+from cntk.device import cpu, try_set_default_device
+from cntk.learners import sgd, adadelta, learning_parameter_schedule_per_sample
+from cntk.ops import relu, element_times, constant, times
+from cntk.layers import Dense, Sequential, For
+from cntk.losses import cross_entropy_with_softmax
+from cntk.metrics import classification_error
+from cntk.train.training_session import *
+from cntk.logging import ProgressPrinter, TensorBoardProgressWriter
+from cntk.initializer import glorot_uniform, uniform
 
 # Paths relative to current python file.
-abs_path   = os.path.dirname(os.path.abspath(__file__))
-data_path  = abs_path
-model_path = os.path.join(abs_path, "Models")
+data_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Define the reader for both training and evaluation action.
+def check_path(path):
+    if not os.path.exists(path):
+        readme_file = os.path.normpath(os.path.join(
+            os.path.dirname(path), "..", "README.md"))
+        raise RuntimeError(
+            "File '%s' does not exist. Please follow the instructions at %s to download and prepare it." % (path, readme_file))
+
 def create_reader(path, is_training, input_dim, label_dim):
-    return C.io.MinibatchSource(C.io.CTFDeserializer(path, C.io.StreamDefs(
-        features=C.io.StreamDef(field='features', shape=input_dim),
-        labels=C.io.StreamDef(field='labels',   shape=label_dim)
-    )), randomize=is_training, max_sweeps=C.io.INFINITELY_REPEAT if is_training else 1)
-
+    return MinibatchSource(CTFDeserializer(path, StreamDefs(
+        features  = StreamDef(field='features', shape=input_dim, is_sparse=False),
+        labels    = StreamDef(field='labels',   shape=label_dim, is_sparse=False)
+    )), randomize=False, max_sweeps = INFINITELY_REPEAT if is_training else 1)
 
 # Creates and trains a feedforward classification model for MNIST images
-def convnet_mnist(debug_output=False, epoch_size=60000, minibatch_size=64, max_epochs=40):
+def convnet_mnist():
+    
+    # Set global device type.
+    cpu = C.DeviceDescriptor.cpu_device()
+    try_set_default_device(cpu, acquire_device_lock=False)
+    
+    # Define data.
     image_height = 28
     image_width  = 28
     num_channels = 1
-    input_dim = image_height * image_width * num_channels
+    input_shape = (num_channels, image_height, image_width)
+    input_dimensions = image_height * image_width * num_channels
     num_output_classes = 10
 
     # Input variables denoting the features and label data
-    input_var = C.ops.input_variable((num_channels, image_height, image_width), np.float32)
+    input_var = C.ops.input_variable(input_shape, np.float32)
     label_var = C.ops.input_variable(num_output_classes, np.float32)
 
     # Instantiate the feedforward classification model
     scaled_input = C.ops.element_times(C.ops.constant(0.00390625), input_var)
 
+    # setup initializer
+    init = uniform(scale= 0.1, seed=32)
+
     with C.layers.default_options(activation=C.ops.relu, pad=False):
-        conv1 = C.layers.Convolution2D((5,5), 32, pad=True)(scaled_input)
+        conv1 = C.layers.Convolution2D((5,5), 32, init=init, bias=False, pad=True)(scaled_input)
         pool1 = C.layers.MaxPooling((3,3), (2,2))(conv1)
-        conv2 = C.layers.Convolution2D((3,3), 48)(pool1)
+        conv2 = C.layers.Convolution2D((3,3), 48, init=init, bias=False)(pool1)
         pool2 = C.layers.MaxPooling((3,3), (2,2))(conv2)
-        conv3 = C.layers.Convolution2D((3,3), 64)(pool2)
-        f4    = C.layers.Dense(96)(conv3)
-        drop4 = C.layers.Dropout(0.5)(f4)
-        z     = C.layers.Dense(num_output_classes, activation=None)(drop4)
+        conv3 = C.layers.Convolution2D((3,3), 64, init=init, bias=False)(pool2)
+        dense4 = C.layers.Dense(96, init=init, bias=False)(conv3)
+        drop4 = C.layers.Dropout(0.5, seed=32)(dense4)
+        model = C.layers.Dense(num_output_classes, activation=None, init=init, bias=False)(drop4)
+    
+    # Define loss and error metric.
+    ce = C.losses.cross_entropy_with_softmax(model, label_var)
+    pe = C.metrics.classification_error(model, label_var)
 
-    ce = C.losses.cross_entropy_with_softmax(z, label_var)
-    pe = C.metrics.classification_error(z, label_var)
+    # Training config.
+    minibatch_size = 64
+    minibatch_iterations = 200
 
-    reader_train = create_reader(os.path.join(data_path, 'Train-28x28_cntk_text.txt'), True, input_dim, num_output_classes)
+    # Instantiate progress writers.
+    training_progress_output_freq = 100
 
-    # Set learning parameters
-    lr_per_sample    = [0.001]*10 + [0.0005]*10 + [0.0001]
-    lr_schedule      = C.learning_parameter_schedule_per_sample(lr_per_sample, epoch_size=epoch_size)
-    mms = [0]*5 + [0.9990239141819757]
-    mm_schedule      = C.learners.momentum_schedule_per_sample(mms, epoch_size=epoch_size)
+    # Instantiate the trainer object to drive the model training.
+    lr_schedule      = C.learning_parameter_schedule_per_sample(0.01)
+    learner = C.learners.sgd(model.parameters, lr_schedule)
+    trainer = C.Trainer(model, (ce, pe), learner)
 
-    # Instantiate the trainer object to drive the model training
-    learner = C.learners.momentum_sgd(z.parameters, lr_schedule, mm_schedule)
-    progress_printer = C.logging.ProgressPrinter(tag='Training', num_epochs=max_epochs)
-    trainer = C.Trainer(z, (ce, pe), learner, progress_printer)
+    # Load train data
+    path = os.path.normpath(os.path.join(data_dir, "Train-28x28_cntk_text.txt"))
+    check_path(path)
+    reader_train = create_reader(path, True, input_dimensions, num_output_classes)
 
-    # define mapping from reader streams to network inputs
     input_map = {
-        input_var : reader_train.streams.features,
-        label_var : reader_train.streams.labels
+        input_var  : reader_train.streams.features,
+        label_var  : reader_train.streams.labels
     }
 
-    C.logging.log_number_of_parameters(z) ; print()
+    # Train model.
+    for i in range(0, int(minibatch_iterations)):
+        mb = reader_train.next_minibatch(minibatch_size, input_map=input_map)
+        trainer.train_minibatch(mb)
+        if (((i + 1) % training_progress_output_freq) == 0 and trainer.previous_minibatch_sample_count != 0):
+            trainLossValue = trainer.previous_minibatch_loss_average
+            evaluationValue = trainer.previous_minibatch_evaluation_average
+            print("Minibatch:", i + 1, "CrossEntropyLoss = ", trainLossValue, "EvaluationCriterion = ", evaluationValue)
 
-    # Get minibatches of images to train with and perform model training
-    for epoch in range(max_epochs):       # loop over epochs
-        sample_count = 0
-        while sample_count < epoch_size:  # loop over minibatches in the epoch
-            data = reader_train.next_minibatch(min(minibatch_size, epoch_size - sample_count), input_map=input_map) # fetch minibatch.
-            trainer.train_minibatch(data)                                   # update model with it
-            sample_count += data[label_var].num_samples                     # count samples processed so far
-
-        trainer.summarize_training_progress()
-        z.save(os.path.join(model_path, "ConvNet_MNIST_{}.dnn".format(epoch)))
     
-    # Load test data
-    reader_test = create_reader(os.path.join(data_path, 'Test-28x28_cntk_text.txt'), False, input_dim, num_output_classes)
+    # Load test data.
+    path = os.path.normpath(os.path.join(data_dir, "Test-28x28_cntk_text.txt"))
+    check_path(path)
+    reader_test = create_reader(path, False, input_dimensions, num_output_classes)
 
     input_map = {
         input_var : reader_test.streams.features,
-        label_var : reader_test.streams.labels
+        label_var  : reader_test.streams.labels
     }
 
-    # Test data for trained model
-    epoch_size = 10000
-    minibatch_size = 1024
+    # Test data for trained model.
+    test_minibatch_size = 1
+    num_test_samples = 10000
+    test_result = 0.0
+    for i in range(0, int(num_test_samples)):
+        mb = reader_test.next_minibatch(test_minibatch_size, input_map=input_map)
+        eval_error = trainer.test_minibatch(mb)
+        test_result = test_result + eval_error
 
-    # process minibatches and evaluate the model
-    metric_numer    = 0
-    metric_denom    = 0
-    sample_count    = 0
-    minibatch_index = 0
+    # Average of evaluation errors of all test minibatches
+    return test_result / num_test_samples
 
-    while sample_count < epoch_size:
-        current_minibatch = min(minibatch_size, epoch_size - sample_count)
-
-        # Fetch next test min batch.
-        data = reader_test.next_minibatch(current_minibatch, input_map=input_map)
-
-        # minibatch data to be trained with
-        metric_numer += trainer.test_minibatch(data) * current_minibatch
-        metric_denom += current_minibatch
-
-        # Keep track of the number of samples processed so far.
-        sample_count += data[label_var].num_samples
-        minibatch_index += 1
-
-    print("")
-    print("Final Results: Minibatch[1-{}]: errs = {:0.2f}% * {}".format(minibatch_index+1, (metric_numer*100.0)/metric_denom, metric_denom))
-    print("")
-
-    return metric_numer/metric_denom
 
 if __name__=='__main__':
 
@@ -143,4 +156,5 @@ if __name__=='__main__':
         ut.savetxt(testPath, test)
         print ('Done.')
 
-    convnet_mnist()
+    error = convnet_mnist()
+    print("Test Error: %f" % error)

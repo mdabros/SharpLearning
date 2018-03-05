@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>98788219-2133-4032-a8c8-319b8f15d5c0</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>SimpleMNIST.py</StartupFile>
+    <StartupFile>ConvNet_MNIST.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
