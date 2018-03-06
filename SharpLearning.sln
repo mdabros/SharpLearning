@@ -60,8 +60,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural.Cntk", "src\SharpLearning.Neural.Cntk\SharpLearning.Neural.Cntk.csproj", "{95F92B6E-E981-4300-AB45-06010E969C87}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -168,10 +166,6 @@ Global
 		{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95F92B6E-E981-4300-AB45-06010E969C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95F92B6E-E981-4300-AB45-06010E969C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95F92B6E-E981-4300-AB45-06010E969C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95F92B6E-E981-4300-AB45-06010E969C87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
