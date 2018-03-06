@@ -39,7 +39,9 @@ import tensorflow as tf
 
 FLAGS = None
 
-GlobalSeed = 42
+# There are two seeds, a graph level seed and a op level seed
+GraphGlobalSeed = 17
+OpGlobalSeed = 42
 
 def deepnn(x):
   """deepnn builds the graph for a deep net for classifying digits.
@@ -97,7 +99,7 @@ def deepnn(x):
   # features.
   with tf.name_scope('dropout'):
     keep_prob = tf.placeholder(tf.float32)
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, seed=GlobalSeed)
+    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob, seed=OpGlobalSeed)
 
   # Map the 1024 features to 10 classes, one for each digit
   with tf.name_scope('fc2'):
@@ -121,7 +123,7 @@ def max_pool_2x2(x):
 
 def weight_variable(shape):
   """weight_variable generates a weight variable of a given shape."""
-  initial = tf.truncated_normal(shape, stddev=0.1, seed=GlobalSeed)
+  initial = tf.truncated_normal(shape, stddev=0.1, seed=OpGlobalSeed)
   return tf.Variable(initial)
 
 
@@ -133,7 +135,9 @@ def bias_variable(shape):
 
 def main(_):
   # Import data
-  mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True)
+  mnist = input_data.read_data_sets(FLAGS.data_dir, one_hot=True, validation_size=0)
+
+  tf.set_random_seed(GraphGlobalSeed)
 
   # Create the model
   x = tf.placeholder(tf.float32, [None, 784])
@@ -145,12 +149,11 @@ def main(_):
   y_conv, keep_prob = deepnn(x)
 
   with tf.name_scope('loss'):
-    cross_entropy = tf.squared_difference(x=y_conv, y=y_) # Note order is reversed
-  
+    perOutputLoss = tf.squared_difference(x=y_conv, y=y_) # Note order is reversed
     # We do not have softmax in C# yet, due to missing gradient
     #cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=y_,
     #                                                        logits=y_conv)
-  cross_entropy = tf.reduce_mean(cross_entropy)
+    cross_entropy = tf.reduce_mean(perOutputLoss)
 
   with tf.name_scope('optimizer'):
     # GradientDescent works really poorly, but it's just for testing
@@ -165,24 +168,45 @@ def main(_):
     correct_prediction = tf.cast(correct_prediction, tf.float32)
   accuracy = tf.reduce_mean(correct_prediction)
 
-  graph_location = '../../outputs/tf/MnistDeep/'
-  print('Saving graph to: %s' % graph_location)
-  train_writer = tf.summary.FileWriter(graph_location, tf.get_default_graph())
+  #graph_location = '../../outputs/tf/MnistDeep/'
+  #print('Saving graph to: %s' % graph_location)
+  #train_writer = tf.summary.FileWriter(graph_location, tf.get_default_graph())
 
   with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
+    initializeOutpu = sess.run(tf.global_variables_initializer())
+
+    globalVariables = tf.global_variables()
+    for g in globalVariables:
+        gp = tf.Print(g, [g])
+        print(gp.eval())
+
+
     batchSize = 64
     #for i in range(20000):
-    for i in range(100):
+    for i in range(1):
       batch = mnist.train.next_batch(batchSize, shuffle=False)
+
       if i % 100 == 0:
         train_accuracy = accuracy.eval(feed_dict={
             x: batch[0], y_: batch[1], keep_prob: 1.0})
+
+        for g in globalVariables:
+          gp = tf.Print(g, [g])
+          print(gp.eval())
+
         print('step %d, training accuracy %g' % (i, train_accuracy))
+
       train_step.run(feed_dict={x: batch[0], y_: batch[1], keep_prob: 0.5})
+
+      for g in globalVariables:
+        gp = tf.Print(g, [g])
+        print(gp.eval())
+
+      print(i)
 
     r = accuracy.eval(feed_dict={
       x: mnist.test.images, y_: mnist.test.labels, keep_prob: 1.0})
+
 
     print('test accuracy {:.16f}'.format(r))
     # test accuracy expected 0.2029999941587448

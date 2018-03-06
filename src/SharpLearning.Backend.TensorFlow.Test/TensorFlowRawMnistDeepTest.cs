@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Backend.Testing;
 using TensorFlow;
 
 namespace SharpLearning.Backend.TensorFlow.Test
@@ -14,7 +17,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
         const int ImageSize = 28;
         const int FeatureCount = ImageSize * ImageSize;
         const int ClassCount = 10;
-        const int GlobalSeed = 42;
+        const int GraphGlobalSeed = 17;
+        const int OpGlobalSeed = 42;
 
         [TestMethod]
         public void MnistDeep()
@@ -23,6 +27,8 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
             using (var g = new TFGraph())
             {
+                g.Seed = GraphGlobalSeed;
+
                 TFOutput x = g.Placeholder(TFDataType.Float, new TFShape(-1, FeatureCount), "x");
                 TFOutput y_ = g.Placeholder(TFDataType.Float, new TFShape(-1, ClassCount), "y_");
 
@@ -55,6 +61,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
 
                 TFOperation[] variablesAssignOps = GetVariableAssignOps(variablesList);
 
+                TFOutput correctPrediction;
                 TFOutput accuracy;
                 //with tf.name_scope('accuracy'):
                 using (g.WithScope("accuracy"))
@@ -63,8 +70,9 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     g.ArgMax(y_conv, one);
                     TFOutput argMaxActual = g.ArgMax(y_conv, one);
                     TFOutput argMaxExpected = g.ArgMax(y_, one);
-                    TFOutput correctPrediction = g.Equal(argMaxActual, argMaxExpected);
+                    correctPrediction = g.Equal(argMaxActual, argMaxExpected);
                     TFOutput castCorrectPrediction = g.Cast(correctPrediction, TFDataType.Float);
+                    TFOutput correctSum = g.ReduceSum(castCorrectPrediction);
                     accuracy = g.ReduceMean(castCorrectPrediction);
                     //correct_prediction = tf.equal(tf.argmax(y_conv, 1), tf.argmax(y_, 1))
                     //correct_prediction = tf.cast(correct_prediction, tf.float32)
@@ -75,15 +83,44 @@ namespace SharpLearning.Backend.TensorFlow.Test
                 //train_writer = tf.summary.FileWriter(graph_location)
                 //train_writer.add_graph(tf.get_default_graph())
 
-                var mnist = Mnist.Load(DownloadPath);
-                const int batchSize = 64;
-                const int iterations = 100;
+                var data = DataSets.Mnist.Load(DownloadPath);
+
+                const int trainBatchSize = 64;
+                const int iterations = 1; // 100;
+
+                var s = new Stopwatch();
+                s.Start();
 
                 using (var status = new TFStatus())
                 using (var session = new TFSession(g))
                 {
+                    TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
+                    TFBuffer runMetaData = null;
+                    TFBuffer runOptions = null;
+                    TFStatus trainStatus = new TFStatus();
+
                     // Initialize variables
                     session.GetRunner().AddTarget(variablesAssignOps).Run();
+
+                    // Dump initial assigns to see random initializes are identical
+                    TFTensor[] variablesInitialized = session.Run(new TFOutput[] { }, new TFTensor[] { }, variablesOutputs,
+                        targets, runMetaData, runOptions, trainStatus);
+
+                    // Can be used for debugging initialization of all variables
+                    //using (var w = new StreamWriter("MnistDeepVariablesInitial.txt"))
+                    //{
+                    //    foreach (var v in variablesInitialized)
+                    //    {
+                    //        var vText = v.ToString();
+                    //        var array = (Array)v.GetValue();
+                    //        w.WriteLine(vText);
+                    //        w.WriteLine(array.ToDebugText());
+                    //        Log(vText + " Initialize Logged");
+                    //    }
+                    //}
+
+                    var initializeTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
 
                     TFTensor train_dropout_keep_prob = new TFTensor(0.5f);
                     TFTensor test_dropout_keep_prob = new TFTensor(1f);
@@ -91,58 +128,164 @@ namespace SharpLearning.Backend.TensorFlow.Test
                     // Train (note that by using session.Run directly
                     //        we get a much more efficient loop, and it is easy to see what actually happens)
                     TFOutput[] inputs = new[] { x, y_, keep_prob };
-                    TFOutput[] outputs = updates; // Gradient updates are currently the outputs ensuring these are applied
-                    TFOperation[] targets = null; // TODO: It is possible to create a single operation target, instead of using outputs... how?
+                    TFOutput[] trainOutputs = updates; // Gradient updates are currently the outputs ensuring these are applied
 
-                    TFOutput[] accuracyInputs = new[] { x, y_, keep_prob };
                     TFOutput[] accuracyOutputs = new[] { accuracy };
+                    TFOutput[] correctPredictionOutputs = new[] { correctPrediction };
 
-                    TFBuffer runMetaData = null;
-                    TFBuffer runOptions = null;
-                    TFStatus trainStatus = new TFStatus();
+                    TFTensor[] inputValues = new TFTensor[inputs.Length];
 
-                    var trainReader = mnist.GetTrainReader();
-                    for (int i = 0; i < iterations; i++)
+
+                    // Pre-allocate train tensors
+                    TFTensor trainInputBatchTensor = new TFTensor(TFDataType.Float,
+                        new long[] { trainBatchSize, FeatureCount }, sizeof(float) * trainBatchSize * FeatureCount);
+                    TFTensor trainLabelBatchTensor = new TFTensor(TFDataType.Float,
+                        new long[] { trainBatchSize, ClassCount }, sizeof(float) * trainBatchSize * ClassCount);
+
+                    var rawTrainBatchEnumerator = data.CreateTrainBatchEnumerator(trainBatchSize);
+                    var trainBatchEnumerator = Convert(rawTrainBatchEnumerator, ClassCount);
+                    for (int i = 0; i < iterations && trainBatchEnumerator.MoveNext(); i++)
                     {
-                        (float[,] inputBatch, float[,] labelBatch) = trainReader.NextBatch(batchSize);
+                        (float[] inputBatch, float[] labelBatch) = trainBatchEnumerator.CurrentBatch();
 
+                        Marshal.Copy(inputBatch, 0, trainInputBatchTensor.Data, inputBatch.Length);
+                        Marshal.Copy(labelBatch, 0, trainLabelBatchTensor.Data, labelBatch.Length);
+                        inputValues[0] = trainInputBatchTensor;
+                        inputValues[1] = trainLabelBatchTensor;
+                        //inputValues[0] = TFTensor.FromBuffer(new TFShape(trainBatchSize, FeatureCount), inputBatch, 0, inputBatch.Length);
+                        //inputValues[1] = TFTensor.FromBuffer(new TFShape(trainBatchSize, ClassCount), labelBatch, 0, labelBatch.Length);
+                        
                         if (i % 100 == 0)
                         {
-                            TFTensor[] accuracyInputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch), test_dropout_keep_prob };
-                            TFTensor[] accuracyOutputValues = session.Run(accuracyInputs, accuracyInputValues, accuracyOutputs,
+                            inputValues[2] = test_dropout_keep_prob;
+                            TFTensor[] accuracyOutputValues = session.Run(inputs, inputValues, accuracyOutputs,
                                 targets, runMetaData, runOptions, trainStatus);
 
                             trainStatus.Raise();
 
                             var train_accuracy = accuracyOutputValues[0];
                             float train_acc = (float)train_accuracy.GetValue();
-
+                            if (i == 0)
+                            {
+                                Assert.AreEqual(train_acc, 0.03125f);
+                            }
                             Log($"Step {i} Accuracy {train_acc}");
+
+                            TFTensor[] variablesAfterEval = session.Run(new TFOutput[] { }, new TFTensor[] { }, variablesOutputs,
+                                targets, runMetaData, runOptions, trainStatus);
+                            trainStatus.Raise();
+                            using (var w = new StreamWriter("MnistDeepVariablesAfterTrainEval.txt"))
+                            {
+                                foreach (var v in variablesAfterEval)
+                                {
+                                    var vText = v.ToString();
+                                    var array = (Array)v.GetValue();
+                                    w.WriteLine(vText);
+                                    w.WriteLine(array.ToDebugText());
+                                }
+                            }
                         }
 
-                        TFTensor[] inputValues = new[] { new TFTensor(inputBatch), new TFTensor(labelBatch), train_dropout_keep_prob };
-                        TFTensor[] outputValues = session.Run(inputs, inputValues, outputs,
+                        inputValues[2] = train_dropout_keep_prob;
+                        TFTensor[] outputValues = session.Run(inputs, inputValues, trainOutputs,
                             targets, runMetaData, runOptions, trainStatus);
-
                         trainStatus.Raise();
+                        using (var w = new StreamWriter($"MnistDeepTrainOutputs_{i}.txt"))
+                        {
+                            foreach (var v in outputValues)
+                            {
+                                var vText = v.ToString();
+                                var array = (Array)v.GetValue();
+                                w.WriteLine(vText);
+                                w.WriteLine(array.ToDebugText());
+                                //Log(vText + " Initialize Logged");
+                            }
+                        }
+
+                        TFTensor[] variablesAfterTrain = session.Run(new TFOutput[] { }, new TFTensor[] { }, variablesOutputs,
+                            targets, runMetaData, runOptions, trainStatus);
+                        trainStatus.Raise();
+                        using (var w = new StreamWriter($"MnistDeepVariablesAfterTrain_{i}.txt"))
+                        {
+                            foreach (var v in variablesAfterTrain)
+                            {
+                                var vText = v.ToString();
+                                var array = (Array)v.GetValue();
+                                w.WriteLine(vText);
+                                w.WriteLine(array.ToDebugText());
+                            }
+                        }
                     }
+                    var trainTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
 
                     // Test trained model
-                    var testReader = mnist.GetTestReader();
-                    var (testImages, testLabels) = testReader.All();
+                    // Batch evaluation is faster (2x) and uses A LOT less memory, not batched == 6GB, batched == 240MB!
+                    var testBatchSize = 100;
+                    Debug.Assert(data.TestTargets.Data.Length % testBatchSize == 0); // Or we need to do something that handles remaining samples
 
-                    TFTensor evaluatedAccuracy = session.GetRunner()
-                        .AddInput(x, testImages)
-                        .AddInput(y_, testLabels)
-                        .AddInput(keep_prob, test_dropout_keep_prob) // DOESN*T WORK!??!
-                        .Run(accuracy);
+                    // Pre-allocate train tensors
+                    TFTensor testInputBatchTensor = new TFTensor(TFDataType.Float,
+                        new long[] { testBatchSize, FeatureCount }, sizeof(float) * testBatchSize * FeatureCount);
+                    TFTensor testLabelBatchTensor = new TFTensor(TFDataType.Float,
+                        new long[] { testBatchSize, ClassCount }, sizeof(float) * testBatchSize * ClassCount);
 
-                    float acc = (float)evaluatedAccuracy.GetValue();
+                    var rawTestBatchEnumerator = data.CreateTestBatchEnumerator(testBatchSize);
+                    var testBatchEnumerator = Convert(rawTestBatchEnumerator, ClassCount);
+                    var totalCount = 0;
+                    var correctCount = 0;
+                    while (testBatchEnumerator.MoveNext())
+                    {
+                        var (testInputBatch, testLabelBatch) = testBatchEnumerator.CurrentBatch();
 
-                    Log($"Accuracy {acc}");
-                    Assert.AreEqual(0.2029999941587448, acc);
+                        Marshal.Copy(testInputBatch, 0, testInputBatchTensor.Data, testInputBatch.Length);
+                        Marshal.Copy(testLabelBatch, 0, testLabelBatchTensor.Data, testLabelBatch.Length);
+                        inputValues[0] = testInputBatchTensor;
+                        inputValues[1] = testLabelBatchTensor;
+                        //inputValues[0] = TFTensor.FromBuffer(new TFShape(testBatchSize, FeatureCount), testInputBatch, 0, testInputBatch.Length);
+                        //inputValues[1] = TFTensor.FromBuffer(new TFShape(testBatchSize, ClassCount), testLabelBatch, 0, testLabelBatch.Length);
+
+                        inputValues[2] = test_dropout_keep_prob;
+
+                        TFTensor[] outputValues = session.Run(inputs, inputValues, correctPredictionOutputs,
+                            targets, runMetaData, runOptions, trainStatus);
+                        
+                        trainStatus.Raise();
+                        TFTensor evaluatedCorrectPrediction = outputValues[0];
+
+                        var ps = (bool[])evaluatedCorrectPrediction.GetValue();
+
+                        totalCount += ps.Length;
+                        foreach (var p in ps)
+                        {
+                            if (p) { ++correctCount; }
+                        }
+                    }
+
+                    var incorrectCount = totalCount - correctCount;
+                    var acc = correctCount / (float)totalCount;
+
+                    var testTime_ms = s.Elapsed.TotalMilliseconds;
+                    s.Restart();
+
+                    // NOTE: That for even this simple CNN and for very small images the test time is about 1ms per image. I.e. 10000 ms. Depending on machine/CPU.
+                    Log($"Accuracy {acc} Initialize {initializeTime_ms,6:F1} Train {trainTime_ms,6:F1} Test {testTime_ms,6:F1} [ms]");
+                    Assert.AreEqual(0.0898000001907349, acc, 0.00000001); // This is what C# currently computes
+                    //Assert.AreEqual(0.2066999971866608, acc); // This is what equivalent python computes
                 }
             }
+        }
+
+        private static IFlatBatchFeaturesTargetEnumerator<float, float> Convert(
+            IFlatBatchFeaturesTargetEnumerator<byte, byte> enumerator, int classCount)
+        {
+            var convertEnumerator = enumerator
+                // TODO: We really want to do this before batch enumerator so same as for tests..
+                //.From().To(fb => (float)fb, tb => (int)tb);
+                //.Feature().To(fb => (float)fb)
+                .Feature().To(fb => fb * (1.0f / byte.MaxValue))
+                .Target().ToOneHot(t => t, 1.0f, classCount);
+            return convertEnumerator;
         }
 
         private TFOutput[] GetVariableOutputs(List<(TFOutput assign, TFOutput variable)> variablesList)
@@ -282,7 +425,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             {
                 keep_prob = g.Placeholder(TFDataType.Float, new TFShape(1));
                 var shape = new TFShape(FullyConnectedFeatures);
-                h_fc1_drop = g.Dropout(h_fc1, keep_prob, shape, seed: GlobalSeed);
+                h_fc1_drop = g.Dropout(h_fc1, keep_prob, shape, seed: OpGlobalSeed, operName: "dropOut");
             }
             //            with tf.name_scope('dropout'):
             //    keep_prob = tf.placeholder(tf.float32)
@@ -359,7 +502,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             const float mean = 0.0f;
             const float stddev = 0.1f;
             TFOutput shape_output = g.Const(shape.AsTensor());
-            TFOutput rnd = g.TruncatedNormal(shape_output, TFDataType.Float);
+            TFOutput rnd = g.TruncatedNormal(shape_output, TFDataType.Float, seed: GraphGlobalSeed, seed2: OpGlobalSeed);
             TFTensor mean_tensor = new TFTensor(mean);
             TFTensor stddev_tensor = new TFTensor(stddev);
             TFOutput mean_output = g.Const(mean_tensor);
@@ -382,7 +525,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             // What about std dev???
             //Variable variable = g.Variable(initial);
 
-            TFOutput w = g.VariableV2(shape, TFDataType.Float);
+            TFOutput w = g.VariableV2(shape, TFDataType.Float, operName: "W");
             TFOutput w_init = g.Assign(w, initial);
             
             return (w_init, w);
@@ -404,7 +547,7 @@ namespace SharpLearning.Backend.TensorFlow.Test
             TFOutput initial = g.Const(tensor);
 
             TFShape shape = new TFShape(tensor.Shape);
-            TFOutput b = g.VariableV2(shape, TFDataType.Float);
+            TFOutput b = g.VariableV2(shape, TFDataType.Float, operName: "b");
             TFOutput b_init = g.Assign(b, initial);
 
             return (b_init, b);

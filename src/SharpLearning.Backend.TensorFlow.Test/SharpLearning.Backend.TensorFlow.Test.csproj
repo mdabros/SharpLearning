@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net471</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Backend.TensorFlow\SharpLearning.Backend.TensorFlow.csproj" />
+    <ProjectReference Include="..\SharpLearning.Backend.Testing\SharpLearning.Backend.Testing.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,13 +4,15 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>561c987c-7c37-4d7c-ac1b-2f1e6138c3be</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MnistSimple.py</StartupFile>
+    <StartupFile>MnistDeep.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>TensorFlowPython</Name>
     <RootNamespace>TensorFlowPython</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="truncatednormaltest.py" />
     <Compile Include="MnistDeep.py">
       <SubType>Code</SubType>
     </Compile>
