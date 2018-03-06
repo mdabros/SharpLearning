@@ -83,7 +83,7 @@ namespace SharpLearning.Neural.Cntk
         {
             if (input.Shape.Rank != 3)
             {
-                throw new ArgumentException($"Conv2D layer requires shape rank 3, got rank {input.Shape.Rank}");
+                throw new ArgumentException("Conv2D layer requires shape rank 3, got rank " + input.Shape.Rank);
             }
 
             var inputChannels = input.Shape[2];
@@ -101,7 +101,7 @@ namespace SharpLearning.Neural.Cntk
         {
             if (input.Shape.Rank != 3)
             {
-                throw new ArgumentException($"Pool2D layer requires shape rank 3, got rank {input.Shape.Rank}");
+                throw new ArgumentException("Pool2D layer requires shape rank 3, got rank " + input.Shape.Rank);
             }
 
             return CNTKLib.Pooling(input, PoolingType.Max,

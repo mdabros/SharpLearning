@@ -55,19 +55,43 @@ namespace SharpLearning.Neural.Test.Cntk
         //[TestMethod]
         public void CntkNeuralNetLearner_Learn_From_MinibatchSoruce()
         {
-            var epochs = 10;
+            CntkLayers.Device = DeviceDescriptor.GPUDevice(0);
+
+            var epochs = 100;
             var numberOfClasses = 10;
             var imageDimensions = new int[] { 32, 32, 3 };
 
             var net = CntkLayers.Input(imageDimensions);
-            net = CntkLayers.Conv2D(net, 5, 5, 8);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
             net = CntkLayers.Activation(net, Activation.ReLU);
-            net = CntkLayers.Dense(net, 64);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+            net = CntkLayers.Conv2D(net, 3, 3, 32);
+            net = CntkLayers.Activation(net, Activation.ReLU);
+
+            net = CntkLayers.Dense(net, 256);
+            net = CntkLayers.Activation(net, Activation.ReLU);
             net = CntkLayers.Dropout(net, 0.2, 123);
-            net = CntkLayers.Activation(net, Activation.ReLU);
+
             net = CntkLayers.Dense(net, numberOfClasses);
             net = CntkLayers.SoftMax(net);
-            var sut = new CntkNeuralNetLearner(net, CntkLayers.Device, 0.001, epochs, batchSize: 64);
+            var sut = new CntkNeuralNetLearner(net, CntkLayers.Device, 0.001, epochs, batchSize: 128);
 
             var cifarDirectory = @"K:\Git\CNTK\Examples\Image\DataSets\CIFAR-10\";
 

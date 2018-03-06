@@ -63,7 +63,7 @@ namespace SharpLearning.Neural.Cntk
             var evalError = CNTKLib.ClassificationError(m_network, targetVariable);
 
             var device = CntkLayers.Device;
-            Trace.WriteLine($"Using device: {device.Type}");
+            Trace.WriteLine("Using device: " + device.Type);
 
             // setup learner
             // todo: add learner type as input
@@ -123,7 +123,7 @@ namespace SharpLearning.Neural.Cntk
                 }
 
                 var currentLoss = accumulatedLoss / (double)targets.Length;
-                Trace.WriteLine($"Epoch: {epoch + 1}: Loss = {currentLoss}");
+                Trace.WriteLine("Epoch: " + (epoch + 1) + ": Loss = " + currentLoss);
             }
 
             // sometimes it seems the GC is too busy to collect.
@@ -194,7 +194,7 @@ namespace SharpLearning.Neural.Cntk
                 {
                     float trainLossValue = (float)trainer.PreviousMinibatchLossAverage();
                     float evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
-                    Trace.WriteLine($"Minibatch: {minibatchIdx} CrossEntropyLoss = {trainLossValue}, EvaluationCriterion = {evaluationValue}");
+                    Trace.WriteLine("Minibatch: " + minibatchIdx + " CrossEntropyLoss = " + trainLossValue + ", EvaluationCriterion = " + evaluationValue);
                 }
 
                 // Because minibatchSource is created with MinibatchSource.InfinitelyRepeat, 
