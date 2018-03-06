@@ -4,6 +4,9 @@ using CNTK;
 
 namespace SharpLearning.Neural.Cntk
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public enum Activation
     {
         None,
@@ -14,7 +17,7 @@ namespace SharpLearning.Neural.Cntk
     }
 
     /// <summary>
-    /// Temporary class to help create layers via cntk.
+    /// Layers operations for CNTK
     /// </summary>
     public static class CntkLayers
     {

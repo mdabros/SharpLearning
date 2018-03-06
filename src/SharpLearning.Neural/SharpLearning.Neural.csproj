@@ -82,9 +82,11 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="BorderMode.cs" />
+    <Compile Include="Cntk\CntkInitializers.cs" />
     <Compile Include="Cntk\CntkLayers.cs" />
     <Compile Include="Cntk\CntkNeuralNetLearner.cs" />
     <Compile Include="Cntk\CntkNeuralNetModel.cs" />
+    <Compile Include="Cntk\CntkOptimizers.cs" />
     <Compile Include="Cntk\CntkUtils.cs" />
     <Compile Include="Initializations\FanInFanOut.cs" />
     <Compile Include="Initializations\WeightInitialization.cs" />

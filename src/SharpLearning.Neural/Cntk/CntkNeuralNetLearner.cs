@@ -73,7 +73,7 @@ namespace SharpLearning.Neural.Cntk
             //var parameterLearners = new List<Learner>() { Learner.MomentumSGDLearner(m_network.Parameters(), 
             //    learningRatePerSample, momentumRatePerSample, false) };
 
-            var parameterLearners = new List<Learner>() { CntkUtils.AdamLearner(m_network.Parameters(),
+            var parameterLearners = new List<Learner>() { CntkOptimizers.AdamLearner(m_network.Parameters(),
                 new TrainingParameterScheduleDouble(m_learningRate, 1),
                 new TrainingParameterScheduleDouble(0.9, 1),
                 new TrainingParameterScheduleDouble(0.999, 1))
