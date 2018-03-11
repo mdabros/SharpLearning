@@ -8,52 +8,49 @@ namespace SharpLearning.Neural.Cntk
     /// </summary>
     public static class CntkOptimizers
     {
-        /// <summary>
-        /// create a Adam learner
-        /// </summary>
-        /// <param name="parameters">parameters to learn</param>
-        /// <param name="learningRateSchedule">learning rate schedule</param>
-        /// <param name="momentumSchedule">momentum schedule</param>
-        /// <param name="varianceMomentumSchedule">momentum schedule</param>
-        /// <param name="epsilon"></param>
-        /// <param name="adamax"></param>
-        /// <param name="unitGain">unit gain</param>
-        /// <param name="additionalOptions"></param>
-        /// <returns></returns>
-        public static Learner AdamLearner(IList<Parameter> parameters, TrainingParameterScheduleDouble learningRateSchedule,
-            TrainingParameterScheduleDouble momentumSchedule, TrainingParameterScheduleDouble varianceMomentumSchedule,
-            double epsilon = 1e-8, bool adamax = false,
-            bool unitGain = false, AdditionalLearningOptions additionalOptions = null)
-        {
-            if (additionalOptions == null)
-            {
-                additionalOptions = new AdditionalLearningOptions();
-            }
-
-            ParameterVector parameterVector = CntkUtils.AsParameterVector(parameters);
-            return CNTKLib.AdamLearner(parameterVector, learningRateSchedule, momentumSchedule, unitGain,
-                varianceMomentumSchedule, epsilon, adamax, additionalOptions);
-        }
 
         /// <summary>
-        /// create a Adam learner
+        /// Adam (Adaptive Moment Estimation) is another method that computes adaptive learning rates for each parameter. 
+        /// In addition to storing an exponentially decaying average of past squared gradients vtvt like Adadelta, 
+        /// Adam also keeps an exponentially decaying average of past gradients, similar to momentum.
+        /// Essentially Adam is RMSProp with momentum.
+        /// https://arxiv.org/pdf/1412.6980.pdf.
         /// </summary>
-        /// <param name="parameters">parameters to learn</param>
+        /// <param name="parameters">Learnable parameters of the model</param>
+        /// <param name="learningRate">Learning rate. (Default is 0.001)</param>
+        /// <param name="momentum">Momentum (default is 0.9).
+        /// Note that this is the beta1 parameter in the Adam paper.</param>
+        /// <param name="varianceMomentum">variance momentum schedule. (Default is 0.999). 
+        /// Note that this is the beta2 parameter in the Adam paper.</param>
+        /// <param name="l1Reguralization">L1 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="l2Reguralization">L2 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="unitGain"></param>
         /// <param name="epsilon"></param>
-        /// <param name="adamax"></param>
-        /// <param name="unitGain">unit gain</param>
-        /// <param name="additionalOptions"></param>
         /// <returns></returns>
-        public static Learner AdamLearner(IList<Parameter> parameters,
-            double epsilon = 1e-8, bool adamax = false,
-            bool unitGain = false, AdditionalLearningOptions additionalOptions = null)
+        public static Learner Adam(IList<Parameter> parameters, double learningRate = 0.001, 
+            double momentum = 0.9, double varianceMomentum = 0.999,              
+            double l1Reguralization = 0.0,
+            double l2Reguralization = 0.0,
+            bool unitGain = true, double epsilon = 1e-08f)
         {
-            return AdamLearner(parameters,
-                new TrainingParameterScheduleDouble(0.001, 1),
-                new TrainingParameterScheduleDouble(0.9, 1),
-                new TrainingParameterScheduleDouble(0.999, 1),
-                epsilon, adamax, unitGain,
-                additionalOptions);
+            var learningRatePerSample = new TrainingParameterScheduleDouble(learningRate, 1);
+            var momentumRate = new TrainingParameterScheduleDouble(momentum, 1);
+            var varianceMomentumRate = new TrainingParameterScheduleDouble(varianceMomentum, 1);
+
+            var options = new AdditionalLearningOptions();
+            options.l1RegularizationWeight = l1Reguralization;
+            options.l1RegularizationWeight = l2Reguralization;
+
+            // Consider: gradientClippingWithTruncation and gradientClippingThresholdPerSample
+
+            return CNTKLib.AdamLearner(CntkUtils.AsParameterVector(parameters), 
+                learningRatePerSample, 
+                momentumRate, 
+                unitGain, 
+                varianceMomentumRate, 
+                epsilon,
+                false,
+                options);
         }
     }
 }

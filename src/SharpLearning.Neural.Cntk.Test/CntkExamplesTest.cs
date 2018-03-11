@@ -40,7 +40,7 @@ namespace SharpLearning.Neural.Cntk.Test
             net = Dropout(net, 0.5);
             net = Dense(net, numberOfClasses);
 
-            var optimizer = CntkOptimizers.AdamLearner(net.Parameters());
+            var optimizer = CntkOptimizers.Adam(net.Parameters());
             var loss = CrossEntropyWithSoftmax(targetVariable, net.Output);
             var metric = ClassificationError(targetVariable, net.Output);
 
@@ -92,7 +92,7 @@ namespace SharpLearning.Neural.Cntk.Test
             net = Dropout(net, 0.5);
             net = Dense(net, numberOfClasses);
 
-            var optimizer = CntkOptimizers.AdamLearner(net.Parameters());
+            var optimizer = CntkOptimizers.Adam(net.Parameters());
             var loss = CrossEntropyWithSoftmax(targetVariable, net.Output);
             var metric = ClassificationError(targetVariable, net.Output);
 
