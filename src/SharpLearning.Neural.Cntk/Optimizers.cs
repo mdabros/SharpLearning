@@ -8,6 +8,54 @@ namespace SharpLearning.Neural.Cntk
     /// </summary>
     public static class Optimizers
     {
+        /// <summary>
+        /// Stochastic Gradient Descent.
+        /// </summary>
+        /// <param name="parameters">Learnable parameters of the model</param>
+        /// <param name="learningRate">Learning rate. (Default is 0.001)</param>
+        /// <param name="l1Reguralization">L1 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="l2Reguralization">L2 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="unitGain"></param>
+        /// <returns></returns>
+        public static Learner SGD(IList<Parameter> parameters,
+            double learningRate = 0.01,
+            double l1Reguralization = 0.0,
+            double l2Reguralization = 0.0,
+            bool unitGain = true)
+        {
+            var learningRatePerSample = new TrainingParameterScheduleDouble(learningRate, 1);
+
+            var options = SetupAdditionalOptions(l1Reguralization, l2Reguralization);
+
+            return CNTKLib.SGDLearner(CntkUtils.AsParameterVector(parameters),
+                learningRatePerSample, options);
+        }
+
+        /// <summary>
+        /// Stochastic Gradient Descent with momentum.
+        /// </summary>
+        /// <param name="parameters">Learnable parameters of the model</param>
+        /// <param name="learningRate">Learning rate. (Default is 0.001)</param>
+        /// <param name="momentum">Momentum (default is 0.9).</param>
+        /// <param name="l1Reguralization">L1 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="l2Reguralization">L2 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="unitGain"></param>
+        /// <returns></returns>
+        public static Learner MomentumSGD(IList<Parameter> parameters, 
+            double learningRate = 0.01, double momentum = 0.1,
+            double l1Reguralization = 0.0,
+            double l2Reguralization = 0.0,
+            bool unitGain = true)
+        {
+            var learningRatePerSample = new TrainingParameterScheduleDouble(learningRate, 1);
+            var momentumPerSample = new TrainingParameterScheduleDouble(momentum, 1);
+
+            var options = SetupAdditionalOptions(l1Reguralization, l2Reguralization);
+
+            return CNTKLib.MomentumSGDLearner(CntkUtils.AsParameterVector(parameters), 
+                learningRatePerSample, momentumPerSample, unitGain,
+                options);
+        }
 
         /// <summary>
         /// Adam (Adaptive Moment Estimation) is another method that computes adaptive learning rates for each parameter. 
@@ -37,20 +85,26 @@ namespace SharpLearning.Neural.Cntk
             var momentumRate = new TrainingParameterScheduleDouble(momentum, 1);
             var varianceMomentumRate = new TrainingParameterScheduleDouble(varianceMomentum, 1);
 
-            var options = new AdditionalLearningOptions();
-            options.l1RegularizationWeight = l1Reguralization;
-            options.l1RegularizationWeight = l2Reguralization;
+            var options = SetupAdditionalOptions(l1Reguralization, l2Reguralization);
 
             // Consider: gradientClippingWithTruncation and gradientClippingThresholdPerSample
 
-            return CNTKLib.AdamLearner(CntkUtils.AsParameterVector(parameters), 
-                learningRatePerSample, 
-                momentumRate, 
-                unitGain, 
-                varianceMomentumRate, 
+            return CNTKLib.AdamLearner(CntkUtils.AsParameterVector(parameters),
+                learningRatePerSample,
+                momentumRate,
+                unitGain,
+                varianceMomentumRate,
                 epsilon,
                 false,
                 options);
+        }
+
+        private static AdditionalLearningOptions SetupAdditionalOptions(double l1Reguralization, double l2Reguralization)
+        {
+            var options = new AdditionalLearningOptions();
+            options.l1RegularizationWeight = l1Reguralization;
+            options.l1RegularizationWeight = l2Reguralization;
+            return options;
         }
     }
 }
