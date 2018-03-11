@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using static CNTK.CNTKLib;
 using CNTK;
-using static SharpLearning.Neural.Cntk.CntkLayers;
 using System.Collections.Generic;
 using System.Diagnostics;
+
+using static CNTK.CNTKLib;
+using static SharpLearning.Neural.Cntk.Layers;
 
 namespace SharpLearning.Neural.Cntk.Test
 {
@@ -40,7 +41,7 @@ namespace SharpLearning.Neural.Cntk.Test
             net = Dropout(net, 0.5);
             net = Dense(net, numberOfClasses);
 
-            var optimizer = CntkOptimizers.Adam(net.Parameters());
+            var optimizer = Optimizers.Adam(net.Parameters());
             var loss = CrossEntropyWithSoftmax(targetVariable, net.Output);
             var metric = ClassificationError(targetVariable, net.Output);
 
@@ -92,7 +93,7 @@ namespace SharpLearning.Neural.Cntk.Test
             net = Dropout(net, 0.5);
             net = Dense(net, numberOfClasses);
 
-            var optimizer = CntkOptimizers.Adam(net.Parameters());
+            var optimizer = Optimizers.Adam(net.Parameters());
             var loss = CrossEntropyWithSoftmax(targetVariable, net.Output);
             var metric = ClassificationError(targetVariable, net.Output);
 

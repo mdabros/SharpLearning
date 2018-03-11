@@ -7,7 +7,7 @@ namespace SharpLearning.Neural.Cntk
     /// <summary>
     /// Layers operations for CNTK
     /// </summary>
-    public static class CntkLayers
+    public static class Layers
     {
         public static DeviceDescriptor Device = DeviceDescriptor.UseDefaultDevice();
 

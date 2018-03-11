@@ -2,7 +2,7 @@
 
 namespace SharpLearning.Neural.Cntk
 {
-    public static class CntkLosses
+    public static class Losses
     {
         internal static Function MeanAbsError(Variable labels, Variable predictions)
         {

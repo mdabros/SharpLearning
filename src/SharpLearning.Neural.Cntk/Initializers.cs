@@ -24,7 +24,7 @@ namespace SharpLearning.Neural.Cntk
     /// <summary>
     /// Initializer factory for CNTK
     /// </summary>
-    public static class CntkInitializers
+    public static class Initializers
     {
         public static CNTKDictionary Create(Initializer initializer,
             double scale,

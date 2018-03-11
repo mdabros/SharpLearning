@@ -6,7 +6,7 @@ namespace SharpLearning.Neural.Cntk
     /// <summary>
     /// Optimizers for CNTK
     /// </summary>
-    public static class CntkOptimizers
+    public static class Optimizers
     {
 
         /// <summary>

@@ -45,12 +45,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CntkInitializers.cs" />
-    <Compile Include="CntkLayers.cs" />
-    <Compile Include="CntkLosses.cs" />
+    <Compile Include="Initializers.cs" />
+    <Compile Include="Layers.cs" />
+    <Compile Include="Losses.cs" />
     <Compile Include="CntkNeuralNetLearner.cs" />
     <Compile Include="CntkNeuralNetModel.cs" />
-    <Compile Include="CntkOptimizers.cs" />
+    <Compile Include="Optimizers.cs" />
     <Compile Include="CntkUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
