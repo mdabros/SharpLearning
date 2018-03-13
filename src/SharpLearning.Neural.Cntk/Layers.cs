@@ -63,11 +63,17 @@ namespace SharpLearning.Neural.Cntk
             int inferInputRankToMap;
 
             if (inputRank != 0)
+            {
                 inferInputRankToMap = -1; // means map_rank is not specified; input_rank rules.
+            }
             else if (mapRank == 0)
+            {
                 inferInputRankToMap = 0;  // neither given: default to 'infer W to use all input dims'.
+            }
             else
+            {
                 inferInputRankToMap = mapRank;  // infer W to use all input dims except the first static 'map_rank' ones.
+            }
 
             var wDimensions = outputShape.Dimensions.ToList();
             wDimensions.AddRange(inputShape.Dimensions);
