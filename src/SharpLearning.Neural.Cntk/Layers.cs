@@ -9,33 +9,85 @@ namespace SharpLearning.Neural.Cntk
     /// </summary>
     public static class Layers
     {
-        public static DeviceDescriptor Device = DeviceDescriptor.UseDefaultDevice();
+        public static DeviceDescriptor GlobalDevice = DeviceDescriptor.UseDefaultDevice();
+        public static DataType GlobalDataType = DataType.Float;
 
-        public static Function Dense(Variable input, int units, uint seed = 32, string outputName = "")
+        /// <summary>
+        /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="units"></param>
+        /// <param name="weightInitializer"></param>
+        /// <param name="biasInitializer"></param>
+        /// <param name="bias"></param>
+        /// <param name="inputRank"></param>
+        /// <param name="mapRank"></param>
+        /// <returns></returns>
+        public static Function Dense(Variable x, int units, 
+            Initializer weightInitializer = Initializer.GlorotUniform,
+            Initializer biasInitializer = Initializer.Zeros,
+            bool bias = true, int inputRank = 0, int mapRank = 0)
         {
-            if (input.Shape.Rank != 1)
+            return Dense(x, units,
+                Initializers.Create(weightInitializer),
+                Initializers.Create(biasInitializer),
+                bias, inputRank, mapRank);
+        }
+
+        /// <summary>
+        /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="units"></param>
+        /// <param name="weightInitializer"></param>
+        /// <param name="biasInitializer"></param>
+        /// <param name="bias"></param>
+        /// <param name="inputRank"></param>
+        /// <param name="mapRank"></param>
+        /// <returns></returns>
+        public static Function Dense(Variable x, int units, CNTKDictionary weightInitializer,
+            CNTKDictionary biasInitializer, bool bias = true, int inputRank = 0, int mapRank = 0)
+        {
+            if (inputRank != 0 && mapRank != 0)
             {
-                // 
-                int newDim = input.Shape.Dimensions.Aggregate((d1, d2) => d1 * d2);
-                input = CNTKLib.Reshape(input, new int[] { newDim });
+                throw new ArgumentException("Dense: inputRank and mapRank cannot be specified at the same time.");
             }
 
-            int inputDim = input.Shape[0];
+            var outputShape = NDShape.CreateNDShape(new int[] { units });
+            var outputRank = outputShape.Dimensions.Count;
 
-            int[] s = { units, inputDim };
-            var weights = new Parameter((NDShape)s, DataType.Float,
-                CNTKLib.GlorotUniformInitializer(
-                    CNTKLib.DefaultParamInitScale,
-                    CNTKLib.SentinelValueForInferParamInitRank,
-                    CNTKLib.SentinelValueForInferParamInitRank, seed),
-                Device, "timesParam");
+            var inputRanks = (inputRank != 0) ? inputRank : 1;
+            var dimensions = Enumerable.Range(0, inputRanks).Select(v => NDShape.InferredDimension).ToArray(); // infer all dimensions.
+            var inputShape = NDShape.CreateNDShape(dimensions);
 
-            var timesFunction = CNTKLib.Times(weights, input, "times");
+            int inferInputRankToMap;
 
-            int[] s2 = { units };
-            var bias = new Parameter(s2, 0.0f, Device, "plusParam");
+            if (inputRank != 0)
+                inferInputRankToMap = -1; // means map_rank is not specified; input_rank rules.
+            else if (mapRank == 0)
+                inferInputRankToMap = 0;  // neither given: default to 'infer W to use all input dims'.
+            else
+                inferInputRankToMap = mapRank;  // infer W to use all input dims except the first static 'map_rank' ones.
 
-            return CNTKLib.Times(weights, input) + bias;
+            var wDimensions = outputShape.Dimensions.ToList();
+            wDimensions.AddRange(inputShape.Dimensions);
+            var wShape = NDShape.CreateNDShape(wDimensions);
+
+            var w = new Parameter(wShape, GlobalDataType, weightInitializer, GlobalDevice, "w");
+
+            // Weights and input is in reversed order compared to the original python code.
+            // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
+            // The python API was made in this way to be similar to other deep learning toolkits. 
+            // The C# and the C++ share the same column major layout.
+            var r = CNTKLib.Times(w, x, (uint)outputRank, inferInputRankToMap);
+
+            if (bias)
+            {
+                var b = new Parameter(outputShape, GlobalDataType, biasInitializer, GlobalDevice, "b");
+                r = r + b;
+            }
+
+            return r;
         }
 
         public static Function Conv2D(Variable input, int filterW, int filterH, int filterCount,
@@ -50,7 +102,7 @@ namespace SharpLearning.Neural.Cntk
 
             var convWScale = 0.26;
             var convParams = new Parameter(new int[] { filterW, filterH, inputChannels, filterCount }, DataType.Float,
-                CNTKLib.GlorotUniformInitializer(convWScale, -1, 2, seed), Device);
+                CNTKLib.GlorotUniformInitializer(convWScale, -1, 2, seed), GlobalDevice);
 
             return CNTKLib.Convolution(convParams, input, new int[] { strideW, strideH, inputChannels });
         }
@@ -71,11 +123,11 @@ namespace SharpLearning.Neural.Cntk
         public static Function BatchNormalizationLayer(Variable input, bool spatial,
             double initialScaleValue = 1, double initialBiasValue = 0, int bnTimeConst = 5000)
         {
-            var biasParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialBiasValue, Device, "");
-            var scaleParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialScaleValue, Device, "");
-            var runningMean = new Constant(new int[] { NDShape.InferredDimension }, 0.0f, Device);
-            var runningInvStd = new Constant(new int[] { NDShape.InferredDimension }, 0.0f, Device);
-            var runningCount = Constant.Scalar(0.0f, Device);
+            var biasParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialBiasValue, GlobalDevice, "");
+            var scaleParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialScaleValue, GlobalDevice, "");
+            var runningMean = new Constant(new int[] { NDShape.InferredDimension }, 0.0f, GlobalDevice);
+            var runningInvStd = new Constant(new int[] { NDShape.InferredDimension }, 0.0f, GlobalDevice);
+            var runningCount = Constant.Scalar(0.0f, GlobalDevice);
 
             return CNTKLib.BatchNormalization(input, scaleParams, biasParams, runningMean, runningInvStd, runningCount,
                 spatial, (double)bnTimeConst, 0.0, 1e-5 /* epsilon */);
