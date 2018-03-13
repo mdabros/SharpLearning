@@ -11,16 +11,6 @@ namespace SharpLearning.Neural.Cntk
     {
         public static DeviceDescriptor Device = DeviceDescriptor.UseDefaultDevice();
 
-        public static Function Input(params int[] inputDim)
-        {
-            return Variable.InputVariable(inputDim, DataType.Float);
-        }
-
-        public static Function SoftMax(Variable input)
-        {
-            return CNTKLib.Softmax(input);
-        }
-
         public static Function Dense(Variable input, int units, uint seed = 32, string outputName = "")
         {
             if (input.Shape.Rank != 1)
@@ -76,11 +66,6 @@ namespace SharpLearning.Neural.Cntk
 
             return CNTKLib.Pooling(input, PoolingType.Max,
                 new int[] { poolW, poolH }, new int[] { strideW, strideH });
-        }
-
-        public static Function Dropout(Variable input, double dropoutRate, uint seed = 465)
-        {
-            return CNTKLib.Dropout(input, dropoutRate, seed);
         }
 
         public static Function BatchNormalizationLayer(Variable input, bool spatial,
