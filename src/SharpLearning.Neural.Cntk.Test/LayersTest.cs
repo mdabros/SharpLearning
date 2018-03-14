@@ -51,6 +51,26 @@ namespace SharpLearning.Neural.Cntk.Test
         }
 
         [TestMethod]
+        public void Dense_Stack_Of_Two()
+        {
+            var inputVariable = CNTKLib.InputVariable(new int[] { 2 }, Layers.GlobalDataType);
+            var data = new float[] { 1, 1 };
+
+            var sut1 = Layers.Dense(inputVariable, 2,
+                weightInitializer: Initializer.Ones,
+                biasInitializer: Initializer.Ones);
+
+            var sut2 = Layers.Dense(sut1, 2,
+                weightInitializer: Initializer.Ones,
+                biasInitializer: Initializer.Ones);
+
+            var actual = Evaluate(sut2, inputVariable, data);
+
+            var expected = new float[] { 7, 7 };
+            CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void Dense_InputRank_And_MapRank_At_The_Same_Time_Throws()
         {
