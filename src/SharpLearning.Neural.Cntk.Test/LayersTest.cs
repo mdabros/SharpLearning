@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CNTK;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,6 +48,14 @@ namespace SharpLearning.Neural.Cntk.Test
 
             var expected = new float[] { 2, 2 };
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void Dense_InputRank_And_MapRank_At_The_Same_Time_Throws()
+        {
+            var inputVariable = CNTKLib.InputVariable(new int[] { 2 }, Layers.GlobalDataType);
+            Layers.Dense(inputVariable, 2, inputRank: 1, mapRank: 1);
         }
 
         float[] Evaluate(Function layer, Variable inputVariable, float[] inputData)
