@@ -70,7 +70,7 @@
     <Compile Include="Losses.cs" />
     <Compile Include="CntkNeuralNetLearner.cs" />
     <Compile Include="CntkNeuralNetModel.cs" />
-    <Compile Include="Optimizers.cs" />
+    <Compile Include="Learners.cs" />
     <Compile Include="CntkUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

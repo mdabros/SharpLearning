@@ -4,9 +4,9 @@ using CNTK;
 namespace SharpLearning.Neural.Cntk
 {
     /// <summary>
-    /// Optimizers for CNTK
+    /// Learners for CNTK
     /// </summary>
-    public static class Optimizers
+    public static class Learners
     {
         /// <summary>
         /// Stochastic Gradient Descent.
