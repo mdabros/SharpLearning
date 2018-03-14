@@ -11,20 +11,14 @@ namespace SharpLearning.Neural.Cntk.Test
         readonly DataType m_dataType = DataType.Float;
         readonly DeviceDescriptor m_device = DeviceDescriptor.CPUDevice;
 
-        public LossesTest()
-        {
-            Layers.GlobalDataType = m_dataType;
-            Layers.GlobalDevice = m_device;
-        }
-
         [TestMethod]
         public void MeanSquareError()
         {
             var targetsData = new float[] { 1.0f, 2.3f, 3.1f, 4.4f, 5.8f };
-            var targetsVariable = CNTKLib.InputVariable(new int[] { targetsData.Length }, Layers.GlobalDataType);
+            var targetsVariable = CNTKLib.InputVariable(new int[] { targetsData.Length }, m_dataType);
 
             var predictionsData = new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
-            var predictionsVariable = CNTKLib.InputVariable(new int[] { predictionsData.Length }, Layers.GlobalDataType);
+            var predictionsVariable = CNTKLib.InputVariable(new int[] { predictionsData.Length }, m_dataType);
 
             var sut = Losses.MeanSquaredError(targetsVariable, predictionsVariable);
             var actual = Evaluate(sut, targetsVariable, targetsData,
@@ -37,10 +31,10 @@ namespace SharpLearning.Neural.Cntk.Test
         public void MeanSquareError_Zero_Error()
         {
             var targetsData = new float[] { 0, 0, 0, 0, 0, 0 };
-            var targetsVariable = CNTKLib.InputVariable(new int[] { targetsData.Length }, Layers.GlobalDataType);
+            var targetsVariable = CNTKLib.InputVariable(new int[] { targetsData.Length }, m_dataType);
 
             var predictionsData = new float[] { 0, 0, 0, 0, 0, 0 };
-            var predictionsVariable = CNTKLib.InputVariable(new int[] { predictionsData.Length }, Layers.GlobalDataType);
+            var predictionsVariable = CNTKLib.InputVariable(new int[] { predictionsData.Length }, m_dataType);
 
             var sut = Losses.MeanSquaredError(targetsVariable, predictionsVariable);
             var actual = Evaluate(sut, targetsVariable, targetsData,
@@ -54,12 +48,12 @@ namespace SharpLearning.Neural.Cntk.Test
         {
             var input = new Dictionary<Variable, Value>
             {
-                { targetsVariable, Value.CreateBatch(targetsVariable.Shape, targetsData, 0, targetsData.Length, Layers.GlobalDevice) },
-                { predictionsVariable, Value.CreateBatch(predictionsVariable.Shape, predictionsData, 0, predictionsData.Length, Layers.GlobalDevice) }
+                { targetsVariable, Value.CreateBatch(targetsVariable.Shape, targetsData, 0, targetsData.Length, m_device) },
+                { predictionsVariable, Value.CreateBatch(predictionsVariable.Shape, predictionsData, 0, predictionsData.Length, m_device) }
             };
             var output = new Dictionary<Variable, Value> { { loss.Output, null } };
 
-            loss.Evaluate(input, output, true, Layers.GlobalDevice);
+            loss.Evaluate(input, output, true, m_device);
 
             var actual = output[loss.Output].GetDenseData<float>(loss.Output)
                 .Single()
