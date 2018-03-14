@@ -89,6 +89,7 @@
   <ItemGroup>
     <Compile Include="CntkExamplesTest.cs" />
     <Compile Include="LayersTest.cs" />
+    <Compile Include="LossesTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

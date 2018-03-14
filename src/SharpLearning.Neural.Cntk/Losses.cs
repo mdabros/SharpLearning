@@ -4,7 +4,7 @@ namespace SharpLearning.Neural.Cntk
 {
     public static class Losses
     {
-        internal static Function MeanAbsError(Variable labels, Variable predictions)
+        internal static Function MeanAbsoluteError(Variable labels, Variable predictions)
         {
             return CNTKLib.ReduceMean(CNTKLib.Abs(CNTKLib.Minus(predictions, labels)), new Axis(-1));
         }
