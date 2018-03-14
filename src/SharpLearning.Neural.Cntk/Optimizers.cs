@@ -103,7 +103,7 @@ namespace SharpLearning.Neural.Cntk
         {
             var options = new AdditionalLearningOptions();
             options.l1RegularizationWeight = l1Reguralization;
-            options.l1RegularizationWeight = l2Reguralization;
+            options.l2RegularizationWeight = l2Reguralization;
             return options;
         }
     }
