@@ -21,8 +21,8 @@ namespace SharpLearning.Neural.Cntk.Test
         [TestMethod]
         public void Dense()
         {           
-            var inputVariable = CNTKLib.InputVariable(new int[] { 2 }, Layers.GlobalDataType);
             var data = new float[] { 1, 1 };
+            var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, Layers.GlobalDataType);
 
             var sut = Layers.Dense(inputVariable, 2, 
                 weightInitializer: Initializer.Ones, 
@@ -37,8 +37,8 @@ namespace SharpLearning.Neural.Cntk.Test
         [TestMethod]
         public void Dense_No_Bias()
         {
-            var inputVariable = CNTKLib.InputVariable(new int[] { 2 }, Layers.GlobalDataType);
             var data = new float[] { 1, 1 };
+            var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, Layers.GlobalDataType);
 
             var sut = Layers.Dense(inputVariable, 2,
                 weightInitializer: Initializer.Ones,
@@ -53,8 +53,8 @@ namespace SharpLearning.Neural.Cntk.Test
         [TestMethod]
         public void Dense_Stack_Of_Two()
         {
-            var inputVariable = CNTKLib.InputVariable(new int[] { 2 }, Layers.GlobalDataType);
             var data = new float[] { 1, 1 };
+            var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, Layers.GlobalDataType);
 
             var sut1 = Layers.Dense(inputVariable, 2,
                 weightInitializer: Initializer.Ones,
