@@ -1,7 +1,7 @@
 ﻿using System;
 using CNTK;
 
-namespace SharpLearning.Neural.Cntk
+namespace CntkExtensions
 {
     /// <summary>
     /// Initializes for cntk

@@ -2,7 +2,7 @@
 using System.Linq;
 using CNTK;
 
-namespace SharpLearning.Neural.Cntk
+namespace CntkExtensions
 {
     /// <summary>
     /// Layers operations for CNTK

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput.Test", "src\SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
 EndProject
@@ -63,6 +63,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural.Cntk", "src\SharpLearning.Neural.Cntk\SharpLearning.Neural.Cntk.csproj", "{C2CC9A31-E239-4F6C-8180-F4E400A88EF3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.Neural.Cntk.Test", "src\SharpLearning.Neural.Cntk.Test\SharpLearning.Neural.Cntk.Test.csproj", "{2115E586-1D5A-45A3-88BA-9B3D86310F01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CntkExtensions", "src\CntkExtensions\CntkExtensions.csproj", "{5F078033-E409-4B24-99CD-7365A99693E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CntkExtensions.Test", "src\CntkExtensions.Test\CntkExtensions.Test.csproj", "{375D0D4E-03BB-469A-B968-BB31A491B514}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -288,6 +292,22 @@ Global
 		{2115E586-1D5A-45A3-88BA-9B3D86310F01}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{2115E586-1D5A-45A3-88BA-9B3D86310F01}.Release|x64.ActiveCfg = Debug|x64
 		{2115E586-1D5A-45A3-88BA-9B3D86310F01}.Release|x64.Build.0 = Debug|x64
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Debug|x64.ActiveCfg = Debug|x64
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Debug|x64.Build.0 = Debug|x64
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Release|x64.ActiveCfg = Debug|x64
+		{5F078033-E409-4B24-99CD-7365A99693E0}.Release|x64.Build.0 = Debug|x64
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Debug|x64.ActiveCfg = Debug|x64
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Debug|x64.Build.0 = Debug|x64
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Release|x64.ActiveCfg = Debug|x64
+		{375D0D4E-03BB-469A-B968-BB31A491B514}.Release|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

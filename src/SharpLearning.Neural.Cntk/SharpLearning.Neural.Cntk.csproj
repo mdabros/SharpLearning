@@ -65,19 +65,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Initializers.cs" />
-    <Compile Include="Layers.cs" />
-    <Compile Include="Losses.cs" />
     <Compile Include="CntkNeuralNetLearner.cs" />
     <Compile Include="CntkNeuralNetModel.cs" />
-    <Compile Include="Learners.cs" />
-    <Compile Include="CntkUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CntkExtensions\CntkExtensions.csproj">
+      <Project>{5f078033-e409-4b24-99cd-7365a99693e0}</Project>
+      <Name>CntkExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj">
       <Project>{f3be678f-47bf-4b56-9d4c-31a2e47afab0}</Project>
       <Name>SharpLearning.Common.Interfaces</Name>

@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CNTK;
+using CntkExtensions;
 using System.Collections.Generic;
 using System.Diagnostics;
 
 using static CNTK.CNTKLib;
-using static SharpLearning.Neural.Cntk.Layers;
+using static CntkExtensions.Layers;
 
 namespace SharpLearning.Neural.Cntk.Test
 {

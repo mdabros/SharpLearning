@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using CNTK;
+using CntkExtensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SharpLearning.Neural.Cntk.Test
+namespace CntkExtensions.Test
 {
     [TestClass]
     public class LearnersTest

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CNTK;
 
-namespace SharpLearning.Neural.Cntk
+namespace CntkExtensions
 {
     /// <summary>
     /// Learners for CNTK

@@ -1,6 +1,6 @@
 ﻿using CNTK;
 
-namespace SharpLearning.Neural.Cntk
+namespace CntkExtensions
 {
     public static class Losses
     {
