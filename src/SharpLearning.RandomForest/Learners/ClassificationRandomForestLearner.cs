@@ -106,9 +106,14 @@ namespace SharpLearning.RandomForest.Learners
             {
                 var workItems = Enumerable.Range(0, m_trees).ToArray();
                 var rangePartitioner = Partitioner.Create(workItems, true);
+                var randomSeeds = new int[m_trees];
+                for (int i = 0; i < randomSeeds.Length; i++)
+                {
+                    randomSeeds[i] = m_random.Next();
+                }
                 Parallel.ForEach(rangePartitioner, (work, loopState) =>
                 {
-                    results.Add(CreateTree(observations, targets, indices, new Random(m_random.Next())));
+                    results.Add(CreateTree(observations, targets, indices, new Random(randomSeeds[work])));
                 });
             }
 
