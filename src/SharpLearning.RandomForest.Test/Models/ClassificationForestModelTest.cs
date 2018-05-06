@@ -15,6 +15,8 @@ namespace SharpLearning.RandomForest.Test.Models
     [TestClass]
     public class ClassificationForestModelTest
     {
+        readonly double m_delta = 0.0000001;
+
         [TestMethod]
         public void ClassificationForestModel_Predict_Single()
         {
@@ -35,7 +37,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.23076923076923078, error, 0.0000001);
+            Assert.AreEqual(0.23076923076923078, error, m_delta);
         }
 
         [TestMethod]
@@ -54,7 +56,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.23076923076923078, error, 0.0000001);
+            Assert.AreEqual(0.23076923076923078, error, m_delta);
         }
 
         [TestMethod]
@@ -77,7 +79,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
 
-            Assert.AreEqual(0.076923076923076927, error, 0.0000001);
+            Assert.AreEqual(0.076923076923076927, error, m_delta);
 
             var expected = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.650149027443145 }, { 1, 0.349850972556855 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.566943847818848 }, { 1, 0.433056152181152 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.726936489980608 }, { 1, 0.273063510019392 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.752781908451026 }, { 1, 0.247218091548974 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.566943847818848 }, { 1, 0.433056152181152 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.792506836300954 }, { 1, 0.207493163699046 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.491736055611056 }, { 1, 0.508263944388944 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.574583315377433 }, { 1, 0.425416684622567 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.838724674018791 }, { 1, 0.161275325981208 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.241480824730825 }, { 1, 0.758519175269175 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.385258186258186 }, { 1, 0.614741813741813 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.726936489980608 }, { 1, 0.273063510019392 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.706733044733045 }, { 1, 0.293266955266955 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.801266011766012 }, { 1, 0.198733988233988 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.294952297702298 }, { 1, 0.705047702297702 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.821706914001031 }, { 1, 0.178293085998968 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.780062391856509 }, { 1, 0.21993760814349 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.554444388944389 }, { 1, 0.445555611055611 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.261349872349872 }, { 1, 0.738650127650127 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.419758186258186 }, { 1, 0.580241813741813 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.71382231249143 }, { 1, 0.28617768750857 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.241480824730825 }, { 1, 0.758519175269175 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.47562148962149 }, { 1, 0.52437851037851 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.821706914001031 }, { 1, 0.178293085998968 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.792506836300954 }, { 1, 0.207493163699046 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.666244987039105 }, { 1, 0.333755012960895 }, }) };
             CollectionAssert.AreEqual(expected, actual);
@@ -98,7 +100,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
 
-            Assert.AreEqual(0.076923076923076927, error, 0.0000001);
+            Assert.AreEqual(0.076923076923076927, error, m_delta);
 
             var expected = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.650149027443145 }, { 1, 0.349850972556855 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.566943847818848 }, { 1, 0.433056152181152 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.726936489980608 }, { 1, 0.273063510019392 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.752781908451026 }, { 1, 0.247218091548974 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.566943847818848 }, { 1, 0.433056152181152 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.792506836300954 }, { 1, 0.207493163699046 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.491736055611056 }, { 1, 0.508263944388944 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.574583315377433 }, { 1, 0.425416684622567 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.838724674018791 }, { 1, 0.161275325981208 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.241480824730825 }, { 1, 0.758519175269175 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.385258186258186 }, { 1, 0.614741813741813 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.726936489980608 }, { 1, 0.273063510019392 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.706733044733045 }, { 1, 0.293266955266955 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.801266011766012 }, { 1, 0.198733988233988 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.294952297702298 }, { 1, 0.705047702297702 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.821706914001031 }, { 1, 0.178293085998968 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.780062391856509 }, { 1, 0.21993760814349 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.554444388944389 }, { 1, 0.445555611055611 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.261349872349872 }, { 1, 0.738650127650127 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.419758186258186 }, { 1, 0.580241813741813 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.71382231249143 }, { 1, 0.28617768750857 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.241480824730825 }, { 1, 0.758519175269175 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.47562148962149 }, { 1, 0.52437851037851 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.821706914001031 }, { 1, 0.178293085998968 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.792506836300954 }, { 1, 0.207493163699046 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.666244987039105 }, { 1, 0.333755012960895 }, }) };
             CollectionAssert.AreEqual(expected, actual);
@@ -126,7 +128,7 @@ namespace SharpLearning.RandomForest.Test.Models
             foreach (var item in zip)
             {
                 Assert.AreEqual(item.Expected.Key, item.Actual.Key);
-                Assert.AreEqual(item.Expected.Value, item.Actual.Value, 0.000001);
+                Assert.AreEqual(item.Expected.Value, item.Actual.Value, m_delta);
             }
         }
 
@@ -147,7 +149,7 @@ namespace SharpLearning.RandomForest.Test.Models
 
             for (int i = 0; i < expected.Length; i++)
             {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);
+                Assert.AreEqual(expected[i], actual[i], m_delta);
             }
         }
 
@@ -183,7 +185,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.42307692307692307, error, 0.0000001);
+            Assert.AreEqual(0.42307692307692307, error, m_delta);
         }
 
         void Write(ProbabilityPrediction[] predictions)
