@@ -1,20 +1,22 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.RandomForest.Test.Properties;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.RandomForest.Test.Models
 {
     [TestClass]
     public class RegressionForestModelTest
     {
+        readonly double m_delta = 0.0000001;
+
         [TestMethod]
         public void RegressionForestModel_Predict_Single()
         {
@@ -35,7 +37,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.15381141277554411, error, 0.0000001);
+            Assert.AreEqual(0.15381141277554411, error, m_delta);
         }
 
         [TestMethod]
@@ -54,7 +56,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.15381141277554411, error, 0.0000001);
+            Assert.AreEqual(0.15381141277554411, error, m_delta);
         }
 
         [TestMethod]
@@ -77,7 +79,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
 
-            Assert.AreEqual(0.15381141277554411, error, 0.0000001);
+            Assert.AreEqual(0.15381141277554411, error, m_delta);
 
             var expected = new CertaintyPrediction[] { new CertaintyPrediction(0.379151515151515, 0.0608255007215007), new CertaintyPrediction(0.411071351850763, 0.0831655436577049), new CertaintyPrediction(0.243420918950331, 0.0452827034233046), new CertaintyPrediction(0.302332251082251, 0.0699917594408057), new CertaintyPrediction(0.411071351850763, 0.0831655436577049), new CertaintyPrediction(0.175743762773174, 0.0354069437824887), new CertaintyPrediction(0.574083361083361, 0.0765858693929188), new CertaintyPrediction(0.259063776093188, 0.0491198812971218), new CertaintyPrediction(0.163878898878899, 0.0331543420321184), new CertaintyPrediction(0.671753996003996, 0.0624466591504497), new CertaintyPrediction(0.418472943722944, 0.0607014359023913), new CertaintyPrediction(0.243420918950331, 0.0452827034233046), new CertaintyPrediction(0.443779942279942, 0.0941961872991865), new CertaintyPrediction(0.156999361749362, 0.0435804333960299), new CertaintyPrediction(0.591222034501446, 0.0873624628347336), new CertaintyPrediction(0.123822406351818, 0.0283119805431255), new CertaintyPrediction(0.162873993653405, 0.0333697457759022), new CertaintyPrediction(0.596261932511932, 0.0695341060210394), new CertaintyPrediction(0.671753996003996, 0.0624466591504497), new CertaintyPrediction(0.418472943722944, 0.0607014359023913), new CertaintyPrediction(0.329000027750028, 0.0788869852405852), new CertaintyPrediction(0.671753996003996, 0.0624466591504497), new CertaintyPrediction(0.499770375049787, 0.0913884936411888), new CertaintyPrediction(0.140025508804921, 0.0309875116490099), new CertaintyPrediction(0.161207326986739, 0.0336321035325246), new CertaintyPrediction(0.389553418803419, 0.0744433596104835), };
             CollectionAssert.AreEqual(expected, actual);
@@ -98,7 +100,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
 
-            Assert.AreEqual(0.15381141277554411, error, 0.0000001);
+            Assert.AreEqual(0.15381141277554411, error, m_delta);
 
             var expected = new CertaintyPrediction[] { new CertaintyPrediction(0.379151515151515, 0.0608255007215007), new CertaintyPrediction(0.411071351850763, 0.0831655436577049), new CertaintyPrediction(0.243420918950331, 0.0452827034233046), new CertaintyPrediction(0.302332251082251, 0.0699917594408057), new CertaintyPrediction(0.411071351850763, 0.0831655436577049), new CertaintyPrediction(0.175743762773174, 0.0354069437824887), new CertaintyPrediction(0.574083361083361, 0.0765858693929188), new CertaintyPrediction(0.259063776093188, 0.0491198812971218), new CertaintyPrediction(0.163878898878899, 0.0331543420321184), new CertaintyPrediction(0.671753996003996, 0.0624466591504497), new CertaintyPrediction(0.418472943722944, 0.0607014359023913), new CertaintyPrediction(0.243420918950331, 0.0452827034233046), new CertaintyPrediction(0.443779942279942, 0.0941961872991865), new CertaintyPrediction(0.156999361749362, 0.0435804333960299), new CertaintyPrediction(0.591222034501446, 0.0873624628347336), new CertaintyPrediction(0.123822406351818, 0.0283119805431255), new CertaintyPrediction(0.162873993653405, 0.0333697457759022), new CertaintyPrediction(0.596261932511932, 0.0695341060210394), new CertaintyPrediction(0.671753996003996, 0.0624466591504497), new CertaintyPrediction(0.418472943722944, 0.0607014359023913), new CertaintyPrediction(0.329000027750028, 0.0788869852405852), new CertaintyPrediction(0.671753996003996, 0.0624466591504497), new CertaintyPrediction(0.499770375049787, 0.0913884936411888), new CertaintyPrediction(0.140025508804921, 0.0309875116490099), new CertaintyPrediction(0.161207326986739, 0.0336321035325246), new CertaintyPrediction(0.389553418803419, 0.0744433596104835), };
             CollectionAssert.AreEqual(expected, actual);
@@ -126,7 +128,7 @@ namespace SharpLearning.RandomForest.Test.Models
             foreach (var item in zip)
             {
                 Assert.AreEqual(item.Expected.Key, item.Actual.Key);
-                Assert.AreEqual(item.Expected.Value, item.Actual.Value, 0.000001);
+                Assert.AreEqual(item.Expected.Value, item.Actual.Value, m_delta);
             }
         }
 
@@ -147,7 +149,7 @@ namespace SharpLearning.RandomForest.Test.Models
 
             for (int i = 0; i < expected.Length; i++)
             {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);
+                Assert.AreEqual(expected[i], actual[i], m_delta);
             }
         }
 
@@ -172,7 +174,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.14547628738104926, actual, 0.0001);
+            Assert.AreEqual(0.14547628738104926, actual, m_delta);
 
         }
 
@@ -191,7 +193,7 @@ namespace SharpLearning.RandomForest.Test.Models
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.14547628738104926, error, 0.0000001);
+            Assert.AreEqual(0.14547628738104926, error, m_delta);
         }
 
         void Write(CertaintyPrediction[] predictions)
