@@ -98,6 +98,25 @@ namespace SharpLearning.RandomForest.Test.Learners
             Assert.AreEqual(0.098130841121495324, error, 0.0000001);
         }
 
+        [TestMethod]
+        public void ClassificationRandomForestLearner_Learn_Glass_100_Trees_Parallel()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, true);
+
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var error = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.018691588785046728, error, 0.0000001);
+        }
+
         double ClassificationRandomForestLearner_Learn_Glass(int trees, double subSampleRatio = 1.0)
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
