@@ -1,75 +1,75 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers;
+﻿using System;
+using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Test.Properties;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.RandomForest.Test.Learners
 {
     [TestClass]
     public class RegressionExtremelyRandomizedTreesLearnerTest
     {
+        readonly double m_delta = 0.0000001;
+
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_1()
         {
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(1);
-            Assert.AreEqual(0.168653846153846, error, 0.0000001);
+            Assert.AreEqual(0.168653846153846, error, m_delta);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_5()
         {
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(5);
-            Assert.AreEqual(0.0967239316239316, error, 0.0000001);
+            Assert.AreEqual(0.0967239316239316, error, m_delta);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_100()
         {
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(100);
-            Assert.AreEqual(0.0879343920732049, error, 0.0000001);
+            Assert.AreEqual(0.0879343920732049, error, m_delta);
         }
         
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_100_SubSample()
         {
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(100, 0.5);
-            Assert.AreEqual(0.118284721023025, error, 0.0000001);
+            Assert.AreEqual(0.118284721023025, error, m_delta);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_1()
         {
             var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(1);
-            Assert.AreEqual(1.30872564012918, error, 0.0000001);
+            Assert.AreEqual(1.30872564012918, error, m_delta);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_5()
         {
             var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(5);
-            Assert.AreEqual(0.270037843297736, error, 0.0000001);
+            Assert.AreEqual(0.270037843297736, error, m_delta);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_100()
         {
             var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(100);
-            Assert.AreEqual(0.334503564664531, error, 0.0000001);
+            Assert.AreEqual(0.334503564664531, error, m_delta);
         }
 
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass_100_SubSample()
         {
             var error = RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(100, 0.5);
-            Assert.AreEqual(0.563898534712578, error, 0.0000001);
+            Assert.AreEqual(0.563898534712578, error, m_delta);
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.592240619161302, error, 0.0000001);
+            Assert.AreEqual(0.592240619161302, error, m_delta);
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.33450356466453129, error, 0.0000001);
+            Assert.AreEqual(0.33450356466453129, error, m_delta);
         }
 
         double RegressionExtremelyRandomizedTreesLearnerTest_Learn_Glass(int trees, double subSampleRatio = 1.0)
