@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -22,14 +22,12 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
+    <PackageReference Include="System.Memory" Version="4.4.0-preview2-25405-01" />
+    <PackageReference Include="TensorFlowSharp" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharpLearning.AdaBoost\SharpLearning.AdaBoost.csproj" />
-    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
-    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
-    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
-    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj" />
+    <ProjectReference Include="..\SharpLearning.Backend.TensorFlow\SharpLearning.Backend.TensorFlow.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,9 @@ bin/
 obj/
 out/
 
+outputs/
+python/outputs/
+
 # User-specific Files
 *.user
 *.suo
@@ -43,6 +46,12 @@ _TeamCity*
 *.opendb
 *.cachefile
 *.swp
+*.txt
+*.dnn
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
 
 # Upgrades
 _UpgradeReport_Files/
