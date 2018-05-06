@@ -28,14 +28,14 @@ namespace SharpLearning.RandomForest.Test.Learners
         public void ClassificationExtremelyRandomizedTreesLearner_Learn_Aptitude_Trees_5()
         {
             var error = ClassificationExtremelyRandomizedTreesLearner_Learn_Aptitude(5);
-            Assert.AreEqual(0.15384615384615386, error, 0.0000001);
+            Assert.AreEqual(0.115384615384615, error, 0.0000001);
         }
 
         [TestMethod]
         public void ClassificationExtremelyRandomizedTreesLearner_Learn_Aptitude_Trees_100()
         {
             var error = ClassificationExtremelyRandomizedTreesLearner_Learn_Aptitude(100);
-            Assert.AreEqual(0.076923076923076927, error, 0.0000001);
+            Assert.AreEqual(0.153846153846154, error, 0.0000001);
         }
 
         [TestMethod]
@@ -49,28 +49,28 @@ namespace SharpLearning.RandomForest.Test.Learners
         public void ClassificationExtremelyRandomizedTreesLearner_Learn_Glass_1()
         {
             var error = ClassificationExtremelyRandomizedTreesLearner_Learn_Glass(1);
-            Assert.AreEqual(0.28971962616822428, error, 0.0000001);
+            Assert.AreEqual(0.228971962616822, error, 0.0000001);
         }
 
         [TestMethod]
         public void ClassificationExtremelyRandomizedTreesLearner_Learn_Glass_5()
         {
             var error = ClassificationExtremelyRandomizedTreesLearner_Learn_Glass(5);
-            Assert.AreEqual(0.070093457943925228, error, 0.0000001);
+            Assert.AreEqual(0.0747663551401869, error, 0.0000001);
         }
 
         [TestMethod]
         public void ClassificationExtremelyRandomizedTreesLearner_Learn_Glass_100()
         {
             var error = ClassificationExtremelyRandomizedTreesLearner_Learn_Glass(100);
-            Assert.AreEqual(0.046728971962616821, error, 0.0000001);
+            Assert.AreEqual(0.0560747663551402, error, 0.0000001);
         }
 
         [TestMethod]
         public void ClassificationExtremelyRandomizedTreesLearner_Learn_Glass_100_SubSample()
         {
             var error = ClassificationExtremelyRandomizedTreesLearner_Learn_Glass(100, 0.5);
-            Assert.AreEqual(0.102803738317757, error, 0.0000001);
+            Assert.AreEqual(0.0794392523364486, error, 0.0000001);
         }
 
         [TestMethod]
@@ -95,7 +95,26 @@ namespace SharpLearning.RandomForest.Test.Learners
             var evaluator = new TotalErrorClassificationMetric<double>();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.14485981308411214, error, 0.0000001);
+            Assert.AreEqual(0.11214953271028, error, 0.0000001);
+        }
+
+        [TestMethod]
+        public void ClassificationExtremelyRandomizedTreesLearner_Learn_Glass_100_Trees_Parallel()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var sut = new ClassificationExtremelyRandomizedTreesLearner(100, 1, 100, 1, 0.0001, 1.0, 42, true);
+
+            var model = sut.Learn(observations, targets);
+
+            var predictions = model.Predict(observations);
+
+            var evaluator = new TotalErrorClassificationMetric<double>();
+            var error = evaluator.Error(targets, predictions);
+
+            Assert.AreEqual(0.0560747663551402, error, 0.0000001);
         }
 
         double ClassificationExtremelyRandomizedTreesLearner_Learn_Glass(int trees, double subSampleRatio = 1.0)
