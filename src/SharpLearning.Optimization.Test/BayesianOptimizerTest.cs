@@ -8,6 +8,8 @@ namespace SharpLearning.Optimization.Test
     [TestClass]
     public class BayesianOptimizerTest
     {
+        readonly double m_delta = 0.000001;
+
         [TestMethod]
         public void BayesianOptimizer_OptimizeBest()
         {
@@ -20,12 +22,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new BayesianOptimizer(parameters, 100, 5, 1);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.92327107866106661, 0.0001);
+            Assert.AreEqual(actual.Error, -0.73736717818644282, 0.0001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], 8.1239613509382878, 0.0001);
-            Assert.AreEqual(actual.ParameterSet[1], -9.2896384835660637, 0.0001);
-            Assert.AreEqual(actual.ParameterSet[2], -0.03435398919245003, 0.0001);
+            Assert.AreEqual(actual.ParameterSet[0], 7.8124302242940438, m_delta);
+            Assert.AreEqual(actual.ParameterSet[1], -3.2319937242343988, m_delta);
+            Assert.AreEqual(actual.ParameterSet[2], 0.34947285910578074, m_delta);
         }
 
         [TestMethod]
@@ -41,15 +43,15 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.710969353891429 }, 109.34400835405613),
-                new OptimizerResult(new double[] { 99.646240426062718 }, 157577.44222424511)
+                new OptimizerResult(new double[] { 37.524597457388694 }, 110.80326835639002),
+                new OptimizerResult(new double[] { 98.240981063917729 }, 150512.62292441679)
             };
 
-            Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);
-            Assert.AreEqual(expected.First().ParameterSet.First(), actual.First().ParameterSet.First(), 0.0001);
+            Assert.AreEqual(expected.First().Error, actual.First().Error, m_delta);
+            Assert.AreEqual(expected.First().ParameterSet.First(), actual.First().ParameterSet.First(), m_delta);
 
-            Assert.AreEqual(expected.Last().Error, actual.Last().Error, 0.0001);
-            Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), 0.0001);
+            Assert.AreEqual(expected.Last().Error, actual.Last().Error, m_delta);
+            Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), m_delta);
         }
 
 
