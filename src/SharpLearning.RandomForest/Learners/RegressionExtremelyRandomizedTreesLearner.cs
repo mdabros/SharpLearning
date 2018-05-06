@@ -93,26 +93,35 @@ namespace SharpLearning.RandomForest.Learners
                 m_featuresPrSplit = count <= 0 ? 1 : count;
             }
 
-            var results = new ConcurrentBag<RegressionDecisionTreeModel>();
+            var results = new ConcurrentDictionary<int, RegressionDecisionTreeModel>();
+
+            // Ensure each tree (index) is always created with the same random generator,
+            // in both sequential and parallel mode.
+            var treeIndex = 0;
+            var treeIndexToRandomGenerators = Enumerable.Range(0, m_trees)
+                .Select(v => new { Index = treeIndex++, Random = new Random(m_random.Next()) })
+                .ToArray();
 
             if (!m_runParallel)
             {
-                for (int i = 0; i < m_trees; i++)
+                foreach (var indexToRandom in treeIndexToRandomGenerators)
                 {
-                    results.Add(CreateTree(observations, targets, indices, new Random(m_random.Next())));
-                };
+                    var tree = CreateTree(observations, targets, indices, indexToRandom.Random);
+                    results.TryAdd(indexToRandom.Index, tree);
+                }
             }
             else
             {
-                var workItems = Enumerable.Range(0, m_trees).ToArray();
-                var rangePartitioner = Partitioner.Create(workItems, true);
-                Parallel.ForEach(rangePartitioner, (work, loopState) =>
+                var rangePartitioner = Partitioner.Create(treeIndexToRandomGenerators, true);
+                Parallel.ForEach(rangePartitioner, (indexToRandom, loopState) =>
                 {
-                    results.Add(CreateTree(observations, targets, indices, new Random(m_random.Next())));
+                    var tree = CreateTree(observations, targets, indices, indexToRandom.Random);
+                    results.TryAdd(indexToRandom.Index, tree);
                 });
             }
 
-            var models = results.ToArray();
+            // Ensure the order of the trees.
+            var models = results.OrderBy(v => v.Key).Select(v => v.Value).ToArray();
             var rawVariableImportance = VariableImportance(models, observations.ColumnCount);
 
             return new RegressionForestModel(models, rawVariableImportance);
@@ -163,8 +172,8 @@ namespace SharpLearning.RandomForest.Learners
                 new DepthFirstTreeBuilder(m_maximumTreeDepth,
                     m_featuresPrSplit,
                     m_minimumInformationGain,
-                    m_random.Next(),
-                    new RandomSplitSearcher(m_minimumSplitSize, m_random.Next()),
+                    random.Next(),
+                    new RandomSplitSearcher(m_minimumSplitSize, random.Next()),
                     new RegressionImpurityCalculator()));
 
             var treeIndicesLength = (int)Math.Round(m_subSampleRatio * (double)indices.Length);
