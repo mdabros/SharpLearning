@@ -112,8 +112,7 @@ namespace SharpLearning.RandomForest.Learners
             }
             else
             {
-                var rangePartitioner = Partitioner.Create(treeIndexToRandomGenerators, true);
-
+                var rangePartitioner = Partitioner.Create(treeIndexToRandomGenerators, true);           
                 Parallel.ForEach(rangePartitioner, (indexToRandom, loopState) =>
                 {
                     var tree = CreateTree(observations, targets, indices, indexToRandom.Random);
