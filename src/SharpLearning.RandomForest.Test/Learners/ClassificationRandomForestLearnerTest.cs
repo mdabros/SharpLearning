@@ -56,7 +56,7 @@ namespace SharpLearning.RandomForest.Test.Learners
         public void ClassificationRandomForestLearner_Learn_Glass_5()
         {
             var error = ClassificationRandomForestLearner_Learn_Glass(5);
-            Assert.AreEqual(0.0794392523364486, error, 0.0000001);
+            Assert.AreEqual(0.0560747663551402, error, 0.0000001);
         }
 
         [TestMethod]
