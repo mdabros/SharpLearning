@@ -12,7 +12,7 @@ namespace SharpLearning.XGBoost.Learners
     /// </summary>
     public sealed class RegressionXGBoostLearner : ILearner<double>
     {
-        IDictionary<string, object> m_parameters = new Dictionary<string, object>();
+        readonly IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
         /// <summary>
         /// 
