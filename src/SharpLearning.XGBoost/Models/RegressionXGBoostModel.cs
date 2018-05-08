@@ -19,20 +19,23 @@ namespace SharpLearning.XGBoost.Models
 
         public double Predict(double[] observation)
         {
-            var floatObservation = new float[1][];
-            floatObservation[0] = observation.ToFloat();
-            using (var test = new DMatrix(floatObservation))
+            var floatObservation = new float[][]
             {
-                return (double)m_model.Predict(test).Single();
+                observation.ToFloat()
+            };
+
+            using (var data = new DMatrix(floatObservation))
+            {
+                return (double)m_model.Predict(data).Single();
             }
         }
 
         public double[] Predict(F64Matrix observations)
         {
             var floatObservations = observations.ToFloatJaggedArray();
-            using (var test = new DMatrix(floatObservations))
+            using (var data = new DMatrix(floatObservations))
             {
-                return m_model.Predict(test).ToDouble();
+                return m_model.Predict(data).ToDouble();
             }
         }
 
