@@ -30,7 +30,7 @@ namespace SharpLearning.XGBoost.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.22701441864756075, error, m_delta);
+            Assert.AreEqual(0.091791017398738781, error, m_delta);
         }
     }
 }
