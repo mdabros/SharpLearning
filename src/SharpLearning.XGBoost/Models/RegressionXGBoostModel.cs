@@ -76,6 +76,27 @@ namespace SharpLearning.XGBoost.Models
         }
 
         /// <summary>
+        /// Loads a RegressionXGBoostModel.
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        /// <returns></returns>
+        public static RegressionXGBoostModel Load(string modelFilePath)
+        {
+            // load XGBoost model.
+            return new RegressionXGBoostModel(new Booster(modelFilePath));
+        }
+
+        /// <summary>
+        /// Saves the RegressionXGBoostModel.
+        /// </summary>
+        /// <param name="modelFilePath"></param>
+        public void Save(string modelFilePath)
+        {
+            // Save XGBoost model.
+            m_model.Save(modelFilePath);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         public void Dispose()
