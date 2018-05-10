@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Classification;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.XGBoost.Learners;
 using SharpLearning.XGBoost.Models;
