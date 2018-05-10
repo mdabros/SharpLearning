@@ -25,7 +25,7 @@ namespace SharpLearning.XGBoost
                 case RegressionObjective.Tweedie:
                     return "reg:tweedie";
                 default:
-                    throw new ArgumentException("Unknown regression type: " + type);
+                    throw new ArgumentException("Unknown regression objective: " + type);
             }
         }
     }

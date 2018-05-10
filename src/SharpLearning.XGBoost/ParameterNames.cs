@@ -101,7 +101,7 @@
         /// <summary>
         /// which booster to use, can be gbtree, gblinear or dart. gbtree and dart use tree based model while gblinear uses linear function.
         /// </summary>
-        public const string Booster = "_Booster";
+        public const string Booster = "booster";
 
         /// <summary>
         /// The tree construction algorithm used in XGBoost. See reference paper: https://arxiv.org/abs/1603.02754
@@ -120,5 +120,10 @@
         /// 'gpu_hist': GPU implementation of hist algorithm.
         /// </summary>
         public const string TreeMethod = "tree_method";
+
+        /// <summary>
+        /// The number of classes in a classification problem.
+        /// </summary>
+        public const string NumberOfClasses = "num_class";
     }
 }
