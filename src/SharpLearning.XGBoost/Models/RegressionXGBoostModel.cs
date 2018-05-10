@@ -7,16 +7,28 @@ using XGBoost.lib;
 
 namespace SharpLearning.XGBoost.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double>
     {
         readonly Booster m_model;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
         public RegressionXGBoostModel(Booster model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
             m_model = model;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
         public double Predict(double[] observation)
         {
             var floatObservation = new float[][]
@@ -30,6 +42,11 @@ namespace SharpLearning.XGBoost.Models
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
             var floatObservations = observations.ToFloatJaggedArray();
@@ -39,16 +56,28 @@ namespace SharpLearning.XGBoost.Models
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="featureNameToIndex"></param>
+        /// <returns></returns>
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
             throw new System.NotImplementedException();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             if (m_model != null)
