@@ -96,6 +96,29 @@
         /// <summary>
         /// Existing booster
         /// </summary>
+        public const string ExistingBooster = "_Booster";
+
+        /// <summary>
+        /// which booster to use, can be gbtree, gblinear or dart. gbtree and dart use tree based model while gblinear uses linear function.
+        /// </summary>
         public const string Booster = "_Booster";
+
+        /// <summary>
+        /// The tree construction algorithm used in XGBoost. See reference paper: https://arxiv.org/abs/1603.02754
+        /// Distributed and external memory version only support approximate algorithm.
+        /// Choices: {'auto', 'exact', 'approx', 'hist', 'gpu_exact', 'gpu_hist'}.
+        /// 'auto': Use heuristic to choose faster one.
+        /// - For small to medium dataset, exact greedy will be used.
+        /// - For very large-dataset, approximate algorithm will be chosen.
+        /// - Because old behavior is always use exact greedy in single machine, 
+        /// user will get a message when approximate algorithm is chosen to notify this choice.
+        /// 
+        /// 'exact': Exact greedy algorithm.
+        /// 'approx': Approximate greedy algorithm using sketching and histogram.
+        /// 'hist': Fast histogram optimized approximate greedy algorithm. It uses some performance improvements such as bins caching.
+        /// 'gpu_exact': GPU implementation of exact algorithm.
+        /// 'gpu_hist': GPU implementation of hist algorithm.
+        /// </summary>
+        public const string TreeMethod = "tree_method";
     }
 }
