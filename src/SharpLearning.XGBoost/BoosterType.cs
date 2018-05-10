@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SharpLearning.XGBoost
+﻿namespace SharpLearning.XGBoost
 {
+    /// <summary>
+    /// XGBoost booster types.
+    /// </summary>
     public enum BoosterType
     {
         /// <summary>

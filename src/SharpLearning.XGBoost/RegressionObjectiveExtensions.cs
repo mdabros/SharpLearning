@@ -2,8 +2,16 @@
 
 namespace SharpLearning.XGBoost
 {
+    /// <summary>
+    /// XGBoost regression objectives.
+    /// </summary>
     public static class RegressionObjectiveExtensions
     {
+        /// <summary>
+        /// Convert regression objective to the xgboost parameter string.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static string ToXGBoostString(this RegressionObjective type)
         {
             switch (type)

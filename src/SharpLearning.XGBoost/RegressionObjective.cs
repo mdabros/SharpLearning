@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SharpLearning.XGBoost
+﻿namespace SharpLearning.XGBoost
 {
     public enum RegressionObjective
     {
