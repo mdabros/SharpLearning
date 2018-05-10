@@ -14,7 +14,6 @@ namespace SharpLearning.XGBoost.Learners
     {
         readonly IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -24,6 +23,7 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="silent"></param>
         /// <param name="objective"></param>
         /// <param name="boosterType"></param>
+        /// <param name="treeMethod"></param>
         /// <param name="numberOfThreads"></param>
         /// <param name="gamma"></param>
         /// <param name="minChildWeight"></param>
@@ -41,6 +41,7 @@ namespace SharpLearning.XGBoost.Learners
             bool silent = true, 
             RegressionObjective objective = RegressionObjective.Linear,
             BoosterType boosterType = BoosterType.GBTree,
+            TreeMethod treeMethod = TreeMethod.Auto,
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
             int maxDeltaStep = 0, double subsample = 1, double colSampleByTree = 1,
             double colSampleByLevel = 1, double regAlpha = 0, double regLambda = 1,
@@ -69,7 +70,7 @@ namespace SharpLearning.XGBoost.Learners
             m_parameters[ParameterNames.Missing] = (float)missing;
             m_parameters[ParameterNames.ExistingBooster] = null;
             m_parameters[ParameterNames.Booster] = boosterType.ToXGBoostString();
-            m_parameters[ParameterNames.TreeMethod] = "auto";
+            m_parameters[ParameterNames.TreeMethod] = treeMethod.ToXGBoostString();
         }
 
         /// <summary>
