@@ -39,7 +39,7 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="missing"></param>
         public ClassificationXGBoostLearner(int maxDepth = 3, double learningRate = 0.1, int estimaters = 100,
             bool silent = true,
-            ClassificationObjective objective = ClassificationObjective.Softmax,
+            Objective objective = Objective.Softmax,
             BoosterType boosterType = BoosterType.GBTree,
             TreeMethod treeMethod = TreeMethod.Auto,
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,

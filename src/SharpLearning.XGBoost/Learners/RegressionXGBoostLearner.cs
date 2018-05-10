@@ -38,8 +38,8 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="seed"></param>
         /// <param name="missing"></param>
         public RegressionXGBoostLearner(int maxDepth = 3, double learningRate = 0.1, int estimaters = 100,
-            bool silent = true, 
-            RegressionObjective objective = RegressionObjective.Linear,
+            bool silent = true,
+            Objective objective = Objective.LinearRegression,
             BoosterType boosterType = BoosterType.GBTree,
             TreeMethod treeMethod = TreeMethod.Auto,
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
