@@ -20,14 +20,15 @@ namespace SharpLearning.XGBoost.Test.Learners
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
             var sut = new RegressionXGBoostLearner();
-            var model = sut.Learn(observations, targets);
+            using (var model = sut.Learn(observations, targets))
+            {
+                var predictions = model.Predict(observations);
 
-            var predictions = model.Predict(observations);
+                var evaluator = new MeanSquaredErrorRegressionMetric();
+                var error = evaluator.Error(targets, predictions);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var error = evaluator.Error(targets, predictions);
-
-            Assert.AreEqual(0.091791017398738781, error, m_delta);
+                Assert.AreEqual(0.091791017398738781, error, m_delta);
+            }
         }
     }
 }
