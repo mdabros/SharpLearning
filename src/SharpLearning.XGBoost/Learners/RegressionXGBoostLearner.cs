@@ -8,7 +8,7 @@ using XGBoost.lib;
 namespace SharpLearning.XGBoost.Learners
 {
     /// <summary>
-    /// Regression leaner for XGBoost
+    /// Regression learner for XGBoost
     /// </summary>
     public sealed class RegressionXGBoostLearner : ILearner<double>
     {
@@ -37,7 +37,7 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="baseScore"></param>
         /// <param name="seed"></param>
         /// <param name="missing"></param>
-        public RegressionXGBoostLearner(int maxDepth = 3, double learningRate = 0.1F, int estimaters = 100,
+        public RegressionXGBoostLearner(int maxDepth = 3, double learningRate = 0.1, int estimaters = 100,
             bool silent = true, 
             RegressionObjective objective = RegressionObjective.Linear,
             BoosterType boosterType = BoosterType.GBTree,
@@ -45,7 +45,7 @@ namespace SharpLearning.XGBoost.Learners
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
             int maxDeltaStep = 0, double subsample = 1, double colSampleByTree = 1,
             double colSampleByLevel = 1, double regAlpha = 0, double regLambda = 1,
-            double scalePosWeight = 1, double baseScore = 0.5F, int seed = 0,
+            double scalePosWeight = 1, double baseScore = 0.5, int seed = 0,
             double missing = double.NaN)
         {
             m_parameters[ParameterNames.MaxDepth] = maxDepth;
