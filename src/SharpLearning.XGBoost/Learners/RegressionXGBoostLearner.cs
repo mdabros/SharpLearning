@@ -19,10 +19,10 @@ namespace SharpLearning.XGBoost.Learners
         /// </summary>
         /// <param name="maxDepth"></param>
         /// <param name="learningRate"></param>
-        /// <param name="nEstimators"></param>
+        /// <param name="estimaters"></param>
         /// <param name="silent"></param>
         /// <param name="objective"></param>
-        /// <param name="nThread"></param>
+        /// <param name="numberOfThreads"></param>
         /// <param name="gamma"></param>
         /// <param name="minChildWeight"></param>
         /// <param name="maxDeltaStep"></param>
@@ -35,34 +35,34 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="baseScore"></param>
         /// <param name="seed"></param>
         /// <param name="missing"></param>
-        public RegressionXGBoostLearner(int maxDepth = 3, float learningRate = 0.1F, int nEstimators = 100,
-            bool silent = true, string objective = "reg:linear",
-            int nThread = -1, float gamma = 0, int minChildWeight = 1,
-            int maxDeltaStep = 0, float subsample = 1, float colSampleByTree = 1,
-            float colSampleByLevel = 1, float regAlpha = 0, float regLambda = 1,
-            float scalePosWeight = 1, float baseScore = 0.5F, int seed = 0,
-            float missing = float.NaN)
+        public RegressionXGBoostLearner(int maxDepth = 3, double learningRate = 0.1F, int estimaters = 100,
+            bool silent = true, RegressionObjective objective = RegressionObjective.Linear,
+            int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
+            int maxDeltaStep = 0, double subsample = 1, double colSampleByTree = 1,
+            double colSampleByLevel = 1, double regAlpha = 0, double regLambda = 1,
+            double scalePosWeight = 1, double baseScore = 0.5F, int seed = 0,
+            double missing = double.NaN)
         {
             m_parameters[ParameterNames.MaxDepth] = maxDepth;
-            m_parameters[ParameterNames.LearningRate] = learningRate;
-            m_parameters[ParameterNames.Estimators] = nEstimators;
+            m_parameters[ParameterNames.LearningRate] = (float)learningRate;
+            m_parameters[ParameterNames.Estimators] = estimaters;
             m_parameters[ParameterNames.Silent] = silent;
-            m_parameters[ParameterNames.objective] = objective;
+            m_parameters[ParameterNames.objective] = objective.ToXGBoostString();
 
-            m_parameters[ParameterNames.Threads] = nThread;
-            m_parameters[ParameterNames.Gamma] = gamma;
+            m_parameters[ParameterNames.Threads] = numberOfThreads;
+            m_parameters[ParameterNames.Gamma] = (float)gamma;
             m_parameters[ParameterNames.MinChildWeight] = minChildWeight;
             m_parameters[ParameterNames.MaxDeltaStep] = maxDeltaStep;
-            m_parameters[ParameterNames.SubSample] = subsample;
-            m_parameters[ParameterNames.ColSampleByTree] = colSampleByTree;
-            m_parameters[ParameterNames.ColSampleByLevel] = colSampleByLevel;
-            m_parameters[ParameterNames.RegAlpha] = regAlpha;
-            m_parameters[ParameterNames.RegLambda] = regLambda;
-            m_parameters[ParameterNames.ScalePosWeight] = scalePosWeight;
+            m_parameters[ParameterNames.SubSample] = (float)subsample;
+            m_parameters[ParameterNames.ColSampleByTree] = (float)colSampleByTree;
+            m_parameters[ParameterNames.ColSampleByLevel] = (float)colSampleByLevel;
+            m_parameters[ParameterNames.RegAlpha] = (float)regAlpha;
+            m_parameters[ParameterNames.RegLambda] = (float)regLambda;
+            m_parameters[ParameterNames.ScalePosWeight] = (float)scalePosWeight;
 
-            m_parameters[ParameterNames.BaseScore] = baseScore;
+            m_parameters[ParameterNames.BaseScore] = (float)baseScore;
             m_parameters[ParameterNames.Seed] = seed;
-            m_parameters[ParameterNames.Missing] = missing;
+            m_parameters[ParameterNames.Missing] = (float)missing;
             m_parameters[ParameterNames.Booster] = null;
         }
 
