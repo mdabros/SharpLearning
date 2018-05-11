@@ -20,6 +20,5 @@ namespace SharpLearning.XGBoost.Learners
                 throw new ArgumentException($"{name} must be in range [{min};{max}]. Was: {value}");
             }
         }
-
     }
 }
