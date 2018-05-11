@@ -2,6 +2,7 @@
 using System.Linq;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.XGBoost.Models;
 using XGBoost.lib;
 
@@ -10,7 +11,7 @@ namespace SharpLearning.XGBoost.Learners
     /// <summary>
     /// Classification learner for XGBoost
     /// </summary>
-    public sealed class ClassificationXGBoostLearner : ILearner<double>
+    public sealed class ClassificationXGBoostLearner : ILearner<double>, IIndexedLearner<double>
     {
         IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
@@ -89,14 +90,27 @@ namespace SharpLearning.XGBoost.Learners
         }
 
         /// <summary>
-        /// Learns an XGBoost regression model.
+        /// Learns an XGBoost classification model.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
         public ClassificationXGBoostModel Learn(F64Matrix observations, double[] targets)
         {
-            var floatObservations = observations.ToFloatJaggedArray();
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Learns an XGBoost classification model.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public ClassificationXGBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            var floatObservations = observations.ToFloatJaggedArray(indices);
 
             var index = 0;
             var targetNameToIndex = targets.Distinct()
@@ -107,7 +121,8 @@ namespace SharpLearning.XGBoost.Learners
             var numberOfClasses = targetNameToIndex.Count();
             m_parameters[ParameterNames.NumberOfClasses] = numberOfClasses;
 
-            var floatTargets = targets.Select(v => targetNameToIndex[v]).ToArray();
+            var floatTargets = targets.GetIndices(indices)
+                .Select(v => targetNameToIndex[v]).ToArray();
 
             using (var train = new DMatrix(floatObservations, floatTargets))
             {
@@ -121,6 +136,11 @@ namespace SharpLearning.XGBoost.Learners
 
                 return new ClassificationXGBoostModel(booster, targetNameToIndex.ToDictionary(v => v.Value, v => v.Key));
             }
+        }
+
+        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
 
         /// <summary>

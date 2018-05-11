@@ -10,7 +10,7 @@ namespace SharpLearning.XGBoost.Learners
     /// <summary>
     /// Regression learner for XGBoost
     /// </summary>
-    public sealed class RegressionXGBoostLearner : ILearner<double>
+    public sealed class RegressionXGBoostLearner : ILearner<double>, IIndexedLearner<double>
     {
         readonly IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
@@ -96,8 +96,21 @@ namespace SharpLearning.XGBoost.Learners
         /// <returns></returns>
         public RegressionXGBoostModel Learn(F64Matrix observations, double[] targets)
         {
-            var floatObservations = observations.ToFloatJaggedArray();
-            var floatTargets = targets.ToFloat();
+            var indices = Enumerable.Range(0, targets.Length).ToArray();
+            return Learn(observations, targets, indices);
+        }
+
+        /// <summary>
+        /// Learns an XGBoost regression model.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public RegressionXGBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            var floatObservations = observations.ToFloatJaggedArray(indices);
+            var floatTargets = targets.ToFloat(indices);
 
             using (var train = new DMatrix(floatObservations, floatTargets))
             {
@@ -111,6 +124,11 @@ namespace SharpLearning.XGBoost.Learners
                 
                 return new RegressionXGBoostModel(booster);
             }
+        }
+
+        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
 
         /// <summary>
