@@ -15,7 +15,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         readonly double m_delta = 0.0000001;
 
         [TestMethod]
-        public void ClassificationForestModel_Predict_Single()
+        public void ClassificationXGBoostModel_Predict_Single()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
