@@ -2,11 +2,11 @@
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.XGBoost.Learners;
 using SharpLearning.XGBoost.Test.Properties;
-using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.XGBoost.Test.Learners
 {
