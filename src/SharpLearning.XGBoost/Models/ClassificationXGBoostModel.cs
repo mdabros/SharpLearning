@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Serialization;
 using XGBoost.lib;
 
 namespace SharpLearning.XGBoost.Models
@@ -12,24 +11,19 @@ namespace SharpLearning.XGBoost.Models
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ClassificationXGBoostModel : IDisposable, IPredictorModel<double>
+    public sealed class ClassificationXGBoostModel : IDisposable, IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
     {
         readonly Booster m_model;
-        readonly Dictionary<float, double> m_targetIndexToTargetName;
-
-        const string m_targetIndexToTargetNameFileName = "targetIndexToTargetName.xml";
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="model"></param>
         /// <param name="targetIndexToTargetName"></param>
-        public ClassificationXGBoostModel(Booster model, Dictionary<float, double> targetIndexToTargetName)
+        public ClassificationXGBoostModel(Booster model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
-            if (targetIndexToTargetName == null) throw new ArgumentNullException(nameof(targetIndexToTargetName));
             m_model = model;
-            m_targetIndexToTargetName = targetIndexToTargetName;
         }
 
         /// <summary>
@@ -46,7 +40,17 @@ namespace SharpLearning.XGBoost.Models
 
             using (var data = new DMatrix(floatObservation))
             {
-                return m_targetIndexToTargetName[m_model.Predict(data).Single()];
+                var prediction = m_model.Predict(data);
+
+                var numberOfClasses = prediction.Length;
+                if (numberOfClasses >= 2)
+                {
+                    return PredictMultiClass(prediction);
+                }
+                else
+                {
+                    return PredictSingleClass(prediction);
+                }
             }
         }
 
@@ -57,13 +61,67 @@ namespace SharpLearning.XGBoost.Models
         /// <returns></returns>
         public double[] Predict(F64Matrix observations)
         {
-            var floatObservations = observations.ToFloatJaggedArray();
-            using (var data = new DMatrix(floatObservations))
+            var rows = observations.RowCount;
+            var cols = observations.ColumnCount;
+            var observation = new double[cols];
+
+            var predictions = new double[rows];
+            for (int row = 0; row < rows; row++)
             {
-                return m_model.Predict(data)
-                    .Select(v => m_targetIndexToTargetName[v])
-                    .ToArray();
+                observations.Row(row, observation);
+                predictions[row] = Predict(observation);
             }
+
+            return predictions;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public ProbabilityPrediction PredictProbability(double[] observation)
+        {
+            var floatObservation = new float[][]
+            {
+                observation.ToFloat()
+            };
+
+            using (var data = new DMatrix(floatObservation))
+            {
+                var prediction = m_model.Predict(data);
+
+                var numberOfClasses = prediction.Length;
+                if (numberOfClasses >= 2)
+                {
+                    return PredictMultiClassProbability(prediction);
+                }
+                else
+                {
+                    return PredictSingleClassProbability(prediction);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        public ProbabilityPrediction[] PredictProbability(F64Matrix observations)
+        {
+            var rows = observations.RowCount;
+            var cols = observations.ColumnCount;
+            var observation = new double[cols];
+
+            var predictions = new ProbabilityPrediction[rows];
+            for (int row = 0; row < rows; row++)
+            {
+                observations.Row(row, observation);
+                predictions[row] = PredictProbability(observation);
+            }
+
+            return predictions;
         }
 
         /// <summary>
@@ -92,13 +150,8 @@ namespace SharpLearning.XGBoost.Models
         /// <returns></returns>
         public static ClassificationXGBoostModel Load(string modelFilePath)
         {
-            // Load target mapping.
-            var targetIndexToTargetNameFilePath = GetTargetIndexToTargetNameFilePath(modelFilePath);
-            var targetIndexToTargetName = new GenericXmlDataContractSerializer()
-                .Deserialize<Dictionary<float, double>>(() => new StreamReader(targetIndexToTargetNameFilePath));
-
             // load XGBoost model.
-            return new ClassificationXGBoostModel(new Booster(modelFilePath), targetIndexToTargetName);
+            return new ClassificationXGBoostModel(new Booster(modelFilePath));
         }
 
         /// <summary>
@@ -109,19 +162,6 @@ namespace SharpLearning.XGBoost.Models
         {
             // Save XGBoost model.
             m_model.Save(modelFilePath);
-
-            // Save target mapping.
-            var targetIndexToTargetNameFilePath = GetTargetIndexToTargetNameFilePath(modelFilePath);
-
-            new GenericXmlDataContractSerializer()
-                .Serialize(m_targetIndexToTargetName, 
-                    () => new StreamWriter(targetIndexToTargetNameFilePath));
-        }
-
-        static string GetTargetIndexToTargetNameFilePath(string modelFilePath)
-        {
-            return Path.Combine(Path.GetDirectoryName(modelFilePath),
-                m_targetIndexToTargetNameFileName);
         }
 
         /// <summary>
@@ -133,6 +173,82 @@ namespace SharpLearning.XGBoost.Models
             {
                 m_model.Dispose();
             }
+        }
+
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
+        }
+
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            return PredictProbability(observations);
+        }
+
+        static ProbabilityPrediction PredictMultiClassProbability(float[] prediction)
+        {
+            var probabilities = new Dictionary<double, double>();
+            var predictedClass = 0;
+
+            var max = float.MinValue;
+            for (var classIndex = 0; classIndex < prediction.Length; classIndex++)
+            {
+                var probability = prediction[classIndex];
+                probabilities.Add(classIndex, probability);
+
+                if (probability > max)
+                {
+                    max = probability;
+                    predictedClass = classIndex;
+                }
+            }
+
+            return new ProbabilityPrediction(predictedClass, probabilities);
+        }
+
+        static ProbabilityPrediction PredictSingleClassProbability(float[] prediction)
+        {
+            var predictedClass = 0;
+            var singlePrediction = prediction.Single();
+
+            if (singlePrediction > 0.5)
+            {
+                predictedClass = 1;
+            }
+
+            return new ProbabilityPrediction(predictedClass,
+                new Dictionary<double, double> { { 0, 1 - singlePrediction }, { 1, singlePrediction } });
+        }
+
+        static double PredictMultiClass(float[] prediction)
+        {
+            var predictedClass = 0;
+
+            var max = float.MinValue;
+            for (var classIndex = 0; classIndex < prediction.Length; classIndex++)
+            {
+                var probability = prediction[classIndex];
+                if (probability > max)
+                {
+                    max = probability;
+                    predictedClass = classIndex;
+                }
+            }
+
+            return predictedClass;
+        }
+
+        static double PredictSingleClass(float[] prediction)
+        {
+            var predictedClass = 0;
+            var singlePrediction = prediction.Single();
+
+            if (singlePrediction > 0.5)
+            {
+                predictedClass = 1;
+            }
+
+            return predictedClass;
         }
     }
 }

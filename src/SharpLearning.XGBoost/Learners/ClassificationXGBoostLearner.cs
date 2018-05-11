@@ -17,7 +17,8 @@ namespace SharpLearning.XGBoost.Learners
         IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
         /// <summary>
-        /// Classification learner for XGBoost.
+        /// Classification learner for XGBoost. For classification problems, 
+        /// XGBoost requires that target values are sequntial and start at 0.
         /// </summary>
         /// <param name="maximumTreeDepth">Maximum tree depth for base learners. (default is 3)</param>
         /// <param name="learningRate">Boosting learning rate (xgb's "eta"). 0 indicates no limit. (default is 0.1)</param>
@@ -69,6 +70,18 @@ namespace SharpLearning.XGBoost.Learners
             m_parameters[ParameterNames.LearningRate] = (float)learningRate;
             m_parameters[ParameterNames.Estimators] = estimators;
             m_parameters[ParameterNames.Silent] = silent;
+
+            if(objective == Objective.Softmax)
+            {
+                // SoftMax and SoftProp are the same objective,
+                // but softprop returns probabilities.
+                // So in order to always support PredictProbability,
+                // always use softprop for multi-class.
+                // Conversions to class labels is handled in the
+                // ClassificationXGBoostModel.
+                objective = Objective.SoftProb;
+            }
+
             m_parameters[ParameterNames.objective] = objective.ToXGBoostString();
 
             m_parameters[ParameterNames.Threads] = numberOfThreads;
@@ -113,20 +126,17 @@ namespace SharpLearning.XGBoost.Learners
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
-
+                        
             var floatObservations = observations.ToFloatJaggedArray(indices);
+            var floatTargets = targets.ToFloat(indices);
 
-            var index = 0;
-            var targetNameToIndex = targets.Distinct()
-                .Select(v => v)
-                .OrderBy(v => v)
-                .ToDictionary(v => v, v => (float)index++);
-
-            var numberOfClasses = targetNameToIndex.Count();
-            m_parameters[ParameterNames.NumberOfClasses] = numberOfClasses;
-
-            var floatTargets = targets.GetIndices(indices)
-                .Select(v => targetNameToIndex[v]).ToArray();
+            // Only specify XGBoost number of classes if the objective is multi-class.
+            var objective = (string)m_parameters[ParameterNames.objective];
+            if (objective == Objective.Softmax.ToXGBoostString() || objective == Objective.SoftProb.ToXGBoostString())
+            {
+                var numberOfClasses = floatTargets.Distinct().Count();
+                m_parameters[ParameterNames.NumberOfClasses] = numberOfClasses;
+            }
 
             using (var train = new DMatrix(floatObservations, floatTargets))
             {
@@ -138,7 +148,7 @@ namespace SharpLearning.XGBoost.Learners
                     booster.Update(train, iteration);
                 }
 
-                return new ClassificationXGBoostModel(booster, targetNameToIndex.ToDictionary(v => v.Value, v => v.Key));
+                return new ClassificationXGBoostModel(booster);
             }
         }
 
