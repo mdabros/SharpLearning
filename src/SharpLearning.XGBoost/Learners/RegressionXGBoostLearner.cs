@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.XGBoost.Models;
 using XGBoost.lib;
@@ -109,6 +110,9 @@ namespace SharpLearning.XGBoost.Learners
         /// <returns></returns>
         public RegressionXGBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
             var floatObservations = observations.ToFloatJaggedArray(indices);
             var floatTargets = targets.ToFloat(indices);
 

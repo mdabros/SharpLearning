@@ -5,6 +5,7 @@ using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.XGBoost.Models;
 using XGBoost.lib;
+using SharpLearning.Containers;
 
 namespace SharpLearning.XGBoost.Learners
 {
@@ -110,6 +111,9 @@ namespace SharpLearning.XGBoost.Learners
         /// <returns></returns>
         public ClassificationXGBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
         {
+            Checks.VerifyObservationsAndTargets(observations, targets);
+            Checks.VerifyIndices(indices, observations, targets);
+
             var floatObservations = observations.ToFloatJaggedArray(indices);
 
             var index = 0;
