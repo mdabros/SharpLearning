@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
 using SharpLearning.XGBoost.Learners;
@@ -14,13 +15,57 @@ namespace SharpLearning.XGBoost.Test.Learners
         readonly double m_delta = 0.0000001;
 
         [TestMethod]
+        public void ClassificationForestModel_Predict_Single()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var rows = targets.Length;
+
+            var learner = CreateLearner();
+            using (var sut = learner.Learn(observations, targets))
+            {
+                var predictions = new double[rows];
+                for (int i = 0; i < rows; i++)
+                {
+                    predictions[i] = sut.Predict(observations.Row(i));
+                }
+
+                var evaluator = new TotalErrorClassificationMetric<double>();
+                var error = evaluator.Error(targets, predictions);
+
+                Assert.AreEqual(0.17757009345794392, error, m_delta);
+            }
+        }
+
+        [TestMethod]
+        public void ClassificationXGBoostModel_Predict_Multiple()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var learner = CreateLearner();
+
+            using (var sut = learner.Learn(observations, targets))
+            {
+                var predictions = sut.Predict(observations);
+
+                var evaluator = new TotalErrorClassificationMetric<double>();
+                var error = evaluator.Error(targets, predictions);
+
+                Assert.AreEqual(0.17757009345794392, error, m_delta);
+            }
+        }
+
+        [TestMethod]
         public void ClassificationXGBoostModel_Save_Load()
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var leaner = new ClassificationXGBoostLearner(estimators: 2);
+            var leaner = CreateLearner();
             var modelFilePath = "model.xgb";
 
             using (var sutPreSave = leaner.Learn(observations, targets))
@@ -35,7 +80,31 @@ namespace SharpLearning.XGBoost.Test.Learners
             }
         }
 
-        void AssertModel(Containers.Matrices.F64Matrix observations, double[] targets, ClassificationXGBoostModel model)
+        static ClassificationXGBoostLearner CreateLearner()
+        {
+            return new ClassificationXGBoostLearner(maximumTreeDepth: 3,
+                learningRate: 0.1,
+                estimators: 2,
+                silent: true,
+                objective: Objective.Softmax,
+                boosterType: BoosterType.GBTree,
+                treeMethod: TreeMethod.Auto,
+                numberOfThreads: -1,
+                gamma: 0,
+                minChildWeight: 1,
+                maxDeltaStep: 0,
+                subSample: 1,
+                colSampleByTree: 1,
+                colSampleByLevel: 1,
+                l1Regularization: 0,
+                l2Reguralization: 1,
+                scalePosWeight: 1,
+                baseScore: 0.5,
+                seed: 0,
+                missing: double.NaN);
+        }
+
+        void AssertModel(F64Matrix observations, double[] targets, ClassificationXGBoostModel model)
         {
             var predictions = model.Predict(observations);
             var evaluator = new TotalErrorClassificationMetric<double>();
