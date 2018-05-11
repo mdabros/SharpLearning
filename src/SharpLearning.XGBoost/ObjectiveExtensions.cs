@@ -19,7 +19,7 @@ namespace SharpLearning.XGBoost
                 case Objective.LinearRegression:
                     return "reg:linear";
                 case Objective.LogisticRegression:
-                    return "reg: logistic";
+                    return "reg:logistic";
                 case Objective.BinaryLogistic:
                     return "binary:logistic";
                 case Objective.BinaryLogisticRaw:
