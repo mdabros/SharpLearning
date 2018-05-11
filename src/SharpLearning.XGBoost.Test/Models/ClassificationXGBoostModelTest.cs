@@ -20,7 +20,7 @@ namespace SharpLearning.XGBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var leaner = new ClassificationXGBoostLearner(estimaters: 2);
+            var leaner = new ClassificationXGBoostLearner(estimators: 2);
             var modelFilePath = "model.xgb";
 
             using (var sutPreSave = leaner.Learn(observations, targets))

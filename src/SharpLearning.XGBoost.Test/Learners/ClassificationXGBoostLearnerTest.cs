@@ -19,7 +19,7 @@ namespace SharpLearning.XGBoost.Test.Learners
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
             var targets = parser.EnumerateRows("Target").ToF64Vector();
 
-            var sut = new ClassificationXGBoostLearner(estimaters: 2);
+            var sut = new ClassificationXGBoostLearner(estimators: 2);
             using (var model = sut.Learn(observations, targets))
             {
                 var predictions = model.Predict(observations);
