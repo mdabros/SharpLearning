@@ -30,7 +30,7 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="gamma">Minimum loss reduction required to make a further partition on a leaf node of the tree. (default is 0) </param>
         /// <param name="minChildWeight">Minimum sum of instance weight(hessian) needed in a child. (default is 1)</param>
         /// <param name="maxDeltaStep">Maximum delta step we allow each tree's weight estimation to be. (default is 0)</param>
-        /// <param name="subsample">Subsample ratio of the training instance. (default is 1)</param>
+        /// <param name="subSample">Subsample ratio of the training instance. (default is 1)</param>
         /// <param name="colSampleByTree">Subsample ratio of columns when constructing each tree. (defualt is 1)</param>
         /// <param name="colSampleByLevel">Subsample ratio of columns for each split, in each level. (defualt is 1)</param>
         /// <param name="l1Regularization">L1 regularization term on weights. Also known as RegAlpha. (default is 0)</param>
@@ -45,7 +45,7 @@ namespace SharpLearning.XGBoost.Learners
             BoosterType boosterType = BoosterType.GBTree,
             TreeMethod treeMethod = TreeMethod.Auto,
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
-            int maxDeltaStep = 0, double subsample = 1, double colSampleByTree = 1,
+            int maxDeltaStep = 0, double subSample = 1, double colSampleByTree = 1,
             double colSampleByLevel = 1, double l1Regularization = 0, double l2Reguralization = 1,
             double scalePosWeight = 1, double baseScore = 0.5, int seed = 0,
             double missing = double.NaN)
@@ -57,7 +57,7 @@ namespace SharpLearning.XGBoost.Learners
             ArgumentChecks.ThrowOnArgumentLessThan(nameof(gamma), gamma, 0);
             ArgumentChecks.ThrowOnArgumentLessThan(nameof(minChildWeight), minChildWeight, 0);
             ArgumentChecks.ThrowOnArgumentLessThan(nameof(maxDeltaStep), maxDeltaStep, 0);
-            ArgumentChecks.ThrowOnArgumentLessThanOrHigherThan(nameof(subsample), subsample, 0, 1.0);
+            ArgumentChecks.ThrowOnArgumentLessThanOrHigherThan(nameof(subSample), subSample, 0, 1.0);
             ArgumentChecks.ThrowOnArgumentLessThanOrHigherThan(nameof(colSampleByTree), colSampleByTree, 0, 1.0);
             ArgumentChecks.ThrowOnArgumentLessThanOrHigherThan(nameof(colSampleByLevel), colSampleByLevel, 0, 1.0);
             ArgumentChecks.ThrowOnArgumentLessThan(nameof(l1Regularization), l1Regularization, 0);
@@ -74,7 +74,7 @@ namespace SharpLearning.XGBoost.Learners
             m_parameters[ParameterNames.Gamma] = (float)gamma;
             m_parameters[ParameterNames.MinChildWeight] = minChildWeight;
             m_parameters[ParameterNames.MaxDeltaStep] = maxDeltaStep;
-            m_parameters[ParameterNames.SubSample] = (float)subsample;
+            m_parameters[ParameterNames.SubSample] = (float)subSample;
             m_parameters[ParameterNames.ColSampleByTree] = (float)colSampleByTree;
             m_parameters[ParameterNames.ColSampleByLevel] = (float)colSampleByLevel;
             m_parameters[ParameterNames.RegAlpha] = (float)l1Regularization;
