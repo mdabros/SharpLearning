@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
@@ -34,7 +35,7 @@ namespace SharpLearning.XGBoost.Test.Learners
                 var evaluator = new MeanSquaredErrorRegressionMetric();
                 var error = evaluator.Error(targets, predictions);
 
-                Assert.AreEqual(0.091791017398738781, error, m_delta);
+                Assert.AreEqual(0.0795934933096642, error, m_delta);
             }
         }
 
@@ -54,7 +55,7 @@ namespace SharpLearning.XGBoost.Test.Learners
                 var evaluator = new MeanSquaredErrorRegressionMetric();
                 var error = evaluator.Error(targets, predictions);
 
-                Assert.AreEqual(0.091791017398738781, error, m_delta);
+                Assert.AreEqual(0.0795934933096642, error, m_delta);
             }
         }
 
@@ -63,7 +64,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         {
             var parser = new CsvParser(() => new StringReader(Resources.Glass));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();                
 
             var learner = CreateLearner();
             var sut = learner.Learn(observations, targets);
@@ -113,7 +114,7 @@ namespace SharpLearning.XGBoost.Test.Learners
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.091791017398738781, actual, m_delta);
+            Assert.AreEqual(0.0795934933096642, actual, m_delta);
         }
     }
 }
