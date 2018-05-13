@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
@@ -80,6 +82,47 @@ namespace SharpLearning.XGBoost.Test.Learners
             using (var sutAfterSave = RegressionXGBoostModel.Load(modelFilePath))
             {
                 AssertModel(observations, targets, sutAfterSave);
+            }
+        }
+
+        [TestMethod]
+        public void RegressionXGBoostModel_GetVariableImportance()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var index = 0;
+            var name = "f";
+            var featureNameToIndex = Enumerable.Range(0, 9)
+                .ToDictionary(v => name + index.ToString(), v => index++);
+
+            var learner = CreateLearner();
+
+            using (var sut = learner.Learn(observations, targets))
+            {
+                var actual = sut.GetVariableImportance(featureNameToIndex);
+                var expected = new Dictionary<string, double>
+                {
+                    {"f2", 100},
+                    {"f7", 21.1439170859871},
+                    {"f6", 17.5087210061721},
+                    {"f3", 12.6909395202158},
+                    {"f0", 12.3235851417467},
+                    {"f1", 9.00304680229703},
+                    {"f5", 7.10296482157573},
+                    {"f4", 6.43327754840246},
+                    {"f8", 4.61553313147666},                
+                };
+
+                Assert.AreEqual(expected.Count, actual.Count);
+                var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
+
+                foreach (var item in zip)
+                {
+                    Assert.AreEqual(item.Expected.Key, item.Actual.Key);
+                    Assert.AreEqual(item.Expected.Value, item.Actual.Value, m_delta);
+                }
             }
         }
 

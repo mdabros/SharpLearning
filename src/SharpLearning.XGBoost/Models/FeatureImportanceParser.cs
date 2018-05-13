@@ -7,7 +7,7 @@ namespace SharpLearning.XGBoost.Models
         public static double[] ParseFromTreeDump(string[] textTrees, int numberOfFeatures)
         {
             var importanceType = new string[] { "gain=" };
-            var newLine = new string[] { Environment.NewLine };
+            var newLine = new string[] { "\n" };
 
             var rawFeatureImportance = new double[numberOfFeatures];
             foreach (var tree in textTrees)
