@@ -42,7 +42,7 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="missing">Value in the data which needs to be present as a missing value. (default is NaN)</param>
         public ClassificationXGBoostLearner(int maximumTreeDepth = 3, double learningRate = 0.1, int estimators = 100,
             bool silent = true,
-            Objective objective = Objective.Softmax,
+            ClassificationObjective objective = ClassificationObjective.Softmax,
             BoosterType boosterType = BoosterType.GBTree,
             TreeMethod treeMethod = TreeMethod.Auto,
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
@@ -70,7 +70,7 @@ namespace SharpLearning.XGBoost.Learners
             m_parameters[ParameterNames.Estimators] = estimators;
             m_parameters[ParameterNames.Silent] = silent;
 
-            if(objective == Objective.Softmax)
+            if(objective == ClassificationObjective.Softmax)
             {
                 // SoftMax and SoftProp are the same objective,
                 // but softprop returns probabilities.
@@ -78,7 +78,7 @@ namespace SharpLearning.XGBoost.Learners
                 // always use softprop for multi-class.
                 // Conversions to class labels is handled in the
                 // ClassificationXGBoostModel.
-                objective = Objective.SoftProb;
+                objective = ClassificationObjective.SoftProb;
             }
 
             m_parameters[ParameterNames.objective] = objective.ToXGBoostString();
@@ -131,7 +131,7 @@ namespace SharpLearning.XGBoost.Learners
 
             // Only specify XGBoost number of classes if the objective is multi-class.
             var objective = (string)m_parameters[ParameterNames.objective];
-            if (objective == Objective.Softmax.ToXGBoostString() || objective == Objective.SoftProb.ToXGBoostString())
+            if (objective == ClassificationObjective.Softmax.ToXGBoostString() || objective == ClassificationObjective.SoftProb.ToXGBoostString())
             {
                 var numberOfClasses = floatTargets.Distinct().Count();
                 m_parameters[ParameterNames.NumberOfClasses] = numberOfClasses;

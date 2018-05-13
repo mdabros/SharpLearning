@@ -52,7 +52,7 @@ namespace SharpLearning.XGBoost.Test.Learners
 
             var rows = binaryTargets.Length;
 
-            var learner = CreateLearner(Objective.BinaryLogistic);
+            var learner = CreateLearner(ClassificationObjective.BinaryLogistic);
             using (var sut = learner.Learn(observations, binaryTargets))
             {
                 var predictions = new double[rows];
@@ -126,7 +126,7 @@ namespace SharpLearning.XGBoost.Test.Learners
 
             var rows = binaryTargets.Length;
 
-            var learner = CreateLearner(Objective.BinaryLogistic);
+            var learner = CreateLearner(ClassificationObjective.BinaryLogistic);
             using (var sut = learner.Learn(observations, binaryTargets))
             {
                 var actual = new ProbabilityPrediction[rows];
@@ -230,7 +230,7 @@ namespace SharpLearning.XGBoost.Test.Learners
             }
         }
 
-        static ClassificationXGBoostLearner CreateLearner(Objective objective = Objective.SoftProb)
+        static ClassificationXGBoostLearner CreateLearner(ClassificationObjective objective = ClassificationObjective.SoftProb)
         {
             return new ClassificationXGBoostLearner(maximumTreeDepth: 3,
                 learningRate: 0.1,

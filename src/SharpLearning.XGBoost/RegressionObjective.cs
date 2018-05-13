@@ -1,9 +1,9 @@
 ﻿namespace SharpLearning.XGBoost
 {
     /// <summary>
-    /// XGBoost objectives.
+    /// Regression objectives.
     /// </summary>
-    public enum Objective
+    public enum RegressionObjective
     {
         /// <summary>
         /// linear regression.
@@ -14,16 +14,6 @@
         /// logistic regression.
         /// </summary>
         LogisticRegression,
-
-        /// <summary>
-        /// logistic regression for binary classification, output probability.
-        /// </summary>
-        BinaryLogistic,
-
-        /// <summary>
-        /// logistic regression for binary classification, output score before logistic transformation.
-        /// </summary>
-        BinaryLogisticRaw,
 
         /// <summary>
         /// GPU version of linear regression evaluated on the GPU,
@@ -40,20 +30,6 @@
         GPULogistic,
 
         /// <summary>
-        /// GPU version of binary logistic regression evaluated on the GPU,
-        /// note that like the GPU histogram algorithm, 
-        /// they can only be used when the entire training session uses the same dataset.
-        /// </summary>
-        GPUBinaryLogistic,
-
-        /// <summary>
-        /// GPU version of binary logistic regression raw evaluated on the GPU,
-        /// note that like the GPU histogram algorithm, 
-        /// they can only be used when the entire training session uses the same dataset.
-        /// </summary>
-        GPUBinaryLogisticRaw,
-
-        /// <summary>
         /// poisson regression for count data, output mean of poisson distribution,
         /// max_delta_step is set to 0.7 by default in poisson regression (used to safeguard optimization).
         /// </summary>
@@ -65,17 +41,6 @@
         /// in the proportional hazard function h(t) = h0(t) * HR).
         /// </summary>
         SurvivalCox,
-
-        /// <summary>
-        /// Multiclass classification using the softmax objective.
-        /// </summary>
-        Softmax,
-
-        /// <summary>
-        /// same as softmax, but output a vector of ndata * nclass, which can be further reshaped to ndata, 
-        /// nclass matrix.The result contains predicted probability of each data point belonging to each class.
-        /// </summary>
-        SoftProb,
 
         /// <summary>
         /// ranking task by minimizing the pairwise loss.

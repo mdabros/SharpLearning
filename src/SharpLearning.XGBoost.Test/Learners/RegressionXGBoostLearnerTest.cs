@@ -66,7 +66,7 @@ namespace SharpLearning.XGBoost.Test.Learners
                 learningRate: 0.1,
                 estimators: 100,
                 silent: true,
-                objective: Objective.LinearRegression,
+                objective: RegressionObjective.LinearRegression,
                 boosterType: BoosterType.GBTree,
                 treeMethod: TreeMethod.Auto,
                 numberOfThreads: -1,

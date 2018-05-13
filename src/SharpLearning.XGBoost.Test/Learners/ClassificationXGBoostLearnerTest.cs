@@ -66,7 +66,7 @@ namespace SharpLearning.XGBoost.Test.Learners
                 learningRate: 0.1,
                 estimators: 2,
                 silent: true,
-                objective: Objective.Softmax,
+                objective: ClassificationObjective.Softmax,
                 boosterType: BoosterType.GBTree,
                 treeMethod: TreeMethod.Auto,
                 numberOfThreads: -1,

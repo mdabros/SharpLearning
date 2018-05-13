@@ -41,7 +41,7 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="missing">Value in the data which needs to be present as a missing value. (default is NaN)</param>
         public RegressionXGBoostLearner(int maximumTreeDepth = 3, double learningRate = 0.1, int estimators = 100,
             bool silent = true,
-            Objective objective = Objective.LinearRegression,
+            RegressionObjective objective = RegressionObjective.LinearRegression,
             BoosterType boosterType = BoosterType.GBTree,
             TreeMethod treeMethod = TreeMethod.Auto,
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
