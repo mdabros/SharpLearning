@@ -189,6 +189,47 @@ namespace SharpLearning.XGBoost.Test.Learners
             }
         }
 
+        [TestMethod]
+        public void ClassificationXGBoostModel_GetVariableImportance()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var index = 0;
+            var name = "f";
+            var featureNameToIndex = Enumerable.Range(0, 9)
+                .ToDictionary(v => name + index.ToString(), v => index++);
+
+            var learner = CreateLearner();
+
+            using (var sut = learner.Learn(observations, targets))
+            {
+                var actual = sut.GetVariableImportance(featureNameToIndex);
+                var expected = new Dictionary<string, double>
+                {
+                    { "f7", 100 },
+                    { "f3", 96.65114317502 },
+                    { "f2", 58.3335313859471 },
+                    { "f6", 48.3923698786661 },
+                    { "f0", 31.7452355441014 },
+                    { "f8", 16.7766791437258 },
+                    { "f5", 14.4376085200548 },
+                    { "f1", 8.66713759744955 },
+                    { "f4", 5.22468672931978 },
+                };
+
+                Assert.AreEqual(expected.Count, actual.Count);
+                var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
+
+                foreach (var item in zip)
+                {
+                    Assert.AreEqual(item.Expected.Key, item.Actual.Key);
+                    Assert.AreEqual(item.Expected.Value, item.Actual.Value, m_delta);
+                }
+            }
+        }
+
         static ClassificationXGBoostLearner CreateLearner(Objective objective = Objective.SoftProb)
         {
             return new ClassificationXGBoostLearner(maximumTreeDepth: 3,

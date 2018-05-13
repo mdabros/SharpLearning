@@ -125,7 +125,7 @@ namespace SharpLearning.XGBoost.Models
         }
 
         /// <summary>
-        /// 
+        /// Raw vaiable importance is not supported by XGBoost models.
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -134,13 +134,24 @@ namespace SharpLearning.XGBoost.Models
         }
 
         /// <summary>
-        /// 
+        /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
-            throw new System.NotImplementedException();
+            var textTrees = m_model.DumpModelEx(fmap: string.Empty, with_stats: 1, format: "text");
+            var rawVariableImportance = FeatureImportanceParser.ParseFromTreeDump(textTrees, featureNameToIndex.Count);
+
+            var max = rawVariableImportance.Max();
+
+            var scaledVariableImportance = rawVariableImportance
+                .Select(v => (v / max) * 100.0)
+                .ToArray();
+
+            return featureNameToIndex.ToDictionary(kvp => kvp.Key, kvp => scaledVariableImportance[kvp.Value])
+                        .OrderByDescending(kvp => kvp.Value)
+                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         /// <summary>
