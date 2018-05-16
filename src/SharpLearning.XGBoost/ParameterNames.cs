@@ -142,7 +142,7 @@
         ///   - weight of new trees are 1 / (1 + learning_rate)
         ///     dropped trees are scaled by a factor of 1 / (1 + learning_rate)
         /// </summary>
-        public const string NormalizeType = "normalize_type ";
+        public const string NormalizeType = "normalize_type";
 
         /// <summary>
         /// Dropout rate for DART. (a fraction of previous trees to drop during the dropout).

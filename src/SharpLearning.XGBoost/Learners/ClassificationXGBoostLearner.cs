@@ -27,6 +27,14 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="boosterType"> which booster to use, can be gbtree, gblinear or dart. 
         /// gbtree and dart use tree based model while gblinear uses linear function (default is gbtree)</param>
         /// <param name="treeMethod">The tree construction algorithm used in XGBoost. See reference paper: https://arxiv.org/abs/1603.02754. (default is auto)</param>
+        /// <param name="samplerType">Type of sampling algorithm for DART. (default is uniform)</param>
+        /// <param name="normalizeType">Type of normalization algorithm for DART. (default is tree)</param>
+        /// <param name="dropoutRate">Dropout rate for DART (a fraction of previous trees to drop during the dropout). (default is 0.0)</param>
+        /// <param name="oneDrop">When this is true, at least one tree is always dropped during the dropout.
+        /// Allows Binomial-plus-one or epsilon-dropout from the original DART paper. (default is false)</param>
+        /// <param name="skipDrop">Probability of skipping the dropout procedure during a boosting iteration. (default is 0.0)
+        /// If a dropout is skipped, new trees are added in the same manner as gbtree.
+        /// Note that non-zero skip_drop has higher priority than rate_drop or one_drop.</param>
         /// <param name="numberOfThreads">Number of parallel threads used to run xgboost. -1 means use all thread avialable. (default is -1)</param>
         /// <param name="gamma">Minimum loss reduction required to make a further partition on a leaf node of the tree. (default is 0) </param>
         /// <param name="minChildWeight">Minimum sum of instance weight(hessian) needed in a child. (default is 1)</param>
@@ -45,6 +53,11 @@ namespace SharpLearning.XGBoost.Learners
             ClassificationObjective objective = ClassificationObjective.Softmax,
             BoosterType boosterType = BoosterType.GBTree,
             TreeMethod treeMethod = TreeMethod.Auto,
+            SamplerType samplerType = SamplerType.Uniform,
+            NormalizeType normalizeType = NormalizeType.Tree,
+            double dropoutRate = 0.0,
+            bool oneDrop = false,
+            double skipDrop = 0.0,
             int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
             int maxDeltaStep = 0, double subSample = 1, double colSampleByTree = 1,
             double colSampleByLevel = 1, double l1Regularization = 0, double l2Reguralization = 1,
@@ -100,6 +113,12 @@ namespace SharpLearning.XGBoost.Learners
             m_parameters[ParameterNames.ExistingBooster] = null;
             m_parameters[ParameterNames.Booster] = boosterType.ToXGBoostString();
             m_parameters[ParameterNames.TreeMethod] = treeMethod.ToXGBoostString();
+
+            m_parameters[ParameterNames.SampleType] = samplerType.ToXGBoostString();
+            m_parameters[ParameterNames.NormalizeType] = normalizeType.ToXGBoostString();
+            m_parameters[ParameterNames.RateDrop] = (float)dropoutRate;
+            m_parameters[ParameterNames.OneDrop] = oneDrop ? 1 : 0;
+            m_parameters[ParameterNames.SkipDrop] = (float)skipDrop;
         }
 
         /// <summary>
