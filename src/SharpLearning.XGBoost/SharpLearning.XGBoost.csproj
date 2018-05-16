@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
@@ -7,7 +7,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <PackageId>SharpLearning.RandomForest</PackageId>
+    <PackageId>SharpLearning.XGBoost</PackageId>
     <Description>Provides learning algorithms and models for XGBoost regression and classification.</Description>
     <PackageTags>XGBoost machinelearning classification regression machine learning</PackageTags>
   </PropertyGroup>
