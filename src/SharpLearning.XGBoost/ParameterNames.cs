@@ -125,5 +125,43 @@
         /// The number of classes in a classification problem.
         /// </summary>
         public const string NumberOfClasses = "num_class";
+
+        /// <summary>
+        /// type of sampling algorithm for DART.
+        /// - "uniform": dropped trees are selected uniformly.
+        /// - "weighted": dropped trees are selected in proportion to weight.
+        /// </summary>
+        public const string SampleType = "sample_type";
+
+        /// <summary>
+        /// type of normalization algorithm for DART.
+        /// -"tree": new trees have the same weight of each of dropped trees.
+        ///   - weight of new trees are 1 / (k + learning_rate)
+        ///     dropped trees are scaled by a factor of k / (k + learning_rate)
+        /// - "forest": new trees have the same weight of sum of dropped trees(forest).
+        ///   - weight of new trees are 1 / (1 + learning_rate)
+        ///     dropped trees are scaled by a factor of 1 / (1 + learning_rate)
+        /// </summary>
+        public const string NormalizeType = "normalize_type ";
+
+        /// <summary>
+        /// Dropout rate for DART. (a fraction of previous trees to drop during the dropout).
+        /// </summary>
+        public const string RateDrop = "rate_drop";
+
+        /// <summary>
+        /// One drop for DART. 
+        /// When this flag is enabled, 
+        /// at least one tree is always dropped during the dropout 
+        /// (allows Binomial-plus-one or epsilon-dropout from the original DART paper.
+        /// </summary>
+        public const string OneDrop = "one_drop";
+
+        /// <summary>
+        /// Skip_drop for DART. Probability of skipping the dropout procedure during a boosting iteration.
+        ///  - If a dropout is skipped, new trees are added in the same manner as gbtree.
+        ///  - Note that non-zero skip_drop has higher priority than rate_drop or one_drop.
+        /// </summary>
+        public const string SkipDrop = "skip_drop";
     }
 }
