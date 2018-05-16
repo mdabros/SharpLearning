@@ -22,15 +22,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
-    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
-    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
+    <PackageReference Include="PicNet.XGBoost" Version="0.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="XGBoost">
-      <HintPath>..\..\..\XGBoost.Net\XGBoost\bin\Release\XGBoost.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
   </ItemGroup>
 
 </Project>
