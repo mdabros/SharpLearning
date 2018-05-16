@@ -2,8 +2,17 @@
 
 namespace SharpLearning.XGBoost.Models
 {
+    /// <summary>
+    /// Parser for XGBoost feature importance.
+    /// </summary>
     public static class FeatureImportanceParser
     {
+        /// <summary>
+        /// Parse array of feature importance values from text dump of XGBoost trees.
+        /// </summary>
+        /// <param name="textTrees"></param>
+        /// <param name="numberOfFeatures"></param>
+        /// <returns></returns>
         public static double[] ParseFromTreeDump(string[] textTrees, int numberOfFeatures)
         {
             var importanceType = new string[] { "gain=" };
