@@ -97,7 +97,9 @@ namespace SharpLearning.CrossValidation.TimeSeries
                 var startIndex = m_maxTrainingSetSize != 0 ? Math.Max(0, (lastTrainingIndex + 1) - m_maxTrainingSetSize) : 0;
                 var lenght = m_maxTrainingSetSize != 0 ? Math.Min(m_maxTrainingSetSize, lastTrainingIndex) : lastTrainingIndex;
 
-                trainingIndices = Enumerable.Range(startIndex, lenght).ToArray();                
+                trainingIndices = Enumerable.Range(startIndex, lenght).ToArray();
+
+                ModelDisposer.DisposeIfDisposable(model);
             }
 
             return predictions;
