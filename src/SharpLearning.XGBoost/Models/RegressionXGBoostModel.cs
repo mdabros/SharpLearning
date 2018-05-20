@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.GradientBoost.Models;
 using XGBoost.lib;
 
 namespace SharpLearning.XGBoost.Models
