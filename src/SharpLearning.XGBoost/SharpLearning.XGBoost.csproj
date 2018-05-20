@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
+    <ProjectReference Include="..\SharpLearning.GradientBoost\SharpLearning.GradientBoost.csproj" />
     <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
   </ItemGroup>
 
