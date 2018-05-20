@@ -129,7 +129,7 @@ namespace SharpLearning.XGBoost.Models
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
-            throw new System.NotImplementedException();
+            throw new NotSupportedException("XGBoost models does not support raw variable importance, use GetVariableImportance method instead.");
         }
 
         /// <summary>
