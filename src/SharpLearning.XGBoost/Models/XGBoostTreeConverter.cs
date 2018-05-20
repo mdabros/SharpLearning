@@ -22,7 +22,13 @@ namespace SharpLearning.XGBoost.Models
         /// <returns></returns>
         public static GBMTree[] FromXGBoostTextTreesToGBMTrees(string[] textTrees)
         {
-            throw new NotImplementedException();
+            var trees = new GBMTree[textTrees.Length];
+            for (int i = 0; i < textTrees.Length; i++)
+            {
+                trees[i] = ConvertXGBoostTextTreeToGBMTree(textTrees[i]);
+            }
+
+            return trees;
         }
 
         /// <summary>
@@ -32,42 +38,42 @@ namespace SharpLearning.XGBoost.Models
         /// <returns></returns>
         public static GBMTree ConvertXGBoostTextTreeToGBMTree(string textTree)
         {
+            List<GBMNode> nodes = ConvertXGBoostNodesToGBMNodes(textTree);
+
+            return new GBMTree(nodes);
+        }
+
+        private static List<GBMNode> ConvertXGBoostNodesToGBMNodes(string textTree)
+        {
             var newLine = new string[] { "\n" };
             var lines = textTree.Split(newLine, StringSplitOptions.RemoveEmptyEntries);
-            var nodes = new List<GBMNode>();
 
-            // Add special root node for sharplearning
-            nodes.Add(new GBMNode
+            var nodes = new List<GBMNode>
             {
-                FeatureIndex = -1,
-                SplitValue = -1,
-                LeftConstant = 0.5,
-                RightConstant = 0.5,
-            });
+                // Add special root node for sharplearning
+                new GBMNode
+                {
+                    FeatureIndex = -1,
+                    SplitValue = -1,
+                    LeftConstant = 0.5,
+                    RightConstant = 0.5,
+                },
+            };
 
             // Order lines by node index and remove booster line.
             var ordered = lines.Where(l => !l.Contains("booster")).ToArray();
 
             var orderedLines = ordered
-                .OrderBy(l => ParseNodeIndex(l)).ToArray();
+                .OrderBy(l => ParseNodeIndex(l))
+                .ToDictionary(l => ParseNodeIndex(l), l => l);
 
-            foreach (var line in orderedLines)
+            var nodeIndex = 1;
+            foreach (var line in orderedLines.Values)
             {
                 if (IsLeaf(line))
                 {
-                    var splitValue = ParseLeafValue(line);
-
-                    nodes.Add(new GBMNode
-                    {
-                        FeatureIndex = -1,
-                        SplitValue = -1,
-                        
-                        // XGBoost has single value leaf nodes,
-                        // so mimic by setting both left and right
-                        // to the same leaf value.
-                        LeftConstant = splitValue,
-                        RightConstant = splitValue,
-                    });
+                    // Leafs are not added as nodes, leaf values are included in the split nodes.
+                    continue;
                 }
                 else
                 {
@@ -76,23 +82,47 @@ namespace SharpLearning.XGBoost.Models
                     var yesIndex = ParseYesIndex(line);
                     var noIndex = ParseNoIndex(line);
 
-                    // because of sharplearnings rootnode.
-                    var leftIndex = yesIndex + 1;
-                    var rightIndex = noIndex + 1;
-
-                    nodes.Add(new GBMNode
+                    var node = new GBMNode
                     {
                         FeatureIndex = featureIndex,
                         SplitValue = splitValue,
                         LeftConstant = -1,
+                        LeftIndex = -1,
                         RightConstant = -1,
-                        LeftIndex = leftIndex, 
-                        RightIndex = rightIndex
-                    });
+                        RightIndex = -1
+                    };
+
+                    var left = orderedLines[yesIndex];
+                    var leftLeaf = IsLeaf(left);
+                    if (leftLeaf)
+                    {
+                        node.LeftIndex = -1;
+                        node.LeftConstant = ParseLeafValue(left);
+                    }
+                    else
+                    {
+                        nodeIndex++;
+                        node.LeftIndex = nodeIndex;
+                    }
+
+                    var right = orderedLines[noIndex];
+                    var rightLeaf = IsLeaf(right);
+                    if (rightLeaf)
+                    {
+                        node.RightIndex = -1;
+                        node.RightConstant = ParseLeafValue(right);
+                    }
+                    else
+                    {
+                        nodeIndex++;
+                        node.RightIndex = nodeIndex;
+                    }
+
+                    nodes.Add(node);
                 }
             }
 
-            return new GBMTree(nodes);
+            return nodes;
         }
 
         /// <summary>
