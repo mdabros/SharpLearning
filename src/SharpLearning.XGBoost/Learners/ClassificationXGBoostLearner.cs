@@ -11,7 +11,8 @@ namespace SharpLearning.XGBoost.Learners
     /// <summary>
     /// Classification learner for XGBoost
     /// </summary>
-    public sealed class ClassificationXGBoostLearner : ILearner<double>, IIndexedLearner<double>
+    public sealed class ClassificationXGBoostLearner : ILearner<double>, IIndexedLearner<double>,
+        ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>
     {
         IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
@@ -184,6 +185,29 @@ namespace SharpLearning.XGBoost.Learners
         IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
         {
             return Learn(observations, targets);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
+        {
+            return Learn(observations, targets);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        {
+            return Learn(observations, targets, indices);
         }
     }
 }
