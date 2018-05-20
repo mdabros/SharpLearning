@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.GradientBoost.GBMDecisionTree;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.XGBoost.Learners;
 using SharpLearning.XGBoost.Models;
-using SharpLearning.XGBoost.Test.Properties;
 
 namespace SharpLearning.XGBoost.Test.Models
 {
