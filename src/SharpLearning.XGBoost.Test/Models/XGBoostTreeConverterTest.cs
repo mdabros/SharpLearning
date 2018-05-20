@@ -14,27 +14,6 @@ namespace SharpLearning.XGBoost.Test.Models
     {
         readonly double m_delta = 0.000001;
 
-        //[TestMethod]
-        public void TestConvertedModel()
-        {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-
-            var learningRate = 0.1;
-            var sut = new RegressionXGBoostLearner(learningRate: learningRate);
-
-            using (var model = sut.Learn(observations, targets))
-            {
-                var expected = model.Predict(observations);
-
-                var converted = model.ToSharpLearningGBMModel(observations.ColumnCount);
-                var actual = converted.Predict(observations);
-
-                ArrayAssert(expected, actual);
-            }
-        }
-
         [TestMethod]
         public void XGBoostTreeConverter_ConvertXGBoostTextTreeToGBMTree_Tree_1()
         {

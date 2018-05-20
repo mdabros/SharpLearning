@@ -100,22 +100,6 @@ namespace SharpLearning.XGBoost.Models
         }
 
         /// <summary>
-        /// Converts model to fully managed RegressionGradientBoostModel.
-        /// </summary>
-        /// <param name="featureCount"></param>
-        /// <returns></returns>
-        public RegressionGradientBoostModel ToSharpLearningGBMModel(int featureCount)
-        {
-            var textTrees = m_model.DumpModelEx(fmap: string.Empty, with_stats: 1, format: "text");
-            var trees = XGBoostTreeConverter.FromXGBoostTextTreesToGBMTrees(textTrees);
-
-            return new RegressionGradientBoostModel(trees, 
-                learningRate: 1.0, // xgboost models assume no learning rate. 
-                initialLoss: 0.5, 
-                featureCount: featureCount);
-        }
-
-        /// <summary>
         /// Saves the RegressionXGBoostModel.
         /// </summary>
         /// <param name="modelFilePath"></param>
