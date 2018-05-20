@@ -93,8 +93,7 @@ namespace SharpLearning.XGBoost.Models
                     };
 
                     var left = orderedLines[yesIndex];
-                    var leftLeaf = IsLeaf(left);
-                    if (leftLeaf)
+                    if (IsLeaf(left))
                     {
                         node.LeftIndex = -1;
                         node.LeftConstant = ParseLeafValue(left);
@@ -106,8 +105,7 @@ namespace SharpLearning.XGBoost.Models
                     }
 
                     var right = orderedLines[noIndex];
-                    var rightLeaf = IsLeaf(right);
-                    if (rightLeaf)
+                    if (IsLeaf(right))
                     {
                         node.RightIndex = -1;
                         node.RightConstant = ParseLeafValue(right);
