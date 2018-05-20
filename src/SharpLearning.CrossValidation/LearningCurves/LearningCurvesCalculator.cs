@@ -131,6 +131,8 @@ namespace SharpLearning.CrossValidation.LearningCurves
                     var sampleTargets = targets.GetIndices(sampleIndices);
                     trainError += m_metric.Error(sampleTargets, trainingPredictions);
                     validationError += m_metric.Error(validationTargets, validationPredictions);
+
+                    ModelDisposer.DisposeIfDisposable(model);
                 }
 
                 trainError = trainError / m_numberOfShufflesPrSample;

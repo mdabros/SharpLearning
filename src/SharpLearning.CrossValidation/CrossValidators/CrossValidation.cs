@@ -112,6 +112,8 @@ namespace SharpLearning.CrossValidation.CrossValidators
                 {
                     crossValidatedPredictions[cvPredictionIndiceMap[holdoutIndices[j]]] = predictions[j];
                 }
+
+                ModelDisposer.DisposeIfDisposable(model);
             }
         }
     }
