@@ -1,4 +1,5 @@
 ﻿using System;
+using SharpLearning.Containers;
 
 namespace SharpLearning.XGBoost.Models
 {
@@ -37,7 +38,7 @@ namespace SharpLearning.XGBoost.Models
                     var featureIndex = int.Parse(name.Split('f')[1]);
 
                     // extract gain or cover
-                    var gain = double.Parse(line.Split(importanceType, 
+                    var gain = FloatingPointConversion.ToF64(line.Split(importanceType, 
                         StringSplitOptions.RemoveEmptyEntries)[1].Split(',')[0]);
 
                     // add to featureImportance
