@@ -31,7 +31,7 @@ namespace SharpLearning.Optimization
         readonly IParameterSampler m_sampler;
         readonly int m_maxFunctionEvaluations;
         int m_totalFunctionEvaluations;
-        
+
         /// <summary>
         /// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization 
         /// avoids some of the shortcommings the standard implementation. 
@@ -52,9 +52,10 @@ namespace SharpLearning.Optimization
         /// <param name="gamma">Coefficient for expansion part of the algorithm (default is 2)</param>
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
+        /// <param name="seed">Seed for random restarts</param>
         public GlobalizedBoundedNelderMeadOptimizer(ParameterBounds[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
-            double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5)
+            double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentNullException("maxIterationsWithoutImprovement must be at least 1"); }
@@ -71,8 +72,10 @@ namespace SharpLearning.Optimization
             m_maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
             m_maxFunctionEvaluations = maxFunctionEvaluations;
 
-            m_random = new Random(324);
-            m_sampler = new RandomUniform();
+            m_random = new Random(seed);
+
+            // Use member to seed the random uniform sampler.
+            m_sampler = new RandomUniform(m_random.Next());
         }
         /// <summary>
         /// Optimization using Globalized bounded Nelder-Mead method.
