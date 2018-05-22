@@ -21,12 +21,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new BayesianOptimizer(parameters, 100, 5, 1);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.73736717818644282, 0.0001);
+            Assert.AreEqual(actual.Error, -0.74765422244251278, 0.0001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], 7.8124302242940438, m_delta);
-            Assert.AreEqual(actual.ParameterSet[1], -3.2319937242343988, m_delta);
-            Assert.AreEqual(actual.ParameterSet[2], 0.34947285910578074, m_delta);
+            Assert.AreEqual(actual.ParameterSet[0], -5.0065683270835173, m_delta);
+            Assert.AreEqual(actual.ParameterSet[1], -9.67008227467075, m_delta);
+            Assert.AreEqual(actual.ParameterSet[2], -0.24173704452893574, m_delta);
         }
 
         [TestMethod]
@@ -42,8 +42,8 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.524597457388694 }, 110.80326835639002),
-                new OptimizerResult(new double[] { 98.240981063917729 }, 150512.62292441679)
+                new OptimizerResult(new double[] { 42.323589763754789 }, 981.97873691815118),
+                new OptimizerResult(new double[] { 99.110398813667885 }, 154864.41962974239)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, m_delta);

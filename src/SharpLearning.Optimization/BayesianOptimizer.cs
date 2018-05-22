@@ -27,6 +27,7 @@ namespace SharpLearning.Optimization
         readonly int m_numberOfStartingPoints;
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
         readonly IParameterSampler m_sampler;
+        readonly Random m_random;
 
         readonly List<double[]> m_previousParameterSets;
         readonly List<double> m_previousParameterSetScores;
@@ -70,16 +71,28 @@ namespace SharpLearning.Optimization
             m_numberOfStartingPoints = numberOfStartingPoints;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
-            m_sampler = new RandomUniform(seed);
+            m_random = new Random(seed);
+
+            // Use member to seed the random uniform sampler.
+            m_sampler = new RandomUniform(m_random.Next());
             
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
-            m_learner = new RegressionExtremelyRandomizedTreesLearner(30, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
+            m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30, 
+                minimumSplitSize: 10, 
+                maximumTreeDepth: 2000, 
+                featuresPrSplit: parameters.Length, 
+                minimumInformationGain: 1e-6, 
+                subSampleRatio: 1.0, 
+                seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                runParallel: false);
 
-            // optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
-            m_maximizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
+            // Optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
+            m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000, 
+                seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                runParallel: false);
 
-            // acquisition function to maximize,
+            // Acquisition function to maximize.
             m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
         }
 
@@ -114,21 +127,32 @@ namespace SharpLearning.Optimization
             if (previousParameterSetScores.Count < 2 || previousParameterSets.Count < 2)
             { throw new ArgumentException("previousParameterSets length and previousResults length must be at least 2 and was: " + previousParameterSetScores.Count); }
 
-
             m_parameters = parameters;
             m_maxIterations = maxIterations;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
-            m_sampler = new RandomUniform(seed);
+            m_random = new Random(seed);
+
+            // Use member to seed the random uniform sampler.
+            m_sampler = new RandomUniform(m_random.Next());
 
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
-            m_learner = new RegressionExtremelyRandomizedTreesLearner(30, 10, 2000, parameters.Length, 1e-6, 1.0, 42, false);
+            m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
+                minimumSplitSize: 10,
+                maximumTreeDepth: 2000,
+                featuresPrSplit: parameters.Length,
+                minimumInformationGain: 1e-6,
+                subSampleRatio: 1.0,
+                seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                runParallel: false);
 
-            // optimizer for finding maximum expectation (most promissing hyper parameters) from random forest model
-            m_maximizer = new RandomSearchOptimizer(m_parameters, 1000, 42, false);
+            // Optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
+            m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
+                seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                runParallel: false);
 
-            // acquisition function to maximize,
+            // Acquisition function to maximize.
             m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
 
             m_previousParameterSets = previousParameterSets;
