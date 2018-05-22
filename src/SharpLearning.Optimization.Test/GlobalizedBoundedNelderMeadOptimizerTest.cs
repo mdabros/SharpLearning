@@ -19,12 +19,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.99999927563662372, 0.0000001);
+            Assert.AreEqual(actual.Error, -0.99999949547279676, 0.0000001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], 1.5710337846223761, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[1], 3.1421855980282225, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[2], 5.203790999662519E-07, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[0], -7.8547285710964134, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[1], 6.2835515298977995, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[2], -1.5851024386788885E-07, 0.0000001);
         }
 
         [TestMethod]
