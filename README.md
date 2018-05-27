@@ -64,6 +64,7 @@ The wiki also contains a set of guides on how to get started:
  - [**Getting Started**](https://github.com/mdabros/SharpLearning/wiki/Getting-started).
  - [**Introduction to SharpLearning**](https://github.com/mdabros/SharpLearning/wiki/Introduction-to-SharpLearning).
  - [**Tuning Hyperparameters**](https://github.com/mdabros/SharpLearning/wiki/hyperparameter-tuning).
+ - [**Using SharpLearning.XGBoost**](https://github.com/mdabros/SharpLearning/wiki/Using-SharpLearning.XGBoost)
 
 
 Installation
