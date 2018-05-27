@@ -45,7 +45,7 @@ namespace SharpLearning.Optimization.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void ParameterBounds_Throw_On_Transform_Is_Null()
         {
-            new ParameterBounds(min: 10, max: 30, transform: null);
+            new ParameterBounds(min: 10, max: 30, transform: null, parameterType: ParameterType.Continuous);
         }
     }
 }

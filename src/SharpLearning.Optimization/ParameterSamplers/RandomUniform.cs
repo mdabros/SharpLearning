@@ -23,11 +23,32 @@ namespace SharpLearning.Optimization.ParameterSamplers
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.</param>
         /// <returns></returns>
-        public double Sample(double min, double max)
+        public double Sample(double min, double max, ParameterType parameterType)
         {
             if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
+
+            switch (parameterType)
+            {
+                case ParameterType.Discrete:
+                    return SampleInteger((int)min, (int)max);
+                case ParameterType.Continuous:
+                    return SampleContinous(min, max);
+                default:
+                    throw new ArgumentException("Unknown parameter type: " + parameterType);
+            }
+        }
+
+        double SampleContinous(double min, double max)
+        {
             return m_random.NextDouble() * (max - min) + min;
+        }
+
+        int SampleInteger(int min, int max)
+        {
+            var maxInclusive = max + 1; // Add one to get inclusive.
+            return m_random.Next(min, maxInclusive);
         }
     }
 }
