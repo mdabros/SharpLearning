@@ -111,6 +111,15 @@ namespace SharpLearning.XGBoost.Models
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public string[] GetTreesAsStrings()
+        {
+            return m_model.DumpModelEx(fmap: string.Empty, with_stats: 1, format: "text");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void Dispose()
         {
             if (m_model != null)

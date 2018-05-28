@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using SharpLearning.GradientBoost.Models;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.XGBoost.Learners;
@@ -123,6 +125,39 @@ namespace SharpLearning.XGBoost.Test.Learners
                     Assert.AreEqual(item.Expected.Key, item.Actual.Key);
                     Assert.AreEqual(item.Expected.Value, item.Actual.Value, m_delta);
                 }
+            }
+        }
+
+        [TestMethod]
+        public void RegressionXGBoostModel_ConvertModel()
+        {
+            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+
+            var learner = CreateLearner();
+
+            using (var sut = learner.Learn(observations, targets))
+            {
+                var predictions = sut.Predict(observations);
+
+                var evaluator = new MeanSquaredErrorRegressionMetric();
+                var error = evaluator.Error(targets, predictions);
+
+                Assert.AreEqual(0.0795934933096642, error, m_delta);
+
+                var trees = sut.GetTreesAsStrings();
+                var gbmTrees = XGBoostTreeConverter.FromXGBoostTextTreesToGBMTrees(trees);
+                
+                var convertedModel = new RegressionGradientBoostModel(gbmTrees, 1.0, 0.5, observations.ColumnCount);
+                var convertedPredictions = convertedModel.Predict(observations);
+
+                var diff = predictions.Zip(convertedPredictions, (p1, p2) => p1 - p2).ToList();
+
+                diff.ForEach(p => Trace.WriteLine(p));
+
+                var convertedError = evaluator.Error(targets, convertedPredictions);
+                Assert.AreEqual(0.0795934933096642, convertedError, m_delta);
             }
         }
 
