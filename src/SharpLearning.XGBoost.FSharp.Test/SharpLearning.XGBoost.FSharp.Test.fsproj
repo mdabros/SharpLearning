@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\BuildTest\Release\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\BuildTest\Debug\</OutputPath>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Include="Resources\Glass.fs" />
+    <Compile Include="Learners\RegressionXGBoostLearnerTest.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
+    <ProjectReference Include="..\SharpLearning.GradientBoost\SharpLearning.GradientBoost.csproj" />
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
+    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj" />
+    <ProjectReference Include="..\SharpLearning.XGBoost\SharpLearning.XGBoost.csproj" />
+    <ProjectReference Include="..\SharpLearning.XGBoost.Test\SharpLearning.XGBoost.Test.csproj" />  
+  </ItemGroup>
+</Project>
