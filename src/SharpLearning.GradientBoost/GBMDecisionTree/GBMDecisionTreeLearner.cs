@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
@@ -105,10 +106,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             {
                 m_featuresPrSplit = featureCount;
             }
-            if (m_featuresPrSplit > featureCount)
-            {
-                throw new ArgumentException($"Trying to use {m_featuresPrSplit} features per split, but only {featureCount} are available.");
-            }
+            Checks.VerifyFeaturesToUse(featuresToUse: m_featuresPrSplit, featureCount: featureCount);
 
             var featuresPrSplit = new int[m_featuresPrSplit];
             Array.Copy(allFeatureIndices, featuresPrSplit, featuresPrSplit.Length);

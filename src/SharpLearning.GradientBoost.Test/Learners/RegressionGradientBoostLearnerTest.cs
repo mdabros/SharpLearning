@@ -119,6 +119,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         }
 
         [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void RegressionGradientBoostLearner_LearnWithEarlyStopping_array_not_long_enough()
         {
             var sut = new RegressionSquareLossGradientBoostLearner(
@@ -140,7 +141,6 @@ namespace SharpLearning.GradientBoost.Test.Learners
                 new F64Matrix(trainingRows, cols), Create1DArrayFilled(trainingRows, 1.0),
                 new F64Matrix(testRows, cols), Create1DArrayFilled(testRows, 1.0));
 
-            // Throws argument exception "Source array was not long enough"
             var model = sut.LearnWithEarlyStopping(
                 split.TrainingSet.Observations, split.TrainingSet.Targets,
                 split.TestSet.Observations, split.TestSet.Targets,
