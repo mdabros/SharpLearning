@@ -124,35 +124,28 @@ namespace SharpLearning.GradientBoost.Test.Learners
         {
             var sut = new RegressionSquareLossGradientBoostLearner(
                 iterations: 500,
-                learningRate: 0.10936897046368986,
+                learningRate: 0.1,
                 maximumTreeDepth: 10,
                 minimumSplitSize: 15,
-                minimumInformationGain: 0.017451156205578751,
-                subSampleRatio: 0.86159142598583882,
-                featuresPrSplit: 144);
+                minimumInformationGain: 0.01,
+                subSampleRatio: 0.8,
+                featuresPrSplit: 4);
 
             IRegressionMetric metric = new MeanSquaredErrorRegressionMetric();
 
             var trainingRows = 5;
-            var testRows = 9;
-            var cols = 135;
+            var testRows = 6;
+            var cols = 3;
 
             var split = new TrainingTestSetSplit(
-                new F64Matrix(trainingRows, cols), Create1DArrayFilled(trainingRows, 1.0),
-                new F64Matrix(testRows, cols), Create1DArrayFilled(testRows, 1.0));
+                new F64Matrix(trainingRows, cols), new double[trainingRows],
+                new F64Matrix(testRows, cols), new double[testRows]);
 
             var model = sut.LearnWithEarlyStopping(
                 split.TrainingSet.Observations, split.TrainingSet.Targets,
                 split.TestSet.Observations, split.TestSet.Targets,
                 metric,
                 earlyStoppingRounds: 20);
-        }
-
-        static T[] Create1DArrayFilled<T>(int length, T fill)
-        {
-            var values = new T[length];
-            Array.Fill(values, fill);
-            return values;
         }
     }
 }
