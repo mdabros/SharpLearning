@@ -1,16 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
 using System.IO;
-using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.Metrics.Regression;
-using SharpLearning.Metrics.Classification;
-using System.Diagnostics;
-using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.Learners;
-using SharpLearning.GradientBoost.Loss;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
+using SharpLearning.GradientBoost.Learners;
+using SharpLearning.GradientBoost.Test.Properties;
+using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.GradientBoost.Test.Learners
 {
@@ -119,6 +116,43 @@ namespace SharpLearning.GradientBoost.Test.Learners
 
             Assert.AreEqual(0.061035472792879512, actual, 0.000001);
             Assert.AreEqual(40, model.Trees.Length);
+        }
+
+        [TestMethod]
+        public void RegressionGradientBoostLearner_LearnWithEarlyStopping_array_not_long_enough()
+        {
+            var sut = new RegressionSquareLossGradientBoostLearner(
+                iterations: 500,
+                learningRate: 0.10936897046368986,
+                maximumTreeDepth: 10,
+                minimumSplitSize: 15,
+                minimumInformationGain: 0.017451156205578751,
+                subSampleRatio: 0.86159142598583882,
+                featuresPrSplit: 144);
+
+            IRegressionMetric metric = new MeanSquaredErrorRegressionMetric();
+
+            var trainingRows = 5;
+            var testRows = 9;
+            var cols = 135;
+
+            var split = new TrainingTestSetSplit(
+                new F64Matrix(trainingRows, cols), Create1DArrayFilled(trainingRows, 1.0),
+                new F64Matrix(testRows, cols), Create1DArrayFilled(testRows, 1.0));
+
+            // Throws argument exception "Source array was not long enough"
+            var model = sut.LearnWithEarlyStopping(
+                split.TrainingSet.Observations, split.TrainingSet.Targets,
+                split.TestSet.Observations, split.TestSet.Targets,
+                metric,
+                earlyStoppingRounds: 20);
+        }
+
+        static T[] Create1DArrayFilled<T>(int length, T fill)
+        {
+            var values = new T[length];
+            Array.Fill(values, fill);
+            return values;
         }
     }
 }
