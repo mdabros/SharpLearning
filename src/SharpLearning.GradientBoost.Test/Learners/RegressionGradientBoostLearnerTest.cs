@@ -120,7 +120,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void RegressionGradientBoostLearner_LearnWithEarlyStopping_array_not_long_enough()
+        public void RegressionGradientBoostLearner_LearnWithEarlyStopping_when_more_featuresPerSlit_than_featureCount_Throw()
         {
             var sut = new RegressionSquareLossGradientBoostLearner(500, 0.1, 10, 15, 0.01, 0.8,
                 featuresPrSplit: 4);
