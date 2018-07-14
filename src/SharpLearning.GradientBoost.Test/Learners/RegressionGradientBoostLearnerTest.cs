@@ -1,16 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
 using System.IO;
-using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.Metrics.Regression;
-using SharpLearning.Metrics.Classification;
-using System.Diagnostics;
-using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.Learners;
-using SharpLearning.GradientBoost.Loss;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
+using SharpLearning.GradientBoost.Learners;
+using SharpLearning.GradientBoost.Test.Properties;
+using SharpLearning.InputOutput.Csv;
+using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.GradientBoost.Test.Learners
 {
@@ -119,6 +116,30 @@ namespace SharpLearning.GradientBoost.Test.Learners
 
             Assert.AreEqual(0.061035472792879512, actual, 0.000001);
             Assert.AreEqual(40, model.Trees.Length);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void RegressionGradientBoostLearner_LearnWithEarlyStopping_when_more_featuresPerSlit_than_featureCount_Throw()
+        {
+            var sut = new RegressionSquareLossGradientBoostLearner(500, 0.1, 10, 15, 0.01, 0.8,
+                featuresPrSplit: 4);
+
+            IRegressionMetric metric = new MeanSquaredErrorRegressionMetric();
+
+            var trainingRows = 5;
+            var testRows = 6;
+            var cols = 3;
+
+            var split = new TrainingTestSetSplit(
+                new F64Matrix(trainingRows, cols), new double[trainingRows],
+                new F64Matrix(testRows, cols), new double[testRows]);
+
+            var model = sut.LearnWithEarlyStopping(
+                split.TrainingSet.Observations, split.TrainingSet.Targets,
+                split.TestSet.Observations, split.TestSet.Targets,
+                metric,
+                earlyStoppingRounds: 20);
         }
     }
 }
