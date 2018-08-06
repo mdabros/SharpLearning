@@ -29,5 +29,11 @@ namespace SharpLearning.Containers.Test
             var value = "infinity12";
             FloatingPointConversion.ToF64(value);
         }
+
+        [TestMethod]
+        public void FloatingPointConvertsion_ToF64_infinity_symbol()
+        {
+            Assert.AreEqual(double.PositiveInfinity, FloatingPointConversion.ToF64("∞"));
+        }
     }
 }
