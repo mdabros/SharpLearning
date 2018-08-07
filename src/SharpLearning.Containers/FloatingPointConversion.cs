@@ -45,7 +45,7 @@ namespace SharpLearning.Containers
             }
             else
             {
-                throw new ArgumentException("Unable to parse value: " + "\"" + value + "\"" + " to double");
+                throw new ArgumentException($"Unable to parse value: \"{ value }\" to double");
             }
         }
     }
