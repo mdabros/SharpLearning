@@ -31,9 +31,19 @@ namespace SharpLearning.Containers.Test
         }
 
         [TestMethod]
-        public void FloatingPointConvertsion_ToF64_infinity_symbol()
+        [ExpectedException(typeof(ArgumentException))]
+        public void FloatingPointConvertsion_ToF64_win10_infinity_symbol()
         {
-            Assert.AreEqual(double.PositiveInfinity, FloatingPointConversion.ToF64("∞"));
+            // https://stackoverflow.com/questions/40907417/why-is-infinity-printed-as-8-in-the-windows-10-console
+            var win10Infinity = "∞";
+            Assert.AreEqual(double.PositiveInfinity, FloatingPointConversion.ToF64(win10Infinity));
+        }
+
+        [TestMethod]
+        public void FloatingPointConvertsion_ToF64_infinity()
+        {
+            Assert.AreEqual(double.PositiveInfinity, FloatingPointConversion.ToF64("Inf"));
+            Assert.AreEqual(double.NegativeInfinity, FloatingPointConversion.ToF64("-Inf"));
         }
     }
 }

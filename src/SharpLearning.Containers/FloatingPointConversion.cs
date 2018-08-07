@@ -12,11 +12,17 @@ namespace SharpLearning.Containers
         /// 
         /// </summary>
         public const string DefaultFormat = "R";
-        
+        public const string PositiveInfinity = "Inf";
+        public const string NegativeInfinity = "-Inf";
+
         /// <summary>
-        /// 
+        /// Here you may override the infinity symbol definitions
         /// </summary>
-        public static readonly NumberFormatInfo nfi = new NumberFormatInfo();
+        public static readonly NumberFormatInfo nfi = new NumberFormatInfo()
+        {
+            PositiveInfinitySymbol = PositiveInfinity,
+            NegativeInfinitySymbol = NegativeInfinity,
+        };
 
         /// <summary>
         /// Default NumberStyle is Any.
