@@ -12,17 +12,11 @@ namespace SharpLearning.Containers
         /// 
         /// </summary>
         public const string DefaultFormat = "R";
-        public const string PositiveInfinity = "Inf";
-        public const string NegativeInfinity = "-Inf";
 
         /// <summary>
-        /// Here you may override the infinity symbol definitions
+        /// 
         /// </summary>
-        public static readonly NumberFormatInfo nfi = new NumberFormatInfo()
-        {
-            PositiveInfinitySymbol = PositiveInfinity,
-            NegativeInfinitySymbol = NegativeInfinity,
-        };
+        public static readonly NumberFormatInfo nfi = new NumberFormatInfo();
 
         /// <summary>
         /// Default NumberStyle is Any.
@@ -44,14 +38,24 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public static double ToF64(string value)
         {
+            return ToF64(value, ParseAnyNumberStyle);
+        }
+
+        public static double ToF64(string value, Func<string, double> parser)
+        {
+            return parser(value);
+        }
+
+        static double ParseAnyNumberStyle(string value)
+        {
             var result = 0.0;
-            if(double.TryParse(value, NumberStyle, nfi, out result))
+            if (double.TryParse(value, NumberStyle, nfi, out result))
             {
                 return result;
             }
             else
             {
-                throw new ArgumentException($"Unable to parse value: \"{ value }\" to double");
+                throw new ArgumentException($"Unable to parse \"{ value }\" to double");
             }
         }
     }
