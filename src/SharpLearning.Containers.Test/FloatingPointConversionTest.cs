@@ -33,7 +33,7 @@ namespace SharpLearning.Containers.Test
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void FloatingPointConvertsion_ToF64_win10_infinity_symbol()
+        public void FloatingPointConversion_ToF64_win10_infinity_symbol()
         {
             // https://stackoverflow.com/questions/40907417/why-is-infinity-printed-as-8-in-the-windows-10-console
             var win10Infinity = "∞";
