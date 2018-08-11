@@ -49,7 +49,7 @@ namespace CntkExtensions.Test.Models
             var observations = new Tensor(observationsData, observationsShape.ToArray());
 
             var targetsData = new float[observationCount];
-            targetsData = targetsData.Select(d => (float)random.Next(10)).ToArray();
+            targetsData = targetsData.Select(d => (float)random.Next(outputShape.Single())).ToArray();
             var oneHotTargetsData = targetsData.EncodeOneHot();
 
             var targetsShape = new List<int>(outputShape);
