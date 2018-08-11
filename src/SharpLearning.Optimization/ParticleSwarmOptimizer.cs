@@ -49,7 +49,9 @@ namespace SharpLearning.Optimization
             m_c2 = c2;
             
             m_random = new Random(seed);
-            m_sampler = new RandomUniform();
+            
+            // Use member to seed the random uniform sampler.
+            m_sampler = new RandomUniform(m_random.Next());
         }
 
         /// <summary>

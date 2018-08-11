@@ -10,8 +10,8 @@
         /// </summary>
         /// <param name="min">Minimum bound</param>
         /// <param name="max">Maximum bound</param>
-        /// <param name="random"></param>
+        /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.</param>
         /// <returns></returns>
-        double Sample(double min, double max);
+        double Sample(double min, double max, ParameterType parameterType);
     }
 }

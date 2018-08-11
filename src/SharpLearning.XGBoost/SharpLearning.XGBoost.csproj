@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>SharpLearning.XGBoost</PackageId>
+    <Description>Provides learning algorithms and models for XGBoost regression and classification.</Description>
+    <PackageTags>XGBoost machinelearning classification regression machine learning</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\Build\Release\netstandard2.0\SharpLearning.XGBoost.xml</DocumentationFile>
+    <OutputPath>..\..\Build\Release\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Build\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PicNet.XGBoost" Version="0.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
+    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
+    <ProjectReference Include="..\SharpLearning.GradientBoost\SharpLearning.GradientBoost.csproj" />
+    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -13,7 +13,8 @@ namespace SharpLearning.Optimization.Transforms
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <param name="sampler"></param>
+        /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.</param>
         /// <returns></returns>
-        double Transform(double min, double max, IParameterSampler sampler);
+        double Transform(double min, double max, ParameterType parameterType, IParameterSampler sampler);
     }
 }

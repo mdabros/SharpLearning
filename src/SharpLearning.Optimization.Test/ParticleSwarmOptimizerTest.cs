@@ -19,12 +19,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new ParticleSwarmOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.45484916939206588, 0.0000001);
+            Assert.AreEqual(actual.Error, -0.64324321766401094, 0.0000001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], -10, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[1], -10, 0.0000001);
-            Assert.AreEqual(actual.ParameterSet[2], 0.0035692182837614439, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[0], -4.92494268653156, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[1], 10, 0.0000001);
+            Assert.AreEqual(actual.ParameterSet[2], -0.27508308116943514, 0.0000001);
         }
 
         [TestMethod]
@@ -40,8 +40,8 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.804275358363732 }, 109.68474734728727),
-                new OptimizerResult(new double[] { 35.942821697748165 }, 238.00642904844648)
+                new OptimizerResult(new double[] { 37.660092259635064 }, 109.45936368750877),
+                new OptimizerResult(new double[] { 39.038272502859328 }, 181.43166846962754)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);

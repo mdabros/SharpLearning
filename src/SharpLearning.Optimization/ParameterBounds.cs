@@ -21,6 +21,8 @@ namespace SharpLearning.Optimization
 
         readonly ITransform m_transform;
 
+        readonly ParameterType m_parameterType;
+
         /// <summary>
         /// Contains the bounds and transform type for an optimizer.
         /// </summary>
@@ -28,13 +30,17 @@ namespace SharpLearning.Optimization
         /// <param name="max">maximum bound.</param>
         /// <param name="transform">Selects between predefined transform types for controlling how to scale values sampled between min and max bounds.
         /// Default is Linear.</param>
-        public ParameterBounds(double min, double max, Transform transform = Transform.Linear)
+        /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.
+        /// Default is Continous.</param>
+        public ParameterBounds(double min, double max, 
+            Transform transform = Transform.Linear, ParameterType parameterType  = ParameterType.Continuous)
         {
             if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
 
             Min = min;
             Max = max;
             m_transform = TransformFactory.Create(transform);
+            m_parameterType = parameterType;
         }
 
         /// <summary>
@@ -43,7 +49,9 @@ namespace SharpLearning.Optimization
         /// <param name="min">minimum bound.</param>
         /// <param name="max">maximum bound.</param>
         /// <param name="transform">Transform for controlling the scale of the parameter sampled between min and max bounds.</param>
-        public ParameterBounds(double min, double max, ITransform transform)
+        /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.</param>
+        public ParameterBounds(double min, double max, 
+            ITransform transform, ParameterType parameterType)
         {
             if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
             if (transform == null) throw new ArgumentNullException(nameof(transform));
@@ -51,6 +59,7 @@ namespace SharpLearning.Optimization
             Min = min;
             Max = max;
             m_transform = transform;
+            m_parameterType = parameterType;
         }
 
 
@@ -61,7 +70,7 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public double NextValue(IParameterSampler sampler)
         {
-            return m_transform.Transform(Min, Max, sampler);
+            return m_transform.Transform(Min, Max, m_parameterType, sampler);
         }
     }
 }

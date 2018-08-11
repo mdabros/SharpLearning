@@ -64,6 +64,7 @@ The wiki also contains a set of guides on how to get started:
  - [**Getting Started**](https://github.com/mdabros/SharpLearning/wiki/Getting-started).
  - [**Introduction to SharpLearning**](https://github.com/mdabros/SharpLearning/wiki/Introduction-to-SharpLearning).
  - [**Tuning Hyperparameters**](https://github.com/mdabros/SharpLearning/wiki/hyperparameter-tuning).
+ - [**Using SharpLearning.XGBoost**](https://github.com/mdabros/SharpLearning/wiki/Using-SharpLearning.XGBoost)
 
 
 Installation
@@ -79,6 +80,7 @@ Learner and model packages:
 - **SharpLearning.RandomForest** - Provides learning algorithms and models for RandomForest and ExtraTrees regression and classification.
 - **SharpLearning.GradientBoost** - Provides learning algorithms and models for GradientBoost regression and classification.
 - **SharpLearning.Neural** - Provides learning algorithms and models for neural net regression and classification. Layers available for fully connected and covolutional nets.
+- **SharpLearning.XGBoost** - Provides learning algorithms and models for regression and classification using the [XGBoost library](https://github.com/dmlc/xgboost). CPU and GPU learning supported. This pakcage is x64 only.
 - **SharpLearning.Ensemble** - Provides ensemble learning for regression and classification. Makes it possible to combine the other learners/models from SharpLearning.
 - **SharpLearning.Common.Interfaces** - Provides common interfaces for SharpLearning.
 
