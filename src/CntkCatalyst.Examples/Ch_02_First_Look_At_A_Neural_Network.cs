@@ -35,11 +35,11 @@ namespace CntkCatalyst.Examples
             network.Add(x => Layers.Dense(x, units: numberOfClasses));
             network.Add(x => Layers.Softmax(x));
 
-            network.Compile(p => Learners.MomentumSGD(p),
+            network.Compile(p => Learners.RMSProp(p),
                (t, p) => Losses.CategoricalCrossEntropy(t, p),
                (t, p) => Metrics.Accuracy(t, p));
 
-            network.Fit(trainImages, trainTargets, epochs: 5, batchSize: 128);
+            network.Fit(trainImages, trainTargets, epochs: 25, batchSize: 128);
 
             (var loss, var metric) = network.Evaluate(testImages, testTargets);
 

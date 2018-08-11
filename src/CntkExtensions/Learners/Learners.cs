@@ -103,6 +103,41 @@ namespace CntkExtensions
                 options);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="learningRate">A learning rate in float, or a learning rate schedule</param>
+        /// <param name="gamma">Trade-off factor for current and previous gradients. Common value is 0.95. Should be in range (0.0, 1.0)</param>
+        /// <param name="inc">Increasing factor when trying to adjust current learning_rate. Should be greater than 1</param>
+        /// <param name="dec">Decreasing factor when trying to adjust current learning_rate. Should be in range (0.0, 1.0)</param>
+        /// <param name="max">Maximum scale allowed for the initial learning_rate. Should be greater than zero and min</param>
+        /// <param name="min">Minimum scale allowed for the initial learning_rate. Should be greater than zero</param>
+        /// <param name="l1Regularization">L1 regularization term. (Default is 0, so no regularization)</param>
+        /// <param name="l2Regularization">L2 regularization term. (Default is 0, so no regularization)</param>
+        /// <param name="needAveMultiplier"></param>
+        /// <returns></returns>
+        public static Learner RMSProp(IList<Parameter> parameters,
+            double learningRate = 0.001, 
+            double gamma = 0.9, 
+            double inc = 2.0, 
+            double dec = 0.5, 
+            double max = 2.0, 
+            double min = 0.5,
+            double l1Regularization = 0.0,
+            double l2Regularization = 0.0,
+            bool needAveMultiplier = true)
+        {
+            var learningRatePerSample = new TrainingParameterScheduleDouble(learningRate, 1);
+            var options = SetAdditionalOptions(l1Regularization, l2Regularization);
+
+            return CNTKLib.RMSPropLearner(CntkUtils.AsParameterVector(parameters),
+                learningRatePerSample,
+                gamma, inc, dec, max, min,
+                needAveMultiplier, options);
+        }
+
         public static AdditionalLearningOptions SetAdditionalOptions(double l1Regularization, double l2Regularization)
         {
             var options = new AdditionalLearningOptions();
