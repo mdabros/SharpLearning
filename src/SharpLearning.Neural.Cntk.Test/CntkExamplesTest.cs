@@ -30,15 +30,15 @@ namespace SharpLearning.Neural.Cntk.Test
             var scaledInput = ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVariable);
 
             var net = Conv2D(scaledInput, 3, 3, 32);
-            net = ReLU(net);
+            net = CNTKLib.ReLU(net);
             net = Pool2D(net, 2, 2, PoolingType.Max);
 
             net = Conv2D(scaledInput, 3, 3, 32);
-            net = ReLU(net);
+            net = CNTKLib.ReLU(net);
             net = Pool2D(net, 2, 2, PoolingType.Max);
 
             net = Dense(net, 96);
-            net = ReLU(net);
+            net = CNTKLib.ReLU(net);
             net = Dropout(net, 0.5);
             net = Dense(net, numberOfClasses);
 
@@ -82,15 +82,15 @@ namespace SharpLearning.Neural.Cntk.Test
             var scaledInput = ElementTimes(Constant.Scalar(dataType, 0.00390625, device), inputVariable);
 
             var net = Conv2D(scaledInput, 3, 3, 32);
-            net = ReLU(net);
+            net = CNTKLib.ReLU(net);
             net = Pool2D(net, 2, 2, PoolingType.Max);
 
             net = Conv2D(scaledInput, 3, 3, 32);
-            net = ReLU(net);
+            net = CNTKLib.ReLU(net);
             net = Pool2D(net, 2, 2, PoolingType.Max);
 
             net = Dense(net, 96);
-            net = ReLU(net);
+            net = CNTKLib.ReLU(net);
             net = Dropout(net, 0.5);
             net = Dense(net, numberOfClasses);
 

@@ -12,6 +12,16 @@ namespace CntkExtensions
         public static DeviceDescriptor GlobalDevice = DeviceDescriptor.UseDefaultDevice();
         public static DataType GlobalDataType = DataType.Float;
 
+        public static Function ReLU(Variable x)
+        {
+            return CNTKLib.ReLU(x);
+        }
+
+        public static Function Softmax(Variable x)
+        {
+            return CNTKLib.Softmax(x);
+        }
+
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>

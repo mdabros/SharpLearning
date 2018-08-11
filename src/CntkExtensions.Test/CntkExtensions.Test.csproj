@@ -72,9 +72,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LayersTest.cs" />
-    <Compile Include="LearnersTest.cs" />
-    <Compile Include="LossesTest.cs" />
+    <Compile Include="Layers\LayersTest.cs" />
+    <Compile Include="Learners\LearnersTest.cs" />
+    <Compile Include="Losses\LossesTest.cs" />
+    <Compile Include="Models\SequentialTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

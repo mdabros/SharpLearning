@@ -66,15 +66,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CntkUtils.cs" />
-    <Compile Include="Initializers.cs" />
-    <Compile Include="Layers.cs" />
-    <Compile Include="Learners.cs" />
-    <Compile Include="Losses.cs" />
+    <Compile Include="Initializers\Initializers.cs" />
+    <Compile Include="Layers\Layers.cs" />
+    <Compile Include="Learners\Learners.cs" />
+    <Compile Include="Losses\Losses.cs" />
+    <Compile Include="Metrics\Metrics.cs" />
+    <Compile Include="Models\Sequential.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\packages\CNTK.Deps.Cuda.2.4.0\build\net45\CNTK.Deps.Cuda.targets" Condition="Exists('..\..\packages\CNTK.Deps.Cuda.2.4.0\build\net45\CNTK.Deps.Cuda.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
