@@ -6,6 +6,7 @@ using CntkExtensions.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Containers.Matrices;
+using System.Diagnostics;
 
 namespace CntkExtensions.Test.Models
 {
@@ -20,7 +21,7 @@ namespace CntkExtensions.Test.Models
             var outputShape = new int[] { numberOfClasses };
 
             (var observations, var targets) = CreateArtificialData(inputShape, outputShape, observationCount: 10000);
-            // LoadMnistCsv(inputShape, outputShape);
+            //LoadMnistCsv(inputShape, outputShape);
 
             var network = new Sequential(Layers.Input(inputShape));
 
@@ -34,6 +35,10 @@ namespace CntkExtensions.Test.Models
                (t, p) => Metrics.Accuracy(t, p));
 
             network.Fit(observations, targets, batchSize: 32, epochs: 100);
+
+            (var loss, var metric) = network.Evaluate(observations, targets);
+
+            Trace.WriteLine($"Final evaluation - Loss: {loss}, Metric: {metric}");
         }
 
         static (Tensor observations, Tensor targets) CreateArtificialData(int[] inputShape, int[] outputShape, int observationCount)

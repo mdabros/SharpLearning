@@ -12,6 +12,7 @@ namespace CntkExtensions
         int[] m_batchIndeces = Array.Empty<int>();
         
         readonly float[] m_minibatch;
+        bool m_randomize;
 
         Tensor m_observations;
         Tensor m_targets;
@@ -21,7 +22,8 @@ namespace CntkExtensions
 
         public MemoryMinibatchSource(Tensor observations,
             Tensor targets, 
-            int seed)
+            int seed,
+            bool randomize)
         {
             m_observations = observations ?? throw new ArgumentNullException(nameof(observations));
             m_targets = targets ?? throw new ArgumentNullException(nameof(targets));
@@ -38,6 +40,7 @@ namespace CntkExtensions
 
             m_currentSweepIndeces = Enumerable.Range(0, TotalSampleCount).ToArray();
             m_random = new Random(seed);
+            m_randomize = randomize;
             m_minibatch = Array.Empty<float>();
         }
 
@@ -89,7 +92,7 @@ namespace CntkExtensions
         {
             if (m_currentBatchStartIndex < 0)
             {
-                if (m_random != null)
+                if (m_randomize)
                 {
                     // Start new sweep by shuffling indeces inplace.
                     Shuffle(m_currentSweepIndeces, m_random);
