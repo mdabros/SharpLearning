@@ -1,12 +1,13 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.Containers.Extensions;
-using SharpLearning.DecisionTrees.Nodes;
-using SharpLearning.GradientBoost.Loss;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.DecisionTrees.Nodes;
+using SharpLearning.GradientBoost.Loss;
 
 namespace SharpLearning.GradientBoost.GBMDecisionTree
 {
@@ -105,6 +106,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             {
                 m_featuresPrSplit = featureCount;
             }
+            Checks.VerifyFeaturesToUse(featuresToUse: m_featuresPrSplit, featureCount: featureCount);
 
             var featuresPrSplit = new int[m_featuresPrSplit];
             Array.Copy(allFeatureIndices, featuresPrSplit, featuresPrSplit.Length);

@@ -128,5 +128,14 @@ namespace SharpLearning.Containers
                 throw new ArgumentException($"Indices contains elements exceeding the row count of observations and targets. Indices Max: {max}, observations row count: {observationRowCount}, target length: {targetLength}");
             }
         }
+
+        public static void VerifyFeaturesToUse(int featuresToUse, int featureCount)
+        {
+            if (featuresToUse > featureCount)
+            {
+                throw new InvalidOperationException(
+                    $"Trying to use {featuresToUse} features per split, but only {featureCount} are available.");
+            }
+        }
     }
 }
