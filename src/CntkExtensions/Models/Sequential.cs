@@ -77,11 +77,13 @@ namespace CntkExtensions.Models
                     trainer.TrainMinibatch(inputMap, false, d);
 
                     var lossValue = (float)trainer.PreviousMinibatchLossAverage();
-                    var evaluationValue = (float)trainer.PreviousMinibatchEvaluationAverage();
+                    var metricValue = (float)trainer.PreviousMinibatchEvaluationAverage();
+
+                    //Trace.WriteLine($"Loss: {lossValue}, Metric: {metricValue}");
 
                     // Accumulate loss/metric.
                     lossSum += lossValue * batchSize;
-                    metricSum += evaluationValue * batchSize;
+                    metricSum += metricValue * batchSize;
                     totalSampleCount += batchSize;
 
                     inputMap.Clear();
