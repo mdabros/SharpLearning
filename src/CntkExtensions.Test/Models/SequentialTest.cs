@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using CntkExtensions.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.InputOutput.Csv;
+using SharpLearning.Containers.Matrices;
 
 namespace CntkExtensions.Test.Models
 {
@@ -17,6 +20,7 @@ namespace CntkExtensions.Test.Models
             var outputShape = new int[] { numberOfClasses };
 
             (var observations, var targets) = CreateArtificialData(inputShape, outputShape, observationCount: 10000);
+            // LoadMnistCsv(inputShape, outputShape);
 
             var network = new Sequential(Layers.Input(inputShape));
 
@@ -29,7 +33,7 @@ namespace CntkExtensions.Test.Models
                (t, p) => Losses.CategoricalCrossEntropy(t, p),
                (t, p) => Metrics.Accuracy(t, p));
 
-            network.Fit(observations, targets, batchSize: 32, epochs: 5);
+            network.Fit(observations, targets, batchSize: 32, epochs: 100);
         }
 
         static (Tensor observations, Tensor targets) CreateArtificialData(int[] inputShape, int[] outputShape, int observationCount)
@@ -48,6 +52,45 @@ namespace CntkExtensions.Test.Models
             targetsData = targetsData.Select(d => (float)random.Next(10)).ToArray();
             var oneHotTargetsData = targetsData.EncodeOneHot();
 
+            var targetsShape = new List<int>(outputShape);
+            targetsShape.Add(observationCount);
+            var targets = new Tensor(oneHotTargetsData, targetsShape.ToArray());
+
+            return (observations, targets);
+        }
+
+        static (Tensor observations, Tensor targets) LoadMnistCsv(int[] inputShape, int[] outputShape)
+        {
+            var parser = new CsvParser(() => new StreamReader(@"E:\Git\SharpLearning.Examples\src\Resources\mnist_small_train.csv"));
+            var targetName = "Class";
+
+            var featureNames = parser.EnumerateRows(c => c != targetName).First().ColumnNameToIndex.Keys.ToArray();
+
+            // read feature matrix (training)
+            var trainingObservations = parser
+                .EnumerateRows(featureNames)
+                .ToF64Matrix();
+
+            // transform pixel values to be between 0 and 1.
+            trainingObservations.Map(p => p / 255);
+
+            var observationCount = trainingObservations.RowCount;
+            
+            // convert to float tensor
+            var observationsShape = new List<int>(inputShape);
+            observationsShape.Add(observationCount);
+            var observations = new Tensor(trainingObservations.Data().Select(d => (float)d).ToArray(), 
+                observationsShape.ToArray());
+
+            // read classification targets (training)
+            var trainingTargets = parser.EnumerateRows(targetName)
+                .ToF64Vector();
+
+            // Convert targest to float and one-hot
+            var oneHotTargetsData = trainingTargets.Select(d => (float)d)
+                .ToArray().EncodeOneHot();
+
+            // convert targest tensor
             var targetsShape = new List<int>(outputShape);
             targetsShape.Add(observationCount);
             var targets = new Tensor(oneHotTargetsData, targetsShape.ToArray());
