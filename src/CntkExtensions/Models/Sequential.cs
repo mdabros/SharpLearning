@@ -34,13 +34,18 @@ namespace CntkExtensions.Models
         }
 
         public void Fit(Tensor x = null, Tensor y = null, int batchSize = 32, int epochs = 1)
-        {           
+        {
+            // configuration
+            var d = Layers.GlobalDevice;
+            var dataType = Layers.GlobalDataType;
+
             // setup minibatch source.
             var minibatchSource = new MemoryMinibatchSource(x, y, seed: 5);
 
             // Get input and target variables from network.
             var inputVariable = Network.Arguments[0];
-            var targetVariable = Network.Output;
+            var targetShape = Network.Output.Shape;
+            var targetVariable = Variable.InputVariable(targetShape, dataType);
 
             // Setup loss and metric.
             var loss = LossCreator(targetVariable, Network.Output); 
@@ -50,8 +55,7 @@ namespace CntkExtensions.Models
             var learner = LearnerCreator(Network.Parameters());
             var trainer = CNTKLib.CreateTrainer(Network, loss, metric, new LearnerVector { learner });
 
-            // variables for training loop.
-            var d = Layers.GlobalDevice;
+            // variables for training loop.            
             var inputMap = new Dictionary<Variable, Value>();
 
             var lossSum = 0.0;
