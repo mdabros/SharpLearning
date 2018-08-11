@@ -14,12 +14,12 @@ namespace CntkExtensions.Models
         Variable m_inputVariable;
         Variable m_targetVariable;
 
-        public Function Network;
-
         public Sequential(Variable input)
         {
             Network = input;
         }
+
+        public Function Network;
 
         public void Add(Func<Function, Function> layerCreator)
         {
@@ -39,11 +39,11 @@ namespace CntkExtensions.Models
             var targetShape = Network.Output.Shape;
             m_targetVariable = Variable.InputVariable(targetShape, dataType);
 
-            // Setup loss and metric.
+            // create loss and metric.
             m_loss = lossCreator(m_targetVariable, Network.Output);
             m_metric = metricCreator(m_targetVariable, Network.Output);
 
-            // create learner and trainer.
+            // create learner.
             m_learner = learnerCreator(Network.Parameters());
         }
 
@@ -86,14 +86,10 @@ namespace CntkExtensions.Models
                     var lossValue = (float)trainer.PreviousMinibatchLossAverage();
                     var metricValue = (float)trainer.PreviousMinibatchEvaluationAverage();
 
-                    //Trace.WriteLine($"Loss: {lossValue}, Metric: {metricValue}");
-
                     // Accumulate loss/metric.
                     lossSum += lossValue * batchSize;
                     metricSum += metricValue * batchSize;
                     totalSampleCount += batchSize;
-
-                    inputMap.Clear();
 
                     if(isSweepEnd)
                     {
@@ -108,6 +104,7 @@ namespace CntkExtensions.Models
                     }
 
                     // Ensure cleanup, call erase.
+                    inputMap.Clear();
                     batchObservations.Erase();
                     batchTarget.Erase();
                 }
