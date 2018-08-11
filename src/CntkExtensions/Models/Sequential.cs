@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using CNTK;
 using System.Diagnostics;
+using CNTK;
 
 namespace CntkExtensions.Models
 {
     public class Sequential
     {
         // creators.
-        List<Func<Function, Function>> m_layersCreators;
         Func<IList<Parameter>, Learner> LearnerCreator;
         Func<Variable, Variable, Function> LossCreator;
         Func<Variable, Variable, Function> MetricCreator;
@@ -35,17 +33,14 @@ namespace CntkExtensions.Models
             MetricCreator = metricCreator;
         }
 
-        public void Fit(float[][] x = null, float[][] y = null, int batchSize = 32, int epochs = 1)
-        {
+        public void Fit(Tensor x = null, Tensor y = null, int batchSize = 32, int epochs = 1)
+        {           
+            // setup minibatch source.
+            var minibatchSource = new MemoryMinibatchSource(x, y, seed: 5);
+
             // Get input and target variables from network.
             var inputVariable = Network.Arguments[0];
-            var inputSize = inputVariable.Shape.Dimensions.Aggregate((d1, d2) => d1 * d2);
-
             var targetVariable = Network.Output;
-            var targetSize = targetVariable.Shape.Dimensions.Aggregate((d1, d2) => d1 * d2);
-            
-            // setup minibatch source.
-            var minibatchSource = new MemoryMinibatchSource(x, y, inputSize, targetSize, seed: 5);
 
             // Setup loss and metric.
             var loss = LossCreator(targetVariable, Network.Output); 
@@ -53,7 +48,7 @@ namespace CntkExtensions.Models
 
             // create learner and trainer.
             var learner = LearnerCreator(Network.Parameters());
-            var trainer = CNTKLib.CreateTrainer(Network, loss, new LearnerVector { learner });
+            var trainer = CNTKLib.CreateTrainer(Network, loss, metric, new LearnerVector { learner });
 
             // variables for training loop.
             var d = Layers.GlobalDevice;

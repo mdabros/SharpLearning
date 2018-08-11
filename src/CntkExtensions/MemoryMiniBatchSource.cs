@@ -13,30 +13,35 @@ namespace CntkExtensions
         
         readonly float[] m_minibatch;
 
-        float[][] m_observations;
-        float[][] m_targets;
+        Tensor m_observations;
+        Tensor m_targets;
 
         int m_singleObservationDataSize;
         int m_singleTargetDataSize;
 
-        public MemoryMinibatchSource(float[][] observations, 
-            float[][] targets, 
-            int singleObservationSize,
-            int singleTargetSize, 
+        public MemoryMinibatchSource(Tensor observations,
+            Tensor targets, 
             int seed)
         {
             m_observations = observations ?? throw new ArgumentNullException(nameof(observations));
             m_targets = targets ?? throw new ArgumentNullException(nameof(targets));
 
-            m_singleObservationDataSize = singleObservationSize;
-            m_singleTargetDataSize = singleTargetSize;
+            // Assume last dimension is the number of samples, 
+            // aggregate all other dimensions to get single observations size.
+            m_singleObservationDataSize = observations.Dimensions
+                .Take(observations.Dimensions.Length - 1).Aggregate((d1, d2) => d1 * d2);
+            
+            // Assume last dimension is the number of samples, 
+            // aggregate all other dimensions to get single observations size.        
+            m_singleTargetDataSize = targets.Dimensions
+                .Take(targets.Dimensions.Length - 1).Aggregate((d1, d2) => d1 * d2); ;
 
             m_currentSweepIndeces = Enumerable.Range(0, TotalSampleCount).ToArray();
             m_random = new Random(seed);
             m_minibatch = Array.Empty<float>();
         }
 
-        public int TotalSampleCount => m_observations.Length;
+        public int TotalSampleCount => m_observations.Dimensions[m_observations.Dimensions.Length - 1];
         
         public (float[] observations, float[] targets, bool isSweepEnd) GetNextMinibatch(int minibatchSizeInSamples)
         {
@@ -67,10 +72,14 @@ namespace CntkExtensions
             for (int i = 0; i < m_batchIndeces.Length; i++)
             {
                 var batchIndex = m_batchIndeces[i];
-                var observation = m_observations[batchIndex];
-                Array.Copy(observation, 0, observationsMiniBatch, i * observation.Length, observation.Length);
-                var target = m_targets[i];
-                Array.Copy(target, 0, targetMinibatch, i * target.Length, target.Length);
+
+                var observationStartIndex = batchIndex * m_singleObservationDataSize;
+                Array.Copy(m_observations.Data, observationStartIndex, observationsMiniBatch, 
+                    i * m_singleObservationDataSize, m_singleObservationDataSize);
+
+                var targetStartIndex = batchIndex * m_singleTargetDataSize;
+                Array.Copy(m_targets.Data, targetStartIndex, targetMinibatch, 
+                    i * m_singleTargetDataSize, m_singleTargetDataSize);
             }
 
             return (observationsMiniBatch, targetMinibatch);

@@ -93,16 +93,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CntkExtensions\CntkExtensions.csproj">
-      <Project>{5f078033-e409-4b24-99cd-7365a99693e0}</Project>
-      <Name>CntkExtensions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SharpLearning.Neural.Cntk\SharpLearning.Neural.Cntk.csproj">
-      <Project>{c2cc9a31-e239-4f6c-8180-f4e400a88ef3}</Project>
-      <Name>SharpLearning.Neural.Cntk</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MSTest.TestAdapter.1.1.18\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.1.1.18\build\net45\MSTest.TestAdapter.targets')" />
