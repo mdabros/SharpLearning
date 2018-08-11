@@ -22,6 +22,11 @@ namespace CntkExtensions
             return CNTKLib.Softmax(x);
         }
 
+        public static Function Input(NDShape inputShape)
+        {
+            return Variable.InputVariable(inputShape, GlobalDataType); ;
+        }
+
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>
