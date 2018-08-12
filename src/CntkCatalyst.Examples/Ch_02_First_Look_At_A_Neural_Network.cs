@@ -52,6 +52,7 @@ namespace CntkCatalyst.Examples
             // Evaluate the model using the test set.
             (var loss, var metric) = network.Evaluate(testImages, testTargets);
 
+            // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
         }
 
