@@ -18,5 +18,10 @@ namespace CntkExtensions
         {
             return CNTKLib.CrossEntropyWithSoftmax(targets, predictions);
         }
+
+        public static Function BinaryCrossEntropy(Variable targets, Variable predictions)
+        {
+            return CNTKLib.BinaryCrossEntropy(targets, predictions);
+        }
     }
 }
