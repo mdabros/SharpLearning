@@ -50,6 +50,12 @@ namespace CntkCatalyst.Examples
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
+
+            // TODO: Check data loading, layout etc.
+            // TODO: Fix data download and parsing.
+            // TODO: Add validation option to fit method.
+            // TODO: Consider epoch (train/valid) history.
+            // TODO: Plot history.
         }
 
         static (Tensor observations, Tensor targets) LoadImdbData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
