@@ -45,7 +45,7 @@ namespace CntkCatalyst.Examples
                (t, p) => Metrics.Accuracy(t, p));
 
             // Train the model using the training set.
-            network.Fit(trainImages, trainTargets, epochs: 25, batchSize: 128);
+            network.Fit(trainImages, trainTargets, epochs: 5, batchSize: 128);
 
             // Evaluate the model using the test set.
             (var loss, var metric) = network.Evaluate(testImages, testTargets);
