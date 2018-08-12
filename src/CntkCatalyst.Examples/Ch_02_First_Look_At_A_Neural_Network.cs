@@ -16,8 +16,6 @@ namespace CntkCatalyst.Examples
     [TestClass]
     public class Ch_02_First_Look_At_A_Neural_Network
     {
-        enum MnistDataSplit { Train, Test };
-
         [TestMethod]
         public void Run()
         {
@@ -29,8 +27,8 @@ namespace CntkCatalyst.Examples
             // Load train and test sets. 
             // Network will be trained using the training set,
             // and tested using the test set.
-            (var trainImages, var trainTargets) = LoadMnistData(inputShape, outputShape, MnistDataSplit.Train);
-            (var testImages, var testTargets) = LoadMnistData(inputShape, outputShape, MnistDataSplit.Test);
+            (var trainImages, var trainTargets) = LoadMnistData(inputShape, outputShape, DataSplit.Train);
+            (var testImages, var testTargets) = LoadMnistData(inputShape, outputShape, DataSplit.Test);
 
             // Create the network, and define the input shape.
             var network = new Sequential(Layers.Input(inputShape));
@@ -56,11 +54,11 @@ namespace CntkCatalyst.Examples
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
         }
 
-        static (Tensor observations, Tensor targets) LoadMnistData(int[] inputShape, int[] outputShape, MnistDataSplit dataSplit)
+        static (Tensor observations, Tensor targets) LoadMnistData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
         {
             // Load mnist data set using Accord.DataSets.
             var mnist = new MNIST(Directory.GetCurrentDirectory());
-            var dataSet = dataSplit == MnistDataSplit.Train ? mnist.Training : mnist.Testing;
+            var dataSet = dataSplit == DataSplit.Train ? mnist.Training : mnist.Testing;
 
             var observationCount = dataSet.Item2.Length;
             var dataSize = inputShape.Aggregate((d1, d2) => d1 * d2);
