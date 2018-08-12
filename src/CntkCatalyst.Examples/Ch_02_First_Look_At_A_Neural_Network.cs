@@ -21,26 +21,35 @@ namespace CntkCatalyst.Examples
         [TestMethod]
         public void Run()
         {
+            // Define the input and output shape.
             var inputShape = new int[] { 28, 28, 1 };
             var numberOfClasses = 10;
             var outputShape = new int[] { numberOfClasses };
 
+            // Load train and test sets. 
+            // Network will be trained using the training set,
+            // and tested using the test set.
             (var trainImages, var trainTargets) = LoadMnistData(inputShape, outputShape, MnistDataSplit.Train);
             (var testImages, var testTargets) = LoadMnistData(inputShape, outputShape, MnistDataSplit.Test);
 
+            // Create the network, and define the input shape.
             var network = new Sequential(Layers.Input(inputShape));
 
+            // Add layes to the network.
             network.Add(x => Layers.Dense(x, units: 512));
             network.Add(x => Layers.ReLU(x));
             network.Add(x => Layers.Dense(x, units: numberOfClasses));
             network.Add(x => Layers.Softmax(x));
 
+            // Compile the network with the selected learner, loss and metric.
             network.Compile(p => Learners.RMSProp(p),
                (t, p) => Losses.CategoricalCrossEntropy(t, p),
                (t, p) => Metrics.Accuracy(t, p));
 
+            // Train the model using the training set.
             network.Fit(trainImages, trainTargets, epochs: 25, batchSize: 128);
 
+            // Evaluate the model using the test set.
             (var loss, var metric) = network.Evaluate(testImages, testTargets);
 
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
@@ -48,13 +57,14 @@ namespace CntkCatalyst.Examples
 
         static (Tensor observations, Tensor targets) LoadMnistData(int[] inputShape, int[] outputShape, MnistDataSplit dataSplit)
         {
+            // Load mnist data set using Accord.DataSets.
             var mnist = new MNIST(Directory.GetCurrentDirectory());
             var dataSet = dataSplit == MnistDataSplit.Train ? mnist.Training : mnist.Testing;
 
             var observationCount = dataSet.Item2.Length;
             var dataSize = inputShape.Aggregate((d1, d2) => d1 * d2);
 
-            // flatten data.
+            // Transform from sparse to dense format, and flatten arrays.
             var observationsData = dataSet.Item1
                 .Select(s => s.ToDense(dataSize)) // set fixed dataSize.
                 .SelectMany(d => d)                
@@ -69,6 +79,7 @@ namespace CntkCatalyst.Examples
             observationsShape.Add(observationCount);
             var observations = new Tensor(observationsData, observationsShape.ToArray());
 
+            // one-hot encode targets for the classificaiton problem.
             var oneHotTargetsData = targetsData.EncodeOneHot();
 
             var targetsShape = new List<int>(outputShape);
