@@ -41,9 +41,9 @@ namespace SharpLearning.Containers
             return ToF64(value, ParseAnyNumberStyle);
         }
 
-        public static double ToF64(string value, Func<string, double> parser)
+        public static double ToF64(string value, Converter<string, double> converter)
         {
-            return parser(value);
+            return converter(value);
         }
 
         static double ParseAnyNumberStyle(string value)

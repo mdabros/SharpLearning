@@ -62,7 +62,7 @@ namespace SharpLearning.Containers.Test
             };
             
             var actual = text.Select(x => FloatingPointConversion.ToF64(x, 
-                parser: t => double.Parse(t, nfi))).ToArray();
+                converter: t => double.Parse(t, nfi))).ToArray();
 
             var expected = new double[] { double.PositiveInfinity, double.NegativeInfinity, 0.0, 75357.987 };
             CollectionAssert.AreEqual(expected, actual);

@@ -8,14 +8,22 @@ namespace SharpLearning.Containers.Matrices
     /// </summary>
     public static class StringMatrixExtensions
     {
+        public static readonly Converter<string, double> DefaultConverter = FloatingPointConversion.ToF64;
+
         /// <summary>
-        /// Converts StringMatrix to F64Matrix. This will fail if there are values not parsable as a double
+        /// Converts StringMatrix to F64Matrix. Default converter will throw if there are values not parsable as a double
         /// </summary>
         /// <param name="stringMatrix"></param>
         /// <returns></returns>
         public static F64Matrix ToF64Matrix(this StringMatrix stringMatrix)
         {
-            var features = Array.ConvertAll(stringMatrix.Data(), FloatingPointConversion.ToF64);
+            return ToF64Matrix(stringMatrix, DefaultConverter);
+        }
+
+        public static F64Matrix ToF64Matrix(this StringMatrix stringMatrix,
+            Converter<string, double> converter)
+        {
+            var features = Array.ConvertAll(stringMatrix.Data(), converter);
             return new F64Matrix(features, stringMatrix.RowCount, stringMatrix.ColumnCount);
         }
 
