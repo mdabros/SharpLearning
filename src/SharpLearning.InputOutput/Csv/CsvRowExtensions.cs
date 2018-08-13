@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 
@@ -13,7 +12,7 @@ namespace SharpLearning.InputOutput.Csv
     /// </summary>
     public static class CsvRowExtensions
     {
-        public static readonly Converter<string,double> DefaultF64Converter = FloatingPointConversion.ToF64;
+        public static readonly Converter<string,double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
 
         /// <summary>
         /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on. 
@@ -275,7 +274,7 @@ namespace SharpLearning.InputOutput.Csv
             return ToF64Matrix(dataRows, DefaultF64Converter);
         }
         public static F64Matrix ToF64Matrix(this IEnumerable<CsvRow> dataRows,
-            Converter<string,double> converter)
+            Converter<string, double> converter)
         {
             var first = dataRows.First();
             var cols = first.ColumnNameToIndex.Count;
