@@ -121,7 +121,7 @@ namespace SharpLearning.Containers.Extensions
         }
         public static double[] AsF64(this string[] v, Converter<string, double> converter)
         {
-            return v.Select(s => FloatingPointConversion.ToF64(s, converter)).ToArray();
+            return v.Select(s => converter(s)).ToArray();
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace SharpLearning.Containers.Extensions
         }
 
         /// <summary>
-        /// Copies the source to the distination within the provided interval
+        /// Copies the source to the destination within the provided interval
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>

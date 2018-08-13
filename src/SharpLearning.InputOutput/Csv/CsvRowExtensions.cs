@@ -258,7 +258,7 @@ namespace SharpLearning.InputOutput.Csv
 
             if (first.ColumnNameToIndex.Count != 1)
             {
-                throw new ArgumentException("Vector can only be genereded from a single column");
+                throw new ArgumentException("Vector can only be generated from a single column");
             }
 
             return dataRows.SelectMany(values => values.Values).ToArray();
