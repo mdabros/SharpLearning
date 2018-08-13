@@ -1,8 +1,8 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.Containers.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers.Extensions
 {
@@ -11,6 +11,8 @@ namespace SharpLearning.Containers.Extensions
     /// </summary>
     public static class ArrayExtensions
     {
+        public static readonly Converter<string, double> DefaultF64Converter = FloatingPointConversion.ToF64;
+
         /// <summary>
         /// Clears array.
         /// </summary>
@@ -115,7 +117,11 @@ namespace SharpLearning.Containers.Extensions
         /// <returns></returns>
         public static double[] AsF64(this string[] v)
         {
-            return v.Select(s => FloatingPointConversion.ToF64(s)).ToArray();
+            return AsF64(v, DefaultF64Converter);
+        }
+        public static double[] AsF64(this string[] v, Converter<string, double> converter)
+        {
+            return v.Select(s => FloatingPointConversion.ToF64(s, converter)).ToArray();
         }
 
         /// <summary>
