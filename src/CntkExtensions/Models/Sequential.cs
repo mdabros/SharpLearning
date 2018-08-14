@@ -75,8 +75,8 @@ namespace CntkExtensions.Models
 
                 // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
                 // However, unsure how to handle random shuffling in this case.
-                using (Value batchObservations = Value.CreateBatch<float>(m_inputVariable.Shape, observations, d))
-                using (Value batchTarget = Value.CreateBatch<float>(m_targetVariable.Shape, targets, d))
+                using (Value batchObservations = Value.CreateBatch<float>(m_inputVariable.Shape, observations, d, true))
+                using (Value batchTarget = Value.CreateBatch<float>(m_targetVariable.Shape, targets, d, true))
                 {
                     inputMap.Add(m_inputVariable, batchObservations);
                     inputMap.Add(m_targetVariable, batchTarget);
@@ -142,8 +142,8 @@ namespace CntkExtensions.Models
 
                 // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
                 // However, unsure how to handle random shuffling in this case.
-                using (var batchObservations = new MinibatchData(Value.CreateBatch<float>(m_inputVariable.Shape, observations, d)))
-                using (var batchTarget = new MinibatchData(Value.CreateBatch<float>(m_targetVariable.Shape, targets, d)))
+                using (var batchObservations = new MinibatchData(Value.CreateBatch<float>(m_inputVariable.Shape, observations, d, true)))
+                using (var batchTarget = new MinibatchData(Value.CreateBatch<float>(m_targetVariable.Shape, targets, d, true)))
                 {
                     inputMap.Add(m_inputVariable, batchObservations);
                     inputMap.Add(m_targetVariable, batchTarget);

@@ -84,6 +84,7 @@
     <Compile Include="Layers\LayersTest.cs" />
     <Compile Include="Learners\LearnersTest.cs" />
     <Compile Include="Losses\LossesTest.cs" />
+    <Compile Include="MemoryMinibatchSourceTest.cs" />
     <Compile Include="Models\SequentialTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

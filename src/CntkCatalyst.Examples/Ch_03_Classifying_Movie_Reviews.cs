@@ -2,12 +2,12 @@
 using System.IO;
 using System.IO.Compression;
 using System.Net;
-using Accord.IO;
 using CntkExtensions;
 using CntkExtensions.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
+using CNTK;
 
 namespace CntkCatalyst.Examples
 {
@@ -86,14 +86,10 @@ namespace CntkCatalyst.Examples
 
             var observationCount = 25000;
             var featureCount = inputShape.Single();
-            var observationsData = LoadBinaryFile(observationsName, observationCount, featureCount)           
-                .SelectMany(n => n)
-                .ToArray();
+            var observationsData = LoadBinaryFile(observationsName, observationCount * featureCount);          
 
-            var targetsData = LoadBinaryFile(targetsName, observationCount, 1)
-                .SelectMany(n => n)
-                .ToArray();
-
+            var targetsData = LoadBinaryFile(targetsName, observationCount);
+            
             var observationsShape = new List<int>(inputShape);
             observationsShape.Add(observationCount);
             var observations = new Tensor(observationsData, observationsShape.ToArray());
@@ -105,19 +101,15 @@ namespace CntkCatalyst.Examples
             return (observations, targets);
         }
 
-        static float[][] LoadBinaryFile(string filepath, int numRows, int numColumns)
+        public static float[] LoadBinaryFile(string filepath, int N)
         {
-            var buffer = new byte[sizeof(float) * numRows * numColumns];
+            var buffer = new byte[sizeof(float) * N];
             using (var reader = new System.IO.BinaryReader(System.IO.File.OpenRead(filepath)))
             {
                 reader.Read(buffer, 0, buffer.Length);
             }
-            var dst = new float[numRows][];
-            for (int row = 0; row < dst.Length; row++)
-            {
-                dst[row] = new float[numColumns];
-                System.Buffer.BlockCopy(buffer, row * numColumns * sizeof(float), dst[row], 0, numColumns * sizeof(float));
-            }
+            var dst = new float[N];
+            System.Buffer.BlockCopy(buffer, 0, dst, 0, buffer.Length);
             return dst;
         }
     }

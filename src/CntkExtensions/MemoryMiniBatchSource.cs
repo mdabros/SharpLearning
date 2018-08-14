@@ -66,7 +66,7 @@ namespace CntkExtensions
             return (observationsMinibatch, targetsMiniBatch, isSweepEnd);
         }
 
-        public (float[] observations, float[] targets) NextBatch()
+        private (float[] observations, float[] targets) NextBatch()
         {
             var batchSize = m_batchIndeces.Length;
             var observationsMiniBatch = new float[batchSize * m_singleObservationDataSize];
