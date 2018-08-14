@@ -21,7 +21,7 @@ namespace CntkExtensions.Test
             var predictionsData = new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
             var predictionsVariable = CNTKLib.InputVariable(new int[] { predictionsData.Length }, m_dataType);
 
-            var sut = Losses.MeanSquaredError(targetsVariable, predictionsVariable);
+            var sut = Losses.MeanSquaredError(predictionsVariable, targetsVariable);
             var actual = Evaluate(sut, targetsVariable, targetsData,
                 predictionsVariable, predictionsData);
 
@@ -37,7 +37,7 @@ namespace CntkExtensions.Test
             var predictionsData = new float[] { 0, 0, 0, 0, 0, 0 };
             var predictionsVariable = CNTKLib.InputVariable(new int[] { predictionsData.Length }, m_dataType);
 
-            var sut = Losses.MeanSquaredError(targetsVariable, predictionsVariable);
+            var sut = Losses.MeanSquaredError(predictionsVariable, targetsVariable);
             var actual = Evaluate(sut, targetsVariable, targetsData,
                 predictionsVariable, predictionsData);
 

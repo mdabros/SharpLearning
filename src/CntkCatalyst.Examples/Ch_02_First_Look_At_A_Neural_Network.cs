@@ -41,8 +41,8 @@ namespace CntkCatalyst.Examples
 
             // Compile the network with the selected learner, loss and metric.
             network.Compile(p => Learners.RMSProp(p),
-               (t, p) => Losses.CategoricalCrossEntropy(t, p),
-               (t, p) => Metrics.Accuracy(t, p));
+               (p, t) => Losses.CategoricalCrossEntropy(p, t),
+               (p, t) => Metrics.Accuracy(p, t));
 
             // Train the model using the training set.
             network.Fit(trainImages, trainTargets, epochs: 5, batchSize: 128);

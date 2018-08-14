@@ -31,8 +31,8 @@ namespace CntkExtensions.Test.Models
             network.Add(x => Layers.Softmax(x));
 
             network.Compile(p => Learners.MomentumSGD(p),
-               (t, p) => Losses.CategoricalCrossEntropy(t, p),
-               (t, p) => Metrics.Accuracy(t, p));
+               (p, t) => Losses.CategoricalCrossEntropy(p, t),
+               (p, t) => Metrics.Accuracy(p, t));
 
             network.Fit(observations, targets, batchSize: 32, epochs: 100);
 

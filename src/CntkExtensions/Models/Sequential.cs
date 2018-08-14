@@ -40,8 +40,8 @@ namespace CntkExtensions.Models
             m_targetVariable = Variable.InputVariable(targetShape, dataType);
 
             // create loss and metric.
-            m_loss = lossCreator(m_targetVariable, Network.Output);
-            m_metric = metricCreator(m_targetVariable, Network.Output);
+            m_loss = lossCreator(Network.Output, m_targetVariable);
+            m_metric = metricCreator(Network.Output, m_targetVariable);
 
             // create learner.
             m_learner = learnerCreator(Network.Parameters());

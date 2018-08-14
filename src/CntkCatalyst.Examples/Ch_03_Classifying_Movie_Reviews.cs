@@ -38,12 +38,12 @@ namespace CntkCatalyst.Examples
             network.Add(x => Layers.Sigmoid(x));
 
             // Compile the network with the selected learner, loss and metric.
-            network.Compile(p => Learners.MomentumSGD(p),
-               (t, p) => Losses.BinaryCrossEntropy(t, p),
-               (t, p) => Metrics.BinaryAccuracy(t, p));
+            network.Compile(p => Learners.Adam(p),
+               (p, t) => Losses.BinaryCrossEntropy(p, t),
+               (p, t) => Metrics.BinaryAccuracy(p, t));
 
             // Train the model using the training set.
-            network.Fit(trainObservations, trainTargets, epochs: 20, batchSize: 512);
+            network.Fit(trainObservations, trainTargets, epochs: 20, batchSize: 32);
 
             // Evaluate the model using the test set.
             (var loss, var metric) = network.Evaluate(testObservations, testTargets);
