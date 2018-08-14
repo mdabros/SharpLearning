@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace CntkExtensions
 {
+    /// <summary>
+    /// Quick and dirty container class for tensor data.
+    /// </summary>
     public class Tensor
     {
         public float[] Data;
@@ -30,6 +33,32 @@ namespace CntkExtensions
 
             Data = data;
             Dimensions = dimensions;
+        }
+
+        /// <summary>
+        /// Assumes last dimensions is number of samples.
+        /// </summary>
+        public Tensor GetIndices(int[] sampleIndices)
+        {
+            // Assumes last dimensions is number of samples.
+            var shape = Dimensions.Take(Dimensions.Length - 1)
+                .ToList();
+
+            // Calculate sample size before adding number of samples.
+            var sampleSize = shape.Aggregate((d1, d2) => d1 * d2);
+
+            // Add sample count.
+            shape.Add(sampleIndices.Length);
+            
+            var data = new float[shape.Aggregate((d1, d2) => d1 * d2)];
+            for (int i = 0; i < sampleIndices.Length; i++)
+            {
+                var sampleIndex = sampleIndices[i];
+                var startIndex = sampleIndex * sampleSize;
+                Array.Copy(Data, startIndex, data, i * sampleSize, sampleSize);
+            }
+
+            return new Tensor(data, shape.ToArray());
         }
     }
 }
