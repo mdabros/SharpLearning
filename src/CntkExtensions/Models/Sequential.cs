@@ -47,7 +47,8 @@ namespace CntkExtensions.Models
             m_learner = learnerCreator(Network.Parameters());
         }
 
-        public void Fit(Tensor x = null, Tensor y = null, int batchSize = 32, int epochs = 1)
+        public void Fit(Tensor x = null, Tensor y = null, int batchSize = 32, int epochs = 1, 
+            Tensor xValidation = null, Tensor yValidation = null)
         {
             // configuration
             var d = Layers.GlobalDevice;
@@ -95,12 +96,20 @@ namespace CntkExtensions.Models
                     {
                         var currentLoss = lossSum / totalSampleCount;
                         var currentMetric = metricSum / totalSampleCount;
-                        Trace.WriteLine($"Epoch: {epoch + 1} Loss = {currentLoss:F16}, Metric = {currentMetric:F16}");
+                        var traceOutput = $"Epoch: {epoch + 1} Loss = {currentLoss:F16}, Metric = {currentMetric:F16}";
 
                         ++epoch;
                         lossSum = 0;
                         metricSum = 0;
                         totalSampleCount = 0;
+
+                        if(xValidation != null && yValidation != null)
+                        {
+                            (var validationLoss, var validationMetric) = Evaluate(xValidation, yValidation, batchSize);
+                            traceOutput += $" - ValidationLoss = {validationLoss:F16}, ValidationMetric = {validationMetric:F16}";
+                        }
+
+                        Trace.WriteLine(traceOutput);
                     }
 
                     // Ensure cleanup, call erase.
@@ -142,8 +151,10 @@ namespace CntkExtensions.Models
 
                 // Note that it is possible to create a batch using a data buffer array, to reduce allocations. 
                 // However, unsure how to handle random shuffling in this case.
-                using (var batchObservations = new MinibatchData(Value.CreateBatch<float>(m_inputVariable.Shape, observations, d, true)))
-                using (var batchTarget = new MinibatchData(Value.CreateBatch<float>(m_targetVariable.Shape, targets, d, true)))
+                using (var batchObservationsValue = Value.CreateBatch<float>(m_inputVariable.Shape, observations, d, true))
+                using (var batchTargetValue = Value.CreateBatch<float>(m_targetVariable.Shape, targets, d, true))
+                using (var batchObservations = new MinibatchData(batchObservationsValue))
+                using (var batchTarget = new MinibatchData(batchTargetValue))
                 {
                     inputMap.Add(m_inputVariable, batchObservations);
                     inputMap.Add(m_targetVariable, batchTarget);
@@ -156,7 +167,10 @@ namespace CntkExtensions.Models
                     metricSum += metricValue * batchSize;
                     totalSampleCount += batchSize;
 
+                    // Ensure cleanup, call erase.
                     inputMap.Clear();
+                    batchObservationsValue.Erase();
+                    batchTargetValue.Erase();
                 }
             }
 

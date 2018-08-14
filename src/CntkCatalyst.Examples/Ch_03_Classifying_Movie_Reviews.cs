@@ -43,7 +43,9 @@ namespace CntkCatalyst.Examples
                (p, t) => Metrics.BinaryAccuracy(p, t));
 
             // Train the model using the training set.
-            network.Fit(trainObservations, trainTargets, epochs: 20, batchSize: 512);
+            network.Fit(trainObservations, trainTargets, epochs: 20, batchSize: 512, 
+                xValidation: testObservations, 
+                yValidation: testTargets);
 
             // Evaluate the model using the test set.
             (var loss, var metric) = network.Evaluate(testObservations, testTargets);
@@ -51,11 +53,9 @@ namespace CntkCatalyst.Examples
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
-            // TODO: Check data loading, layout etc.
-            // TODO: Fix data download and parsing.
-            // TODO: Add validation option to fit method.
             // TODO: Consider epoch (train/valid) history.
             // TODO: Plot history.
+            // TODO: Fix data download and parsing.
         }
 
         static (Tensor observations, Tensor targets) LoadImdbData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
