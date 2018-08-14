@@ -1,13 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using CntkExtensions;
 using CntkExtensions.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Diagnostics;
-using CNTK;
 
 namespace CntkCatalyst.Examples
 {
@@ -26,6 +25,12 @@ namespace CntkCatalyst.Examples
             (var trainObservations, var trainTargets) = LoadImdbData(inputShape, outputShape, DataSplit.Train);
             (var testObservations, var testTargets) = LoadImdbData(inputShape, outputShape, DataSplit.Test);
 
+            // Split validation set from train.
+            var validationObservations = trainObservations.GetIndices(Enumerable.Range(0, 10000).ToArray());
+            var validationTargets = trainTargets.GetIndices(Enumerable.Range(0, 10000).ToArray());
+            var partialTrainObservations = trainObservations.GetIndices(Enumerable.Range(10000, 15000).ToArray());
+            var partialTrainTargets = trainTargets.GetIndices(Enumerable.Range(10000, 15000).ToArray());
+
             // Create the network, and define the input shape.
             var network = new Sequential(Layers.Input(inputShape));
 
@@ -43,9 +48,9 @@ namespace CntkCatalyst.Examples
                (p, t) => Metrics.BinaryAccuracy(p, t));
 
             // Train the model using the training set.
-            network.Fit(trainObservations, trainTargets, epochs: 20, batchSize: 512, 
-                xValidation: testObservations, 
-                yValidation: testTargets);
+            network.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
+                xValidation: validationObservations, 
+                yValidation: validationTargets);
 
             // Evaluate the model using the test set.
             (var loss, var metric) = network.Evaluate(testObservations, testTargets);
@@ -53,8 +58,9 @@ namespace CntkCatalyst.Examples
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
-            // TODO: Consider epoch (train/valid) history.
+            // TODO: Add epoch (train/valid) history.
             // TODO: Plot history.
+            // TODO: Add Predict method to Sequential.
             // TODO: Fix data download and parsing.
         }
 
