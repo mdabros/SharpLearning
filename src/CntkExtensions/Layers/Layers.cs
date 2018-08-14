@@ -19,7 +19,7 @@ namespace CntkExtensions
 
         public static Function Sigmoid(Variable x)
         {
-            return CNTKLib.ReLU(x);
+            return CNTKLib.Sigmoid(x);
         }
 
         public static Function Softmax(Variable x)
