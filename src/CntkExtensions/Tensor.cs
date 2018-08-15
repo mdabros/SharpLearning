@@ -38,7 +38,7 @@ namespace CntkExtensions
         /// <summary>
         /// Assumes last dimensions is number of samples.
         /// </summary>
-        public Tensor GetIndices(int[] sampleIndices)
+        public Tensor GetIndices(params int[] sampleIndices)
         {
             // Assumes last dimensions is number of samples.
             var shape = Dimensions.Take(Dimensions.Length - 1)

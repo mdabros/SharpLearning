@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using CNTK;
@@ -178,6 +179,57 @@ namespace CntkExtensions.Models
             var finalMetric = metricSum / totalSampleCount;
 
             return ((float)finalLoss, (float)finalMetric);
+        }
+
+        public Tensor Predict(Tensor x)
+        {
+            // Assmunes last dimenion is number of samples.
+            // TODO: This will fail for single observation sample.
+            var sampleCount = x.Dimensions.Last();
+            var inputDimensions = Network.Arguments[0].Shape;
+
+            var outputSize = Network.Output.Shape.Dimensions.Aggregate((d1, d2) => d1 * d1);
+            var predictionData = new float[sampleCount * outputSize];
+
+            for (int i = 0; i < sampleCount; i++)
+            {
+                var observation = x.GetIndices(i);
+                var prediction = Predict(observation.Data);
+
+                Array.Copy(prediction, 0, predictionData, i * outputSize, prediction.Length);
+            }
+
+            var outputShape = Network.Output.Shape.Dimensions.ToList();
+            outputShape.Add(sampleCount);
+
+            return new Tensor(predictionData, outputShape.ToArray());
+        }
+
+        float[] Predict(float[] observation)
+        {
+            var d = Layers.GlobalDevice;
+            var inputDimensions = Network.Arguments[0].Shape;
+
+            using (var singleObservation = Value.CreateBatch<float>(inputDimensions, observation, d))
+            {
+                var inputDataMap = new Dictionary<Variable, Value>() { { Network.Arguments[0], singleObservation } };
+                var outputVar = Network.Output;
+
+                var outputDataMap = new Dictionary<Variable, Value>() { { outputVar, null } };
+                Network.Evaluate(inputDataMap, outputDataMap, d);
+                var outputVal = outputDataMap[outputVar];
+
+                var predictions = outputVal.GetDenseData<float>(outputVar);
+                var floatPrediction = predictions.Single().ToArray();
+
+                // Ensure cleanup, call erase.
+                inputDataMap.Clear();
+                outputDataMap.Clear();
+                outputVal.Erase();
+                singleObservation.Erase();
+
+                return floatPrediction;
+            }
         }
     }
 }
