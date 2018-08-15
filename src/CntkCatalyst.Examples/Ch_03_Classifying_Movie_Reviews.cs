@@ -48,7 +48,7 @@ namespace CntkCatalyst.Examples
                (p, t) => Metrics.BinaryAccuracy(p, t));
 
             // Train the model using the training set.
-            network.Fit(partialTrainObservations, partialTrainTargets, epochs: 1, batchSize: 512, 
+            network.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
                 xValidation: validationObservations, 
                 yValidation: validationTargets);
 

@@ -134,17 +134,20 @@ namespace CntkExtensions.Models
             var metricEvaluator = CNTKLib.CreateEvaluator(m_metric);
 
             // variables for training loop.            
-            var inputMap = new UnorderedMapVariableMinibatchData();//new Dictionary<Variable, Value>();
+            var inputMap = new UnorderedMapVariableMinibatchData();
 
             var lossSum = 0.0;
             var metricSum = 0.0;
             var totalSampleCount = 0;
 
             bool isSweepEnd = false;
+            
+            // Check if batchSize is larger than sample count.
+            var evaluationBatchSize = x.SampleCount < batchSize ? x.SampleCount : batchSize;
 
             while (!isSweepEnd)
             {
-                var minibatchData = minibatchSource.GetNextMinibatch(batchSize);
+                var minibatchData = minibatchSource.GetNextMinibatch(evaluationBatchSize);
 
                 isSweepEnd = minibatchData.isSweepEnd;
                 var observations = minibatchData.observations;
@@ -164,9 +167,9 @@ namespace CntkExtensions.Models
                     var metricValue = metricEvaluator.TestMinibatch(inputMap);
 
                     // Accumulate loss/metric.
-                    lossSum += lossValue * batchSize;
-                    metricSum += metricValue * batchSize;
-                    totalSampleCount += batchSize;
+                    lossSum += lossValue * evaluationBatchSize;
+                    metricSum += metricValue * evaluationBatchSize;
+                    totalSampleCount += evaluationBatchSize;
 
                     // Ensure cleanup, call erase.
                     inputMap.Clear();
