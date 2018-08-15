@@ -15,6 +15,12 @@ namespace CntkExtensions.Models
         Variable m_inputVariable;
         Variable m_targetVariable;
 
+        const string m_lossName = "Loss";
+        const string m_metricName = "Metric";
+
+        const string m_validationLossName = "Validation loss";
+        const string m_validationMetricName = "Validation metric";
+
         public Sequential(Variable input)
         {
             Network = input;
@@ -48,7 +54,7 @@ namespace CntkExtensions.Models
             m_learner = learnerCreator(Network.Parameters());
         }
 
-        public void Fit(Tensor x = null, Tensor y = null, int batchSize = 32, int epochs = 1, 
+        public Dictionary<string, List<float>> Fit(Tensor x = null, Tensor y = null, int batchSize = 32, int epochs = 1, 
             Tensor xValidation = null, Tensor yValidation = null)
         {
             // configuration
@@ -60,11 +66,20 @@ namespace CntkExtensions.Models
             // setup trainer.
             var trainer = CNTKLib.CreateTrainer(Network, m_loss, m_metric, new LearnerVector { m_learner });
 
+            // store epoch history
+            var lossValidationHistory = new Dictionary<string, List<float>>
+            {
+                { m_lossName, new List<float>() },
+                { m_metricName, new List<float>() },
+                { m_validationLossName, new List<float>() },
+                { m_validationMetricName, new List<float>() },
+            };
+
             // variables for training loop.            
             var inputMap = new Dictionary<Variable, Value>();
 
-            var lossSum = 0.0;
-            var metricSum = 0.0;
+            var lossSum = 0f;
+            var metricSum = 0f;
             var totalSampleCount = 0;
 
             for (int epoch = 0; epoch < epochs; )
@@ -96,8 +111,12 @@ namespace CntkExtensions.Models
                     if(isSweepEnd)
                     {
                         var currentLoss = lossSum / totalSampleCount;
+                        lossValidationHistory[m_lossName].Add(currentLoss);
+
                         var currentMetric = metricSum / totalSampleCount;
-                        var traceOutput = $"Epoch: {epoch + 1} Loss = {currentLoss:F16}, Metric = {currentMetric:F16}";
+                        lossValidationHistory[m_metricName].Add(currentMetric);
+
+                        var traceOutput = $"Epoch: {epoch + 1:000} Loss = {currentLoss:F8}, Metric = {currentMetric:F8}";
 
                         ++epoch;
                         lossSum = 0;
@@ -107,7 +126,10 @@ namespace CntkExtensions.Models
                         if(xValidation != null && yValidation != null)
                         {
                             (var validationLoss, var validationMetric) = Evaluate(xValidation, yValidation, batchSize);
-                            traceOutput += $" - ValidationLoss = {validationLoss:F16}, ValidationMetric = {validationMetric:F16}";
+                            traceOutput += $" - ValidationLoss = {validationLoss:F8}, ValidationMetric = {validationMetric:F8}";
+
+                            lossValidationHistory[m_validationLossName].Add(validationLoss);
+                            lossValidationHistory[m_validationMetricName].Add(validationMetric);
                         }
 
                         Trace.WriteLine(traceOutput);
@@ -119,6 +141,8 @@ namespace CntkExtensions.Models
                     batchTarget.Erase();
                 }
             }
+
+            return lossValidationHistory;
         }
 
         public (float loss, float metric) Evaluate(Tensor x = null, Tensor y = null, int batchSize = 32)

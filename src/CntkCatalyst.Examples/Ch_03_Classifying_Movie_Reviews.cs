@@ -48,9 +48,12 @@ namespace CntkCatalyst.Examples
                (p, t) => Metrics.BinaryAccuracy(p, t));
 
             // Train the model using the training set.
-            network.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
+            var history = network.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
                 xValidation: validationObservations, 
                 yValidation: validationTargets);
+
+            // Trace loss and validation history
+            TraceLossValidationHistory(history);
 
             // Evaluate the model using the test set.
             (var loss, var metric) = network.Evaluate(testObservations, testTargets);
@@ -62,10 +65,9 @@ namespace CntkCatalyst.Examples
             var predictions = network.Predict(testObservations.GetSamples(Enumerable.Range(0, 10).ToArray()));
 
             // Use tensor data directly, since only 1 element pr. sample.
-            Trace.WriteLine($"Predictions: [{string.Join(", ", predictions.Data)}]");
+            Trace.WriteLine($"Predictions: [{string.Join(", ", predictions.Data)}]");          
 
-            // TODO: Add epoch (train/valid) history.
-            // TODO: Plot history.
+            // TODO: Plot history?.
             // TODO: Fix data download and parsing.
         }
 
@@ -107,7 +109,7 @@ namespace CntkCatalyst.Examples
             return (observations, targets);
         }
 
-        public static float[] LoadBinaryFile(string filepath, int N)
+        static float[] LoadBinaryFile(string filepath, int N)
         {
             var buffer = new byte[sizeof(float) * N];
             using (var reader = new System.IO.BinaryReader(System.IO.File.OpenRead(filepath)))
@@ -117,6 +119,14 @@ namespace CntkCatalyst.Examples
             var dst = new float[N];
             System.Buffer.BlockCopy(buffer, 0, dst, 0, buffer.Length);
             return dst;
+        }
+
+        static void TraceLossValidationHistory(Dictionary<string, List<float>> history)
+        {
+            foreach (var item in history)
+            {
+                Trace.WriteLine($"{item.Key}: [{string.Join(", ", item.Value)}]");
+            }
         }
     }
 }
