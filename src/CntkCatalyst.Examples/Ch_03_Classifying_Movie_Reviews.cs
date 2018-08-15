@@ -26,10 +26,10 @@ namespace CntkCatalyst.Examples
             (var testObservations, var testTargets) = LoadImdbData(inputShape, outputShape, DataSplit.Test);
 
             // Split validation set from train.
-            var validationObservations = trainObservations.GetIndices(Enumerable.Range(0, 10000).ToArray());
-            var validationTargets = trainTargets.GetIndices(Enumerable.Range(0, 10000).ToArray());
-            var partialTrainObservations = trainObservations.GetIndices(Enumerable.Range(10000, 15000).ToArray());
-            var partialTrainTargets = trainTargets.GetIndices(Enumerable.Range(10000, 15000).ToArray());
+            var validationObservations = trainObservations.GetSamples(Enumerable.Range(0, 10000).ToArray());
+            var validationTargets = trainTargets.GetSamples(Enumerable.Range(0, 10000).ToArray());
+            var partialTrainObservations = trainObservations.GetSamples(Enumerable.Range(10000, 15000).ToArray());
+            var partialTrainTargets = trainTargets.GetSamples(Enumerable.Range(10000, 15000).ToArray());
 
             // Create the network, and define the input shape.
             var network = new Sequential(Layers.Input(inputShape));
@@ -48,7 +48,7 @@ namespace CntkCatalyst.Examples
                (p, t) => Metrics.BinaryAccuracy(p, t));
 
             // Train the model using the training set.
-            network.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
+            network.Fit(partialTrainObservations, partialTrainTargets, epochs: 1, batchSize: 512, 
                 xValidation: validationObservations, 
                 yValidation: validationTargets);
 
@@ -58,9 +58,14 @@ namespace CntkCatalyst.Examples
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
+            // Write first ten predictions
+            var predictions = network.Predict(testObservations.GetSamples(Enumerable.Range(0, 10).ToArray()));
+
+            // Use tensor data directly, since only 1 element pr. sample.
+            Trace.WriteLine($"Predictions: [{string.Join(", ", predictions.Data)}]");
+
             // TODO: Add epoch (train/valid) history.
             // TODO: Plot history.
-            // TODO: Add Predict method to Sequential.
             // TODO: Fix data download and parsing.
         }
 
@@ -92,17 +97,12 @@ namespace CntkCatalyst.Examples
 
             var observationCount = 25000;
             var featureCount = inputShape.Single();
+
             var observationsData = LoadBinaryFile(observationsName, observationCount * featureCount);          
+            var observations = new Tensor(observationsData, inputShape.ToArray(), observationCount);
 
-            var targetsData = LoadBinaryFile(targetsName, observationCount);
-            
-            var observationsShape = new List<int>(inputShape);
-            observationsShape.Add(observationCount);
-            var observations = new Tensor(observationsData, observationsShape.ToArray());
-
-            var targetsShape = new List<int>(outputShape);
-            targetsShape.Add(observationCount);
-            var targets = new Tensor(targetsData, targetsShape.ToArray());
+            var targetsData = LoadBinaryFile(targetsName, observationCount);         
+            var targets = new Tensor(targetsData, outputShape.ToArray(), observationCount);
 
             return (observations, targets);
         }

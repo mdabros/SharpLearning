@@ -28,15 +28,17 @@ namespace CntkExtensions
             m_observations = observations ?? throw new ArgumentNullException(nameof(observations));
             m_targets = targets ?? throw new ArgumentNullException(nameof(targets));
 
-            // Assume last dimension is the number of samples, 
-            // aggregate all other dimensions to get single observations size.
-            m_singleObservationDataSize = observations.Dimensions
-                .Take(observations.Dimensions.Length - 1).Aggregate((d1, d2) => d1 * d2);
+            if(observations.SampleCount != targets.SampleCount)
+            {
+                throw new ArgumentException($"observation samples: {observations.SampleCount}" +
+                    $" differs from target samples: {targets.SampleCount}");
+            }
+
+            m_singleObservationDataSize = observations.SampleShape
+                .Aggregate((d1, d2) => d1 * d2);
             
-            // Assume last dimension is the number of samples, 
-            // aggregate all other dimensions to get single observations size.        
-            m_singleTargetDataSize = targets.Dimensions
-                .Take(targets.Dimensions.Length - 1).Aggregate((d1, d2) => d1 * d2); ;
+            m_singleTargetDataSize = targets.SampleShape
+                .Aggregate((d1, d2) => d1 * d2); ;
 
             m_currentSweepIndeces = Enumerable.Range(0, TotalSampleCount).ToArray();
             m_random = new Random(seed);
@@ -44,7 +46,7 @@ namespace CntkExtensions
             m_minibatch = Array.Empty<float>();
         }
 
-        public int TotalSampleCount => m_observations.Dimensions[m_observations.Dimensions.Length - 1];
+        public int TotalSampleCount => m_observations.SampleCount;
         
         public (float[] observations, float[] targets, bool isSweepEnd) GetNextMinibatch(int minibatchSizeInSamples)
         {

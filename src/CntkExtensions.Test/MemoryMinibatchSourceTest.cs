@@ -26,8 +26,8 @@ namespace CntkExtensions.Test
         [TestMethod]
         public void MemoryMinibatchSource()
         {
-            var observations = new Tensor(m_observationsData, 5, 9);
-            var targets = new Tensor(m_targetData, 1, 9);
+            var observations = new Tensor(m_observationsData, new int[] { 5 }, 9);
+            var targets = new Tensor(m_targetData, new int[] { 1 }, 9);
 
             var sut = new MemoryMinibatchSource(observations, targets, 5, false);
 

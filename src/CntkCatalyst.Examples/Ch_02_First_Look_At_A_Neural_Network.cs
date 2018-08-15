@@ -60,7 +60,7 @@ namespace CntkCatalyst.Examples
             var mnist = new MNIST(Directory.GetCurrentDirectory());
             var dataSet = dataSplit == DataSplit.Train ? mnist.Training : mnist.Testing;
 
-            var observationCount = dataSet.Item2.Length;
+            var sampleCount = dataSet.Item2.Length;
             var dataSize = inputShape.Aggregate((d1, d2) => d1 * d2);
 
             // Transform from sparse to dense format, and flatten arrays.
@@ -74,16 +74,11 @@ namespace CntkCatalyst.Examples
                 .Select(d => (float)d)
                 .ToArray();
 
-            var observationsShape = new List<int>(inputShape);
-            observationsShape.Add(observationCount);
-            var observations = new Tensor(observationsData, observationsShape.ToArray());
+            var observations = new Tensor(observationsData, inputShape.ToArray(), sampleCount);
 
             // one-hot encode targets for the classificaiton problem.
             var oneHotTargetsData = targetsData.EncodeOneHot();
-
-            var targetsShape = new List<int>(outputShape);
-            targetsShape.Add(observationCount);
-            var targets = new Tensor(oneHotTargetsData, targetsShape.ToArray());
+            var targets = new Tensor(oneHotTargetsData, outputShape.ToArray(), sampleCount);
 
             return (observations, targets);
         }

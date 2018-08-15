@@ -49,17 +49,13 @@ namespace CntkExtensions.Test.Models
             var observationsData = new float[observationCount * inputSize];
             observationsData = observationsData.Select(v => (float)random.NextDouble()).ToArray();
 
-            var observationsShape = new List<int>(inputShape);
-            observationsShape.Add(observationCount);
-            var observations = new Tensor(observationsData, observationsShape.ToArray());
+            var observations = new Tensor(observationsData, inputShape.ToArray(), observationCount);
 
             var targetsData = new float[observationCount];
             targetsData = targetsData.Select(d => (float)random.Next(outputShape.Single())).ToArray();
             var oneHotTargetsData = targetsData.EncodeOneHot();
 
-            var targetsShape = new List<int>(outputShape);
-            targetsShape.Add(observationCount);
-            var targets = new Tensor(oneHotTargetsData, targetsShape.ToArray());
+            var targets = new Tensor(oneHotTargetsData, outputShape, observationCount);
 
             return (observations, targets);
         }
@@ -82,10 +78,8 @@ namespace CntkExtensions.Test.Models
             var observationCount = trainingObservations.RowCount;
             
             // convert to float tensor
-            var observationsShape = new List<int>(inputShape);
-            observationsShape.Add(observationCount);
             var observations = new Tensor(trainingObservations.Data().Select(d => (float)d).ToArray(), 
-                observationsShape.ToArray());
+                inputShape.ToArray(), observationCount);
 
             // read classification targets (training)
             var trainingTargets = parser.EnumerateRows(targetName)
@@ -96,9 +90,7 @@ namespace CntkExtensions.Test.Models
                 .ToArray().EncodeOneHot();
 
             // convert targest tensor
-            var targetsShape = new List<int>(outputShape);
-            targetsShape.Add(observationCount);
-            var targets = new Tensor(oneHotTargetsData, targetsShape.ToArray());
+            var targets = new Tensor(oneHotTargetsData, outputShape.ToArray(), observationCount);
 
             return (observations, targets);
         }

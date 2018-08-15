@@ -183,9 +183,7 @@ namespace CntkExtensions.Models
 
         public Tensor Predict(Tensor x)
         {
-            // Assmunes last dimenion is number of samples.
-            // TODO: This will fail for single observation sample.
-            var sampleCount = x.Dimensions.Last();
+            var sampleCount = x.SampleCount;
             var inputDimensions = Network.Arguments[0].Shape;
 
             var outputSize = Network.Output.Shape.Dimensions.Aggregate((d1, d2) => d1 * d1);
@@ -193,16 +191,13 @@ namespace CntkExtensions.Models
 
             for (int i = 0; i < sampleCount; i++)
             {
-                var observation = x.GetIndices(i);
+                var observation = x.GetSamples(i);
                 var prediction = Predict(observation.Data);
 
                 Array.Copy(prediction, 0, predictionData, i * outputSize, prediction.Length);
             }
 
-            var outputShape = Network.Output.Shape.Dimensions.ToList();
-            outputShape.Add(sampleCount);
-
-            return new Tensor(predictionData, outputShape.ToArray());
+            return new Tensor(predictionData, Network.Output.Shape.Dimensions.ToArray(), sampleCount);
         }
 
         float[] Predict(float[] observation)
@@ -225,7 +220,6 @@ namespace CntkExtensions.Models
                 // Ensure cleanup, call erase.
                 inputDataMap.Clear();
                 outputDataMap.Clear();
-                outputVal.Erase();
                 singleObservation.Erase();
 
                 return floatPrediction;

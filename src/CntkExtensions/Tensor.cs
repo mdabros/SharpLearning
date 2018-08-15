@@ -11,46 +11,42 @@ namespace CntkExtensions
         public float[] Data;
 
         /// <summary>
-        /// CNTK uses: [W x H x C x N] layout.
+        /// CNTK uses: [W x H x C] layout.
         /// W: Widht
         /// H: Height
         /// C: Channels
-        /// N: Number of samples
         /// </summary>
-        public int[] Dimensions;
-
-        public Tensor(float[] data, params int[] dimensions)
-        {
-            Data = data ?? throw new ArgumentNullException(nameof(data));
-            Dimensions = dimensions ?? throw new ArgumentNullException(nameof(dimensions));
-
-            var totalElements = dimensions.Aggregate((d1, d2) => d1 * d2);
-            if(totalElements != data.Length)
-            {
-                throw new ArgumentNullException($"Data count: {data.Length} does not match " + 
-                    $" dimensions [{string.Join(", ", dimensions)}]: {totalElements}");
-            }
-
-            Data = data;
-            Dimensions = dimensions;
-        }
+        public int[] SampleShape;
 
         /// <summary>
-        /// Assumes last dimensions is number of samples.
+        /// Number of samples in the tensor
         /// </summary>
-        public Tensor GetIndices(params int[] sampleIndices)
+        public int SampleCount;
+
+        public Tensor(float[] data, int[] sampleShape, int sampleCount)
         {
-            // Assumes last dimensions is number of samples.
-            var shape = Dimensions.Take(Dimensions.Length - 1)
-                .ToList();
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+            SampleShape = sampleShape ?? throw new ArgumentNullException(nameof(sampleShape));
 
-            // Calculate sample size before adding number of samples.
-            var sampleSize = shape.Aggregate((d1, d2) => d1 * d2);
+            var totalElements = sampleShape.Aggregate((d1, d2) => d1 * d2) * sampleCount;
+            if(totalElements != data.Length)
+            {
+                throw new ArgumentException($"Data count: {data.Length} does not match " + 
+                    $" dimensions [{string.Join(", ", sampleShape)}, {sampleCount}]: {totalElements}");
+            }
 
-            // Add sample count.
-            shape.Add(sampleIndices.Length);
+            if (sampleCount < 1) { throw new ArgumentException("Sample count must be at least 1"); }
+
+            Data = data;
+            SampleShape = sampleShape;
+            SampleCount = sampleCount;
+        }
+
+        public Tensor GetSamples(params int[] sampleIndices)
+        {
+            var sampleSize = SampleShape.Aggregate((d1, d2) => d1 * d2);
             
-            var data = new float[shape.Aggregate((d1, d2) => d1 * d2)];
+            var data = new float[sampleSize * sampleIndices.Length];
             for (int i = 0; i < sampleIndices.Length; i++)
             {
                 var sampleIndex = sampleIndices[i];
@@ -58,7 +54,7 @@ namespace CntkExtensions
                 Array.Copy(Data, startIndex, data, i * sampleSize, sampleSize);
             }
 
-            return new Tensor(data, shape.ToArray());
+            return new Tensor(data, SampleShape.ToArray(), sampleIndices.Length);
         }
     }
 }
