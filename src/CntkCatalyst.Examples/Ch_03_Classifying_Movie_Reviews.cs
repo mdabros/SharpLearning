@@ -67,7 +67,6 @@ namespace CntkCatalyst.Examples
             // Use tensor data directly, since only 1 element pr. sample.
             Trace.WriteLine($"Predictions: [{string.Join(", ", predictions.Data)}]");          
 
-            // TODO: Plot history?.
             // TODO: Fix data download and parsing.
         }
 
