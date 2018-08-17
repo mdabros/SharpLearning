@@ -12,7 +12,7 @@ namespace SharpLearning.Containers
         /// 
         /// </summary>
         public const string DefaultFormat = "R";
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -38,14 +38,24 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public static double ToF64(string value)
         {
+            return ToF64(value, ParseAnyNumberStyle);
+        }
+
+        public static double ToF64(string value, Converter<string, double> converter)
+        {
+            return converter(value);
+        }
+
+        static double ParseAnyNumberStyle(string value)
+        {
             var result = 0.0;
-            if(double.TryParse(value, NumberStyle, nfi, out result))
+            if (double.TryParse(value, NumberStyle, nfi, out result))
             {
                 return result;
             }
             else
             {
-                throw new ArgumentException("Unable to parse value: " + "\"" + value + "\"" + " to double");
+                throw new ArgumentException($"Unable to parse \"{ value }\" to double");
             }
         }
     }

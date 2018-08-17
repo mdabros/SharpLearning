@@ -1,9 +1,9 @@
-﻿using SharpLearning.Containers.Extensions;
-using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.InputOutput.Csv
 {
@@ -12,6 +12,8 @@ namespace SharpLearning.InputOutput.Csv
     /// </summary>
     public static class CsvRowExtensions
     {
+        public static readonly Converter<string,double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
+
         /// <summary>
         /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on. 
         /// </summary>
@@ -230,6 +232,11 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public static double[] ToF64Vector(this IEnumerable<CsvRow> dataRows)
         {
+            return ToF64Vector(dataRows, DefaultF64Converter);
+        }
+        public static double[] ToF64Vector(this IEnumerable<CsvRow> dataRows,
+            Converter<string, double> converter)
+        {
             var first = dataRows.First();
 
             if (first.ColumnNameToIndex.Count != 1)
@@ -237,7 +244,7 @@ namespace SharpLearning.InputOutput.Csv
                 throw new ArgumentException("Vector can only be genereded from a single column");
             }
 
-            return dataRows.SelectMany(values => values.Values.AsF64()).ToArray();
+            return dataRows.SelectMany(values => values.Values.AsF64(converter)).ToArray();
         }
 
         /// <summary>
@@ -251,12 +258,11 @@ namespace SharpLearning.InputOutput.Csv
 
             if (first.ColumnNameToIndex.Count != 1)
             {
-                throw new ArgumentException("Vector can only be genereded from a single column");
+                throw new ArgumentException("Vector can only be generated from a single column");
             }
 
             return dataRows.SelectMany(values => values.Values).ToArray();
         }
-
 
         /// <summary>
         /// Parses the CsvRows to a F64Matrix
@@ -265,6 +271,11 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public static F64Matrix ToF64Matrix(this IEnumerable<CsvRow> dataRows)
         {
+            return ToF64Matrix(dataRows, DefaultF64Converter);
+        }
+        public static F64Matrix ToF64Matrix(this IEnumerable<CsvRow> dataRows,
+            Converter<string, double> converter)
+        {
             var first = dataRows.First();
             var cols = first.ColumnNameToIndex.Count;
             var rows = 0;
@@ -272,7 +283,7 @@ namespace SharpLearning.InputOutput.Csv
             var features = dataRows.SelectMany(values =>
             {
                 rows++;
-                return values.Values.AsF64();
+                return values.Values.AsF64(converter);
             }).ToArray();
 
             return new F64Matrix(features, rows, cols);
