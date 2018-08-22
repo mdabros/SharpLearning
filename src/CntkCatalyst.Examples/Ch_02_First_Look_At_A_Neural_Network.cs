@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Accord.DataSets;
+﻿using System.Diagnostics;
 using CntkExtensions;
 using CntkExtensions.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

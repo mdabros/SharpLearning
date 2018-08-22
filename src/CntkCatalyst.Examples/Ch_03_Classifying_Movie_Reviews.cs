@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using CntkExtensions;
 using CntkExtensions.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CntkCatalyst.Examples
 {
+    /// <summary>
+    /// Example from Chapter 3.5: Classifying movie reviews:
+    /// https://github.com/mdabros/deep-learning-with-python-notebooks/blob/master/3.5-classifying-movie-reviews.ipynb
+    /// </summary>
     [TestClass]
     public class Ch_03_Classifying_Movie_Reviews
     {
