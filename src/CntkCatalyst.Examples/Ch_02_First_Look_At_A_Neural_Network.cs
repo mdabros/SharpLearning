@@ -27,8 +27,10 @@ namespace CntkCatalyst.Examples
             // Load train and test sets. 
             // Network will be trained using the training set,
             // and tested using the test set.
-            (var trainImages, var trainTargets) = LoadMnistData(inputShape, outputShape, DataSplit.Train);
-            (var testImages, var testTargets) = LoadMnistData(inputShape, outputShape, DataSplit.Test);
+            (var trainImages, var trainTargets) = DataProvider
+                .LoadMnistData(inputShape, outputShape, DataSplit.Train);
+            (var testImages, var testTargets) = DataProvider
+                .LoadMnistData(inputShape, outputShape, DataSplit.Test);
 
             // Create the network, and define the input shape.
             var network = new Sequential(Layers.Input(inputShape));
@@ -52,35 +54,6 @@ namespace CntkCatalyst.Examples
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
-        }
-
-        static (Tensor observations, Tensor targets) LoadMnistData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
-        {
-            // Load mnist data set using Accord.DataSets.
-            var mnist = new MNIST(Directory.GetCurrentDirectory());
-            var dataSet = dataSplit == DataSplit.Train ? mnist.Training : mnist.Testing;
-
-            var sampleCount = dataSet.Item2.Length;
-            var dataSize = inputShape.Aggregate((d1, d2) => d1 * d2);
-
-            // Transform from sparse to dense format, and flatten arrays.
-            var observationsData = dataSet.Item1
-                .Select(s => s.ToDense(dataSize)) // set fixed dataSize.
-                .SelectMany(d => d)                
-                .Select(d => (float) d / 255) // transform pixel values to be between 0 and 1.
-                .ToArray();
-
-            var targetsData = dataSet.Item2
-                .Select(d => (float)d)
-                .ToArray();
-
-            var observations = new Tensor(observationsData, inputShape.ToArray(), sampleCount);
-
-            // one-hot encode targets for the classificaiton problem.
-            var oneHotTargetsData = targetsData.EncodeOneHot();
-            var targets = new Tensor(oneHotTargetsData, outputShape.ToArray(), sampleCount);
-
-            return (observations, targets);
         }
     }
 }

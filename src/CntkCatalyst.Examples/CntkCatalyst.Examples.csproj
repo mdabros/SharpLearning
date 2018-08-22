@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Ch_02_First_Look_At_A_Neural_Network.cs" />
     <Compile Include="Ch_03_Classifying_Movie_Reviews.cs" />
+    <Compile Include="DataProvider.cs" />
     <Compile Include="DataSplit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
