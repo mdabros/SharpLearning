@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using CNTK;
 
 namespace CntkExtensions.Models
@@ -251,6 +252,51 @@ namespace CntkExtensions.Models
 
                 return floatPrediction;
             }
+        }
+
+        /// <summary>
+        /// Currently will only list all layers with empty name.
+        /// </summary>
+        /// <returns></returns>
+        public string Summary()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("---------------------");
+            sb.AppendLine("Model Summary");
+            sb.AppendLine("Input Shape= " + Network.Arguments[0].Shape.AsString());
+            sb.AppendLine("Output Shape= " + Network.Output.Shape.AsString());
+            sb.AppendLine("=====================");
+            sb.AppendLine("");
+
+            var totalParameterCount = 0;
+
+            // Finds all layers with empty name.
+            // Figure out of to list all layers regardless of name.
+            var layers = Network.FindAllWithName(string.Empty)
+                .Reverse().ToList();
+
+            foreach (var layer in layers)
+            {                
+                var outputShape = layer.Output.Shape;
+                var layerParameterCount = 0;
+
+                if (layer.Parameters().Any())
+                {
+                    layerParameterCount = layer.Parameters().First().Shape.TotalSize;
+                }
+
+                sb.AppendLine($"Layer Name='{layer.Name}' Output Shape={outputShape.AsString(),-30}" + 
+                    $" Param #:{layerParameterCount}");
+
+                totalParameterCount += layerParameterCount;
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("=====================");
+            sb.AppendLine($"Total Number of Parameters: {totalParameterCount:N0}");
+            sb.AppendLine("---------------------");
+
+            return sb.ToString();
         }
     }
 }

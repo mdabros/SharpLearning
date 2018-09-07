@@ -63,7 +63,8 @@ namespace CntkCatalyst.Examples
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
-            // TODO: Add summary method to model.
+            // Write model summary.
+            Trace.WriteLine(network.Summary());
         }
     }
 }
