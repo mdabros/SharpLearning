@@ -18,7 +18,6 @@ namespace SharpLearning.Cntk.Test
         Variable m_targetVariable;
 
         public Function Network;
-        private int m_validationLossName;
 
         public CntkLearner(Function network,
             CntkOptimizerCreator optimizerCreator,
