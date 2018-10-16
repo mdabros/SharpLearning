@@ -64,6 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost.Test", "src\SharpLearning.XGBoost.Test\SharpLearning.XGBoost.Test.csproj", "{FFD79827-ED40-47EB-9CB8-2E683DEA3606}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Cntk.Test", "src\SharpLearning.Cntk.Test\SharpLearning.Cntk.Test.csproj", "{3C5C9536-7EE4-4B1A-B463-B5C0555346A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,10 @@ Global
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C5C9536-7EE4-4B1A-B463-B5C0555346A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C5C9536-7EE4-4B1A-B463-B5C0555346A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C5C9536-7EE4-4B1A-B463-B5C0555346A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C5C9536-7EE4-4B1A-B463-B5C0555346A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
