@@ -143,14 +143,14 @@ namespace SharpLearning.Cntk.Test
             return m_batchIndeces;
         }
 
-        static void Shuffle<T>(T[] array, Random random)
+        static void Shuffle<TIndex>(TIndex[] array, Random random)
         {
             int n = array.Length;
             while (n > 1)
             {
                 int k = random.Next(n);
                 --n;
-                T temp = array[n];
+                TIndex temp = array[n];
                 array[n] = array[k];
                 array[k] = temp;
             }

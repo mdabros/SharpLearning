@@ -2,13 +2,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using CNTK;
 using System;
 using System.Collections.Generic;
-using SharpLearning.Containers.Matrices;
 using System.Linq;
 
 namespace SharpLearning.Cntk.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class CntkLearnerBrainStormTest
     {
         [TestMethod]
         public void TestMethod1()
@@ -23,7 +22,7 @@ namespace SharpLearning.Cntk.Test
                 .Select(v => (float)random.NextDouble()).ToArray();
             var observations = new MemoryMinibatchData<float>(observationsData, inputShape, numberOfObservations);
 
-            var targetsData = Enumerable.Range(0, numberOfObservations * numberOfFeatures)
+            var targetsData = Enumerable.Range(0, numberOfObservations)
                 .Select(v => (float)random.NextDouble()).ToArray();
             var targets = new MemoryMinibatchData<float>(targetsData, new int[] { 1 }, numberOfObservations);
 
@@ -44,13 +43,6 @@ namespace SharpLearning.Cntk.Test
             var source = new MemoryMinibatchSource<float>(observations, targets, seed: 432, randomize: true);
 
             var model = learner.LearnFromSource(source, 32, 10);
-        }
-
-        void CreateData(int numberOfObservations, int numberOfFeatures, Random random, out F64Matrix observations, out double[] targets)
-        {
-            observations = new F64Matrix(numberOfObservations, numberOfFeatures);
-            observations.Map(() => random.NextDouble());
-            targets = Enumerable.Range(0, numberOfObservations).Select(i => random.NextDouble()).ToArray();
         }
 
         CNTK.MinibatchSource CreateMinibatchSource(string map_file, int num_classes, bool train)
