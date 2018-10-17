@@ -13,7 +13,7 @@ namespace CntkCatalyst.Examples
 {
     public static class DataProvider
     {
-        public static (Tensor observations, Tensor targets) LoadMnistData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
+        public static (MemoryMinibatchData observations, MemoryMinibatchData targets) LoadMnistData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
         {
             // Load mnist data set using Accord.DataSets.
             var mnist = new MNIST(Directory.GetCurrentDirectory());
@@ -33,16 +33,16 @@ namespace CntkCatalyst.Examples
                 .Select(d => (float)d)
                 .ToArray();
 
-            var observations = new Tensor(observationsData, inputShape.ToArray(), sampleCount);
+            var observations = new MemoryMinibatchData(observationsData, inputShape.ToArray(), sampleCount);
 
             // one-hot encode targets for the classificaiton problem.
             var oneHotTargetsData = targetsData.EncodeOneHot();
-            var targets = new Tensor(oneHotTargetsData, outputShape.ToArray(), sampleCount);
+            var targets = new MemoryMinibatchData(oneHotTargetsData, outputShape.ToArray(), sampleCount);
 
             return (observations, targets);
         }
 
-        public static (Tensor observations, Tensor targets) LoadImdbData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
+        public static (MemoryMinibatchData observations, MemoryMinibatchData targets) LoadImdbData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
         {
             var xTrainFilePath = "x_train.bin";
             var yTrainFilePath = "y_train.bin";
@@ -72,10 +72,10 @@ namespace CntkCatalyst.Examples
             var featureCount = inputShape.Single();
 
             var observationsData = LoadBinaryFile(observationsName, observationCount * featureCount);
-            var observations = new Tensor(observationsData, inputShape.ToArray(), observationCount);
+            var observations = new MemoryMinibatchData(observationsData, inputShape.ToArray(), observationCount);
 
             var targetsData = LoadBinaryFile(targetsName, observationCount);
-            var targets = new Tensor(targetsData, outputShape.ToArray(), observationCount);
+            var targets = new MemoryMinibatchData(targetsData, outputShape.ToArray(), observationCount);
 
             return (observations, targets);
         }

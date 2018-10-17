@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using CNTK;
 using CntkCatalyst;
 using CntkCatalyst.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,7 +30,9 @@ namespace CntkCatalyst.Examples
                 .LoadMnistData(inputShape, outputShape, DataSplit.Test);
 
             // Create the network, and define the input shape.
-            var network = new Sequential(Layers.Input(inputShape));
+            var d = DataType.Float;
+            var device = DeviceDescriptor.UseDefaultDevice();
+            var network = new Sequential(Layers.Input(inputShape), d, device);
 
             // Add layes to the network.
             network.Add(x => Layers.Dense(x, units: 512));

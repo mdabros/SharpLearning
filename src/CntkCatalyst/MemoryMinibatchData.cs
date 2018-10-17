@@ -4,15 +4,16 @@ using System.Linq;
 namespace CntkCatalyst
 {
     /// <summary>
-    /// Quick and dirty container class for tensor data.
+    /// Quick and dirty container for data.
     /// </summary>
-    public class Tensor
+    /// <typeparam name="T"></typeparam>
+    public class MemoryMinibatchData
     {
         public float[] Data;
 
         /// <summary>
         /// CNTK uses: [W x H x C] layout.
-        /// W: Widht
+        /// W: Width
         /// H: Height
         /// C: Channels
         /// </summary>
@@ -23,15 +24,15 @@ namespace CntkCatalyst
         /// </summary>
         public int SampleCount;
 
-        public Tensor(float[] data, int[] sampleShape, int sampleCount)
+        public MemoryMinibatchData(float[] data, int[] sampleShape, int sampleCount)
         {
             Data = data ?? throw new ArgumentNullException(nameof(data));
             SampleShape = sampleShape ?? throw new ArgumentNullException(nameof(sampleShape));
 
             var totalElements = sampleShape.Aggregate((d1, d2) => d1 * d2) * sampleCount;
-            if(totalElements != data.Length)
+            if (totalElements != data.Length)
             {
-                throw new ArgumentException($"Data count: {data.Length} does not match " + 
+                throw new ArgumentException($"Data count: {data.Length} does not match " +
                     $" dimensions [{string.Join(", ", sampleShape)}, {sampleCount}]: {totalElements}");
             }
 
@@ -42,10 +43,10 @@ namespace CntkCatalyst
             SampleCount = sampleCount;
         }
 
-        public Tensor GetSamples(params int[] sampleIndices)
+        public MemoryMinibatchData GetSamples(params int[] sampleIndices)
         {
             var sampleSize = SampleShape.Aggregate((d1, d2) => d1 * d2);
-            
+
             var data = new float[sampleSize * sampleIndices.Length];
             for (int i = 0; i < sampleIndices.Length; i++)
             {
@@ -54,7 +55,7 @@ namespace CntkCatalyst
                 Array.Copy(Data, startIndex, data, i * sampleSize, sampleSize);
             }
 
-            return new Tensor(data, SampleShape.ToArray(), sampleIndices.Length);
+            return new MemoryMinibatchData(data, SampleShape.ToArray(), sampleIndices.Length);
         }
     }
 }

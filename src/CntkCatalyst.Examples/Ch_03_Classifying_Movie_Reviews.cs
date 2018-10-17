@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using CNTK;
 using CntkCatalyst;
 using CntkCatalyst.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,7 +36,9 @@ namespace CntkCatalyst.Examples
             var partialTrainTargets = trainTargets.GetSamples(Enumerable.Range(10000, 15000).ToArray());
 
             // Create the network, and define the input shape.
-            var network = new Sequential(Layers.Input(inputShape));
+            var d = DataType.Float;
+            var device = DeviceDescriptor.UseDefaultDevice();
+            var network = new Sequential(Layers.Input(inputShape), d, device);
 
             // Add layes to the network.
             network.Add(x => Layers.Dense(x, units: 16));

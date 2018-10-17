@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using CNTK;
 using CntkCatalyst.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Containers.Matrices;
-using System.Diagnostics;
+using SharpLearning.InputOutput.Csv;
 
 namespace CntkCatalyst.Test.Models
 {
@@ -21,9 +21,10 @@ namespace CntkCatalyst.Test.Models
             var outputShape = new int[] { numberOfClasses };
 
             (var observations, var targets) = CreateArtificialData(inputShape, outputShape, observationCount: 10000);
-            //LoadMnistCsv(inputShape, outputShape);
 
-            var network = new Sequential(Layers.Input(inputShape));
+            var d = DataType.Float;
+            var device = DeviceDescriptor.UseDefaultDevice();
+            var network = new Sequential(Layers.Input(inputShape), d, device);
 
             network.Add(x => Layers.Dense(x, units: 512));
             network.Add(x => Layers.ReLU(x));
@@ -41,7 +42,7 @@ namespace CntkCatalyst.Test.Models
             Trace.WriteLine($"Final evaluation - Loss: {loss}, Metric: {metric}");
         }
 
-        static (Tensor observations, Tensor targets) CreateArtificialData(int[] inputShape, int[] outputShape, int observationCount)
+        static (MemoryMinibatchData observations, MemoryMinibatchData targets) CreateArtificialData(int[] inputShape, int[] outputShape, int observationCount)
         {
             var inputSize = inputShape.Aggregate((d1, d2) => d1 * d2);
             var random = new Random(32);
@@ -49,18 +50,18 @@ namespace CntkCatalyst.Test.Models
             var observationsData = new float[observationCount * inputSize];
             observationsData = observationsData.Select(v => (float)random.NextDouble()).ToArray();
 
-            var observations = new Tensor(observationsData, inputShape.ToArray(), observationCount);
+            var observations = new MemoryMinibatchData(observationsData, inputShape.ToArray(), observationCount);
 
             var targetsData = new float[observationCount];
             targetsData = targetsData.Select(d => (float)random.Next(outputShape.Single())).ToArray();
             var oneHotTargetsData = targetsData.EncodeOneHot();
 
-            var targets = new Tensor(oneHotTargetsData, outputShape, observationCount);
+            var targets = new MemoryMinibatchData(oneHotTargetsData, outputShape, observationCount);
 
             return (observations, targets);
         }
 
-        static (Tensor observations, Tensor targets) LoadMnistCsv(int[] inputShape, int[] outputShape)
+        static (MemoryMinibatchData observations, MemoryMinibatchData targets) LoadMnistCsv(int[] inputShape, int[] outputShape)
         {
             var parser = new CsvParser(() => new StreamReader(@"E:\Git\SharpLearning.Examples\src\Resources\mnist_small_train.csv"));
             var targetName = "Class";
@@ -78,7 +79,7 @@ namespace CntkCatalyst.Test.Models
             var observationCount = trainingObservations.RowCount;
             
             // convert to float tensor
-            var observations = new Tensor(trainingObservations.Data().Select(d => (float)d).ToArray(), 
+            var observations = new MemoryMinibatchData(trainingObservations.Data().Select(d => (float)d).ToArray(), 
                 inputShape.ToArray(), observationCount);
 
             // read classification targets (training)
@@ -90,7 +91,7 @@ namespace CntkCatalyst.Test.Models
                 .ToArray().EncodeOneHot();
 
             // convert targest tensor
-            var targets = new Tensor(oneHotTargetsData, outputShape.ToArray(), observationCount);
+            var targets = new MemoryMinibatchData(oneHotTargetsData, outputShape.ToArray(), observationCount);
 
             return (observations, targets);
         }
