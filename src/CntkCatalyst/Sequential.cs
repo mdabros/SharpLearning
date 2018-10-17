@@ -25,22 +25,16 @@ namespace CntkCatalyst.Models
         readonly DataType m_dataType;
         readonly DeviceDescriptor m_device;
 
-        public Sequential(Variable input,
+        public Sequential(Variable network,
             DataType dataType,
             DeviceDescriptor device)
         {
-            Network = input;
-
+            Network = network ?? throw new ArgumentNullException(nameof(network));
             m_device = device ?? throw new ArgumentNullException(nameof(device));
             m_dataType = dataType;
         }
 
         public Function Network;
-
-        public void Add(Func<Function, Function> layerCreator)
-        {
-            Network = layerCreator(Network);
-        }
 
         public void Compile(Func<IList<Parameter>, Learner> learnerCreator,
             Func<Variable, Variable, Function> lossCreator,
@@ -78,9 +72,6 @@ namespace CntkCatalyst.Models
             IMinibatchSource validationMinibatchSource = null)
 
         {
-            // configuration
-            var d = Layers.GlobalDevice;
-           
             // setup trainer.
             var trainer = CNTKLib.CreateTrainer(Network, m_loss, m_metric, new LearnerVector { m_learner });
 
@@ -244,16 +235,15 @@ namespace CntkCatalyst.Models
 
         float[] Predict(float[] observation)
         {
-            var d = Layers.GlobalDevice;
             var inputDimensions = Network.Arguments[0].Shape;
 
-            using (var singleObservation = Value.CreateBatch<float>(inputDimensions, observation, d))
+            using (var singleObservation = Value.CreateBatch<float>(inputDimensions, observation, m_device))
             {
                 var inputDataMap = new Dictionary<Variable, Value>() { { Network.Arguments[0], singleObservation } };
                 var outputVar = Network.Output;
 
                 var outputDataMap = new Dictionary<Variable, Value>() { { outputVar, null } };
-                Network.Evaluate(inputDataMap, outputDataMap, d);
+                Network.Evaluate(inputDataMap, outputDataMap, m_device);
                 var outputVal = outputDataMap[outputVar];
 
                 var predictions = outputVal.GetDenseData<float>(outputVar);

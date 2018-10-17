@@ -24,20 +24,23 @@ namespace CntkCatalyst.Test.Models
 
             var d = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
-            var network = new Sequential(Layers.Input(inputShape), d, device);
 
-            network.Add(x => Layers.Dense(x, units: 512));
-            network.Add(x => Layers.ReLU(x));
-            network.Add(x => Layers.Dense(x, units: numberOfClasses));
-            network.Add(x => Layers.Softmax(x));
+            // Create the architecture.
+            var network = Layers.Input(inputShape, d)
+                .Dense(512, d, device)
+                .ReLU()
+                .Dense(numberOfClasses, d, device)
+                .Softmax();
 
-            network.Compile(p => Learners.MomentumSGD(p),
+            var model = new Sequential(network, d, device);
+
+            model.Compile(p => Learners.MomentumSGD(p),
                (p, t) => Losses.CategoricalCrossEntropy(p, t),
                (p, t) => Metrics.Accuracy(p, t));
 
-            network.Fit(observations, targets, batchSize: 32, epochs: 100);
+            model.Fit(observations, targets, batchSize: 32, epochs: 100);
 
-            (var loss, var metric) = network.Evaluate(observations, targets);
+            (var loss, var metric) = model.Evaluate(observations, targets);
 
             Trace.WriteLine($"Final evaluation - Loss: {loss}, Metric: {metric}");
         }

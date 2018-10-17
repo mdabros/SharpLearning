@@ -29,44 +29,47 @@ namespace CntkCatalyst.Examples
             (var testImages, var testTargets) = DataProvider
                 .LoadMnistData(inputShape, outputShape, DataSplit.Test);
 
-            // Create the network, and define the input shape.
+            // Define data type and device for the model.
             var d = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
-            var network = new Sequential(Layers.Input(inputShape), d, device);
 
-            // Add layes to the network.
-            network.Add(x => Layers.Conv2D(x, 3, 3, 32));
-            network.Add(x => Layers.ReLU(x));
-            network.Add(x => Layers.Pool2D(x, 2, 2, PoolingType.Max));
+            // Create the architecture.
+            var network = Layers.Input(inputShape, d)
+                .Conv2D(3, 3, 32, d, device)
+                .ReLU()
+                .Pool2D(2, 2, PoolingType.Max)
 
-            network.Add(x => Layers.Conv2D(x, 3, 3, 64));
-            network.Add(x => Layers.ReLU(x));
-            network.Add(x => Layers.Pool2D(x, 2, 2, PoolingType.Max));
+                .Conv2D(3, 3, 32, d, device)
+                .ReLU()
+                .Pool2D(2, 2, PoolingType.Max)
 
-            network.Add(x => Layers.Conv2D(x, 3, 3, 64));
-            network.Add(x => Layers.ReLU(x));
+                .Conv2D(3, 3, 32, d, device)
+                .ReLU()
+                
+                .Dense(64, d, device)
+                .ReLU()
+                .Dense(numberOfClasses, d, device)
+                .Softmax();
 
-            network.Add(x => Layers.Dense(x, units: 64));
-            network.Add(x => Layers.ReLU(x));
-            network.Add(x => Layers.Dense(x, units: numberOfClasses));
-            network.Add(x => Layers.Softmax(x));
+            // Create the network.
+            var model = new Sequential(network, d, device);
 
             // Compile the network with the selected learner, loss and metric.
-            network.Compile(p => Learners.Adam(p),
+            model.Compile(p => Learners.Adam(p),
                (p, t) => Losses.CategoricalCrossEntropy(p, t),
                (p, t) => Metrics.Accuracy(p, t));
 
             // Train the model using the training set.
-            network.Fit(trainImages, trainTargets, epochs: 5, batchSize: 64);
+            model.Fit(trainImages, trainTargets, epochs: 5, batchSize: 64);
 
             // Evaluate the model using the test set.
-            (var loss, var metric) = network.Evaluate(testImages, testTargets);
+            (var loss, var metric) = model.Evaluate(testImages, testTargets);
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
             // Write model summary.
-            Trace.WriteLine(network.Summary());
+            Trace.WriteLine(model.Summary());
         }
     }
 }

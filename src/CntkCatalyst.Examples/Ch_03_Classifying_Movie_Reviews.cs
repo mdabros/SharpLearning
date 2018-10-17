@@ -35,26 +35,29 @@ namespace CntkCatalyst.Examples
             var partialTrainObservations = trainObservations.GetSamples(Enumerable.Range(10000, 15000).ToArray());
             var partialTrainTargets = trainTargets.GetSamples(Enumerable.Range(10000, 15000).ToArray());
 
-            // Create the network, and define the input shape.
+            // Define data type and device for the model.
             var d = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
-            var network = new Sequential(Layers.Input(inputShape), d, device);
 
-            // Add layes to the network.
-            network.Add(x => Layers.Dense(x, units: 16));
-            network.Add(x => Layers.ReLU(x));
-            network.Add(x => Layers.Dense(x, units: 16));
-            network.Add(x => Layers.ReLU(x));
-            network.Add(x => Layers.Dense(x, units: numberOfClasses));
-            network.Add(x => Layers.Sigmoid(x));
+            // Create the architecture.
+            var network = Layers.Input(inputShape, d)
+                .Dense(16, d, device)
+                .ReLU()
+                .Dense(16, d, device)
+                .ReLU()
+                .Dense(numberOfClasses, d, device)
+                .Softmax();
+
+            // Create the network.
+            var model = new Sequential(network, d, device);
 
             // Compile the network with the selected learner, loss and metric.
-            network.Compile(p => Learners.Adam(p),
+            model.Compile(p => Learners.Adam(p),
                (p, t) => Losses.BinaryCrossEntropy(p, t),
                (p, t) => Metrics.BinaryAccuracy(p, t));
 
             // Train the model using the training set.
-            var history = network.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
+            var history = model.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
                 xValidation: validationObservations, 
                 yValidation: validationTargets);
 
@@ -62,13 +65,13 @@ namespace CntkCatalyst.Examples
             TraceLossValidationHistory(history);
 
             // Evaluate the model using the test set.
-            (var loss, var metric) = network.Evaluate(testObservations, testTargets);
+            (var loss, var metric) = model.Evaluate(testObservations, testTargets);
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
             // Write first ten predictions
-            var predictions = network.Predict(testObservations.GetSamples(Enumerable.Range(0, 10).ToArray()));
+            var predictions = model.Predict(testObservations.GetSamples(Enumerable.Range(0, 10).ToArray()));
 
             // Use tensor data directly, since only 1 element pr. sample.
             Trace.WriteLine($"Predictions: [{string.Join(", ", predictions.Data)}]");          
