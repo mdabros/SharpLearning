@@ -69,13 +69,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CntkUtils.cs" />
-    <Compile Include="Initializers\Initializers.cs" />
-    <Compile Include="Layers\Layers.cs" />
-    <Compile Include="Learners\Learners.cs" />
-    <Compile Include="Losses\Losses.cs" />
+    <Compile Include="Initializers.cs" />
+    <Compile Include="Layers.cs" />
+    <Compile Include="Learners.cs" />
+    <Compile Include="Losses.cs" />
     <Compile Include="MemoryMinibatchSource.cs" />
-    <Compile Include="Metrics\Metrics.cs" />
-    <Compile Include="Models\Sequential.cs" />
+    <Compile Include="Metrics.cs" />
+    <Compile Include="Sequential.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tensor.cs" />
   </ItemGroup>
