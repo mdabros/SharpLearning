@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using CntkExtensions;
-using CntkExtensions.Models;
+using CntkCatalyst;
+using CntkCatalyst.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CntkCatalyst.Examples

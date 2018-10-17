@@ -1,11 +1,11 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CntkExtensions", "src\CntkExtensions\CntkExtensions.csproj", "{5F078033-E409-4B24-99CD-7365A99693E0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CntkCatalyst", "src\CntkCatalyst\CntkCatalyst.csproj", "{5F078033-E409-4B24-99CD-7365A99693E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CntkExtensions.Test", "src\CntkExtensions.Test\CntkExtensions.Test.csproj", "{375D0D4E-03BB-469A-B968-BB31A491B514}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CntkCatalyst.Test", "src\CntkCatalyst.Test\CntkCatalyst.Test.csproj", "{375D0D4E-03BB-469A-B968-BB31A491B514}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CntkCatalyst.Examples", "src\CntkCatalyst.Examples\CntkCatalyst.Examples.csproj", "{4ED90B2D-BE84-4564-BAE4-63E9A2B22E9D}"
 EndProject

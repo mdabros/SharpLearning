@@ -1,6 +1,6 @@
-﻿using CNTK;
+using CNTK;
 
-namespace CntkExtensions
+namespace CntkCatalyst
 {
     public static class Metrics
     {

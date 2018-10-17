@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using CNTK;
-using CntkExtensions;
-using CntkExtensions.Models;
+using CntkCatalyst;
+using CntkCatalyst.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CntkCatalyst.Examples

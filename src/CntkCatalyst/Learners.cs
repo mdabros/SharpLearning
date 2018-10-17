@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using CNTK;
 
-namespace CntkExtensions
+namespace CntkCatalyst
 {
     /// <summary>
     /// Learners for CNTK

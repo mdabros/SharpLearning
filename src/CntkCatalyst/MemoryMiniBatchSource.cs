@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 
-namespace CntkExtensions
+namespace CntkCatalyst
 {
     public class MemoryMinibatchSource
     {

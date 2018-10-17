@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Linq;
 using CNTK;
 
-namespace CntkExtensions
+namespace CntkCatalyst
 {
     /// <summary>
     /// Layers operations for CNTK

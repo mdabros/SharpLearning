@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CntkExtensions.Test
+namespace CntkCatalyst.Test
 {
     [TestClass]
     public class MemoryMinibatchSourceTest

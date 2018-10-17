@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Accord.DataSets;
-using CntkExtensions;
+using CntkCatalyst;
 
 namespace CntkCatalyst.Examples
 {

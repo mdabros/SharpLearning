@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using CNTK;
-using CntkExtensions;
+using CntkCatalyst;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CntkExtensions.Test
+namespace CntkCatalyst.Test
 {
     [TestClass]
     public class LossesTest

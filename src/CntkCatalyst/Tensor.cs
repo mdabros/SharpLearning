@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Linq;
 
-namespace CntkExtensions
+namespace CntkCatalyst
 {
     /// <summary>
     /// Quick and dirty container class for tensor data.

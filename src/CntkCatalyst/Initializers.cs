@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using CNTK;
 
-namespace CntkExtensions
+namespace CntkCatalyst
 {
     /// <summary>
     /// Initializes for cntk

@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CntkExtensions.Models;
+using CntkCatalyst.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.Containers.Matrices;
 using System.Diagnostics;
 
-namespace CntkExtensions.Test.Models
+namespace CntkCatalyst.Test.Models
 {
     [TestClass]
     public class SequentialTest
