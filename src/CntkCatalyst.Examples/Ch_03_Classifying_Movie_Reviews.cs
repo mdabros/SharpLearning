@@ -46,7 +46,7 @@ namespace CntkCatalyst.Examples
                 .Dense(16, d, device)
                 .ReLU()
                 .Dense(numberOfClasses, d, device)
-                .Softmax();
+                .Sigmoid();
 
             // Create the network.
             var model = new Sequential(network, d, device);
