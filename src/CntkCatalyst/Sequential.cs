@@ -256,7 +256,6 @@ namespace CntkCatalyst.Models
                 // Ensure cleanup, call erase.
                 inputDataMap.Clear();
                 outputDataMap.Clear();
-                singleObservation.Erase();
 
                 return floatPrediction;
             }
@@ -279,7 +278,7 @@ namespace CntkCatalyst.Models
             var totalParameterCount = 0;
 
             // Finds all layers with empty name.
-            // Figure out of to list all layers regardless of name.
+            // TODO: Figure out of to list all layers regardless of name.
             var layers = Network.FindAllWithName(string.Empty)
                 .Reverse().ToList();
 
