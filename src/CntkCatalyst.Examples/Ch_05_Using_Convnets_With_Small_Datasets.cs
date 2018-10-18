@@ -26,19 +26,19 @@ namespace CntkCatalyst.Examples
 
             // Setup minibatch sources.
             var featuresName = "features";
-            var labelsName = "labels";
+            var targetsName = "targets";
 
-            var train = CreateMinibatchSource(mapFiles.trainFilePath, featuresName, labelsName,
+            var train = CreateMinibatchSource(mapFiles.trainFilePath, featuresName, targetsName,
                 numberOfClasses, inputShape, augmentation: true);
-            var trainingSource = new CntkMinibatchSource(train, featuresName, labelsName);
+            var trainingSource = new CntkMinibatchSource(train, featuresName, targetsName);
 
-            var valid = CreateMinibatchSource(mapFiles.validFilePath, featuresName, labelsName,
+            var valid = CreateMinibatchSource(mapFiles.validFilePath, featuresName, targetsName,
                 numberOfClasses, inputShape, augmentation: false); // Notice augmentation is switched off for validation data.
-            var validationSource = new CntkMinibatchSource(train, featuresName, labelsName);
+            var validationSource = new CntkMinibatchSource(train, featuresName, targetsName);
 
-            var test = CreateMinibatchSource(mapFiles.testFilePath, featuresName, labelsName,
+            var test = CreateMinibatchSource(mapFiles.testFilePath, featuresName, targetsName,
                 numberOfClasses, inputShape, augmentation: false); // Notice augmentation is switched off for test data.
-            var testSource = new CntkMinibatchSource(train, featuresName, labelsName);
+            var testSource = new CntkMinibatchSource(train, featuresName, targetsName);
 
             // Define data type and device for the model.
             var d = DataType.Float;
@@ -91,7 +91,7 @@ namespace CntkCatalyst.Examples
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
         }
 
-        MinibatchSource CreateMinibatchSource(string mapFilePath, string featuresName, string labelsName,
+        MinibatchSource CreateMinibatchSource(string mapFilePath, string featuresName, string targetsName,
             int numberOfClasses, int[] inputShape, bool augmentation)
         {
             var transforms = new List<CNTKDictionary>();
@@ -109,7 +109,7 @@ namespace CntkCatalyst.Examples
             var scaleTransform = CNTKLib.ReaderScale(inputShape[0], inputShape[1], inputShape[2]);
             transforms.Add(scaleTransform);
 
-            var imageDeserializer = CNTKLib.ImageDeserializer(mapFilePath, labelsName, 
+            var imageDeserializer = CNTKLib.ImageDeserializer(mapFilePath, targetsName, 
                 (uint)numberOfClasses, featuresName, transforms);
 
             var minibatchSourceConfig = new MinibatchSourceConfig(new DictionaryVector() { imageDeserializer });
@@ -121,7 +121,10 @@ namespace CntkCatalyst.Examples
         {
             var imageDirectoryPath = Path.Combine(baseDataDirectoryPath, "train");
 
-            if(!Directory.Exists(imageDirectoryPath))
+            // Download data from one of these locations:
+            // https://www.kaggle.com/c/dogs-vs-cats/data (needs an account)
+            // https://www.microsoft.com/en-us/download/details.aspx?id=54765
+            if (!Directory.Exists(imageDirectoryPath))
             {
                 throw new ArgumentException($"Image data directory not found: {imageDirectoryPath}");
             }
