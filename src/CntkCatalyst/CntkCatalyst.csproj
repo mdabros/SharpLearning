@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CntkMinibatchSource.cs" />
     <Compile Include="CntkUtils.cs" />
     <Compile Include="IMinibatchSource.cs" />
     <Compile Include="Initializers.cs" />
