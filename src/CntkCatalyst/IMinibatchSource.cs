@@ -6,5 +6,7 @@ namespace CntkCatalyst
     {
         UnorderedMapStreamInformationMinibatchData GetNextMinibatch(uint minibatchSizeInSamples, 
             DeviceDescriptor device);
+
+        StreamInformation StreamInfo(string streamName);
     }
 }

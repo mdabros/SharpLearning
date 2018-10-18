@@ -96,8 +96,8 @@ namespace CntkCatalyst.Models
                 var minibatchData = trainMinibatchSource.GetNextMinibatch((uint)batchSize, m_device);
                 var isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
 
-                var obserationsStreamInfo = new StreamInformation { m_name = MemoryMinibatchSource.ObservationsName };
-                var targetsStreamInfo = new StreamInformation { m_name = MemoryMinibatchSource.TargetsName };
+                var obserationsStreamInfo = trainMinibatchSource.StreamInfo(MemoryMinibatchSource.ObservationsName);
+                var targetsStreamInfo = trainMinibatchSource.StreamInfo(MemoryMinibatchSource.TargetsName);
 
                 var observationsData = minibatchData[obserationsStreamInfo].data;
                 var targetsData = minibatchData[targetsStreamInfo].data;
@@ -162,7 +162,7 @@ namespace CntkCatalyst.Models
 
         public (float loss, float metric) EvaluateFromMinibatchSource(IMinibatchSource minibatchSource, int batchSize = 32)
         {
-            // create learner and trainer.
+            // create loss and metric evaluators.
             var lossEvaluator = CNTKLib.CreateEvaluator(m_loss);
             var metricEvaluator = CNTKLib.CreateEvaluator(m_metric);
 
@@ -181,32 +181,36 @@ namespace CntkCatalyst.Models
 
             while (!isSweepEnd)
             {
-                var minibatchData = minibatchSource.GetNextMinibatch((uint)evaluationBatchSize, m_device);
-                isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
+                using (var minibatchData = minibatchSource.GetNextMinibatch((uint)evaluationBatchSize, m_device))
+                {
+                    isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
 
-                var obserationsStreamInfo = new StreamInformation { m_name = MemoryMinibatchSource.ObservationsName };
-                var targetsStreamInfo = new StreamInformation { m_name = MemoryMinibatchSource.TargetsName };
+                    var obserationsStreamInfo = minibatchSource.StreamInfo(MemoryMinibatchSource.ObservationsName);
+                    var targetsStreamInfo = minibatchSource.StreamInfo(MemoryMinibatchSource.TargetsName);
 
-                var observations = minibatchData[obserationsStreamInfo];
-                var targets = minibatchData[targetsStreamInfo];
+                    using (var observations = minibatchData[obserationsStreamInfo])
+                    using (var targets = minibatchData[targetsStreamInfo])
+                    {
+                        inputMap.Add(m_inputVariable, observations);
+                        inputMap.Add(m_targetVariable, targets);
 
-                inputMap.Add(m_inputVariable, observations);
-                inputMap.Add(m_targetVariable, targets);
+                        var lossValue = lossEvaluator.TestMinibatch(inputMap);
+                        var metricValue = metricEvaluator.TestMinibatch(inputMap);
 
-                var lossValue = lossEvaluator.TestMinibatch(inputMap);
-                var metricValue = metricEvaluator.TestMinibatch(inputMap);
-
-                // Accumulate loss/metric.
-                lossSum += lossValue * evaluationBatchSize;
-                metricSum += metricValue * evaluationBatchSize;
-                totalSampleCount += evaluationBatchSize;
-
-                // Ensure cleanup, call erase.
-                inputMap.Clear();
-                observations.Dispose();
-                targets.Dispose();
-                minibatchData.Dispose();
+                        // Accumulate loss/metric.
+                        lossSum += lossValue * evaluationBatchSize;
+                        metricSum += metricValue * evaluationBatchSize;
+                        totalSampleCount += evaluationBatchSize;
+                        
+                        inputMap.Clear();
+                    }
+                }
             }
+
+            // Ensure cleanup, call erase.
+            inputMap.Dispose();
+            lossEvaluator.Dispose();
+            metricEvaluator.Dispose();
 
             var finalLoss = lossSum / totalSampleCount;
             var finalMetric = metricSum / totalSampleCount;

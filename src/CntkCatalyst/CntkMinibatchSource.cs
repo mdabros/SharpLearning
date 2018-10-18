@@ -15,7 +15,12 @@ namespace CntkCatalyst
         public UnorderedMapStreamInformationMinibatchData GetNextMinibatch(uint minibatchSizeInSamples, 
             DeviceDescriptor device)
         {
-            return m_minibatchSource.GetNextMinibatch(minibatchSizeInSamples, device);
+            return m_minibatchSource.GetNextMinibatch(minibatchSizeInSamples, device);            
+        }
+
+        public StreamInformation StreamInfo(string streamName)
+        {
+            return m_minibatchSource.StreamInfo(streamName);
         }
     }
 }

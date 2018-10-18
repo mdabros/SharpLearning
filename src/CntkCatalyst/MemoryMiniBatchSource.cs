@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using CNTK;
 
@@ -21,9 +22,11 @@ namespace CntkCatalyst
         int m_singleObservationDataSize;
         int m_singleTargetDataSize;
 
+        readonly Dictionary<string, StreamInformation> m_streamInfos;
+
         public const string ObservationsName = "features";
         public const string TargetsName = "targets";
-
+               
         public MemoryMinibatchSource(MemoryMinibatchData observations,
             MemoryMinibatchData targets,
             int seed,
@@ -48,6 +51,12 @@ namespace CntkCatalyst
             m_random = new Random(seed);
             m_randomize = randomize;
             m_minibatch = Array.Empty<float>();
+
+            m_streamInfos = new Dictionary<string, StreamInformation>
+            {
+                { ObservationsName, new StreamInformation { m_name = ObservationsName } },
+                { TargetsName, new StreamInformation { m_name = TargetsName } },
+            };
         }
 
         public int TotalSampleCount => m_observations.SampleCount;
@@ -61,14 +70,19 @@ namespace CntkCatalyst
 
             var minibatch = new UnorderedMapStreamInformationMinibatchData
             {
-                { new StreamInformation { m_name = ObservationsName }, new MinibatchData(batchObservations,
+                { StreamInfo(ObservationsName), new MinibatchData(batchObservations,
                     minibatchSizeInSamples, minibatchData.isSweepEnd) },
 
-                { new StreamInformation { m_name = TargetsName }, new MinibatchData(batchTarget,
+                { StreamInfo(TargetsName), new MinibatchData(batchTarget,
                     minibatchSizeInSamples, minibatchData.isSweepEnd) },
             };
 
             return minibatch;
+        }
+
+        public StreamInformation StreamInfo(string streamName)
+        {
+            return m_streamInfos[streamName];
         }
 
         public (float[] observations, float[] targets, bool isSweepEnd) GetNextMinibatch(int minibatchSizeInSamples)
