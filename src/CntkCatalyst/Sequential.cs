@@ -97,7 +97,7 @@ namespace CntkCatalyst.Models
                 var isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
 
                 var obserationsStreamInfo = trainMinibatchSource.StreamInfo(trainMinibatchSource.FeaturesName);
-                var targetsStreamInfo = trainMinibatchSource.StreamInfo(trainMinibatchSource.LabelsName);
+                var targetsStreamInfo = trainMinibatchSource.StreamInfo(trainMinibatchSource.TargetsName);
 
                 var observationsData = minibatchData[obserationsStreamInfo].data;
                 var targetsData = minibatchData[targetsStreamInfo].data;
@@ -186,7 +186,7 @@ namespace CntkCatalyst.Models
                     isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
 
                     var obserationsStreamInfo = minibatchSource.StreamInfo(minibatchSource.FeaturesName);
-                    var targetsStreamInfo = minibatchSource.StreamInfo(minibatchSource.LabelsName);
+                    var targetsStreamInfo = minibatchSource.StreamInfo(minibatchSource.TargetsName);
 
                     using (var observations = minibatchData[obserationsStreamInfo])
                     using (var targets = minibatchData[targetsStreamInfo])

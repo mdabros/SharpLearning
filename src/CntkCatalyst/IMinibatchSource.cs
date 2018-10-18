@@ -10,6 +10,6 @@ namespace CntkCatalyst
         StreamInformation StreamInfo(string streamName);
 
         string FeaturesName { get; }
-        string LabelsName { get; }
+        string TargetsName { get; }
     }
 }
