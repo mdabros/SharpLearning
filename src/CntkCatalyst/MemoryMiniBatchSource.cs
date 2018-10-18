@@ -61,7 +61,7 @@ namespace CntkCatalyst
 
         public int TotalSampleCount => m_observations.SampleCount;
         public string FeaturesName => m_featuresName;
-        public string LabelsName => m_featuresName;
+        public string LabelsName => m_labelsName;
 
         public UnorderedMapStreamInformationMinibatchData GetNextMinibatch(uint minibatchSizeInSamples, DeviceDescriptor device)
         {
