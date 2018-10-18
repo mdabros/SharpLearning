@@ -1,14 +1,22 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using CNTK;
 using CntkCatalyst.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
 
 namespace CntkCatalyst.Examples
 {
+    /// <summary>
+    /// Example from Chapter 5.2: Using convnets with small datasets:
+    /// https://github.com/mdabros/deep-learning-with-python-notebooks/blob/master/5.2-using-convnets-with-small-datasets.ipynb
+    /// 
+    /// This example needs manual download of the "dogs-vs-cats" dataset.
+    /// Sources to download from:
+    /// https://www.kaggle.com/c/dogs-vs-cats/data (needs an account)
+    /// https://www.microsoft.com/en-us/download/details.aspx?id=54765
+    /// </summary>
     [TestClass]
     public class Ch_05_Using_Convnets_With_Small_Datasets
     {
@@ -34,11 +42,11 @@ namespace CntkCatalyst.Examples
 
             var valid = CreateMinibatchSource(mapFiles.validFilePath, featuresName, targetsName,
                 numberOfClasses, inputShape, augmentation: false); // Notice augmentation is switched off for validation data.
-            var validationSource = new CntkMinibatchSource(train, featuresName, targetsName);
+            var validationSource = new CntkMinibatchSource(valid, featuresName, targetsName);
 
             var test = CreateMinibatchSource(mapFiles.testFilePath, featuresName, targetsName,
                 numberOfClasses, inputShape, augmentation: false); // Notice augmentation is switched off for test data.
-            var testSource = new CntkMinibatchSource(train, featuresName, targetsName);
+            var testSource = new CntkMinibatchSource(test, featuresName, targetsName);
 
             // Define data type and device for the model.
             var d = DataType.Float;
@@ -89,6 +97,9 @@ namespace CntkCatalyst.Examples
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
+
+            // Save model.
+            model.Network.Save("cats_and_dogs_small_2.cntk");
         }
 
         MinibatchSource CreateMinibatchSource(string mapFilePath, string featuresName, string targetsName,
