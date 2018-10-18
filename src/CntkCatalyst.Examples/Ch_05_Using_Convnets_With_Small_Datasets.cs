@@ -40,12 +40,14 @@ namespace CntkCatalyst.Examples
                 numberOfClasses, inputShape, augmentation: true);
             var trainingSource = new CntkMinibatchSource(train, featuresName, targetsName);
 
+            // Notice augmentation is switched off for validation data.
             var valid = CreateMinibatchSource(mapFiles.validFilePath, featuresName, targetsName,
-                numberOfClasses, inputShape, augmentation: false); // Notice augmentation is switched off for validation data.
+                numberOfClasses, inputShape, augmentation: false); 
             var validationSource = new CntkMinibatchSource(valid, featuresName, targetsName);
 
+            // Notice augmentation is switched off for test data.
             var test = CreateMinibatchSource(mapFiles.testFilePath, featuresName, targetsName,
-                numberOfClasses, inputShape, augmentation: false); // Notice augmentation is switched off for test data.
+                numberOfClasses, inputShape, augmentation: false); 
             var testSource = new CntkMinibatchSource(test, featuresName, targetsName);
 
             // Define data type and device for the model.
