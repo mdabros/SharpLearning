@@ -24,8 +24,8 @@ namespace CntkCatalyst
 
         readonly Dictionary<string, StreamInformation> m_streamInfos;
 
-        public const string ObservationsName = "features";
-        public const string TargetsName = "targets";
+        const string m_featuresName = "features";
+        const string m_labelsName = "targets";
                
         public MemoryMinibatchSource(MemoryMinibatchData observations,
             MemoryMinibatchData targets,
@@ -54,12 +54,14 @@ namespace CntkCatalyst
 
             m_streamInfos = new Dictionary<string, StreamInformation>
             {
-                { ObservationsName, new StreamInformation { m_name = ObservationsName } },
-                { TargetsName, new StreamInformation { m_name = TargetsName } },
+                { m_featuresName, new StreamInformation { m_name = m_featuresName } },
+                { m_labelsName, new StreamInformation { m_name = m_labelsName } },
             };
         }
 
         public int TotalSampleCount => m_observations.SampleCount;
+        public string FeaturesName => m_featuresName;
+        public string LabelsName => m_featuresName;
 
         public UnorderedMapStreamInformationMinibatchData GetNextMinibatch(uint minibatchSizeInSamples, DeviceDescriptor device)
         {
@@ -70,10 +72,10 @@ namespace CntkCatalyst
 
             var minibatch = new UnorderedMapStreamInformationMinibatchData
             {
-                { StreamInfo(ObservationsName), new MinibatchData(batchObservations,
+                { StreamInfo(m_featuresName), new MinibatchData(batchObservations,
                     minibatchSizeInSamples, minibatchData.isSweepEnd) },
 
-                { StreamInfo(TargetsName), new MinibatchData(batchTarget,
+                { StreamInfo(m_labelsName), new MinibatchData(batchTarget,
                     minibatchSizeInSamples, minibatchData.isSweepEnd) },
             };
 

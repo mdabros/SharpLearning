@@ -8,5 +8,8 @@ namespace CntkCatalyst
             DeviceDescriptor device);
 
         StreamInformation StreamInfo(string streamName);
+
+        string FeaturesName { get; }
+        string LabelsName { get; }
     }
 }
