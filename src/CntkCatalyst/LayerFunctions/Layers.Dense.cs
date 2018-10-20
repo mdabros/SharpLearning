@@ -12,7 +12,7 @@ namespace CntkCatalyst.LayerFunctions
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="input"></param>
         /// <param name="units"></param>
         /// <param name="weightInitializer"></param>
         /// <param name="biasInitializer"></param>
@@ -20,13 +20,13 @@ namespace CntkCatalyst.LayerFunctions
         /// <param name="inputRank"></param>
         /// <param name="mapRank"></param>
         /// <returns></returns>
-        public static Function Dense(this Function x, int units,
+        public static Function Dense(this Function input, int units,
             DataType d, DeviceDescriptor device,
             Initializer weightInitializer = Initializer.GlorotUniform,
             Initializer biasInitializer = Initializer.Zeros,
             bool bias = true, int inputRank = 0, int mapRank = 0)
         {
-            return Dense(x, units,
+            return Dense(input, units,
                 d, device,
                 Initializers.Create(weightInitializer),
                 Initializers.Create(biasInitializer),
@@ -36,7 +36,7 @@ namespace CntkCatalyst.LayerFunctions
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="input"></param>
         /// <param name="units"></param>
         /// <param name="weightInitializer"></param>
         /// <param name="biasInitializer"></param>
@@ -44,7 +44,7 @@ namespace CntkCatalyst.LayerFunctions
         /// <param name="inputRank"></param>
         /// <param name="mapRank"></param>
         /// <returns></returns>
-        public static Function Dense(this Function x, int units,
+        public static Function Dense(this Function input, int units,
             DataType d, DeviceDescriptor device,
             CNTKDictionary weightInitializer, CNTKDictionary biasInitializer,
             bool bias = true, int inputRank = 0, int mapRank = 0)
@@ -86,7 +86,7 @@ namespace CntkCatalyst.LayerFunctions
             // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
             // The python API was made in this way to be similar to other deep learning toolkits. 
             // The C# and the C++ share the same column major layout.
-            var r = CNTKLib.Times(w, x, (uint)outputRank, inferInputRankToMap);
+            var r = CNTKLib.Times(w, input, (uint)outputRank, inferInputRankToMap);
 
             if (bias)
             {

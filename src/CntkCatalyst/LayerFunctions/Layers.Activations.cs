@@ -7,19 +7,19 @@ namespace CntkCatalyst.LayerFunctions
     /// </summary>
     public static partial class Layers
     {
-        public static Function ReLU(this Function x)
+        public static Function ReLU(this Function input)
         {
-            return CNTKLib.ReLU(x);
+            return CNTKLib.ReLU(input);
         }
 
-        public static Function Sigmoid(this Function x)
+        public static Function Sigmoid(this Function input)
         {
-            return CNTKLib.Sigmoid(x);
+            return CNTKLib.Sigmoid(input);
         }
 
-        public static Function Softmax(this Function x)
+        public static Function Softmax(this Function input)
         {
-            return CNTKLib.Softmax(x);
+            return CNTKLib.Softmax(input);
         }
     }
 }
