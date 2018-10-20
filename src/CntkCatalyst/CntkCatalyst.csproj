@@ -72,7 +72,12 @@
     <Compile Include="CntkUtils.cs" />
     <Compile Include="IMinibatchSource.cs" />
     <Compile Include="Initializers.cs" />
-    <Compile Include="Layers.cs" />
+    <Compile Include="LayerFunctions\Layers.Pool.cs" />
+    <Compile Include="LayerFunctions\Layers.Conv.cs" />
+    <Compile Include="LayerFunctions\Layers.Dense.cs" />
+    <Compile Include="LayerFunctions\Layers.Input.cs" />
+    <Compile Include="LayerFunctions\Layers.Activations.cs" />
+    <Compile Include="LayerFunctions\Layers.BatchNorm.cs" />
     <Compile Include="Learners.cs" />
     <Compile Include="Losses.cs" />
     <Compile Include="MemoryMinibatchSource.cs" />

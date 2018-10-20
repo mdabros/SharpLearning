@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CNTK;
 using CntkCatalyst;
+using CntkCatalyst.LayerFunctions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CntkCatalyst.Test

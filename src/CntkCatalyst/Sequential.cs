@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using CNTK;
 
-namespace CntkCatalyst.Models
+namespace CntkCatalyst
 {
     public class Sequential
     {

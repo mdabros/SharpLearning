@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using CNTK;
 using CntkCatalyst;
-using CntkCatalyst.Models;
+using CntkCatalyst.LayerFunctions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CntkCatalyst.Examples
