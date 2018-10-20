@@ -20,8 +20,8 @@ namespace CntkCatalyst.Test.LayerFunctions
             var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, m_dataType);
 
             var sut = Layers.Dense(inputVariable, 2,
-                m_dataType, m_device,
-                weightInitializer: Initializer.Ones, 
+                m_device, m_dataType,
+                weightInitializer: Initializer.Ones,
                 biasInitializer: Initializer.Ones);
 
             var actual = Evaluate(sut, inputVariable, data);
@@ -37,7 +37,7 @@ namespace CntkCatalyst.Test.LayerFunctions
             var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, m_dataType);
 
             var sut = Layers.Dense(inputVariable, 2,
-                m_dataType, m_device,
+                m_device, m_dataType,
                 weightInitializer: Initializer.Ones,
                 biasInitializer: Initializer.None);
 
@@ -54,12 +54,12 @@ namespace CntkCatalyst.Test.LayerFunctions
             var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, m_dataType);
 
             var sut1 = Layers.Dense(inputVariable, 2,
-                m_dataType, m_device,
+                m_device, m_dataType,
                 weightInitializer: Initializer.Ones,
                 biasInitializer: Initializer.Ones);
 
             var sut2 = Layers.Dense(sut1, 2,
-                m_dataType, m_device,
+                m_device, m_dataType,
                 weightInitializer: Initializer.Ones,
                 biasInitializer: Initializer.Ones);
 
@@ -74,7 +74,7 @@ namespace CntkCatalyst.Test.LayerFunctions
         public void Dense_InputRank_And_MapRank_At_The_Same_Time_Throws()
         {
             var inputVariable = CNTKLib.InputVariable(new int[] { 2 }, m_dataType);
-            Layers.Dense(inputVariable, 2, m_dataType, m_device, inputRank: 1, mapRank: 1);
+            Layers.Dense(inputVariable, 2, m_device, m_dataType, inputRank: 1, mapRank: 1);
         }
 
         float[] Evaluate(Function layer, Variable inputVariable, float[] inputData)

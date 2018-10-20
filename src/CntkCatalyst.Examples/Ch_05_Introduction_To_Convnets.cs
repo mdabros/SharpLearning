@@ -46,9 +46,9 @@ namespace CntkCatalyst.Examples
                 .Conv2D(3, 3, 32, d, device)
                 .ReLU()
                 
-                .Dense(64, d, device)
+                .Dense(64, device, d)
                 .ReLU()
-                .Dense(numberOfClasses, d, device)
+                .Dense(numberOfClasses, device, d)
                 .Softmax();
 
             // Create the network.

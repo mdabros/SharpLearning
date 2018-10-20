@@ -27,9 +27,9 @@ namespace CntkCatalyst.Test.Models
 
             // Create the architecture.
             var network = Layers.Input(inputShape, d)
-                .Dense(512, d, device)
+                .Dense(512, device, d)
                 .ReLU()
-                .Dense(numberOfClasses, d, device)
+                .Dense(numberOfClasses, device, d)
                 .Softmax();
 
             var model = new Sequential(network, d, device);

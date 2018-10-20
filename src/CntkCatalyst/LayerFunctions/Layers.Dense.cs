@@ -12,14 +12,17 @@ namespace CntkCatalyst.LayerFunctions
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>
-        public static Function Dense(this Function input, int units,
-            DataType d, DeviceDescriptor device,
+        public static Function Dense(this Function input,
+            int units,
+            DeviceDescriptor device,
+            DataType dataType,
             Initializer weightInitializer = Initializer.GlorotUniform,
             Initializer biasInitializer = Initializer.Zeros,
-            int inputRank = 0, int mapRank = 0)
+            int inputRank = 0,
+            int mapRank = 0)
         {
             return Dense(input, units,
-                d, device,
+                device, dataType,
                 Initializers.Create(weightInitializer),
                 Initializers.Create(biasInitializer),
                 inputRank, mapRank);
@@ -28,10 +31,14 @@ namespace CntkCatalyst.LayerFunctions
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>
-        public static Function Dense(this Function input, int units,
-            DataType d, DeviceDescriptor device,
-            CNTKDictionary weightInitializer, CNTKDictionary biasInitializer,
-            int inputRank = 0, int mapRank = 0)
+        public static Function Dense(this Function input,
+            int units,
+            DeviceDescriptor device,
+            DataType dataType,
+            CNTKDictionary weightInitializer,
+            CNTKDictionary biasInitializer,
+            int inputRank = 0,
+            int mapRank = 0)
         {
             if (inputRank != 0 && mapRank != 0)
             {
@@ -63,9 +70,9 @@ namespace CntkCatalyst.LayerFunctions
 
             var weightsDimensions = outputShape.Dimensions.ToList();
             weightsDimensions.AddRange(inputShape.Dimensions);
-            var wShape = NDShape.CreateNDShape(weightsDimensions);
+            var weightsShape = NDShape.CreateNDShape(weightsDimensions);
 
-            var weights = new Parameter(wShape, d, weightInitializer, device, "w");
+            var weights = new Parameter(weightsShape, dataType, weightInitializer, device, "w");
 
             // Weights and input is in reversed order compared to the original python code.
             // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
@@ -75,7 +82,7 @@ namespace CntkCatalyst.LayerFunctions
 
             if (biasInitializer != null)
             {
-                var biasParameter = new Parameter(outputShape, d, biasInitializer, device, "b");
+                var biasParameter = new Parameter(outputShape, dataType, biasInitializer, device, "b");
                 r = r + biasParameter;
             }
 

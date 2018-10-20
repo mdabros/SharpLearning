@@ -41,11 +41,11 @@ namespace CntkCatalyst.Examples
 
             // Create the architecture.
             var network = Layers.Input(inputShape, d)
-                .Dense(16, d, device)
+                .Dense(16, device, d)
                 .ReLU()
-                .Dense(16, d, device)
+                .Dense(16, device, d)
                 .ReLU()
-                .Dense(numberOfClasses, d, device)
+                .Dense(numberOfClasses, device, d)
                 .Sigmoid();
 
             // Create the network.
