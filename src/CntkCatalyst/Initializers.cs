@@ -4,66 +4,31 @@ using CNTK;
 namespace CntkCatalyst
 {
     /// <summary>
-    /// Initializes for cntk
-    /// </summary>
-    public enum Initializer
-    {
-        Uniform,
-        Normal,
-        TruncatedNormal,
-        Zeros,
-        Ones,
-        Constant,
-        Xavier,
-        GlorotNormal,
-        GlorotUniform,
-        HeNormal,
-        HeUniform,
-        None,
-    }
-
-    /// <summary>
     /// Initializer factory for CNTK
     /// </summary>
     public static class Initializers
     {
-        public static CNTKDictionary Create(Initializer initializer)
+        public static CNTKDictionary Zero()
         {
-            switch (initializer)
-            {
-                case Initializer.Uniform:
-                    return Uniform();
-                case Initializer.Normal:
-                    return Normal();
-                case Initializer.TruncatedNormal:
-                    return TruncatedNormal();
-                case Initializer.Zeros:
-                    return CNTKLib.ConstantInitializer(0);
-                case Initializer.Ones:
-                    return CNTKLib.ConstantInitializer(1);
-                case Initializer.Xavier:
-                    return Xavier();
-                case Initializer.GlorotNormal:
-                    return GlorotNormal();
-                case Initializer.GlorotUniform:
-                    return GlorotUniform();
-                case Initializer.HeNormal:
-                    return HeNormal();
-                case Initializer.HeUniform:
-                    return HeUniform();
-                case Initializer.None:
-                    return null;
-                default:
-                    throw new ArgumentException("Unsupported initializer: " + initializer);
-            }
+            return CNTKLib.ConstantInitializer(0);
         }
 
-        static CNTKDictionary Uniform(uint seed = 1)
+        public static CNTKDictionary One()
+        {
+            return CNTKLib.ConstantInitializer(1);
+        }
+
+        public static CNTKDictionary None()
+        {
+            return null;
+        }
+
+        public static CNTKDictionary Uniform(uint seed = 1)
         {
             return CNTKLib.UniformInitializer(CNTKLib.DefaultParamInitScale, seed);
         }
 
-        static CNTKDictionary Normal(uint seed = 1)
+        public static CNTKDictionary Normal(uint seed = 1)
         {
             return CNTKLib.NormalInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
@@ -71,13 +36,13 @@ namespace CntkCatalyst
                 seed);
         }
 
-        static CNTKDictionary TruncatedNormal(uint seed = 1)
+        public static CNTKDictionary TruncatedNormal(uint seed = 1)
         {
             return CNTKLib.TruncatedNormalInitializer(CNTKLib.DefaultParamInitScale,
                 seed);
         }
 
-        static CNTKDictionary Xavier(uint seed = 1)
+        public static CNTKDictionary Xavier(uint seed = 1)
         {
             return CNTKLib.XavierInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
@@ -85,7 +50,7 @@ namespace CntkCatalyst
                 seed);
         }
 
-        static CNTKDictionary GlorotNormal(uint seed = 1)
+        public static CNTKDictionary GlorotNormal(uint seed = 1)
         {
             return CNTKLib.GlorotNormalInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
@@ -93,7 +58,7 @@ namespace CntkCatalyst
                 seed);
         }
 
-        static CNTKDictionary GlorotUniform(uint seed = 1)
+        public static CNTKDictionary GlorotUniform(uint seed = 1)
         {
             return CNTKLib.GlorotUniformInitializer(CNTKLib.DefaultParamInitScale, 
                 CNTKLib.SentinelValueForInferParamInitRank, 
@@ -101,7 +66,7 @@ namespace CntkCatalyst
                 seed);
         }
 
-        static CNTKDictionary HeNormal(uint seed = 1)
+        public static CNTKDictionary HeNormal(uint seed = 1)
         {
             return CNTKLib.HeNormalInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
@@ -109,7 +74,7 @@ namespace CntkCatalyst
                 seed);
         }
 
-        static CNTKDictionary HeUniform(uint seed = 1)
+        public static CNTKDictionary HeUniform(uint seed = 1)
         {
             return CNTKLib.HeUniformInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,

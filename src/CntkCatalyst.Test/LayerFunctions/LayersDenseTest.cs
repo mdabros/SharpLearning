@@ -20,9 +20,9 @@ namespace CntkCatalyst.Test.LayerFunctions
             var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, m_dataType);
 
             var sut = Layers.Dense(inputVariable, 2,
-                m_device, m_dataType,
-                weightInitializer: Initializer.Ones,
-                biasInitializer: Initializer.Ones);
+                weightInitializer: Initializers.One(), biasInitializer: Initializers.One(),
+                device: m_device,
+                dataType: m_dataType);
 
             var actual = Evaluate(sut, inputVariable, data);
 
@@ -37,9 +37,9 @@ namespace CntkCatalyst.Test.LayerFunctions
             var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, m_dataType);
 
             var sut = Layers.Dense(inputVariable, 2,
-                m_device, m_dataType,
-                weightInitializer: Initializer.Ones,
-                biasInitializer: Initializer.None);
+                weightInitializer: Initializers.One(), biasInitializer: Initializers.None(),
+                device: m_device,
+                dataType: m_dataType);
 
             var actual = Evaluate(sut, inputVariable, data);
 
@@ -54,14 +54,14 @@ namespace CntkCatalyst.Test.LayerFunctions
             var inputVariable = CNTKLib.InputVariable(new int[] { data.Length }, m_dataType);
 
             var sut1 = Layers.Dense(inputVariable, 2,
-                m_device, m_dataType,
-                weightInitializer: Initializer.Ones,
-                biasInitializer: Initializer.Ones);
+                weightInitializer: Initializers.One(), biasInitializer: Initializers.One(),
+                device: m_device,
+                dataType: m_dataType);
 
             var sut2 = Layers.Dense(sut1, 2,
-                m_device, m_dataType,
-                weightInitializer: Initializer.Ones,
-                biasInitializer: Initializer.Ones);
+                weightInitializer: Initializers.One(), biasInitializer: Initializers.One(),
+                device: m_device,
+                dataType: m_dataType);
 
             var actual = Evaluate(sut2, inputVariable, data);
 
@@ -74,7 +74,8 @@ namespace CntkCatalyst.Test.LayerFunctions
         public void Dense_InputRank_And_MapRank_At_The_Same_Time_Throws()
         {
             var inputVariable = CNTKLib.InputVariable(new int[] { 2 }, m_dataType);
-            Layers.Dense(inputVariable, 2, m_device, m_dataType, inputRank: 1, mapRank: 1);
+            Layers.Dense(inputVariable, 2, Initializers.GlorotUniform(),Initializers.Zero(),
+                m_device, m_dataType, inputRank: 1, mapRank: 1);
         }
 
         float[] Evaluate(Function layer, Variable inputVariable, float[] inputData)

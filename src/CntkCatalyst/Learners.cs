@@ -31,7 +31,7 @@ namespace CntkCatalyst
 
             var options = SetAdditionalOptions(l1Regularization, l2Regularization);
 
-            return CNTKLib.SGDLearner(CntkUtils.AsParameterVector(parameters),
+            return CNTKLib.SGDLearner(CntkUtils.CreateParameterVector(parameters),
                 learningRatePerSample, options);
         }
 
@@ -56,7 +56,7 @@ namespace CntkCatalyst
 
             var options = SetAdditionalOptions(l1Regularization, l2Regularization);
 
-            return CNTKLib.MomentumSGDLearner(CntkUtils.AsParameterVector(parameters), 
+            return CNTKLib.MomentumSGDLearner(CntkUtils.CreateParameterVector(parameters), 
                 learningRatePerSample, momentumPerSample, unitGain,
                 options);
         }
@@ -93,7 +93,7 @@ namespace CntkCatalyst
 
             // Consider: gradientClippingWithTruncation and gradientClippingThresholdPerSample
 
-            return CNTKLib.AdamLearner(CntkUtils.AsParameterVector(parameters),
+            return CNTKLib.AdamLearner(CntkUtils.CreateParameterVector(parameters),
                 learningRatePerSample,
                 momentumRate,
                 unitGain,
@@ -132,7 +132,7 @@ namespace CntkCatalyst
             var learningRatePerSample = new TrainingParameterScheduleDouble(learningRate, 1);
             var options = SetAdditionalOptions(l1Regularization, l2Regularization);
 
-            return CNTKLib.RMSPropLearner(CntkUtils.AsParameterVector(parameters),
+            return CNTKLib.RMSPropLearner(CntkUtils.CreateParameterVector(parameters),
                 learningRatePerSample,
                 gamma, inc, dec, max, min,
                 needAveMultiplier, options);

@@ -9,12 +9,7 @@ namespace CntkCatalyst
     /// </summary>
     public static class CntkUtils
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public static ParameterVector AsParameterVector(IList<Parameter> input)
+        internal static ParameterVector CreateParameterVector(IList<Parameter> input)
         {
             ParameterVector inputVector = new ParameterVector();
             foreach (var element in input)
@@ -22,6 +17,16 @@ namespace CntkCatalyst
                 inputVector.Add(element);
             }
             return inputVector;
+        }
+
+        internal static BoolVector CreateFilledBoolVector(int size, bool fill)
+        {
+            var boolVector = new BoolVector(size);
+            for (int i = 0; i < size; i++)
+            {
+                boolVector.Add(fill);
+            }
+            return boolVector;
         }
 
         /// <summary>
