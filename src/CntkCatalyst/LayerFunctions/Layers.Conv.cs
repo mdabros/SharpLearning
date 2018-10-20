@@ -34,7 +34,6 @@ namespace CntkCatalyst.LayerFunctions
             DeviceDescriptor device,
             DataType dataType)
         {
-
             var filterSizes = new int[]
             {
                 filterShape.Item1,
