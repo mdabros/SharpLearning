@@ -57,8 +57,8 @@ namespace CntkCatalyst.Examples
 
             // Train the model using the training set.
             var history = model.Fit(partialTrainObservations, partialTrainTargets, epochs: 20, batchSize: 512, 
-                xValidation: validationObservations, 
-                yValidation: validationTargets);
+                validationObservations: validationObservations, 
+                validationTargets: validationTargets);
 
             // Trace loss and validation history
             TraceLossValidationHistory(history);

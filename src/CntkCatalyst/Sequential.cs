@@ -53,16 +53,19 @@ namespace CntkCatalyst
             m_learner = learnerCreator(Network.Parameters());
         }
 
-        public Dictionary<string, List<float>> Fit(MemoryMinibatchData x = null, MemoryMinibatchData y = null, int batchSize = 32, int epochs = 1, 
-            MemoryMinibatchData xValidation = null, MemoryMinibatchData yValidation = null)
+        public Dictionary<string, List<float>> Fit(MemoryMinibatchData observations = null, MemoryMinibatchData targets = null, 
+            int batchSize = 32, int epochs = 1, 
+            MemoryMinibatchData validationObservations = null, MemoryMinibatchData validationTargets = null)
         {
-            // setup minibatch source.
-            var trainMinibatchSource = new MemoryMinibatchSource(x, y, seed: 5, randomize: true);
+            // setup minibatch sources.
+            var trainMinibatchSource = new MemoryMinibatchSource(observations, targets, 
+                seed: 5, randomize: true);
 
             MemoryMinibatchSource validationMinibatchSource = null;
-            if(xValidation != null && yValidation != null)
+            if(validationObservations != null && validationTargets != null)
             {
-                validationMinibatchSource = new MemoryMinibatchSource(xValidation, yValidation, seed: 5, randomize: false);
+                validationMinibatchSource = new MemoryMinibatchSource(validationObservations, validationTargets, 
+                    seed: 5, randomize: false);
             }
             
             return FitFromMinibatchSource(trainMinibatchSource, batchSize, epochs, validationMinibatchSource);
@@ -152,10 +155,12 @@ namespace CntkCatalyst
             return lossValidationHistory;
         }
 
-        public (float loss, float metric) Evaluate(MemoryMinibatchData x = null, MemoryMinibatchData y = null, int batchSize = 32)
+        public (float loss, float metric) Evaluate(MemoryMinibatchData observations = null, 
+            MemoryMinibatchData targets = null, int batchSize = 32)
         {
             // setup minibatch source.
-            var minibatchSource = new MemoryMinibatchSource(x, y, seed: 5, randomize: true);
+            var minibatchSource = new MemoryMinibatchSource(observations, targets, 
+                seed: 5, randomize: true);
 
             return EvaluateFromMinibatchSource(minibatchSource, batchSize);
         }
@@ -163,64 +168,58 @@ namespace CntkCatalyst
         public (float loss, float metric) EvaluateFromMinibatchSource(IMinibatchSource minibatchSource, int batchSize = 32)
         {
             // create loss and metric evaluators.
-            var lossEvaluator = CNTKLib.CreateEvaluator(m_loss);
-            var metricEvaluator = CNTKLib.CreateEvaluator(m_metric);
-
-            // variables for training loop.            
-            var inputMap = new UnorderedMapVariableMinibatchData();
-
-            var lossSum = 0.0;
-            var metricSum = 0.0;
-            var totalSampleCount = 0;
-
-            bool isSweepEnd = false;
-
-            // TODO: Check if batchSize is larger than sample count.
-            //var evaluationBatchSize = x.SampleCount < batchSize ? x.SampleCount : batchSize;
-            var evaluationBatchSize = batchSize;
-
-            while (!isSweepEnd)
+            using (var lossEvaluator = CNTKLib.CreateEvaluator(m_loss))
+            using (var metricEvaluator = CNTKLib.CreateEvaluator(m_metric))       
+            using (var inputMap = new UnorderedMapVariableMinibatchData())
             {
-                using (var minibatchData = minibatchSource.GetNextMinibatch((uint)evaluationBatchSize, m_device))
+                var lossSum = 0.0;
+                var metricSum = 0.0;
+                var totalSampleCount = 0;
+
+                bool isSweepEnd = false;
+
+                // TODO: Check if batchSize is larger than sample count.
+                //var evaluationBatchSize = x.SampleCount < batchSize ? x.SampleCount : batchSize;
+                var evaluationBatchSize = batchSize;
+
+                while (!isSweepEnd)
                 {
-                    isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
-
-                    var obserationsStreamInfo = minibatchSource.StreamInfo(minibatchSource.FeaturesName);
-                    var targetsStreamInfo = minibatchSource.StreamInfo(minibatchSource.TargetsName);
-
-                    using (var observations = minibatchData[obserationsStreamInfo])
-                    using (var targets = minibatchData[targetsStreamInfo])
+                    using (var minibatchData = minibatchSource.GetNextMinibatch((uint)evaluationBatchSize, m_device))
                     {
-                        inputMap.Add(m_inputVariable, observations);
-                        inputMap.Add(m_targetVariable, targets);
+                        isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
 
-                        var lossValue = lossEvaluator.TestMinibatch(inputMap);
-                        var metricValue = metricEvaluator.TestMinibatch(inputMap);
+                        var obserationsStreamInfo = minibatchSource.StreamInfo(minibatchSource.FeaturesName);
+                        var targetsStreamInfo = minibatchSource.StreamInfo(minibatchSource.TargetsName);
 
-                        // Accumulate loss/metric.
-                        lossSum += lossValue * evaluationBatchSize;
-                        metricSum += metricValue * evaluationBatchSize;
-                        totalSampleCount += evaluationBatchSize;
-                        
-                        inputMap.Clear();
+                        using (var observations = minibatchData[obserationsStreamInfo])
+                        using (var targets = minibatchData[targetsStreamInfo])
+                        {
+                            inputMap.Add(m_inputVariable, observations);
+                            inputMap.Add(m_targetVariable, targets);
+
+                            var lossValue = lossEvaluator.TestMinibatch(inputMap);
+                            var metricValue = metricEvaluator.TestMinibatch(inputMap);
+
+                            // Accumulate loss/metric.
+                            lossSum += lossValue * evaluationBatchSize;
+                            metricSum += metricValue * evaluationBatchSize;
+                            totalSampleCount += evaluationBatchSize;
+
+                            inputMap.Clear();
+                        }
                     }
                 }
+
+                var finalLoss = lossSum / totalSampleCount;
+                var finalMetric = metricSum / totalSampleCount;
+
+                return ((float)finalLoss, (float)finalMetric);
             }
-
-            // Ensure cleanup, call erase.
-            inputMap.Dispose();
-            lossEvaluator.Dispose();
-            metricEvaluator.Dispose();
-
-            var finalLoss = lossSum / totalSampleCount;
-            var finalMetric = metricSum / totalSampleCount;
-
-            return ((float)finalLoss, (float)finalMetric);
         }
 
-        public MemoryMinibatchData Predict(MemoryMinibatchData x)
+        public MemoryMinibatchData Predict(MemoryMinibatchData observations)
         {
-            var sampleCount = x.SampleCount;
+            var sampleCount = observations.SampleCount;
             var inputDimensions = Network.Arguments[0].Shape;
 
             var outputSize = Network.Output.Shape.Dimensions.Aggregate((d1, d2) => d1 * d1);
@@ -228,7 +227,7 @@ namespace CntkCatalyst
 
             for (int i = 0; i < sampleCount; i++)
             {
-                var observation = x.GetSamples(i);
+                var observation = observations.GetSamples(i);
                 var prediction = Predict(observation.Data);
 
                 Array.Copy(prediction, 0, predictionData, i * outputSize, prediction.Length);
