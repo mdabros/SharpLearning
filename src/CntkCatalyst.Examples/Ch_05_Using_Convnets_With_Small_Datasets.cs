@@ -58,19 +58,19 @@ namespace CntkCatalyst.Examples
             var network = Layers.Input(inputShape, dataType)
                 .Conv2D((3, 3), 32, (1, 1), device, dataType)
                 .ReLU()
-                .Pool2D(2, 2, PoolingType.Max)
+                .MaxPool2D((2, 2), (2, 2))
 
                 .Conv2D((3, 3), 64, (1, 1), device, dataType)
                 .ReLU()
-                .Pool2D(2, 2, PoolingType.Max)
+                .MaxPool2D((2, 2), (2, 2))
 
                 .Conv2D((3, 3), 128, (1, 1), device, dataType)
                 .ReLU()
-                .Pool2D(2, 2, PoolingType.Max)
+                .MaxPool2D((2, 2), (2, 2))
 
                 .Conv2D((3, 3), 128, (1, 1), device, dataType)
                 .ReLU()
-                .Pool2D(2, 2, PoolingType.Max)
+                .MaxPool2D((2, 2), (2, 2))
 
                 .Dense(512, device, dataType)
                 .ReLU()

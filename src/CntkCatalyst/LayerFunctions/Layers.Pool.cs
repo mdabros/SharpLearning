@@ -8,23 +8,20 @@ namespace CntkCatalyst.LayerFunctions
     /// </summary>
     public static partial class Layers
     {
-        public static Function Pool2D(this Function input, 
-            int poolW, 
-            int poolH,
-            PoolingType poolingType = PoolingType.Max,
-            int strideW = 2, 
-            int strideH = 2, 
-            string outputName = "")
+        public static Function MaxPool2D(this Function input,
+            ValueTuple<int, int> poolShape,
+            ValueTuple<int, int> strideShape,
+            bool padding = false) 
         {
-            if (input.Output.Shape.Rank != 3)
-            {
-                throw new ArgumentException("Pool2D layer requires shape rank 3, got rank " + input.Output.Shape.Rank);
-            }
+            var poolSizes = new int[] { poolShape.Item1, poolShape.Item2 };
+            var strideSizes = new int[] { strideShape.Item1, strideShape.Item2 };
+            var paddingSizes = new bool[] { padding, padding };
 
-            return CNTKLib.Pooling(input, 
-                poolingType,
-                new int[] { poolW, poolH }, 
-                new int[] { strideW, strideH });
+            return CNTKLib.Pooling(input,
+                PoolingType.Max,
+                poolSizes,
+                strideSizes,
+                paddingSizes);
         }
     }
 }
