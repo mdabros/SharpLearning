@@ -29,18 +29,18 @@ namespace CntkCatalyst.Examples
                 .LoadMnistData(inputShape, outputShape, DataSplit.Test);
 
             // Define data type and device for the model.
-            var d = DataType.Float;
+            var dataType = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
 
             // Create the architecture.
-            var network = Layers.Input(inputShape, d)
-                .Dense(512, device, d)
+            var network = Layers.Input(inputShape, dataType)
+                .Dense(512, device, dataType)
                 .ReLU()
-                .Dense(numberOfClasses, device, d)
+                .Dense(numberOfClasses, device, dataType)
                 .Softmax();
 
             // Create the network.
-            var model = new Sequential(network, d, device);
+            var model = new Sequential(network, dataType, device);
 
             // Compile the network with the selected learner, loss and metric.
             model.Compile(p => Learners.RMSProp(p),

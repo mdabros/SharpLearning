@@ -36,20 +36,20 @@ namespace CntkCatalyst.Examples
             var partialTrainTargets = trainTargets.GetSamples(Enumerable.Range(10000, 15000).ToArray());
 
             // Define data type and device for the model.
-            var d = DataType.Float;
+            var dataType = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
 
             // Create the architecture.
-            var network = Layers.Input(inputShape, d)
-                .Dense(16, device, d)
+            var network = Layers.Input(inputShape, dataType)
+                .Dense(16, device, dataType)
                 .ReLU()
-                .Dense(16, device, d)
+                .Dense(16, device, dataType)
                 .ReLU()
-                .Dense(numberOfClasses, device, d)
+                .Dense(numberOfClasses, device, dataType)
                 .Sigmoid();
 
             // Create the network.
-            var model = new Sequential(network, d, device);
+            var model = new Sequential(network, dataType, device);
 
             // Compile the network with the selected learner, loss and metric.
             model.Compile(p => Learners.Adam(p),

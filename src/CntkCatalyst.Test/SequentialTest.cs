@@ -22,17 +22,17 @@ namespace CntkCatalyst.Test.Models
 
             (var observations, var targets) = CreateArtificialData(inputShape, outputShape, observationCount: 10000);
 
-            var d = DataType.Float;
+            var dataType = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
 
             // Create the architecture.
-            var network = Layers.Input(inputShape, d)
-                .Dense(512, device, d)
+            var network = Layers.Input(inputShape, dataType)
+                .Dense(512, device, dataType)
                 .ReLU()
-                .Dense(numberOfClasses, device, d)
+                .Dense(numberOfClasses, device, dataType)
                 .Softmax();
 
-            var model = new Sequential(network, d, device);
+            var model = new Sequential(network, dataType, device);
 
             model.Compile(p => Learners.MomentumSGD(p),
                (p, t) => Losses.CategoricalCrossEntropy(p, t),
