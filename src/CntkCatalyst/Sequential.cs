@@ -93,60 +93,60 @@ namespace CntkCatalyst
 
             for (int epoch = 0; epoch < epochs; )
             {
-                var minibatchData = trainMinibatchSource.GetNextMinibatch((uint)batchSize, m_device);
-                var isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
-
-                var obserationsStreamInfo = trainMinibatchSource.StreamInfo(trainMinibatchSource.FeaturesName);
-                var targetsStreamInfo = trainMinibatchSource.StreamInfo(trainMinibatchSource.TargetsName);
-
-                var observationsData = minibatchData[obserationsStreamInfo].data;
-                var targetsData = minibatchData[targetsStreamInfo].data;
-
-                inputMap.Add(m_inputVariable, observationsData);
-                inputMap.Add(m_targetVariable, targetsData);
-
-                trainer.TrainMinibatch(inputMap, false, m_device);
-
-                var lossValue = (float)trainer.PreviousMinibatchLossAverage();
-                var metricValue = (float)trainer.PreviousMinibatchEvaluationAverage();
-
-                // Accumulate loss/metric.
-                lossSum += lossValue * batchSize;
-                metricSum += metricValue * batchSize;
-                totalSampleCount += batchSize;
-
-                if(isSweepEnd)
+                using (var minibatchData = trainMinibatchSource.GetNextMinibatch((uint)batchSize, m_device))
                 {
-                    var currentLoss = lossSum / totalSampleCount;
-                    lossValidationHistory[m_lossName].Add(currentLoss);
+                    var isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
 
-                    var currentMetric = metricSum / totalSampleCount;
-                    lossValidationHistory[m_metricName].Add(currentMetric);
+                    var obserationsStreamInfo = trainMinibatchSource.StreamInfo(trainMinibatchSource.FeaturesName);
+                    var targetsStreamInfo = trainMinibatchSource.StreamInfo(trainMinibatchSource.TargetsName);
 
-                    var traceOutput = $"Epoch: {epoch + 1:000} Loss = {currentLoss:F8}, Metric = {currentMetric:F8}";
-
-                    ++epoch;
-                    lossSum = 0;
-                    metricSum = 0;
-                    totalSampleCount = 0;
-
-                    if(validationMinibatchSource != null)
+                    using (var observationsData = minibatchData[obserationsStreamInfo].data)
+                    using (var targetsData = minibatchData[targetsStreamInfo].data)
                     {
-                        (var validationLoss, var validationMetric) = EvaluateFromMinibatchSource(validationMinibatchSource, batchSize);
-                        traceOutput += $" - ValidationLoss = {validationLoss:F8}, ValidationMetric = {validationMetric:F8}";
+                        inputMap.Add(m_inputVariable, observationsData);
+                        inputMap.Add(m_targetVariable, targetsData);
 
-                        lossValidationHistory[m_validationLossName].Add(validationLoss);
-                        lossValidationHistory[m_validationMetricName].Add(validationMetric);
+                        trainer.TrainMinibatch(inputMap, false, m_device);
+
+                        var lossValue = (float)trainer.PreviousMinibatchLossAverage();
+                        var metricValue = (float)trainer.PreviousMinibatchEvaluationAverage();
+
+                        // Accumulate loss/metric.
+                        lossSum += lossValue * batchSize;
+                        metricSum += metricValue * batchSize;
+                        totalSampleCount += batchSize;
+
+                        if (isSweepEnd)
+                        {
+                            var currentLoss = lossSum / totalSampleCount;
+                            lossValidationHistory[m_lossName].Add(currentLoss);
+
+                            var currentMetric = metricSum / totalSampleCount;
+                            lossValidationHistory[m_metricName].Add(currentMetric);
+
+                            var traceOutput = $"Epoch: {epoch + 1:000} Loss = {currentLoss:F8}, Metric = {currentMetric:F8}";
+
+                            ++epoch;
+                            lossSum = 0;
+                            metricSum = 0;
+                            totalSampleCount = 0;
+
+                            if (validationMinibatchSource != null)
+                            {
+                                (var validationLoss, var validationMetric) = EvaluateFromMinibatchSource(validationMinibatchSource, batchSize);
+                                traceOutput += $" - ValidationLoss = {validationLoss:F8}, ValidationMetric = {validationMetric:F8}";
+
+                                lossValidationHistory[m_validationLossName].Add(validationLoss);
+                                lossValidationHistory[m_validationMetricName].Add(validationMetric);
+                            }
+
+                            Trace.WriteLine(traceOutput);
+                        }
+
+                        // Ensure cleanup
+                        inputMap.Clear();
                     }
-
-                    Trace.WriteLine(traceOutput);
                 }
-
-                // Ensure cleanup
-                inputMap.Clear();
-                observationsData.Dispose();
-                targetsData.Dispose();
-                minibatchData.Dispose();
             }
 
             return lossValidationHistory;
