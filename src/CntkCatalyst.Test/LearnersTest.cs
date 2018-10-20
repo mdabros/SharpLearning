@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using CNTK;
-using CntkCatalyst;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CntkCatalyst.Test

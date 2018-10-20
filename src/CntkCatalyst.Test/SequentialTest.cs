@@ -1,12 +1,9 @@
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using CNTK;
 using CntkCatalyst.LayerFunctions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Csv;
 
 namespace CntkCatalyst.Test.Models
 {
@@ -60,41 +57,6 @@ namespace CntkCatalyst.Test.Models
             var oneHotTargetsData = targetsData.EncodeOneHot();
 
             var targets = new MemoryMinibatchData(oneHotTargetsData, outputShape, observationCount);
-
-            return (observations, targets);
-        }
-
-        static (MemoryMinibatchData observations, MemoryMinibatchData targets) LoadMnistCsv(int[] inputShape, int[] outputShape)
-        {
-            var parser = new CsvParser(() => new StreamReader(@"E:\Git\SharpLearning.Examples\src\Resources\mnist_small_train.csv"));
-            var targetName = "Class";
-
-            var featureNames = parser.EnumerateRows(c => c != targetName).First().ColumnNameToIndex.Keys.ToArray();
-
-            // read feature matrix (training)
-            var trainingObservations = parser
-                .EnumerateRows(featureNames)
-                .ToF64Matrix();
-
-            // transform pixel values to be between 0 and 1.
-            trainingObservations.Map(p => p / 255);
-
-            var observationCount = trainingObservations.RowCount;
-            
-            // convert to float tensor
-            var observations = new MemoryMinibatchData(trainingObservations.Data().Select(d => (float)d).ToArray(), 
-                inputShape.ToArray(), observationCount);
-
-            // read classification targets (training)
-            var trainingTargets = parser.EnumerateRows(targetName)
-                .ToF64Vector();
-
-            // Convert targest to float and one-hot
-            var oneHotTargetsData = trainingTargets.Select(d => (float)d)
-                .ToArray().EncodeOneHot();
-
-            // convert targest tensor
-            var targets = new MemoryMinibatchData(oneHotTargetsData, outputShape.ToArray(), observationCount);
 
             return (observations, targets);
         }

@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using CNTK;
-using CntkCatalyst;
 using CntkCatalyst.LayerFunctions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
