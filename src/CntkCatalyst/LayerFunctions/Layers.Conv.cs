@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using CNTK;
 
 namespace CntkCatalyst.LayerFunctions
@@ -9,26 +10,64 @@ namespace CntkCatalyst.LayerFunctions
     public static partial class Layers
     {
         public static Function Conv2D(this Function input,
-            ValueTuple<int, int> filterSize,
+            ValueTuple<int, int> filterShape,
             int filterCount,
-            ValueTuple<int, int> strideSize,
+            ValueTuple<int, int> strideShape,
             DeviceDescriptor device,
-            DataType dataType,
-            uint seed = 34,
-            string outputName = "")
+            DataType dataType)
         {
-            if (input.Output.Shape.Rank != 3)
+            return Conv2D(input, filterShape,
+                filterCount,
+                strideShape,
+                weightInitializer: Initializers.GlorotUniform(),
+                biasInitializer: Initializers.Zero(),
+                device: device,
+                dataType: dataType);
+        }
+
+        public static Function Conv2D(this Function input,
+            ValueTuple<int, int> filterShape,
+            int filterCount,
+            ValueTuple<int, int> strideShape,
+            CNTKDictionary weightInitializer,
+            CNTKDictionary biasInitializer,
+            DeviceDescriptor device,
+            DataType dataType)
+        {
+
+            var filterSizes = new int[]
             {
-                throw new ArgumentException("Conv2D layer requires shape rank 3, got rank " + input.Output.Shape.Rank);
+                filterShape.Item1,
+                filterShape.Item2,
+                NDShape.InferredDimension, // Infer number of channels in input.
+                filterCount
+            };
+
+            var filterStrides = new int[]
+            {
+                strideShape.Item1,
+                strideShape.Item2,
+            };
+
+            var weights = new Parameter(NDShape.CreateNDShape(filterSizes), dataType,
+                   weightInitializer, device);
+
+            var result = CNTKLib.Convolution(weights, input, filterStrides);
+
+            if (biasInitializer != null)
+            {
+                // Bias dimensions should be defined for filter dimensions.
+                // For instance for 2D case: (1, 1, filterChannels).
+                var biasShape = filterStrides.Select(s => 1).ToList();
+                biasShape.Add(filterCount);
+
+                var bias = new Parameter(NDShape.CreateNDShape(biasShape.ToArray()),
+                    dataType, biasInitializer, device);
+
+                result = CNTKLib.Plus(result, bias);
             }
 
-            var inputChannels = input.Output.Shape[2];
-
-            var convWScale = 0.26;
-            var convParams = new Parameter(new int[] { filterSize.Item1, filterSize.Item2, inputChannels, filterCount }, dataType,
-                CNTKLib.GlorotUniformInitializer(convWScale, -1, 2, seed), device);
-
-            return CNTKLib.Convolution(convParams, input, new int[] { strideSize.Item1, strideSize.Item2, inputChannels });
+            return result;
         }
     }
 }
