@@ -35,15 +35,15 @@ namespace CntkCatalyst.Examples
 
             // Create the architecture.
             var network = Layers.Input(inputShape, d)
-                .Conv2D(3, 3, 32, d, device)
+                .Conv2D(3, 3, 32, device, d)
                 .ReLU()
                 .Pool2D(2, 2, PoolingType.Max)
 
-                .Conv2D(3, 3, 32, d, device)
+                .Conv2D(3, 3, 32, device, d)
                 .ReLU()
                 .Pool2D(2, 2, PoolingType.Max)
 
-                .Conv2D(3, 3, 32, d, device)
+                .Conv2D(3, 3, 32, device, d)
                 .ReLU()
                 
                 .Dense(64, device, d)
