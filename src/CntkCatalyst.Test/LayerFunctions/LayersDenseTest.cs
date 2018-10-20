@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CNTK;
-using CntkCatalyst;
 using CntkCatalyst.LayerFunctions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CntkCatalyst.Test
+namespace CntkCatalyst.Test.LayerFunctions
 {
     [TestClass]
-    public class LayersTest
+    public class LayersDenseTest
     {
         readonly DataType m_dataType = DataType.Float;
         readonly DeviceDescriptor m_device = DeviceDescriptor.CPUDevice;
@@ -40,7 +39,7 @@ namespace CntkCatalyst.Test
             var sut = Layers.Dense(inputVariable, 2,
                 m_dataType, m_device,
                 weightInitializer: Initializer.Ones,
-                bias: false);
+                biasInitializer: Initializer.None);
 
             var actual = Evaluate(sut, inputVariable, data);
 

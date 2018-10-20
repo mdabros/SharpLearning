@@ -12,42 +12,26 @@ namespace CntkCatalyst.LayerFunctions
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="units"></param>
-        /// <param name="weightInitializer"></param>
-        /// <param name="biasInitializer"></param>
-        /// <param name="bias"></param>
-        /// <param name="inputRank"></param>
-        /// <param name="mapRank"></param>
-        /// <returns></returns>
         public static Function Dense(this Function input, int units,
             DataType d, DeviceDescriptor device,
             Initializer weightInitializer = Initializer.GlorotUniform,
             Initializer biasInitializer = Initializer.Zeros,
-            bool bias = true, int inputRank = 0, int mapRank = 0)
+            int inputRank = 0, int mapRank = 0)
         {
             return Dense(input, units,
                 d, device,
                 Initializers.Create(weightInitializer),
                 Initializers.Create(biasInitializer),
-                bias, inputRank, mapRank);
+                inputRank, mapRank);
         }
 
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="units"></param>
-        /// <param name="weightInitializer"></param>
-        /// <param name="biasInitializer"></param>
-        /// <param name="bias"></param>
-        /// <param name="inputRank"></param>
-        /// <param name="mapRank"></param>
-        /// <returns></returns>
         public static Function Dense(this Function input, int units,
             DataType d, DeviceDescriptor device,
             CNTKDictionary weightInitializer, CNTKDictionary biasInitializer,
-            bool bias = true, int inputRank = 0, int mapRank = 0)
+            int inputRank = 0, int mapRank = 0)
         {
             if (inputRank != 0 && mapRank != 0)
             {
@@ -58,7 +42,8 @@ namespace CntkCatalyst.LayerFunctions
             var outputRank = outputShape.Dimensions.Count;
 
             var inputRanks = (inputRank != 0) ? inputRank : 1;
-            var dimensions = Enumerable.Range(0, inputRanks).Select(v => NDShape.InferredDimension).ToArray(); // infer all dimensions.
+            var dimensions = Enumerable.Range(0, inputRanks)
+                .Select(v => NDShape.InferredDimension).ToArray(); // infer all dimensions.
             var inputShape = NDShape.CreateNDShape(dimensions);
 
             int inferInputRankToMap;
@@ -76,22 +61,22 @@ namespace CntkCatalyst.LayerFunctions
                 inferInputRankToMap = mapRank;  // infer W to use all input dims except the first static 'map_rank' ones.
             }
 
-            var wDimensions = outputShape.Dimensions.ToList();
-            wDimensions.AddRange(inputShape.Dimensions);
-            var wShape = NDShape.CreateNDShape(wDimensions);
+            var weightsDimensions = outputShape.Dimensions.ToList();
+            weightsDimensions.AddRange(inputShape.Dimensions);
+            var wShape = NDShape.CreateNDShape(weightsDimensions);
 
-            var w = new Parameter(wShape, d, weightInitializer, device, "w");
+            var weights = new Parameter(wShape, d, weightInitializer, device, "w");
 
             // Weights and input is in reversed order compared to the original python code.
             // Same goes for the dimensions. This is because the python api reverses the dimensions internally.
             // The python API was made in this way to be similar to other deep learning toolkits. 
             // The C# and the C++ share the same column major layout.
-            var r = CNTKLib.Times(w, input, (uint)outputRank, inferInputRankToMap);
+            var r = CNTKLib.Times(weights, input, (uint)outputRank, inferInputRankToMap);
 
-            if (bias)
+            if (biasInitializer != null)
             {
-                var b = new Parameter(outputShape, d, biasInitializer, device, "b");
-                r = r + b;
+                var biasParameter = new Parameter(outputShape, d, biasInitializer, device, "b");
+                r = r + biasParameter;
             }
 
             return r;

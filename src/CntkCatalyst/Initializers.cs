@@ -19,6 +19,7 @@ namespace CntkCatalyst
         GlorotUniform,
         HeNormal,
         HeUniform,
+        None,
     }
 
     /// <summary>
@@ -50,6 +51,8 @@ namespace CntkCatalyst
                     return HeNormal();
                 case Initializer.HeUniform:
                     return HeUniform();
+                case Initializer.None:
+                    return null;
                 default:
                     throw new ArgumentException("Unsupported initializer: " + initializer);
             }

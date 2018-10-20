@@ -81,7 +81,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LayersTest.cs" />
+    <Compile Include="LayerFunctions\LayersDenseTest.cs" />
     <Compile Include="LearnersTest.cs" />
     <Compile Include="LossesTest.cs" />
     <Compile Include="MemoryMinibatchSourceTest.cs" />
