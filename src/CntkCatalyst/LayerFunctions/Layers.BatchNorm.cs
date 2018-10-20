@@ -7,9 +7,13 @@ namespace CntkCatalyst.LayerFunctions
     /// </summary>
     public static partial class Layers
     {
-        public static Function BatchNormalizationLayer(this Function input, bool spatial,
-            DataType d, DeviceDescriptor device,
-            double initialScaleValue = 1, double initialBiasValue = 0, int bnTimeConst = 5000)
+        public static Function BatchNormalization(this Function input,
+            bool spatial,
+            DeviceDescriptor device,
+            DataType dataType,
+            double initialScaleValue = 1,
+            double initialBiasValue = 0,
+            int bnTimeConst = 5000)
         {
             var biasParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialBiasValue, device, "");
             var scaleParams = new Parameter(new int[] { NDShape.InferredDimension }, (float)initialScaleValue, device, "");
