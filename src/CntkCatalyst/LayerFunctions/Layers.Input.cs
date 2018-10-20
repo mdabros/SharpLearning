@@ -7,9 +7,9 @@ namespace CntkCatalyst.LayerFunctions
     /// </summary>
     public static partial class Layers
     {
-        public static Function Input(NDShape inputShape, DataType d)
+        public static Function Input(NDShape inputShape, DataType dataType)
         {
-            return Variable.InputVariable(inputShape, d); ;
+            return Variable.InputVariable(inputShape, dataType); ;
         }
     }
 }
