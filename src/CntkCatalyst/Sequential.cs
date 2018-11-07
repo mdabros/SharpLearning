@@ -56,24 +56,6 @@ namespace CntkCatalyst
             m_learner = learnerCreator(Network.Parameters());
         }
 
-        public Dictionary<string, List<float>> Fit(MemoryMinibatchData observations = null, MemoryMinibatchData targets = null, 
-            int batchSize = 32, int epochs = 1, 
-            MemoryMinibatchData validationObservations = null, MemoryMinibatchData validationTargets = null)
-        {
-            // setup minibatch sources.
-            var trainMinibatchSource = new MemoryMinibatchSource(observations, targets, 
-                seed: 5, randomize: true);
-
-            MemoryMinibatchSource validationMinibatchSource = null;
-            if(validationObservations != null && validationTargets != null)
-            {
-                validationMinibatchSource = new MemoryMinibatchSource(validationObservations, validationTargets, 
-                    seed: 5, randomize: false);
-            }
-            
-            return FitFromMinibatchSource(trainMinibatchSource, batchSize, epochs, validationMinibatchSource);
-        }
-
         public Dictionary<string, List<float>> FitFromMinibatchSource(IMinibatchSource trainMinibatchSource = null, int batchSize = 32, int epochs = 1,
             IMinibatchSource validationMinibatchSource = null)
 
@@ -156,16 +138,6 @@ namespace CntkCatalyst
             }
 
             return lossValidationHistory;
-        }
-
-        public (float loss, float metric) Evaluate(MemoryMinibatchData observations = null, 
-            MemoryMinibatchData targets = null, int batchSize = 32)
-        {
-            // setup minibatch source.
-            var minibatchSource = new MemoryMinibatchSource(observations, targets, 
-                seed: 5, randomize: true);
-
-            return EvaluateFromMinibatchSource(minibatchSource, batchSize);
         }
 
         public (float loss, float metric) EvaluateFromMinibatchSource(IMinibatchSource minibatchSource, int batchSize = 32)
@@ -260,49 +232,6 @@ namespace CntkCatalyst
             }
 
             return predictions;
-        }
-
-        public MemoryMinibatchData Predict(MemoryMinibatchData observations)
-        {
-            var sampleCount = observations.SampleCount;
-            var inputDimensions = Network.Arguments[0].Shape;
-
-            var outputSize = Network.Output.Shape.Dimensions.Aggregate((d1, d2) => d1 * d1);
-            var predictionData = new float[sampleCount * outputSize];
-
-            for (int i = 0; i < sampleCount; i++)
-            {
-                var observation = observations.GetSamples(i);
-                var prediction = Predict(observation.Data);
-
-                Array.Copy(prediction, 0, predictionData, i * outputSize, prediction.Length);
-            }
-
-            return new MemoryMinibatchData(predictionData, Network.Output.Shape.Dimensions.ToArray(), sampleCount);
-        }
-
-        float[] Predict(float[] observation)
-        {
-            var inputDimensions = Network.Arguments[0].Shape;
-
-            using (var singleObservation = Value.CreateBatch<float>(inputDimensions, observation, m_device))
-            {
-                var inputDataMap = new Dictionary<Variable, Value>() { { Network.Arguments[0], singleObservation } };
-                var outputVar = Network.Output;
-
-                var outputDataMap = new Dictionary<Variable, Value>() { { outputVar, null } };
-                Network.Evaluate(inputDataMap, outputDataMap, m_device);
-                var outputVal = outputDataMap[outputVar];
-
-                var predictions = outputVal.GetDenseData<float>(outputVar);
-                var floatPrediction = predictions.Single().ToArray();
-
-                // Ensure cleanup, call erase.
-                inputDataMap.Clear();
-                outputDataMap.Clear();
-
-                return floatPrediction;
-            }
         }
 
         /// <summary>
