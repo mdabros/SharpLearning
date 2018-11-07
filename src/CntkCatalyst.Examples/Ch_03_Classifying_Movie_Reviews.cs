@@ -95,11 +95,12 @@ namespace CntkCatalyst.Examples
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
-            //// Write first ten predictions
-            //var predictions = model.Predict(testObservations.GetSamples(Enumerable.Range(0, 10).ToArray()));
+            // Write first ten predictions
+            var predictions = model.PredictFromMinibatchSource(testSource)
+                .Take(10);
 
-            //// Use tensor data directly, since only 1 element pr. sample.
-            //Trace.WriteLine($"Predictions: [{string.Join(", ", predictions.Data)}]");          
+            // Use tensor data directly, since only 1 element pr. sample.
+            Trace.WriteLine($"Predictions: [{string.Join(", ", predictions.Select(p => p.First()))}]");
         }
 
         MinibatchSource CreateMinibatchSource(string filePath, string featuresName, string targetsName,

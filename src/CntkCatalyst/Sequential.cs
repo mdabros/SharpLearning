@@ -220,6 +220,48 @@ namespace CntkCatalyst
             }
         }
 
+        public IList<IList<float>> PredictFromMinibatchSource(IMinibatchSource minibatchSource)
+        {
+            var predictions = new List<IList<float>>();
+            var outputDataMap = new Dictionary<Variable, Value>();
+            var inputMap = new Dictionary<Variable, Value>();
+
+            bool isSweepEnd = false;
+
+            while (!isSweepEnd)
+            {
+                const uint evaluationBatchSize = 1;
+                using (var minibatchData = minibatchSource.GetNextMinibatch((uint)evaluationBatchSize, m_device))
+                {
+                    isSweepEnd = minibatchData.Values.Any(a => a.sweepEnd);
+
+                    var obserationsStreamInfo = minibatchSource.StreamInfo(minibatchSource.FeaturesName);
+                    var targetsStreamInfo = minibatchSource.StreamInfo(minibatchSource.TargetsName);
+
+                    using (var observations = minibatchData[obserationsStreamInfo])
+                    {
+                        inputMap.Add(m_inputVariable, observations.data);
+
+                        var outputVar = Network.Output;
+                        outputDataMap.Add(outputVar, null);
+
+                        Network.Evaluate(inputMap, outputDataMap, m_device);
+                        var outputVal = outputDataMap[outputVar];
+
+                        var batchPrediction = outputVal.GetDenseData<float>(outputVar);
+                        // assumes batch size 1
+                        predictions.Add(batchPrediction.Single());
+
+                        // Ensure cleanup, call erase.
+                        inputMap.Clear();
+                        outputDataMap.Clear();
+                    }
+                }
+            }
+
+            return predictions;
+        }
+
         public MemoryMinibatchData Predict(MemoryMinibatchData observations)
         {
             var sampleCount = observations.SampleCount;
