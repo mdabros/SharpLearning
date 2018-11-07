@@ -2,41 +2,11 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using Accord.DataSets;
 
 namespace CntkCatalyst.Examples
 {
     public static class DataProvider
     {
-        public static (MemoryMinibatchData observations, MemoryMinibatchData targets) LoadMnistData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
-        {
-            // Load mnist data set using Accord.DataSets.
-            var mnist = new MNIST(Directory.GetCurrentDirectory());
-            var dataSet = dataSplit == DataSplit.Train ? mnist.Training : mnist.Testing;
-
-            var sampleCount = dataSet.Item2.Length;
-            var dataSize = inputShape.Aggregate((d1, d2) => d1 * d2);
-
-            // Transform from sparse to dense format, and flatten arrays.
-            var observationsData = dataSet.Item1
-                .Select(s => s.ToDense(dataSize)) // set fixed dataSize.
-                .SelectMany(d => d)
-                .Select(d => (float)d / 255) // transform pixel values to be between 0 and 1.
-                .ToArray();
-
-            var targetsData = dataSet.Item2
-                .Select(d => (float)d)
-                .ToArray();
-
-            var observations = new MemoryMinibatchData(observationsData, inputShape.ToArray(), sampleCount);
-
-            // one-hot encode targets for the classificaiton problem.
-            var oneHotTargetsData = targetsData.EncodeOneHot();
-            var targets = new MemoryMinibatchData(oneHotTargetsData, outputShape.ToArray(), sampleCount);
-
-            return (observations, targets);
-        }
-
         public static (MemoryMinibatchData observations, MemoryMinibatchData targets) LoadImdbData(int[] inputShape, int[] outputShape, DataSplit dataSplit)
         {
             var xTrainFilePath = "x_train.bin";
