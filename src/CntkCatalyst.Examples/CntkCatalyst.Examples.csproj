@@ -66,8 +66,6 @@
     <Compile Include="Ch_05_Introduction_To_Convnets.cs" />
     <Compile Include="Ch_03_Classifying_Movie_Reviews.cs" />
     <Compile Include="Ch_05_Using_Convnets_With_Small_Datasets.cs" />
-    <Compile Include="DataProvider.cs" />
-    <Compile Include="DataSplit.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
