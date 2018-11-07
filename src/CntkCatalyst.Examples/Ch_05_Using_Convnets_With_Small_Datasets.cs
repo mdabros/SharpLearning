@@ -110,12 +110,14 @@ namespace CntkCatalyst.Examples
             var transforms = new List<CNTKDictionary>();
             if (augmentation)
             {
-                var randomSideTransform = CNTKLib.ReaderCrop("RandomSide",
-                  new Tuple<int, int>(0, 0),
-                  new Tuple<float, float>(0.8f, 1.0f),
-                  new Tuple<float, float>(0.0f, 0.0f),
-                  new Tuple<float, float>(1.0f, 1.0f),
-                  "uniRatio");
+                var randomSideTransform = CNTKLib.ReaderCrop(
+                    cropType:"RandomSide",
+                    cropSize: new Tuple<int, int>(0, 0),
+                    sideRatio: new Tuple<float, float>(0.8f, 1.0f),
+                    areaRatio: new Tuple<float, float>(0.0f, 0.0f),
+                    aspectRatio: new Tuple<float, float>(1.0f, 1.0f),
+                    jitterType: "uniRatio");
+
                 transforms.Add(randomSideTransform);
             }
 
