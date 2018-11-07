@@ -38,12 +38,15 @@ namespace CntkCatalyst
 
         public void Compile(Func<IList<Parameter>, Learner> learnerCreator,
             Func<Variable, Variable, Function> lossCreator,
-            Func<Variable, Variable, Function> metricCreator)
+            Func<Variable, Variable, Function> metricCreator,
+            Variable targetVariable = null)
         {
             // Get input and target variables from network.
             m_inputVariable = Network.Arguments[0];
             var targetShape = Network.Output.Shape;
-            m_targetVariable = Variable.InputVariable(targetShape, m_dataType);
+
+            // TODO: find a better design for specifying custom input variables.
+            m_targetVariable = targetVariable ?? Variable.InputVariable(targetShape, m_dataType);
 
             // create loss and metric.
             m_loss = lossCreator(Network.Output, m_targetVariable);
