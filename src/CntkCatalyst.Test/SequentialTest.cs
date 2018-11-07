@@ -35,9 +35,10 @@ namespace CntkCatalyst.Test.Models
                (p, t) => Losses.CategoricalCrossEntropy(p, t),
                (p, t) => Metrics.Accuracy(p, t));
 
-            model.Fit(observations, targets, batchSize: 32, epochs: 10);
+            var source = new MemoryMinibatchSource(observations, targets, seed: 232, randomize: true);
+            model.FitFromMinibatchSource(source, batchSize: 32, epochs: 10);
 
-            (var loss, var metric) = model.Evaluate(observations, targets);
+            (var loss, var metric) = model.EvaluateFromMinibatchSource(source);
 
             Trace.WriteLine($"Final evaluation - Loss: {loss}, Metric: {metric}");
         }
