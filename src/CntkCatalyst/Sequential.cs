@@ -56,7 +56,7 @@ namespace CntkCatalyst
             m_learner = learnerCreator(Network.Parameters());
         }
 
-        public Dictionary<string, List<float>> FitFromMinibatchSource(IMinibatchSource trainMinibatchSource = null, int batchSize = 32, int epochs = 1,
+        public Dictionary<string, List<float>> Fit(IMinibatchSource trainMinibatchSource = null, int batchSize = 32, int epochs = 1,
             IMinibatchSource validationMinibatchSource = null)
 
         {
@@ -121,7 +121,7 @@ namespace CntkCatalyst
 
                             if (validationMinibatchSource != null)
                             {
-                                (var validationLoss, var validationMetric) = EvaluateFromMinibatchSource(validationMinibatchSource, batchSize);
+                                (var validationLoss, var validationMetric) = Evaluate(validationMinibatchSource, batchSize);
                                 traceOutput += $" - ValidationLoss = {validationLoss:F8}, ValidationMetric = {validationMetric:F8}";
 
                                 lossValidationHistory[m_validationLossName].Add(validationLoss);
@@ -140,7 +140,7 @@ namespace CntkCatalyst
             return lossValidationHistory;
         }
 
-        public (float loss, float metric) EvaluateFromMinibatchSource(IMinibatchSource minibatchSource, int batchSize = 32)
+        public (float loss, float metric) Evaluate(IMinibatchSource minibatchSource, int batchSize = 32)
         {
             // create loss and metric evaluators.
             using (var lossEvaluator = CNTKLib.CreateEvaluator(m_loss))
@@ -192,7 +192,7 @@ namespace CntkCatalyst
             }
         }
 
-        public IList<IList<float>> PredictFromMinibatchSource(IMinibatchSource minibatchSource)
+        public IList<IList<float>> Predict(IMinibatchSource minibatchSource)
         {
             var predictions = new List<IList<float>>();
             var outputDataMap = new Dictionary<Variable, Value>();

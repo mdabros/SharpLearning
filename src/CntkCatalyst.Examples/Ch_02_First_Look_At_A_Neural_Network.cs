@@ -71,10 +71,10 @@ namespace CntkCatalyst.Examples
                (p, t) => Metrics.Accuracy(p, t));
 
             // Train the model using the training set.
-            model.FitFromMinibatchSource(trainingSource, epochs: 5, batchSize: 128);
+            model.Fit(trainingSource, epochs: 5, batchSize: 128);
 
             // Evaluate the model using the test set.
-            (var loss, var metric) = model.EvaluateFromMinibatchSource(testSource);
+            (var loss, var metric) = model.Evaluate(testSource);
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");

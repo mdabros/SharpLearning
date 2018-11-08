@@ -80,20 +80,20 @@ namespace CntkCatalyst.Examples
                targetVariable);
 
             // Train the model using the training set.
-            var history = model.FitFromMinibatchSource(trainingSource, epochs: 100, batchSize: 512,
+            var history = model.Fit(trainingSource, epochs: 100, batchSize: 512,
                 validationMinibatchSource: testSource);
 
             // Trace loss and validation history
             TraceLossValidationHistory(history);
 
             // Evaluate the model using the test set.
-            (var loss, var metric) = model.EvaluateFromMinibatchSource(testSource);
+            (var loss, var metric) = model.Evaluate(testSource);
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
 
             // Write first ten predictions
-            var predictions = model.PredictFromMinibatchSource(testSource)
+            var predictions = model.Predict(testSource)
                 .Take(10);
 
             // Use tensor data directly, since only 1 element pr. sample.

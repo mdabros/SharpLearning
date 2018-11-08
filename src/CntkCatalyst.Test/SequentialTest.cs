@@ -36,10 +36,10 @@ namespace CntkCatalyst.Test.Models
                (p, t) => Metrics.Accuracy(p, t));
 
             var trainSource = new MemoryMinibatchSource(observations, targets, seed: 232, randomize: true);
-            model.FitFromMinibatchSource(trainSource, batchSize: 32, epochs: 10);
+            model.Fit(trainSource, batchSize: 32, epochs: 10);
 
             var evalSource = new MemoryMinibatchSource(observations, targets, seed: 232, randomize: false);
-            (var loss, var metric) = model.EvaluateFromMinibatchSource(trainSource);
+            (var loss, var metric) = model.Evaluate(trainSource);
 
             Trace.WriteLine($"Final evaluation - Loss: {loss}, Metric: {metric}");
         }

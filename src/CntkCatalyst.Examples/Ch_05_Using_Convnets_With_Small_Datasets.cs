@@ -89,13 +89,12 @@ namespace CntkCatalyst.Examples
             Trace.WriteLine(model.Summary());
 
             // Train the model using the training set.
-            model.FitFromMinibatchSource(
-                trainMinibatchSource: trainingSource,
+            model.Fit(trainMinibatchSource: trainingSource,
                 epochs: 100, batchSize: 32,
                 validationMinibatchSource: validationSource);
 
             // Evaluate the model using the test set.
-            (var loss, var metric) = model.EvaluateFromMinibatchSource(testSource);
+            (var loss, var metric) = model.Evaluate(testSource);
 
             // Write the test set loss and metric to debug output.
             Trace.WriteLine($"Test set - Loss: {loss}, Metric: {metric}");
