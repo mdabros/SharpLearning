@@ -13,22 +13,6 @@ namespace CntkCatalyst.LayerFunctions
             ValueTuple<int, int> filterShape,
             int filterCount,
             ValueTuple<int, int> strideShape,
-            DeviceDescriptor device,
-            DataType dataType)
-        {
-            return Conv2D(input, filterShape,
-                filterCount,
-                strideShape,
-                weightInitializer: Initializers.GlorotUniform(),
-                biasInitializer: Initializers.Zero(),
-                device: device,
-                dataType: dataType);
-        }
-
-        public static Function Conv2D(this Function input,
-            ValueTuple<int, int> filterShape,
-            int filterCount,
-            ValueTuple<int, int> strideShape,
             CNTKDictionary weightInitializer,
             CNTKDictionary biasInitializer,
             DeviceDescriptor device,

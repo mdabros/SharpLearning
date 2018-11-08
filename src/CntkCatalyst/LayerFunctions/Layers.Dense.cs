@@ -9,18 +9,6 @@ namespace CntkCatalyst.LayerFunctions
     /// </summary>
     public static partial class Layers
     {
-        public static Function Dense(this Function input,
-            int units,
-            DeviceDescriptor device,
-            DataType dataType)
-        {
-            return Dense(input, units,
-                weightInitializer: Initializers.GlorotUniform(),
-                biasInitializer: Initializers.Zero(),
-                device: device,
-                dataType: dataType);
-        }
-
         /// <summary>
         /// Based on Dense from: https://github.com/Microsoft/CNTK/blob/master/bindings/python/cntk/layers/layers.py
         /// </summary>

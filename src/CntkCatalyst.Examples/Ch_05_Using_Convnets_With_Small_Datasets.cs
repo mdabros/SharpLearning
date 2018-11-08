@@ -53,28 +53,33 @@ namespace CntkCatalyst.Examples
             // Define data type and device for the model.
             var dataType = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
-            
+
+            // Setup initializers
+            var random = new Random(232);
+            Func<CNTKDictionary> weightInit = () => Initializers.GlorotNormal(random.Next());
+            var biasInit = Initializers.Zero();
+
             // Create the architecture.
             var network = Layers.Input(inputShape, dataType)
-                .Conv2D((3, 3), 32, (1, 1), device, dataType)
+                .Conv2D((3, 3), 32, (1, 1), weightInit(), biasInit, device, dataType)
                 .ReLU()
                 .MaxPool2D((2, 2), (2, 2))
 
-                .Conv2D((3, 3), 64, (1, 1), device, dataType)
+                .Conv2D((3, 3), 64, (1, 1), weightInit(), biasInit, device, dataType)
                 .ReLU()
                 .MaxPool2D((2, 2), (2, 2))
 
-                .Conv2D((3, 3), 128, (1, 1), device, dataType)
+                .Conv2D((3, 3), 128, (1, 1), weightInit(), biasInit, device, dataType)
                 .ReLU()
                 .MaxPool2D((2, 2), (2, 2))
 
-                .Conv2D((3, 3), 128, (1, 1), device, dataType)
+                .Conv2D((3, 3), 128, (1, 1), weightInit(), biasInit, device, dataType)
                 .ReLU()
                 .MaxPool2D((2, 2), (2, 2))
 
-                .Dense(512, device, dataType)
+                .Dense(512, weightInit(), biasInit, device, dataType)
                 .ReLU()
-                .Dense(numberOfClasses, device, dataType)
+                .Dense(numberOfClasses, weightInit(), biasInit, device, dataType)
                 .Softmax();
 
             // Create the network.

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -54,14 +55,19 @@ namespace CntkCatalyst.Examples
             var dataType = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
 
+            // Setup initializers
+            var random = new Random(232);
+            Func<CNTKDictionary> weightInit = () => Initializers.GlorotNormal(random.Next());
+            var biasInit = Initializers.Zero();
+
             // Create the architecture.
             //var input = CNTKLib.SequenceLast(Layers.Input(inputShape, dataType));
             var network = Layers.Input(inputShape, dataType, isSparse: true)
-                .Dense(16, device, dataType)
+                .Dense(16, weightInit(), biasInit, device, dataType)
                 .ReLU()
-                .Dense(16, device, dataType)
+                .Dense(16, weightInit(), biasInit, device, dataType)
                 .ReLU()
-                .Dense(numberOfClasses, device, dataType)
+                .Dense(numberOfClasses, weightInit(), biasInit, device, dataType)
                 .Softmax();
 
             // Since we are processing sequence data, 

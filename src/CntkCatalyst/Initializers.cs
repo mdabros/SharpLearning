@@ -22,63 +22,63 @@ namespace CntkCatalyst
             return null;
         }
 
-        public static CNTKDictionary Uniform(uint seed = 1)
+        public static CNTKDictionary Uniform(int seed)
         {
-            return CNTKLib.UniformInitializer(CNTKLib.DefaultParamInitScale, seed);
+            return CNTKLib.UniformInitializer(CNTKLib.DefaultParamInitScale, (uint)seed);
         }
 
-        public static CNTKDictionary Normal(uint seed = 1)
+        public static CNTKDictionary Normal(int seed)
         {
             return CNTKLib.NormalInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank,
-                seed);
+                (uint)seed);
         }
 
-        public static CNTKDictionary TruncatedNormal(uint seed = 1)
+        public static CNTKDictionary TruncatedNormal(int seed)
         {
             return CNTKLib.TruncatedNormalInitializer(CNTKLib.DefaultParamInitScale,
-                seed);
+                (uint)seed);
         }
 
-        public static CNTKDictionary Xavier(uint seed = 1)
+        public static CNTKDictionary Xavier(int seed)
         {
             return CNTKLib.XavierInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank,
-                seed);
+                (uint)seed);
         }
 
-        public static CNTKDictionary GlorotNormal(uint seed = 1)
+        public static CNTKDictionary GlorotNormal(int seed)
         {
             return CNTKLib.GlorotNormalInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank,
-                seed);
+                (uint)seed);
         }
 
-        public static CNTKDictionary GlorotUniform(uint seed = 1)
+        public static CNTKDictionary GlorotUniform(int seed)
         {
             return CNTKLib.GlorotUniformInitializer(CNTKLib.DefaultParamInitScale, 
                 CNTKLib.SentinelValueForInferParamInitRank, 
                 CNTKLib.SentinelValueForInferParamInitRank,
-                seed);
+                (uint)seed);
         }
 
-        public static CNTKDictionary HeNormal(uint seed = 1)
+        public static CNTKDictionary HeNormal(int seed)
         {
             return CNTKLib.HeNormalInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank,
-                seed);
+                (uint)seed);
         }
 
-        public static CNTKDictionary HeUniform(uint seed = 1)
+        public static CNTKDictionary HeUniform(int seed)
         {
             return CNTKLib.HeUniformInitializer(CNTKLib.DefaultParamInitScale,
                 CNTKLib.SentinelValueForInferParamInitRank,
                 CNTKLib.SentinelValueForInferParamInitRank,
-                seed);
+                (uint)seed);
         }
     }
 }

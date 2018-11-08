@@ -22,11 +22,15 @@ namespace CntkCatalyst.Test.Models
             var dataType = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
 
+            var random = new Random(232);
+            Func<CNTKDictionary> weightInit = () => Initializers.GlorotNormal(random.Next());
+            var biasInit = Initializers.Zero();
+
             // Create the architecture.
             var network = Layers.Input(inputShape, dataType)
-                .Dense(512, device, dataType)
+                .Dense(512, weightInit(), biasInit, device, dataType)
                 .ReLU()
-                .Dense(numberOfClasses, device, dataType)
+                .Dense(numberOfClasses, weightInit(), biasInit, device, dataType)
                 .Softmax();
 
             var model = new Sequential(network, dataType, device);

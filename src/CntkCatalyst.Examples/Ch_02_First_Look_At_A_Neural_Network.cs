@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -51,15 +52,20 @@ namespace CntkCatalyst.Examples
             var dataType = DataType.Float;
             var device = DeviceDescriptor.UseDefaultDevice();
 
+            // Setup initializers
+            var random = new Random(232);
+            Func<CNTKDictionary> weightInit = () => Initializers.GlorotNormal(random.Next());
+            var biasInit = Initializers.Zero();
+
             // Create the architecture.
             var input = Layers.Input(inputShape, dataType);
             // scale input between 0 and 1.
             var scaledInput = CNTKLib.ElementTimes(Constant.Scalar(0.00390625f, device), input);
 
             var network = scaledInput
-                .Dense(512, device, dataType)
+                .Dense(512, weightInit(), biasInit, device, dataType)
                 .ReLU()
-                .Dense(numberOfClasses, device, dataType)
+                .Dense(numberOfClasses, weightInit(), biasInit, device, dataType)
                 .Softmax();
 
             // Create the network.
