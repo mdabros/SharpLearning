@@ -61,7 +61,7 @@ namespace CntkCatalyst.Examples
 
             // Create the architecture.
             var network = Layers.Input(inputShape, dataType, isSparse: true)
-                .Embedding(8, Initializers.GlorotUniform(23), dataType, device)
+                .Embedding(8, weightInit(), dataType, device)
                 .Dense(32, weightInit(), biasInit, device, dataType)
                 .ReLU()
                 .Dense(numberOfClasses, weightInit(), biasInit, device, dataType)
