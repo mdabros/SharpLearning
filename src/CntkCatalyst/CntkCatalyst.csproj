@@ -73,6 +73,7 @@
     <Compile Include="IMinibatchSource.cs" />
     <Compile Include="Initializers.cs" />
     <Compile Include="LayerFunctions\Layers.Dropout.cs" />
+    <Compile Include="LayerFunctions\Layers.Embedding.cs" />
     <Compile Include="LayerFunctions\Layers.Pool.cs" />
     <Compile Include="LayerFunctions\Layers.Conv.cs" />
     <Compile Include="LayerFunctions\Layers.Dense.cs" />
