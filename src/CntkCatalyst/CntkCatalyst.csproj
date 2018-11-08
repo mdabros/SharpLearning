@@ -75,6 +75,7 @@
     <Compile Include="LayerFunctions\Layers.Conv1D.cs" />
     <Compile Include="LayerFunctions\Layers.Dropout.cs" />
     <Compile Include="LayerFunctions\Layers.Embedding.cs" />
+    <Compile Include="LayerFunctions\Layers.Flatten.cs" />
     <Compile Include="LayerFunctions\Layers.GlobalMaxPooling1D.cs" />
     <Compile Include="LayerFunctions\Layers.Pool1D.cs" />
     <Compile Include="LayerFunctions\Layers.Pool2D.cs" />
