@@ -59,6 +59,8 @@ namespace CntkCatalyst.Examples
             Func<CNTKDictionary> weightInit = () => Initializers.GlorotNormal(random.Next());
             var biasInit = Initializers.Zero();
 
+            //TODO: Fix for full network.
+
             // Create the architecture.
             var network = Layers.Input(inputShape, dataType, isSparse: true)
                 .Embedding(8, weightInit(), dataType, device)
