@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ch_02_First_Look_At_A_Neural_Network.cs" />
+    <Compile Include="Ch_06_Sequence_Processing_With_Convnets.cs" />
     <Compile Include="Ch_06_Using_Word_Embeddings.cs" />
     <Compile Include="Ch_05_Introduction_To_Convnets.cs" />
     <Compile Include="Ch_03_Classifying_Movie_Reviews.cs" />
