@@ -41,6 +41,12 @@ namespace SharpLearning.Containers
             return ToF64(value, ParseAnyNumberStyle);
         }
 
+        /// <summary>
+        /// Allows for custom conversion of string to double.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static double ToF64(string value, Converter<string, double> converter)
         {
             return converter(value);

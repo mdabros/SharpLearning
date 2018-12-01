@@ -8,6 +8,9 @@ namespace SharpLearning.Containers.Matrices
     /// </summary>
     public static class StringMatrixExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly Converter<string, double> DefaultConverter = FloatingPointConversion.ToF64;
 
         /// <summary>
