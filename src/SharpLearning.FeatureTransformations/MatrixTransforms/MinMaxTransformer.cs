@@ -11,6 +11,7 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
     [Serializable]
     public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
     {
+        [Serializable]
         class FeatureMinMax
         {
             public double Min {get; set;}
