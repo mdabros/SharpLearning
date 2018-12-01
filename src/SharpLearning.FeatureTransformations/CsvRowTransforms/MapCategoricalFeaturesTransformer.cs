@@ -1,5 +1,6 @@
-﻿using SharpLearning.InputOutput.Csv;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {
@@ -9,6 +10,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
     /// For example: [monday, tuesday] -> [0, 1]
     /// This is needed when the features are used with machine learning algorithms
     /// </summary>
+    [Serializable]
     public sealed class MapCategoricalFeaturesTransformer : ICsvRowTransformer
     {
         readonly Dictionary<string, Dictionary<string, string>> m_namedFeatureMapping;

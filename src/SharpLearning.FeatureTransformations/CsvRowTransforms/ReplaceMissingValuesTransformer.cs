@@ -1,9 +1,7 @@
-﻿using SharpLearning.InputOutput.Csv;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {
@@ -11,6 +9,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
     /// Replaces missing values identified with the missing values identifiers. 
     /// The missing values are replaced by the provided replacement value
     /// </summary>
+    [Serializable]
     public sealed class ReplaceMissingValuesTransformer : ICsvRowTransformer
     {
         readonly Dictionary<string, string> m_missingValueIdentifiers;

@@ -1,6 +1,7 @@
-﻿using SharpLearning.InputOutput.Csv;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {
@@ -12,6 +13,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
     /// day_monday { 1, 0}
     /// day_tuesday {0, 1}
     /// </summary>
+    [Serializable]
     public sealed class OneHotTransformer : ICsvRowTransformer
     {
         readonly Dictionary<string, HashSet<string>> m_featureMap;
