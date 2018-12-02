@@ -7,18 +7,8 @@ namespace SharpLearning.Optimization
     /// <summary>
     /// Contains the bounds and sampling type for an optimizer parameter.
     /// </summary>
-    public class ParameterBounds
+    public class ParameterBounds : IParameterBounds
     {
-        /// <summary>
-        /// Minimum bound.
-        /// </summary>
-        public readonly double Min;
-
-        /// <summary>
-        /// Maximum bound.
-        /// </summary>
-        public readonly double Max;
-
         readonly ITransform m_transform;
 
         readonly ParameterType m_parameterType;
@@ -62,6 +52,15 @@ namespace SharpLearning.Optimization
             m_parameterType = parameterType;
         }
 
+        /// <summary>
+        /// Minimum bound.
+        /// </summary>
+        public double Min { get; }
+
+        /// <summary>
+        /// Maximum bound.
+        /// </summary>
+        public double Max { get; }
 
         /// <summary>
         /// Samples a new point within the specified parameter bounds.
