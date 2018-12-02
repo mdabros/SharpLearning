@@ -54,7 +54,7 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
-        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="numberOfStartingPoints">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
@@ -108,7 +108,7 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
-        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="previousParameterSets">Parameter sets from previous run</param>
         /// <param name="previousParameterSetScores">Scores from previous run corresponding to each parameter set</param>

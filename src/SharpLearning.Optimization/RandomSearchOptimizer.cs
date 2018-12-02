@@ -21,14 +21,13 @@ namespace SharpLearning.Optimization
         /// Random search optimizer initializes random parameters between min and max of the provided parameters.
         /// Roughly based on: http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf
         /// </summary>
-        /// <param name="parameterRanges">A list of parameter bounds for each optimization parameter</param>        
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>        
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public RandomSearchOptimizer(IParameter[] parameterRanges, int iterations, int seed=42, bool runParallel = true)
+        public RandomSearchOptimizer(IParameter[] parameters, int iterations, int seed=42, bool runParallel = true)
         {
-            if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
-            m_parameters = parameterRanges;
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
             m_sampler = new RandomUniform(seed);
             m_iterations = iterations;

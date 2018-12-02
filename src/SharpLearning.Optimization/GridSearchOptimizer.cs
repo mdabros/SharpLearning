@@ -12,17 +12,16 @@ namespace SharpLearning.Optimization
     public sealed class GridSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly IParameter[] m_parameterBounds;
+        readonly IParameter[] m_parameters;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parameterBounds">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public GridSearchOptimizer(IParameter[] parameterBounds, bool runParallel = true)
+        public GridSearchOptimizer(IParameter[] parameters, bool runParallel = true)
         {
-            if (parameterBounds == null) { throw new ArgumentNullException("parameterRanges"); }
-            m_parameterBounds = parameterBounds;
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
         }
 
@@ -45,7 +44,7 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
-            var grid = CartesianProduct(m_parameterBounds);
+            var grid = CartesianProduct(m_parameters);
 
             // Initialize the search
             var results = new ConcurrentBag<OptimizerResult>();

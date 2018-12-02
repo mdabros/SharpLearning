@@ -42,7 +42,7 @@ namespace SharpLearning.Optimization
         /// and
         /// http://www.emse.fr/~leriche/GBNM_SMO_1026_final.pdf
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="maxRestarts">Maximum number of restart (default is 8</param>
         /// <param name="noImprovementThreshold">Minimum value of improvement before the improvement is accepted as an actual improvement (default is 0.001)</param>
         /// <param name="maxIterationsWithoutImprovement">Maximum number of iterations without an improvement (default is 5)</param>
@@ -57,8 +57,8 @@ namespace SharpLearning.Optimization
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324)
         {
-            if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentNullException("maxIterationsWithoutImprovement must be at least 1"); }
-            if (maxFunctionEvaluations < 0) { throw new ArgumentNullException("maxFunctionEvaluations must be at least 1"); }
+            if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentException("maxIterationsWithoutImprovement must be at least 1"); }
+            if (maxFunctionEvaluations < 0) { throw new ArgumentException("maxFunctionEvaluations must be at least 1"); }
 
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_maxRestarts = maxRestarts;
