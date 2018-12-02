@@ -10,9 +10,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void RandomSearchOptimizer_OptimizeBest()
         {
-            var parameters = new ParameterBounds[] 
+            var parameters = new MinMaxParameter[] 
             {
-                new ParameterBounds(0.0, 100.0, Transform.Linear)
+                new MinMaxParameter(0.0, 100.0, Transform.Linear)
             };
             var sut = new RandomSearchOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
@@ -24,9 +24,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void RandomSearchOptimizer_Optimize()
         {
-            var parameters = new ParameterBounds[] 
+            var parameters = new MinMaxParameter[] 
             {
-                new ParameterBounds(10.0, 37.5, Transform.Linear)
+                new MinMaxParameter(10.0, 37.5, Transform.Linear)
             };
             var sut = new RandomSearchOptimizer(parameters, 2);
             var actual = sut.Optimize(Minimize);

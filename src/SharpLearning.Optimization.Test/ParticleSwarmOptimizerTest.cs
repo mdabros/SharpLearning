@@ -10,11 +10,11 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void ParticleSwarmOptimizer_OptimizeBest()
         {
-            var parameters = new ParameterBounds[]
+            var parameters = new MinMaxParameter[]
             {
-                new ParameterBounds(-10.0, 10.0, Transform.Linear),
-                new ParameterBounds(-10.0, 10.0, Transform.Linear),
-                new ParameterBounds(-10.0, 10.0, Transform.Linear),
+                new MinMaxParameter(-10.0, 10.0, Transform.Linear),
+                new MinMaxParameter(-10.0, 10.0, Transform.Linear),
+                new MinMaxParameter(-10.0, 10.0, Transform.Linear),
             };
             var sut = new ParticleSwarmOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
@@ -30,9 +30,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void ParticleSwarmOptimizer_Optimize()
         {
-            var parameters = new ParameterBounds[]
+            var parameters = new MinMaxParameter[]
             {
-                new ParameterBounds(0.0, 100.0, Transform.Linear)
+                new MinMaxParameter(0.0, 100.0, Transform.Linear)
             };
             var sut = new ParticleSwarmOptimizer(parameters, 100);
             var results = sut.Optimize(Minimize2);

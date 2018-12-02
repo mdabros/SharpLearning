@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpLearning.Optimization.Test
@@ -10,7 +11,7 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void GridSearchOptimizer_OptimizeBest()
         {
-            var parameters = new double[][] { new double[]{ 10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0 } };
+            var parameters = new GridParameter[] { new GridParameter(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0) };
             var sut = new GridSearchOptimizer(parameters);
             var actual = sut.OptimizeBest(Minimize);
 
@@ -21,7 +22,7 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void GridSearchOptimizer_Optimize()
         {
-            var parameters = new double[][] { new double[] { 10.0, 37.5 } };
+            var parameters = new GridParameter[] { new GridParameter(10.0, 37.5) };
             var sut = new GridSearchOptimizer(parameters);
             var actual = sut.Optimize(Minimize);
 

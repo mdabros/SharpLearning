@@ -12,11 +12,11 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void BayesianOptimizer_OptimizeBest()
         {
-            var parameters = new ParameterBounds[]
+            var parameters = new MinMaxParameter[]
             {
-                new ParameterBounds(-10.0, 10.0, Transform.Linear),
-                new ParameterBounds(-10.0, 10.0, Transform.Linear),
-                new ParameterBounds(-10.0, 10.0, Transform.Linear),
+                new MinMaxParameter(-10.0, 10.0, Transform.Linear),
+                new MinMaxParameter(-10.0, 10.0, Transform.Linear),
+                new MinMaxParameter(-10.0, 10.0, Transform.Linear),
             };
             var sut = new BayesianOptimizer(parameters, 100, 5, 1);
             var actual = sut.OptimizeBest(Minimize);
@@ -32,9 +32,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void BayesianOptimizer_Optimize()
         {
-            var parameters = new ParameterBounds[]
+            var parameters = new MinMaxParameter[]
             {
-                new ParameterBounds(0.0, 100.0, Transform.Linear)
+                new MinMaxParameter(0.0, 100.0, Transform.Linear)
             };
             var sut = new BayesianOptimizer(parameters, 120, 5, 1);
             var results = sut.Optimize(Minimize2);

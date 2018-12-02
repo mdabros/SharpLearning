@@ -26,7 +26,7 @@ namespace SharpLearning.Optimization
         readonly double m_rho;
         readonly double m_sigma;
         readonly double m_noImprovementThreshold;
-        readonly ParameterBounds[] m_parameters;
+        readonly MinMaxParameter[] m_parameters;
         readonly Random m_random;
         readonly IParameterSampler m_sampler;
         readonly int m_maxFunctionEvaluations;
@@ -53,7 +53,7 @@ namespace SharpLearning.Optimization
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         /// <param name="seed">Seed for random restarts</param>
-        public GlobalizedBoundedNelderMeadOptimizer(ParameterBounds[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
+        public GlobalizedBoundedNelderMeadOptimizer(MinMaxParameter[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324)
         {
@@ -293,7 +293,7 @@ namespace SharpLearning.Optimization
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 var parameter = m_parameters[i];
-                newPoint[i] = parameter.NextValue(m_sampler);
+                newPoint[i] = parameter.SampleValue(m_sampler);
             }
         }
     }
