@@ -57,17 +57,16 @@ namespace SharpLearning.Optimization
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentNullException("maxIterationsWithoutImprovement must be at least 1"); }
             if (maxFunctionEvaluations < 0) { throw new ArgumentNullException("maxFunctionEvaluations must be at least 1"); }
 
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_maxRestarts = maxRestarts;
             m_maxIterationsPrRestart = maxIterationsPrRestart;
             m_alpha = alpha;
             m_gamma = gamma;
             m_rho = rho;
             m_sigma = sigma;
-            m_parameters = parameters;
             m_noImprovementThreshold = noImprovementThreshold;
             m_maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
             m_maxFunctionEvaluations = maxFunctionEvaluations;
