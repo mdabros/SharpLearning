@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SharpLearning.Optimization.ParameterSamplers;
@@ -13,7 +14,7 @@ namespace SharpLearning.Optimization
     public sealed class RandomSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly IParameterSpec[] m_parameters;
+        readonly Dictionary<string, IParameterSpec> m_parameters;
         readonly int m_iterations;
         readonly IParameterSampler m_sampler;
 
@@ -25,7 +26,7 @@ namespace SharpLearning.Optimization
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public RandomSearchOptimizer(IParameterSpec[] parameters, int iterations, int seed=42, bool runParallel = true)
+        public RandomSearchOptimizer(Dictionary<string, IParameterSpec> parameters, int iterations, int seed=42, bool runParallel = true)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
@@ -39,7 +40,7 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
+        public OptimizerResult OptimizeBest(FunctionToMinimize functionToMinimize) =>
             // Return the best model found.
             Optimize(functionToMinimize).First();
 
@@ -49,7 +50,7 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
+        public OptimizerResult[] Optimize(FunctionToMinimize functionToMinimize)
         {
             // Generate the cartesian product between all parameters
             var parameterSets = CreateParameterSets(m_parameters);
@@ -83,22 +84,26 @@ namespace SharpLearning.Optimization
         }
 
 
-        double[][] CreateParameterSets(IParameterSpec[] parameters)
+        List<Dictionary<string, double>> CreateParameterSets(Dictionary<string, IParameterSpec> parameters)
         {
-            var newSearchSpace = new double[m_iterations][];
-            for (int i = 0; i < newSearchSpace.Length; i++)
+            var searchSpace = new List<Dictionary<string, double>>();
+            for (int i = 0; i < m_iterations; i++)
 			{
-                var newParameters = new double[parameters.Length];
-                var index = 0;
-                foreach (var param in parameters)
+                var parameterSet = new Dictionary<string, double>();
+
+                // Order by name to ensure reproducibility.
+                foreach (var nameToParameter in m_parameters.OrderBy(v => v.Key))
                 {
-                    newParameters[index] = param.SampleValue(m_sampler);
-                    index++;
+                    var name = nameToParameter.Key;
+                    var parameterSpec = nameToParameter.Value;
+
+                    parameterSet.Add(nameToParameter.Key, parameterSpec.SampleValue(m_sampler));
                 }
-                newSearchSpace[i] = newParameters;
+
+                searchSpace.Add(parameterSet);
 			}
 
-            return newSearchSpace;
+            return searchSpace;
         }
     }
 }

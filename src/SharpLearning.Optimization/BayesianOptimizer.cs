@@ -22,14 +22,14 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class BayesianOptimizer : IOptimizer
     {
-        readonly IParameterSpec[] m_parameters;
+        readonly Dictionary<string, IParameterSpec> m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfStartingPoints;
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
         readonly IParameterSampler m_sampler;
         readonly Random m_random;
 
-        readonly List<double[]> m_previousParameterSets;
+        readonly List<Dictionary<string, double>> m_previousParameterSets;
         readonly List<double> m_previousParameterSetScores;
 
         // Important to use extra trees learner to have split between features calculated as: 
@@ -60,7 +60,7 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(IParameterSpec[] parameters, int maxIterations, 
+        public BayesianOptimizer(Dictionary<string, IParameterSpec> parameters, int maxIterations, 
             int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
@@ -81,7 +81,7 @@ namespace SharpLearning.Optimization
             m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30, 
                 minimumSplitSize: 10, 
                 maximumTreeDepth: 2000, 
-                featuresPrSplit: parameters.Length, 
+                featuresPrSplit: parameters.Count, 
                 minimumInformationGain: 1e-6, 
                 subSampleRatio: 1.0, 
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
@@ -115,8 +115,8 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(IParameterSpec[] parameters, int maxIterations, 
-            List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+        public BayesianOptimizer(Dictionary<string, IParameterSpec> parameters, int maxIterations, 
+            List<Dictionary<string, double>> previousParameterSets, List<double> previousParameterSetScores,
             int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -150,7 +150,7 @@ namespace SharpLearning.Optimization
             m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
                 minimumSplitSize: 10,
                 maximumTreeDepth: 2000,
-                featuresPrSplit: parameters.Length,
+                featuresPrSplit: parameters.Count,
                 minimumInformationGain: 1e-6,
                 subSampleRatio: 1.0,
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
@@ -171,7 +171,7 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
+        public OptimizerResult OptimizeBest(FunctionToMinimize functionToMinimize) =>
             // Return the best model found.
             Optimize(functionToMinimize).First();
 
@@ -181,12 +181,12 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
+        public OptimizerResult[] Optimize(FunctionToMinimize functionToMinimize)
         {
-            var bestParameterSet = new double[m_parameters.Length];
+            var bestParameterSet = new Dictionary<string, double>();
             var bestParameterSetScore = double.MaxValue;
 
-            var parameterSets = new List<double[]>();
+            var parameterSets = new List<Dictionary<string, double>>();
             var parameterSetScores = new List<double>();
 
             var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
@@ -234,11 +234,12 @@ namespace SharpLearning.Optimization
                 }
             }
 
-            var lastSet = new double[m_parameters.Length];
+            var lastSet = new Dictionary<string, double>();
             for (int iteration = 0; iteration < m_maxIterations; iteration++)
             {
                 // fit model
-                var observations = parameterSets.ToF64Matrix();
+                var observations = parameterSets.Select(v => v.Select(k => k.Value).ToArray())
+                    .ToList().ToF64Matrix();
                 var targets = parameterSetScores.ToArray();
                 var model = m_learner.Learn(observations, targets);
 
@@ -299,10 +300,10 @@ namespace SharpLearning.Optimization
 
         OptimizerResult[] FindNextCandidates(RegressionForestModel model, double bestScore)
         {
-            Func<double[], OptimizerResult> minimize = (param) =>
+            FunctionToMinimize minimize = (param) =>
             {
                 // use the model to predict the expected performance, mean and variance, of the parameter set.
-                var p = model.PredictCertainty(param);
+                var p = model.PredictCertainty(param.Select(v => v.Value).ToArray());
 
                 return new OptimizerResult(param,
                     // negative, since we want to "maximize" the acquisition function.
@@ -338,17 +339,20 @@ namespace SharpLearning.Optimization
             return false;
         }
 
-        double[] CreateParameterSet()
+        Dictionary<string, double> CreateParameterSet()
         {
-            var newPoint = new double[m_parameters.Length];
+            var parameterSet = new Dictionary<string, double>();
 
-            for (int i = 0; i < m_parameters.Length; i++)
+            // Order by name to ensure reproducibility.
+            foreach (var nameToParameter in m_parameters.OrderBy(v => v.Key))
             {
-                var parameter = m_parameters[i];
-                newPoint[i] = parameter.SampleValue(m_sampler);
+                var name = nameToParameter.Key;
+                var parameterSpec = nameToParameter.Value;
+
+                parameterSet.Add(nameToParameter.Key, parameterSpec.SampleValue(m_sampler));
             }
 
-            return newPoint;
+            return parameterSet;
         }
     }
 }

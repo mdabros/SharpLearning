@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SharpLearning.Optimization
 {
@@ -13,7 +14,7 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="error"></param>
         /// <param name="parameterSet"></param>
-        public OptimizerResult(double[] parameterSet, double error)
+        public OptimizerResult(Dictionary<string, double> parameterSet, double error)
         {
             ParameterSet = parameterSet ?? throw new ArgumentException(nameof(parameterSet));
             Error = error;
@@ -27,6 +28,6 @@ namespace SharpLearning.Optimization
         /// <summary>
         /// The parameter set.
         /// </summary>
-        public double[] ParameterSet { get; }
+        public Dictionary<string, double> ParameterSet { get; }
     }
 }
