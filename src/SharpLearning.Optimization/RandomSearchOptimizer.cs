@@ -13,7 +13,7 @@ namespace SharpLearning.Optimization
     public sealed class RandomSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly IParameter[] m_parameters;
+        readonly IParameterSpec[] m_parameters;
         readonly int m_iterations;
         readonly IParameterSampler m_sampler;
 
@@ -25,7 +25,7 @@ namespace SharpLearning.Optimization
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public RandomSearchOptimizer(IParameter[] parameters, int iterations, int seed=42, bool runParallel = true)
+        public RandomSearchOptimizer(IParameterSpec[] parameters, int iterations, int seed=42, bool runParallel = true)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
@@ -83,7 +83,7 @@ namespace SharpLearning.Optimization
         }
 
 
-        double[][] CreateParameterSets(IParameter[] parameters)
+        double[][] CreateParameterSets(IParameterSpec[] parameters)
         {
             var newSearchSpace = new double[m_iterations][];
             for (int i = 0; i < newSearchSpace.Length; i++)

@@ -12,14 +12,14 @@ namespace SharpLearning.Optimization
     public sealed class GridSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly IParameter[] m_parameters;
+        readonly IParameterSpec[] m_parameters;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public GridSearchOptimizer(IParameter[] parameters, bool runParallel = true)
+        public GridSearchOptimizer(IParameterSpec[] parameters, bool runParallel = true)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
@@ -72,7 +72,7 @@ namespace SharpLearning.Optimization
             return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
         }
 
-        static double[][] CartesianProduct(IParameter[] sequences)
+        static double[][] CartesianProduct(IParameterSpec[] sequences)
         {
             var cartesian = CartesianProductEnumerable(sequences.Select(p => p.GetAllValues()));
             return cartesian.Select(row => row.ToArray()).ToArray();

@@ -16,7 +16,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class ParticleSwarmOptimizer : IOptimizer
     {
-        readonly IParameter[] m_parameters;
+        readonly IParameterSpec[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfParticles;
         readonly double m_c1;
@@ -36,7 +36,7 @@ namespace SharpLearning.Optimization
         /// <param name="c1">Learning factor weighting local particle best solution. (default is 2)</param>
         /// <param name="c2">Learning factor weighting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        public ParticleSwarmOptimizer(IParameter[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
+        public ParticleSwarmOptimizer(IParameterSpec[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
         {
             if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
             if (numberOfParticles < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }

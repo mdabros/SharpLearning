@@ -5,10 +5,10 @@ using SharpLearning.Optimization.ParameterSamplers;
 namespace SharpLearning.Optimization
 {
     /// <summary>
-    /// GridParameter, usable when a fixed set of parameters,
+    /// GridParameterSpec, usable when a fixed set of parameters,
     /// needs to be searched.
     /// </summary>
-    public sealed class GridParameter : IParameter
+    public sealed class GridParameterSpec : IParameterSpec
     {
         readonly double[] m_parameters;
         readonly int m_minIndex;
@@ -17,11 +17,11 @@ namespace SharpLearning.Optimization
         const ParameterType m_parameterType = ParameterType.Discrete;
 
         /// <summary>
-        /// GridParameter, usable when a fixed set of parameters,
+        /// GridParameterSpec, usable when a fixed set of parameters,
         /// needs to be searched.
         /// </summary>
         /// <param name="parameters"></param>
-        public GridParameter(params double[] parameters)
+        public GridParameterSpec(params double[] parameters)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_minIndex = 0;
@@ -29,14 +29,14 @@ namespace SharpLearning.Optimization
         }
 
         /// <summary>
-        /// Maximum of the parameter range.
-        /// </summary>
-        public double Max => m_parameters.Max();
-
-        /// <summary>
         /// Minimum of the parameter range.
         /// </summary>
         public double Min => m_parameters.Min();
+
+        /// <summary>
+        /// Maximum of the parameter range.
+        /// </summary>
+        public double Max => m_parameters.Max();
 
         /// <summary>
         /// Samples a value defined for the parameter.

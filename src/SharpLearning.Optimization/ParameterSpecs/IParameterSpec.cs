@@ -3,19 +3,19 @@
 namespace SharpLearning.Optimization
 {
     /// <summary>
-    /// Interface for parameter bounds.
+    /// Interface for parameter specs.
     /// </summary>
-    public interface IParameter
+    public interface IParameterSpec
     {
         /// <summary>
         /// Minimum bound.
         /// </summary>
-        double Max { get; }
+        double Min { get; }
 
         /// <summary>
         /// Maximum bound.
         /// </summary>
-        double Min { get; }
+        double Max { get; }
 
         /// <summary>
         /// samples a value.

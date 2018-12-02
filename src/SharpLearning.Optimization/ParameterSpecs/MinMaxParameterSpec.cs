@@ -5,16 +5,16 @@ using SharpLearning.Optimization.Transforms;
 namespace SharpLearning.Optimization
 {
     /// <summary>
-    /// MinMaxParameter, used for sampling values in the range [min;max].
+    /// MinMaxParameterSpec, used for sampling values in the range [min;max].
     /// </summary>
-    public class MinMaxParameter : IParameter
+    public class MinMaxParameterSpec : IParameterSpec
     {
         readonly ITransform m_transform;
 
         readonly ParameterType m_parameterType;
 
         /// <summary>
-        /// MinMaxParameter, used for sampling values in the range [min;max].
+        /// MinMaxParameterSpec, used for sampling values in the range [min;max].
         /// </summary>
         /// <param name="min">minimum bound.</param>
         /// <param name="max">maximum bound.</param>
@@ -22,7 +22,7 @@ namespace SharpLearning.Optimization
         /// Default is Linear.</param>
         /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continuous values.
         /// Default is Continuous.</param>
-        public MinMaxParameter(double min, double max, 
+        public MinMaxParameterSpec(double min, double max, 
             Transform transform = Transform.Linear, ParameterType parameterType  = ParameterType.Continuous)
         {
             if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
@@ -34,13 +34,13 @@ namespace SharpLearning.Optimization
         }
 
         /// <summary>
-        /// MinMaxParameter, used for sampling values in the range [min;max].
+        /// MinMaxParameterSpec, used for sampling values in the range [min;max].
         /// </summary>
         /// <param name="min">minimum bound.</param>
         /// <param name="max">maximum bound.</param>
         /// <param name="transform">Transform for controlling the scale of the parameter sampled between min and max bounds.</param>
         /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.</param>
-        public MinMaxParameter(double min, double max, 
+        public MinMaxParameterSpec(double min, double max, 
             ITransform transform, ParameterType parameterType)
         {
             if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
@@ -73,12 +73,12 @@ namespace SharpLearning.Optimization
         }
 
         /// <summary>
-        /// Not available for MinMaxParameter.
+        /// Not available for MinMaxParameterSpec.
         /// </summary>
         /// <returns></returns>
         public double[] GetAllValues()
         {
-            throw new NotImplementedException($"Get all values is not available for {nameof(MinMaxParameter)}");
+            throw new NotImplementedException($"Get all values is not available for {nameof(MinMaxParameterSpec)}");
         }
     }
 }
