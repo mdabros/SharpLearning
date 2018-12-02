@@ -12,31 +12,28 @@ namespace SharpLearning.Optimization
     public sealed class GridSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly double[][] m_parameters;
+        readonly IParameterSpec[] m_parameters;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public GridSearchOptimizer(double[][] parameterRanges, bool runParallel = true)
+        public GridSearchOptimizer(IParameterSpec[] parameters, bool runParallel = true)
         {
-            if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
-            m_parameters = parameterRanges;
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
         }
 
         /// <summary>
         /// Simple grid search that tries all combinations of the provided parameters.
-        /// Returns the result which best minimises the provided function.
+        /// Returns the result which best minimizes the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
-        {
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            return Optimize(functionToMinimize).First();
-        }
+            Optimize(functionToMinimize).First();
 
         /// <summary>
         /// Simple grid search that tries all combinations of the provided parameters.
@@ -75,9 +72,9 @@ namespace SharpLearning.Optimization
             return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
         }
 
-        static T[][] CartesianProduct<T>(T[][] sequences)
+        static double[][] CartesianProduct(IParameterSpec[] sequences)
         {
-            var cartesian = CartesianProductEnumerable(sequences);
+            var cartesian = CartesianProductEnumerable(sequences.Select(p => p.GetAllValues()));
             return cartesian.Select(row => row.ToArray()).ToArray();
         }
 

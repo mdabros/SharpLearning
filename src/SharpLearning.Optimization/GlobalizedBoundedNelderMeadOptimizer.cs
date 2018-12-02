@@ -8,8 +8,8 @@ namespace SharpLearning.Optimization
 {
     /// <summary>
     /// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization 
-    /// avoids some of the shortcommings the standard implementation. 
-    /// Specifically it is better suited for multimodal optimization problems through its restart property.
+    /// avoids some of the shortcomings the standard implementation. 
+    /// Specifically it is better suited for multi-modal optimization problems through its restart property.
     /// It also respect the bounds given by the provided parameter space.
     /// Roughly based on:
     /// http://home.ku.edu.tr/~daksen/2004-Nelder-Mead-Method-Wolff.pdf
@@ -26,7 +26,7 @@ namespace SharpLearning.Optimization
         readonly double m_rho;
         readonly double m_sigma;
         readonly double m_noImprovementThreshold;
-        readonly ParameterBounds[] m_parameters;
+        readonly IParameterSpec[] m_parameters;
         readonly Random m_random;
         readonly IParameterSampler m_sampler;
         readonly int m_maxFunctionEvaluations;
@@ -34,40 +34,39 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization 
-        /// avoids some of the shortcommings the standard implementation. 
-        /// Specifically it is better suited for multimodal optimization problems through its restart property.
+        /// avoids some of the shortcomings the standard implementation. 
+        /// Specifically it is better suited for multi-modal optimization problems through its restart property.
         /// It also respect the bounds given by the provided parameter space.
         /// Roughly based on:
         /// http://home.ku.edu.tr/~daksen/2004-Nelder-Mead-Method-Wolff.pdf
         /// and
         /// http://www.emse.fr/~leriche/GBNM_SMO_1026_final.pdf
         /// </summary>
-        /// <param name="parameters">Each row is a series of values for a specific parameter</param>
-        /// <param name="maxRestarts">Maximun number of restart (default is 8</param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
+        /// <param name="maxRestarts">Maximum number of restart (default is 8</param>
         /// <param name="noImprovementThreshold">Minimum value of improvement before the improvement is accepted as an actual improvement (default is 0.001)</param>
         /// <param name="maxIterationsWithoutImprovement">Maximum number of iterations without an improvement (default is 5)</param>
-        /// <param name="maxIterationsPrRestart">Maximum iterations pr. restart. 0 is no limit and will run to convergens (default is 0)</param>
-        /// <param name="maxFunctionEvaluations">Maximum function evaluations. 0 is no limit and will run to convergens (default is 0)</param>
+        /// <param name="maxIterationsPrRestart">Maximum iterations pr. restart. 0 is no limit and will run to convergence (default is 0)</param>
+        /// <param name="maxFunctionEvaluations">Maximum function evaluations. 0 is no limit and will run to convergence (default is 0)</param>
         /// <param name="alpha">Coefficient for reflection part of the algorithm (default is 1)</param>
         /// <param name="gamma">Coefficient for expansion part of the algorithm (default is 2)</param>
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         /// <param name="seed">Seed for random restarts</param>
-        public GlobalizedBoundedNelderMeadOptimizer(ParameterBounds[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
+        public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
             double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentNullException("maxIterationsWithoutImprovement must be at least 1"); }
-            if (maxFunctionEvaluations < 0) { throw new ArgumentNullException("maxFunctionEvaluations must be at least 1"); }
+            if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentException("maxIterationsWithoutImprovement must be at least 1"); }
+            if (maxFunctionEvaluations < 0) { throw new ArgumentException("maxFunctionEvaluations must be at least 1"); }
 
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_maxRestarts = maxRestarts;
             m_maxIterationsPrRestart = maxIterationsPrRestart;
             m_alpha = alpha;
             m_gamma = gamma;
             m_rho = rho;
             m_sigma = sigma;
-            m_parameters = parameters;
             m_noImprovementThreshold = noImprovementThreshold;
             m_maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
             m_maxFunctionEvaluations = maxFunctionEvaluations;
@@ -79,14 +78,13 @@ namespace SharpLearning.Optimization
         }
         /// <summary>
         /// Optimization using Globalized bounded Nelder-Mead method.
-        /// Returns the result which best minimises the provided function.
+        /// Returns the result which best minimizes the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
-        {
-            return Optimize(functionToMinimize).First();
-        }
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
+            // Return the best model found.
+            Optimize(functionToMinimize).First();
 
         /// <summary>
         /// Optimization using Globalized bounded Nelder-Mead method.
@@ -288,12 +286,12 @@ namespace SharpLearning.Optimization
         /// <param name="newPoint"></param>
         void RandomRestartPoint(double[] newPoint)
         {
-            // consider to implement gaussian selection of next point to avoid very similar point being selected
+            // consider to implement Gaussian selection of next point to avoid very similar point being selected
             // look at: https://github.com/ojdo/gbnm/blob/master/gbnm.m
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 var parameter = m_parameters[i];
-                newPoint[i] = parameter.NextValue(m_sampler);
+                newPoint[i] = parameter.SampleValue(m_sampler);
             }
         }
     }

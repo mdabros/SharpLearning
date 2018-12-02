@@ -16,7 +16,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class ParticleSwarmOptimizer : IOptimizer
     {
-        readonly ParameterBounds[] m_parameters;
+        readonly IParameterSpec[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfParticles;
         readonly double m_c1;
@@ -30,19 +30,18 @@ namespace SharpLearning.Optimization
         /// The first one is the best solution found by the specific particle so far. 
         /// The other "best" value is the global best value obtained by any particle in the population so far.
         /// </summary>
-        /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
         /// <param name="numberOfParticles">The number of particles to use (default is 10). MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
-        /// <param name="c1">Learning factor weigting local particle best solution. (default is 2)</param>
-        /// <param name="c2">Learning factor weigting global best solution. (default is 2)</param>
+        /// <param name="c1">Learning factor weighting local particle best solution. (default is 2)</param>
+        /// <param name="c2">Learning factor weighting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        public ParticleSwarmOptimizer(ParameterBounds[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
+        public ParticleSwarmOptimizer(IParameterSpec[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
-            if (numberOfParticles < 1) { throw new ArgumentNullException("numberOfParticles must be at least 1"); }
+            if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
+            if (numberOfParticles < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
 
-            m_parameters = parameters;
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_maxIterations = maxIterations;
             m_numberOfParticles = numberOfParticles;
             m_c1 = c1;
@@ -56,14 +55,13 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Optimization using swarm optimization.
-        /// Returns the result which best minimises the provided function.
+        /// Returns the result which best minimizes the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
-        {
-            return Optimize(functionToMinimize).First();
-        }
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
+            // Return the best model found.
+            Optimize(functionToMinimize).First();
 
         /// <summary>
         /// Optimization using swarm optimization.
@@ -171,7 +169,7 @@ namespace SharpLearning.Optimization
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 var parameter = m_parameters[i];
-                newPoint[i] = parameter.NextValue(m_sampler);
+                newPoint[i] = parameter.SampleValue(m_sampler);
             }
 
             return newPoint;

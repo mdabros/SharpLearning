@@ -9,25 +9,24 @@ namespace SharpLearning.Optimization
     public sealed class OptimizerResult
     {
         /// <summary>
-        /// Resulting error using the parameter set
-        /// </summary>
-        public readonly double Error;
-
-        /// <summary>
-        /// The parameter set
-        /// </summary>
-        public readonly double[] ParameterSet;
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="error"></param>
         /// <param name="parameterSet"></param>
         public OptimizerResult(double[] parameterSet, double error)
         {
-            if (parameterSet == null) { throw new ArgumentException("parameterSet"); }
-            ParameterSet = parameterSet;
+            ParameterSet = parameterSet ?? throw new ArgumentException(nameof(parameterSet));
             Error = error;
         }
+
+        /// <summary>
+        /// Resulting error using the parameter set.
+        /// </summary>
+        public double Error { get; }
+
+        /// <summary>
+        /// The parameter set.
+        /// </summary>
+        public double[] ParameterSet { get; }
     }
 }
