@@ -60,13 +60,13 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(IParameter[] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
+        public BayesianOptimizer(IParameter[] parameters, int maxIterations, 
+            int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
-            if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
-            if (numberOfStartingPoints < 1) { throw new ArgumentNullException("numberOfParticles must be at least 1"); }
+            if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
+            if (numberOfStartingPoints < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
 
-            m_parameters = parameters;
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_maxIterations = maxIterations;
             m_numberOfStartingPoints = numberOfStartingPoints;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
@@ -115,19 +115,28 @@ namespace SharpLearning.Optimization
         /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(IParameter[] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+        public BayesianOptimizer(IParameter[] parameters, int maxIterations, 
+            List<double[]> previousParameterSets, List<double> previousParameterSetScores,
             int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
-            if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
-            if (previousParameterSets == null) { throw new ArgumentNullException("previousParameterSets"); }
-            if (previousParameterSetScores == null) { throw new ArgumentNullException("previousResults"); }
-            if (previousParameterSets.Count != previousParameterSetScores.Count) { throw new ArgumentException("previousParameterSets length: " 
-                + previousParameterSets.Count + " does not correspond with previousResults length: " + previousParameterSetScores.Count); }
-            if (previousParameterSetScores.Count < 2 || previousParameterSets.Count < 2)
-            { throw new ArgumentException("previousParameterSets length and previousResults length must be at least 2 and was: " + previousParameterSetScores.Count); }
+            if (previousParameterSets.Count != previousParameterSetScores.Count)
+            {
+                throw new ArgumentException("previousParameterSets length: " 
+                    + previousParameterSets.Count + " does not correspond with previousResults length: " 
+                    + previousParameterSetScores.Count);
+            }
 
-            m_parameters = parameters;
+            if (previousParameterSetScores.Count < 2 || previousParameterSets.Count < 2)
+            {
+                throw new ArgumentException("previousParameterSets length and previousResults length must be at least 2 and was: " 
+                    + previousParameterSetScores.Count);
+            }
+
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+            m_previousParameterSets = previousParameterSets ?? throw new ArgumentNullException(nameof(previousParameterSets));
+            m_previousParameterSetScores = previousParameterSetScores ?? throw new ArgumentNullException(nameof(previousParameterSetScores));
+
             m_maxIterations = maxIterations;
             m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
 
@@ -154,9 +163,6 @@ namespace SharpLearning.Optimization
 
             // Acquisition function to maximize.
             m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
-
-            m_previousParameterSets = previousParameterSets;
-            m_previousParameterSetScores = previousParameterSetScores;
         }
 
         /// <summary>
