@@ -32,11 +32,9 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
-        {
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            return Optimize(functionToMinimize).First();
-        }
+            Optimize(functionToMinimize).First();
 
         /// <summary>
         /// Simple grid search that tries all combinations of the provided parameters.
