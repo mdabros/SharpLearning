@@ -12,17 +12,17 @@ namespace SharpLearning.Optimization
     public sealed class GridSearchOptimizer : IOptimizer
     {
         readonly bool m_runParallel;
-        readonly double[][] m_parameters;
+        readonly GridParameter[] m_parameterBounds;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="parameterRanges">Each row is a series of values for a specific parameter</param>
+        /// <param name="parameterBounds">Each row is a series of values for a specific parameter</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public GridSearchOptimizer(double[][] parameterRanges, bool runParallel = true)
+        public GridSearchOptimizer(GridParameter[] parameterBounds, bool runParallel = true)
         {
-            if (parameterRanges == null) { throw new ArgumentNullException("parameterRanges"); }
-            m_parameters = parameterRanges;
+            if (parameterBounds == null) { throw new ArgumentNullException("parameterRanges"); }
+            m_parameterBounds = parameterBounds;
             m_runParallel = runParallel;
         }
 
@@ -47,7 +47,7 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
-            var grid = CartesianProduct(m_parameters);
+            var grid = CartesianProduct(m_parameterBounds);
 
             // Initialize the search
             var results = new ConcurrentBag<OptimizerResult>();
@@ -75,9 +75,9 @@ namespace SharpLearning.Optimization
             return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
         }
 
-        static T[][] CartesianProduct<T>(T[][] sequences)
+        static double[][] CartesianProduct(GridParameter[] sequences)
         {
-            var cartesian = CartesianProductEnumerable(sequences);
+            var cartesian = CartesianProductEnumerable(sequences.Select(p => p.GetAllValues()));
             return cartesian.Select(row => row.ToArray()).ToArray();
         }
 
