@@ -11,7 +11,7 @@ namespace SharpLearning.Optimization
 {
     /// <summary>
     /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
-    /// This model is used to sample new promising parameter candiates which are evaluated and added to the existing paramter sets.
+    /// This model is used to sample new promising parameter candidates which are evaluated and added to the existing parameter sets.
     /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
     /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
     /// But in that case it can usually reduce the number of iterations required to reach a good solution compared to less sophisticated methods.
@@ -22,7 +22,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class BayesianOptimizer : IOptimizer
     {
-        readonly MinMaxParameter[] m_parameters;
+        readonly IParameter[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfStartingPoints;
         readonly int m_numberOfCandidatesEvaluatedPrIteration;
@@ -32,12 +32,12 @@ namespace SharpLearning.Optimization
         readonly List<double[]> m_previousParameterSets;
         readonly List<double> m_previousParameterSetScores;
 
-        // Important to use extra trees learner to have split bestween features calculated as: 
+        // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
         // instead of: (currentValue + prevValue) * 0.5; like in random forest.
         readonly RegressionExtremelyRandomizedTreesLearner m_learner;
 
-        // Optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
+        // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
         readonly IOptimizer m_maximizer;
 
         // Acquisition function to maximize
@@ -45,7 +45,7 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
-        /// This model is used to sample new promising parameter candiates which are evaluated and added to the existing paramter sets.
+        /// This model is used to sample new promising parameter candidates which are evaluated and added to the existing parameter sets.
         /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
         /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
         /// But in that case it can usually reduce the number of iterations required to reach a good solution compared to less sophisticated methods.
@@ -57,10 +57,10 @@ namespace SharpLearning.Optimization
         /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="numberOfStartingPoints">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
-        /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
-        /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
+        /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
+        /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(MinMaxParameter[] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
+        public BayesianOptimizer(IParameter[] parameters, int maxIterations, int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -87,7 +87,7 @@ namespace SharpLearning.Optimization
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
                 runParallel: false);
 
-            // Optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
+            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
             m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000, 
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
                 runParallel: false);
@@ -99,7 +99,7 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
-        /// This model is used to sample new promising parameter candiates which are evaluated and added to the existing paramter sets.
+        /// This model is used to sample new promising parameter candidates which are evaluated and added to the existing parameter sets.
         /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
         /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
         /// But in that case it can usually reduce the number of iterations required to reach a good solution compared to less sophisticated methods.
@@ -111,11 +111,11 @@ namespace SharpLearning.Optimization
         /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
         /// <param name="previousParameterSets">Parameter sets from previous run</param>
-        /// <param name="previousParameterSetScores">Scores from from previous run corresponding to each parameter set</param>
-        /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candiate parameter set should by sampled from the model in each iteration. 
-        /// The parameter sets are inlcuded in order of most promissing outcome (default is 1)</param>
+        /// <param name="previousParameterSetScores">Scores from previous run corresponding to each parameter set</param>
+        /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
+        /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(MinMaxParameter[] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
+        public BayesianOptimizer(IParameter[] parameters, int maxIterations, List<double[]> previousParameterSets, List<double> previousParameterSetScores,
             int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
@@ -147,7 +147,7 @@ namespace SharpLearning.Optimization
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
                 runParallel: false);
 
-            // Optimizer for finding maximum expectation (most promissing hyper parameters) from extra trees model.
+            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
             m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
                 runParallel: false);
@@ -161,14 +161,13 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Optimization using Sequential Model-based optimization.
-        /// Returns the result which best minimises the provided function.
+        /// Returns the result which best minimizes the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
-        {
-            return Optimize(functionToMinimize).First();
-        }
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
+            // Return the best model found.
+            Optimize(functionToMinimize).First();
 
         /// <summary>
         /// Optimization using Sequential Model-based optimization.
