@@ -16,7 +16,7 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class ParticleSwarmOptimizer : IOptimizer
     {
-        readonly MinMaxParameter[] m_parameters;
+        readonly IParameter[] m_parameters;
         readonly int m_maxIterations;
         readonly int m_numberOfParticles;
         readonly double m_c1;
@@ -33,10 +33,10 @@ namespace SharpLearning.Optimization
         /// <param name="parameters">A list of parameter bounds for each optimization parameter</param>
         /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
         /// <param name="numberOfParticles">The number of particles to use (default is 10). MaxIteration * numberOfParticles = totalFunctionEvaluations</param>
-        /// <param name="c1">Learning factor weigting local particle best solution. (default is 2)</param>
-        /// <param name="c2">Learning factor weigting global best solution. (default is 2)</param>
+        /// <param name="c1">Learning factor weighting local particle best solution. (default is 2)</param>
+        /// <param name="c2">Learning factor weighting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        public ParticleSwarmOptimizer(MinMaxParameter[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
+        public ParticleSwarmOptimizer(IParameter[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
         {
             if (parameters == null) { throw new ArgumentNullException("parameters"); }
             if (maxIterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
@@ -56,14 +56,13 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Optimization using swarm optimization.
-        /// Returns the result which best minimises the provided function.
+        /// Returns the result which best minimizes the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize)
-        {
-            return Optimize(functionToMinimize).First();
-        }
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
+            // Return the best model found.
+            Optimize(functionToMinimize).First();
 
         /// <summary>
         /// Optimization using swarm optimization.
