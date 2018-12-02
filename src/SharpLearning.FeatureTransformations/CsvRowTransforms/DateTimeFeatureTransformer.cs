@@ -1,9 +1,9 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.InputOutput.Csv;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using SharpLearning.Containers;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {
@@ -13,6 +13,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
     /// Year, Month, DayOfMonth, DayOfWeek, HourOfDay, TotalDays, TotalHours.
     /// The TotalDays and TotalHours are calculated from a provided start date or if none provided: 1970-1-1.
     /// </summary>
+    [Serializable]
     public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     {
         /// <summary>

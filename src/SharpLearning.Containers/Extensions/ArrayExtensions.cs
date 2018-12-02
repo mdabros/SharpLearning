@@ -11,6 +11,9 @@ namespace SharpLearning.Containers.Extensions
     /// </summary>
     public static class ArrayExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly Converter<string, double> DefaultF64Converter = FloatingPointConversion.ToF64;
 
         /// <summary>

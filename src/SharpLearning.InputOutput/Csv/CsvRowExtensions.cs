@@ -12,6 +12,9 @@ namespace SharpLearning.InputOutput.Csv
     /// </summary>
     public static class CsvRowExtensions
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly Converter<string,double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
 
         /// <summary>
