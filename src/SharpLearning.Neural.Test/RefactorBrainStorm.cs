@@ -30,13 +30,13 @@ namespace SharpLearning.Neural.Test
 
         interface ILoss
         {
-            DenseTensor<double> Losses(DenseTensor<double> targets, DenseTensor<double> predictions);
-            double AccumulateLoss(DenseTensor<double> targets, DenseTensor<double> predictions);
+            DenseTensor<double> sampleLosses(DenseTensor<double> targets, DenseTensor<double> predictions);
+            double AccumulateSampleLoss(DenseTensor<double> sampleLosses);
         }
 
         class MeanSquareLoss : ILoss
         {
-            public DenseTensor<double> Losses(DenseTensor<double> targets, DenseTensor<double> predictions)
+            public DenseTensor<double> sampleLosses(DenseTensor<double> targets, DenseTensor<double> predictions)
             {
                 CheckDimensions(targets, predictions);
 
@@ -50,19 +50,17 @@ namespace SharpLearning.Neural.Test
                 return losses;
             }
 
-            public double AccumulateLoss(DenseTensor<double> targets, DenseTensor<double> predictions)
+            public double AccumulateSampleLoss(DenseTensor<double> sampleLosses)
             {
-                CheckDimensions(targets, predictions);
-
                 var accumulatedLoss = 0.0;
 
-                for (int i = 0; i < targets.Length; i++)
+                for (int i = 0; i < sampleLosses.Length; i++)
                 {
-                    var error = predictions[i] - targets[i];
-                    accumulatedLoss += error * error;
+                    var sampleLoss = sampleLosses[i];
+                    accumulatedLoss += sampleLoss * sampleLoss;
                 }
 
-                accumulatedLoss = accumulatedLoss / targets.Length;
+                accumulatedLoss = accumulatedLoss / sampleLosses.Length;
 
                 return accumulatedLoss;
             }
