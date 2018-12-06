@@ -13,26 +13,30 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         [TestMethod]
         public void RefactorBrainStorm()
         {
+            // TODO: Fix Dense.Initialize. 
+            // Dimensions are off.
+
             var inputShape = new TensorShape(10, 10);
             var targetShape = new TensorShape(1);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(inputShape.Dimensions));
-            net.Add(new DenseLayer(units: 128));
-            net.Add(new ReluLayer());
+            //net.Add(new DenseLayer(units: 128));
+            //net.Add(new ReluLayer());
             net.Add(new DenseLayer(units: 1));
 
             var loss = new MeanSquareLoss();
 
             var random = new Random(232);
 
-            // TODO: Figure out how to handle batchsize in storage tensors.
+            // TODO: Figure out how to handle batch size in storage tensors.
             var storage = new NeuralNetStorage();
             net.Initialize(random, storage);
+            Trace.WriteLine(net.Summary());
 
             var minibatchSource = new MinibatchSource(inputShape, targetShape, seed: random.Next());
 
-            var iterations = 10;
+            var iterations = 1000;
             var batchSize = 32;
 
             var optimizer = new SgdOptimizer(learningRate: 0.01f, batchSize: batchSize);
@@ -40,9 +44,10 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
             for (int iteration = 0; iteration < iterations; iteration++)
             {
                 var (observations, targets) = minibatchSource.GetMinibatch(batchSize);
-
-                // inputs are assinged to the first layer.
-                storage.AssignTensor(net.Input, observations.Data);
+                
+                // inputs are assigned to the first layer.
+                storage.AssignTensor(net.Input, observations);
+                net.UpdateDimensions(net.Input);
 
                 // forward 
                 net.Forward(storage);
@@ -55,7 +60,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
                 Trace.WriteLine("Batch Loss:" + currentLoss);
 
                 // assign sample losses and back propagate.
-                storage.AssignGradient(net.Output, sampleLosses.Data);
+                storage.AssignGradient(net.Output, sampleLosses);
                 net.Backward(storage);
 
                 // update parameters.

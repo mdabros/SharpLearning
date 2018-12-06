@@ -15,11 +15,10 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <param name="shape"></param>
         /// <param name="trainable"></param>
         /// <param name="preservable"></param>
-        Variable(TensorShape shape, bool trainable = false, bool preservable = false)
+        Variable(TensorShape shape, bool trainable = false)
         {
             Shape = shape;
             Trainable = trainable;
-            Preservable = preservable;
         }
 
         /// <summary>
@@ -28,24 +27,19 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <param name="dimensions"></param>
         /// <param name="trainable"></param>
         /// <param name="preservable"></param>
-        Variable(int[] dimensions, bool trainable = false, bool preservable = false)
-            : this(new TensorShape(dimensions), trainable, preservable)
+        Variable(int[] dimensions, bool trainable = false)
+            : this(new TensorShape(dimensions), trainable)
         { }
 
         /// <summary>
         /// 
         /// </summary>
-        public TensorShape Shape { get; }
+        public TensorShape Shape { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         public bool Trainable { get; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public bool Preservable { get; }
 
         /// <summary>
         /// 
@@ -73,7 +67,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <returns></returns>
         public Variable Copy()
         {
-            return new Variable(Dimensions.ToArray(), Trainable, Preservable);
+            return new Variable(Dimensions.ToArray(), Trainable);
         }
 
         /// <summary>
@@ -83,17 +77,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <returns></returns>
         public static Variable CreateTrainable(params int[] dimensions)
         {
-            return new Variable(dimensions, true, true);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dimensions"></param>
-        /// <returns></returns>
-        public static Variable CreatePreservable(params int[] dimensions)
-        {
-            return new Variable(dimensions, false, true);
+            return new Variable(dimensions, true);
         }
 
         /// <summary>
@@ -190,18 +174,6 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <summary>
         /// 
         /// </summary>
-        public void ClearNonPreservables()
-        {
-            var variablesToClear = m_data.Keys.Where(k => !k.Trainable && !k.Preservable)
-                .ToList();
-
-            foreach (var key in variablesToClear)
-                m_data.Remove(key);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="shape"></param>
         /// <returns></returns>
         public Tensor<float> GetTensor(Variable shape)
@@ -249,25 +221,30 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="shape"></param>
+        /// <param name="variable"></param>
         /// <param name="data"></param>
-        public void AssignTensor(Variable shape, float[] data)
+        public void AssignTensor(Variable variable, Tensor<float> data)
         {
-            if (!m_data.ContainsKey(shape))
+            if (!m_data.ContainsKey(variable))
             {
-                m_data[shape] = new Data<float>();
+                m_data[variable] = new Data<float>();
             }
 
-            var tensor = m_data[shape].GetOrAllocateTensor(shape);
-
-            // consider reshape instead of fail.
-
-            if (tensor.ElementCount != data.Length)
+            // reshape tensor to update batch size.
+            if (variable.Shape != data.Shape) 
             {
-                throw new ArgumentException($"tensor element count: {tensor.ElementCount}, differs from data length: {data.Length}");
-            }
+                m_data.Remove(variable);
+                variable.Shape = data.Shape;
 
-            data.CopyTo(tensor.Data, 0);
+                m_data[variable] = new Data<float>();
+                var tensor = m_data[variable].GetOrAllocateTensor(variable);
+                data.Data.CopyTo(tensor.Data, 0);
+            }
+            else
+            {
+                var tensor = m_data[variable].GetOrAllocateTensor(variable);
+                data.Data.CopyTo(tensor.Data, 0);
+            }           
         }
 
 
@@ -290,25 +267,32 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="shape"></param>
+        /// <param name="variable"></param>
         /// <param name="data"></param>
-        public void AssignGradient(Variable shape, float[] data)
+        public void AssignGradient(Variable variable, Tensor<float> data)
         {
-            if (!m_data.ContainsKey(shape))
+            if (!m_data.ContainsKey(variable))
             {
-                m_data[shape] = new Data<float>();
+                m_data[variable] = new Data<float>();
             }
 
-            var gradient = m_data[shape].GetOrAllocateGradient(shape);
+            var gradient = m_data[variable].GetOrAllocateGradient(variable);
 
-            // consider reshape instead of fail.
-
-            if (gradient.ElementCount != data.Length)
+            // reshape tensor to update batch size.
+            if (variable.Shape != data.Shape)
             {
-                throw new ArgumentException($"tensor element count: {gradient.ElementCount}, differs from data length: {data.Length}");
-            }
+                m_data.Remove(variable);
+                variable.Shape = data.Shape;
 
-            data.CopyTo(gradient.Data, 0);
+                m_data[variable] = new Data<float>();
+                var tensor = m_data[variable].GetOrAllocateGradient(variable);
+                data.Data.CopyTo(tensor.Data, 0);
+            }
+            else
+            {
+                var tensor = m_data[variable].GetOrAllocateGradient(variable);
+                data.Data.CopyTo(tensor.Data, 0);
+            }
         }
     }
 }

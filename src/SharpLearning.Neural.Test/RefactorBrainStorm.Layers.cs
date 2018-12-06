@@ -44,17 +44,10 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="inputVariable"></param>
-        /// <param name="storage"></param>
-        /// <param name="copyStorage"></param>
-        /// <param name="layers"></param>
-        void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayer> layers);
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="input"></param>
         void UpdateDimensions(Variable input);
+
+        int ParameterCount();
     }
 
     /// <summary>
@@ -108,21 +101,6 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="inputVariable"></param>
-        /// <param name="storage"></param>
-        /// <param name="copyStorage"></param>
-        /// <param name="layers"></param>
-        public void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayer> layers)
-        {
-            var copy = new InputLayer(inputVariable.Copy());
-            copy.UpdateDimensions(inputVariable);
-
-            layers.Add(copy);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="storage"></param>
         /// <param name="training"></param>
         public void Forward(NeuralNetStorage storage)
@@ -140,6 +118,11 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, Initialization initializtion)
         {
             UpdateDimensions(inputVariable);
+        }
+
+        public int ParameterCount()
+        {
+            return 0;
         }
 
         /// <summary>
@@ -216,7 +199,8 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         {
             UpdateDimensions(inputVariable);
 
-            var fanIn = inputVariable.DimensionOffSets[0]; // product of all dimensions except batch size.
+            // Assumes no batch dimension in inputVariable.
+            var fanIn = inputVariable.Dimensions.Aggregate((v1, v2) => v1 * v2);
             var fanOut = m_units;
 
             var fans = new FanInFanOut(fanIn, fanOut);
@@ -241,25 +225,12 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
             Output = Variable.Create(batchSize, m_units);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="inputVariable"></param>
-        /// <param name="storage"></param>
-        /// <param name="copyStorage"></param>
-        /// <param name="layers"></param>
-        public void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayer> layers)
+        public int ParameterCount()
         {
-            var copy = new DenseLayer(m_units);
-            copy.UpdateDimensions(inputVariable);
+            var weightCount = Weights.ElementCount;
+            var biasCount = Bias.ElementCount;
 
-            copy.Weights = Weights.Copy();
-            copyStorage.AssignTensor(copy.Weights, storage.GetTensor(Weights).Data.ToArray());
-
-            copy.Bias = Bias.Copy();
-            copyStorage.AssignTensor(copy.Bias, storage.GetTensor(Bias).Data.ToArray());
-
-            layers.Add(copy);
+            return weightCount + biasCount;
         }
     }
 
@@ -270,14 +241,6 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
             m_forward = Operators.ReLU.Forward;
             m_backward = Operators.ReLU.Backward;
         }
-
-        public override void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayer> layers)
-        {
-            var copy = new ReluLayer();
-            copy.UpdateDimensions(inputVariable);
-
-            layers.Add(copy);
-        }
     }
 
     public sealed class SigmoidLayer : ActivationLayer
@@ -286,14 +249,6 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         {
             m_forward = Operators.Sigmoid.Forward;
             m_backward = Operators.Sigmoid.Backward;
-        }
-
-        public override void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayer> layers)
-        {
-            var copy = new SigmoidLayer();
-            copy.UpdateDimensions(inputVariable);
-
-            layers.Add(copy);
         }
     }
 
@@ -358,17 +313,9 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
             Output = Variable.Create(input.Dimensions.ToArray());
         }
 
-        /// <summary>
-        /// Copies a minimal version of the layer to be used in a model for predictions.
-        /// </summary>
-        /// <param name="inputVariable"></param>
-        /// <param name="storage"></param>
-        /// <param name="copyStorage"></param>
-        /// <param name="layers"></param>
-        public virtual void Copy(Variable inputVariable, NeuralNetStorage storage, NeuralNetStorage copyStorage, List<ILayer> layers)
+        public int ParameterCount()
         {
-            throw new NotImplementedException();
+            return 0;
         }
     }
-
 }
