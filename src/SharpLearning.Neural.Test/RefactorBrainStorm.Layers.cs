@@ -39,13 +39,15 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <param name="storage"></param>
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
-        void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, Initialization initializtion);
+        void Initialize(Variable inputVariable, int batchSize,
+            NeuralNetStorage storage, Random random, 
+            Initialization initializtion);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="input"></param>
-        void UpdateDimensions(Variable input);
+        void UpdateDimensions(int batchSize);
 
         int ParameterCount();
     }
@@ -115,9 +117,11 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <param name="storage"></param>
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
-        public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random, Initialization initializtion)
+        public void Initialize(Variable inputVariable, int batchSize,
+            NeuralNetStorage storage, Random random, 
+            Initialization initializtion)
         {
-            UpdateDimensions(inputVariable);
+            UpdateDimensions(batchSize);
         }
 
         public int ParameterCount()
@@ -129,9 +133,10 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// 
         /// </summary>
         /// <param name="input"></param>
-        public void UpdateDimensions(Variable input)
+        public void UpdateDimensions(int batchSize)
         {
-            Input = input;
+            var dimensions = new int[] { batchSize }.Concat(Input.Dimensions).ToArray();
+            Input = Variable.Create(dimensions);
             Output = Input;
         }
     }
@@ -194,13 +199,15 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <param name="storage"></param>
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
-        public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random,
+        public void Initialize(Variable inputVariable, int batchSize,
+            NeuralNetStorage storage, Random random,
             Initialization initializtion = Initialization.GlorotUniform)
         {
-            UpdateDimensions(inputVariable);
+            Input = inputVariable;
+            UpdateDimensions(batchSize);
 
-            // Assumes no batch dimension in inputVariable.
-            var fanIn = inputVariable.Dimensions.Aggregate((v1, v2) => v1 * v2);
+            // Assumes first dimension is batch size
+            var fanIn = inputVariable.DimensionOffSets[0];
             var fanOut = m_units;
 
             var fans = new FanInFanOut(fanIn, fanOut);
@@ -217,11 +224,8 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// 
         /// </summary>
         /// <param name="input"></param>
-        public void UpdateDimensions(Variable input)
+        public void UpdateDimensions(int batchSize)
         {
-            Input = input;
-
-            var batchSize = input.Dimensions[0];
             Output = Variable.Create(batchSize, m_units);
         }
 
@@ -297,20 +301,21 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// <param name="storage"></param>
         /// <param name="random"></param>
         /// <param name="initializtion"></param>
-        public void Initialize(Variable inputVariable, NeuralNetStorage storage, Random random,
-            Initialization initializtion = Initialization.GlorotUniform)
+        public void Initialize(Variable inputVariable, int batchSize,
+            NeuralNetStorage storage, Random random,
+            Initialization initializtion)
         {
-            UpdateDimensions(inputVariable);
+            Input = inputVariable;
+            UpdateDimensions(batchSize);
         }
 
         /// <summary>
         /// Updates the input and output dimensions of the layer
         /// </summary>
         /// <param name="input"></param>
-        public void UpdateDimensions(Variable input)
+        public void UpdateDimensions(int batchSize)
         {
-            Input = input;
-            Output = Variable.Create(input.Dimensions.ToArray());
+            Output = Variable.Create(Input.Dimensions.ToArray());
         }
 
         public int ParameterCount()

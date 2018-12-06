@@ -67,19 +67,22 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// </summary>
         /// <param name="input"></param>
         /// <param name="random"></param>
-        public void Initialize(Random random, NeuralNetStorage storage)
+        public void Initialize(Random random, int batcSize,
+            NeuralNetStorage storage)
         {
             if (!(Layers.First() is InputLayer))
             {
                 throw new ArgumentException("First layer must be InputLayer. Was: " + Layers.First().GetType().Name);
             }
 
-            Layers.First().Initialize(Input, storage, random, m_initialization);
+            Layers.First().Initialize(Input, batcSize, 
+                storage, random, m_initialization);
 
             for (int i = 1; i < Layers.Count; i++)
             {
                 var previousLayer = Layers[i - 1];
-                Layers[i].Initialize(previousLayer.Output, storage, random, m_initialization);
+                Layers[i].Initialize(previousLayer.Output, batcSize, 
+                    storage, random, m_initialization);
             }
         }
 
@@ -87,14 +90,14 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         /// 
         /// </summary>
         /// <param name="input"></param>
-        public void UpdateDimensions(Variable input)
+        public void UpdateDimensions(int batcSize)
         {
-            Layers.First().UpdateDimensions(input);
+            Layers.First().UpdateDimensions(batcSize);
 
             for (int i = 1; i < Layers.Count; i++)
             {
                 var previousLayer = Layers[i - 1];
-                Layers[i].UpdateDimensions(previousLayer.Output);
+                Layers[i].UpdateDimensions(batcSize);
             }
         }
 

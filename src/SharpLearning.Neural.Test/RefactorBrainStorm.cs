@@ -13,31 +13,27 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         [TestMethod]
         public void RefactorBrainStorm()
         {
-            // TODO: Fix Dense.Initialize. 
-            // Dimensions are off.
-
-            var inputShape = new TensorShape(10, 10);
+            var inputShape = new TensorShape(10, 20);
             var targetShape = new TensorShape(1);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(inputShape.Dimensions));
-            //net.Add(new DenseLayer(units: 128));
-            //net.Add(new ReluLayer());
+            net.Add(new DenseLayer(units: 128));
+            net.Add(new ReluLayer());
             net.Add(new DenseLayer(units: 1));
 
             var loss = new MeanSquareLoss();
 
             var random = new Random(232);
-
-            // TODO: Figure out how to handle batch size in storage tensors.
             var storage = new NeuralNetStorage();
-            net.Initialize(random, storage);
+
+            var batchSize = 32;
+            net.Initialize(random, batchSize, storage);
             Trace.WriteLine(net.Summary());
 
             var minibatchSource = new MinibatchSource(inputShape, targetShape, seed: random.Next());
 
-            var iterations = 1000;
-            var batchSize = 32;
+            var iterations = 100;
 
             var optimizer = new SgdOptimizer(learningRate: 0.01f, batchSize: batchSize);
 
@@ -46,8 +42,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
                 var (observations, targets) = minibatchSource.GetMinibatch(batchSize);
                 
                 // inputs are assigned to the first layer.
-                storage.AssignTensor(net.Input, observations);
-                net.UpdateDimensions(net.Input);
+                storage.AssignTensor(net.Input, observations);               
 
                 // forward 
                 net.Forward(storage);
