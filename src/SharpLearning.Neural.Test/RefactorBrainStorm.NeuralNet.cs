@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace SharpLearning.Neural.Test.RefactorBranStorm
 {
@@ -80,6 +81,56 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
                 var previousLayer = Layers[i - 1];
                 Layers[i].Initialize(previousLayer.Output, storage, random, m_initialization);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        public void UpdateDimensions(Variable input)
+        {
+            Layers.First().UpdateDimensions(input);
+
+            for (int i = 1; i < Layers.Count; i++)
+            {
+                var previousLayer = Layers[i - 1];
+                Layers[i].UpdateDimensions(previousLayer.Output);
+            }
+        }
+
+        /// <summary>
+        /// Model summary of all shapes and parameters in the network.
+        /// </summary>
+        /// <returns></returns>
+        public string Summary()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("---------------------");
+            sb.AppendLine("Model Summary");
+            sb.AppendLine("Input Shape= " + Input.Shape.ToString());
+            sb.AppendLine("Output Shape= " + Output.Shape.ToString());
+            sb.AppendLine("=====================");
+            sb.AppendLine("");
+
+            var totalParameterCount = 0;
+
+            foreach (var layer in Layers)
+            {
+                var outputShape = layer.Output.Shape;
+                var layerParameterCount = layer.ParameterCount();
+
+                sb.AppendLine($"Layer Name='{layer.GetType().Name}' Output Shape={outputShape.ToString(),-30}" +
+                    $" Param #:{layerParameterCount}");
+
+                totalParameterCount += layerParameterCount;
+            }
+
+            sb.AppendLine();
+            sb.AppendLine("=====================");
+            sb.AppendLine($"Total Number of Parameters: {totalParameterCount:N0}");
+            sb.AppendLine("---------------------");
+
+            return sb.ToString();
         }
     }
 }
