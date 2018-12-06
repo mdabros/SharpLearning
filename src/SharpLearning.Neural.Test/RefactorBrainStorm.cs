@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using MathNet.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SharpLearning.Neural.Test.RefactorBranStorm
@@ -13,12 +14,18 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         [TestMethod]
         public void RefactorBrainStorm()
         {
-            var inputShape = new TensorShape(32, 32, 3);
+            SetupLinerAlgebraProvider();
+
+            var inputShape = new TensorShape(28, 28, 1);
             var targetShape = new TensorShape(1);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(inputShape.Dimensions));
             net.Add(new DenseLayer(units: 128));
+            net.Add(new ReluLayer());
+            net.Add(new DenseLayer(units: 256));
+            net.Add(new ReluLayer());
+            net.Add(new DenseLayer(units: 512));
             net.Add(new ReluLayer());
             net.Add(new DenseLayer(units: 1));
 
@@ -33,7 +40,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
 
             var minibatchSource = new MinibatchSource(inputShape, targetShape, seed: random.Next());
 
-            var iterations = 100000;
+            var iterations = 6000;
 
             var optimizer = new SgdOptimizer(learningRate: 0.01f, batchSize: batchSize);
 
@@ -91,6 +98,24 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
                 t3.Start();
                 optimizer.UpdateParameters(parameters);
                 t3.Stop();
+            }
+        }
+
+        void SetupLinerAlgebraProvider()
+        {
+            if (Control.TryUseNativeMKL())
+            {
+                Trace.WriteLine("Using MKL Provider");
+            }
+            else if (Control.TryUseNativeOpenBLAS())
+            {
+                Trace.WriteLine("Using OpenBLAS Provider");
+            }
+            else
+            {
+                Control.UseManaged();
+                Control.UseMultiThreading();
+                Trace.WriteLine("Using .Net Managed Provider");
             }
         }
 
