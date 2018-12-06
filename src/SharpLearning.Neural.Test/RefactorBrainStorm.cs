@@ -13,7 +13,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         [TestMethod]
         public void RefactorBrainStorm()
         {
-            var inputShape = new TensorShape(10, 20);
+            var inputShape = new TensorShape(32, 32, 3);
             var targetShape = new TensorShape(1);
 
             var net = new NeuralNet();
@@ -33,34 +33,64 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
 
             var minibatchSource = new MinibatchSource(inputShape, targetShape, seed: random.Next());
 
-            var iterations = 100;
+            var iterations = 100000;
 
             var optimizer = new SgdOptimizer(learningRate: 0.01f, batchSize: batchSize);
 
-            for (int iteration = 0; iteration < iterations; iteration++)
+            var t1 = new Stopwatch();
+            var t2 = new Stopwatch();
+            var t3 = new Stopwatch();
+
+            var lossSum = 0.0;
+            var totalSampleCount = 0;
+            for (int iteration = 1; iteration < iterations; iteration++)
             {
                 var (observations, targets) = minibatchSource.GetMinibatch(batchSize);
                 
                 // inputs are assigned to the first layer.
-                storage.AssignTensor(net.Input, observations);               
+                storage.AssignTensor(net.Input, observations);
 
                 // forward 
+                t1.Start();
                 net.Forward(storage);
+                t1.Stop();
 
                 // calculate losses.
                 var predictions = storage.GetTensor(net.Output);
                 var sampleLosses = loss.SampleLosses(targets, predictions);
-                var currentLoss = loss.AccumulateSampleLoss(sampleLosses);
+                var batchLoss = loss.AccumulateSampleLoss(sampleLosses);
 
-                Trace.WriteLine("Batch Loss:" + currentLoss);
+                lossSum += batchLoss;
+                totalSampleCount += batchSize;
+
+                if (iteration % 2000 == 0)
+                {
+                    var currentLoss = lossSum / totalSampleCount;
+                    lossSum = 0;
+                    totalSampleCount = 0;
+
+                    Trace.WriteLine($"Loss : {currentLoss} "  
+                        + $"Forward(ms): {t1.ElapsedMilliseconds} "
+                        + $"Backward(ms): {t2.ElapsedMilliseconds} "
+                        + $"UpdateParameters(ms): {t3.ElapsedMilliseconds} ");
+
+                    t1.Reset();
+                    t2.Reset();
+                    t3.Reset();
+                }
 
                 // assign sample losses and back propagate.
                 storage.AssignGradient(net.Output, sampleLosses);
+                t2.Start();
                 net.Backward(storage);
+                t2.Stop();
 
                 // update parameters.
                 var parameters = storage.GetTrainableParameters();
+
+                t3.Start();
                 optimizer.UpdateParameters(parameters);
+                t3.Stop();
             }
         }
 
