@@ -16,6 +16,9 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         {
             SetupLinerAlgebraProvider();
 
+            // TODO: Separate trainable parameters from storage.
+            //       Only calculated output and gradients should be on the storage.
+
             var inputShape = new TensorShape(28, 28, 1);
             var targetShape = new TensorShape(1);
 
