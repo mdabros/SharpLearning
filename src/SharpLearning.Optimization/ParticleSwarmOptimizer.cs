@@ -39,7 +39,7 @@ namespace SharpLearning.Optimization
         /// <param name="c1">Learning factor weighting local particle best solution. (default is 2)</param>
         /// <param name="c2">Learning factor weighting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations. (default is unlimited)</param>
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
         public ParticleSwarmOptimizer(IParameterSpec[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42, int maxDegreeOfParallelism = -1)
         {
             if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }

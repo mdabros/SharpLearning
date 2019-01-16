@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SharpLearning.Containers.Arithmetic;
 using SharpLearning.Optimization.ParameterSamplers;
 
@@ -31,6 +32,7 @@ namespace SharpLearning.Optimization
         readonly IParameterSampler m_sampler;
         readonly int m_maxFunctionEvaluations;
         int m_totalFunctionEvaluations;
+        readonly int m_maxDegreeOfParallelism = -1;
 
         /// <summary>
         /// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization 
@@ -53,9 +55,10 @@ namespace SharpLearning.Optimization
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         /// <param name="seed">Seed for random restarts</param>
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
         public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
             int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
-            double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324)
+            double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324, int maxDegreeOfParallelism = -1)
         {
             if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentException("maxIterationsWithoutImprovement must be at least 1"); }
             if (maxFunctionEvaluations < 0) { throw new ArgumentException("maxFunctionEvaluations must be at least 1"); }
@@ -70,6 +73,7 @@ namespace SharpLearning.Optimization
             m_noImprovementThreshold = noImprovementThreshold;
             m_maxIterationsWithoutImprovement = maxIterationsWithoutImprovement;
             m_maxFunctionEvaluations = maxFunctionEvaluations;
+            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
 
             m_random = new Random(seed);
 
@@ -109,7 +113,7 @@ namespace SharpLearning.Optimization
                 var iterationsWithoutImprovement = 0;
                 var results = new List<OptimizerResult> { new OptimizerResult(prevBest.ParameterSet, prevBest.Error) };
 
-                for (int i = 0; i < dim; i++)
+                Parallel.For(0, dim, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (i) =>
                 {
                     var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max - m_parameters[i].Min); // % simplex size between 2%-8% of min(xrange)
 
@@ -132,7 +136,7 @@ namespace SharpLearning.Optimization
                     results.Add(score);
 
                     //Console.WriteLine("Intials: " + score.Error + " " + string.Join(", ", score.ParameterSet));
-                }
+                });
 
                 // Console.WriteLine(restarts);
 
