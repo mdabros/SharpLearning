@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SharpLearning.Containers.Arithmetic;
 using SharpLearning.Optimization.ParameterSamplers;
 
@@ -23,6 +24,8 @@ namespace SharpLearning.Optimization
         readonly double m_c2;
         readonly Random m_random;
         readonly IParameterSampler m_sampler;
+        readonly int m_maxDegreeOfParallelism;
+        readonly object m_bestLocker;
 
         /// <summary>
         /// Particle Swarm optimizer (PSO). PSO is initialized with a group of random particles
@@ -36,7 +39,8 @@ namespace SharpLearning.Optimization
         /// <param name="c1">Learning factor weighting local particle best solution. (default is 2)</param>
         /// <param name="c2">Learning factor weighting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        public ParticleSwarmOptimizer(IParameterSpec[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42)
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations. (default is unlimited)</param>
+        public ParticleSwarmOptimizer(IParameterSpec[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42, int maxDegreeOfParallelism = -1)
         {
             if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
             if (numberOfParticles < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
@@ -46,9 +50,11 @@ namespace SharpLearning.Optimization
             m_numberOfParticles = numberOfParticles;
             m_c1 = c1;
             m_c2 = c2;
-            
+            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
+            m_bestLocker = new object();
+
             m_random = new Random(seed);
-            
+
             // Use member to seed the random uniform sampler.
             m_sampler = new RandomUniform(m_random.Next());
         }
@@ -104,7 +110,7 @@ namespace SharpLearning.Optimization
                 .ToArray();
 
             var gBest = new OptimizerResult(new double[m_parameters.Length], double.MaxValue);
-            
+
             // random initialize particles
             for (int i = 0; i < m_numberOfParticles; i++)
             {
@@ -114,21 +120,24 @@ namespace SharpLearning.Optimization
             // iterate for find best
             for (int iterations = 0; iterations < m_maxIterations; iterations++)
             {
-                for (int i = 0; i < m_numberOfParticles; i++)
+                Parallel.For(0, m_numberOfParticles, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (i) =>
                 {
                     var result = functionToMinimize(particles[i]);
-                    if(result.Error < pBestScores[i])
+                    lock (m_bestLocker)
                     {
-                        pBest[i] = result.ParameterSet;
-                        pBestScores[i] = result.Error;
-                    }
+                        if (result.Error < pBestScores[i])
+                        {
+                            pBest[i] = result.ParameterSet;
+                            pBestScores[i] = result.Error;
+                        }
 
-                    if(result.Error < gBest.Error)
-                    {
-                        gBest = new OptimizerResult(result.ParameterSet.ToArray(), result.Error);
-                        //Trace.WriteLine(gBest.Error);
+                        if (result.Error < gBest.Error)
+                        {
+                            gBest = new OptimizerResult(result.ParameterSet.ToArray(), result.Error);
+                            //Trace.WriteLine(gBest.Error);
+                        }
                     }
-                }
+                });
 
                 for (int i = 0; i < m_numberOfParticles; i++)
                 {
@@ -149,7 +158,7 @@ namespace SharpLearning.Optimization
             for (int i = 0; i < m_numberOfParticles; i++)
             {
                 results.Add(new OptimizerResult(pBest[i], pBestScores[i]));
-            }                            
+            }
 
             return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
         }

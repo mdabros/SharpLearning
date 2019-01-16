@@ -8,13 +8,17 @@ namespace SharpLearning.Optimization.Test
     public class RandomSearchOptimizerTest
     {
         [TestMethod]
-        public void RandomSearchOptimizer_OptimizeBest()
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void RandomSearchOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
         {
-            var parameters = new MinMaxParameterSpec[] 
+            var parameters = new MinMaxParameterSpec[]
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
-            var sut = new RandomSearchOptimizer(parameters, 100);
+            var sut = maxDegreeOfParallelism.HasValue ? new RandomSearchOptimizer(parameters, 100, 42, true, maxDegreeOfParallelism.Value) : new RandomSearchOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
 
             Assert.AreEqual(110.67173923600831, actual.Error, 0.00001);
@@ -22,19 +26,23 @@ namespace SharpLearning.Optimization.Test
         }
 
         [TestMethod]
-        public void RandomSearchOptimizer_Optimize()
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void RandomSearchOptimizer_Optimize(int? maxDegreeOfParallelism)
         {
-            var parameters = new MinMaxParameterSpec[] 
+            var parameters = new MinMaxParameterSpec[]
             {
                 new MinMaxParameterSpec(10.0, 37.5, Transform.Linear)
             };
-            var sut = new RandomSearchOptimizer(parameters, 2);
+            var sut = maxDegreeOfParallelism.HasValue ? new RandomSearchOptimizer(parameters, 2, 42, true, maxDegreeOfParallelism.Value) : new RandomSearchOptimizer(parameters, 2);
             var actual = sut.Optimize(Minimize);
 
-            var expected = new OptimizerResult[] 
-            { 
+            var expected = new OptimizerResult[]
+            {
               new OptimizerResult(new double[] { 28.372927812567415 }, 3690.8111981874217),
-              new OptimizerResult(new double[] { 13.874950705270725 }, 23438.215764163542) 
+              new OptimizerResult(new double[] { 13.874950705270725 }, 23438.215764163542)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);

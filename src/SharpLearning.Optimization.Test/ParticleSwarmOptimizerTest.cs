@@ -8,7 +8,11 @@ namespace SharpLearning.Optimization.Test
     public class ParticleSwarmOptimizerTest
     {
         [TestMethod]
-        public void ParticleSwarmOptimizer_OptimizeBest()
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void ParticleSwarmOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
@@ -16,7 +20,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
-            var sut = new ParticleSwarmOptimizer(parameters, 100);
+            var sut = maxDegreeOfParallelism.HasValue ? new ParticleSwarmOptimizer(parameters, 100, maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : new ParticleSwarmOptimizer(parameters, 100);
             var actual = sut.OptimizeBest(Minimize);
 
             Assert.AreEqual(actual.Error, -0.64324321766401094, 0.0000001);
@@ -28,13 +32,17 @@ namespace SharpLearning.Optimization.Test
         }
 
         [TestMethod]
-        public void ParticleSwarmOptimizer_Optimize()
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void ParticleSwarmOptimizer_Optimize(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
-            var sut = new ParticleSwarmOptimizer(parameters, 100);
+            var sut = maxDegreeOfParallelism.HasValue ? new ParticleSwarmOptimizer(parameters, 100, maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : new ParticleSwarmOptimizer(parameters, 100);
             var results = sut.Optimize(Minimize2);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
