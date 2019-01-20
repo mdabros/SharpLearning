@@ -4,12 +4,12 @@ using SharpLearning.Optimization.ParameterSamplers;
 namespace SharpLearning.Optimization.Transforms
 {
     /// <summary>
-    /// Logarithmic scale. For ranges with a large difference in numerical scale, like min: 0.0001 and max: 1.0.
+    /// Transform to Log10 scale. For ranges with a large difference in numerical scale, like min: 0.0001 and max: 1.0.
     /// </summary>
-    public class LogarithmicTransform : ITransform
+    public class Log10Transform : ITransform
     {
         /// <summary>
-        /// Logarithmic scale. For ranges with a large difference in numerical scale, like min: 0.0001 and max: 1.0.
+        /// Transform to Log10 scale. For ranges with a large difference in numerical scale, like min: 0.0001 and max: 1.0.
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>

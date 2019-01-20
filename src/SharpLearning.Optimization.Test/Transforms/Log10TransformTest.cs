@@ -6,12 +6,12 @@ using SharpLearning.Optimization.Transforms;
 namespace SharpLearning.Optimization.Test.Transforms
 {
     [TestClass]
-    public class LogarithmicTransformTest
+    public class Log10TransformTest
     {
         [TestMethod]
-        public void LogarithmicTransform_Transform()
+        public void Log10Transform_Transform()
         {
-            var sut = new LogarithmicTransform();
+            var sut = new Log10Transform();
             var sampler = new RandomUniform(seed: 32);
 
             var actual = new double[10];
@@ -31,9 +31,9 @@ namespace SharpLearning.Optimization.Test.Transforms
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void LogarithmicTransform_Throw_On_Min_equal_Zero()
+        public void Log10Transform_Throw_On_Min_equal_Zero()
         {
-            var sut = new LogarithmicTransform();
+            var sut = new Log10Transform();
             var sampler = new RandomUniform(seed: 32);
             sut.Transform(min: 0, max: 1,
                 parameterType: ParameterType.Continuous, sampler: sampler);
@@ -41,9 +41,9 @@ namespace SharpLearning.Optimization.Test.Transforms
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void LogarithmicTransform_Throw_On_Max_equal_Zero()
+        public void Log10Transform_Throw_On_Max_equal_Zero()
         {
-            var sut = new LogarithmicTransform();
+            var sut = new Log10Transform();
             var sampler = new RandomUniform(seed: 32);
             sut.Transform(min: 0.01, max: 0,
                 parameterType: ParameterType.Continuous, sampler: sampler);
@@ -51,9 +51,9 @@ namespace SharpLearning.Optimization.Test.Transforms
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void LogarithmicTransform_Throw_On_Min_below_Zero()
+        public void Log10Transform_Throw_On_Min_below_Zero()
         {
-            var sut = new LogarithmicTransform();
+            var sut = new Log10Transform();
             var sampler = new RandomUniform(seed: 32);
             sut.Transform(min: -0.1, max: 1,
                 parameterType: ParameterType.Continuous, sampler: sampler);
@@ -61,9 +61,9 @@ namespace SharpLearning.Optimization.Test.Transforms
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void LogarithmicTransform_Throw_On_Max_below_Zero()
+        public void Log10Transform_Throw_On_Max_below_Zero()
         {
-            var sut = new LogarithmicTransform();
+            var sut = new Log10Transform();
             var sampler = new RandomUniform(seed: 32);
             sut.Transform(min: 0.1, max: -0.1,
                 parameterType: ParameterType.Continuous, sampler: sampler);
