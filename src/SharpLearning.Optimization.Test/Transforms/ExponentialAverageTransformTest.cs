@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Optimization.ParameterSamplers;
 using SharpLearning.Optimization.Transforms;
