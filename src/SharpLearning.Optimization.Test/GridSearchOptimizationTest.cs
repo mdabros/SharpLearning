@@ -14,7 +14,10 @@ namespace SharpLearning.Optimization.Test
         [DataRow(null)]
         public void GridSearchOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
         {
-            var parameters = new GridParameterSpec[] { new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0) };
+            var parameters = new GridParameterSpec[] 
+            {
+                new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
+            };
 
             var sut = maxDegreeOfParallelism.HasValue ? 
                 new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : 
@@ -33,7 +36,10 @@ namespace SharpLearning.Optimization.Test
         [DataRow(null)]
         public void GridSearchOptimizer_Optimize(int? maxDegreeOfParallelism)
         {
-            var parameters = new GridParameterSpec[] { new GridParameterSpec(10.0, 37.5) };
+            var parameters = new GridParameterSpec[] 
+            {
+                new GridParameterSpec(10.0, 37.5)
+            };
 
             var sut = maxDegreeOfParallelism.HasValue ? 
                 new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : 
