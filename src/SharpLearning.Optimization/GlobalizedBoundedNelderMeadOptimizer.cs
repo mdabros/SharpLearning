@@ -89,11 +89,12 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
         /// Optimization using Globalized bounded Nelder-Mead method.
-        /// Returns the final results ordered from best to worst (minimized).
+        /// Returns all results, chronologically ordered. 
+        /// Note that the order of results might be affected if running parallel.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
@@ -260,7 +261,7 @@ namespace SharpLearning.Optimization
                 }
             }
 
-            return allResults.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return allResults.ToArray();
         }
 
         OptimizerResult EvaluateFunction(Func<double[], OptimizerResult> functionToMinimize, double[] parameters)

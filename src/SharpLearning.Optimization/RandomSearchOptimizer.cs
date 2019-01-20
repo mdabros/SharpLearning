@@ -37,18 +37,19 @@ namespace SharpLearning.Optimization
         }
 
         /// <summary>
-        /// Random search optimizer initializes random parameters between min and max of the provided.
+        /// Random search optimizer initializes random parameters between min and max of the provided bounds.
         /// Returns the result which best minimizes the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
-        /// Random search optimizer initializes random parameters between min and max of the provided
-        /// Returns all results ordered from best to worst (minimized).
+        /// Random search optimizer initializes random parameters between min and max of the provided bounds.
+        /// Returns all results, chronologically ordered. 
+        /// Note that the order of results might be affected if running parallel.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
@@ -82,7 +83,7 @@ namespace SharpLearning.Optimization
 
 
             // return all results ordered
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return results.ToArray();
         }
 
 

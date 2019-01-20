@@ -42,8 +42,8 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 42.323589763754789 }, 981.97873691815118),
-                new OptimizerResult(new double[] { 99.110398813667885 }, 154864.41962974239)
+                new OptimizerResult(new double[] { 90.513222660177 }, 114559.431919558),
+                new OptimizerResult(new double[] { 24.204380402436 },   7601.008090362)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, m_delta);
@@ -52,7 +52,6 @@ namespace SharpLearning.Optimization.Test
             Assert.AreEqual(expected.Last().Error, actual.Last().Error, m_delta);
             Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), m_delta);
         }
-
 
         OptimizerResult Minimize(double[] x)
         {

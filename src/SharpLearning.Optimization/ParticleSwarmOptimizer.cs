@@ -67,12 +67,10 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
-        /// Optimization using swarm optimization.
-        /// Returns the final results ordered from best to worst (minimized).
-        /// </summary>
+        /// Optimization using swarm optimization. Returns results for all particles.
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
@@ -160,7 +158,7 @@ namespace SharpLearning.Optimization
                 results.Add(new OptimizerResult(pBest[i], pBestScores[i]));
             }
 
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return results.ToArray();
         }
 
         void BoundCheck(double[] newValues, double[] maxValues, double[] minValues)
