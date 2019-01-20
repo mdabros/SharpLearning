@@ -173,11 +173,11 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
         /// Optimization using Sequential Model-based optimization.
-        /// Returns the final results ordered from best to worst (minimized).
+        /// Returns all results, chronologically ordered. 
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
@@ -294,7 +294,7 @@ namespace SharpLearning.Optimization
                 results.Add(new OptimizerResult(parameterSets[i], parameterSetScores[i]));
             }
 
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return results.ToArray();
         }
 
         OptimizerResult[] FindNextCandidates(RegressionForestModel model, double bestScore)
@@ -309,7 +309,9 @@ namespace SharpLearning.Optimization
                     -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
             };
 
-            return m_maximizer.Optimize(minimize).Take(m_numberOfCandidatesEvaluatedPrIteration).ToArray();
+            return m_maximizer.Optimize(minimize)
+                .Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error)
+                .Take(m_numberOfCandidatesEvaluatedPrIteration).ToArray();
         }
 
         bool Equals(double[] p1, double[] p2)
