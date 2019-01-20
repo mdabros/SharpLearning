@@ -18,7 +18,11 @@ namespace SharpLearning.Optimization.Test
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
-            var sut = maxDegreeOfParallelism.HasValue ? new RandomSearchOptimizer(parameters, 100, 42, true, maxDegreeOfParallelism.Value) : new RandomSearchOptimizer(parameters, 100);
+
+            var sut = maxDegreeOfParallelism.HasValue ? 
+                new RandomSearchOptimizer(parameters, 100, 42, true, maxDegreeOfParallelism.Value) : 
+                new RandomSearchOptimizer(parameters, 100);
+
             var actual = sut.OptimizeBest(Minimize);
 
             Assert.AreEqual(110.67173923600831, actual.Error, 0.00001);
@@ -36,7 +40,11 @@ namespace SharpLearning.Optimization.Test
             {
                 new MinMaxParameterSpec(10.0, 37.5, Transform.Linear)
             };
-            var sut = maxDegreeOfParallelism.HasValue ? new RandomSearchOptimizer(parameters, 2, 42, true, maxDegreeOfParallelism.Value) : new RandomSearchOptimizer(parameters, 2);
+
+            var sut = maxDegreeOfParallelism.HasValue ? 
+                new RandomSearchOptimizer(parameters, 2, 42, true, maxDegreeOfParallelism.Value) : 
+                new RandomSearchOptimizer(parameters, 2);
+
             var actual = sut.Optimize(Minimize);
 
             var expected = new OptimizerResult[]
@@ -74,5 +82,4 @@ namespace SharpLearning.Optimization.Test
             return new OptimizerResult(parameters, cost);
         }
     }
-
 }

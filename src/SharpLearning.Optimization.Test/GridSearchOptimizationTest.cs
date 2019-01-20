@@ -1,7 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -15,8 +14,15 @@ namespace SharpLearning.Optimization.Test
         [DataRow(null)]
         public void GridSearchOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
         {
-            var parameters = new GridParameterSpec[] { new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0) };
-            var sut = maxDegreeOfParallelism.HasValue ? new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : new GridSearchOptimizer(parameters);
+            var parameters = new GridParameterSpec[] 
+            {
+                new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
+            };
+
+            var sut = maxDegreeOfParallelism.HasValue ? 
+                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : 
+                new GridSearchOptimizer(parameters);
+
             var actual = sut.OptimizeBest(Minimize);
 
             Assert.AreEqual(111.20889999999987, actual.Error, 0.00001);
@@ -30,8 +36,15 @@ namespace SharpLearning.Optimization.Test
         [DataRow(null)]
         public void GridSearchOptimizer_Optimize(int? maxDegreeOfParallelism)
         {
-            var parameters = new GridParameterSpec[] { new GridParameterSpec(10.0, 37.5) };
-            var sut = maxDegreeOfParallelism.HasValue ? new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : new GridSearchOptimizer(parameters);
+            var parameters = new GridParameterSpec[] 
+            {
+                new GridParameterSpec(10.0, 37.5)
+            };
+
+            var sut = maxDegreeOfParallelism.HasValue ? 
+                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : 
+                new GridSearchOptimizer(parameters);
+
             var actual = sut.Optimize(Minimize);
 
             var expected = new OptimizerResult[] 
@@ -69,5 +82,4 @@ namespace SharpLearning.Optimization.Test
             return new OptimizerResult(parameters, cost);
         }
     }
-
 }

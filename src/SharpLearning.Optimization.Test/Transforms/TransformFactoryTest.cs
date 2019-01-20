@@ -12,8 +12,8 @@ namespace SharpLearning.Optimization.Test.Transforms
         {
             var linear = TransformFactory.Create(Transform.Linear);
             Assert.AreEqual(typeof(LinearTransform), linear.GetType());
-            var logarithmic = TransformFactory.Create(Transform.Linear);
-            Assert.AreEqual(typeof(LinearTransform), logarithmic.GetType());
+            var log10 = TransformFactory.Create(Transform.Log10);
+            Assert.AreEqual(typeof(Log10Transform), log10.GetType());
             var exponentialAverage = TransformFactory.Create(Transform.ExponentialAverage);
             Assert.AreEqual(typeof(ExponentialAverageTransform), exponentialAverage.GetType());
         }

@@ -20,7 +20,12 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
-            var sut = maxDegreeOfParallelism.HasValue ? new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10, maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
+
+            var sut = maxDegreeOfParallelism.HasValue ? 
+                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10, 
+                    maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
+                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
+
             var actual = sut.OptimizeBest(Minimize);
 
             Assert.AreEqual(actual.Error, -0.99999949547279676, 0.0000001);
@@ -42,7 +47,12 @@ namespace SharpLearning.Optimization.Test
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
-            var sut = maxDegreeOfParallelism.HasValue ? new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10, maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
+
+            var sut = maxDegreeOfParallelism.HasValue ? 
+                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10, 
+                    maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
+                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
+
             var results = sut.Optimize(Minimize2);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
