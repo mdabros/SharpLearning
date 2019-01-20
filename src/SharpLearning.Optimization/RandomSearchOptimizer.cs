@@ -26,7 +26,7 @@ namespace SharpLearning.Optimization
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
         public RandomSearchOptimizer(IParameterSpec[] parameters, int iterations, int seed=42, bool runParallel = true, int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));

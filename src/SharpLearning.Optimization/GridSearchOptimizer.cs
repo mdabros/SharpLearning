@@ -20,7 +20,7 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
         public GridSearchOptimizer(IParameterSpec[] parameters, bool runParallel = true, int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
