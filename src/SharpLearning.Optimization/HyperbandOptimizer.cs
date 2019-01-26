@@ -29,12 +29,16 @@ namespace SharpLearning.Optimization
         readonly int m_sMax;
         readonly int m_b;
 
+        readonly bool m_skipLast;
+
         /// <summary>
         /// TODO: Find better names for arguments.
         /// </summary>
         /// <param name="maximunIterationsPrConfiguration"></param>
         /// <param name=""></param>
-        public HyperbandOptimizer(IParameterSpec[] parameters, int maximunIterationsPrConfiguration = 81, int eta = 3)
+        public HyperbandOptimizer(IParameterSpec[] parameters, 
+            int maximunIterationsPrConfiguration = 81, int eta = 3,
+            bool skipLast = false)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_sampler = new RandomUniform(seed: 34);
@@ -45,6 +49,8 @@ namespace SharpLearning.Optimization
 
             m_sMax =  (int)(Math.Log(m_max_iter) / Math.Log(m_eta));
             m_b = (m_sMax + 1) * m_max_iter;
+
+            m_skipLast = skipLast;
         }
 
         public OptimizerResult[] Optimize(HyperbandObjectiveFunction functionToMinimize)
@@ -64,7 +70,9 @@ namespace SharpLearning.Optimization
                 // n random configurations
                 var T = CreateParameterSets(m_parameters, n);
                 var results = new ConcurrentBag<OptimizerResult>();
-                for (int i = 0; i < s + 1; i++)
+
+                var rounds = m_skipLast ? s : (s + 1);
+                for (int i = 0; i < rounds; i++)
                 {
                     // Run each of the n configs for <iterations> 
                     // and keep best (n_configs / eta) configurations
@@ -74,14 +82,20 @@ namespace SharpLearning.Optimization
 
                     Trace.WriteLine($"{(int)Math.Round(n_configs)} configurations x {n_iterations:F1} iterations each");
 
-                    var rangePartitioner = Partitioner.Create(T, true);
-                    var options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
-
-                    Parallel.ForEach(rangePartitioner, options, (t, loopState) =>
+                    foreach (var t in T)
                     {
                         var result = functionToMinimize(t, n_iterations);
                         results.Add(result);
-                    });
+                    }
+
+                    //var rangePartitioner = Partitioner.Create(T, true);
+                    //var options = new ParallelOptions { MaxDegreeOfParallelism = 8 };
+
+                    //Parallel.ForEach(rangePartitioner, options, (t, loopState) =>
+                    //{
+                    //    var result = functionToMinimize(t, n_iterations);
+                    //    results.Add(result);
+                    //});
 
                     // Select a number of best configurations for the next loop
                     T = results.OrderBy(v => v.Error)

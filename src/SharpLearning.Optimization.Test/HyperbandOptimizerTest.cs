@@ -85,8 +85,12 @@ namespace SharpLearning.Optimization.Test
             };
 
             // create random search optimizer
-            var maximunIterationsPrConfiguration = 40;
-            var optimizer = new HyperbandOptimizer(parameters, maximunIterationsPrConfiguration, eta: 3);
+            var maximunIterationsPrConfiguration = 81;
+
+            var optimizer = new HyperbandOptimizer(parameters, 
+                maximunIterationsPrConfiguration, 
+                eta: 3, 
+                skipLast: true);
 
             var timer = new Stopwatch();
 
