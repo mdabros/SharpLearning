@@ -25,11 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
-    <ProjectReference Include="..\SharpLearning.CrossValidation\SharpLearning.CrossValidation.csproj" />
-    <ProjectReference Include="..\SharpLearning.GradientBoost\SharpLearning.GradientBoost.csproj" />
-    <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
-    <ProjectReference Include="..\SharpLearning.Metrics\SharpLearning.Metrics.csproj" />
     <ProjectReference Include="..\SharpLearning.Optimization\SharpLearning.Optimization.csproj" />
   </ItemGroup>
 
