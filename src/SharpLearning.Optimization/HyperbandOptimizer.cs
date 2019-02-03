@@ -11,10 +11,12 @@ namespace SharpLearning.Optimization
     /// <summary>
     /// Hyperband optimizer based on:
     /// https://arxiv.org/pdf/1603.06560.pdf
-    /// 
     /// Implementation based on:
     /// https://github.com/zygmuntz/hyperband
     /// 
+    /// Hyperband controls a budget of compute for each set of hyperparameters, 
+    /// Initially it will run each parameter set with very little compute budget to get a taste of how they perform. 
+    /// Then it takes the best performers and runs them on a larger budget. 
     /// </summary>
     public sealed class HyperbandOptimizer
     {
@@ -51,6 +53,8 @@ namespace SharpLearning.Optimization
             int seed = 34)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+            if(maximumUnitsOfCompute < 1) throw new ArgumentException(nameof(maximumUnitsOfCompute) + " must be at larger than 0");
+            if (eta < 1) throw new ArgumentException(nameof(eta) + " must be at larger than 0");
             m_sampler = new RandomUniform(seed);
 
             // This is called R in the paper.
@@ -62,6 +66,9 @@ namespace SharpLearning.Optimization
             // This is called `B` in the paper.
             m_totalUnitsOfComputePerRound = (m_numberOfRounds + 1) * m_maximumUnitsOfCompute;
 
+            // Suggestion by fastml: http://fastml.com/tuning-hyperparams-fast-with-hyperband/
+            // "One could discard the last tier (1 x 81, 2 x 81, etc.) in each round, 
+            // including the last round. This drastically reduces time needed.             
             m_skipLastIterationOfEachRound = skipLastIterationOfEachRound;
         }
 
