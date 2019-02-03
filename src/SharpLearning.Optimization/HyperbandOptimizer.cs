@@ -72,6 +72,22 @@ namespace SharpLearning.Optimization
             m_skipLastIterationOfEachRound = skipLastIterationOfEachRound;
         }
 
+        /// <summary>
+        /// Optimization using Hyberband.
+        /// Returns the result which best minimizes the provided function.
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <returns></returns>
+        public OptimizerResult OptimizeBest(HyperbandObjectiveFunction functionToMinimize) =>
+            // Return the best model found.
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
+
+        /// <summary>
+        /// Optimization using Hyberband.
+        /// Returns all results, chronologically ordered.
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <returns></returns>
         public OptimizerResult[] Optimize(HyperbandObjectiveFunction functionToMinimize)
         {
             var allResults = new List<OptimizerResult>();
