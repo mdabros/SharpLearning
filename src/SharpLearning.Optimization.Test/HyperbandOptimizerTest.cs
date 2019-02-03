@@ -23,9 +23,12 @@ namespace SharpLearning.Optimization.Test
                 return new OptimizerResult(p, error);
             };
         
-            var sut = new HyperbandOptimizer(parameters, 
-                maximunIterationsPrConfiguration: 81, 
-                eta: 5, skipLast: false);
+            var sut = new HyperbandOptimizer(
+                parameters, 
+                maximumUnitsOfCompute: 81, 
+                eta: 5, 
+                skipLastIterationOfEachRound: false,
+                seed: 34);
 
             var actual = sut.Optimize(minimize);
 
