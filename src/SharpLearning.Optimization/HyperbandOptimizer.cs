@@ -3,6 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.Optimization.ParameterSamplers;
+using SharpLearning.RandomForest.Learners;
+using SharpLearning.RandomForest.Models;
+using SharpLearning.Containers.Extensions;
+using System.Diagnostics;
 
 namespace SharpLearning.Optimization
 {
@@ -22,6 +26,7 @@ namespace SharpLearning.Optimization
     {
         readonly IParameterSpec[] m_parameters;
         readonly IParameterSampler m_sampler;
+        readonly int m_seed;
 
         readonly int m_maximumUnitsOfCompute;
         readonly int m_eta;
@@ -56,6 +61,7 @@ namespace SharpLearning.Optimization
             if(maximumUnitsOfCompute < 1) throw new ArgumentException(nameof(maximumUnitsOfCompute) + " must be at larger than 0");
             if (eta < 1) throw new ArgumentException(nameof(eta) + " must be at larger than 0");
             m_sampler = new RandomUniform(seed);
+            m_seed = seed;
 
             // This is called R in the paper.
             m_maximumUnitsOfCompute = maximumUnitsOfCompute;
@@ -91,6 +97,8 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(HyperbandObjectiveFunction functionToMinimize)
         {
             var allResults = new List<OptimizerResult>();
+            var bayesianParameterSampler = new BayesianParameterSetSampler(m_parameters, seed: m_seed);
+            var randomInitialization = true;
 
             for (int rounds = m_numberOfRounds; rounds >= 0; rounds--)
             {
@@ -101,10 +109,15 @@ namespace SharpLearning.Optimization
                 // Initial unitsOfCompute per parameter set.
                 var initialUnitsOfCompute = m_maximumUnitsOfCompute * Math.Pow(m_eta, -rounds);
 
-                var parameterSets = CreateParameterSets(m_parameters, initialConfigurationCount);
-                var results = new ConcurrentBag<OptimizerResult>();
+                double[][] parameterSets = null;
+                if(randomInitialization)
+                {
+                    parameterSets = CreateParameterSets(m_parameters, 5);
+                }
 
+                var results = new ConcurrentBag<OptimizerResult>();
                 var iterations = m_skipLastIterationOfEachRound ? rounds : (rounds + 1);
+                var firstIteration = true;
                 for (int iteration = 0; iteration < iterations; iteration++)
                 {
                     // Run each of the parameter sets with unitsOfCompute
@@ -113,26 +126,66 @@ namespace SharpLearning.Optimization
                     var configurationCount = initialConfigurationCount * Math.Pow(m_eta, -iteration);
                     var unitsOfCompute = initialUnitsOfCompute * Math.Pow(m_eta, iteration);
 
-                    //Trace.WriteLine($"{(int)Math.Round(configurationCount)} configurations x {unitsOfCompute:F1} unitsOfCompute each");
-                    foreach (var parameterSet in parameterSets)
+                    Trace.WriteLine($"{(int)Math.Round(configurationCount)} configurations x {unitsOfCompute:F1} unitsOfCompute each");
+
+                    if (firstIteration)
                     {
-                        var result = functionToMinimize(parameterSet, unitsOfCompute);
-                        results.Add(result);
+                        for (int i = 0; i < configurationCount; i++)
+                        {
+                            double[] parameterSet = null;
+                            if (randomInitialization && i < parameterSets.Length)
+                            {
+                                parameterSet = parameterSets[i];
+                            }
+                            else
+                            {
+                                parameterSet = bayesianParameterSampler.FindNextCandidate(allResults);  // SampleRandomParameterSet(m_parameters);
+                                randomInitialization = false;
+                            }
+
+                            var result = functionToMinimize(parameterSet, unitsOfCompute);
+                            results.Add(result);
+                            allResults.Add(result);
+                        }
+                        firstIteration = false;
+                    }
+                    else
+                    {
+                        foreach (var parameterSet in parameterSets)
+                        {
+                            var result = functionToMinimize(parameterSet, unitsOfCompute);
+                            results.Add(result);
+                            allResults.Add(result);
+                        }
                     }
 
                     // Select a number of best configurations for the next loop
                     var configurationsToKeep = (int)Math.Round(configurationCount / m_eta);
+                    Trace.WriteLine($"configurationsToKeep: {configurationsToKeep}");
+
                     parameterSets = results.OrderBy(v => v.Error)
                         .Take(configurationsToKeep)
                         .Select(v => v.ParameterSet)
                         .ToArray();
                 }
 
-                allResults.AddRange(results);
-                //Trace.WriteLine($" Lowest loss so far: {allResults.OrderBy(v => v.Error).First().Error:F4}");
+                Trace.WriteLine($" Lowest loss so far: {allResults.OrderBy(v => v.Error).First().Error:F4}");
             }
 
             return allResults.ToArray();
+        }
+
+        double[] SampleRandomParameterSet(IParameterSpec[] parameters)
+        {
+            var newParameters = new double[parameters.Length];
+            var index = 0;
+            foreach (var param in parameters)
+            {
+                newParameters[index] = param.SampleValue(m_sampler);
+                index++;
+            }
+
+            return newParameters;
         }
 
         double[][] CreateParameterSets(IParameterSpec[] parameters, 
@@ -141,17 +194,85 @@ namespace SharpLearning.Optimization
             var newSearchSpace = new double[setCount][];
             for (int i = 0; i < newSearchSpace.Length; i++)
             {
-                var newParameters = new double[parameters.Length];
-                var index = 0;
-                foreach (var param in parameters)
-                {
-                    newParameters[index] = param.SampleValue(m_sampler);
-                    index++;
-                }
+                var newParameters = SampleRandomParameterSet(parameters);
                 newSearchSpace[i] = newParameters;
             }
 
             return newSearchSpace;
+        }
+
+        class BayesianParameterSetSampler
+        {
+            readonly IParameterSpec[] m_parameters;
+            readonly IParameterSampler m_sampler;
+            readonly Random m_random;
+
+            readonly List<double[]> m_previousParameterSets;
+            readonly List<double> m_previousParameterSetScores;
+
+            // Important to use extra trees learner to have split between features calculated as: 
+            // m_random.NextDouble() * (max - min) + min; 
+            // instead of: (currentValue + prevValue) * 0.5; like in random forest.
+            readonly RegressionExtremelyRandomizedTreesLearner m_learner;
+
+            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
+            readonly IOptimizer m_maximizer;
+
+            // Acquisition function to maximize
+            readonly AcquisitionFunction m_acquisitionFunc;
+
+            public BayesianParameterSetSampler(IParameterSpec[] parameters, int seed)
+            {
+                m_parameters = parameters;
+                m_random = new Random(seed);
+
+                // Use member to seed the random uniform sampler.
+                m_sampler = new RandomUniform(m_random.Next());
+
+                // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
+                // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
+                m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
+                    minimumSplitSize: 10,
+                    maximumTreeDepth: 2000,
+                    featuresPrSplit: parameters.Length,
+                    minimumInformationGain: 1e-6,
+                    subSampleRatio: 1.0,
+                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                    runParallel: false);
+
+                // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
+                m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
+                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                    runParallel: false);
+
+                // Acquisition function to maximize.
+                m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
+            }
+
+            public double[] FindNextCandidate(List<OptimizerResult> currentResults)
+            {
+                // Fit model to current results
+                var observations = currentResults.Select(r => r.ParameterSet)
+                    .ToList().ToF64Matrix();
+                var targets = currentResults.Select(r => r.Error)
+                    .ToArray();
+                var model = m_learner.Learn(observations, targets);
+
+                var bestScore = targets.Min();
+
+                // Find the most promising hyperparameters.
+                Func<double[], OptimizerResult> minimize = (param) =>
+                {
+                    // use the model to predict the expected performance, mean and variance, of the parameter set.
+                    var p = model.PredictCertainty(param);
+
+                    return new OptimizerResult(param,
+                        // negative, since we want to "maximize" the acquisition function.
+                        -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
+                };
+
+                return m_maximizer.OptimizeBest(minimize).ParameterSet;
+            }
         }
     }
 }
