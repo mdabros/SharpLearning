@@ -7,6 +7,36 @@ namespace SharpLearning.Optimization.Test
     public class HyperbandOptimizerTest
     {
         [TestMethod]
+        public void HyperbandOptimizer_OptimizeBest()
+        {
+            var parameters = new IParameterSpec[]
+            {
+                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear), // iterations
+                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10), // learning rate
+                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear), // maximumTreeDepth
+            };
+
+            var random = new Random(343);
+            HyperbandObjectiveFunction minimize = (p, r) =>
+            {
+                var error = random.NextDouble();
+                return new OptimizerResult(p, error);
+            };
+
+            var sut = new HyperbandOptimizer(
+                parameters,
+                maximumUnitsOfCompute: 81,
+                eta: 5,
+                skipLastIterationOfEachRound: false,
+                seed: 34);
+
+            var actual = sut.OptimizeBest(minimize);
+            var expected = new OptimizerResult(new[] { 278.337940, 0.098931, 13.177449 }, 0.009549);
+
+            AssertOptimizerResult(expected, actual);
+        }
+
+        [TestMethod]
         public void HyperbandOptimizer_Optimize()
         {
             var parameters = new IParameterSpec[]
