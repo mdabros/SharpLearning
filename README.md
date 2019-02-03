@@ -47,6 +47,7 @@ However, several optimization methods are available for hyperparameter tuning:
 * RandomSearch
 * ParticleSwarm
 * GlobalizedBoundedNelderMead
+* Hyperband
 * BayesianOptimization  
 
 License
