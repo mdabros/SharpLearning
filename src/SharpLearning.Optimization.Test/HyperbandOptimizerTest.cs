@@ -17,7 +17,7 @@ namespace SharpLearning.Optimization.Test
         public void HyperbandOptimizer_test()
         {
             // Use StreamReader(filepath) when running from filesystem
-            var parser = new CsvParser(() => new StreamReader(@"E:\Git\open-source\SharpLearning.Examples\src\Resources\winequality-white.csv"));
+            var parser = new CsvParser(() => new StreamReader(@"E:\Git\SharpLearning.Examples\src\Resources\winequality-white.csv"));
             var targetName = "quality";
 
             // read feature matrix
