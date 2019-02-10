@@ -112,7 +112,8 @@ namespace SharpLearning.Optimization
                 double[][] parameterSets = null;
                 if(randomInitialization)
                 {
-                    parameterSets = CreateParameterSets(m_parameters, 5);
+                    var randomParameterSetsCount = m_parameters.Length + 1;
+                    parameterSets = CreateParameterSets(m_parameters, randomParameterSetsCount);
                 }
 
                 var results = new ConcurrentBag<OptimizerResult>();
@@ -206,9 +207,6 @@ namespace SharpLearning.Optimization
             readonly IParameterSpec[] m_parameters;
             readonly IParameterSampler m_sampler;
             readonly Random m_random;
-
-            readonly List<double[]> m_previousParameterSets;
-            readonly List<double> m_previousParameterSetScores;
 
             // Important to use extra trees learner to have split between features calculated as: 
             // m_random.NextDouble() * (max - min) + min; 
