@@ -108,24 +108,48 @@ namespace SharpLearning.Optimization
                 var initialUnitsOfCompute = m_maximumUnitsOfCompute * Math.Pow(m_eta, -rounds);
                 var iterations = m_skipLastIterationOfEachRound ? rounds : (rounds + 1);
 
+                var parameterSets = new List<double[]>();
+                var firstIteration = true;
+
                 for (int iteration = 0; iteration < iterations; iteration++)
                 {
                     // Run each of the parameter sets with unitsOfCompute
                     // and keep the best (configurationCount / m_eta) configurations
-                    var configurationCount = initialConfigurationCount * Math.Pow(m_eta, -iteration);
+                    int configurationCount = (int)(initialConfigurationCount * Math.Pow(m_eta, -iteration));
                     var unitsOfCompute = initialUnitsOfCompute * Math.Pow(m_eta, iteration);
 
-                    Trace.WriteLine($"{(int)Math.Round(configurationCount)} configurations x {unitsOfCompute:F1} unitsOfCompute each");
+                    Trace.WriteLine($"{configurationCount} configurations x {unitsOfCompute:F1} unitsOfCompute each");
 
-                    OptimizerResult result = null;
+                    var iterationResults = new List<OptimizerResult>();
                     for (int i = 0; i < configurationCount; i++)
                     {
                         var budget = (int)Math.Round(unitsOfCompute);
-                        var parameterSet = configurationSampler.Sample(result, budget);
-                        result = functionToMinimize(parameterSet, unitsOfCompute);
+                        
+                        double[] parameterSet = null;
+                        if (firstIteration)
+                        {
+                            parameterSet = configurationSampler.Sample(budget); 
+                        }
+                        else
+                        {
+                            parameterSet = parameterSets[i];
+                        }
 
+                        var result = functionToMinimize(parameterSet, unitsOfCompute);
+
+                        configurationSampler.AddResultsToBudget(result, budget);
+                        iterationResults.Add(result);
                         allResults.Add(result);
                     }
+
+                    firstIteration = false;
+
+                    // Select a number of best configurations for the next loop
+                    var configurationsToKeep = (int)Math.Round((double)(configurationCount / m_eta));
+                    parameterSets = iterationResults.OrderBy(v => v.Error)
+                        .Take(configurationsToKeep)
+                        .Select(v => v.ParameterSet)
+                        .ToList();
 
                     Trace.WriteLine($" Lowest loss so far: {allResults.OrderBy(v => v.Error).First().Error:F4}");
                 }
@@ -139,7 +163,7 @@ namespace SharpLearning.Optimization
             double[] Sample(OptimizerResult newResult);
         }
 
-        class RandomConfigurationSampler : IConfigurationSampler
+        class RandomConfigurationSampler
         {
             readonly IParameterSpec[] m_parameters;
             readonly RandomUniform m_sampler;
@@ -150,7 +174,7 @@ namespace SharpLearning.Optimization
                 m_sampler = new RandomUniform(seed);
             }
 
-            public double[] Sample(OptimizerResult newResult)
+            public double[] Sample()
             {
                 var newParameters = new double[m_parameters.Length];
                 var index = 0;
@@ -299,20 +323,18 @@ namespace SharpLearning.Optimization
                 m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
             }
 
-            public double[] Sample(OptimizerResult newResult, int budget)
+            public double[] Sample(int budget)
             {
-                if(newResult == null || m_random.NextDouble() < m_randomConfigurationRatio)
+                if(m_random.NextDouble() < m_randomConfigurationRatio)
                 {
-                    return m_randomConfigurationSampler.Sample(newResult);
+                    return m_randomConfigurationSampler.Sample();
                 }
                 else
                 {
-                    AddResultsToBudget(newResult, budget);
-
                     // Check if any budget contains enough samples for a model.
                     if(!m_budgetToResults.Where(v => v.Value.Count > m_minimiumTrainingSamples).Any())
                     {
-                        return m_randomConfigurationSampler.Sample(newResult);
+                        return m_randomConfigurationSampler.Sample();
                     }
 
                     // Sample from the largest budget model available.
@@ -346,7 +368,7 @@ namespace SharpLearning.Optimization
                 }
             }
 
-            void AddResultsToBudget(OptimizerResult result, int budget)
+            public void AddResultsToBudget(OptimizerResult result, int budget)
             {
                 if (!m_budgetToResults.ContainsKey(budget))
                 {
