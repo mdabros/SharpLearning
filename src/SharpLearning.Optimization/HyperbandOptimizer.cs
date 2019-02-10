@@ -114,7 +114,6 @@ namespace SharpLearning.Optimization
                 {
                     // Run each of the parameter sets with unitsOfCompute
                     // and keep the best (configurationCount / m_eta) configurations
-
                     var configurationCount = initialConfigurationCount * Math.Pow(m_eta, -iteration);
                     var unitsOfCompute = initialUnitsOfCompute * Math.Pow(m_eta, iteration);
 
@@ -130,14 +129,6 @@ namespace SharpLearning.Optimization
                         allResults.Add(result);
                     }
 
-                    //// Select a number of best configurations for the next loop
-                    //var configurationsToKeep = (int)Math.Round(configurationCount / m_eta);
-                    //Trace.WriteLine($"configurationsToKeep: {configurationsToKeep}");
-
-                    //parameterSets = results.OrderBy(v => v.Error)
-                    //    .Take(configurationsToKeep)
-                    //    .Select(v => v.ParameterSet)
-                    //    .ToArray();
                     Trace.WriteLine($" Lowest loss so far: {allResults.OrderBy(v => v.Error).First().Error:F4}");
                 }
             }
