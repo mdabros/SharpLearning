@@ -22,6 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
     <ProjectReference Include="..\SharpLearning.RandomForest\SharpLearning.RandomForest.csproj" />

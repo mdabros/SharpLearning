@@ -7,6 +7,7 @@ using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
 using SharpLearning.Containers.Extensions;
 using System.Diagnostics;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Optimization
 {
@@ -97,9 +98,7 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(HyperbandObjectiveFunction functionToMinimize)
         {
             var allResults = new List<OptimizerResult>();
-            var bayesianParameterSampler = new BayesianConfigurationSampler(m_parameters, seed: m_seed);
-            var randomConfigurationSampler = new RandomConfigurationSampler(m_parameters, m_seed);
-            var randomInitialization = true;
+            var configurationSampler = new BOHPConfigurationSampler(m_parameters, 342, 0.15, m_parameters.Length + 1, 0.2);
 
             for (int rounds = m_numberOfRounds; rounds >= 0; rounds--)
             {
@@ -109,20 +108,8 @@ namespace SharpLearning.Optimization
 
                 // Initial unitsOfCompute per parameter set.
                 var initialUnitsOfCompute = m_maximumUnitsOfCompute * Math.Pow(m_eta, -rounds);
-
-                var randomParameterSetsCount = m_parameters.Length + 1;
-                var parameterSets = new double[randomParameterSetsCount][];
-                if(randomInitialization)
-                {
-                    for (int i = 0; i < randomParameterSetsCount; i++)
-                    {
-                        parameterSets[i] = randomConfigurationSampler.SampleConfiguration(allResults);
-                    }                    
-                }
-
-                var results = new ConcurrentBag<OptimizerResult>();
                 var iterations = m_skipLastIterationOfEachRound ? rounds : (rounds + 1);
-                var firstIteration = true;
+
                 for (int iteration = 0; iteration < iterations; iteration++)
                 {
                     // Run each of the parameter sets with unitsOfCompute
@@ -133,48 +120,26 @@ namespace SharpLearning.Optimization
 
                     Trace.WriteLine($"{(int)Math.Round(configurationCount)} configurations x {unitsOfCompute:F1} unitsOfCompute each");
 
-                    if (firstIteration)
+                    OptimizerResult result = null;
+                    for (int i = 0; i < configurationCount; i++)
                     {
-                        for (int i = 0; i < configurationCount; i++)
-                        {
-                            double[] parameterSet = null;
-                            if (randomInitialization && i < parameterSets.Length)
-                            {
-                                parameterSet = parameterSets[i];
-                            }
-                            else
-                            {
-                                parameterSet = bayesianParameterSampler.SampleConfiguration(allResults);
-                                randomInitialization = false;
-                            }
+                        var budget = (int)Math.Round(unitsOfCompute);
+                        var parameterSet = configurationSampler.Sample(result, budget);
+                        result = functionToMinimize(parameterSet, unitsOfCompute);
 
-                            var result = functionToMinimize(parameterSet, unitsOfCompute);
-                            results.Add(result);
-                            allResults.Add(result);
-                        }
-                        firstIteration = false;
-                    }
-                    else
-                    {
-                        foreach (var parameterSet in parameterSets)
-                        {
-                            var result = functionToMinimize(parameterSet, unitsOfCompute);
-                            results.Add(result);
-                            allResults.Add(result);
-                        }
+                        allResults.Add(result);
                     }
 
-                    // Select a number of best configurations for the next loop
-                    var configurationsToKeep = (int)Math.Round(configurationCount / m_eta);
-                    Trace.WriteLine($"configurationsToKeep: {configurationsToKeep}");
+                    //// Select a number of best configurations for the next loop
+                    //var configurationsToKeep = (int)Math.Round(configurationCount / m_eta);
+                    //Trace.WriteLine($"configurationsToKeep: {configurationsToKeep}");
 
-                    parameterSets = results.OrderBy(v => v.Error)
-                        .Take(configurationsToKeep)
-                        .Select(v => v.ParameterSet)
-                        .ToArray();
+                    //parameterSets = results.OrderBy(v => v.Error)
+                    //    .Take(configurationsToKeep)
+                    //    .Select(v => v.ParameterSet)
+                    //    .ToArray();
+                    Trace.WriteLine($" Lowest loss so far: {allResults.OrderBy(v => v.Error).First().Error:F4}");
                 }
-
-                Trace.WriteLine($" Lowest loss so far: {allResults.OrderBy(v => v.Error).First().Error:F4}");
             }
 
             return allResults.ToArray();
@@ -182,7 +147,7 @@ namespace SharpLearning.Optimization
 
         public interface IConfigurationSampler
         {
-            double[] SampleConfiguration(List<OptimizerResult> currentResults);
+            double[] Sample(OptimizerResult newResult);
         }
 
         class RandomConfigurationSampler : IConfigurationSampler
@@ -196,7 +161,7 @@ namespace SharpLearning.Optimization
                 m_sampler = new RandomUniform(seed);
             }
 
-            public double[] SampleConfiguration(List<OptimizerResult> currentResults)
+            public double[] Sample(OptimizerResult newResult)
             {
                 var newParameters = new double[m_parameters.Length];
                 var index = 0;
@@ -209,8 +174,8 @@ namespace SharpLearning.Optimization
                 return newParameters;
             }
         }
-
-        class BayesianConfigurationSampler : IConfigurationSampler
+               
+        class BayesianConfigurationSampler
         {
             readonly IParameterSpec[] m_parameters;
             readonly IParameterSampler m_sampler;
@@ -255,7 +220,7 @@ namespace SharpLearning.Optimization
                 m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
             }
 
-            public double[] SampleConfiguration(List<OptimizerResult> currentResults)
+            public double[] Sample(List<OptimizerResult> currentResults)
             {
                 // Fit model to current results
                 var observations = currentResults.Select(r => r.ParameterSet)
@@ -267,6 +232,13 @@ namespace SharpLearning.Optimization
                 var bestScore = targets.Min();
 
                 // Find the most promising hyperparameters.
+                var minimize = Minimize(model, bestScore);
+
+                return m_maximizer.OptimizeBest(minimize).ParameterSet;
+            }
+
+            Func<double[], OptimizerResult> Minimize(RegressionForestModel model, double bestScore)
+            {
                 Func<double[], OptimizerResult> minimize = (param) =>
                 {
                     // use the model to predict the expected performance, mean and variance, of the parameter set.
@@ -276,8 +248,196 @@ namespace SharpLearning.Optimization
                         // negative, since we want to "maximize" the acquisition function.
                         -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
                 };
+                return minimize;
+            }
+        }
 
-                return m_maximizer.OptimizeBest(minimize).ParameterSet;
+        class BOHPConfigurationSampler
+        {
+            readonly IParameterSpec[] m_parameters;
+            enum SamplerModel { Good, Bad };
+
+            Dictionary<int, Dictionary<SamplerModel, RegressionForestModel>> m_models;
+            readonly RegressionExtremelyRandomizedTreesLearner m_learner;
+            readonly RandomConfigurationSampler m_randomConfigurationSampler;
+
+            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
+            readonly IOptimizer m_maximizer;
+
+            // Acquisition function to maximize
+            readonly AcquisitionFunction m_acquisitionFunc;
+
+            readonly double m_topSampleRatioToTrainOn;
+            readonly int m_minimiumTrainingSamples;
+            readonly double m_randomConfigurationRatio;
+
+            readonly Random m_random;
+
+            Dictionary<int, List<OptimizerResult>> m_budgetToResults;
+
+            public BOHPConfigurationSampler(IParameterSpec[] parameters, int seed,
+                double topSampleRatioToTrainOn, int minimiumTrainingSamples, double randomConfigurationRatio)
+            {
+                m_parameters = parameters;
+                m_random = new Random(seed);
+
+                m_randomConfigurationSampler = new RandomConfigurationSampler(parameters, m_random.Next());
+
+                m_topSampleRatioToTrainOn = topSampleRatioToTrainOn;
+                m_minimiumTrainingSamples = minimiumTrainingSamples;
+                m_randomConfigurationRatio = randomConfigurationRatio;
+
+                m_models = new Dictionary<int, Dictionary<SamplerModel, RegressionForestModel>>();
+                m_budgetToResults = new Dictionary<int, List<OptimizerResult>>();
+
+                // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
+                // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
+                m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
+                    minimumSplitSize: 10,
+                    maximumTreeDepth: 2000,
+                    featuresPrSplit: parameters.Length,
+                    minimumInformationGain: 1e-6,
+                    subSampleRatio: 1.0,
+                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                    runParallel: false);
+
+                // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
+                m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
+                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                    runParallel: false);
+
+                // Acquisition function to maximize.
+                m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
+            }
+
+            public double[] Sample(OptimizerResult newResult, int budget)
+            {
+                if(newResult == null || m_random.NextDouble() < m_randomConfigurationRatio)
+                {
+                    return m_randomConfigurationSampler.Sample(newResult);
+                }
+                else
+                {
+                    AddResultsToBudget(newResult, budget);
+
+                    // Check if any budget contains enough samples for a model.
+                    if(!m_budgetToResults.Where(v => v.Value.Count > m_minimiumTrainingSamples).Any())
+                    {
+                        return m_randomConfigurationSampler.Sample(newResult);
+                    }
+
+                    // Sample from the largest budget model available.
+                    var maxBudget = m_budgetToResults
+                        .Where(v => v.Value.Count > m_minimiumTrainingSamples)
+                        .Max(v => v.Key);
+
+                    var results = m_budgetToResults[maxBudget];
+
+                    TrainBudgetModels(results, maxBudget);
+
+                    // Always sample from max budget models if available
+                    var good = m_models[maxBudget][SamplerModel.Good];
+                    var bad = m_models[maxBudget][SamplerModel.Bad];
+
+                    var best = results.OrderBy(r => r.Error).First().Error;
+
+                    var l = Minimize(good, best);
+                    var g = Minimize(bad, best);
+
+                    Func<double[], OptimizerResult> minimize = p =>
+                    {
+                        var gr = -g(p).Error;
+                        var lr = -l(p).Error;
+                        // negative since we want to maximize using the minimizer.
+                        var r = -Math.Max(1e-32, gr) / Math.Max(1e-32, lr);
+                        return new OptimizerResult(p, r);
+                    };
+
+                    return m_maximizer.OptimizeBest(minimize).ParameterSet;
+                }
+            }
+
+            void AddResultsToBudget(OptimizerResult result, int budget)
+            {
+                if (!m_budgetToResults.ContainsKey(budget))
+                {
+                    m_budgetToResults.Add(budget, new List<OptimizerResult> { result });
+                }
+                else
+                {
+                    m_budgetToResults[budget].Add(result);
+                }
+            }
+
+            void TrainBudgetModels(List<OptimizerResult> results, int budget)
+            {
+                var result = m_budgetToResults[budget];
+
+                var resultCount = result.Count;
+
+                var goodResultCount = Math.Max(m_minimiumTrainingSamples, 
+                    (int)Math.Round(m_topSampleRatioToTrainOn * resultCount));
+                var badResultCount = Math.Max(m_minimiumTrainingSamples, 
+                    resultCount - goodResultCount);
+
+                // take best results
+                var goodResults = result.OrderBy(v => v.Error)
+                    .Take(goodResultCount);
+
+                // take worst results
+                var badResults = result.OrderByDescending(v => v.Error)
+                    .Take(badResultCount);
+
+                var goodModel = TrainModel(goodResults);
+                var badModel = TrainModel(badResults);
+
+                var budgetModels = new Dictionary<SamplerModel, RegressionForestModel>
+                {
+                    { SamplerModel.Good, goodModel },
+                    { SamplerModel.Bad, badModel},
+                };
+
+                if (m_models.ContainsKey(budget))
+                {
+                    m_models[budget] = budgetModels;
+                }
+                else
+                {
+                    m_models.Add(budget, budgetModels);
+                }
+            }
+
+            Func<double[], OptimizerResult> Minimize(RegressionForestModel model, double bestScore)
+            {
+                Func<double[], OptimizerResult> minimize = (param) =>
+                {
+                    // use the model to predict the expected performance, mean and variance, of the parameter set.
+                    var p = model.PredictCertainty(param);
+
+                    // negative, since we want to "maximize" the acquisition function.
+                    var result = -m_acquisitionFunc(bestScore, p.Prediction, p.Variance);
+
+                    return new OptimizerResult(param, result);
+                };
+                return minimize;
+            }
+
+            RegressionForestModel TrainModel(IEnumerable<OptimizerResult> results)
+            {
+                var trainingData = ConvertToTrainingData(results);
+                var model = m_learner.Learn(trainingData.observations, trainingData.targets);
+
+                return model;
+            }
+
+            (F64Matrix observations, double[] targets) ConvertToTrainingData(IEnumerable<OptimizerResult> results)
+            {
+                var observations = results.Select(r => r.ParameterSet)
+                    .ToList().ToF64Matrix();
+                var targets = results.Select(r => r.Error)
+                    .ToArray();
+
+                return (observations, targets);
             }
         }
     }
