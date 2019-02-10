@@ -86,7 +86,7 @@ namespace SharpLearning.Optimization.Test
 
             // create random search optimizer
             var maximunIterationsPrConfiguration = 81;
-            var optimizer = new HyperbandOptimizer(parameters, maximunIterationsPrConfiguration, eta: 3);
+            var optimizer = new BOHPOptimizer(parameters, maximunIterationsPrConfiguration, eta: 3);
 
             var timer = new Stopwatch();
 
