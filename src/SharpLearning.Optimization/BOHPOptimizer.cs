@@ -96,7 +96,7 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(HyperbandObjectiveFunction functionToMinimize)
         {
             var allResults = new List<OptimizerResult>();
-            var configurationSampler = new BOHPConfigurationSampler(m_parameters, 342, 0.15, m_parameters.Length + 1, 0.2);
+            var configurationSampler = new BayesianConfigurationSampler(m_parameters, 342, 0.15, m_parameters.Length + 1, 0.2);
 
             for (int rounds = m_numberOfRounds; rounds >= 0; rounds--)
             {
@@ -188,83 +188,6 @@ namespace SharpLearning.Optimization
             }
         }
                
-        class BayesianConfigurationSampler
-        {
-            readonly IParameterSpec[] m_parameters;
-            readonly IParameterSampler m_sampler;
-            readonly Random m_random;
-
-            // Important to use extra trees learner to have split between features calculated as: 
-            // m_random.NextDouble() * (max - min) + min; 
-            // instead of: (currentValue + prevValue) * 0.5; like in random forest.
-            readonly RegressionExtremelyRandomizedTreesLearner m_learner;
-
-            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
-            readonly IOptimizer m_maximizer;
-
-            // Acquisition function to maximize
-            readonly AcquisitionFunction m_acquisitionFunc;
-
-            public BayesianConfigurationSampler(IParameterSpec[] parameters, int seed)
-            {
-                m_parameters = parameters;
-                m_random = new Random(seed);
-
-                // Use member to seed the random uniform sampler.
-                m_sampler = new RandomUniform(m_random.Next());
-
-                // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
-                // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
-                m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
-                    minimumSplitSize: 10,
-                    maximumTreeDepth: 2000,
-                    featuresPrSplit: parameters.Length,
-                    minimumInformationGain: 1e-6,
-                    subSampleRatio: 1.0,
-                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
-                    runParallel: false);
-
-                // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
-                m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
-                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
-                    runParallel: false);
-
-                // Acquisition function to maximize.
-                m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
-            }
-
-            public double[] Sample(List<OptimizerResult> currentResults)
-            {
-                // Fit model to current results
-                var observations = currentResults.Select(r => r.ParameterSet)
-                    .ToList().ToF64Matrix();
-                var targets = currentResults.Select(r => r.Error)
-                    .ToArray();
-                var model = m_learner.Learn(observations, targets);
-
-                var bestScore = targets.Min();
-
-                // Find the most promising hyperparameters.
-                var minimize = Minimize(model, bestScore);
-
-                return m_maximizer.OptimizeBest(minimize).ParameterSet;
-            }
-
-            Func<double[], OptimizerResult> Minimize(RegressionForestModel model, double bestScore)
-            {
-                Func<double[], OptimizerResult> minimize = (param) =>
-                {
-                    // use the model to predict the expected performance, mean and variance, of the parameter set.
-                    var p = model.PredictCertainty(param);
-
-                    return new OptimizerResult(param,
-                        // negative, since we want to "maximize" the acquisition function.
-                        -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
-                };
-                return minimize;
-            }
-        }
-
         class BOHPConfigurationSampler
         {
             readonly IParameterSpec[] m_parameters;
@@ -415,6 +338,159 @@ namespace SharpLearning.Optimization
                 else
                 {
                     m_models.Add(budget, budgetModels);
+                }
+            }
+
+            Func<double[], OptimizerResult> Minimize(RegressionForestModel model, double bestScore)
+            {
+                Func<double[], OptimizerResult> minimize = (param) =>
+                {
+                    // use the model to predict the expected performance, mean and variance, of the parameter set.
+                    var p = model.PredictCertainty(param);
+
+                    // negative, since we want to "maximize" the acquisition function.
+                    var result = -m_acquisitionFunc(bestScore, p.Prediction, p.Variance);
+
+                    return new OptimizerResult(param, result);
+                };
+                return minimize;
+            }
+
+            RegressionForestModel TrainModel(IEnumerable<OptimizerResult> results)
+            {
+                var trainingData = ConvertToTrainingData(results);
+                var model = m_learner.Learn(trainingData.observations, trainingData.targets);
+
+                return model;
+            }
+
+            (F64Matrix observations, double[] targets) ConvertToTrainingData(IEnumerable<OptimizerResult> results)
+            {
+                var observations = results.Select(r => r.ParameterSet)
+                    .ToList().ToF64Matrix();
+                var targets = results.Select(r => r.Error)
+                    .ToArray();
+
+                return (observations, targets);
+            }
+        }
+
+        class BayesianConfigurationSampler
+        {
+            readonly IParameterSpec[] m_parameters;
+
+            Dictionary<int, RegressionForestModel> m_models;
+            readonly RegressionExtremelyRandomizedTreesLearner m_learner;
+            readonly RandomConfigurationSampler m_randomConfigurationSampler;
+
+            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
+            readonly IOptimizer m_maximizer;
+
+            // Acquisition function to maximize
+            readonly AcquisitionFunction m_acquisitionFunc;
+
+            readonly double m_topSampleRatioToTrainOn;
+            readonly int m_minimiumTrainingSamples;
+            readonly double m_randomConfigurationRatio;
+
+            readonly Random m_random;
+
+            Dictionary<int, List<OptimizerResult>> m_budgetToResults;
+
+            public BayesianConfigurationSampler(IParameterSpec[] parameters, int seed,
+                double topSampleRatioToTrainOn, int minimiumTrainingSamples, double randomConfigurationRatio)
+            {
+                m_parameters = parameters;
+                m_random = new Random(seed);
+
+                m_randomConfigurationSampler = new RandomConfigurationSampler(parameters, m_random.Next());
+
+                m_topSampleRatioToTrainOn = topSampleRatioToTrainOn;
+                m_minimiumTrainingSamples = minimiumTrainingSamples;
+                m_randomConfigurationRatio = randomConfigurationRatio;
+
+                m_models = new Dictionary<int, RegressionForestModel>();
+                m_budgetToResults = new Dictionary<int, List<OptimizerResult>>();
+
+                // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
+                // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
+                m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
+                    minimumSplitSize: 10,
+                    maximumTreeDepth: 2000,
+                    featuresPrSplit: parameters.Length,
+                    minimumInformationGain: 1e-6,
+                    subSampleRatio: 1.0,
+                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                    runParallel: false);
+
+                // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
+                m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
+                    seed: m_random.Next(), // Use member to seed the random uniform sampler.
+                    runParallel: false);
+
+                // Acquisition function to maximize.
+                m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
+            }
+
+            public double[] Sample(int budget)
+            {
+                if (m_random.NextDouble() < m_randomConfigurationRatio)
+                {
+                    return m_randomConfigurationSampler.Sample();
+                }
+                else
+                {
+                    // Check if any budget contains enough samples for a model.
+                    if (!m_budgetToResults.Where(v => v.Value.Count > m_minimiumTrainingSamples).Any())
+                    {
+                        return m_randomConfigurationSampler.Sample();
+                    }
+
+                    // Sample from the largest budget model available.
+                    var maxBudget = m_budgetToResults
+                        .Where(v => v.Value.Count > m_minimiumTrainingSamples)
+                        .Max(v => v.Key);
+
+                    var results = m_budgetToResults[maxBudget];
+
+                    TrainBudgetModels(results, maxBudget);
+
+                    // Always sample from max budget models if available
+                    var model = m_models[maxBudget];
+
+                    var best = results.OrderBy(r => r.Error).First().Error;
+
+                    var minimize = Minimize(model, best);
+
+                    return m_maximizer.OptimizeBest(minimize).ParameterSet;
+                }
+            }
+
+            public void AddResultsToBudget(OptimizerResult result, int budget)
+            {
+                if (!m_budgetToResults.ContainsKey(budget))
+                {
+                    m_budgetToResults.Add(budget, new List<OptimizerResult> { result });
+                }
+                else
+                {
+                    m_budgetToResults[budget].Add(result);
+                }
+            }
+
+            void TrainBudgetModels(List<OptimizerResult> results, int budget)
+            {
+                var result = m_budgetToResults[budget];
+
+                var model = TrainModel(result);
+
+                if (m_models.ContainsKey(budget))
+                {
+                    m_models[budget] = model;
+                }
+                else
+                {
+                    m_models.Add(budget, model);
                 }
             }
 
