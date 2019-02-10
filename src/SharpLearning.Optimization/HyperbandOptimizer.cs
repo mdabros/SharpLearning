@@ -97,7 +97,8 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(HyperbandObjectiveFunction functionToMinimize)
         {
             var allResults = new List<OptimizerResult>();
-            var bayesianParameterSampler = new BayesianParameterSetSampler(m_parameters, seed: m_seed);
+            var bayesianParameterSampler = new BayesianConfigurationSampler(m_parameters, seed: m_seed);
+            var randomConfigurationSampler = new RandomConfigurationSampler(m_parameters, m_seed);
             var randomInitialization = true;
 
             for (int rounds = m_numberOfRounds; rounds >= 0; rounds--)
@@ -109,11 +110,14 @@ namespace SharpLearning.Optimization
                 // Initial unitsOfCompute per parameter set.
                 var initialUnitsOfCompute = m_maximumUnitsOfCompute * Math.Pow(m_eta, -rounds);
 
-                double[][] parameterSets = null;
+                var randomParameterSetsCount = m_parameters.Length + 1;
+                var parameterSets = new double[randomParameterSetsCount][];
                 if(randomInitialization)
                 {
-                    var randomParameterSetsCount = m_parameters.Length + 1;
-                    parameterSets = CreateParameterSets(m_parameters, randomParameterSetsCount);
+                    for (int i = 0; i < randomParameterSetsCount; i++)
+                    {
+                        parameterSets[i] = randomConfigurationSampler.SampleConfiguration(allResults);
+                    }                    
                 }
 
                 var results = new ConcurrentBag<OptimizerResult>();
@@ -140,7 +144,7 @@ namespace SharpLearning.Optimization
                             }
                             else
                             {
-                                parameterSet = bayesianParameterSampler.FindNextCandidate(allResults);  // SampleRandomParameterSet(m_parameters);
+                                parameterSet = bayesianParameterSampler.SampleConfiguration(allResults);
                                 randomInitialization = false;
                             }
 
@@ -176,33 +180,37 @@ namespace SharpLearning.Optimization
             return allResults.ToArray();
         }
 
-        double[] SampleRandomParameterSet(IParameterSpec[] parameters)
+        public interface IConfigurationSampler
         {
-            var newParameters = new double[parameters.Length];
-            var index = 0;
-            foreach (var param in parameters)
-            {
-                newParameters[index] = param.SampleValue(m_sampler);
-                index++;
-            }
-
-            return newParameters;
+            double[] SampleConfiguration(List<OptimizerResult> currentResults);
         }
 
-        double[][] CreateParameterSets(IParameterSpec[] parameters, 
-            int setCount)
+        class RandomConfigurationSampler : IConfigurationSampler
         {
-            var newSearchSpace = new double[setCount][];
-            for (int i = 0; i < newSearchSpace.Length; i++)
+            readonly IParameterSpec[] m_parameters;
+            readonly RandomUniform m_sampler;
+
+            public RandomConfigurationSampler(IParameterSpec[] parameters, int seed)
             {
-                var newParameters = SampleRandomParameterSet(parameters);
-                newSearchSpace[i] = newParameters;
+                m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+                m_sampler = new RandomUniform(seed);
             }
 
-            return newSearchSpace;
+            public double[] SampleConfiguration(List<OptimizerResult> currentResults)
+            {
+                var newParameters = new double[m_parameters.Length];
+                var index = 0;
+                foreach (var param in m_parameters)
+                {
+                    newParameters[index] = param.SampleValue(m_sampler);
+                    index++;
+                }
+
+                return newParameters;
+            }
         }
 
-        class BayesianParameterSetSampler
+        class BayesianConfigurationSampler : IConfigurationSampler
         {
             readonly IParameterSpec[] m_parameters;
             readonly IParameterSampler m_sampler;
@@ -219,7 +227,7 @@ namespace SharpLearning.Optimization
             // Acquisition function to maximize
             readonly AcquisitionFunction m_acquisitionFunc;
 
-            public BayesianParameterSetSampler(IParameterSpec[] parameters, int seed)
+            public BayesianConfigurationSampler(IParameterSpec[] parameters, int seed)
             {
                 m_parameters = parameters;
                 m_random = new Random(seed);
@@ -247,7 +255,7 @@ namespace SharpLearning.Optimization
                 m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
             }
 
-            public double[] FindNextCandidate(List<OptimizerResult> currentResults)
+            public double[] SampleConfiguration(List<OptimizerResult> currentResults)
             {
                 // Fit model to current results
                 var observations = currentResults.Select(r => r.ParameterSet)
