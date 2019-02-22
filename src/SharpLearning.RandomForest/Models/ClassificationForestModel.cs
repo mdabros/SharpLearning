@@ -170,6 +170,18 @@ namespace SharpLearning.RandomForest.Models
         }
 
         /// <summary>
+        /// Get the individual trees prediction of the RandomForest model
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        public double[] IndividualTreesPredict(double[] observation)
+        {
+            var individualTreesPrediction = m_models.Select(m => m.Predict(observation)).ToArray();
+
+            return individualTreesPrediction;
+        }
+
+        /// <summary>
         /// Loads a ClassificationForestModel.
         /// </summary>
         /// <param name="reader"></param>
