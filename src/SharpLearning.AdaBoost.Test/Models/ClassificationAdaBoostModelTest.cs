@@ -1,14 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.AdaBoost.Learners;
-using SharpLearning.AdaBoost.Models;
-using SharpLearning.AdaBoost.Test.Properties;
-using SharpLearning.Containers;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Classification;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.AdaBoost.Learners;
+using SharpLearning.AdaBoost.Models;
+using SharpLearning.Containers;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.AdaBoost.Test.Models
 {
@@ -18,14 +16,12 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationAdaBoostLearner(10);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -41,11 +37,8 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_Precit_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
-
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+            
             var learner = new ClassificationAdaBoostLearner(10);
             var sut = learner.Learn(observations, targets);
 
@@ -60,14 +53,12 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_PredictProbability_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var actual = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -86,10 +77,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_PredictProbability_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
@@ -107,9 +95,8 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
@@ -133,9 +120,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_GetRawVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationAdaBoostLearner(10, 1, 3);
             var sut = learner.Learn(observations, targets);
@@ -154,9 +139,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_Save()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationAdaBoostLearner(2);
             var sut = learner.Learn(observations, targets);
@@ -170,9 +153,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void ClassificationAdaBoostModel_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var reader = new StringReader(ClassificationAdaBoostModelString);
             var sut = ClassificationAdaBoostModel.Load(() => reader);

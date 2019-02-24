@@ -1,4 +1,58 @@
-F1;F2;F3;F4;F5;F6;F7;F8;F10;Target
+﻿using System.IO;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
+
+namespace SharpLearning.AdaBoost.Test
+{
+    public static class DataSetUtilities
+    {
+        public static (F64Matrix observations, double[] targets) LoadAptitudeDataSet()
+        {
+            var parser = new CsvParser(() => new StringReader(AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            return (observations, targets);
+        }
+
+        public static (F64Matrix observations, double[] targets) LoadGlassDataSet()
+        {
+            var parser = new CsvParser(() => new StringReader(GlassData));
+            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            return (observations, targets);
+        }
+
+        public const string AptitudeData =
+ @"AptitudeTestScore;PreviousExperience_month;Pass
+5;6;0
+1;15;0
+1;12;0
+4;6;0
+1;15;1
+1;6;0
+4;16;1
+1;10;1
+3;12;0
+4;26;1
+5;2;1
+1;12;0
+3;18;0
+3;3;0
+1;24;1
+2;8;0
+1;9;0
+4;18;0
+4;22;1
+5;3;1
+4;12;0
+4;24;1
+2;18;1
+2;6;0
+1;8;0
+5;12;0";
+
+        public const string GlassData =
+@"F1;F2;F3;F4;F5;F6;F7;F8;F10;Target
 1.52101;13.64;4.49;1.1;71.78;0.06;8.75;0;0;1
 1.51761;13.89;3.6;1.36;72.73;0.48;7.83;0;0;1
 1.51618;13.53;3.55;1.54;72.99;0.39;7.78;0;0;1
@@ -212,4 +266,7 @@ F1;F2;F3;F4;F5;F6;F7;F8;F10;Target
 1.51685;14.92;0;1.99;73.06;0;8.4;1.59;0;7
 1.52065;14.36;0;2.02;73.42;0;8.44;1.64;0;7
 1.51651;14.38;0;1.94;73.61;0;8.48;1.57;0;7
-1.51711;14.23;0;2.08;73.36;0;8.62;1.67;0;7
+1.51711;14.23;0;2.08;73.36;0;8.62;1.67;0;7";
+
+    }
+}
