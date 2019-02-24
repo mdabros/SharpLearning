@@ -1,11 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.CrossValidation.Samplers;
-using SharpLearning.CrossValidation.Test.Properties;
+using SharpLearning.CrossValidation.Test;
 using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
-using System;
-using System.IO;
 
 namespace SharpLearning.CrossValidation.CrossValidators.Test
 {
@@ -35,10 +33,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
 
         double CrossValidate(int folds)
         {
-            var targetName = "T";
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new CrossValidation<double>(new RandomIndexSampler<double>(42), folds);
             var predictions = sut.CrossValidate(new RegressionDecisionTreeLearner(), observations, targets);

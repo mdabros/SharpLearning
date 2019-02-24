@@ -1,11 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.CrossValidation.Samplers;
-using SharpLearning.InputOutput.Csv;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.CrossValidation.Test.Samplers
 {

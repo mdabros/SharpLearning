@@ -1,9 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using SharpLearning.CrossValidation.LearningCurves;
-using SharpLearning.Containers.Matrices;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.CrossValidation.LearningCurves;
 
 namespace SharpLearning.CrossValidation.Test.LearningCurves
 {

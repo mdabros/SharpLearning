@@ -1,4 +1,58 @@
-F1;F2;T
+﻿using System.IO;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
+
+namespace SharpLearning.CrossValidation.Test
+{
+    public static class DataSetUtilities
+    {
+        public static (F64Matrix observations, double[] targets) LoadAptitudeDataSet()
+        {
+            var parser = new CsvParser(() => new StringReader(AptitudeData));
+            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            return (observations, targets);
+        }
+
+        public static (F64Matrix observations, double[] targets) LoadDecisionTreeDataSet()
+        {
+            var parser = new CsvParser(() => new StringReader(DecisionTreeData));
+            var observations = parser.EnumerateRows(v => v != "T").ToF64Matrix();
+            var targets = parser.EnumerateRows("T").ToF64Vector();
+            return (observations, targets);
+        }
+
+        public const string AptitudeData =
+ @"AptitudeTestScore;PreviousExperience_month;Pass
+5;6;0
+1;15;0
+1;12;0
+4;6;0
+1;15;1
+1;6;0
+4;16;1
+1;10;1
+3;12;0
+4;26;1
+5;2;1
+1;12;0
+3;18;0
+3;3;0
+1;24;1
+2;8;0
+1;9;0
+4;18;0
+4;22;1
+5;3;1
+4;12;0
+4;24;1
+2;18;1
+2;6;0
+1;8;0
+5;12;0";
+
+        public const string DecisionTreeData =
+@"F1;F2;T
 1;0.409175;1.88318
 1;0.182603;0.063908
 1;0.663687;3.042257
@@ -198,4 +252,7 @@ F1;F2;T
 1;0.845148;4.22085
 1;0.012003;-0.217283
 1;0.018883;-0.300577
-1;0.071476;0.006014
+1;0.071476;0.006014";
+
+    }
+}

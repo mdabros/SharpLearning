@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Augmentators;
-using System;
 
 namespace SharpLearning.CrossValidation.Test.Augmentors
 {
