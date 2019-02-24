@@ -102,15 +102,19 @@ namespace SharpLearning.RandomForest.Test.Models
             var reader = new StringReader(m_cassificationForestModelString);
             var sut = RegressionForestModel.Load(() => reader);
 
-            var predictions = sut.Trees.Select(t => t.Predict(observations))
-                .Select(p => p.Average())
-                .ToArray();
+            var rows = observations.RowCount;
+            var predictions = new double[rows];
+            for (int row = 0; row < rows; row++)
+            {
+                var observation = observations.Row(row);
+                predictions[row] = sut.Trees.Select(t => t.Predict(observation))
+                    .Average();
+            }
 
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var error = evaluator.Error(targets, predictions);
 
             Assert.AreEqual(0.14547628738104926, error, m_delta);
-
         }
 
         [TestMethod]
