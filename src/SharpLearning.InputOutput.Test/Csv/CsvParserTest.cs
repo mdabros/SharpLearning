@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
 using System.Collections.Generic;
 using System.IO;
-using SharpLearning.InputOutput.Test.Properties;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.InputOutput.Test.Csv
 {
@@ -26,7 +25,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvParser_EnumerateRows_ColumNames()
         {
-            var sut = new CsvParser(() => new StringReader(Resources.AptitudeTestData));
+            var sut = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
 
             var actual = sut.EnumerateRows("PreviousExperience_month", "Pass")
                             .Skip(10).Take(3)
@@ -38,7 +37,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvParser_EnumerateRows_Select_ColumNames()
         {
-            var sut = new CsvParser(() => new StringReader(Resources.AptitudeTestData));
+            var sut = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
 
             var actual = sut.EnumerateRows(name => name == "Pass")
                             .Skip(10).Take(3)
