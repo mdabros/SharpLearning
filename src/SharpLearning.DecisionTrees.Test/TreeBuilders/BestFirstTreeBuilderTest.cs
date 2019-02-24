@@ -1,14 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
-using SharpLearning.DecisionTrees.Test.Properties;
 using SharpLearning.DecisionTrees.TreeBuilders;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
-using System;
-using System.IO;
 
 namespace SharpLearning.DecisionTrees.Test.TreeBuilders
 {
@@ -55,10 +52,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         [TestMethod]
         public void BestFirstTreeBuilder_Build_Full_Tree()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 2000, observations.ColumnCount, 0.000001, 42,
                 new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));
@@ -77,10 +71,7 @@ namespace SharpLearning.DecisionTrees.Test.TreeBuilders
         [TestMethod]
         public void BestFirstTreeBuilder_Build_Leaf_Nodes_4()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 4, observations.ColumnCount, 0.000001, 42,
                 new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));

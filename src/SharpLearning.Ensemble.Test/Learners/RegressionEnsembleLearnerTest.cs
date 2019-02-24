@@ -1,13 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
-using SharpLearning.Ensemble.Test.Properties;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Test.Learners
 {
@@ -27,9 +24,7 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
 
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -53,9 +48,7 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy(), 0.7);
 
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -79,9 +72,8 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
 
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+
             var indices = Enumerable.Range(0, 25).ToArray();
 
             var model = sut.Learn(observations, targets, indices);

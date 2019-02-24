@@ -1,14 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.AdaBoost.Learners;
-using SharpLearning.AdaBoost.Models;
-using SharpLearning.AdaBoost.Test.Properties;
-using SharpLearning.Containers;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Regression;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.AdaBoost.Learners;
+using SharpLearning.AdaBoost.Models;
+using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.AdaBoost.Test.Models
 {
@@ -18,9 +14,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void RegressionAdaBoostModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
             var rows = targets.Length;
 
             var learner = new RegressionAdaBoostLearner(10);
@@ -41,10 +35,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void RegressionAdaBoostModel_Precit_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new RegressionAdaBoostLearner(10);
             var sut = learner.Learn(observations, targets);
@@ -60,9 +51,8 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void RegressionAdaBoostModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
@@ -86,9 +76,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void RegressionAdaBoostModel_GetRawVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new RegressionAdaBoostLearner(10);
             var sut = learner.Learn(observations, targets);
@@ -107,9 +95,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void RegressionAdaBoostModel_Save()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new RegressionAdaBoostLearner(2);
             var sut = learner.Learn(observations, targets);
@@ -124,9 +110,7 @@ namespace SharpLearning.AdaBoost.Test.Models
         [TestMethod]
         public void RegressionAdaBoostModel_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var reader = new StringReader(RegressionDecisionTreeModelString);
             var sut = RegressionAdaBoostModel.Load(() => reader);

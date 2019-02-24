@@ -4,11 +4,9 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
 using SharpLearning.RandomForest.Learners;
 using SharpLearning.RandomForest.Models;
-using SharpLearning.RandomForest.Test.Properties;
 
 namespace SharpLearning.RandomForest.Test.Models
 {
@@ -20,14 +18,12 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, false);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -43,10 +39,7 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_Predict_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, false);
             var sut = learner.Learn(observations, targets);
@@ -62,14 +55,12 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_PredictProbability_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, false);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var actual = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -88,10 +79,7 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_PredictProbability_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, false);
             var sut = learner.Learn(observations, targets);
@@ -109,9 +97,8 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
@@ -135,9 +122,7 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_GetRawVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, false);
             var sut = learner.Learn(observations, targets);
@@ -156,9 +141,7 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_Save()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationRandomForestLearner(2, 5, 100, 1, 0.0001, 1.0, 42, false);
             var sut = learner.Learn(observations, targets);
@@ -173,9 +156,7 @@ namespace SharpLearning.RandomForest.Test.Models
         [TestMethod]
         public void ClassificationForestModel_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var reader = new StringReader(ClassificationForestModelString);
             var sut = ClassificationForestModel.Load(() => reader);

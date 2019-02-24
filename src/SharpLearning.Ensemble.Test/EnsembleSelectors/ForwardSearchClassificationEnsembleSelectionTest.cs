@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.Ensemble.EnsembleSelectors;
 using SharpLearning.Ensemble.Strategies;
 using SharpLearning.Metrics.Classification;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Test.EnsembleSelectors
 {

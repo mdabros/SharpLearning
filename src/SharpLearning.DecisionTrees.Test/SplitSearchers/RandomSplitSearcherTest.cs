@@ -1,12 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.SplitSearchers;
-using SharpLearning.DecisionTrees.Test.Properties;
 using SharpLearning.InputOutput.Csv;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Test.SplitSearchers
 {
@@ -23,7 +22,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
         [TestMethod]
         public void RandomSplitSearcher_FindBestSplit()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
+            var parser = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
             var feature = parser.EnumerateRows("AptitudeTestScore").ToF64Vector();
             var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var interval = Interval1D.Create(0, feature.Length);
