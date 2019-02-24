@@ -1,16 +1,13 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.Metrics.Classification;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
-using System.Collections.Generic;
-using System.Diagnostics;
-using SharpLearning.GradientBoost.Models;
 using SharpLearning.GradientBoost.Learners;
 using SharpLearning.GradientBoost.Loss;
+using SharpLearning.GradientBoost.Models;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.GradientBoost.Test.Models
 {
@@ -20,14 +17,12 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -43,10 +38,7 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_Predict_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
@@ -62,14 +54,12 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_PredictProbability_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var actual = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -88,10 +78,7 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_PredictProbability_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
@@ -109,9 +96,8 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
@@ -135,9 +121,7 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_GetRawVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
             var sut = learner.Learn(observations, targets);
@@ -156,9 +140,7 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_Save()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationGradientBoostLearner(5);
             var sut = learner.Learn(observations, targets);
@@ -180,9 +162,7 @@ namespace SharpLearning.GradientBoost.Test.Models
         [TestMethod]
         public void ClassificationGradientBoostModel_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var reader = new StringReader(ClassificationGradientBoostModelString);
             var sut = ClassificationGradientBoostModel.Load(() => reader);
