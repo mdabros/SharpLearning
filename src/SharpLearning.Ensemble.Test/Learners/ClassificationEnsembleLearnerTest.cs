@@ -1,14 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
-using SharpLearning.Ensemble.Test.Properties;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Test.Learners
 {
@@ -28,9 +25,7 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -54,9 +49,7 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy(), 0.7);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -80,9 +73,8 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
+
             var indices = Enumerable.Range(0, 25).ToArray();
 
             var model = sut.Learn(observations, targets, indices);
