@@ -11,26 +11,28 @@ using System.Linq;
 namespace SharpLearning.RandomForest.Models
 {
     /// <summary>
-    /// Regression forest model consiting of a series of decision trees
+    /// Regression forest model consisting of a series of decision trees
     /// </summary>
     [Serializable]
     public sealed class RegressionForestModel : IPredictorModel<double>
     {
-        readonly RegressionDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;
 
         /// <summary>
-        /// Classification forest model consiting of a series of decision trees
+        /// Classification forest model consisting of a series of decision trees
         /// </summary>
-        /// <param name="models">The decision tree models</param>
+        /// <param name="trees">The decision tree models</param>
         /// <param name="rawVariableImportance">The summed variable importance from all decision trees</param>
-        public RegressionForestModel(RegressionDecisionTreeModel[] models, double[] rawVariableImportance)
+        public RegressionForestModel(RegressionDecisionTreeModel[] trees, double[] rawVariableImportance)
         {
-            if (models == null) { throw new ArgumentNullException("models"); }
-            if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
-            m_models = models;
-            m_rawVariableImportance = rawVariableImportance;
+            Trees = trees ?? throw new ArgumentNullException("models");
+            m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException("rawVariableImportance");
         }
+
+        /// <summary>
+        /// Individual trees from the ensemble.
+        /// </summary>
+        public RegressionDecisionTreeModel[] Trees { get; }
 
         /// <summary>
         /// Predicts a single observations using the mean of all predictors
@@ -39,14 +41,14 @@ namespace SharpLearning.RandomForest.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            var prediction = m_models.Select(m => m.Predict(observation))
+            var prediction = Trees.Select(m => m.Predict(observation))
                 .Average();
             
             return prediction;
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the mean of all predictors
+        /// Predicts a set of observations using the mean of all predictors
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -71,13 +73,13 @@ namespace SharpLearning.RandomForest.Models
         {
             var prediction = Predict(observation);
             var variance = 0.0;
-            for (int i = 0; i < m_models.Length; i++)
+            for (int i = 0; i < Trees.Length; i++)
             {
-                var temp = m_models[i].Predict(observation) - prediction;
+                var temp = Trees[i].Predict(observation) - prediction;
                 variance += temp * temp;
             }
 
-            variance = variance / (double)m_models.Length;
+            variance = variance / (double)Trees.Length;
 
             return new CertaintyPrediction(prediction, variance);
         }
