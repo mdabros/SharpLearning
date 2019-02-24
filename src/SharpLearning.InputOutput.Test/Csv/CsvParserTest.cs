@@ -14,7 +14,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvParser_EnumerateRows()
         {
-            var sut = new CsvParser(() => new StringReader(Resources.AptitudeTestData));
+            var sut = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
 
             var actual = sut.EnumerateRows()
                             .Skip(10).Take(3)
