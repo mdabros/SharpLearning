@@ -1,15 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.DecisionTrees.Test.Properties;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Test.suts
 {
@@ -19,14 +17,12 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(100, 1, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -42,10 +38,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_Precit_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(100, 1, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
@@ -61,10 +54,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_Predict_Multiple_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(100, 5, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
@@ -83,14 +73,12 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_PredictProbability_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(100, 5, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var actual = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -109,10 +97,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_PredictProbability_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(100, 5, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
@@ -130,10 +115,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_PredictProbability_Multiple_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(100, 5, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
@@ -154,9 +136,8 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, { "PreviousExperience_month", 1 } };
 
             var learner = new ClassificationDecisionTreeLearner(100, 1, 2, 0.001, 42);
@@ -178,9 +159,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_GetRawVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(100, 1, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
@@ -199,9 +178,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_Save()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learner = new ClassificationDecisionTreeLearner(2);
             var sut = learner.Learn(observations, targets);
@@ -215,9 +192,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
         [TestMethod]
         public void ClassificationDecisionTreeModel_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var reader = new StringReader(ClassificationDecisionTreeModelString);
             var sut = ClassificationDecisionTreeModel.Load(() => reader);
