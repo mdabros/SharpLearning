@@ -5,7 +5,6 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
-using SharpLearning.InputOutput.Test.Properties;
 
 namespace SharpLearning.InputOutput.Test.Csv
 {
@@ -131,8 +130,8 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var keyName = "Date";
 
-            var parser1 = new CsvParser(() => new StringReader(Resources.TimeData1));
-            var parser2 = new CsvParser(() => new StringReader(Resources.TimeData2));
+            var parser1 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData1));
+            var parser2 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData2));
 
             var rows = parser1.EnumerateRows()
                               .KeyCombine(parser2.EnumerateRows(), (r1, r2) => r1.GetValue(keyName) == r2.GetValue(keyName), false);
@@ -156,8 +155,8 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var keyName = "Date";
 
-            var parser1 = new CsvParser(() => new StringReader(Resources.TimeData1));
-            var parser2 = new CsvParser(() => new StringReader(Resources.TimeData21));
+            var parser1 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData1));
+            var parser2 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData21));
 
             var rows = parser1.EnumerateRows()
                               .KeyCombine(parser2.EnumerateRows(), (r1, r2) => r1.GetValue(keyName) == r2.GetValue(keyName));
@@ -181,8 +180,8 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var keyName = "Date";
 
-            var parser1 = new CsvParser(() => new StringReader(Resources.TimeData1));
-            var parser2 = new CsvParser(() => new StringReader(Resources.TimeData2));
+            var parser1 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData1));
+            var parser2 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData2));
 
             var rows = parser1.EnumerateRows()
                               .KeyCombine(parser2.EnumerateRows(), keyName, keyName, false);
@@ -206,8 +205,8 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var keyName = "Date";
 
-            var parser1 = new CsvParser(() => new StringReader(Resources.TimeData1));
-            var parser2 = new CsvParser(() => new StringReader(Resources.TimeData21));
+            var parser1 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData1));
+            var parser2 = new CsvParser(() => new StringReader(DataSetUtilities.TimeData21));
 
             var rows = parser1.EnumerateRows()
                               .KeyCombine(parser2.EnumerateRows(), keyName, keyName);

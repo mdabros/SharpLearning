@@ -72,6 +72,7 @@ namespace SharpLearning.RandomForest.Test.Learners
         public void ClassificationExtremelyRandomizedTreesLearner_Learn_Glass_100_Indices()
         {
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
+
             var sut = new ClassificationExtremelyRandomizedTreesLearner(100, 1, 100, 1, 0.0001, 1.0,  42, false);
             
             var indices = Enumerable.Range(0, targets.Length).ToArray();
@@ -123,7 +124,6 @@ namespace SharpLearning.RandomForest.Test.Learners
         double ClassificationExtremelyRandomizedTreesLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
-            var rows = targets.Length;
 
             var sut = new ClassificationExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);

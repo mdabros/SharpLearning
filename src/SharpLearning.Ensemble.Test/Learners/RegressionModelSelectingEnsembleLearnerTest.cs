@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.CrossValidation.CrossValidators;
 using SharpLearning.Ensemble.EnsembleSelectors;
 using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
 using SharpLearning.Metrics.Regression;
-using System;
 
 namespace SharpLearning.Ensemble.Test.Learners
 {

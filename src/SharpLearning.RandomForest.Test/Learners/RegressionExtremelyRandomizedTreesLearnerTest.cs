@@ -124,6 +124,7 @@ namespace SharpLearning.RandomForest.Test.Learners
         double RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 

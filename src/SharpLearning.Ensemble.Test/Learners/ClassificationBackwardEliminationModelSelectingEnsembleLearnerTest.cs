@@ -1,17 +1,12 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Ensemble.Learners;
-using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.CrossValidation.CrossValidators;
-using SharpLearning.InputOutput.Csv;
-using System.IO;
-using SharpLearning.Ensemble.Test.Properties;
-using SharpLearning.Metrics.Classification;
-using System.Linq;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
-using SharpLearning.Ensemble.EnsembleSelectors;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.Ensemble.Test.Learners
 {
@@ -39,9 +34,7 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, 5);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.PredictProbability(observations);
@@ -73,9 +66,7 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, 5);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var metaObservations = sut.LearnMetaFeatures(observations, targets);
             var model = sut.SelectModels(observations, metaObservations, targets);
@@ -113,9 +104,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, 5,
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy, metric);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
+
             var indices = Enumerable.Range(0, 25).ToArray();
 
             var model = sut.Learn(observations, targets, indices);

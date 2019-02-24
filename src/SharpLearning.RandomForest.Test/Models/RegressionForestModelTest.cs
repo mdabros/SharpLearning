@@ -123,6 +123,7 @@ namespace SharpLearning.RandomForest.Test.Models
         public void RegressionForestModel_GetVariableImportance()
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 

@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.XGBoost.Learners;
 using SharpLearning.XGBoost.Models;
-using SharpLearning.XGBoost.Test.Properties;
 
 namespace SharpLearning.XGBoost.Test.Learners
 {
@@ -19,14 +16,13 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void RegressionXGBoostModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var learner = CreateLearner();
+
             using (var sut = learner.Learn(observations, targets))
             {
+                var rows = targets.Length;
                 var predictions = new double[rows];
                 for (int i = 0; i < rows; i++)
                 {
@@ -43,9 +39,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void RegressionXGBoostModel_Predict_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var learner = CreateLearner();
 
@@ -63,9 +57,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void RegressionXGBoostModel_Save_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();                
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var learner = CreateLearner();
             var sut = learner.Learn(observations, targets);
@@ -88,9 +80,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void RegressionXGBoostModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var index = 0;
             var name = "f";

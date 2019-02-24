@@ -1,13 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.CrossValidation.Test;
-using SharpLearning.CrossValidation.Test.Properties;
-using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Classification;
-using System;
-using System.IO;
+﻿using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.CrossValidation.Test;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.CrossValidation.CrossValidators.Test
 {
@@ -54,10 +50,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
 
         double CrossValidate(int folds)
         {
-            var targetName = "Pass";
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new StratifiedCrossValidation<double>(folds, 42);
             var predictions = sut.CrossValidate(new ClassificationDecisionTreeLearner(), observations, targets);
@@ -68,10 +61,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
 
         double CrossValidate_Provide_Indices(int folds)
         {
-            var targetName = "Pass";
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new StratifiedCrossValidation<double>(folds, 42);
 
