@@ -16,7 +16,6 @@ namespace SharpLearning.RandomForest.Models
     [Serializable]
     public sealed class ClassificationForestModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
     {
-        readonly ClassificationDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;
 
         /// <summary>
@@ -26,11 +25,14 @@ namespace SharpLearning.RandomForest.Models
         /// <param name="rawVariableImportance">The summed variable importance from all decision trees</param>
         public ClassificationForestModel(ClassificationDecisionTreeModel[] models, double[] rawVariableImportance)
         {
-            if (models == null) { throw new ArgumentNullException("models"); }
-            if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
-            m_models = models;
-            m_rawVariableImportance = rawVariableImportance;
+            Trees = models ?? throw new ArgumentNullException("models");
+            m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException("rawVariableImportance");
         }
+
+        /// <summary>
+        /// Individual trees from the ensemble.
+        /// </summary>
+        public ClassificationDecisionTreeModel[] Trees { get; }
 
         /// <summary>
         /// Predicts a single observations using majority vote
@@ -39,7 +41,7 @@ namespace SharpLearning.RandomForest.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            var prediction = m_models.Select(m => m.Predict(observation))
+            var prediction = Trees.Select(m => m.Predict(observation))
                 .GroupBy(p => p).OrderByDescending(g => g.Count())
                 .First().Key;
             
@@ -93,7 +95,7 @@ namespace SharpLearning.RandomForest.Models
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
             var probabilities = new Dictionary<double, double>();
-            var modelsProbability = m_models.Select(m => m.PredictProbability(observation).Probabilities)
+            var modelsProbability = Trees.Select(m => m.PredictProbability(observation).Probabilities)
                 .ToArray();
 
             foreach (var model in modelsProbability)
@@ -114,7 +116,7 @@ namespace SharpLearning.RandomForest.Models
             var keys = probabilities.Keys.ToList();
             foreach (var target in keys)
             {
-                probabilities[target] /= m_models.Length;
+                probabilities[target] /= Trees.Length;
             }
 
             var prediction = probabilities.OrderByDescending(p => p.Value)
