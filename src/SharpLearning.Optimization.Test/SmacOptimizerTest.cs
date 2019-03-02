@@ -18,8 +18,8 @@ namespace SharpLearning.Optimization.Test
 
             var actual = sut.OptimizeBest(ObjectiveUtilities.MinimizeWeightFromHeight);
 
-            Assert.AreEqual(109.42115405881532, actual.Error, ObjectiveUtilities.Delta);
-            Assert.AreEqual(37.669741473006894, actual.ParameterSet.Single(), ObjectiveUtilities.Delta);
+            Assert.AreEqual(109.616853578648, actual.Error, ObjectiveUtilities.Delta);
+            Assert.AreEqual(37.6315924979893, actual.ParameterSet.Single(), ObjectiveUtilities.Delta);
         }
 
         [TestMethod]
@@ -35,12 +35,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new SmacOptimizer(parameters, 80);
             var actual = sut.OptimizeBest(ObjectiveUtilities.Minimize);
 
-            Assert.AreEqual(actual.Error, -0.98652950641642445, ObjectiveUtilities.Delta);
+            Assert.AreEqual(-0.964878416222769, actual.Error, ObjectiveUtilities.Delta);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], -7.8353112367146238, ObjectiveUtilities.Delta);
-            Assert.AreEqual(actual.ParameterSet[1], 6.2707440537729973, ObjectiveUtilities.Delta);
-            Assert.AreEqual(actual.ParameterSet[2], 0.01339932438609992, ObjectiveUtilities.Delta);
+            Assert.AreEqual(-7.8487638560350819, actual.ParameterSet[0], ObjectiveUtilities.Delta);
+            Assert.AreEqual(6.2840940040927826, actual.ParameterSet[1], ObjectiveUtilities.Delta);
+            Assert.AreEqual(0.036385473812179825, actual.ParameterSet[2], ObjectiveUtilities.Delta);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace SharpLearning.Optimization.Test
             var expected = new OptimizerResult[]
             {
                 new OptimizerResult(new double[] { 90.513222660177 }, 114559.431919558),
-                new OptimizerResult(new double[] { 37.6697414730069 },  109.421154058815),
+                new OptimizerResult(new double[] { 41.8333740634068 },  806.274612132759),
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, ObjectiveUtilities.Delta);

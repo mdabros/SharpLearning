@@ -29,7 +29,7 @@ namespace SharpLearning.Optimization
             int iterationCount = 10,
             int startParameterSetCount = 20, 
             int localSearchParentCount = 10,
-            int randomEISearchParameterSetsCount = 10000,
+            int randomEISearchParameterSetsCount = 1000,
             int seed = 42)
         {
             m_random = new Random(seed);
@@ -43,7 +43,7 @@ namespace SharpLearning.Optimization
 
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
-            m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
+            m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 10,
                 minimumSplitSize: 2,
                 maximumTreeDepth: 2000,
                 featuresPrSplit: parameters.Length,
