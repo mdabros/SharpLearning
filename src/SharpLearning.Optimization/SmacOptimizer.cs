@@ -94,11 +94,7 @@ namespace SharpLearning.Optimization
                 var randomParameterSetCount = Math.Min(parameterSetCount,
                     m_startParameterSetCount - previousParameterSets);
 
-                var randomParameterSets = new double[randomParameterSetCount][];
-                for (int i = 0; i < randomParameterSetCount; i++)
-                {
-                    randomParameterSets[i] = CreateParameterSet();
-                }
+                var randomParameterSets = SampleRandomParameterSets(randomParameterSetCount);
 
                 return randomParameterSets;
             }
@@ -136,11 +132,7 @@ namespace SharpLearning.Optimization
 
             // Create random parameter sets.
             var randomParameterSets = parameterSetCount - challengers.Length;
-            var randomChallengers = new double[randomParameterSets][];
-            for (int i = 0; i < randomParameterSets; i++)
-            {
-                randomChallengers[i] = CreateParameterSet();
-            }
+            var randomChallengers = SampleRandomParameterSets(randomParameterSets);
 
             // Interleave challengers and random parameter sets.
             return InterLeaveModelBasedAndRandomParameterSets(challengers, randomChallengers);
@@ -173,7 +165,7 @@ namespace SharpLearning.Optimization
             // Additional set of random parameterSets to choose from during local search.
             for (int i = 0; i < m_randomEISearchParameterSetsCount; i++)
             {
-                var parameterSet = CreateParameterSet();
+                var parameterSet = SampleParameterSet();
                 var ei = ComputeExpectedImprovement(best, parameterSet, model);
                 parameterSets.Add((parameterSet, ei));
             }
@@ -257,17 +249,28 @@ namespace SharpLearning.Optimization
             return AcquisitionFunctions.ExpectedImprovement(best, mean, variance);
         }
 
-        double[] CreateParameterSet()
+        double[][] SampleRandomParameterSets(int parameterSetCount)
         {
-            var newPoint = new double[m_parameters.Length];
+            var parameterSets = new double[parameterSetCount][];
+            for (int i = 0; i < parameterSetCount; i++)
+            {
+                parameterSets[i] = SampleParameterSet();
+            }
+
+            return parameterSets;
+        }
+
+        double[] SampleParameterSet()
+        {
+            var parameterSet = new double[m_parameters.Length];
 
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 var parameter = m_parameters[i];
-                newPoint[i] = parameter.SampleValue(m_sampler);
+                parameterSet[i] = parameter.SampleValue(m_sampler);
             }
 
-            return newPoint;
+            return parameterSet;
         }
     }
 }
