@@ -62,7 +62,7 @@ namespace SharpLearning.Optimization
 
             for (int iteration = 0; iteration < m_iterationCount; iteration++)
             {
-                var configurations = SelectConfigurations(5, results);
+                var configurations = SelectConfigurations(1, results);
                 RunConfigurations(functionToMinimize, configurations, results);
             }
 
@@ -88,11 +88,11 @@ namespace SharpLearning.Optimization
         double[][] SelectConfigurations(int configurationCount, 
             IReadOnlyList<OptimizerResult> previousRuns = null)
         {
-            var configurations = previousRuns == null ? 0 : previousRuns.Count;
-            if (configurations < m_startConfigurationCount)
+            var previousConfigurations = previousRuns == null ? 0 : previousRuns.Count;
+            if (previousConfigurations < m_startConfigurationCount)
             {
-                var randomConfigurationCount = Math.Min(configurationCount, 
-                    m_startConfigurationCount - configurations);
+                var randomConfigurationCount = Math.Min(configurationCount,
+                    m_startConfigurationCount - previousConfigurations);
 
                 var randomConfigurations = new double[randomConfigurationCount][];
                 for (int i = 0; i < randomConfigurationCount; i++)
@@ -103,9 +103,15 @@ namespace SharpLearning.Optimization
                 return randomConfigurations;
             }
 
-            var validConfigurations = previousRuns.Where(v => !double.IsNaN(v.Error));
-
             // fit model
+            var validConfigurations = previousRuns.Where(v => !double.IsNaN(v.Error));            
+            var model = FitModel(validConfigurations);
+
+            return GenerateCandidateConfigurations(configurationCount, validConfigurations.ToList(), model);
+        }
+
+        RegressionForestModel FitModel(IEnumerable<OptimizerResult> validConfigurations)
+        {
             var observations = validConfigurations
                 .Select(v => v.ParameterSet).ToList()
                 .ToF64Matrix();
@@ -114,11 +120,11 @@ namespace SharpLearning.Optimization
                 .Select(v => v.Error).ToArray();
 
             var model = m_learner.Learn(observations, targets);
-
-            return GenerateCandidateConfigurations(configurations, validConfigurations.ToList(), model);
+            return model;
         }
 
-        double[][] GenerateCandidateConfigurations(int configurationCount, IReadOnlyList<OptimizerResult> previousRuns, RegressionForestModel model)
+        double[][] GenerateCandidateConfigurations(int configurationCount, 
+            IReadOnlyList<OptimizerResult> previousRuns, RegressionForestModel model)
         {
             // Get k best previous runs ParameterSets.
             var bestKParamSets = previousRuns.OrderBy(v => v.Error)
