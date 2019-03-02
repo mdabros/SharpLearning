@@ -181,12 +181,8 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Performs a local one-mutation neighborhood greedy search.
+        /// Stop search when no neighbors increase expected improvement.
         /// </summary>
-        /// <param name="parentConfigurations">Starting parameter set configuration.</param>
-        /// <param name="model">Trained forest, for evaluation of points.</param>
-        /// <param name="bestScore">Best performance seen thus far.</param>
-        /// <param name="epsilon">Threshold for when to stop the local search.</param>
-        /// <returns></returns>
         (double[] configuration, double expectedImprovement) LocalSearch(double[][] parentConfigurations, 
             RegressionForestModel model, double bestScore, double epsilon)
         {
