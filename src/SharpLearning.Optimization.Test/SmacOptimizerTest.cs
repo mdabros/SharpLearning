@@ -23,7 +23,8 @@ namespace SharpLearning.Optimization.Test
             Assert.AreEqual(37.533294194160632, actual.ParameterSet.Single(), 0.00001);
         }
 
-        public void SmacOptimizer_OptimizeBest2(int? maxDegreeOfParallelism)
+        [TestMethod]
+        public void SmacOptimizer_OptimizeBest2()
         {
             var parameters = new MinMaxParameterSpec[]
             {
@@ -33,7 +34,7 @@ namespace SharpLearning.Optimization.Test
             };
 
             var sut = new SmacOptimizer(parameters);
-            var actual = sut.OptimizeBest(Minimize);
+            var actual = sut.OptimizeBest(Minimize2);
 
             Assert.AreEqual(actual.Error, -0.99999949547279676, 0.0000001);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
@@ -73,6 +74,11 @@ namespace SharpLearning.Optimization.Test
         public void RandomSearchOptimizer_ArgumentCheck_ParameterRanges()
         {
             var sut = new RandomSearchOptimizer(null, 10);
+        }
+
+        OptimizerResult Minimize2(double[] x)
+        {
+            return new OptimizerResult(x, Math.Sin(x[0]) * Math.Cos(x[1]) * (1.0 / (Math.Abs(x[2]) + 1)));
         }
 
         OptimizerResult Minimize(double[] parameters)
