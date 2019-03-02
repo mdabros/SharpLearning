@@ -53,6 +53,9 @@ namespace SharpLearning.Optimization
                 runParallel: false);
         }
 
+        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
+            // Return the best model found.
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
@@ -71,10 +74,6 @@ namespace SharpLearning.Optimization
             // return all results ordered
             return results.ToArray();
         }
-
-        public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) => 
-            // Return the best model found.
-            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         void RunParameterSets(Func<double[], OptimizerResult> functionToMinimize, 
             double[][] parameterSets, List<OptimizerResult> results)
