@@ -184,48 +184,43 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="parentConfigurations">Starting parameter set configuration.</param>
         /// <param name="model">Trained forest, for evaluation of points.</param>
-        /// <param name="bestVal">Best performance seen thus far.</param>
+        /// <param name="bestScore">Best performance seen thus far.</param>
         /// <param name="epsilon">Threshold for when to stop the local search.</param>
         /// <returns></returns>
-        (double[] configuration, double bestEI) LocalSearch(double[][] parentConfigurations, 
-            RegressionForestModel model, double bestVal, double epsilon)
+        (double[] configuration, double expectedImprovement) LocalSearch(double[][] parentConfigurations, 
+            RegressionForestModel model, double bestScore, double epsilon)
         {
-            var currentBestConfig = parentConfigurations.First();
-            var currentBestEI = ComputeExpectedImprovement(bestVal, currentBestConfig, model);
+            var bestConfiguration = parentConfigurations.First();
+            var BestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestConfiguration, model);
 
-            // TODO: clean up loop.
-            var newBest = true;
+            var newExpectedImprovement = false;
             while (true)
             {
-                // Stop search of no neighbors improve EI.
-                if(newBest)
-                {
-                    newBest = false;
-                }
-                else
-                {
-                    break;
-                }
-
-                var neighborhood = GetOneMutationNeighborhood(currentBestConfig);
+                var neighborhood = GetOneMutationNeighborhood(bestConfiguration);
                 for (int i = 0; i < neighborhood.Count; i++)
                 {
                     var neighbor = neighborhood[i];
-                    var ei = ComputeExpectedImprovement(bestVal, neighbor, model);
-                    // TODO: Determine correct comparison. We want the largest possible expected improvement.
-                    if (ei - currentBestEI < epsilon)
+                    var ei = ComputeExpectedImprovement(bestScore, neighbor, model);
+                    if (ei - BestExpectedImprovement > epsilon)
                     {
+                        bestConfiguration = neighbor;
+                        BestExpectedImprovement = ei;
+                        newExpectedImprovement = true;
                     }
-                    else
-                    {
-                        currentBestConfig = neighbor;
-                        currentBestEI = ei;
-                        newBest = true;
-                    }
+                }
+
+                // Stop search when no neighbors increase expected improvement.
+                if (!newExpectedImprovement)
+                {
+                    break;
+                }
+                else
+                {
+                    newExpectedImprovement = false;
                 }
             }
 
-            return (currentBestConfig, currentBestEI);
+            return (bestConfiguration, BestExpectedImprovement);
         }
 
         List<double[]> GetOneMutationNeighborhood(double[] parentConfiguration)
@@ -234,10 +229,13 @@ namespace SharpLearning.Optimization
 
             for (int i = 0; i < m_parameters.Length; i++)
             {
-                // Add a new configuration that differs by one parameter from the parent.
+                // Add a new parameter set that differs only by one parameter from the parent.
                 var parameterSpec = m_parameters[i];
 
-                // Add 4 configurations pr. parameter
+                // Add 4 configurations pr. parameter. 
+                // This case if for continuous variables.
+                // Original paper also has a case for categorical parameters.
+                // However, this is currently not supported.
                 const int configurationCount = 4;
                 for (int j = 0; j < configurationCount; j++)
                 {
