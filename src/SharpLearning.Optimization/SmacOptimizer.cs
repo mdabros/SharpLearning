@@ -18,6 +18,8 @@ namespace SharpLearning.Optimization
         readonly int m_localSearchCount;
         readonly int m_randomEISearchParameterSetsCount;
 
+        readonly ParameterSetEqualityComparer m_comparer = new ParameterSetEqualityComparer();
+
         // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
         // instead of: (currentValue + prevValue) * 0.5; like in random forest.
@@ -158,8 +160,8 @@ namespace SharpLearning.Optimization
             // Perform local search.
             foreach (var parameterSet in parentParameterSets)
             {
-                var bestChildConfig = LocalSearch(parentParameterSets, model, best, epsilon: 0.00001);
-                parameterSets.Add(bestChildConfig);
+                var bestParameterSet = LocalSearch(parentParameterSets, model, best, epsilon: 0.00001);
+                parameterSets.Add(bestParameterSet);
             }
 
             // Additional set of random parameterSets to choose from during local search.
@@ -170,9 +172,11 @@ namespace SharpLearning.Optimization
                 parameterSets.Add((parameterSet, ei));
             }
 
-            // Take the best parameterSets. Here we want the max expected improvement.
-            return parameterSets.OrderByDescending(v => v.EI)
-                .Take(parameterSetCount).Select(v => v.parameterSet).ToArray();
+            // Take the best parameterSets, while removing duplicates. 
+            // Here we want the max expected improvement.
+            return parameterSets.Distinct(m_comparer)
+                .OrderByDescending(v => v.Item2)
+                .Take(parameterSetCount).Select(v => v.Item1).ToArray();
         }
 
         /// <summary>
@@ -183,36 +187,27 @@ namespace SharpLearning.Optimization
             RegressionForestModel model, double bestScore, double epsilon)
         {
             var bestParameterSet = parentParameterSets.First();
-            var BestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestParameterSet, model);
+            var bestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestParameterSet, model);
 
-            var newExpectedImprovement = false;
-            while (true)
+            var continueSearch = true;
+            while (continueSearch)
             {
+                continueSearch = false;
                 var neighborhood = GetOneMutationNeighborhood(bestParameterSet);
                 for (int i = 0; i < neighborhood.Count; i++)
                 {
                     var neighbor = neighborhood[i];
                     var ei = ComputeExpectedImprovement(bestScore, neighbor, model);
-                    if (ei - BestExpectedImprovement > epsilon)
+                    if (ei - bestExpectedImprovement > epsilon)
                     {
                         bestParameterSet = neighbor;
-                        BestExpectedImprovement = ei;
-                        newExpectedImprovement = true;
+                        bestExpectedImprovement = ei;
+                        continueSearch = true;
                     }
-                }
-
-                // Stop search when no neighbors increase expected improvement.
-                if (!newExpectedImprovement)
-                {
-                    break;
-                }
-                else
-                {
-                    newExpectedImprovement = false;
                 }
             }
 
-            return (bestParameterSet, BestExpectedImprovement);
+            return (bestParameterSet, bestExpectedImprovement);
         }
 
         List<double[]> GetOneMutationNeighborhood(double[] parentParameterSet)
@@ -270,6 +265,45 @@ namespace SharpLearning.Optimization
             }
 
             return parameterSet;
+        }
+
+        class ParameterSetEqualityComparer : IEqualityComparer<(double[], double)>
+        {
+            public bool Equals((double[], double) x, (double[], double) y)
+            {
+                return Equals(x.Item1, y.Item1);
+            }
+
+            public int GetHashCode((double[], double) obj)
+            {
+                return obj.GetHashCode();
+            }
+
+            bool Equals(double[] p1, double[] p2)
+            {
+                for (int i = 0; i < p1.Length; i++)
+                {
+                    if (!Equal(p1[i], p2[i]))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            bool Equal(double a, double b)
+            {
+                var diff = Math.Abs(a * m_tolerence);
+                if (Math.Abs(a - b) <= diff)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+
+            const double m_tolerence = 0.00001;
         }
     }
 }
