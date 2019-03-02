@@ -218,7 +218,6 @@ namespace SharpLearning.Optimization
         List<double[]> GetOneMutationNeighborhood(double[] parentParameterSet)
         {
             var neighbors = new List<double[]>();
-
             for (int i = 0; i < m_parameters.Length; i++)
             {
                 // Add a new parameter set that differs only by one parameter from the parent.
@@ -231,7 +230,7 @@ namespace SharpLearning.Optimization
                 const int parameterSetCount = 4;
                 for (int j = 0; j < parameterSetCount; j++)
                 {
-                    // Copy parant and mutate one parameter.
+                    // Copy parent and mutate one parameter.
                     var newParameterSet = parentParameterSet.ToArray();
                     newParameterSet[i] = parameterSpec.SampleValue(m_sampler);
                     neighbors.Add(newParameterSet);
