@@ -126,28 +126,32 @@ namespace SharpLearning.Optimization
         double[][] GenerateCandidateConfigurations(int configurationCount, 
             IReadOnlyList<OptimizerResult> previousRuns, RegressionForestModel model)
         {
-            // Get k best previous runs ParameterSets.
-            var bestKParamSets = previousRuns.OrderBy(v => v.Error)
+            // Get top parameter sets from previous runs.
+            var topParameterSets = previousRuns.OrderBy(v => v.Error)
                 .Take(m_localSearchCount).Select(v => v.ParameterSet).ToArray();
-            
-            // Perform local searches using the k best previous run configurations.
-            var eiChallengers = GreedyPlusRandomSearch(bestKParamSets, model, 
+
+            // Perform local search using the top parameter sets from previous run.
+            var challengers = GreedyPlusRandomSearch(topParameterSets, model,
                 (int)Math.Ceiling(configurationCount / 2.0F), previousRuns);
 
-            // Generate another set of random configurations to interleave.
-            var randomConfigurations = configurationCount - eiChallengers.Length;
+            // Create random parameter sets.
+            var randomConfigurations = configurationCount - challengers.Length;
             var randomChallengers = new double[randomConfigurations][];
             for (int i = 0; i < randomConfigurations; i++)
             {
                 randomChallengers[i] = CreateParameterSet();
             }
 
-            // Return interleaved challenger candidates with random candidates. Since the number of candidates from either can be less than
-            // the number asked for, since we only generate unique candidates, and the number from either method may vary considerably.
-            var finalConfigurations = new double[eiChallengers.Length + randomChallengers.Length][];
-            Array.Copy(eiChallengers, 0, finalConfigurations, 0, eiChallengers.Length);
-            Array.Copy(randomChallengers, 0, finalConfigurations, eiChallengers.Length, randomChallengers.Length);
+            // Interleave challengers and random parameter sets.
+            return InterLeaveModelBasedAndRandomParameterSets(challengers, randomChallengers);
+        }
 
+        double[][] InterLeaveModelBasedAndRandomParameterSets(double[][] challengers, 
+            double[][] randomChallengers)
+        {
+            var finalConfigurations = new double[challengers.Length + randomChallengers.Length][];
+            Array.Copy(challengers, 0, finalConfigurations, 0, challengers.Length);
+            Array.Copy(randomChallengers, 0, finalConfigurations, challengers.Length, randomChallengers.Length);
             return finalConfigurations;
         }
 
@@ -156,9 +160,9 @@ namespace SharpLearning.Optimization
         {
             // TODO: Handle maximization and minimization. Currently minimizes.
             var best = previousRuns.Min(v => v.Error);
-            var worst = previousRuns.Max(v => v.Error);
 
             var configurations = new List<(double[] configuration, double EI)>();
+           
             // Perform local search.
             foreach (var configuration in parentConfigurations)
             {
@@ -174,7 +178,7 @@ namespace SharpLearning.Optimization
                 configurations.Add((configuration, ei));
             }
 
-            // take best configurations. Here we want the max expected improvement).
+            // Take the best configurations. Here we want the max expected improvement.
             return configurations.OrderByDescending(v => v.EI)
                 .Take(configurationCount).Select(v => v.configuration).ToArray();
         }
