@@ -14,9 +14,9 @@ namespace SharpLearning.Optimization
         readonly IParameterSampler m_sampler;
         readonly IParameterSpec[] m_parameters;
         readonly int m_iterationCount;
-        readonly int m_startConfigurationCount;
+        readonly int m_startParameterSetCount;
         readonly int m_localSearchCount;
-        readonly int m_randomEISearchConfigurationsCount;
+        readonly int m_randomEISearchParameterSetsCount;
 
         // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
@@ -25,9 +25,9 @@ namespace SharpLearning.Optimization
 
         public SmacOptimizer(IParameterSpec[] parameters,
             int iterationCount = 10,
-            int startConfigurationCount = 20, 
+            int startParameterSetCount = 20, 
             int localSearchParentCount = 10,
-            int randomEISearchConfigurationsCount = 10000,
+            int randomEISearchParameterSetsCount = 10000,
             int seed = 42)
         {
             m_random = new Random(seed);
@@ -35,9 +35,9 @@ namespace SharpLearning.Optimization
             m_sampler = new RandomUniform(m_random.Next());
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_iterationCount = iterationCount;
-            m_startConfigurationCount = startConfigurationCount;
+            m_startParameterSetCount = startParameterSetCount;
             m_localSearchCount = localSearchParentCount;
-            m_randomEISearchConfigurationsCount = randomEISearchConfigurationsCount;
+            m_randomEISearchParameterSetsCount = randomEISearchParameterSetsCount;
 
             // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
             // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
@@ -54,16 +54,16 @@ namespace SharpLearning.Optimization
 
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            var initialConfigurations = SelectConfigurations(m_startConfigurationCount, null);
+            var initialParameterSets = SelectParameterSets(m_startParameterSetCount, null);
 
             // Initialize the search
             var results = new List<OptimizerResult>();
-            RunConfigurations(functionToMinimize, initialConfigurations, results);
+            RunParameterSets(functionToMinimize, initialParameterSets, results);
 
             for (int iteration = 0; iteration < m_iterationCount; iteration++)
             {
-                var configurations = SelectConfigurations(1, results);
-                RunConfigurations(functionToMinimize, configurations, results);
+                var parameterSets = SelectParameterSets(1, results);
+                RunParameterSets(functionToMinimize, parameterSets, results);
             }
 
             // return all results ordered
@@ -74,56 +74,56 @@ namespace SharpLearning.Optimization
             // Return the best model found.
             Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
-        void RunConfigurations(Func<double[], OptimizerResult> functionToMinimize, 
-            double[][] configurations, List<OptimizerResult> results)
+        void RunParameterSets(Func<double[], OptimizerResult> functionToMinimize, 
+            double[][] parameterSets, List<OptimizerResult> results)
         {
-            foreach (var configuration in configurations)
+            foreach (var parameterSet in parameterSets)
             {
                 // Get the current parameters for the current point
-                var result = functionToMinimize(configuration);
+                var result = functionToMinimize(parameterSet);
                 results.Add(result);
             }
         }
 
-        double[][] SelectConfigurations(int configurationCount, 
+        double[][] SelectParameterSets(int parameterSetCount, 
             IReadOnlyList<OptimizerResult> previousRuns = null)
         {
-            var previousConfigurations = previousRuns == null ? 0 : previousRuns.Count;
-            if (previousConfigurations < m_startConfigurationCount)
+            var previousParameterSets = previousRuns == null ? 0 : previousRuns.Count;
+            if (previousParameterSets < m_startParameterSetCount)
             {
-                var randomConfigurationCount = Math.Min(configurationCount,
-                    m_startConfigurationCount - previousConfigurations);
+                var randomParameterSetCount = Math.Min(parameterSetCount,
+                    m_startParameterSetCount - previousParameterSets);
 
-                var randomConfigurations = new double[randomConfigurationCount][];
-                for (int i = 0; i < randomConfigurationCount; i++)
+                var randomParameterSets = new double[randomParameterSetCount][];
+                for (int i = 0; i < randomParameterSetCount; i++)
                 {
-                    randomConfigurations[i] = CreateParameterSet();
+                    randomParameterSets[i] = CreateParameterSet();
                 }
 
-                return randomConfigurations;
+                return randomParameterSets;
             }
 
             // fit model
-            var validConfigurations = previousRuns.Where(v => !double.IsNaN(v.Error));            
-            var model = FitModel(validConfigurations);
+            var validParameterSets = previousRuns.Where(v => !double.IsNaN(v.Error));            
+            var model = FitModel(validParameterSets);
 
-            return GenerateCandidateConfigurations(configurationCount, validConfigurations.ToList(), model);
+            return GenerateCandidateParameterSets(parameterSetCount, validParameterSets.ToList(), model);
         }
 
-        RegressionForestModel FitModel(IEnumerable<OptimizerResult> validConfigurations)
+        RegressionForestModel FitModel(IEnumerable<OptimizerResult> validParameterSets)
         {
-            var observations = validConfigurations
+            var observations = validParameterSets
                 .Select(v => v.ParameterSet).ToList()
                 .ToF64Matrix();
 
-            var targets = validConfigurations
+            var targets = validParameterSets
                 .Select(v => v.Error).ToArray();
 
             var model = m_learner.Learn(observations, targets);
             return model;
         }
 
-        double[][] GenerateCandidateConfigurations(int configurationCount, 
+        double[][] GenerateCandidateParameterSets(int parameterSetCount, 
             IReadOnlyList<OptimizerResult> previousRuns, RegressionForestModel model)
         {
             // Get top parameter sets from previous runs.
@@ -132,12 +132,12 @@ namespace SharpLearning.Optimization
 
             // Perform local search using the top parameter sets from previous run.
             var challengers = GreedyPlusRandomSearch(topParameterSets, model,
-                (int)Math.Ceiling(configurationCount / 2.0F), previousRuns);
+                (int)Math.Ceiling(parameterSetCount / 2.0F), previousRuns);
 
             // Create random parameter sets.
-            var randomConfigurations = configurationCount - challengers.Length;
-            var randomChallengers = new double[randomConfigurations][];
-            for (int i = 0; i < randomConfigurations; i++)
+            var randomParameterSets = parameterSetCount - challengers.Length;
+            var randomChallengers = new double[randomParameterSets][];
+            for (int i = 0; i < randomParameterSets; i++)
             {
                 randomChallengers[i] = CreateParameterSet();
             }
@@ -149,61 +149,61 @@ namespace SharpLearning.Optimization
         double[][] InterLeaveModelBasedAndRandomParameterSets(double[][] challengers, 
             double[][] randomChallengers)
         {
-            var finalConfigurations = new double[challengers.Length + randomChallengers.Length][];
-            Array.Copy(challengers, 0, finalConfigurations, 0, challengers.Length);
-            Array.Copy(randomChallengers, 0, finalConfigurations, challengers.Length, randomChallengers.Length);
-            return finalConfigurations;
+            var finalParameterSets = new double[challengers.Length + randomChallengers.Length][];
+            Array.Copy(challengers, 0, finalParameterSets, 0, challengers.Length);
+            Array.Copy(randomChallengers, 0, finalParameterSets, challengers.Length, randomChallengers.Length);
+            return finalParameterSets;
         }
 
-        double[][] GreedyPlusRandomSearch(double[][] parentConfigurations, RegressionForestModel model, 
-            int configurationCount, IReadOnlyList<OptimizerResult> previousRuns)
+        double[][] GreedyPlusRandomSearch(double[][] parentParameterSets, RegressionForestModel model, 
+            int parameterSetCount, IReadOnlyList<OptimizerResult> previousRuns)
         {
             // TODO: Handle maximization and minimization. Currently minimizes.
             var best = previousRuns.Min(v => v.Error);
 
-            var configurations = new List<(double[] configuration, double EI)>();
+            var parameterSets = new List<(double[] parameterSet, double EI)>();
            
             // Perform local search.
-            foreach (var configuration in parentConfigurations)
+            foreach (var parameterSet in parentParameterSets)
             {
-                var bestChildConfig = LocalSearch(parentConfigurations, model, best, epsilon: 0.00001);
-                configurations.Add(bestChildConfig);
+                var bestChildConfig = LocalSearch(parentParameterSets, model, best, epsilon: 0.00001);
+                parameterSets.Add(bestChildConfig);
             }
 
-            // Additional set of random configurations to choose from during local search.
-            for (int i = 0; i < m_randomEISearchConfigurationsCount; i++)
+            // Additional set of random parameterSets to choose from during local search.
+            for (int i = 0; i < m_randomEISearchParameterSetsCount; i++)
             {
-                var configuration = CreateParameterSet();
-                var ei = ComputeExpectedImprovement(best, configuration, model);
-                configurations.Add((configuration, ei));
+                var parameterSet = CreateParameterSet();
+                var ei = ComputeExpectedImprovement(best, parameterSet, model);
+                parameterSets.Add((parameterSet, ei));
             }
 
-            // Take the best configurations. Here we want the max expected improvement.
-            return configurations.OrderByDescending(v => v.EI)
-                .Take(configurationCount).Select(v => v.configuration).ToArray();
+            // Take the best parameterSets. Here we want the max expected improvement.
+            return parameterSets.OrderByDescending(v => v.EI)
+                .Take(parameterSetCount).Select(v => v.parameterSet).ToArray();
         }
 
         /// <summary>
         /// Performs a local one-mutation neighborhood greedy search.
         /// Stop search when no neighbors increase expected improvement.
         /// </summary>
-        (double[] configuration, double expectedImprovement) LocalSearch(double[][] parentConfigurations, 
+        (double[] parameterSet, double expectedImprovement) LocalSearch(double[][] parentParameterSets, 
             RegressionForestModel model, double bestScore, double epsilon)
         {
-            var bestConfiguration = parentConfigurations.First();
-            var BestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestConfiguration, model);
+            var bestParameterSet = parentParameterSets.First();
+            var BestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestParameterSet, model);
 
             var newExpectedImprovement = false;
             while (true)
             {
-                var neighborhood = GetOneMutationNeighborhood(bestConfiguration);
+                var neighborhood = GetOneMutationNeighborhood(bestParameterSet);
                 for (int i = 0; i < neighborhood.Count; i++)
                 {
                     var neighbor = neighborhood[i];
                     var ei = ComputeExpectedImprovement(bestScore, neighbor, model);
                     if (ei - BestExpectedImprovement > epsilon)
                     {
-                        bestConfiguration = neighbor;
+                        bestParameterSet = neighbor;
                         BestExpectedImprovement = ei;
                         newExpectedImprovement = true;
                     }
@@ -220,10 +220,10 @@ namespace SharpLearning.Optimization
                 }
             }
 
-            return (bestConfiguration, BestExpectedImprovement);
+            return (bestParameterSet, BestExpectedImprovement);
         }
 
-        List<double[]> GetOneMutationNeighborhood(double[] parentConfiguration)
+        List<double[]> GetOneMutationNeighborhood(double[] parentParameterSet)
         {
             var neighbors = new List<double[]>();
 
@@ -232,26 +232,26 @@ namespace SharpLearning.Optimization
                 // Add a new parameter set that differs only by one parameter from the parent.
                 var parameterSpec = m_parameters[i];
 
-                // Add 4 configurations pr. parameter. 
+                // Add 4 parameterSets pr. parameter. 
                 // This case if for continuous variables.
                 // Original paper also has a case for categorical parameters.
                 // However, this is currently not supported.
-                const int configurationCount = 4;
-                for (int j = 0; j < configurationCount; j++)
+                const int parameterSetCount = 4;
+                for (int j = 0; j < parameterSetCount; j++)
                 {
                     // Copy parant and mutate one parameter.
-                    var newConfiguration = parentConfiguration.ToArray();
-                    newConfiguration[i] = parameterSpec.SampleValue(m_sampler);
-                    neighbors.Add(newConfiguration);
+                    var newParameterSet = parentParameterSet.ToArray();
+                    newParameterSet[i] = parameterSpec.SampleValue(m_sampler);
+                    neighbors.Add(newParameterSet);
                 }
             }
 
             return neighbors;
         }
 
-        double ComputeExpectedImprovement(double best, double[] configuration, RegressionForestModel model)
+        double ComputeExpectedImprovement(double best, double[] parameterSet, RegressionForestModel model)
         {
-            var prediction = model.PredictCertainty(configuration);
+            var prediction = model.PredictCertainty(parameterSet);
             var mean = prediction.Prediction;
             var variance = prediction.Variance;
             return AcquisitionFunctions.ExpectedImprovement(best, mean, variance);
