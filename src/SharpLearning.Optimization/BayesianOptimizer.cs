@@ -216,7 +216,7 @@ namespace SharpLearning.Optimization
                 // initialize random starting points for the first iteration
                 for (int i = 0; i < m_numberOfStartingPoints; i++)
                 {
-                    var set = CreateParameterSet();
+                    var set = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
                     var score = functionToMinimize(set).Error;
                     iterations++;
 
@@ -261,7 +261,8 @@ namespace SharpLearning.Optimization
                     {
                         // if the beset parameter set is sampled again.
                         // Add a new random parameter set.
-                        parameterSet = CreateParameterSet();
+                        parameterSet = RandomSearchOptimizer
+                            .SampleParameterSet(m_parameters, m_sampler);
                     }
 
                     var result = functionToMinimize(parameterSet);
@@ -338,19 +339,6 @@ namespace SharpLearning.Optimization
             }
 
             return false;
-        }
-
-        double[] CreateParameterSet()
-        {
-            var newPoint = new double[m_parameters.Length];
-
-            for (int i = 0; i < m_parameters.Length; i++)
-            {
-                var parameter = m_parameters[i];
-                newPoint[i] = parameter.SampleValue(m_sampler);
-            }
-
-            return newPoint;
         }
     }
 }
