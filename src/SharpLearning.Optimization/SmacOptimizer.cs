@@ -21,6 +21,7 @@ namespace SharpLearning.Optimization
         readonly IParameterSpec[] m_parameters;
         readonly int m_iterations;
         readonly int m_randomStartingPointsCount;
+        readonly int m_functionEvaluationsPerIterationCount;
         readonly int m_localSearchPointCount;
         readonly int m_randomSearchPointCount;
 
@@ -38,7 +39,9 @@ namespace SharpLearning.Optimization
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="randomStartingPointCount">Number of randomly parameter sets used 
-        /// for initialization (default is 10)</param>
+        /// for initialization (default is 20)</param>
+        /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration. 
+        /// (default is 1).</param>
         /// <param name="localSearchPointCount">The number of top contenders 
         /// to use in the greedy local search (default is (10)</param>
         /// <param name="randomSearchPointCount">The number of random parameter sets
@@ -46,7 +49,8 @@ namespace SharpLearning.Optimization
         /// <param name="seed"></param>
         public SmacOptimizer(IParameterSpec[] parameters,
             int iterations,
-            int randomStartingPointCount = 10, 
+            int randomStartingPointCount = 20,
+            int functionEvaluationsPerIterationCount = 1,
             int localSearchPointCount = 10,
             int randomSearchPointCount = 1000,
             int seed = 42)
@@ -59,6 +63,7 @@ namespace SharpLearning.Optimization
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_iterations = iterations;
             m_randomStartingPointsCount = randomStartingPointCount;
+            m_functionEvaluationsPerIterationCount = functionEvaluationsPerIterationCount;
             m_localSearchPointCount = localSearchPointCount;
             m_randomSearchPointCount = randomSearchPointCount;
 
@@ -90,7 +95,7 @@ namespace SharpLearning.Optimization
 
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
-                var parameterSets = ProposeParameterSets(1, results);
+                var parameterSets = ProposeParameterSets(m_functionEvaluationsPerIterationCount, results);
                 RunParameterSets(functionToMinimize, parameterSets, results);
             }
 
