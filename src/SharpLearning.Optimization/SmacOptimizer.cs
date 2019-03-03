@@ -110,7 +110,6 @@ namespace SharpLearning.Optimization
                 results.AddRange(iterationResults);
             }
 
-            // return all results ordered
             return results.ToArray();
         }
 
