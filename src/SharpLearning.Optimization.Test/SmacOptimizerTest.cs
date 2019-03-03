@@ -14,7 +14,13 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = new SmacOptimizer(parameters, 80);
+            var sut = new SmacOptimizer(parameters,
+                iterations: 80,
+                randomStartingPointCount: 20,
+                functionEvaluationsPerIterationCount: 1,
+                localSearchPointCount: 10,
+                randomSearchPointCount: 1000,
+                seed: 42);
 
             var actual = sut.OptimizeBest(ObjectiveUtilities.MinimizeWeightFromHeight);
 
@@ -32,7 +38,14 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
 
-            var sut = new SmacOptimizer(parameters, 80);
+            var sut = new SmacOptimizer(parameters,
+                iterations: 80,
+                randomStartingPointCount: 20,
+                functionEvaluationsPerIterationCount: 1,
+                localSearchPointCount: 10,
+                randomSearchPointCount: 1000,
+                seed: 42);
+
             var actual = sut.OptimizeBest(ObjectiveUtilities.Minimize);
 
             Assert.AreEqual(-0.964878416222769, actual.Error, ObjectiveUtilities.Delta);
@@ -51,7 +64,13 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = new SmacOptimizer(parameters, 80);
+            var sut = new SmacOptimizer(parameters,
+                iterations: 80,
+                randomStartingPointCount: 20,
+                functionEvaluationsPerIterationCount: 1,
+                localSearchPointCount: 10,
+                randomSearchPointCount: 1000,
+                seed: 42);
 
             var actual = sut.Optimize(ObjectiveUtilities.MinimizeWeightFromHeight);
 
