@@ -24,6 +24,7 @@ namespace SharpLearning.Optimization
         readonly int m_functionEvaluationsPerIterationCount;
         readonly int m_localSearchPointCount;
         readonly int m_randomSearchPointCount;
+        readonly double m_epsilon;
 
         // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
@@ -47,6 +48,7 @@ namespace SharpLearning.Optimization
         /// to use in the greedy local search (default is (10)</param>
         /// <param name="randomSearchPointCount">The number of random parameter sets
         /// used when maximizing the expected improvement acquisition function (default is 1000)</param>
+        /// <param name="epsilon">Threshold for ending local search (default is 0.00001)</param>
         /// <param name="seed"></param>
         public SmacOptimizer(IParameterSpec[] parameters,
             int iterations,
@@ -54,6 +56,7 @@ namespace SharpLearning.Optimization
             int functionEvaluationsPerIterationCount = 1,
             int localSearchPointCount = 10,
             int randomSearchPointCount = 1000,
+            double epsilon = 0.00001,
             int seed = 42)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
@@ -67,6 +70,7 @@ namespace SharpLearning.Optimization
             m_functionEvaluationsPerIterationCount = functionEvaluationsPerIterationCount;
             m_localSearchPointCount = localSearchPointCount;
             m_randomSearchPointCount = randomSearchPointCount;
+            m_epsilon = epsilon;
 
             // Hyper parameters for regression extra trees learner. 
             // These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
@@ -208,7 +212,7 @@ namespace SharpLearning.Optimization
             // Perform local search.
             foreach (var parameterSet in parentParameterSets)
             {
-                var bestParameterSet = LocalSearch(parentParameterSets, model, best, epsilon: 0.00001);
+                var bestParameterSet = LocalSearch(parentParameterSets, model, best, m_epsilon);
                 parameterSets.Add(bestParameterSet);
             }
 
