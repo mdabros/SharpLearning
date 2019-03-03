@@ -25,7 +25,7 @@ namespace SharpLearning.Optimization.Test
 
             var sut = new HyperbandOptimizer(
                 parameters,
-                maximumUnitsOfCompute: 81,
+                maximumBudget: 81,
                 eta: 5,
                 skipLastIterationOfEachRound: false,
                 seed: 34);
@@ -55,7 +55,7 @@ namespace SharpLearning.Optimization.Test
         
             var sut = new HyperbandOptimizer(
                 parameters, 
-                maximumUnitsOfCompute: 81, 
+                maximumBudget: 81, 
                 eta: 5, 
                 skipLastIterationOfEachRound: false,
                 seed: 34);
