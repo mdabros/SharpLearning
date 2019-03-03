@@ -92,30 +92,49 @@ namespace SharpLearning.Optimization
 
             // Initialize the search
             var results = new List<OptimizerResult>();
-            RunParameterSets(functionToMinimize, initialParameterSets, results);
+            var initializationResults = RunParameterSets(functionToMinimize, initialParameterSets);
+            results.AddRange(initializationResults);
 
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 var parameterSets = ProposeParameterSets(m_functionEvaluationsPerIterationCount, results);
-                RunParameterSets(functionToMinimize, parameterSets, results);
+                var iterationResults = RunParameterSets(functionToMinimize, parameterSets);
+                results.AddRange(iterationResults);
             }
 
             // return all results ordered
             return results.ToArray();
         }
 
-        void RunParameterSets(Func<double[], OptimizerResult> functionToMinimize, 
-            double[][] parameterSets, List<OptimizerResult> results)
+        /// <summary>
+        /// Runs a set of parameter sets and returns the results.
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <param name="parameterSets"></param>
+        /// <returns></returns>
+        public List<OptimizerResult> RunParameterSets(Func<double[], OptimizerResult> functionToMinimize, 
+            double[][] parameterSets)
         {
+            var results = new List<OptimizerResult>();
             foreach (var parameterSet in parameterSets)
             {
                 // Get the current parameters for the current point
                 var result = functionToMinimize(parameterSet);
                 results.Add(result);
             }
+
+            return results;
         }
 
-        double[][] ProposeParameterSets(int parameterSetCount, 
+        /// <summary>
+        /// Propose a new list of parameter sets.
+        /// </summary>
+        /// <param name="parameterSetCount">The number of parameter sets to propose</param>
+        /// <param name="previousRuns">Results from previous runs.  
+        /// These are used in the model for proposing new parameter sets.
+        /// If no results are provided, random parameter sets will be returned.</param>
+        /// <returns></returns>
+        public double[][] ProposeParameterSets(int parameterSetCount, 
             IReadOnlyList<OptimizerResult> previousRuns = null)
         {
             var previousParameterSetCount = previousRuns == null ? 0 : previousRuns.Count;
