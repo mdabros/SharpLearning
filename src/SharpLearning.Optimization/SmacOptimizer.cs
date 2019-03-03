@@ -8,6 +8,11 @@ using SharpLearning.RandomForest.Models;
 
 namespace SharpLearning.Optimization
 {
+    /// <summary>
+    /// Implementation of the SMAC algorithm for hyperparameter optimization.
+    /// Based on: Sequential Model-Based Optimization for General Algorithm Configuration:
+    /// https://ml.informatik.uni-freiburg.de/papers/11-LION5-SMAC.pdf
+    /// </summary>
     public class SmacOptimizer : IOptimizer
     {
         readonly Random m_random;
@@ -17,8 +22,6 @@ namespace SharpLearning.Optimization
         readonly int m_startParameterSetCount;
         readonly int m_localSearchCount;
         readonly int m_randomEISearchParameterSetsCount;
-
-        readonly ParameterSetEqualityComparer m_comparer = new ParameterSetEqualityComparer();
 
         // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
@@ -59,7 +62,7 @@ namespace SharpLearning.Optimization
 
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            var initialParameterSets = SelectParameterSets(m_startParameterSetCount, null);
+            var initialParameterSets = ProposeParameterSets(m_startParameterSetCount, null);
 
             // Initialize the search
             var results = new List<OptimizerResult>();
@@ -67,7 +70,7 @@ namespace SharpLearning.Optimization
 
             for (int iteration = 0; iteration < m_iterationCount; iteration++)
             {
-                var parameterSets = SelectParameterSets(1, results);
+                var parameterSets = ProposeParameterSets(1, results);
                 RunParameterSets(functionToMinimize, parameterSets, results);
             }
 
@@ -86,7 +89,7 @@ namespace SharpLearning.Optimization
             }
         }
 
-        double[][] SelectParameterSets(int parameterSetCount, 
+        double[][] ProposeParameterSets(int parameterSetCount, 
             IReadOnlyList<OptimizerResult> previousRuns = null)
         {
             var previousParameterSets = previousRuns == null ? 0 : previousRuns.Count;
@@ -175,11 +178,9 @@ namespace SharpLearning.Optimization
                 parameterSets.Add((parameterSet, ei));
             }
 
-            // Take the best parameterSets, while removing duplicates. 
-            // Here we want the max expected improvement.
-            return parameterSets.Distinct(m_comparer)
-                .OrderByDescending(v => v.Item2)
-                .Take(parameterSetCount).Select(v => v.Item1).ToArray();
+            // Take the best parameterSets. Here we want the max expected improvement.
+            return parameterSets.OrderByDescending(v => v.EI)
+                .Take(parameterSetCount).Select(v => v.parameterSet).ToArray();
         }
 
         /// <summary>
@@ -244,45 +245,6 @@ namespace SharpLearning.Optimization
             var mean = prediction.Prediction;
             var variance = prediction.Variance;
             return AcquisitionFunctions.ExpectedImprovement(best, mean, variance);
-        }
-
-        class ParameterSetEqualityComparer : IEqualityComparer<(double[], double)>
-        {
-            public bool Equals((double[], double) x, (double[], double) y)
-            {
-                return Equals(x.Item1, y.Item1);
-            }
-
-            public int GetHashCode((double[], double) obj)
-            {
-                return obj.GetHashCode();
-            }
-
-            bool Equals(double[] p1, double[] p2)
-            {
-                for (int i = 0; i < p1.Length; i++)
-                {
-                    if (!Equal(p1[i], p2[i]))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            bool Equal(double a, double b)
-            {
-                var diff = Math.Abs(a * m_tolerence);
-                if (Math.Abs(a - b) <= diff)
-                {
-                    return true;
-                }
-
-                return false;
-            }
-
-            const double m_tolerence = 0.00001;
         }
     }
 }
