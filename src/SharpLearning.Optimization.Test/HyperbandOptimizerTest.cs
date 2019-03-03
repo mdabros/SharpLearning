@@ -11,9 +11,9 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new IParameterSpec[]
             {
-                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear), // iterations
-                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10), // learning rate
-                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear), // maximumTreeDepth
+                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear),
+                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10),
+                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear),
             };
 
             var random = new Random(343);
@@ -41,9 +41,9 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new IParameterSpec[]
             {
-                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear), // iterations
-                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10), // learning rate
-                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear), // maximumTreeDepth
+                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear),
+                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10),
+                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear),
             };
 
             var random = new Random(343);
