@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -76,9 +77,7 @@ namespace SharpLearning.Optimization.Test
 
         static void AssertOptimizerResult(OptimizerResult expected, OptimizerResult actual)
         {
-            const double delta = 0.000001;
-
-            Assert.AreEqual(expected.Error, actual.Error, delta);
+            Assert.AreEqual(expected.Error, actual.Error, Delta);
 
             var expectedParameterSet = expected.ParameterSet;
             var actualParameterSet = actual.ParameterSet;
@@ -87,7 +86,7 @@ namespace SharpLearning.Optimization.Test
 
             for (int i = 0; i < expectedParameterSet.Length; i++)
             {
-                Assert.AreEqual(expectedParameterSet[i], actualParameterSet[i], delta);
+                Assert.AreEqual(expectedParameterSet[i], actualParameterSet[i], Delta);
             }
         }
 

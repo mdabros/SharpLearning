@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -23,10 +24,10 @@ namespace SharpLearning.Optimization.Test
                 new RandomSearchOptimizer(parameters, 100, 42, true, maxDegreeOfParallelism.Value) : 
                 new RandomSearchOptimizer(parameters, 100);
 
-            var actual = sut.OptimizeBest(ObjectiveUtilities.MinimizeWeightFromHeight);
+            var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
 
-            Assert.AreEqual(110.67173923600831, actual.Error, ObjectiveUtilities.Delta);
-            Assert.AreEqual(37.533294194160632, actual.ParameterSet.Single(), ObjectiveUtilities.Delta);
+            Assert.AreEqual(110.67173923600831, actual.Error, Delta);
+            Assert.AreEqual(37.533294194160632, actual.ParameterSet.Single(), Delta);
         }
 
         [TestMethod]
@@ -45,7 +46,7 @@ namespace SharpLearning.Optimization.Test
                 new RandomSearchOptimizer(parameters, 2, 42, true, maxDegreeOfParallelism.Value) : 
                 new RandomSearchOptimizer(parameters, 2);
 
-            var actual = sut.Optimize(ObjectiveUtilities.MinimizeWeightFromHeight);
+            var actual = sut.Optimize(MinimizeWeightFromHeight);
 
             var expected = new OptimizerResult[]
             {
@@ -53,13 +54,13 @@ namespace SharpLearning.Optimization.Test
                 new OptimizerResult(new double[] { 28.3729278125674 },  3690.81119818742),
             };
 
-            Assert.AreEqual(expected.First().Error, actual.First().Error, ObjectiveUtilities.Delta);
+            Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
             Assert.AreEqual(expected.First().ParameterSet.First(), 
-                actual.First().ParameterSet.First(), ObjectiveUtilities.Delta);
+                actual.First().ParameterSet.First(), Delta);
 
-            Assert.AreEqual(expected.Last().Error, actual.Last().Error, ObjectiveUtilities.Delta);
+            Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
             Assert.AreEqual(expected.Last().ParameterSet.First(), 
-                actual.Last().ParameterSet.First(), ObjectiveUtilities.Delta);
+                actual.Last().ParameterSet.First(), Delta);
         }
 
         [TestMethod]

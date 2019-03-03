@@ -1,6 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -26,14 +26,14 @@ namespace SharpLearning.Optimization.Test
                     maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
                 new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
 
-            var actual = sut.OptimizeBest(ObjectiveUtilities.Minimize);
+            var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.99999949547279676, ObjectiveUtilities.Delta);
+            Assert.AreEqual(actual.Error, -0.99999949547279676, Delta);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], -7.8547285710964134, ObjectiveUtilities.Delta);
-            Assert.AreEqual(actual.ParameterSet[1], 6.2835515298977995, ObjectiveUtilities.Delta);
-            Assert.AreEqual(actual.ParameterSet[2], -1.5851024386788885E-07, ObjectiveUtilities.Delta);
+            Assert.AreEqual(actual.ParameterSet[0], -7.8547285710964134, Delta);
+            Assert.AreEqual(actual.ParameterSet[1], 6.2835515298977995, Delta);
+            Assert.AreEqual(actual.ParameterSet[2], -1.5851024386788885E-07, Delta);
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace SharpLearning.Optimization.Test
                     maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
                 new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
 
-            var results = sut.Optimize(ObjectiveUtilities.MinimizeWeightFromHeight);
+            var results = sut.Optimize(MinimizeWeightFromHeight);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
             var expected = new OptimizerResult[]
@@ -62,13 +62,13 @@ namespace SharpLearning.Optimization.Test
                 new OptimizerResult(new double[] { 37.7131485180996 }, 109.34381396350526)
             };
 
-            Assert.AreEqual(expected.First().Error, actual.First().Error, ObjectiveUtilities.Delta);
+            Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
             Assert.AreEqual(expected.First().ParameterSet.First(), 
-                actual.First().ParameterSet.First(), ObjectiveUtilities.Delta);
+                actual.First().ParameterSet.First(), Delta);
 
-            Assert.AreEqual(expected.Last().Error, actual.Last().Error, ObjectiveUtilities.Delta);
+            Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
             Assert.AreEqual(expected.Last().ParameterSet.First(), 
-                actual.Last().ParameterSet.First(), ObjectiveUtilities.Delta);
+                actual.Last().ParameterSet.First(), Delta);
         }
     }
 }
