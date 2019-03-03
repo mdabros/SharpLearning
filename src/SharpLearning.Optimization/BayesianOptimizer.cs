@@ -23,9 +23,9 @@ namespace SharpLearning.Optimization
     public sealed class BayesianOptimizer : IOptimizer
     {
         readonly IParameterSpec[] m_parameters;
-        readonly int m_maxIterations;
-        readonly int m_numberOfStartingPoints;
-        readonly int m_numberOfCandidatesEvaluatedPrIteration;
+        readonly int m_iterations;
+        readonly int m_randomStartingPointCount;
+        readonly int m_functionEvaluationsPerIteration;
         readonly IParameterSampler m_sampler;
         readonly Random m_random;
 
@@ -55,21 +55,21 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
-        /// <param name="maxIterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
-        /// <param name="numberOfStartingPoints">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
-        /// <param name="numberOfCandidatesEvaluatedPrIteration">How many candidate parameter set should by sampled from the model in each iteration. 
+        /// <param name="iterations">Number of iterations. Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
+        /// <param name="randomStartingPointCount">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
+        /// <param name="functionEvaluationsPerIteration">The number of function evaluations per iteration. 
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
-        public BayesianOptimizer(IParameterSpec[] parameters, int maxIterations, 
-            int numberOfStartingPoints = 5, int numberOfCandidatesEvaluatedPrIteration = 1, int seed = 42)
+        public BayesianOptimizer(IParameterSpec[] parameters, int iterations, 
+            int randomStartingPointCount = 5, int functionEvaluationsPerIteration = 1, int seed = 42)
         {
-            if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
-            if (numberOfStartingPoints < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
+            if (iterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
+            if (randomStartingPointCount < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
 
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-            m_maxIterations = maxIterations;
-            m_numberOfStartingPoints = numberOfStartingPoints;
-            m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
+            m_iterations = iterations;
+            m_randomStartingPointCount = randomStartingPointCount;
+            m_functionEvaluationsPerIteration = functionEvaluationsPerIteration;
 
             m_random = new Random(seed);
 
@@ -137,8 +137,8 @@ namespace SharpLearning.Optimization
             m_previousParameterSets = previousParameterSets ?? throw new ArgumentNullException(nameof(previousParameterSets));
             m_previousParameterSetScores = previousParameterSetScores ?? throw new ArgumentNullException(nameof(previousParameterSetScores));
 
-            m_maxIterations = maxIterations;
-            m_numberOfCandidatesEvaluatedPrIteration = numberOfCandidatesEvaluatedPrIteration;
+            m_iterations = maxIterations;
+            m_functionEvaluationsPerIteration = numberOfCandidatesEvaluatedPrIteration;
 
             m_random = new Random(seed);
 
@@ -214,7 +214,7 @@ namespace SharpLearning.Optimization
             else
             {
                 // initialize random starting points for the first iteration
-                for (int i = 0; i < m_numberOfStartingPoints; i++)
+                for (int i = 0; i < m_randomStartingPointCount; i++)
                 {
                     var set = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
                     var score = functionToMinimize(set).Error;
@@ -235,7 +235,7 @@ namespace SharpLearning.Optimization
             }
 
             var lastSet = new double[m_parameters.Length];
-            for (int iteration = 0; iteration < m_maxIterations; iteration++)
+            for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 // fit model
                 var observations = parameterSets.ToF64Matrix();
@@ -312,7 +312,7 @@ namespace SharpLearning.Optimization
 
             return m_maximizer.Optimize(minimize)
                 .Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error)
-                .Take(m_numberOfCandidatesEvaluatedPrIteration).ToArray();
+                .Take(m_functionEvaluationsPerIteration).ToArray();
         }
 
         bool Equals(double[] p1, double[] p2)
