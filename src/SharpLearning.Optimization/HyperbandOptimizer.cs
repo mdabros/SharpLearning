@@ -101,7 +101,9 @@ namespace SharpLearning.Optimization
                 // Initial unitsOfCompute per parameter set.
                 var initialUnitsOfCompute = m_maximumUnitsOfCompute * Math.Pow(m_eta, -rounds);
 
-                var parameterSets = CreateParameterSets(m_parameters, initialConfigurationCount);
+                var parameterSets = RandomSearchOptimizer.SampleRandomParameterSets(initialConfigurationCount,
+                    m_parameters, m_sampler);
+
                 var results = new ConcurrentBag<OptimizerResult>();
 
                 var iterations = m_skipLastIterationOfEachRound ? rounds : (rounds + 1);
@@ -133,25 +135,6 @@ namespace SharpLearning.Optimization
             }
 
             return allResults.ToArray();
-        }
-
-        double[][] CreateParameterSets(IParameterSpec[] parameters, 
-            int setCount)
-        {
-            var newSearchSpace = new double[setCount][];
-            for (int i = 0; i < newSearchSpace.Length; i++)
-            {
-                var newParameters = new double[parameters.Length];
-                var index = 0;
-                foreach (var param in parameters)
-                {
-                    newParameters[index] = param.SampleValue(m_sampler);
-                    index++;
-                }
-                newSearchSpace[i] = newParameters;
-            }
-
-            return newSearchSpace;
         }
     }
 }
