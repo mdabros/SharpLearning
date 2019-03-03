@@ -22,6 +22,7 @@ namespace SharpLearning.Optimization.Test
                 functionEvaluationsPerIterationCount: 1,
                 localSearchPointCount: 10,
                 randomSearchPointCount: 1000,
+                epsilon: 0.00001,
                 seed: 42);
 
             var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
@@ -46,6 +47,7 @@ namespace SharpLearning.Optimization.Test
                 functionEvaluationsPerIterationCount: 1,
                 localSearchPointCount: 10,
                 randomSearchPointCount: 1000,
+                epsilon: 0.00001,
                 seed: 42);
 
             var actual = sut.OptimizeBest(Minimize);
@@ -72,6 +74,7 @@ namespace SharpLearning.Optimization.Test
                 functionEvaluationsPerIterationCount: 1,
                 localSearchPointCount: 10,
                 randomSearchPointCount: 1000,
+                epsilon: 0.00001,
                 seed: 42);
 
             var actual = sut.Optimize(MinimizeWeightFromHeight);
@@ -171,6 +174,7 @@ namespace SharpLearning.Optimization.Test
                 functionEvaluationsPerIterationCount: functionEvaluationsPerIterationCount,
                 localSearchPointCount: 10,
                 randomSearchPointCount: 1000,
+                epsilon: 0.00001,
                 seed: 42);
 
             // Using SmacOptimizer in an open loop.
