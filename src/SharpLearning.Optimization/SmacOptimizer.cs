@@ -12,6 +12,7 @@ namespace SharpLearning.Optimization
     /// Implementation of the SMAC algorithm for hyperparameter optimization.
     /// Based on: Sequential Model-Based Optimization for General Algorithm Configuration:
     /// https://ml.informatik.uni-freiburg.de/papers/11-LION5-SMAC.pdf
+    /// Uses Bayesian optimization in tandem with a greedy local search on the top performing solutions.
     /// </summary>
     public class SmacOptimizer : IOptimizer
     {
@@ -28,6 +29,18 @@ namespace SharpLearning.Optimization
         // instead of: (currentValue + prevValue) * 0.5; like in random forest.
         readonly RegressionExtremelyRandomizedTreesLearner m_learner;
 
+        /// <summary>
+        /// Implementation of the SMAC algorithm for hyperparameter optimization.
+        /// Based on: Sequential Model-Based Optimization for General Algorithm Configuration:
+        /// https://ml.informatik.uni-freiburg.de/papers/11-LION5-SMAC.pdf
+        /// Uses Bayesian optimization in tandem with a greedy local search on the top performing solutions.
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="iterationCount"></param>
+        /// <param name="startParameterSetCount"></param>
+        /// <param name="localSearchParentCount"></param>
+        /// <param name="randomEISearchParameterSetsCount"></param>
+        /// <param name="seed"></param>
         public SmacOptimizer(IParameterSpec[] parameters,
             int iterationCount = 10,
             int startParameterSetCount = 20, 
@@ -35,6 +48,8 @@ namespace SharpLearning.Optimization
             int randomEISearchParameterSetsCount = 1000,
             int seed = 42)
         {
+            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
+
             m_random = new Random(seed);
             // Use member to seed the random uniform sampler.
             m_sampler = new RandomUniform(m_random.Next());
@@ -92,11 +107,11 @@ namespace SharpLearning.Optimization
         double[][] ProposeParameterSets(int parameterSetCount, 
             IReadOnlyList<OptimizerResult> previousRuns = null)
         {
-            var previousParameterSets = previousRuns == null ? 0 : previousRuns.Count;
-            if (previousParameterSets < m_startParameterSetCount)
+            var previousParameterSetCount = previousRuns == null ? 0 : previousRuns.Count;
+            if (previousParameterSetCount < m_startParameterSetCount)
             {
                 var randomParameterSetCount = Math.Min(parameterSetCount,
-                    m_startParameterSetCount - previousParameterSets);
+                    m_startParameterSetCount - previousParameterSetCount);
 
                 var randomParameterSets = RandomSearchOptimizer.SampleRandomParameterSets(
                     randomParameterSetCount, m_parameters, m_sampler);
@@ -104,7 +119,6 @@ namespace SharpLearning.Optimization
                 return randomParameterSets;
             }
 
-            // fit model
             var validParameterSets = previousRuns.Where(v => !double.IsNaN(v.Error));            
             var model = FitModel(validParameterSets);
 
@@ -120,8 +134,7 @@ namespace SharpLearning.Optimization
             var targets = validParameterSets
                 .Select(v => v.Error).ToArray();
 
-            var model = m_learner.Learn(observations, targets);
-            return model;
+            return m_learner.Learn(observations, targets);
         }
 
         double[][] GenerateCandidateParameterSets(int parameterSetCount, 
@@ -132,8 +145,9 @@ namespace SharpLearning.Optimization
                 .Take(m_localSearchCount).Select(v => v.ParameterSet).ToArray();
 
             // Perform local search using the top parameter sets from previous run.
+            var challengerCount = (int)Math.Ceiling(parameterSetCount / 2.0F);
             var challengers = GreedyPlusRandomSearch(topParameterSets, model,
-                (int)Math.Ceiling(parameterSetCount / 2.0F), previousRuns);
+                challengerCount, previousRuns);
 
             // Create random parameter sets.
             var randomParameterSetCount = parameterSetCount - challengers.Length;
@@ -180,7 +194,8 @@ namespace SharpLearning.Optimization
 
             // Take the best parameterSets. Here we want the max expected improvement.
             return parameterSets.OrderByDescending(v => v.EI)
-                .Take(parameterSetCount).Select(v => v.parameterSet).ToArray();
+                .Take(parameterSetCount).Select(v => v.parameterSet)
+                .ToArray();
         }
 
         /// <summary>
@@ -193,6 +208,7 @@ namespace SharpLearning.Optimization
             var bestParameterSet = parentParameterSets.First();
             var bestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestParameterSet, model);
 
+            // Continue search until no improvement is found.
             var continueSearch = true;
             while (continueSearch)
             {
