@@ -153,17 +153,6 @@ namespace SharpLearning.Optimization.Test
             Assert.AreEqual(-0.029263948104000903, actual.ParameterSet[2], Delta);
         }
 
-        static void Trace(IEnumerable<OptimizerResult> results)
-        {
-            var b = new StringBuilder();
-            foreach (var result in results)
-            {
-                b.AppendLine("new OptimizerResult(new[] {" + $"{string.Join(",", result.ParameterSet)}" + "}," + $" {result.Error}),");
-            }
-
-            System.Diagnostics.Trace.Write(b.ToString());
-        }
-
         OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
         {
             var parameters = new MinMaxParameterSpec[]
@@ -196,8 +185,6 @@ namespace SharpLearning.Optimization.Test
                 var iterationResults = sut.RunParameterSets(Minimize, parameterSets);
                 results.AddRange(iterationResults);
             }
-
-            Trace(results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error));
 
             return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
         }
