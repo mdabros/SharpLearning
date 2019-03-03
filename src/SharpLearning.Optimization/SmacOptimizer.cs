@@ -37,11 +37,12 @@ namespace SharpLearning.Optimization
         /// Uses Bayesian optimization in tandem with a greedy local search on the top performing solutions.
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
-        /// <param name="iterations">The number of iterations to perform</param>
+        /// <param name="iterations">The number of iterations to perform.
+        /// Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
         /// <param name="randomStartingPointCount">Number of randomly parameter sets used 
         /// for initialization (default is 20)</param>
         /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration. 
-        /// (default is 1).</param>
+        /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="localSearchPointCount">The number of top contenders 
         /// to use in the greedy local search (default is (10)</param>
         /// <param name="randomSearchPointCount">The number of random parameter sets
