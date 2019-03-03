@@ -277,6 +277,7 @@ namespace SharpLearning.Optimization
                 {
                     // Copy parent and mutate one parameter.
                     var newParameterSet = parentParameterSet.ToArray();
+                    // TODO: Original paper normalizes all numerical parameters between 0 and 1.
                     newParameterSet[i] = parameterSpec.SampleValue(m_sampler);
                     neighbors.Add(newParameterSet);
                 }
