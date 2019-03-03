@@ -71,6 +71,7 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Optimization using swarm optimization. Returns results for all particles.
+        /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
