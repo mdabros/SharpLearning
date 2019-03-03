@@ -19,10 +19,10 @@ namespace SharpLearning.Optimization
         readonly Random m_random;
         readonly IParameterSampler m_sampler;
         readonly IParameterSpec[] m_parameters;
-        readonly int m_iterationCount;
-        readonly int m_startParameterSetCount;
-        readonly int m_localSearchCount;
-        readonly int m_randomEISearchParameterSetsCount;
+        readonly int m_iterations;
+        readonly int m_randomStartingPointsCount;
+        readonly int m_localSearchPointCount;
+        readonly int m_randomSearchPointCount;
 
         // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
@@ -35,17 +35,20 @@ namespace SharpLearning.Optimization
         /// https://ml.informatik.uni-freiburg.de/papers/11-LION5-SMAC.pdf
         /// Uses Bayesian optimization in tandem with a greedy local search on the top performing solutions.
         /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="iterationCount"></param>
-        /// <param name="startParameterSetCount"></param>
-        /// <param name="localSearchParentCount"></param>
-        /// <param name="randomEISearchParameterSetsCount"></param>
+        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
+        /// <param name="iterations">The number of iterations to perform</param>
+        /// <param name="randomStartingPointCount">Number of randomly parameter sets used 
+        /// for initialization (default is 10)</param>
+        /// <param name="localSearchPointCount">The number of top contenders 
+        /// to use in the greedy local search (default is (10)</param>
+        /// <param name="randomSearchPointCount">The number of random parameter sets
+        /// used when maximizing the expected improvement acquisition function (default is 1000)</param>
         /// <param name="seed"></param>
         public SmacOptimizer(IParameterSpec[] parameters,
-            int iterationCount = 10,
-            int startParameterSetCount = 20, 
-            int localSearchParentCount = 10,
-            int randomEISearchParameterSetsCount = 1000,
+            int iterations,
+            int randomStartingPointCount = 10, 
+            int localSearchPointCount = 10,
+            int randomSearchPointCount = 1000,
             int seed = 42)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
@@ -54,13 +57,15 @@ namespace SharpLearning.Optimization
             // Use member to seed the random uniform sampler.
             m_sampler = new RandomUniform(m_random.Next());
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-            m_iterationCount = iterationCount;
-            m_startParameterSetCount = startParameterSetCount;
-            m_localSearchCount = localSearchParentCount;
-            m_randomEISearchParameterSetsCount = randomEISearchParameterSetsCount;
+            m_iterations = iterations;
+            m_randomStartingPointsCount = randomStartingPointCount;
+            m_localSearchPointCount = localSearchPointCount;
+            m_randomSearchPointCount = randomSearchPointCount;
 
-            // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
-            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
+            // Hyper parameters for regression extra trees learner. 
+            // These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
+            // However, according to the author Frank Hutter, 
+            // the hyper parameters for the forest model should not matter that much.
             m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 10,
                 minimumSplitSize: 2,
                 maximumTreeDepth: 2000,
@@ -77,13 +82,13 @@ namespace SharpLearning.Optimization
 
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            var initialParameterSets = ProposeParameterSets(m_startParameterSetCount, null);
+            var initialParameterSets = ProposeParameterSets(m_randomStartingPointsCount, null);
 
             // Initialize the search
             var results = new List<OptimizerResult>();
             RunParameterSets(functionToMinimize, initialParameterSets, results);
 
-            for (int iteration = 0; iteration < m_iterationCount; iteration++)
+            for (int iteration = 0; iteration < m_iterations; iteration++)
             {
                 var parameterSets = ProposeParameterSets(1, results);
                 RunParameterSets(functionToMinimize, parameterSets, results);
@@ -108,10 +113,10 @@ namespace SharpLearning.Optimization
             IReadOnlyList<OptimizerResult> previousRuns = null)
         {
             var previousParameterSetCount = previousRuns == null ? 0 : previousRuns.Count;
-            if (previousParameterSetCount < m_startParameterSetCount)
+            if (previousParameterSetCount < m_randomStartingPointsCount)
             {
                 var randomParameterSetCount = Math.Min(parameterSetCount,
-                    m_startParameterSetCount - previousParameterSetCount);
+                    m_randomStartingPointsCount - previousParameterSetCount);
 
                 var randomParameterSets = RandomSearchOptimizer.SampleRandomParameterSets(
                     randomParameterSetCount, m_parameters, m_sampler);
@@ -142,7 +147,7 @@ namespace SharpLearning.Optimization
         {
             // Get top parameter sets from previous runs.
             var topParameterSets = previousRuns.OrderBy(v => v.Error)
-                .Take(m_localSearchCount).Select(v => v.ParameterSet).ToArray();
+                .Take(m_localSearchPointCount).Select(v => v.ParameterSet).ToArray();
 
             // Perform local search using the top parameter sets from previous run.
             var challengerCount = (int)Math.Ceiling(parameterSetCount / 2.0F);
@@ -183,7 +188,7 @@ namespace SharpLearning.Optimization
             }
 
             // Additional set of random parameterSets to choose from during local search.
-            for (int i = 0; i < m_randomEISearchParameterSetsCount; i++)
+            for (int i = 0; i < m_randomSearchPointCount; i++)
             {
                 var parameterSet = RandomSearchOptimizer
                     .SampleParameterSet(m_parameters, m_sampler);
