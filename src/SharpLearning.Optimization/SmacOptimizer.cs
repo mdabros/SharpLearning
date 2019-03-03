@@ -65,6 +65,17 @@ namespace SharpLearning.Optimization
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
 
+            if(iterations < 1) throw new ArgumentException(nameof(iterations) + 
+                "must be at least 1. Was: " + iterations);
+            if (randomStartingPointCount < 1) throw new ArgumentException(nameof(randomStartingPointCount) +
+                "must be at least 1. Was: " + randomStartingPointCount);
+            if (functionEvaluationsPerIterationCount < 1) throw new ArgumentException(nameof(functionEvaluationsPerIterationCount) +
+                "must be at least 1. Was: " + functionEvaluationsPerIterationCount);
+            if (localSearchPointCount < 1) throw new ArgumentException(nameof(localSearchPointCount) +
+                "must be at least 1. Was: " + localSearchPointCount);
+            if (randomSearchPointCount < 1) throw new ArgumentException(nameof(randomSearchPointCount) +
+                "must be at least 1. Was: " + randomSearchPointCount);
+
             m_random = new Random(seed);
             // Use member to seed the random uniform sampler.
             m_sampler = new RandomUniform(m_random.Next());

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
@@ -153,6 +154,53 @@ namespace SharpLearning.Optimization.Test
             Assert.AreEqual(-1.5411651281365977, actual.ParameterSet[0], Delta);
             Assert.AreEqual(6.3397464232238683, actual.ParameterSet[1], Delta);
             Assert.AreEqual(-0.029263948104000903, actual.ParameterSet[2], Delta);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void SmacOptimizer_ArgumentCheck_ParameterRanges()
+        {
+            var sut = new SmacOptimizer(null, 20);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SmacOptimizer_ArgumentCheck_Iterations()
+        {
+            var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 
+                0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SmacOptimizer_ArgumentCheck_RandomStartingPointCount()
+        {
+            var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
+                10, 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SmacOptimizer_ArgumentCheck_FunctionEvaluationsPerIterationCount()
+        {
+            var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
+                10, 20, 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SmacOptimizer_ArgumentCheck_LocalSearchPointCount()
+        {
+            var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
+                10, 20, 30, 0);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void SmacOptimizer_ArgumentCheck_RandomSearchPointCount()
+        {
+            var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
+                10, 20, 30, 40, 0);
         }
 
         OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
