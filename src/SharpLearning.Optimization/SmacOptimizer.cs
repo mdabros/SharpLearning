@@ -95,7 +95,8 @@ namespace SharpLearning.Optimization
                 var randomParameterSetCount = Math.Min(parameterSetCount,
                     m_startParameterSetCount - previousParameterSets);
 
-                var randomParameterSets = SampleRandomParameterSets(randomParameterSetCount);
+                var randomParameterSets = RandomSearchOptimizer.SampleRandomParameterSets(
+                    randomParameterSetCount, m_parameters, m_sampler);
 
                 return randomParameterSets;
             }
@@ -132,8 +133,9 @@ namespace SharpLearning.Optimization
                 (int)Math.Ceiling(parameterSetCount / 2.0F), previousRuns);
 
             // Create random parameter sets.
-            var randomParameterSets = parameterSetCount - challengers.Length;
-            var randomChallengers = SampleRandomParameterSets(randomParameterSets);
+            var randomParameterSetCount = parameterSetCount - challengers.Length;
+            var randomChallengers = RandomSearchOptimizer.SampleRandomParameterSets(
+                randomParameterSetCount, m_parameters, m_sampler);
 
             // Interleave challengers and random parameter sets.
             return InterLeaveModelBasedAndRandomParameterSets(challengers, randomChallengers);
@@ -166,7 +168,9 @@ namespace SharpLearning.Optimization
             // Additional set of random parameterSets to choose from during local search.
             for (int i = 0; i < m_randomEISearchParameterSetsCount; i++)
             {
-                var parameterSet = SampleParameterSet();
+                var parameterSet = RandomSearchOptimizer
+                    .SampleParameterSet(m_parameters, m_sampler);
+
                 var ei = ComputeExpectedImprovement(best, parameterSet, model);
                 parameterSets.Add((parameterSet, ei));
             }
@@ -240,30 +244,6 @@ namespace SharpLearning.Optimization
             var mean = prediction.Prediction;
             var variance = prediction.Variance;
             return AcquisitionFunctions.ExpectedImprovement(best, mean, variance);
-        }
-
-        double[][] SampleRandomParameterSets(int parameterSetCount)
-        {
-            var parameterSets = new double[parameterSetCount][];
-            for (int i = 0; i < parameterSetCount; i++)
-            {
-                parameterSets[i] = SampleParameterSet();
-            }
-
-            return parameterSets;
-        }
-
-        double[] SampleParameterSet()
-        {
-            var parameterSet = new double[m_parameters.Length];
-
-            for (int i = 0; i < m_parameters.Length; i++)
-            {
-                var parameter = m_parameters[i];
-                parameterSet[i] = parameter.SampleValue(m_sampler);
-            }
-
-            return parameterSet;
         }
 
         class ParameterSetEqualityComparer : IEqualityComparer<(double[], double)>
