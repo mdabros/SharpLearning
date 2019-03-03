@@ -12,6 +12,8 @@ namespace SharpLearning.Optimization
     /// Implementation of the SMAC algorithm for hyperparameter optimization.
     /// Based on: Sequential Model-Based Optimization for General Algorithm Configuration:
     /// https://ml.informatik.uni-freiburg.de/papers/11-LION5-SMAC.pdf
+    /// And ML.Net implementation:
+    /// https://github.com/dotnet/machinelearning/blob/master/src/Microsoft.ML.Sweeper/Algorithms/SmacSweeper.cs
     /// Uses Bayesian optimization in tandem with a greedy local search on the top performing solutions.
     /// </summary>
     public class SmacOptimizer : IOptimizer
@@ -36,6 +38,8 @@ namespace SharpLearning.Optimization
         /// Based on: Sequential Model-Based Optimization for General Algorithm Configuration:
         /// https://ml.informatik.uni-freiburg.de/papers/11-LION5-SMAC.pdf
         /// Uses Bayesian optimization in tandem with a greedy local search on the top performing solutions.
+        /// And ML.Net implementation:
+        /// https://github.com/dotnet/machinelearning/blob/master/src/Microsoft.ML.Sweeper/Algorithms/SmacSweeper.cs
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="iterations">The number of iterations to perform.
@@ -222,8 +226,8 @@ namespace SharpLearning.Optimization
                 var parameterSet = RandomSearchOptimizer
                     .SampleParameterSet(m_parameters, m_sampler);
 
-                var ei = ComputeExpectedImprovement(best, parameterSet, model);
-                parameterSets.Add((parameterSet, ei));
+                var expectedImprovement = ComputeExpectedImprovement(best, parameterSet, model);
+                parameterSets.Add((parameterSet, expectedImprovement));
             }
 
             // Take the best parameterSets. Here we want the max expected improvement.
