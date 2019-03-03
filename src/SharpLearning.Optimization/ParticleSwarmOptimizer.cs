@@ -112,7 +112,7 @@ namespace SharpLearning.Optimization
             // random initialize particles
             for (int i = 0; i < m_numberOfParticles; i++)
             {
-                particles[i] = CreateParticle();
+                particles[i] = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
             }
 
             // iterate for find best
@@ -167,19 +167,6 @@ namespace SharpLearning.Optimization
             {
                 newValues[i] = Math.Max(minValues[i], Math.Min(newValues[i], maxValues[i]));
             }
-        }
-
-        double[] CreateParticle()
-        {
-            var newPoint = new double[m_parameters.Length];
-
-            for (int i = 0; i < m_parameters.Length; i++)
-            {
-                var parameter = m_parameters[i];
-                newPoint[i] = parameter.SampleValue(m_sampler);
-            }
-
-            return newPoint;
         }
     }
 }
