@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.CrossValidation.Samplers;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
-using System;
 
 namespace SharpLearning.CrossValidation.Test.TrainingTestSplitters
 {

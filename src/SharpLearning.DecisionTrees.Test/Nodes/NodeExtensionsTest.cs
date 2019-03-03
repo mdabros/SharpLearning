@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.DecisionTrees.Nodes;
-using System.Collections.Generic;
 
 namespace SharpLearning.DecisionTrees.Test.Nodes
 {

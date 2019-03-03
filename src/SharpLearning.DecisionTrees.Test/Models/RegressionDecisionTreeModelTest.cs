@@ -1,13 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers;
+﻿using System.Collections.Generic;
+using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.DecisionTrees.Test.Properties;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
-using System.Collections.Generic;
-using System.IO;
 
 namespace SharpLearning.DecisionTrees.Test.Models
 {
@@ -17,14 +14,12 @@ namespace SharpLearning.DecisionTrees.Test.Models
         [TestMethod]
         public void RegressionDecisionTreeModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var learner = new RegressionDecisionTreeLearner(100, 4, 2, 0.1, 42);
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -40,10 +35,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
         [TestMethod]
         public void RegressionDecisionTreeModel_Predict_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var learner = new RegressionDecisionTreeLearner(100, 4, 2, 0.1, 42);
             var sut = learner.Learn(observations, targets);
@@ -59,10 +51,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
         [TestMethod]
         public void RegressionDecisionTreeModel_Predict_Multiple_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var learner = new RegressionDecisionTreeLearner(100, 4, 2, 0.1, 42);
             var sut = learner.Learn(observations, targets);
@@ -80,10 +69,8 @@ namespace SharpLearning.DecisionTrees.Test.Models
         [TestMethod]
         public void RegressionDecisionTreeModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "F1", 0 }, { "F2", 1 } };
 
             var learner = new RegressionDecisionTreeLearner(100, 4, 2, 0.1, 42);
@@ -98,10 +85,8 @@ namespace SharpLearning.DecisionTrees.Test.Models
         [TestMethod]
         public void RegressionDecisionTreeModel_GetRawVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "F1", 0 }, { "F2", 1 } };
 
             var learner = new RegressionDecisionTreeLearner(100, 4, 2, 0.1, 42);
@@ -121,9 +106,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
         [TestMethod]
         public void RegressionDecisionTreeModel_Save()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var learner = new RegressionDecisionTreeLearner(100, 4, 2, 0.1, 42);
             var sut = learner.Learn(observations, targets);
@@ -137,9 +120,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
         [TestMethod]
         public void RegressionDecisionTreeModel_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var reader = new StringReader(RegressionDecisionTreeModelString);
             var sut = RegressionDecisionTreeModel.Load(() => reader);

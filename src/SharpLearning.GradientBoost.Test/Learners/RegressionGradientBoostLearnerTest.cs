@@ -1,12 +1,8 @@
 ﻿using System;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
 using SharpLearning.GradientBoost.Learners;
-using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.GradientBoost.Test.Learners
@@ -81,9 +77,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [ExpectedException(typeof(ArgumentException))]
         public void RegressionGradientBoostLearner_LearnWithEarlyStopping_ToFewIterations()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var splitter = new RandomTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);
@@ -98,9 +92,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionGradientBoostLearner_LearnWithEarlyStopping()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var splitter = new RandomTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);

@@ -1,12 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 using SharpLearning.XGBoost.Learners;
-using SharpLearning.XGBoost.Test.Properties;
 
 namespace SharpLearning.XGBoost.Test.Learners
 {
@@ -18,9 +15,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void RegressionXGBoostLearner_Learn()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = CreateLearner();
 
@@ -38,9 +33,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void RegressionXGBoostLearner_Learn_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));

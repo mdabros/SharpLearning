@@ -1,14 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.DecisionTrees.Test.Properties;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Classification;
 using SharpLearning.Metrics.Regression;
-using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Test.Learners
 {
@@ -18,10 +12,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
         [TestMethod]
         public void RegressionDecisionTreeLearner_Learn_Reuse_No_Valid_Split()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new RegressionDecisionTreeLearner();
 
@@ -93,10 +84,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
 
         private static double RegressionDecisionTreeLearner_Learn(int treeDepth)
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new RegressionDecisionTreeLearner(treeDepth, 4, 2, 0.1, 42);
 
@@ -111,10 +99,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
 
         private double RegressionDecisionTreeLearner_Learn_Weighted(int treeDepth, double weight)
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new RegressionDecisionTreeLearner(treeDepth, 4, 2, 0.1, 42);
             var weights = targets.Select(v => Weight(v, weight)).ToArray();

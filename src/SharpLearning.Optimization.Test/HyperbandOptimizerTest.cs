@@ -3,10 +3,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.CrossValidation.TrainingTestSplitters;
-using SharpLearning.GradientBoost.Learners;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Regression;
+using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -134,9 +131,9 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new IParameterSpec[]
             {
-                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear), // iterations
-                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10), // learning rate
-                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear), // maximumTreeDepth
+                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear),
+                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10),
+                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear),
             };
 
             var random = new Random(343);
@@ -148,7 +145,7 @@ namespace SharpLearning.Optimization.Test
 
             var sut = new HyperbandOptimizer(
                 parameters,
-                maximumUnitsOfCompute: 81,
+                maximumBudget: 81,
                 eta: 5,
                 skipLastIterationOfEachRound: false,
                 seed: 34);
@@ -164,9 +161,9 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new IParameterSpec[]
             {
-                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear), // iterations
-                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10), // learning rate
-                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear), // maximumTreeDepth
+                new MinMaxParameterSpec(min: 80, max: 300, transform: Transform.Linear),
+                new MinMaxParameterSpec(min: 0.02, max:  0.2, transform: Transform.Log10),
+                new MinMaxParameterSpec(min: 8, max: 15, transform: Transform.Linear),
             };
 
             var random = new Random(343);
@@ -178,7 +175,7 @@ namespace SharpLearning.Optimization.Test
         
             var sut = new HyperbandOptimizer(
                 parameters, 
-                maximumUnitsOfCompute: 81, 
+                maximumBudget: 81, 
                 eta: 5, 
                 skipLastIterationOfEachRound: false,
                 seed: 34);
@@ -199,9 +196,7 @@ namespace SharpLearning.Optimization.Test
 
         static void AssertOptimizerResult(OptimizerResult expected, OptimizerResult actual)
         {
-            const double delta = 0.000001;
-
-            Assert.AreEqual(expected.Error, actual.Error, delta);
+            Assert.AreEqual(expected.Error, actual.Error, Delta);
 
             var expectedParameterSet = expected.ParameterSet;
             var actualParameterSet = actual.ParameterSet;
@@ -210,7 +205,7 @@ namespace SharpLearning.Optimization.Test
 
             for (int i = 0; i < expectedParameterSet.Length; i++)
             {
-                Assert.AreEqual(expectedParameterSet[i], actualParameterSet[i], delta);
+                Assert.AreEqual(expectedParameterSet[i], actualParameterSet[i], Delta);
             }
         }
 

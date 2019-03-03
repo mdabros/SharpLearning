@@ -1,16 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
-using System.IO;
-using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.Metrics.Regression;
-using SharpLearning.Metrics.Classification;
-using System.Diagnostics;
 using System.Linq;
-using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.Learners;
-using SharpLearning.GradientBoost.Loss;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
+using SharpLearning.GradientBoost.Learners;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.GradientBoost.Test.Learners
 {
@@ -84,9 +77,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [ExpectedException(typeof(ArgumentException))]
         public void ClassificationGradientBoostLearner_LearnWithEarlyStopping_ToFewIterations()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var splitter = new StratifiedTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);
@@ -101,9 +92,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void ClassificationGradientBoostLearner_LearnWithEarlyStopping()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(r => r != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var splitter = new StratifiedTrainingTestIndexSplitter<double>(0.6, 1234);
             var split = splitter.SplitSet(observations, targets);

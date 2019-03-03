@@ -1,13 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.AdaBoost.Learners;
-using SharpLearning.AdaBoost.Test.Properties;
-using SharpLearning.Containers;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Classification;
-using SharpLearning.Containers.Extensions;
-using System;
-using System.IO;
+﻿using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.AdaBoost.Learners;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.AdaBoost.Test.Learners
 {
@@ -17,9 +13,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void ClassificationAdaBoostLearner_Learn_AptitudeData()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new ClassificationAdaBoostLearner(10);
             
@@ -35,9 +29,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void ClassificationAdaBoostLearner_Learn_Glass()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new ClassificationAdaBoostLearner(10, 1, 5);
 
@@ -53,11 +45,9 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void ClassificationAdaBoostLearner_Learn_AptitudeData_SequenceContainNoItemIssue_Solved()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
             var indices = new int[] { 22, 6, 23, 12 };
 
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
             var sut = new ClassificationAdaBoostLearner(10);
             
             var model = sut.Learn(observations, targets, indices);
@@ -74,9 +64,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void ClassificationAdaBoostLearner_Learn_Glass_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new ClassificationAdaBoostLearner(10, 1, 5);
 

@@ -1,12 +1,9 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.InputOutput.Csv;
-using System.IO;
-using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.Metrics.Regression;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.Learners;
+using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.GradientBoost.Test.Learners
 {
@@ -16,9 +13,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionAbsoluteLossGradientBoostLearner_Learn()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0, false);
             var model = sut.Learn(observations, targets);
@@ -34,9 +29,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionAbsoluteLossGradientBoostLearner_FeaturesPrSplit_Learn()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 1, false);
             var model = sut.Learn(observations, targets);
@@ -52,9 +45,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionAbsoluteLossGradientBoostLearner_Learn_Glass_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, false);
 
@@ -77,9 +68,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionAbsoluteLossGradientBoostLearner_Learn_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, 1.0, 0, false);
 
@@ -102,9 +91,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionAbsoluteLossGradientBoostLearner_Stochastic_Learn()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, false);
             var model = sut.Learn(observations, targets);
@@ -120,9 +107,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionAbsoluteLossGradientBoostLearner_Stochastic_Learn_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 0, false);
 
@@ -145,9 +130,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
         [TestMethod]
         public void RegressionAbsoluteLossGradientBoostLearner_Stochastic_FeaturesPrSplit_Learn_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new RegressionAbsoluteLossGradientBoostLearner(50, 0.1, 3, 1, 1e-6, .5, 3, false);
 

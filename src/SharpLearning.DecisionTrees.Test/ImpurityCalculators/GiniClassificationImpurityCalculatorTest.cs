@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
-using System.Linq;
 
 namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
 {

@@ -1,11 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.CrossValidation.LearningCurves;
-using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
-using System.Collections.Generic;
-using System.IO;
 
 namespace SharpLearning.CrossValidation.Test.LearningCurves
 {
@@ -18,10 +15,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
             var sut = new StratifiedLearningCurvesCalculator<double>(new TotalErrorClassificationMetric<double>(),
                 new double[] { 0.2, 0.8 }, 0.8, 5, 42);
 
-            var targetName = "Pass";
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var actual = sut.Calculate(new ClassificationDecisionTreeLearner(),
                 observations, targets);

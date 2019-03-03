@@ -72,7 +72,6 @@ namespace SharpLearning.Optimization
                 });
             }
 
-            // return all results ordered
             return results.ToArray();
         }
 

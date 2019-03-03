@@ -7,7 +7,13 @@ using SharpLearning.Optimization.ParameterSamplers;
 
 namespace SharpLearning.Optimization
 {
-    public delegate OptimizerResult HyperbandObjectiveFunction(double[] parameterSet, double unitsOfCompute);
+    /// <summary>
+    /// Objective function for hyperband optimizer.
+    /// </summary>
+    /// <param name="parameterSet">Parameter set to run.</param>
+    /// <param name="budget">Budget under which to run the parameter set.</param>
+    /// <returns></returns>
+    public delegate OptimizerResult HyperbandObjectiveFunction(double[] parameterSet, double budget);
 
     /// <summary>
     /// Hyperband optimizer based on:
@@ -24,11 +30,11 @@ namespace SharpLearning.Optimization
         readonly IParameterSpec[] m_parameters;
         readonly IParameterSampler m_sampler;
 
-        readonly int m_maximumUnitsOfCompute;
+        readonly int m_maximumBudget;
         readonly int m_eta;
 
         readonly int m_numberOfRounds;
-        readonly int m_totalUnitsOfComputePerRound;
+        readonly int m_totalBudgetPerRound;
 
         readonly bool m_skipLastIterationOfEachRound;
 
@@ -40,32 +46,33 @@ namespace SharpLearning.Optimization
         /// Then it takes the best performers and runs them on a larger budget. 
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
-        /// <param name="maximumUnitsOfCompute">This indicates the maximum units of compute.
-        /// A unit of compute could be 5 epochs over a dataset for instance. Consequently, 
+        /// <param name="maximumBudget">This provides the maximum budget.
+        /// One unit of compute could be 5 epochs over a dataset for instance. Consequently, 
         /// a unit of compute should be chosen to be the minimum amount of computation where different 
         /// hyperparameter configurations start to separate (or where it is clear that some settings diverge)></param>
         /// <param name="eta">Controls the proportion of configurations discarded in each round.
         /// Together with maximumUnitsOfCompute, it dictates how many rounds are considered</param>
         /// <param name="skipLastIterationOfEachRound">True to skip the last, 
         /// most computationally expensive, iteration of each round. Default is false.</param>
-        public HyperbandOptimizer(IParameterSpec[] parameters,
-            int maximumUnitsOfCompute = 81, int eta = 3,
+        /// <param name="seed"></param>
+        public HyperbandOptimizer(IParameterSpec[] parameters, 
+            int maximumBudget = 81, int eta = 3,
             bool skipLastIterationOfEachRound = false,
             int seed = 34)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-            if (maximumUnitsOfCompute < 1) throw new ArgumentException(nameof(maximumUnitsOfCompute) + " must be at larger than 0");
+            if(maximumBudget < 1) throw new ArgumentException(nameof(maximumBudget) + " must be at larger than 0");
             if (eta < 1) throw new ArgumentException(nameof(eta) + " must be at larger than 0");
             m_sampler = new RandomUniform(seed);
 
             // This is called R in the paper.
-            m_maximumUnitsOfCompute = maximumUnitsOfCompute;
+            m_maximumBudget = maximumBudget;
             m_eta = eta;
 
             // This is called `s max` in the paper.
-            m_numberOfRounds = (int)(Math.Log(m_maximumUnitsOfCompute) / Math.Log(m_eta));
+            m_numberOfRounds =  (int)(Math.Log(m_maximumBudget) / Math.Log(m_eta));
             // This is called `B` in the paper.
-            m_totalUnitsOfComputePerRound = (m_numberOfRounds + 1) * m_maximumUnitsOfCompute;
+            m_totalBudgetPerRound = (m_numberOfRounds + 1) * m_maximumBudget;
 
             // Suggestion by fastml: http://fastml.com/tuning-hyperparams-fast-with-hyperband/
             // "One could discard the last tier (1 x 81, 2 x 81, etc.) in each round, 
@@ -96,29 +103,30 @@ namespace SharpLearning.Optimization
             for (int rounds = m_numberOfRounds; rounds >= 0; rounds--)
             {
                 // Initial configurations count.
-                var initialConfigurationCount = (int)Math.Ceiling((m_totalUnitsOfComputePerRound / m_maximumUnitsOfCompute)
+                var initialConfigurationCount = (int)Math.Ceiling((m_totalBudgetPerRound / m_maximumBudget) 
                     * (Math.Pow(m_eta, rounds) / (rounds + 1)));
 
-                // Initial unitsOfCompute per parameter set.
-                var initialUnitsOfCompute = m_maximumUnitsOfCompute * Math.Pow(m_eta, -rounds);
+                // Initial budget per parameter set.
+                var initialBudget = m_maximumBudget * Math.Pow(m_eta, -rounds);
 
-                var parameterSets = CreateParameterSets(m_parameters, initialConfigurationCount);
+                var parameterSets = RandomSearchOptimizer.SampleRandomParameterSets(initialConfigurationCount,
+                    m_parameters, m_sampler);
+
+                var results = new ConcurrentBag<OptimizerResult>();
 
                 var iterations = m_skipLastIterationOfEachRound ? rounds : (rounds + 1);
                 for (int iteration = 0; iteration < iterations; iteration++)
                 {
-                    // Run each of the parameter sets with unitsOfCompute
+                    // Run each of the parameter sets with budget
                     // and keep the best (configurationCount / m_eta) configurations
 
                     var configurationCount = initialConfigurationCount * Math.Pow(m_eta, -iteration);
-                    var unitsOfCompute = initialUnitsOfCompute * Math.Pow(m_eta, iteration);
+                    var budget = initialBudget * Math.Pow(m_eta, iteration);
 
-                    var results = new ConcurrentBag<OptimizerResult>();
-
-                    Trace.WriteLine($"{(int)Math.Round(configurationCount)} configurations x {unitsOfCompute:F1} unitsOfCompute each");
+                    //Trace.WriteLine($"{(int)Math.Round(configurationCount)} configurations x {budget:F1} budget each");
                     foreach (var parameterSet in parameterSets)
                     {
-                        var result = functionToMinimize(parameterSet, unitsOfCompute);
+                        var result = functionToMinimize(parameterSet, budget);
                         results.Add(result);
                     }
 
@@ -135,25 +143,6 @@ namespace SharpLearning.Optimization
             }
 
             return allResults.ToArray();
-        }
-
-        double[][] CreateParameterSets(IParameterSpec[] parameters,
-            int setCount)
-        {
-            var newSearchSpace = new double[setCount][];
-            for (int i = 0; i < newSearchSpace.Length; i++)
-            {
-                var newParameters = new double[parameters.Length];
-                var index = 0;
-                foreach (var param in parameters)
-                {
-                    newParameters[index] = param.SampleValue(m_sampler);
-                    index++;
-                }
-                newSearchSpace[i] = newParameters;
-            }
-
-            return newSearchSpace;
         }
     }
 }
