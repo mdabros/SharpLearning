@@ -71,6 +71,7 @@ namespace SharpLearning.Optimization
 
         /// <summary>
         /// Optimization using swarm optimization. Returns results for all particles.
+        /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
@@ -112,7 +113,7 @@ namespace SharpLearning.Optimization
             // random initialize particles
             for (int i = 0; i < m_numberOfParticles; i++)
             {
-                particles[i] = CreateParticle();
+                particles[i] = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
             }
 
             // iterate for find best
@@ -167,19 +168,6 @@ namespace SharpLearning.Optimization
             {
                 newValues[i] = Math.Max(minValues[i], Math.Min(newValues[i], maxValues[i]));
             }
-        }
-
-        double[] CreateParticle()
-        {
-            var newPoint = new double[m_parameters.Length];
-
-            for (int i = 0; i < m_parameters.Length; i++)
-            {
-                var parameter = m_parameters[i];
-                newPoint[i] = parameter.SampleValue(m_sampler);
-            }
-
-            return newPoint;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
 namespace SharpLearning.Optimization.Test
 {
@@ -23,10 +24,10 @@ namespace SharpLearning.Optimization.Test
                 new RandomSearchOptimizer(parameters, 100, 42, true, maxDegreeOfParallelism.Value) : 
                 new RandomSearchOptimizer(parameters, 100);
 
-            var actual = sut.OptimizeBest(Minimize);
+            var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
 
-            Assert.AreEqual(110.67173923600831, actual.Error, 0.00001);
-            Assert.AreEqual(37.533294194160632, actual.ParameterSet.Single(), 0.00001);
+            Assert.AreEqual(110.67173923600831, actual.Error, Delta);
+            Assert.AreEqual(37.533294194160632, actual.ParameterSet.Single(), Delta);
         }
 
         [TestMethod]
@@ -45,7 +46,7 @@ namespace SharpLearning.Optimization.Test
                 new RandomSearchOptimizer(parameters, 2, 42, true, maxDegreeOfParallelism.Value) : 
                 new RandomSearchOptimizer(parameters, 2);
 
-            var actual = sut.Optimize(Minimize);
+            var actual = sut.Optimize(MinimizeWeightFromHeight);
 
             var expected = new OptimizerResult[]
             {
@@ -53,11 +54,13 @@ namespace SharpLearning.Optimization.Test
                 new OptimizerResult(new double[] { 28.3729278125674 },  3690.81119818742),
             };
 
-            Assert.AreEqual(expected.First().Error, actual.First().Error, 0.0001);
-            Assert.AreEqual(expected.First().ParameterSet.First(), actual.First().ParameterSet.First(), 0.0001);
+            Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
+            Assert.AreEqual(expected.First().ParameterSet.First(), 
+                actual.First().ParameterSet.First(), Delta);
 
-            Assert.AreEqual(expected.Last().Error, actual.Last().Error, 0.0001);
-            Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), 0.0001);
+            Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
+            Assert.AreEqual(expected.Last().ParameterSet.First(), 
+                actual.Last().ParameterSet.First(), Delta);
         }
 
         [TestMethod]
@@ -65,21 +68,6 @@ namespace SharpLearning.Optimization.Test
         public void RandomSearchOptimizer_ArgumentCheck_ParameterRanges()
         {
             var sut = new RandomSearchOptimizer(null, 10);
-        }
-
-        OptimizerResult Minimize(double[] parameters)
-        {
-            var heights = new double[] { 1.47, 1.50, 1.52, 1.55, 1.57, 1.60, 1.63, 1.65, 1.68, 1.70, 1.73, 1.75, 1.78, 1.80, 1.83 };
-            var weights = new double[] { 52.21, 53.12, 54.48, 55.84, 57.20, 58.57, 59.93, 61.29, 63.11, 64.47, 66.28, 68.10, 69.92, 72.19, 74.46 };
-
-            var cost = 0.0;
-
-            for (int i = 0; i < heights.Length; i++)
-            {
-                cost += (parameters[0] * heights[i] - weights[i]) * (parameters[0] * heights[i] - weights[i]);
-            }
-
-            return new OptimizerResult(parameters, cost);
         }
     }
 }

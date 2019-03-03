@@ -56,7 +56,8 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
-            var parameterSets = CreateParameterSets(m_parameters);
+            var parameterSets = SampleRandomParameterSets(m_iterations, 
+                m_parameters, m_sampler);
 
             // Initialize the search
             var results = new ConcurrentBag<OptimizerResult>();
@@ -81,28 +82,46 @@ namespace SharpLearning.Optimization
                 });
             }
 
-
-            // return all results ordered
             return results.ToArray();
         }
 
-
-        double[][] CreateParameterSets(IParameterSpec[] parameters)
+        /// <summary>
+        /// Samples a set of random parameter sets.
+        /// </summary>
+        /// <param name="parameterSetCount"></param>
+        /// <param name="parameters"></param>
+        /// <param name="sampler"></param>
+        /// <returns></returns>
+        public static double[][] SampleRandomParameterSets(int parameterSetCount, 
+            IParameterSpec[] parameters, IParameterSampler sampler)
         {
-            var newSearchSpace = new double[m_iterations][];
-            for (int i = 0; i < newSearchSpace.Length; i++)
-			{
-                var newParameters = new double[parameters.Length];
-                var index = 0;
-                foreach (var param in parameters)
-                {
-                    newParameters[index] = param.SampleValue(m_sampler);
-                    index++;
-                }
-                newSearchSpace[i] = newParameters;
-			}
+            var parameterSets = new double[parameterSetCount][];
+            for (int i = 0; i < parameterSetCount; i++)
+            {
+                parameterSets[i] = SampleParameterSet(parameters, sampler);
+            }
 
-            return newSearchSpace;
+            return parameterSets;
+        }
+
+        /// <summary>
+        /// Samples a random parameter set.
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="sampler"></param>
+        /// <returns></returns>
+        public static double[] SampleParameterSet(IParameterSpec[] parameters, 
+            IParameterSampler sampler)
+        {
+            var parameterSet = new double[parameters.Length];
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parameter = parameters[i];
+                parameterSet[i] = parameter.SampleValue(sampler);
+            }
+
+            return parameterSet;
         }
     }
 }
