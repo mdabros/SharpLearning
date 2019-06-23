@@ -2,7 +2,7 @@ trigger:
   - master
 
 variables:
-  buildPlatform: 'Any CPU' # specify platform ('x86', 'x64', 'Any CPU')
+  #buildPlatform: 'Any CPU' # specify platform ('x86', 'x64', 'Any CPU')
   testAssembliesSearchPattern: 'BuildTest\**\*Test.dll'
   
 jobs:
@@ -30,14 +30,14 @@ jobs:
     inputs:
       command: build
       projects: '**/*.csproj'
-      arguments: '--configuration $(buildConfiguration) /p:Platform $(buildPlatform)'
+      arguments: '--configuration $(buildConfiguration)'
 
   - task: DotNetCoreCLI@2
     displayName: Test
     inputs:
       command: test
       projects: '$(testAssembliesSearchPattern)'
-      arguments: '--configuration $(buildConfiguration) /p:Platform $(buildPlatform)'
+      arguments: '--configuration $(buildConfiguration)'
 
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack'
@@ -53,4 +53,4 @@ jobs:
   #    nuGetFeedType: external
   #    publishFeedCredentials: 'nuget/mdabros Api'
   #  enabled: false
-  #  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #  condition: and(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), eq(variables['buildConfiguration'], 'Release')
