@@ -3,7 +3,7 @@ trigger:
 
 variables:
   #buildPlatform: 'Any CPU' # specify platform ('x86', 'x64', 'Any CPU')
-  testAssembliesSearchPattern: 'BuildTest\**\*Test.dll'
+  testProjectsSearchPattern: '**/*.Test.csproj'
   
 jobs:
 - job: 'CI'
@@ -36,8 +36,15 @@ jobs:
     displayName: Test
     inputs:
       command: test
-      projects: '$(testAssembliesSearchPattern)'
-      arguments: '--configuration $(buildConfiguration)'
+      projects: '$(testProjectsSearchPattern)'
+      arguments: '--configuration $(BuildConfiguration)'
+
+  - task: PublishTestResults@2
+    displayName: Publish Test Results
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
 
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack'
