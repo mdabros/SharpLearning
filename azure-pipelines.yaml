@@ -1,0 +1,68 @@
+# Trigger CI only on master branch.
+trigger:
+  - master
+
+# Pull request validation against master branch only.
+pr: 
+  - master
+
+variables:
+  #buildPlatform: 'Any CPU' # specify platform ('x86', 'x64', 'Any CPU').
+  testProjectsSearchPattern: '**/*.Test.csproj'
+  
+jobs:
+- job: 'CI'
+  displayName: 'CI'
+  pool:
+    name: Hosted VS2017
+    
+  strategy:
+    matrix:
+      Debug:
+        buildConfiguration: 'Debug'
+      Release:
+        buildConfiguration: 'Release'
+        
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: build
+      projects: '**/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: '$(testProjectsSearchPattern)'
+      arguments: '--configuration $(BuildConfiguration)'
+
+  - task: PublishTestResults@2
+    displayName: Publish Test Results
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: '**/*.trx'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet pack'
+    inputs:
+      command: pack
+      packagesToPack: '**/*.csproj;-:**/*.Test.csproj'
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      nuGetFeedType: external
+      publishFeedCredentials: 'nuget/mdabros Api'
+    enabled: true
+    condition: and(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), eq(variables['buildConfiguration'], 'Release'))
