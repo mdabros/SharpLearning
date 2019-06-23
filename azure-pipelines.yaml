@@ -2,8 +2,7 @@ trigger:
   - master
 
 variables:
-  cleanOnCheckout: true
-  buildPlatform 'AnyCPU' # specify platform ('x86', 'x64', 'AnyCPU')
+  buildPlatform: 'AnyCPU' # specify platform ('x86', 'x64', 'AnyCPU')
   testAssembliesSearchPattern: 'BuildTest\**\*Test.dll'
   
 jobs:
@@ -18,45 +17,45 @@ jobs:
     - Cmd
     
   strategy:
-    marix:
+    matrix:
       Debug:
         buildConfiguration: 'Debug'
       Release:
         buildConfiguration: 'Release'
         
-steps:
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: 'restore'
-    projects: '**/*.csproj'
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --Platform $(buildPlatform)'
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      command: build
+      projects: '**/*.csproj'
+      arguments: '--configuration $(buildConfiguration) --Platform $(buildPlatform)'
 
-- task: DotNetCoreCLI@2
-  displayName: Test
-  inputs:
-    command: test
-    projects: '$(testAssembliesSearchPattern)'
-    arguments: '--configuration $(buildConfiguration) --Platform $(buildPlatform)'
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: '$(testAssembliesSearchPattern)'
+      arguments: '--configuration $(buildConfiguration) --Platform $(buildPlatform)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet pack'
-  inputs:
-    command: pack
-    packagesToPack: '**/*.csproj;-:**/*.Test.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet pack'
+    inputs:
+      command: pack
+      packagesToPack: '**/*.csproj;-:**/*.Test.csproj'
 
-#- task: NuGetCommand@2
-#  displayName: 'NuGet push'
-#  inputs:
-#    command: push
-#    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-#    nuGetFeedType: external
-#    publishFeedCredentials: 'nuget/mdabros Api'
-#  enabled: false
-#  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #- task: NuGetCommand@2
+  #  displayName: 'NuGet push'
+  #  inputs:
+  #    command: push
+  #    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+  #    nuGetFeedType: external
+  #    publishFeedCredentials: 'nuget/mdabros Api'
+  #  enabled: false
+  #  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
