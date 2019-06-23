@@ -52,12 +52,13 @@ jobs:
       command: pack
       packagesToPack: '**/*.csproj;-:**/*.Test.csproj'
 
-  #- task: NuGetCommand@2
-  #  displayName: 'NuGet push'
-  #  inputs:
-  #    command: push
-  #    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
-  #    nuGetFeedType: external
-  #    publishFeedCredentials: 'nuget/mdabros Api'
-  #  enabled: false
-  #  condition: and(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), eq(variables['buildConfiguration'], 'Release')
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    inputs:
+      command: push
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      nuGetFeedType: external
+      publishFeedCredentials: 'nuget/mdabros Api'
+	  allowPackageConflicts: true
+    enabled: true
+    condition: and(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), eq(variables['buildConfiguration'], 'Release')
