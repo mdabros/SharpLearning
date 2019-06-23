@@ -65,4 +65,4 @@ jobs:
       nuGetFeedType: external
       publishFeedCredentials: 'nuget/mdabros Api'
     enabled: true
-    condition: and(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), eq(variables['buildConfiguration'], 'Release')
+    condition: and(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), eq(variables['buildConfiguration'], 'Release'))
