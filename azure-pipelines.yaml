@@ -64,6 +64,5 @@ jobs:
       packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'nuget/mdabros Api'
-	  allowPackageConflicts: true
     enabled: true
     condition: and(and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')), eq(variables['buildConfiguration'], 'Release')
