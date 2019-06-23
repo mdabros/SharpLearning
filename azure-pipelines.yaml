@@ -2,7 +2,7 @@ trigger:
   - master
 
 variables:
-  buildPlatform: 'AnyCPU' # specify platform ('x86', 'x64', 'AnyCPU')
+  buildPlatform: 'Any CPU' # specify platform ('x86', 'x64', 'Any CPU')
   testAssembliesSearchPattern: 'BuildTest\**\*Test.dll'
   
 jobs:
