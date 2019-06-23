@@ -10,11 +10,6 @@ jobs:
   displayName: 'CI'
   pool:
     name: Hosted VS2017
-    demands:
-    - msbuild
-    - visualstudio
-    - vstest
-    - Cmd
     
   strategy:
     matrix:
@@ -35,14 +30,14 @@ jobs:
     inputs:
       command: build
       projects: '**/*.csproj'
-      arguments: '--configuration $(buildConfiguration) --Platform $(buildPlatform)'
+      arguments: '--configuration $(buildConfiguration) /Platform $(buildPlatform)'
 
   - task: DotNetCoreCLI@2
     displayName: Test
     inputs:
       command: test
       projects: '$(testAssembliesSearchPattern)'
-      arguments: '--configuration $(buildConfiguration) --Platform $(buildPlatform)'
+      arguments: '--configuration $(buildConfiguration) /Platform $(buildPlatform)'
 
   - task: DotNetCoreCLI@2
     displayName: 'dotnet pack'
