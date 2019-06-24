@@ -101,10 +101,20 @@ namespace SharpLearning.Optimization
                 runParallel: false);
         }
 
+        /// <summary>
+        /// Minimizes the provided function
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
             Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
+        /// <summary>
+        /// Minimizes the provided function
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             var initialParameterSets = ProposeParameterSets(m_randomStartingPointsCount, null);

@@ -237,6 +237,13 @@ namespace SharpLearning.InputOutput.Csv
         {
             return ToF64Vector(dataRows, DefaultF64Converter);
         }
+
+        /// <summary>
+        /// Parses the CsvRows to a double array. Only CsvRows with a single column can be used
+        /// </summary>
+        /// <param name="dataRows"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static double[] ToF64Vector(this IEnumerable<CsvRow> dataRows,
             Converter<string, double> converter)
         {
@@ -276,6 +283,13 @@ namespace SharpLearning.InputOutput.Csv
         {
             return ToF64Matrix(dataRows, DefaultF64Converter);
         }
+
+        /// <summary>
+        /// Parses the CsvRows to a F64Matrix
+        /// </summary>
+        /// <param name="dataRows"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static F64Matrix ToF64Matrix(this IEnumerable<CsvRow> dataRows,
             Converter<string, double> converter)
         {

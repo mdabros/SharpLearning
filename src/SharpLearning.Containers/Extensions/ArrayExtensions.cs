@@ -114,7 +114,7 @@ namespace SharpLearning.Containers.Extensions
         }
 
         /// <summary>
-        /// Converts am array of string to an array of floats
+        /// Converts an array of string to an array of floats
         /// </summary>
         /// <param name="v"></param>
         /// <returns></returns>
@@ -122,6 +122,13 @@ namespace SharpLearning.Containers.Extensions
         {
             return AsF64(v, DefaultF64Converter);
         }
+
+        /// <summary>
+        /// /// Converts an array of string to an array of floats
+        /// </summary>
+        /// <param name="v"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static double[] AsF64(this string[] v, Converter<string, double> converter)
         {
             return v.Select(s => converter(s)).ToArray();
