@@ -50,7 +50,8 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new RandomCrossValidation<double>(folds, 42);
-            var predictions = sut.CrossValidate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var predictions = sut.CrossValidate(learner, observations, targets);
             var metric = new MeanSquaredErrorRegressionMetric();
 
             return metric.Error(targets, predictions);
@@ -65,8 +66,8 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var rowsToCrossvalidate = targets.Length / 2;
             var indices = Enumerable.Range(0, rowsToCrossvalidate).ToArray();
             var predictions = new double[rowsToCrossvalidate];
-
-            sut.CrossValidate(new RegressionDecisionTreeLearner(), observations, targets, indices, predictions);
+            var learner = new RegressionDecisionTreeLearner();
+            sut.CrossValidate(learner, observations, targets, indices, predictions);
             var metric = new MeanSquaredErrorRegressionMetric();
 
             return metric.Error(targets.Take(rowsToCrossvalidate).ToArray(), predictions);

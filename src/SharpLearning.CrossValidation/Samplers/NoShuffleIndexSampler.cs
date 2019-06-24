@@ -18,7 +18,11 @@ namespace SharpLearning.CrossValidation.Samplers
         /// <returns></returns>
         public int[] Sample(T[] data, int sampleSize)
         {
-            if (data.Length < sampleSize) { throw new ArgumentException("Sample size " + sampleSize + " is larger than data size " + data.Length); }
+            if (data.Length < sampleSize)
+            {
+                throw new ArgumentException("Sample size " + sampleSize + 
+                    " is larger than data size " + data.Length);
+            }
             
             return Enumerable.Range(0, sampleSize).ToArray();
         }
@@ -33,9 +37,16 @@ namespace SharpLearning.CrossValidation.Samplers
         public int[] Sample(T[] data, int sampleSize, int[] dataIndices)
         {
             if (data.Length < sampleSize)
-            { throw new ArgumentException("Sample size " + sampleSize + " is larger than data size " + data.Length); }
+            {
+                throw new ArgumentException("Sample size " + sampleSize + 
+                    " is larger than data size " + data.Length);
+            }
+
             if (data.Length < dataIndices.Length)
-            { throw new ArgumentException("dataIndice size " + dataIndices.Length + " is larger than data size " + data.Length); }
+            {
+                throw new ArgumentException("dataIndice size " + dataIndices.Length + 
+                    " is larger than data size " + data.Length);
+            }
             
             return dataIndices.Take(sampleSize).ToArray();
         }
