@@ -8,7 +8,7 @@ namespace SharpLearning.Common.Interfaces
     public interface IModelVariableImportance
     {
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         double[] GetRawVariableImportance();
