@@ -21,7 +21,7 @@ namespace SharpLearning.Containers.Views
         readonly int m_cols;
 
         /// <summary>
-        /// Pinnes the provided F64Matrix
+        /// Pins the provided F64Matrix
         /// </summary>
         /// <param name="matrix"></param>
         public F64MatrixPinnedPtr(F64Matrix matrix)

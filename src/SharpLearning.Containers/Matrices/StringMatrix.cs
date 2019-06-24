@@ -53,7 +53,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Sets the item at the specified posistion
+        /// Sets the item at the specified position
         /// </summary>
         /// <param name="row"></param>
         /// <param name="col"></param>

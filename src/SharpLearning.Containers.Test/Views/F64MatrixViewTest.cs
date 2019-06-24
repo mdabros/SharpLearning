@@ -38,7 +38,10 @@ namespace SharpLearning.Containers.Test.Views
             var matrix = Matrix();
             using (var pinnedMatrix = matrix.GetPinnedPointer())
             {
-                var subView = pinnedMatrix.View().View(Interval2D.Create(Interval1D.Create(0, 2), Interval1D.Create(0, 3)));
+                var subView = pinnedMatrix.View().View(
+                    Interval2D.Create(Interval1D.Create(0, 2), 
+                    Interval1D.Create(0, 3)));
+
                 var subMatrix = matrix.Rows(new int[] { 0, 1 });
                 AssertMatrixView(subMatrix, subView);
             }

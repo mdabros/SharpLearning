@@ -10,7 +10,6 @@ namespace SharpLearning.Containers.Views
     {
         const int SizeOfType = sizeof(double);
         readonly double* m_dataPtr;
-        readonly int m_rows;
         readonly int m_strideInBytes;
 
         /// <summary>
@@ -22,7 +21,7 @@ namespace SharpLearning.Containers.Views
         public F64MatrixColumnView(double* dataPtr, int rows, int strideInBytes)
         {
             m_dataPtr = dataPtr;
-            m_rows = rows;
+            Rows = rows;
             m_strideInBytes = strideInBytes;
         }
 
@@ -36,16 +35,16 @@ namespace SharpLearning.Containers.Views
             get { return *RowPtr(row); }
             set { *RowPtr(row) = value; }
         }
-        
+
         /// <summary>
         /// Gets the number of rows
         /// </summary>
-   		public int Rows { get { return m_rows; } }
+        public int Rows { get; private set; }
 
         /// <summary>
         /// Gets the interval of the column view
         /// </summary>
-        public Interval1D Interval { get { return new Interval1D(0, m_rows); } }
+        public Interval1D Interval { get { return new Interval1D(0, Rows); } }
 
         double* RowPtr(int row)
         {

@@ -225,7 +225,8 @@ namespace SharpLearning.Containers.Extensions
         /// <param name="source"></param>
         /// <param name="interval"></param>
         /// <param name="destination"></param>
-        public static void IndexedCopy(this int[] indices, F64MatrixColumnView source, Interval1D interval, double[] destination)
+        public static void IndexedCopy(this int[] indices, F64MatrixColumnView source, 
+            Interval1D interval, double[] destination)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
             {
@@ -454,14 +455,21 @@ namespace SharpLearning.Containers.Extensions
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, Random random)
         {
             if (data.Length < sampleSize)
-            { throw new ArgumentException("SampleSize " + sampleSize + " is larger than data size " + data.Length); }
+            {
+                throw new ArgumentException("SampleSize " + sampleSize + 
+                    " is larger than data size " + data.Length);
+            }
 
             var requiredSamples = data.GroupBy(d => d)
-                .ToDictionary(d => d.Key, d => (int)Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
+                .ToDictionary(d => d.Key, d => (int)Math.Round((double)d.Count() / data.Length * sampleSize));
 
             foreach (var kvp in requiredSamples)
             {
-                if (kvp.Value == 0) { throw new ArgumentException("Sample size is too small for value: " + kvp.Key + " to be included."); }
+                if (kvp.Value == 0)
+                {
+                    throw new ArgumentException("Sample size is too small for value: " + 
+                        kvp.Key + " to be included.");
+                }
             }
 
             // Shuffle the indices to avoid sampling the data in original order.
@@ -470,10 +478,10 @@ namespace SharpLearning.Containers.Extensions
 
             var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
             
-            // might be slightly different than the specified depending on data destribution
+            // might be slightly different than the specified depending on data distribution
             var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
             
-            // if actual sample size is different from specified add/subtract diff from largest class
+            // if actual sample size is different from specified add/subtract duff from largest class
             if(actualSampleSize != sampleSize)
             {
                 var diff = sampleSize - actualSampleSize;
@@ -513,7 +521,7 @@ namespace SharpLearning.Containers.Extensions
         /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
         /// http://en.wikipedia.org/wiki/Stratified_sampling
         /// Returns a set of indices corresponding to the samples chosen. 
-        /// Only samples within the indies provided in dataIndices
+        /// Only samples within the indices provided in dataIndices
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
@@ -524,23 +532,34 @@ namespace SharpLearning.Containers.Extensions
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices, Random random)
         {
             if (dataIndices.Length < sampleSize) 
-            { throw new ArgumentException("SampleSize " + sampleSize + " is larger than dataIndices size " + dataIndices.Length); }
+            {
+                throw new ArgumentException("SampleSize " + sampleSize + 
+                    " is larger than dataIndices size " + dataIndices.Length);
+            }
+
             if (data.Length < dataIndices.Length) 
-            { throw new ArgumentException("dataIndices " + dataIndices.Length + " is larger than data size " + data.Length); }
+            {
+                throw new ArgumentException("dataIndices " + dataIndices.Length + 
+                    " is larger than data size " + data.Length);
+            }
 
             var requiredSamples = data.GroupBy(d => d)
-                .ToDictionary(d => d.Key, d => (int)Math.Round((double)d.Count() / (double)data.Length * (double)sampleSize));
+                .ToDictionary(d => d.Key, d => (int)Math.Round((double)d.Count() / data.Length * sampleSize));
 
             foreach (var kvp in requiredSamples)
             {
-                if (kvp.Value == 0) { throw new ArgumentException("Sample size is too small for value: " + kvp.Key + " to be included."); }
+                if (kvp.Value == 0)
+                {
+                    throw new ArgumentException("Sample size is too small for value: " + 
+                        kvp.Key + " to be included.");
+                }
             }
 
             var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
-            // might be slightly different than the specified depending on data destribution
+            // might be slightly different than the specified depending on data distribution
             var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
             
-            // if actual sample size is different from specified add/subtract diff from largest class
+            // if actual sample size is different from specified add/subtract difference from largest class
             if (actualSampleSize != sampleSize)
             {
                 var diff = sampleSize - actualSampleSize;

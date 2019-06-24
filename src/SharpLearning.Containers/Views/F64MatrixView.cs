@@ -36,10 +36,17 @@ namespace SharpLearning.Containers.Views
             m_strideInBytes = strideInBytes;
         }
 
-        double* GetSubViewDataPointer(Interval2D subView)
-        {
-            return this[subView.Cols.FromInclusive] + subView.Rows.FromInclusive;
-        }
+        /// <summary>
+        /// Gets the number of columns
+        /// </summary>
+        /// <value></value>
+        public int ColumnCount { get; private set; }
+
+        /// <summary>
+        /// Gets the number of rows
+        /// </summary>
+        /// <value></value>
+        public int RowCount { get; private set; }
 
         /// <summary>
         /// Gets the item at the specified position
@@ -73,7 +80,7 @@ namespace SharpLearning.Containers.Views
         }
 
         /// <summary>
-        /// Gets a subview over the specified interval
+        /// Gets a sub-view over the specified interval
         /// </summary>
         /// <param name="subView"></param>
         /// <returns></returns>
@@ -82,16 +89,9 @@ namespace SharpLearning.Containers.Views
             return new F64MatrixView(GetSubViewDataPointer(subView), subView.Rows.Length, subView.Cols.Length, m_strideInBytes);
         }
 
-        /// <summary>
-        /// Gets the number of columns
-        /// </summary>
-        /// <value></value>
-        public int ColumnCount { get; private set; }
-
-        /// <summary>
-        /// Gets the number of rows
-        /// </summary>
-        /// <value></value>
-        public int RowCount { get; private set; }
+        double* GetSubViewDataPointer(Interval2D subView)
+        {
+            return this[subView.Cols.FromInclusive] + subView.Rows.FromInclusive;
+        }
     }
 }

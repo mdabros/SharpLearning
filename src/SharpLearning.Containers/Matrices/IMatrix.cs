@@ -84,7 +84,7 @@ namespace SharpLearning.Containers.Matrices
         void Columns(int[] indices, IMatrix<T> output);
 
         /// <summary>
-        /// Gets the array which stores all matrix values. values are storred row-wise.
+        /// Gets the array which stores all matrix values. values are stored row-wise.
         /// </summary>
         /// <returns></returns>
         T[] Data();
@@ -96,7 +96,7 @@ namespace SharpLearning.Containers.Matrices
         int ColumnCount { get; }
 
         /// <summary>
-        /// Gets the numver of rows
+        /// Gets the number of rows
         /// </summary>
         /// <returns></returns>
         int RowCount { get; }

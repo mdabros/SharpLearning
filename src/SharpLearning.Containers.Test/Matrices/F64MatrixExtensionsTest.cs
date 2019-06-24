@@ -47,7 +47,9 @@ namespace SharpLearning.Containers.Test.Matrices
             var matrix = new F64Matrix(m_inputData, 2, 3);
             var actual = matrix.ToStringMatrix();
 
-            var expected = new StringMatrix(m_inputData.Select(v => FloatingPointConversion.ToString(v)).ToArray(), 2, 3);
+            var expected = new StringMatrix(m_inputData.Select(v => 
+                FloatingPointConversion.ToString(v)).ToArray(), 2, 3);
+
             Assert.AreEqual(expected, actual);
         }
 
