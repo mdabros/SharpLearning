@@ -56,8 +56,13 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random sampling</param>
-        public RegressionAdaBoostLearner(int iterations = 50, double learningRate = 1, int maximumTreeDepth = 0, 
-            AdaBoostRegressionLoss loss = AdaBoostRegressionLoss.Linear, int minimumSplitSize = 1, double minimumInformationGain = 0.000001, int seed = 42)
+        public RegressionAdaBoostLearner(int iterations = 50, 
+            double learningRate = 1, 
+            int maximumTreeDepth = 0, 
+            AdaBoostRegressionLoss loss = AdaBoostRegressionLoss.Linear, 
+            int minimumSplitSize = 1, 
+            double minimumInformationGain = 0.000001, 
+            int seed = 42)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
             if (learningRate > 1.0 || learningRate <= 0) { throw new ArgumentException("learningRate must be larger than zero and smaller than 1.0"); }
@@ -170,7 +175,8 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
         }
@@ -181,7 +187,8 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets)
         {
             return Learn(observations, targets);
         }

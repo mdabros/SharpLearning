@@ -64,7 +64,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using weighted majority vote
+        /// Predicts a set of observations using weighted majority vote
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -83,7 +83,7 @@ namespace SharpLearning.AdaBoost.Models
         /// <summary>
         /// Predicts a single observation using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -146,9 +146,9 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the ensembled probabilities
+        /// Predicts a set of observations using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -183,7 +183,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()

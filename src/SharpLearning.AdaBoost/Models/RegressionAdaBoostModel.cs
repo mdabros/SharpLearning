@@ -59,7 +59,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using weighted median
+        /// Predicts a set of observations using weighted median
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -94,7 +94,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
