@@ -18,12 +18,18 @@ namespace SharpLearning.FeatureTransformations.Normalization
         public double Normalize(double newMin, double newMax, double oldMin, double oldMax, double value)
         {
             if (value == oldMin)
+            {
                 value = newMin;
+            }
             else if (value == oldMax)
+            {
                 value = newMax;
+            }
             else
-                value = newMin + (newMax - newMin) *
-                (value - oldMin) / (oldMax - oldMin);
+            {
+                value = newMin + (newMax - newMin) * (value - oldMin) / (oldMax - oldMin);
+            }
+
             return value;
         }
     }

@@ -16,14 +16,8 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
     [Serializable]
     public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public string[] FeatureNames { get { return m_featureNames; } }
-
         readonly DateTime m_startDate;
         readonly string m_dateTimeColumn;
-        readonly string[] m_featureNames = new string[] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
 
         /// <summary>
         /// Transform a data string into numerical features that can be presented to a machine learning algorithm.
@@ -50,6 +44,14 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
             if (startDate == null) { throw new ArgumentException("startDate"); }
             m_dateTimeColumn = dateTimeColumn;
             m_startDate = startDate;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string[] FeatureNames
+        {
+            get => new [] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
         }
 
         /// <summary>
