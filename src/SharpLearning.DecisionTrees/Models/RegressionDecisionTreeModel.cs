@@ -1,10 +1,10 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.DecisionTrees.Nodes;
-using SharpLearning.Common.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.DecisionTrees.Models

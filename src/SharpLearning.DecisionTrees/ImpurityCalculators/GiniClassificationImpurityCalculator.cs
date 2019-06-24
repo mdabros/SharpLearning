@@ -1,7 +1,4 @@
-﻿using SharpLearning.Containers.Views;
-using System.Collections.Generic;
-
-namespace SharpLearning.DecisionTrees.ImpurityCalculators
+﻿namespace SharpLearning.DecisionTrees.ImpurityCalculators
 {
     /// <summary>
     /// Classifiction impurity calculator using the gini impurity.

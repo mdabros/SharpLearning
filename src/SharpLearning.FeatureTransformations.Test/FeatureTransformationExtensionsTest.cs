@@ -1,10 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.FeatureTransformations;
 using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.FeatureTransformations.MatrixTransforms;
 using SharpLearning.InputOutput.Csv;
-using System.IO;
 
 namespace SharpLearning.FeatureTransformations.Test
 {

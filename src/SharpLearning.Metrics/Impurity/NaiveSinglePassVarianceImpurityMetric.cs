@@ -1,5 +1,4 @@
 ﻿using SharpLearning.Containers.Views;
-using SharpLearning.Containers;
 
 namespace SharpLearning.Metrics.Impurity
 {

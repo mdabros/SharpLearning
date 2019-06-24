@@ -1,10 +1,10 @@
-﻿using SharpLearning.Containers.Matrices;
+﻿using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
-using SharpLearning.Common.Interfaces;
 
 namespace SharpLearning.DecisionTrees.Learners
 {

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Containers.Matrices
 {
@@ -276,8 +273,7 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            StringMatrix other = obj as StringMatrix;
-            if (other != null && Equals(other))
+            if (obj is StringMatrix other && this.Equals(other))
             {
                 return true;
             }

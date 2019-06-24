@@ -1,12 +1,12 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Serialization;
-using SharpLearning.GradientBoost.GBMDecisionTree;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.GradientBoost.GBMDecisionTree;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.GradientBoost.Models
 {

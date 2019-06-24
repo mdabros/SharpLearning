@@ -1,6 +1,6 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System;
+using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Storage;
-using System;
 
 namespace SharpLearning.Neural
 {

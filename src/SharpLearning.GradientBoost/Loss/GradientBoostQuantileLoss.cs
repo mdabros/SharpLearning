@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.GBMDecisionTree;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 
 namespace SharpLearning.GradientBoost.Loss
 {

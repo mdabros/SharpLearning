@@ -1,10 +1,10 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Neural.Layers;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
+using SharpLearning.Neural.Layers;
 
 namespace SharpLearning.Neural.Test.Layers
 {

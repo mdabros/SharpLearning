@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers;
 
 namespace SharpLearning.Metrics.Classification
 {

@@ -1,8 +1,5 @@
-﻿using SharpLearning.Containers.Views;
-using SharpLearning.Containers;
-using SharpLearning.Containers.Extensions;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Metrics.Impurity
 {

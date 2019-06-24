@@ -1,11 +1,11 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Views;
 using SharpLearning.Ensemble.Strategies;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
 {

@@ -1,12 +1,11 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Neural.Layers;
-using MathNet.Numerics.LinearAlgebra;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using SharpLearning.Neural.Activations;
+using MathNet.Numerics.LinearAlgebra;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.Initializations;
+using SharpLearning.Neural.Layers;
 
 namespace SharpLearning.Neural.Test.Layers
 {

@@ -1,9 +1,8 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Samplers;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.CrossValidation.CrossValidators
 {

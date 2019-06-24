@@ -1,5 +1,5 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Arithmetic
 {

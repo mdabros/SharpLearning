@@ -1,8 +1,7 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using SharpLearning.Containers.Extensions;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
 

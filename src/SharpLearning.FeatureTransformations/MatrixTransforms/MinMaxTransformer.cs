@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.FeatureTransformations.Normalization;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.FeatureTransformations.Normalization;
 
 namespace SharpLearning.FeatureTransformations.MatrixTransforms
 {

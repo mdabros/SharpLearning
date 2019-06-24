@@ -1,9 +1,9 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Ensemble.Models
 {

@@ -1,8 +1,6 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.Containers.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.Containers;
 
 namespace SharpLearning.DecisionTrees.Nodes
 {

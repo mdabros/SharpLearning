@@ -1,11 +1,11 @@
-﻿using MathNet.Numerics.LinearAlgebra.Storage;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using MathNet.Numerics.LinearAlgebra.Storage;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Serialization;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace SharpLearning.Neural.Models
 {

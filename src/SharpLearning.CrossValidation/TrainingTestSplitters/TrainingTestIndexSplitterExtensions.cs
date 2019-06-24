@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers;
+﻿using System;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
-using System;
 
 namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {

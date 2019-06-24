@@ -1,7 +1,5 @@
 ﻿using System;
 using SharpLearning.Containers.Extensions;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Containers.Matrices
 {

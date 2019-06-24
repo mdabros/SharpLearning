@@ -129,6 +129,11 @@ namespace SharpLearning.Containers
             }
         }
 
+        /// <summary>
+        /// Verify that featuresToUse is smaller or equal to featureCount.
+        /// </summary>
+        /// <param name="featuresToUse"></param>
+        /// <param name="featureCount"></param>
         public static void VerifyFeaturesToUse(int featuresToUse, int featureCount)
         {
             if (featuresToUse > featureCount)

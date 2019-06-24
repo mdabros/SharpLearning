@@ -1,10 +1,10 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using SharpLearning.Neural.Activations;
-using SharpLearning.Neural.Initializations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MathNet.Numerics.LinearAlgebra;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Layers
 {

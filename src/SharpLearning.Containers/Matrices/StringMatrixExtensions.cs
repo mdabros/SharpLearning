@@ -23,6 +23,12 @@ namespace SharpLearning.Containers.Matrices
             return ToF64Matrix(stringMatrix, DefaultConverter);
         }
 
+        /// <summary>
+        /// Converts StringMatrix to F64Matrix.
+        /// </summary>
+        /// <param name="stringMatrix"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static F64Matrix ToF64Matrix(this StringMatrix stringMatrix,
             Converter<string, double> converter)
         {

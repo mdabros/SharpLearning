@@ -1,5 +1,4 @@
 ﻿using SharpLearning.GradientBoost.Loss;
-using System;
 
 namespace SharpLearning.GradientBoost.Learners
 {

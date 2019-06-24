@@ -1,8 +1,8 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.GradientBoost.GBMDecisionTree
 {

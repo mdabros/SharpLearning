@@ -1,6 +1,4 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-
-namespace SharpLearning.Neural.Activations
+﻿namespace SharpLearning.Neural.Activations
 {
     /// <summary>
     /// Neural net activiation interface

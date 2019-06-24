@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Views
 {

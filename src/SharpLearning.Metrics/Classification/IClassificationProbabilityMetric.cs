@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers;
+﻿using System.Collections.Generic;
 using SharpLearning.Common.Interfaces;
-using System.Collections.Generic;
+using SharpLearning.Containers;
 
 namespace SharpLearning.Metrics.Classification
 {

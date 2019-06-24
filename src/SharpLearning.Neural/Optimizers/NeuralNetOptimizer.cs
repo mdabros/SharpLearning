@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.Neural.Optimizers
 {

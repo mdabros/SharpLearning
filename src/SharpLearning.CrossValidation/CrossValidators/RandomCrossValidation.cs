@@ -1,5 +1,5 @@
-﻿using SharpLearning.CrossValidation.Samplers;
-using System;
+﻿using System;
+using SharpLearning.CrossValidation.Samplers;
 
 namespace SharpLearning.CrossValidation.CrossValidators
 {

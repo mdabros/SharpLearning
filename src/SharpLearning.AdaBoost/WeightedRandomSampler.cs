@@ -1,7 +1,6 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.Containers.Extensions;
-using System;
+﻿using System;
 using System.Linq;
+using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.AdaBoost
 {

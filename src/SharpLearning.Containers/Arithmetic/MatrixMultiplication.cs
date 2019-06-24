@@ -1,7 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Threading.Tasks;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Arithmetic
 {

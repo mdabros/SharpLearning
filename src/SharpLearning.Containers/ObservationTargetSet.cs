@@ -1,9 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers
 {
@@ -53,8 +50,7 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is ObservationTargetSet other && 
-                this.Equals(other))
+            if (obj is ObservationTargetSet other &&  this.Equals(other))
             {
                 return true;
             }

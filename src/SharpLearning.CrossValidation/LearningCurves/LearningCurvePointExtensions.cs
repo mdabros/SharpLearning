@@ -1,11 +1,8 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Csv;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.CrossValidation.LearningCurves
 {

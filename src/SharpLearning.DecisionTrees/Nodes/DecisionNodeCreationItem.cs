@@ -1,7 +1,7 @@
 ﻿using SharpLearning.Containers.Views;
 
 namespace SharpLearning.DecisionTrees.Nodes
-{   
+{
     /// <summary>
     /// Structure used for decision tree learning
     /// </summary>

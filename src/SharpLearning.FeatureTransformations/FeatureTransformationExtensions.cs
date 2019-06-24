@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Csv;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.FeatureTransformations
 {

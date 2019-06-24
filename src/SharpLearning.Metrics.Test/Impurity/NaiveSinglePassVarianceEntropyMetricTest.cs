@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Views;
 using SharpLearning.Metrics.Impurity;
-using System.Linq;
 
 namespace SharpLearning.Metrics.Test.Impurity
 {

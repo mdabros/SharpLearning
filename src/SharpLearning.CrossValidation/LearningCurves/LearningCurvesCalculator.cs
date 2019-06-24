@@ -1,10 +1,10 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Samplers;
 using SharpLearning.CrossValidation.TrainingTestSplitters;
-using System;
-using System.Collections.Generic;
 
 namespace SharpLearning.CrossValidation.LearningCurves
 {

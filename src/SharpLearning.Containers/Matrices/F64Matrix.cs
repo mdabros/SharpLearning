@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers.Views;
-using System;
+﻿using System;
 using System.Linq;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers.Matrices
 {
@@ -277,8 +277,7 @@ namespace SharpLearning.Containers.Matrices
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            F64Matrix other = obj as F64Matrix;
-            if (other != null && Equals(other))
+            if (obj is F64Matrix other && this.Equals(other))
             {
                 return true;
             }

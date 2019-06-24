@@ -1,12 +1,11 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.Containers.Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.DecisionTrees.SplitSearchers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.DecisionTrees.TreeBuilders
 {

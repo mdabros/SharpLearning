@@ -1,6 +1,6 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using System;
+using MathNet.Numerics.Distributions;
 using SharpLearning.Neural.Layers;
-using System;
 
 namespace SharpLearning.Neural.Initializations
 {

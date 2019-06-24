@@ -1,12 +1,12 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Neural.Layers;
 using SharpLearning.Neural.Loss;
 using SharpLearning.Neural.Models;
 using SharpLearning.Neural.Optimizers;
 using SharpLearning.Neural.TargetEncoders;
-using System;
-using System.Linq;
 
 namespace SharpLearning.Neural.Learners
 {

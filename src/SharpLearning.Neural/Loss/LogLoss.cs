@@ -1,5 +1,5 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System;
+﻿using System;
+using MathNet.Numerics.LinearAlgebra;
 
 namespace SharpLearning.Neural.Loss
 {

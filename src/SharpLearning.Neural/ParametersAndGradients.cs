@@ -1,6 +1,4 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-
-namespace SharpLearning.Neural
+﻿namespace SharpLearning.Neural
 {
     /// <summary>
     /// 

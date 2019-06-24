@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SharpLearning.Common.Interfaces
+﻿namespace SharpLearning.Common.Interfaces
 {
     /// <summary>
     /// Interface for predictor models. Supports prediction and variable importance.

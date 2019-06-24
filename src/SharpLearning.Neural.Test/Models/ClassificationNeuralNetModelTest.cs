@@ -1,4 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.IO;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Metrics.Classification;
@@ -6,9 +9,6 @@ using SharpLearning.Neural.Layers;
 using SharpLearning.Neural.Learners;
 using SharpLearning.Neural.Loss;
 using SharpLearning.Neural.Models;
-using System;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.Neural.Test.Models
 {

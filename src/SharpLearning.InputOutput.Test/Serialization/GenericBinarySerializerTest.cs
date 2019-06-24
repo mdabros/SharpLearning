@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Serialization;
-using System.IO;
-using System.Collections.Generic;
 
 namespace SharpLearning.InputOutput.Test.Serialization
 {
