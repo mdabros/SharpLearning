@@ -26,11 +26,8 @@ namespace SharpLearning.Neural.Models
         /// <param name="targetNames"></param>
         public ClassificationNeuralNetModel(NeuralNet model, double[] targetNames)
         {
-            if (model == null) { throw new ArgumentNullException("model"); }
-            if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
-
-            m_neuralNet = model;
-            m_targetNames = targetNames;
+            m_neuralNet = model ?? throw new ArgumentNullException(nameof(model));
+            m_targetNames = targetNames ?? throw new ArgumentNullException(nameof(targetNames));
         }
 
         /// <summary>

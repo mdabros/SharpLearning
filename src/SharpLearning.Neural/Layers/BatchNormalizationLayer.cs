@@ -64,7 +64,7 @@ namespace SharpLearning.Neural.Layers
         Matrix<float> m_delta;
 
         /// <summary>
-        /// The wieghts controlling the linear scaling of the normalization.
+        /// The weights controlling the linear scaling of the normalization.
         /// </summary>
         public Matrix<float> Scale;
 

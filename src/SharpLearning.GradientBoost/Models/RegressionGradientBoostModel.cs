@@ -44,8 +44,7 @@ namespace SharpLearning.GradientBoost.Models
         /// <param name="featureCount"></param>
         public RegressionGradientBoostModel(GBMTree[] trees, double learningRate, double initialLoss, int featureCount)
         {
-            if (trees == null) { throw new ArgumentNullException("trees"); }
-            Trees = trees;
+            Trees = trees ?? throw new ArgumentNullException(nameof(trees));
             LearningRate = learningRate;
             InitialLoss = initialLoss;
             FeatureCount = featureCount;

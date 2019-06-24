@@ -27,8 +27,7 @@ namespace SharpLearning.InputOutput.Serialization
         /// Currently only the SharpLearning.Neural models require this.</param>
         public GenericXmlDataContractSerializer(Type[] knownTypes, bool preserveObjectReferences = true)
         {
-            if (knownTypes == null) { throw new ArgumentNullException("knownTypes"); }
-            m_knownTypes = knownTypes;
+            m_knownTypes = knownTypes ?? throw new ArgumentNullException(nameof(knownTypes));
             m_preserveObjectReferences = preserveObjectReferences;
         }
 
@@ -114,14 +113,14 @@ namespace SharpLearning.InputOutput.Serialization
         {
             const string DefaultNamespace = "global";
 
-            readonly Dictionary<Type, Tuple<string, string>> m_TypeToNames;
-            readonly Dictionary<string, Dictionary<string, Type>> m_NamesToType;
+            readonly Dictionary<Type, Tuple<string, string>> m_typeToNames;
+            readonly Dictionary<string, Dictionary<string, Type>> m_namesToType;
 
             public Type[] KnownTypes
             {
                 get
                 {
-                    return m_TypeToNames.Keys.ToArray();
+                    return m_typeToNames.Keys.ToArray();
                 }
             }
 
@@ -131,21 +130,21 @@ namespace SharpLearning.InputOutput.Serialization
 
             public GenericResolver(Type[] typesToResolve)
             {
-                m_TypeToNames = new Dictionary<Type, Tuple<string, string>>();
-                m_NamesToType = new Dictionary<string, Dictionary<string, Type>>();
+                m_typeToNames = new Dictionary<Type, Tuple<string, string>>();
+                m_namesToType = new Dictionary<string, Dictionary<string, Type>>();
 
                 foreach (Type type in typesToResolve)
                 {
                     string typeNamespace = GetNamespace(type);
                     string typeName = GetName(type);
 
-                    m_TypeToNames[type] = new Tuple<string, string>(typeNamespace, typeName);
+                    m_typeToNames[type] = new Tuple<string, string>(typeNamespace, typeName);
 
-                    if (m_NamesToType.ContainsKey(typeNamespace) == false)
+                    if (m_namesToType.ContainsKey(typeNamespace) == false)
                     {
-                        m_NamesToType[typeNamespace] = new Dictionary<string, Type>();
+                        m_namesToType[typeNamespace] = new Dictionary<string, Type>();
                     }
-                    m_NamesToType[typeNamespace][typeName] = type;
+                    m_namesToType[typeNamespace][typeName] = type;
                 }
             }
 
@@ -178,11 +177,11 @@ namespace SharpLearning.InputOutput.Serialization
 
             public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
             {
-                if (m_NamesToType.ContainsKey(typeNamespace))
+                if (m_namesToType.ContainsKey(typeNamespace))
                 {
-                    if (m_NamesToType[typeNamespace].ContainsKey(typeName))
+                    if (m_namesToType[typeNamespace].ContainsKey(typeName))
                     {
-                        return m_NamesToType[typeNamespace][typeName];
+                        return m_namesToType[typeNamespace][typeName];
                     }
                 }
                 return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, null);
@@ -190,11 +189,11 @@ namespace SharpLearning.InputOutput.Serialization
 
             public override bool TryResolveType(Type type, Type declaredType, DataContractResolver knownTypeResolver, out XmlDictionaryString typeName, out XmlDictionaryString typeNamespace)
             {
-                if (m_TypeToNames.ContainsKey(type))
+                if (m_typeToNames.ContainsKey(type))
                 {
                     XmlDictionary dictionary = new XmlDictionary();
-                    typeNamespace = dictionary.Add(m_TypeToNames[type].Item1);
-                    typeName = dictionary.Add(m_TypeToNames[type].Item2);
+                    typeNamespace = dictionary.Add(m_typeToNames[type].Item1);
+                    typeName = dictionary.Add(m_typeToNames[type].Item2);
 
                     return true;
                 }

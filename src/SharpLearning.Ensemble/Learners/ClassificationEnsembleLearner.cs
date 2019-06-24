@@ -61,11 +61,11 @@ namespace SharpLearning.Ensemble.Learners
         public ClassificationEnsembleLearner(Func<F64Matrix, double[], int[], IPredictorModel<ProbabilityPrediction>>[] learners, Func<IClassificationEnsembleStrategy> ensembleStrategy,
             double subSampleRatio = 1.0, int seed = 24)
         {
-            if (learners == null) { throw new ArgumentNullException("learners"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
             if (learners.Length < 1) { throw new ArgumentException("there must be at least 1 learner"); }
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
+
             m_learners = learners;
-            m_ensembleStrategy = ensembleStrategy;
             m_random = new Random(seed);
             m_subSampleRatio = subSampleRatio;
         }

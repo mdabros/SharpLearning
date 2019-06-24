@@ -160,6 +160,7 @@ namespace SharpLearning.Neural.Layers
 
             copy.Weights = Matrix<float>.Build.Dense(Weights.RowCount, Weights.ColumnCount);
             copy.Bias = Vector<float>.Build.Dense(Bias.Count);
+
             Array.Copy(Weights.Data(), copy.Weights.Data(), Weights.Data().Length);
             Array.Copy(Bias.Data(), copy.Bias.Data(), Bias.Data().Length);
 

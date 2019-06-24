@@ -20,9 +20,8 @@ namespace SharpLearning.Neural.Test.Learners
 
             var random = new Random(32);
 
-            F64Matrix observations;
-            double[] targets;
-            CreateData(numberOfObservations, numberOfFeatures, random, out observations, out targets);
+            var (observations, targets) = CreateData(numberOfObservations, 
+                numberOfFeatures, random);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(numberOfFeatures));
@@ -48,13 +47,11 @@ namespace SharpLearning.Neural.Test.Learners
 
             var random = new Random(32);
 
-            F64Matrix observations;
-            double[] targets;
-            CreateData(numberOfObservations, numberOfFeatures, random, out observations, out targets);
+            var (observations, targets) = CreateData(numberOfObservations, 
+                numberOfFeatures, random);
 
-            F64Matrix validationObservations;
-            double[] validationTargets;
-            CreateData(numberOfObservations, numberOfFeatures, random, out validationObservations, out validationTargets);
+            var (validationObservations, validationTargets) = CreateData(numberOfObservations, 
+                numberOfFeatures, random);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(numberOfFeatures));
@@ -85,12 +82,13 @@ namespace SharpLearning.Neural.Test.Learners
             var sut = new RegressionNeuralNetLearner(net, new AccuracyLoss());
         }
 
-        void CreateData(int numberOfObservations, int numberOfFeatures, Random random, out F64Matrix observations, out double[] targets)
+        (F64Matrix observations, double[] targets) CreateData(int numberOfObservations, int numberOfFeatures, Random random)
         {
-            observations = new F64Matrix(numberOfObservations, numberOfFeatures);
+            var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            targets = Enumerable.Range(0, numberOfObservations).Select(i => random.NextDouble()).ToArray();
-        }
+            var targets = Enumerable.Range(0, numberOfObservations).Select(i => random.NextDouble()).ToArray();
 
+            return (observations, targets);
+        }
     }
 }

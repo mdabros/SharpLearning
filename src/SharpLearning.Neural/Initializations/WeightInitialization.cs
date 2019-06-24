@@ -42,9 +42,8 @@ namespace SharpLearning.Neural.Initializations
         /// <returns></returns>
         public static FanInFanOut GetFans(ILayer layer, int inputWidth, int inputHeight, int inputDepth)
         {
-            if(layer is Conv2DLayer)
+            if (layer is Conv2DLayer conv)
             {
-                var conv = (Conv2DLayer)layer;
                 var receptiveFieldSize = conv.FilterWidth * conv.FilterHeight;
 
                 var fanIn = inputDepth * receptiveFieldSize;
@@ -53,7 +52,7 @@ namespace SharpLearning.Neural.Initializations
                 return new FanInFanOut(fanIn, fanOut);
 
             }
-            else if(layer is DenseLayer)
+            else if (layer is DenseLayer)
             {
                 var fanIn = inputWidth * inputHeight * inputDepth;
                 var fanOut = layer.Width * layer.Height * layer.Depth;

@@ -41,14 +41,10 @@ namespace SharpLearning.DecisionTrees.Nodes
         public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames, 
             double[] variableImportance)
         {
-            if (nodes == null) { throw new ArgumentNullException("nodes"); }
-            if (probabilities == null) { throw new ArgumentNullException("probabilities"); }
-            if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
-            if (variableImportance == null) { throw new ArgumentNullException("variableImportance"); }
-            Nodes = nodes;
-            Probabilities = probabilities;
-            TargetNames = targetNames;
-            VariableImportance = variableImportance;
+            Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
+            Probabilities = probabilities ?? throw new ArgumentNullException(nameof(probabilities));
+            TargetNames = targetNames ?? throw new ArgumentNullException(nameof(targetNames));
+            VariableImportance = variableImportance ?? throw new ArgumentNullException(nameof(variableImportance));
         }
 
         /// <summary>

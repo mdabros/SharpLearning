@@ -49,18 +49,14 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-        /// <param name="ensembleSelection">Enemble selection method used to find the beset subset of models</param>
+        /// <param name="ensembleSelection">Ensemble selection method used to find the beset subset of models</param>
         public RegressionModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
             Func<IRegressionEnsembleStrategy> ensembleStrategy, IRegressionEnsembleSelection ensembleSelection)
         {
-            if (learners == null) { throw new ArgumentNullException("learners"); }
-            if (crossValidation == null) { throw new ArgumentNullException("crossValidation"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
-            if (ensembleSelection == null) { throw new ArgumentNullException("ensembleSelection"); }
-            m_learners = learners;
-            m_crossValidation = crossValidation;
-            m_ensembleStrategy = ensembleStrategy;
-            m_ensembleSelection = ensembleSelection;
+            m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentNullException(nameof(crossValidation));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
+            m_ensembleSelection = ensembleSelection ?? throw new ArgumentNullException(nameof(ensembleSelection));
         }
 
         /// <summary>

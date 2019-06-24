@@ -17,17 +17,17 @@ namespace SharpLearning.Neural.Optimizers
         readonly float m_momentum;
         readonly int m_batchSize;
 
-        readonly List<double[]> gsumWeights = new List<double[]>(); // last iteration gradients (used for momentum calculations)
-        readonly List<double[]> xsumWeights = new List<double[]>(); // used in adam or adadelta
+        readonly List<double[]> m_gsumWeights = new List<double[]>(); // last iteration gradients (used for momentum calculations)
+        readonly List<double[]> m_xsumWeights = new List<double[]>(); // used in adam or adadelta
 
-        readonly OptimizerMethod OptimizerMethod = OptimizerMethod.Sgd;
+        readonly OptimizerMethod m_optimizerMethod = OptimizerMethod.Sgd;
         readonly float m_rho = 0.95f;
         readonly float m_eps = 1e-8f;
         readonly float m_beta1 = 0.9f;
         readonly float m_beta2 = 0.999f;
 
         // Nadam specific members.
-        float m_schedule_decay = 0.004f;
+        readonly float m_schedule_decay = 0.004f;
         float m_schedule = 1.0f;
         double m_momentumCache;
         double m_momentumCache_1;
@@ -71,7 +71,7 @@ namespace SharpLearning.Neural.Optimizers
             m_l1Decay = (float)l1decay;
             m_l2Decay = (float)l2decay;
 
-            OptimizerMethod = optimizerMethod;
+            m_optimizerMethod = optimizerMethod;
             m_momentum = (float)momentum;
             m_rho = (float)rho;
             m_beta1 = (float)beta1;
@@ -87,7 +87,7 @@ namespace SharpLearning.Neural.Optimizers
             m_iterationCounter++;
 
             // initialize accumulators. Will only be done once on first iteration and if optimizer methods is not sgd
-            var useAccumulators = gsumWeights.Count == 0 && (OptimizerMethod != OptimizerMethod.Sgd || m_momentum > 0.0);
+            var useAccumulators = m_gsumWeights.Count == 0 && (m_optimizerMethod != OptimizerMethod.Sgd || m_momentum > 0.0);
             if (useAccumulators) { InitializeAccumulators(parametersAndGradients); }
 
             UpdateLearningRate();
@@ -102,7 +102,7 @@ namespace SharpLearning.Neural.Optimizers
                 var gradients = parametersAndGradient.Gradients;
 
                 // update weights
-                UpdateParam(i, parameters, gradients, m_l2Decay, m_l1Decay, gsumWeights, xsumWeights);
+                UpdateParam(i, parameters, gradients, m_l2Decay, m_l1Decay, m_gsumWeights, m_xsumWeights);
             });
         }
 
@@ -110,20 +110,20 @@ namespace SharpLearning.Neural.Optimizers
         {
             for (var i = 0; i < parametersAndGradients.Count; i++)
             {
-                gsumWeights.Add(new double[parametersAndGradients[i].Parameters.Length]);
-                if (OptimizerMethod == OptimizerMethod.Adam || 
-                    OptimizerMethod == OptimizerMethod.Adadelta || 
-                    OptimizerMethod == OptimizerMethod.AdaMax ||
-                    OptimizerMethod == OptimizerMethod.Nadam)
+                m_gsumWeights.Add(new double[parametersAndGradients[i].Parameters.Length]);
+                if (m_optimizerMethod == OptimizerMethod.Adam || 
+                    m_optimizerMethod == OptimizerMethod.Adadelta || 
+                    m_optimizerMethod == OptimizerMethod.AdaMax ||
+                    m_optimizerMethod == OptimizerMethod.Nadam)
                 {
-                    xsumWeights.Add(new double[parametersAndGradients[i].Parameters.Length]);
+                    m_xsumWeights.Add(new double[parametersAndGradients[i].Parameters.Length]);
                 }
             }
         }
 
         void UpdateLearningRate()
         {
-            switch (OptimizerMethod)
+            switch (m_optimizerMethod)
             {
                 case OptimizerMethod.Adam:
                     {
@@ -172,7 +172,7 @@ namespace SharpLearning.Neural.Optimizers
                     xsumi = xsum[i];
                 }
 
-                switch (OptimizerMethod)
+                switch (m_optimizerMethod)
                 {
                     case OptimizerMethod.Sgd:
                         {
@@ -270,14 +270,14 @@ namespace SharpLearning.Neural.Optimizers
             m_iterationCounter = 0;
 
             // clear sums
-            for (int i = 0; i < gsumWeights.Count; i++)
+            for (int i = 0; i < m_gsumWeights.Count; i++)
             {
-                gsumWeights[i].Clear();
+                m_gsumWeights[i].Clear();
             }
 
-            for (int i = 0; i < xsumWeights.Count; i++)
+            for (int i = 0; i < m_xsumWeights.Count; i++)
             {
-                xsumWeights[i].Clear();
+                m_xsumWeights[i].Clear();
             }
         }
     }

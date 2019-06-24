@@ -27,9 +27,8 @@ namespace SharpLearning.InputOutput.Serialization
                     var baseStream = ((StreamReader)baseReader).BaseStream;
                     return (T)serializer.Deserialize(baseStream);
                 }
-                else if (baseReader is StringReader)
+                else if (baseReader is StringReader baseStream)
                 {
-                    var baseStream = ((StringReader)baseReader);
                     var bytes = Convert.FromBase64String(baseStream.ReadToEnd());
                     using (var memoryStream = new MemoryStream(bytes))
                     {

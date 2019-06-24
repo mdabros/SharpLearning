@@ -13,8 +13,8 @@ namespace SharpLearning.CrossValidation.Augmentators
     /// </summary>
     public sealed class ContinuousMungeAugmentator
     {
-        double m_probabilityParameter;
-        double m_localVariance;
+        readonly double m_probabilityParameter;
+        readonly double m_localVariance;
         Random m_random;
 
         /// <summary>

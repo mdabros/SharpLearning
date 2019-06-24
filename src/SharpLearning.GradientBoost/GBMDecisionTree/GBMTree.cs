@@ -23,8 +23,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="nodes"></param>
         public GBMTree(List<GBMNode> nodes)
         {
-            if (nodes == null) { throw new ArgumentNullException("nodes"); }
-            Nodes = nodes;
+            Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
         }
 
         /// <summary>

@@ -54,12 +54,11 @@ namespace SharpLearning.GradientBoost.Learners
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (subSampleRatio <= 0.0 || subSampleRatio > 1.0) { throw new ArgumentException("subSampleRatio must be larger than 0.0 and at max 1.0"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
-            if (loss == null) { throw new ArgumentNullException("loss"); }
+            m_loss = loss ?? throw new ArgumentNullException(nameof(loss));
 
             m_iterations = iterations;
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
-            m_loss = loss;
             m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, m_loss, runParallel);
         }
 

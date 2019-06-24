@@ -4,10 +4,10 @@ using System.Linq;
 namespace SharpLearning.Metrics.Regression
 {
     /// <summary>
-    /// Zips the targets and predictions and groups by the values availible in targets.
-    /// The resuling error is the mean error of each group. The internal metric used for each group
+    /// Zips the targets and predictions and groups by the values available in targets.
+    /// The resulting error is the mean error of each group. The internal metric used for each group
     /// Is provided as a constructor parameter.
-    /// This metric only makes sence if the target values have a descrete nature. That is, not too many unique values.
+    /// This metric only makes sense if the target values have a discrete nature. That is, not too many unique values.
     /// An example could be targets with the values: 0, 1, 2, 3, 4, 5.
     /// </summary>
     public sealed class DiscreteTargetMeanErrorRegressionMetric : IRegressionMetric
@@ -15,24 +15,23 @@ namespace SharpLearning.Metrics.Regression
         readonly IRegressionMetric m_regressionMetric;
 
         /// <summary>
-        /// Zips the targets and predictions and groups by the values availible in targets.
-        /// The resuling error is the mean error of each group. The internal metric used for each group
+        /// Zips the targets and predictions and groups by the values available in targets.
+        /// The resulting error is the mean error of each group. The internal metric used for each group
         /// Is provided as a constructor parameter.
-        /// This metric only makes sence if the target values have a descrete nature. That is, not too many unique values.
+        /// This metric only makes sense if the target values have a discrete nature. That is, not too many unique values.
         /// An example could be targets with the values: 0, 1, 2, 3, 4, 5.
         /// </summary>
         /// <param name="regressionMetric">Default is MeanSquaredError</param>
         public DiscreteTargetMeanErrorRegressionMetric(IRegressionMetric regressionMetric)
         {
-            if (regressionMetric == null) { throw new ArgumentNullException("regressionMetric"); }
-            m_regressionMetric = regressionMetric;
+            m_regressionMetric = regressionMetric ?? throw new ArgumentNullException(nameof(regressionMetric));
         }
 
         /// <summary>
-        /// Zips the targets and predictions and groups by the values availible in targets.
-        /// The resuling error is the mean error of each group. The internal metric used for each group
+        /// Zips the targets and predictions and groups by the values available in targets.
+        /// The resulting error is the mean error of each group. The internal metric used for each group
         /// Is provided as a constructor parameter.
-        /// This metric only makes sence if the target values have a descrete nature. That is, not too many unique values.
+        /// This metric only makes sense if the target values have a discrete nature. That is, not too many unique values.
         /// An example could be targets with the values: 0, 1, 2, 3, 4, 5.
         /// 
         /// Default internal metric is MeanSquaredErrorRegressionMetric.
@@ -43,9 +42,9 @@ namespace SharpLearning.Metrics.Regression
         }
 
         /// <summary>
-        /// The resuling error is the mean error of each group. The internal metric used for each group
+        /// The resulting error is the mean error of each group. The internal metric used for each group
         /// Is provided as a constructor parameter.
-        /// This metric only makes sence if the target values have a descrete nature. That is, not too many unique values.
+        /// This metric only makes sense if the target values have a discrete nature. That is, not too many unique values.
         /// An example could be targets with the values: 0, 1, 2, 3, 4, 5.
         /// </summary>
         /// <param name="target"></param>

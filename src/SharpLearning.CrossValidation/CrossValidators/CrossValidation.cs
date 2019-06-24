@@ -23,10 +23,9 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
         public CrossValidation(IIndexSampler<double> sampler, int crossValidationFolds)
         {
-            if (sampler == null) { throw new ArgumentNullException("shuffler"); }
+            m_indexedSampler = sampler ?? throw new ArgumentNullException(nameof(sampler));
             if (crossValidationFolds < 1) { throw new ArgumentException("CrossValidationFolds "); }
 
-            m_indexedSampler = sampler;
             m_crossValidationFolds = crossValidationFolds;
         }
         

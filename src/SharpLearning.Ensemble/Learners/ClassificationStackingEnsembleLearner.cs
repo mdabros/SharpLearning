@@ -67,12 +67,9 @@ namespace SharpLearning.Ensemble.Learners
         public ClassificationStackingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, Func<F64Matrix, double[], IPredictorModel<ProbabilityPrediction>> metaLearner,
             ICrossValidation<ProbabilityPrediction> crossValidation, bool includeOriginalFeaturesForMetaLearner = true)
         {
-            if (learners == null) { throw new ArgumentException("learners"); }
-            if (crossValidation == null) { throw new ArgumentException("crossValidation"); }
-            if (metaLearner == null) { throw new ArgumentException("metaLearner"); }
-            m_learners = learners;
-            m_crossValidation = crossValidation;
-            m_metaLearner = metaLearner;
+            m_learners = learners ?? throw new ArgumentException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentException(nameof(crossValidation));
+            m_metaLearner = metaLearner ?? throw new ArgumentException(nameof(metaLearner));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
         }
 

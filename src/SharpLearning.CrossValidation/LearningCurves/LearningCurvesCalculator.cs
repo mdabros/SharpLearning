@@ -35,25 +35,22 @@ namespace SharpLearning.CrossValidation.LearningCurves
         /// Learning curves can be used to determine if a model has high bias or high variance.
         /// </summary>
         /// <param name="trainingValidationIndexSplitter"></param>
-        /// <param name="shuffler">Type of shuffler to use when splitting data</param>
+        /// <param name="sampler">Type of shuffler to use when splitting data</param>
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 
         /// training data used in each point of the learning curve</param>
         /// <param name="numberOfShufflesPrSample">How many times should the data be shuffled pr. calculated point</param>
         public LearningCurvesCalculator(ITrainingTestIndexSplitter<double> trainingValidationIndexSplitter,
-            IIndexSampler<double> shuffler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
+            IIndexSampler<double> sampler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
         {
-            if (trainingValidationIndexSplitter == null) { throw new ArgumentException("trainingValidationIndexSplitter"); }
-            if (shuffler == null) { throw new ArgumentException("shuffler"); }
+            m_trainingValidationIndexSplitter = trainingValidationIndexSplitter ?? throw new ArgumentException(nameof(trainingValidationIndexSplitter));
+            m_indexedSampler = sampler ?? throw new ArgumentException(nameof(sampler));
+            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
             if (samplePercentages == null) { throw new ArgumentNullException("samplePercentages"); }
             if (samplePercentages.Length < 1) { throw new ArgumentException("SamplePercentages length must be at least 1"); }
-            if (metric == null) { throw new ArgumentNullException("metric");}
             if (numberOfShufflesPrSample < 1) { throw new ArgumentNullException("numberOfShufflesPrSample must be at least 1"); }
             
-            m_trainingValidationIndexSplitter = trainingValidationIndexSplitter;
-            m_indexedSampler = shuffler;
             m_samplePercentages = samplePercentages;
-            m_metric = metric;
             m_numberOfShufflesPrSample = numberOfShufflesPrSample;
             m_random = new Random(42);
         }

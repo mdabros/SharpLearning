@@ -11,7 +11,7 @@ namespace SharpLearning.Neural.Layers
     /// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes. 
     /// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class, 
     /// the Softmax classifier gives a slightly more intuitive output (normalized class probabilities.
-    /// However, the softmax might sacrifice accuracy inorder to achive better propabilities.
+    /// However, the softmax might sacrifice accuracy in order to achieve better probabilities.
     /// </summary>
     [Serializable]
     public sealed class SoftMaxLayer : ILayer, IOutputLayer, IClassificationLayer
@@ -48,7 +48,7 @@ namespace SharpLearning.Neural.Layers
         /// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes. 
         /// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class, 
         /// the Softmax classifier gives a slightly more intuitive output (normalized class probabilities.
-        /// However, the softmax might sacrifice accuracy inorder to achive better propabilities.
+        /// However, the softmax might sacrifice accuracy in order to achieve better propabilities.
         /// </summary>
         /// <param name="numberOfClasses"></param>
         public SoftMaxLayer(int numberOfClasses)

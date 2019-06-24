@@ -29,8 +29,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <param name="tree"></param>
         public ClassificationDecisionTreeModel(BinaryTree tree)
         {
-            if (tree == null) { throw new ArgumentNullException("root"); }
-            Tree = tree;
+            Tree = tree ?? throw new ArgumentNullException(nameof(tree));
             m_variableImportance = tree.VariableImportance;
         }
 

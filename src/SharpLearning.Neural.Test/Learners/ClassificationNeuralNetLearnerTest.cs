@@ -20,9 +20,8 @@ namespace SharpLearning.Neural.Test.Learners
             var numberOfClasses = 5;
 
             var random = new Random(32);
-            F64Matrix observations;
-            double[] targets;
-            CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out observations, out targets);
+            var (observations, targets) = CreateData(numberOfObservations, 
+                numberOfFeatures, numberOfClasses, random);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(numberOfFeatures));
@@ -49,13 +48,11 @@ namespace SharpLearning.Neural.Test.Learners
 
             var random = new Random(32);
 
-            F64Matrix observations;
-            double[] targets;
-            CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out observations, out targets);
+            var (observations, targets) = CreateData(numberOfObservations, 
+                numberOfFeatures, numberOfClasses, random);
 
-            F64Matrix validationObservations;
-            double[] validationTargets;
-            CreateData(numberOfObservations, numberOfFeatures, numberOfClasses, random, out validationObservations, out validationTargets);
+            var (validationObservations, validationTargets) = CreateData(numberOfObservations, 
+                numberOfFeatures, numberOfClasses, random);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(numberOfFeatures));
@@ -86,11 +83,13 @@ namespace SharpLearning.Neural.Test.Learners
             var sut = new ClassificationNeuralNetLearner(net, new AccuracyLoss());
         }
 
-        void CreateData(int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random, out F64Matrix observations, out double[] targets)
+        (F64Matrix observations, double[] targets) CreateData(int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random)
         {
-            observations = new F64Matrix(numberOfObservations, numberOfFeatures);
+            var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+
+            return (observations, targets);
         }
     }
 }

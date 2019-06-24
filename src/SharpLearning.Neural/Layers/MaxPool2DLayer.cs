@@ -49,12 +49,11 @@ namespace SharpLearning.Neural.Layers
         /// </summary>
         public int InputDepth;
 
-        int m_padWidth;
-        int m_padHeight;
-        int m_stride;
-
-        int m_poolWidth;
-        int m_poolHeight;
+        readonly int m_padWidth;
+        readonly int m_padHeight;
+        readonly int m_stride;
+        readonly int m_poolWidth;
+        readonly int m_poolHeight;
 
         /// <summary>
         /// Switches for determining the position of the max during forward and back propagation.

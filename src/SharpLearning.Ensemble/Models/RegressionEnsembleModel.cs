@@ -21,12 +21,11 @@ namespace SharpLearning.Ensemble.Models
         /// </summary>
         /// <param name="ensembleModels">Models included in the ensemble</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-        public RegressionEnsembleModel(IPredictorModel<double>[] ensembleModels, IRegressionEnsembleStrategy ensembleStrategy)
+        public RegressionEnsembleModel(IPredictorModel<double>[] ensembleModels, 
+            IRegressionEnsembleStrategy ensembleStrategy)
         {
-            if (ensembleModels == null) { throw new ArgumentNullException("ensembleModels"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
-            m_ensembleModels = ensembleModels;
-            m_ensembleStrategy = ensembleStrategy;
+            m_ensembleModels = ensembleModels ?? throw new ArgumentNullException(nameof(ensembleModels));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
         }
 
         /// <summary>

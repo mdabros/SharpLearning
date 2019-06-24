@@ -39,9 +39,9 @@ namespace SharpLearning.Neural.Layers
         /// </summary>
         public bool BatchNormalization { get; set; }
 
-        int m_padWidth = 0;
-        int m_padHeight = 0;
-        int m_stride = 1;
+        readonly int m_padWidth = 0;
+        readonly int m_padHeight = 0;
+        readonly int m_stride = 1;
 
         /// <summary>
         /// 
@@ -289,14 +289,17 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1; // prediction time only uses 1 item at a time.
-            var copy = new Conv2DLayer(FilterWidth, FilterHeight, FilterCount, m_stride, m_padWidth, m_padHeight, ActivationFunc);
+            var copy = new Conv2DLayer(FilterWidth, FilterHeight, FilterCount, 
+                m_stride, m_padWidth, m_padHeight, ActivationFunc);
 
             copy.InputDepth = InputDepth;
             copy.InputWidth = InputWidth;
             copy.InputHeight = InputHeight;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, m_stride, m_padWidth, BorderMode);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, m_stride, m_padHeight, BorderMode);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(InputWidth, FilterWidth, 
+                m_stride, m_padWidth, BorderMode);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(InputHeight, FilterHeight, 
+                m_stride, m_padHeight, BorderMode);
             copy.BorderMode = BorderMode;
 
             // Calculations of dimensions based on:

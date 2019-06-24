@@ -28,11 +28,10 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         public BackwardEliminationClassificationEnsembleSelection(IMetric<double, ProbabilityPrediction> metric, IClassificationEnsembleStrategy ensembleStrategy,
             int numberOfModelsToSelect)
         {
-            if (metric == null) { throw new ArgumentNullException("metric"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
             if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
-            m_metric = metric;
-            m_ensembleStrategy = ensembleStrategy;
+
             m_numberOfModelsToSelect = numberOfModelsToSelect;
         }
 

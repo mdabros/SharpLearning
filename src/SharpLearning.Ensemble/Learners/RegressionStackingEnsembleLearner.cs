@@ -60,17 +60,14 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
         /// <param name="crossValidation">Cross validation method</param>
-        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
-        /// False; the meta learner only recieves the output of the ensemble models as features</param>
+        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+        /// False; the meta learner only receives the output of the ensemble models as features</param>
         public RegressionStackingEnsembleLearner(IIndexedLearner<double>[] learners, Func<F64Matrix, double[], IPredictorModel<double>> metaLearner,
             ICrossValidation<double> crossValidation, bool includeOriginalFeaturesForMetaLearner = true)
         {
-            if (learners == null) { throw new ArgumentException("learners"); }
-            if (crossValidation == null) { throw new ArgumentException("crossValidation"); }
-            if (metaLearner == null) { throw new ArgumentException("metaLearner"); }
-            m_learners = learners;
-            m_crossValidation = crossValidation;
-            m_metaLearner = metaLearner;
+            m_learners = learners ?? throw new ArgumentException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentException(nameof(crossValidation));
+            m_metaLearner = metaLearner ?? throw new ArgumentException(nameof(metaLearner));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
         }
 

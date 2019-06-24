@@ -53,14 +53,10 @@ namespace SharpLearning.Ensemble.Learners
         public ClassificationModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, ICrossValidation<ProbabilityPrediction> crossValidation,
             Func<IClassificationEnsembleStrategy> ensembleStrategy, IClassificationEnsembleSelection ensembleSelection)
         {
-            if (learners == null) { throw new ArgumentNullException("learners"); }
-            if (crossValidation == null) { throw new ArgumentNullException("crossValidation"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
-            if (ensembleSelection == null) { throw new ArgumentNullException("ensembleSelection"); }
-            m_learners = learners;
-            m_crossValidation = crossValidation;
-            m_ensembleStrategy = ensembleStrategy;
-            m_ensembleSelection = ensembleSelection;
+            m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentNullException(nameof(crossValidation));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
+            m_ensembleSelection = ensembleSelection ?? throw new ArgumentNullException(nameof(ensembleSelection));
         }
         
         /// <summary>

@@ -285,9 +285,7 @@ namespace SharpLearning.Metrics.Impurity
 
         public bool Contains(KeyValuePair<int, int> item)
         {
-            int value;
-
-            if (!TryGetValue(item.Key, out value))
+            if (!TryGetValue(item.Key, out int value))
                 return false;
 
             if (!item.Value.Equals(value))

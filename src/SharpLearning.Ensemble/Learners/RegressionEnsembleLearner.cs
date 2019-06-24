@@ -60,11 +60,10 @@ namespace SharpLearning.Ensemble.Learners
         public RegressionEnsembleLearner(Func<F64Matrix, double[], int[], IPredictorModel<double>>[] learners, Func<IRegressionEnsembleStrategy> ensembleStrategy,
             double subSampleRatio = 1.0, int seed = 24)
         {
-            if (learners == null) { throw new ArgumentNullException("learners"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_learners = learners ??  throw new ArgumentNullException("learners"); 
             if (learners.Length < 1) { throw new ArgumentException("there must be at least 1 learner"); }
-            m_learners = learners;
-            m_ensembleStrategy = ensembleStrategy;
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException("ensembleStrategy");
+
             m_random = new Random(seed);
             m_subSampleRatio = subSampleRatio;
         }
