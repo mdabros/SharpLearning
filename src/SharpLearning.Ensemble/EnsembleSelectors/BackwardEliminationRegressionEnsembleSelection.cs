@@ -19,14 +19,15 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         List<int> m_remainingModelIndices;
         List<int> m_bestModelIndices;
 
-
         /// <summary>
         /// Greedy backward elimination of ensemble models.
         /// </summary>
         /// <param name="metric">Metric to minimize</param>
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
-        public BackwardEliminationRegressionEnsembleSelection(IMetric<double, double> metric, IRegressionEnsembleStrategy ensembleStrategy,
+        public BackwardEliminationRegressionEnsembleSelection(
+            IMetric<double, double> metric, 
+            IRegressionEnsembleStrategy ensembleStrategy,
             int numberOfModelsToSelect)
         {
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
@@ -73,9 +74,13 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             return m_bestModelIndices.ToArray();
         }
 
-        double SelectNextModelToRemove(F64Matrix crossValidatedModelPredictions, double[] targets, double currentBestError)
+        double SelectNextModelToRemove(F64Matrix crossValidatedModelPredictions, 
+            double[] targets, 
+            double currentBestError)
         {
-            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount, m_remainingModelIndices.Count - 1);
+            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount, 
+                m_remainingModelIndices.Count - 1);
+
             var candidatePredictions = new double[crossValidatedModelPredictions.RowCount];
             var candidateModelIndices = new int[m_remainingModelIndices.Count - 1];
 

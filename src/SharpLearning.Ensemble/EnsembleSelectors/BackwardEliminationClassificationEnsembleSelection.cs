@@ -25,7 +25,9 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <param name="metric">Metric to minimize</param>
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
-        public BackwardEliminationClassificationEnsembleSelection(IMetric<double, ProbabilityPrediction> metric, IClassificationEnsembleStrategy ensembleStrategy,
+        public BackwardEliminationClassificationEnsembleSelection(
+            IMetric<double, ProbabilityPrediction> metric, 
+            IClassificationEnsembleStrategy ensembleStrategy,
             int numberOfModelsToSelect)
         {
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
@@ -46,7 +48,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.Length +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 
@@ -72,7 +74,9 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             return m_bestModelIndices.ToArray();
         }
 
-        double SelectNextModelToRemove(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets, double currentBestError)
+        double SelectNextModelToRemove(ProbabilityPrediction[][] crossValidatedModelPredictions, 
+            double[] targets, 
+            double currentBestError)
         {
             var rows = crossValidatedModelPredictions.First().Length;
             var candidateModelMatrix = new ProbabilityPrediction[m_remainingModelIndices.Count - 1][];

@@ -70,26 +70,6 @@ namespace SharpLearning.Ensemble.Models
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
-        /// Predicts a single observation using the ensembled probabilities
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
             var ensembleFeatures = m_ensembleModels.Length * m_numberOfClasses;
@@ -188,6 +168,26 @@ namespace SharpLearning.Ensemble.Models
             }
 
             return m_metaModel.GetVariableImportance(ensembleFeatureNameToIndex);
+        }
+
+        /// <summary>
+        /// Predicts a single observation using the ensembled probabilities
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            return PredictProbability(observations);
         }
 
         string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)

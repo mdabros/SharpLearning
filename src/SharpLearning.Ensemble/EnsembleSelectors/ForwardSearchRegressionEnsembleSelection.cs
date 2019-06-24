@@ -56,7 +56,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 

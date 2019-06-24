@@ -32,8 +32,13 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
         /// <param name="seed"></param>
-        public RandomClassificationEnsembleSelection(IMetric<double, ProbabilityPrediction> metric, IClassificationEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, int iterations, bool selectWithReplacement, int seed = 42)
+        public RandomClassificationEnsembleSelection(
+            IMetric<double, ProbabilityPrediction> metric, 
+            IClassificationEnsembleStrategy ensembleStrategy,
+            int numberOfModelsToSelect, 
+            int iterations, 
+            bool selectWithReplacement, 
+            int seed = 42)
         {
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
             m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
@@ -57,7 +62,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.Length +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 

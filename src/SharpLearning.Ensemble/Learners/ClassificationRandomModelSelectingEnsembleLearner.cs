@@ -25,8 +25,13 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         /// <param name="iterations">Number of iterations to random select model combinations.</param> 
-        public ClassificationRandomModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, int numberOfModelsToSelect, int iterations = 50)
-            : this(learners, numberOfModelsToSelect, new StratifiedCrossValidation<ProbabilityPrediction>(5, 42), new MeanProbabilityClassificationEnsembleStrategy(),
+        public ClassificationRandomModelSelectingEnsembleLearner(
+            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            int numberOfModelsToSelect, 
+            int iterations = 50)
+            : this(learners, numberOfModelsToSelect, 
+                new StratifiedCrossValidation<ProbabilityPrediction>(5, 42), 
+                new MeanProbabilityClassificationEnsembleStrategy(),
                 new LogLossClassificationProbabilityMetric(), iterations)
         {
         }
@@ -45,9 +50,19 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="iterations">Number of iterations to random select model combinations.</param> 
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.</param>
         /// <param name="seed"></param>
-        public ClassificationRandomModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, int numberOfModelsToSelect,
-            ICrossValidation<ProbabilityPrediction> crossValidation, IClassificationEnsembleStrategy ensembleStrategy, IMetric<double, ProbabilityPrediction> metric, int iterations = 50, bool selectWithReplacement = true, int seed = 42)
-            : base(learners, crossValidation, ensembleStrategy, new RandomClassificationEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect, iterations, selectWithReplacement, seed))
+        public ClassificationRandomModelSelectingEnsembleLearner(
+            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            int numberOfModelsToSelect,
+            ICrossValidation<ProbabilityPrediction> crossValidation, 
+            IClassificationEnsembleStrategy ensembleStrategy, 
+            IMetric<double, ProbabilityPrediction> metric, 
+            int iterations = 50, 
+            bool selectWithReplacement = true, 
+            int seed = 42)
+            : base(learners, crossValidation, ensembleStrategy, 
+                  new RandomClassificationEnsembleSelection(
+                      metric, ensembleStrategy, numberOfModelsToSelect, 
+                      iterations, selectWithReplacement, seed))
         {
         }
     }

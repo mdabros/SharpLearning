@@ -20,6 +20,5 @@ namespace SharpLearning.Ensemble.Strategies
         /// <param name="ensemblePredictions"></param>
         /// <param name="predictions"></param>
         void Combine(ProbabilityPrediction[][] ensemblePredictions, ProbabilityPrediction[] predictions);
-
     }
 }

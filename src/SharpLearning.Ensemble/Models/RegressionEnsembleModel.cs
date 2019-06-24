@@ -65,13 +65,13 @@ namespace SharpLearning.Ensemble.Models
         }
         
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
             // return normalized variable importance. 
-            // Individdual models can have very different scaling of importances 
+            // Individual models can have very different scaling of importances 
             var index = 0;
             var dummyFeatureNameToIndex = m_ensembleModels
                 .First().GetRawVariableImportance()

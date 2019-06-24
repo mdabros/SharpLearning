@@ -26,7 +26,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var rows = targets.Length;
@@ -55,7 +57,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -79,7 +83,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var rows = targets.Length;
@@ -108,7 +114,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.PredictProbability(observations);
@@ -135,7 +143,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
@@ -165,7 +175,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();

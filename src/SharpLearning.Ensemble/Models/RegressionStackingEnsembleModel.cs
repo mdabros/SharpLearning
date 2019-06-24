@@ -74,7 +74,7 @@ namespace SharpLearning.Ensemble.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()

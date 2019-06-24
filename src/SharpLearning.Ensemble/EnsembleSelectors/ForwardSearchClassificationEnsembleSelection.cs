@@ -31,8 +31,12 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// The top n models will be selected based in their solo performance</param>
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
-        public ForwardSearchClassificationEnsembleSelection(IMetric<double, ProbabilityPrediction> metric, IClassificationEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, int numberOfModelsFromStart, bool selectWithReplacement)
+        public ForwardSearchClassificationEnsembleSelection(
+            IMetric<double, ProbabilityPrediction> metric, 
+            IClassificationEnsembleStrategy ensembleStrategy,
+            int numberOfModelsToSelect, 
+            int numberOfModelsFromStart, 
+            bool selectWithReplacement)
         {
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
             m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
@@ -56,7 +60,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.Length +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 
@@ -96,7 +100,9 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             return m_selectedModelIndices.ToArray();
         }
 
-        double SelectNextModelToAdd(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets, double currentBestError)
+        double SelectNextModelToAdd(ProbabilityPrediction[][] crossValidatedModelPredictions, 
+            double[] targets, 
+            double currentBestError)
         {
             var rows = crossValidatedModelPredictions.First().Length;
             var candidateModelMatrix = new ProbabilityPrediction[m_selectedModelIndices.Count + 1][];
