@@ -130,12 +130,12 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// SvmLayer layer does not have any parameters or graidents.
+        /// SvmLayer layer does not have any parameters or gradients.
         /// </summary>
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            // SvmLayer layer does not have any parameters or graidents.
+            // SvmLayer layer does not have any parameters or gradients.
         }
 
         /// <summary>
