@@ -23,7 +23,11 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="seed">The minimum size for a node to be split</param>
         public RandomSplitSearcher(int minimumSplitSize, int seed)
         {
-            if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
+            if (minimumSplitSize <= 0)
+            {
+                throw new ArgumentException("minimum split size must be larger than 0");
+            }
+
             m_minimumSplitSize = minimumSplitSize;
             m_random = new Random(seed);
         }
@@ -37,7 +41,8 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="parentInterval"></param>
         /// <param name="parentImpurity"></param>
         /// <returns></returns>
-        public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets, Interval1D parentInterval, double parentImpurity)
+        public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets, 
+            Interval1D parentInterval, double parentImpurity)
         {
             var min = double.MaxValue;
             var max = double.MinValue;

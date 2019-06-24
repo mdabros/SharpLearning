@@ -47,14 +47,18 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
         /// </summary>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">The number of features to be selected between at each split. 
-        /// 0 means use all availible features</param>
+        /// 0 means use all available features</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
         /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
         /// <param name="impurityCalculator">Impurity calculator used to decide which split is optimal</param>
-        public DepthFirstTreeBuilder(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain, int seed,
-            ISplitSearcher splitSearcher, IImpurityCalculator impurityCalculator)
+        public DepthFirstTreeBuilder(int maximumTreeDepth, 
+            int featuresPrSplit, 
+            double minimumInformationGain, 
+            int seed,
+            ISplitSearcher splitSearcher, 
+            IImpurityCalculator impurityCalculator)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }

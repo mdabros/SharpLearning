@@ -24,9 +24,14 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
-        public RegressionDecisionTreeLearner(int maximumTreeDepth=2000, int minimumSplitSize=1, int featuresPrSplit=0, double minimumInformationGain=0.000001, int seed=42)
-            : base(new DepthFirstTreeBuilder(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, new OnlyUniqueThresholdsSplitSearcher(minimumSplitSize), 
-                   new RegressionImpurityCalculator()))
+        public RegressionDecisionTreeLearner(int maximumTreeDepth=2000, 
+            int minimumSplitSize=1, 
+            int featuresPrSplit=0, 
+            double minimumInformationGain=0.000001, 
+            int seed=42)
+            : base(new DepthFirstTreeBuilder(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, 
+                new OnlyUniqueThresholdsSplitSearcher(minimumSplitSize), 
+                new RegressionImpurityCalculator()))
         {
         }
 
@@ -48,7 +53,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, double[] weights)
+        public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, 
+            double[] weights)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets, weights));
         }
@@ -60,9 +66,54 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices));
+        }
+
+        /// <summary>
+        /// Learns a regression tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices, double[] weights)
+        {
+            return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices, weights));
+        }
+
+        /// <summary>
+        /// Learns a regression tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        public new RegressionDecisionTreeModel Learn(F64MatrixView observations, double[] targets, 
+            int[] indices)
+        {
+            return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices));
+        }
+
+        /// <summary>
+        /// Learns a regression tree from the provided observations and targets but limited to the observation indices provided by indices.
+        /// Indices can contain the same index multiple times.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public new RegressionDecisionTreeModel Learn(F64MatrixView observations, double[] targets, 
+            int[] indices, double[] weights)
+        {
+            return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices, weights));
         }
 
         /// <summary>
@@ -72,7 +123,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
         }
@@ -83,50 +135,10 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets)
         {
             return Learn(observations, targets);
-        }
-
-        /// <summary>
-        /// Learns a regression tree from the provided observations and targets but limited to the observation indices provided by indices.
-        /// Indices can contain the same index multiple times.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <param name="weights"></param>
-        /// <returns></returns>
-        public new RegressionDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
-        {
-            return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices, weights));
-        }
-
-        /// <summary>
-        /// Learns a regression tree from the provided observations and targets but limited to the observation indices provided by indices.
-        /// Indices can contain the same index multiple times.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        public new RegressionDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices)
-        {
-            return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices));
-        }
-
-        /// <summary>
-        /// Learns a regression tree from the provided observations and targets but limited to the observation indices provided by indices.
-        /// Indices can contain the same index multiple times.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <param name="weights"></param>
-        /// <returns></returns>
-        public new RegressionDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
-        {
-            return new RegressionDecisionTreeModel(base.Learn(observations, targets, indices, weights));
         }
     }
 }

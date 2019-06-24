@@ -90,7 +90,8 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
@@ -202,7 +203,8 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets)
         {
             return Learn(observations, targets);
         }

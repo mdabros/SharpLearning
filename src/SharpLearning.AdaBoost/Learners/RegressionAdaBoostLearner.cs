@@ -82,7 +82,7 @@ namespace SharpLearning.AdaBoost.Learners
         }
 
         /// <summary>
-        /// Learns an adaboost regression model
+        /// Learns an Adaboost regression model
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -94,13 +94,14 @@ namespace SharpLearning.AdaBoost.Learners
         }
 
         /// <summary>
-        /// Learns an adaboost regression model
+        /// Learns an Adaboost regression model
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);

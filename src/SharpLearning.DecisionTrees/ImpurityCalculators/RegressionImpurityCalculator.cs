@@ -146,7 +146,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             if (m_currentPosition > newPosition)
             {
                 throw new ArgumentException("New position: " + newPosition +
-                    " must be larget than current: " + m_currentPosition);
+                    " must be larger than current: " + m_currentPosition);
             }
 
             var weightsPresent = m_weights.Length != 0;
@@ -234,7 +234,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
-        /// Unique target names are not availible for regression
+        /// Unique target names are not available for regression
         /// </summary>
         public double[] TargetNames
         {
@@ -242,7 +242,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
-        /// Probabilities are not availible for regression
+        /// Probabilities are not available for regression
         /// </summary>
         /// <returns></returns>
         public double[] LeafProbabilities()

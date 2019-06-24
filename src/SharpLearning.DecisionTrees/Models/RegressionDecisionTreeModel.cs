@@ -95,13 +95,10 @@ namespace SharpLearning.DecisionTrees.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_variableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_variableImportance;
 
         /// <summary>
         /// Loads a RegressionDecisionTreeModel.

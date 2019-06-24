@@ -13,8 +13,12 @@ namespace SharpLearning.DecisionTrees.Learners
     /// Trains a Classification Decision tree
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
-    public sealed class ClassificationDecisionTreeLearner : DecisionTreeLearner, 
-        IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>, ILearner<double>, ILearner<ProbabilityPrediction>
+    public sealed class ClassificationDecisionTreeLearner 
+        : DecisionTreeLearner
+        , IIndexedLearner<double>
+        , IIndexedLearner<ProbabilityPrediction>
+        , ILearner<double>
+        , ILearner<ProbabilityPrediction>
     {
         /// <summary>
         /// Trains a Classification Decision tree
@@ -26,9 +30,13 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
-        public ClassificationDecisionTreeLearner(int maximumTreeDepth=2000, int minimumSplitSize=1, int featuresPrSplit=0, double minimumInformationGain=0.000001, int seed=42)
-            : base(new DepthFirstTreeBuilder(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, new OnlyUniqueThresholdsSplitSearcher(minimumSplitSize),
-                   new GiniClassificationImpurityCalculator()))          
+        public ClassificationDecisionTreeLearner(int maximumTreeDepth=2000, 
+            int minimumSplitSize=1, 
+            int featuresPrSplit=0, 
+            double minimumInformationGain=0.000001, int seed=42)
+            : base(new DepthFirstTreeBuilder(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, 
+                    new OnlyUniqueThresholdsSplitSearcher(minimumSplitSize),
+                    new GiniClassificationImpurityCalculator()))          
         {
         }
                 
@@ -64,7 +72,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices));
         }
@@ -78,7 +87,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="indices"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
+        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices, double[] weights)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights));
         }
@@ -91,7 +101,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices)
+        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, 
+            int[] indices)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices));
         }
@@ -105,7 +116,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="indices"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
+        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, 
+            int[] indices, double[] weights)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights));
         }
@@ -117,7 +129,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
         }
@@ -129,7 +142,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
+        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets, int[] indices)
         {
             return Learn(observations, targets, indices);
         }
@@ -140,7 +154,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets)
         {
             return Learn(observations, targets);
         }
@@ -151,7 +166,8 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
+        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets)
         {
             return Learn(observations, targets);
         }

@@ -79,26 +79,6 @@ namespace SharpLearning.DecisionTrees.Models
         }
 
         /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
         /// Predicts a single observation with probabilities
         /// </summary>
         /// <param name="observation"></param>
@@ -163,7 +143,7 @@ namespace SharpLearning.DecisionTrees.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -190,6 +170,26 @@ namespace SharpLearning.DecisionTrees.Models
         {
             new GenericXmlDataContractSerializer()
                 .Serialize(this, writer);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            return PredictProbability(observations);
         }
     }
 }

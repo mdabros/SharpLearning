@@ -48,7 +48,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Predicts using a continous node strategy
+        /// Predicts using a continuous node strategy
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -58,7 +58,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Predict probabilities using a continous node strategy
+        /// Predict probabilities using a continuous node strategy
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -68,7 +68,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Predicts using a continous node strategy
+        /// Predicts using a continuous node strategy
         /// </summary>
         /// <param name="node"></param>
         /// <param name="observation"></param>
@@ -93,7 +93,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Returns the prediction node using a continous node strategy
+        /// Returns the prediction node using a continuous node strategy
         /// </summary>
         /// <param name="node"></param>
         /// <param name="observation"></param>
@@ -118,7 +118,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Predict probabilities using a continous node strategy
+        /// Predict probabilities using a continuous node strategy
         /// </summary>
         /// <param name="node"></param>
         /// <param name="observation"></param>
