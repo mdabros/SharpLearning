@@ -33,7 +33,13 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         /// <param name="loss">loss function used</param>
         /// <param name="runParallel">Use multi threading to speed up execution</param>
-        public GBMDecisionTreeLearner(int maximumTreeDepth, int minimumSplitSize, double minimumInformationGain, int featuresPrSplit, IGradientBoostLoss loss, bool runParallel)
+        public GBMDecisionTreeLearner(
+            int maximumTreeDepth, 
+            int minimumSplitSize, 
+            double minimumInformationGain, 
+            int featuresPrSplit, 
+            IGradientBoostLoss loss, 
+            bool runParallel)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
@@ -55,23 +61,34 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="minimumSplitSize">The minimum size </param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
-        public GBMDecisionTreeLearner(int maximumTreeDepth = 2000, int minimumSplitSize = 1, double minimumInformationGain = 1E-6, int featuresPrSplit = 0)
-            : this(maximumTreeDepth, minimumSplitSize, minimumInformationGain, featuresPrSplit, new GradientBoostSquaredLoss(), true)
+        public GBMDecisionTreeLearner(
+            int maximumTreeDepth = 2000, 
+            int minimumSplitSize = 1, 
+            double minimumInformationGain = 1E-6, 
+            int featuresPrSplit = 0)
+            : this(maximumTreeDepth, minimumSplitSize, 
+                minimumInformationGain, featuresPrSplit, 
+                new GradientBoostSquaredLoss(), true)
         {
         }
 
         /// <summary>
-        /// Fites a regression decision tree using a set presorted indices for each feature.
+        /// Fits a regression decision tree using a set presorted indices for each feature.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets">the original targets</param>
         /// <param name="residuals">the residuals for each boosting iteration</param>
         /// <param name="predictions">the current predictions</param>
         /// <param name="orderedElements">jagged array of sorted indices corresponding to each features</param>
-        /// <param name="inSample">bool array containing the samples to use</param>
+        /// <param name="inSample">Bool array containing the samples to use</param>
         /// <returns></returns>
-        public GBMTree Learn(F64Matrix observations, double[] targets, double[] residuals, double[] predictions,
-            int[][] orderedElements, bool[] inSample)
+        public GBMTree Learn(
+            F64Matrix observations, 
+            double[] targets, 
+            double[] residuals, 
+            double[] predictions,
+            int[][] orderedElements, 
+            bool[] inSample)
         {
             var rootValues = m_loss.InitSplit(targets, residuals, inSample);
             var bestConstant = rootValues.BestConstant;
@@ -171,7 +188,13 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                     Parallel.ForEach(rangePartitioner, (work, loopState) => work());
                 }
 
-                var bestSplitResult = new GBMSplitResult { BestSplit = initBestSplit, Left = GBMSplitInfo.NewEmpty(), Right = GBMSplitInfo.NewEmpty() };
+                var bestSplitResult = new GBMSplitResult
+                {
+                    BestSplit = initBestSplit,
+                    Left = GBMSplitInfo.NewEmpty(),
+                    Right = GBMSplitInfo.NewEmpty()
+                };
+
                 if (splitResults.Count != 0)
                 {
                     // alternative to for finding bestsplit. gives slightly different results. probably due to order.
@@ -271,13 +294,20 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             return new GBMTree(nodes);
         }
 
-        private static void EmpytySplitResults(ConcurrentBag<GBMSplitResult> splitResults)
+        static void EmpytySplitResults(ConcurrentBag<GBMSplitResult> splitResults)
         {
             while (splitResults.TryTake(out GBMSplitResult result)) ;
         }
 
-        void SplitWorker(F64Matrix observations, double[] residuals, double[] targets, double[] predictions, int[][] orderedElements, 
-            GBMTreeCreationItem parentItem, bool[] parentInSample, ConcurrentQueue<int> featureIndices, ConcurrentBag<GBMSplitResult> results)
+        void SplitWorker(F64Matrix observations, 
+            double[] residuals, 
+            double[] targets, 
+            double[] predictions, 
+            int[][] orderedElements, 
+            GBMTreeCreationItem parentItem, 
+            bool[] parentInSample, 
+            ConcurrentQueue<int> featureIndices, 
+            ConcurrentBag<GBMSplitResult> results)
         {
             int featureIndex = -1;
             while (featureIndices.TryDequeue(out featureIndex))
@@ -287,8 +317,15 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             }
         }
 
-        void FindBestSplit(F64Matrix observations, double[] residuals, double[] targets, double[] predictions, int[][] orderedElements, 
-            GBMTreeCreationItem parentItem, bool[] parentInSample, int featureIndex, ConcurrentBag<GBMSplitResult> results)
+        void FindBestSplit(F64Matrix observations, 
+            double[] residuals, 
+            double[] targets, 
+            double[] predictions, 
+            int[][] orderedElements, 
+            GBMTreeCreationItem parentItem, 
+            bool[] parentInSample, 
+            int featureIndex, 
+            ConcurrentBag<GBMSplitResult> results)
         {
             var bestSplit = new GBMSplit
             {

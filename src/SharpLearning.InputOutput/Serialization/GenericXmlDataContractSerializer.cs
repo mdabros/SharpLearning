@@ -165,17 +165,10 @@ namespace SharpLearning.InputOutput.Serialization
                 return new GenericResolver(types.ToArray());
             }
 
-            static string GetNamespace(Type type)
-            {
-                return type.Namespace ?? DefaultNamespace;
-            }
-
-            static string GetName(Type type)
-            {
-                return type.Name;
-            }
-
-            public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
+            public override Type ResolveName(string typeName, 
+                string typeNamespace, 
+                Type declaredType, 
+                DataContractResolver knownTypeResolver)
             {
                 if (m_namesToType.ContainsKey(typeNamespace))
                 {
@@ -187,7 +180,11 @@ namespace SharpLearning.InputOutput.Serialization
                 return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, null);
             }
 
-            public override bool TryResolveType(Type type, Type declaredType, DataContractResolver knownTypeResolver, out XmlDictionaryString typeName, out XmlDictionaryString typeNamespace)
+            public override bool TryResolveType(Type type, 
+                Type declaredType, 
+                DataContractResolver knownTypeResolver, 
+                out XmlDictionaryString typeName, 
+                out XmlDictionaryString typeNamespace)
             {
                 if (m_typeToNames.ContainsKey(type))
                 {
@@ -199,8 +196,19 @@ namespace SharpLearning.InputOutput.Serialization
                 }
                 else
                 {
-                    return knownTypeResolver.TryResolveType(type, declaredType, null, out typeName, out typeNamespace);
+                    return knownTypeResolver.TryResolveType(type, declaredType, null, 
+                        out typeName, out typeNamespace);
                 }
+            }
+
+            static string GetNamespace(Type type)
+            {
+                return type.Namespace ?? DefaultNamespace;
+            }
+
+            static string GetName(Type type)
+            {
+                return type.Name;
             }
 
             static Type[] ReflectTypes()

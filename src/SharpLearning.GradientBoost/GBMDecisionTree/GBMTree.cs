@@ -82,25 +82,6 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             }
         }
 
-        GBMNode Predict(GBMNode parent, int nodeIndex, double[] observation)
-        {
-            if (nodeIndex == -1)
-            {
-                return parent;
-            }
-
-            var node = Nodes[nodeIndex];
-
-            if (observation[node.FeatureIndex] < node.SplitValue)
-            {
-                return Predict(node, node.LeftIndex, observation); // left
-            }
-            else
-            {
-                return Predict(node, node.RightIndex, observation); // right
-            }
-        }
-
         /// <summary>
         /// Variable importances are based on the work each variable does (error reduction).
         /// the scores at each split are scaled by the amount of data the node splits
@@ -117,24 +98,6 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             var rootError = Nodes[0].LeftError;
             var totalSampleCount = Nodes[0].SampleCount;
             AddRecursive(rawVariableImportances, Nodes[1], rootError, totalSampleCount);
-        }
-
-        void AddRecursive(double[] rawFeatureImportances, GBMNode node, double previousError, int totalSampleCount)
-        {
-            var error = node.LeftError + node.RightError;
-            var reduction = previousError - error;
-            rawFeatureImportances[node.FeatureIndex] += reduction * reduction *
-                (double)node.SampleCount / (double)totalSampleCount;
-            
-            if(node.LeftIndex != -1)
-            {
-                AddRecursive(rawFeatureImportances, Nodes[node.LeftIndex], error, totalSampleCount);
-            }
-
-            if (node.RightIndex != -1)
-            {
-                AddRecursive(rawFeatureImportances, Nodes[node.RightIndex], error, totalSampleCount);
-            }
         }
 
         /// <summary>
@@ -183,6 +146,43 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                     text += ")";
                 }
                 Trace.WriteLine(text);
+            }
+        }
+
+        GBMNode Predict(GBMNode parent, int nodeIndex, double[] observation)
+        {
+            if (nodeIndex == -1)
+            {
+                return parent;
+            }
+
+            var node = Nodes[nodeIndex];
+
+            if (observation[node.FeatureIndex] < node.SplitValue)
+            {
+                return Predict(node, node.LeftIndex, observation); // left
+            }
+            else
+            {
+                return Predict(node, node.RightIndex, observation); // right
+            }
+        }
+
+        void AddRecursive(double[] rawFeatureImportances, GBMNode node, double previousError, int totalSampleCount)
+        {
+            var error = node.LeftError + node.RightError;
+            var reduction = previousError - error;
+            rawFeatureImportances[node.FeatureIndex] += reduction * reduction *
+                (double)node.SampleCount / (double)totalSampleCount;
+
+            if (node.LeftIndex != -1)
+            {
+                AddRecursive(rawFeatureImportances, Nodes[node.LeftIndex], error, totalSampleCount);
+            }
+
+            if (node.RightIndex != -1)
+            {
+                AddRecursive(rawFeatureImportances, Nodes[node.RightIndex], error, totalSampleCount);
             }
         }
     }

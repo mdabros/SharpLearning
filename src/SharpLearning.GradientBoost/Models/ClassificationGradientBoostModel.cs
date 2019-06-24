@@ -14,7 +14,9 @@ namespace SharpLearning.GradientBoost.Models
     /// 
     /// </summary>
     [Serializable]
-    public sealed class ClassificationGradientBoostModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
+    public sealed class ClassificationGradientBoostModel 
+        : IPredictorModel<double>
+        , IPredictorModel<ProbabilityPrediction>
     {
         /// <summary>
         /// 
@@ -49,7 +51,12 @@ namespace SharpLearning.GradientBoost.Models
         /// <param name="learningRate"></param>
         /// <param name="initialLoss"></param>
         /// <param name="featureCount"></param>
-        public ClassificationGradientBoostModel(GBMTree[][] trees, double[] targetNames, double learningRate, double initialLoss, int featureCount)
+        public ClassificationGradientBoostModel(
+            GBMTree[][] trees, 
+            double[] targetNames, 
+            double learningRate, 
+            double initialLoss, 
+            int featureCount)
         {
             Trees = trees ?? throw new ArgumentNullException(nameof(trees));
             TargetNames = targetNames ?? throw new ArgumentException(nameof(targetNames));
@@ -77,26 +84,6 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
         /// Predicts a single observation with probabilities
         /// </summary>
         /// <param name="observation"></param>
@@ -114,7 +101,7 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the combination of all predictors
+        /// Predicts a set of observations using the combination of all predictors
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -167,7 +154,7 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -205,6 +192,25 @@ namespace SharpLearning.GradientBoost.Models
                 .Serialize(this, writer);
         }
 
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            return PredictProbability(observations);
+        }
 
         double BinaryPredict(double[] observation)
         {

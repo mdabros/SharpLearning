@@ -27,7 +27,10 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="separator"></param>
         /// <param name="quoteInclosedColumns"></param>
         /// <param name="hasHeader"></param>
-        public CsvParser(Func<TextReader> reader, char separator = DefaultDelimiter, bool quoteInclosedColumns = false, bool hasHeader = true)
+        public CsvParser(Func<TextReader> reader, 
+            char separator = DefaultDelimiter, 
+            bool quoteInclosedColumns = false, 
+            bool hasHeader = true)
         {
             m_getReader = reader ?? throw new ArgumentException("reader");
             m_separator = separator;
@@ -36,7 +39,7 @@ namespace SharpLearning.InputOutput.Csv
         }
 
         /// <summary>
-        /// Enumerates rows with column names fulfilling the selection func 
+        /// Enumerates rows with column names fulfilling the selection function
         /// </summary>
         /// <param name="selectColumnNames"></param>
         /// <returns></returns>
@@ -44,16 +47,20 @@ namespace SharpLearning.InputOutput.Csv
         {
             if(!m_hasHeader)
             {
-                throw new ArgumentException("CsvParser configured to use no header. Column names cannot be selected in this made");
+                throw new ArgumentException("CsvParser configured to use no header." + 
+                    " Column names cannot be selected in this made");
             }
 
             using (var reader = m_getReader())
             {
                 var headerLine = reader.ReadLine();
                 var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
-                var columnNames = columnNameToIndex.Keys.Where(name => selectColumnNames(name)).ToArray();
+                var columnNames = columnNameToIndex.Keys.Where(name => selectColumnNames(name))
+                    .ToArray();
+
                 var indices = columnNameToIndex.GetValues(columnNames);
-                var subColumnNameToIndex = Enumerable.Range(0, indices.Length).ToDictionary(index => columnNames[index]);
+                var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
+                    .ToDictionary(index => columnNames[index]);
 
                 string line = null;
                 while ((line = reader.ReadLine()) != null)
@@ -73,7 +80,8 @@ namespace SharpLearning.InputOutput.Csv
         {
             if (!m_hasHeader)
             {
-                throw new ArgumentException("CsvParser configured to use no header. Column names cannot be selected in this made");
+                throw new ArgumentException("CsvParser configured to use no header." + 
+                    "Column names cannot be selected in this made");
             }
 
             using (var reader = m_getReader())
@@ -81,7 +89,8 @@ namespace SharpLearning.InputOutput.Csv
                 var headerLine = reader.ReadLine();
                 var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
                 var indices = columnNameToIndex.GetValues(columnNames);
-                var subColumnNameToIndex = Enumerable.Range(0, indices.Length).ToDictionary(index => columnNames[index]);
+                var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
+                    .ToDictionary(index => columnNames[index]);
 
                 string line = null;
                 while ((line = reader.ReadLine()) != null)

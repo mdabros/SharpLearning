@@ -21,7 +21,9 @@ namespace SharpLearning.GradientBoost.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, 
+                new GradientBoostBinomialLoss(), false);
+
             var sut = learner.Learn(observations, targets);
 
             var rows = targets.Length;
@@ -42,7 +44,9 @@ namespace SharpLearning.GradientBoost.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, 
+                new GradientBoostBinomialLoss(), false);
+
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -58,7 +62,9 @@ namespace SharpLearning.GradientBoost.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, 
+                new GradientBoostBinomialLoss(), false);
+
             var sut = learner.Learn(observations, targets);
 
             var rows = targets.Length;
@@ -82,7 +88,9 @@ namespace SharpLearning.GradientBoost.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, 
+                new GradientBoostBinomialLoss(), false);
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.PredictProbability(observations);
@@ -103,7 +111,9 @@ namespace SharpLearning.GradientBoost.Test.Models
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
-            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, 
+                new GradientBoostBinomialLoss(), false);
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
@@ -125,7 +135,9 @@ namespace SharpLearning.GradientBoost.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, new GradientBoostBinomialLoss(), false);
+            var learner = new ClassificationGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1, 0, 
+                new GradientBoostBinomialLoss(), false);
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();

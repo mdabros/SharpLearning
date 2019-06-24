@@ -26,8 +26,15 @@ namespace SharpLearning.GradientBoost.Learners
         /// This reduces variance in the ensemble and can help ounter overfitting</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public ClassificationBinomialGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0, int featuresPrSplit = 0, bool runParallel = true)
+        public ClassificationBinomialGradientBoostLearner(
+            int iterations = 100, 
+            double learningRate = 0.1, 
+            int maximumTreeDepth = 3,
+            int minimumSplitSize = 1, 
+            double minimumInformationGain = 0.000001, 
+            double subSampleRatio = 1.0, 
+            int featuresPrSplit = 0, 
+            bool runParallel = true)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
                 subSampleRatio, featuresPrSplit, new GradientBoostBinomialLoss(), runParallel)
         {
