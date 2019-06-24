@@ -18,11 +18,11 @@ namespace SharpLearning.Optimization.Test
             };
 
             var random = new Random(343);
-            HyperbandObjectiveFunction minimize = (p, r) =>
+            OptimizerResult Minimize(double[] p, double r)
             {
                 var error = random.NextDouble();
                 return new OptimizerResult(p, error);
-            };
+            }
 
             var sut = new HyperbandOptimizer(
                 parameters,
@@ -31,7 +31,7 @@ namespace SharpLearning.Optimization.Test
                 skipLastIterationOfEachRound: false,
                 seed: 34);
 
-            var actual = sut.OptimizeBest(minimize);
+            var actual = sut.OptimizeBest(Minimize);
             var expected = new OptimizerResult(new[] { 278.337940, 0.098931, 13.177449 }, 0.009549);
 
             AssertOptimizerResult(expected, actual);
@@ -48,12 +48,12 @@ namespace SharpLearning.Optimization.Test
             };
 
             var random = new Random(343);
-            HyperbandObjectiveFunction minimize = (p, r) =>
+            OptimizerResult minimize(double[] p, double r)
             {
                 var error = random.NextDouble();
                 return new OptimizerResult(p, error);
-            };
-        
+            }
+
             var sut = new HyperbandOptimizer(
                 parameters, 
                 maximumBudget: 81, 

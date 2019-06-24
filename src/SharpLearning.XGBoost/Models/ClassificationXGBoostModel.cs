@@ -21,8 +21,7 @@ namespace SharpLearning.XGBoost.Models
         /// <param name="model"></param>
         public ClassificationXGBoostModel(Booster model)
         {
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            m_model = model;
+            m_model = model ?? throw new ArgumentNullException(nameof(model));
         }
 
         /// <summary>

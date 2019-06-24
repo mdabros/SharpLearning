@@ -300,7 +300,7 @@ namespace SharpLearning.Optimization
 
         OptimizerResult[] FindNextCandidates(RegressionForestModel model, double bestScore)
         {
-            Func<double[], OptimizerResult> minimize = (param) =>
+            OptimizerResult minimize(double[] param)
             {
                 // use the model to predict the expected performance, mean and variance, of the parameter set.
                 var p = model.PredictCertainty(param);
@@ -308,7 +308,7 @@ namespace SharpLearning.Optimization
                 return new OptimizerResult(param,
                     // negative, since we want to "maximize" the acquisition function.
                     -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
-            };
+            }
 
             return m_maximizer.Optimize(minimize)
                 .Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error)

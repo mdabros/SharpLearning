@@ -39,14 +39,13 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
-            if (loss == null) { throw new ArgumentNullException("loss"); }
+            m_loss = loss ?? throw new ArgumentNullException("loss");
 
             m_maximumTreeDepth = maximumTreeDepth;
             m_minimumSplitSize = minimumSplitSize;
             m_minimumInformationGain = minimumInformationGain;
             m_featuresPrSplit = featuresPrSplit;
             m_runParallel = runParallel;
-            m_loss = loss;
         }
 
         /// <summary>
@@ -116,7 +115,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             var splitResults = new ConcurrentBag<GBMSplitResult>();
             while (queue.Count > 0)
             {
-                EmpyTySplitResults(splitResults);
+                EmpytySplitResults(splitResults);
 
                 var parentItem = queue.Dequeue();
                 var parentInSample = parentItem.InSample;
@@ -158,13 +157,14 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                         workItems.Enqueue(i);
                     }
 
-                    Action findSplit = () => SplitWorker(observations, residuals, targets, predictions, orderedElements, parentItem,
-                            parentInSample, workItems, splitResults);
+                    void FindSplit() => SplitWorker(
+                        observations, residuals, targets, predictions, 
+                        orderedElements, parentItem, parentInSample, workItems, splitResults);
 
                     var workers = new List<Action>();
 
                     for (int i = 0; i < Environment.ProcessorCount; i++)
-                    { workers.Add(findSplit); }
+                    { workers.Add(FindSplit); }
 
                     var rangePartitioner = Partitioner.Create(workers, true);
                     // Loop over the partitions in parallel.
@@ -271,10 +271,9 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             return new GBMTree(nodes);
         }
 
-        private static void EmpyTySplitResults(ConcurrentBag<GBMSplitResult> splitResults)
+        private static void EmpytySplitResults(ConcurrentBag<GBMSplitResult> splitResults)
         {
-            GBMSplitResult result;
-            while (splitResults.TryTake(out result)) ;
+            while (splitResults.TryTake(out GBMSplitResult result)) ;
         }
 
         void SplitWorker(F64Matrix observations, double[] residuals, double[] targets, double[] predictions, int[][] orderedElements, 

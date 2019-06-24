@@ -30,10 +30,8 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         /// <param name="testSet"></param>
         public TrainingTestSetSplit(ObservationTargetSet trainingSet, ObservationTargetSet testSet)
         {
-            if (trainingSet == null) { throw new ArgumentNullException("trainingSet"); }
-            if (testSet == null) { throw new ArgumentNullException("testSet"); }
-            TrainingSet = trainingSet;
-            TestSet = testSet;
+            TrainingSet = trainingSet ?? throw new ArgumentNullException("trainingSet");
+            TestSet = testSet ?? throw new ArgumentNullException("testSet");
         }
 
         /// <summary>
@@ -70,8 +68,7 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            TrainingTestSetSplit other = obj as TrainingTestSetSplit;
-            if (other != null && Equals(other))
+            if (obj is TrainingTestSetSplit other && this.Equals(other))
             {
                 return true;
             }

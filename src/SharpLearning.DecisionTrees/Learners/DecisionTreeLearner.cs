@@ -22,8 +22,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="treeBuilder"></param>
         public DecisionTreeLearner(ITreeBuilder treeBuilder)
         {
-            if (treeBuilder == null) { throw new ArgumentNullException("treeBuilder"); }
-            m_treeBuilder = treeBuilder;
+            m_treeBuilder = treeBuilder ?? throw new ArgumentNullException(nameof(treeBuilder));
         }
 
         /// <summary>

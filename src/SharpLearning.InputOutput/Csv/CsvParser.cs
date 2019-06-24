@@ -30,8 +30,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="hasHeader"></param>
         public CsvParser(Func<TextReader> reader, char separator = DefaultDelimiter, bool quoteInclosedColumns = false, bool hasHeader = true)
         {
-            if (reader == null) { throw new ArgumentException("reader"); }
-            m_getReader = reader;
+            m_getReader = reader ?? throw new ArgumentException("reader");
             m_separator = separator;
             m_quoteInclosedColumns = quoteInclosedColumns;
             m_hasHeader = hasHeader;

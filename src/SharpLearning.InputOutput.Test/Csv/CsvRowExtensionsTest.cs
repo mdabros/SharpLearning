@@ -11,17 +11,17 @@ namespace SharpLearning.InputOutput.Test.Csv
     [TestClass]
     public class CsvRowExtensionsTest
     {
-        static readonly string[] Data = new string[] { "1", "2", "3", "4" };
-        static readonly Dictionary<string, int> ColumnNameToIndex = new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "3", 2 }, { "4", 3 } };
-        readonly F64Matrix ExpectedF64Matrix = new F64Matrix(Data.Select(value => CsvRowExtensions.DefaultF64Converter(value)).ToArray(), 1, 4);
-        readonly StringMatrix ExpectedStringMatrix = new StringMatrix(Data, 1, 4);
+        static readonly string[] m_data = new string[] { "1", "2", "3", "4" };
+        static readonly Dictionary<string, int> m_columnNameToIndex = new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "3", 2 }, { "4", 3 } };
+        readonly F64Matrix m_expectedF64Matrix = new F64Matrix(m_data.Select(value => CsvRowExtensions.DefaultF64Converter(value)).ToArray(), 1, 4);
+        readonly StringMatrix m_expectedStringMatrix = new StringMatrix(m_data, 1, 4);
 
-        readonly string ExpectedWrite = "1;2;3;4\r\n1;2;3;4";
+        readonly string m_expectedWrite = "1;2;3;4\r\n1;2;3;4";
 
         [TestMethod]
         public void CsvRowExtensions_GetValues()
         {
-            var sut = new CsvRow(ColumnNameToIndex, Data);
+            var sut = new CsvRow(m_columnNameToIndex, m_data);
             var actual = sut.GetValues(new string[] {"1", "3"});
             var expected = new string[] { "1", "3" };
             CollectionAssert.AreEqual(expected, actual);
@@ -30,7 +30,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_SetValue()
         {
-            var sut = new CsvRow(ColumnNameToIndex, Data.ToArray());
+            var sut = new CsvRow(m_columnNameToIndex, m_data.ToArray());
             sut.SetValue("3", "33");
             
             var actual = sut.GetValue("3");
@@ -40,7 +40,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_GetValue()
         {
-            var sut = new CsvRow(ColumnNameToIndex, Data);
+            var sut = new CsvRow(m_columnNameToIndex, m_data);
             var actual = sut.GetValue("3");
             var expected = "3";
             Assert.AreEqual(expected, actual);
@@ -49,7 +49,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_Keep()
         {
-            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
+            var sut = new List<CsvRow> { new CsvRow(m_columnNameToIndex, m_data) };
 
             var actual = sut.Keep("1", "2").ToList().First();
             var expected = new CsvRow(new Dictionary<string, int> { { "1", 0 }, { "2", 1 } }, new string[] { "1", "2" });
@@ -60,7 +60,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_Remove()
         {
-            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
+            var sut = new List<CsvRow> { new CsvRow(m_columnNameToIndex, m_data) };
 
             var actual = sut.Remove("3").ToList().First();
             var expected = new CsvRow(new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "4", 2 } }, new string[] { "1", "2", "4" });
@@ -71,17 +71,17 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_ToF64Matrix()
         {
-            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
+            var sut = new List<CsvRow> { new CsvRow(m_columnNameToIndex, m_data) };
             var actual = sut.ToF64Matrix();
-            Assert.AreEqual(ExpectedF64Matrix, actual);
+            Assert.AreEqual(m_expectedF64Matrix, actual);
         }
 
         [TestMethod]
         public void CsvRowExtensions_ToStringMatrix()
         {
-            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
+            var sut = new List<CsvRow> { new CsvRow(m_columnNameToIndex, m_data) };
             var actual = sut.ToStringMatrix();
-            Assert.AreEqual(ExpectedStringMatrix, actual);
+            Assert.AreEqual(m_expectedStringMatrix, actual);
         }
 
 
@@ -116,13 +116,13 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvRowExtensions_Write()
         {
-            var sut = new List<CsvRow> { new CsvRow(ColumnNameToIndex, Data) };
+            var sut = new List<CsvRow> { new CsvRow(m_columnNameToIndex, m_data) };
 
             var writer = new StringWriter();
             sut.Write(() => writer);
 
             var actual = writer.ToString();
-            Assert.AreEqual(ExpectedWrite, actual);
+            Assert.AreEqual(m_expectedWrite, actual);
         }
 
         [TestMethod]
