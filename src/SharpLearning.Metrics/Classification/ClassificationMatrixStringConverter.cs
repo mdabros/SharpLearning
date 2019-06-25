@@ -9,7 +9,6 @@ namespace SharpLearning.Metrics.Classification
     /// </summary>
     public static class ClassificationMatrixStringConverter
     {
-
         /// <summary>
         /// Creates a string representation of the classification matrix consisting of the provided confusion matrix and error matrix.
         /// Using the target naming provided in targetStringMapping.
@@ -22,7 +21,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="error"></param>
         /// <returns></returns>
         public static string Convert<T>(List<T> uniqueTargets, Dictionary<T, string> targetStringMapping, 
-            int[][] confusionMatrix, double[][] errorMatrix, double error)
+            int[,] confusionMatrix, double[,] errorMatrix, double error)
         {
             var uniqueStringTargets = uniqueTargets.Select(t => targetStringMapping[t]).ToList();
             return Convert(uniqueStringTargets, confusionMatrix, errorMatrix, error);
@@ -36,7 +35,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="errorMatrix"></param>
         /// <param name="error"></param>
         /// <returns></returns>
-        public static string Convert<T>(List<T> uniqueTargets, int[][] confusionMatrix, double[][] errorMatrix, double error)
+        public static string Convert<T>(List<T> uniqueTargets, int[,] confusionMatrix, double[,] errorMatrix, double error)
         {
             var combinedMatrix = CombineMatrices(confusionMatrix, errorMatrix);
 
@@ -51,15 +50,15 @@ namespace SharpLearning.Metrics.Classification
 
             horizontalClassNames += horizontalClassNames;
             builder.AppendLine(horizontalClassNames);
-            var numberofCols = combinedMatrix.First().Length;
-            var numberOfRows = combinedMatrix.Length;
+            var rows = combinedMatrix.GetLength(0);
+            var cols = combinedMatrix.GetLength(1);
 
-            for (int x = 0; x < numberOfRows; x++)
+            for (int r = 0; r < rows; r++)
             {
-                var row = string.Format("{0}", uniqueTargets[x]);
-                for (int y = 0; y < numberofCols; y++)
+                var row = string.Format("{0}", uniqueTargets[r]);
+                for (int c = 0; c < cols; c++)
                 {
-                    row += string.Format(";{0:0.000}", combinedMatrix[x][y]);
+                    row += string.Format(";{0:0.000}", combinedMatrix[r, c]);
                 }
                 builder.AppendLine(row);
             }
@@ -69,21 +68,21 @@ namespace SharpLearning.Metrics.Classification
             return builder.ToString();
         }
 
-        static double[][] CombineMatrices(int[][] classCountMatrix, double[][] classErrorMatrix)
+        static double[,] CombineMatrices(int[,] classCountMatrix, double[,] classErrorMatrix)
         {
-            var numberOfRows = classErrorMatrix.Length;
-            var numberOfCols = classErrorMatrix.First().Length;
-            var combinedMatrix = new double[classErrorMatrix.Length].Select(s => new double[2 * numberOfCols]).ToArray();
-            for (int i = 0; i < numberOfRows; i++)
+            var rows = classErrorMatrix.GetLength(0);
+            var cols = classErrorMatrix.GetLength(1);
+            var combinedMatrix = new double[rows, 2 * cols];
+            for (int r = 0; r < rows; r++)
             {
-                for (int j = 0; j < numberOfCols; j++)
+                for (int c = 0; c < cols; c++)
                 {
-                    combinedMatrix[i][j] = classCountMatrix[i][j];
+                    combinedMatrix[r, c] = classCountMatrix[r, c];
                 }
 
-                for (int j = 0; j < numberOfCols; j++)
+                for (int c = 0; c < cols; c++)
                 {
-                    combinedMatrix[i][j + numberOfCols] = classErrorMatrix[i][j] * 100.0; // convert to percentage
+                    combinedMatrix[r, c + cols] = classErrorMatrix[r, c] * 100.0; // convert to percentage
                 }
             }
             return combinedMatrix;
