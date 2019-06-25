@@ -22,11 +22,7 @@ namespace SharpLearning.Optimization.Test.Transforms
             }
 
             var expected = new double[] { 0.00596229274859676, 0.000671250295495889, 0.000348781578382963, 0.00357552550811494, 0.0411440752926137, 0.012429636665806, 0.000944855847942692, 0.00964528475124291, 0.557104498829374, 0.000197223348905772, };
-            Assert.AreEqual(expected.Length, actual.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);
-            }
+            ArrayAssert.AssertAreEqual(expected, actual);
         }
 
         [TestMethod]
