@@ -14,7 +14,9 @@ namespace SharpLearning.Neural.Models
     /// Classification neural net model.
     /// </summary>
     [Serializable]
-    public sealed class ClassificationNeuralNetModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
+    public sealed class ClassificationNeuralNetModel 
+        : IPredictorModel<double>
+        , IPredictorModel<ProbabilityPrediction>
     {
         readonly NeuralNet m_neuralNet;
         readonly double[] m_targetNames;
@@ -58,26 +60,6 @@ namespace SharpLearning.Neural.Models
         }
 
         /// <summary>
-        /// Predicts a single observation
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
         /// Predicts a set of observations
         /// </summary>
         /// <param name="observations"></param>
@@ -100,7 +82,7 @@ namespace SharpLearning.Neural.Models
         /// <summary>
         /// Predicts a single observation using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// Usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -130,7 +112,7 @@ namespace SharpLearning.Neural.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the ensembled probabilities
+        /// Predicts a set of observations using the ensembled probabilities
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -211,6 +193,26 @@ namespace SharpLearning.Neural.Models
 
             new GenericXmlDataContractSerializer(types)
                 .Serialize(this, writer);
+        }
+
+        /// <summary>
+        /// Predicts a single observation
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+        {
+            return PredictProbability(observation);
+        }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+        {
+            return PredictProbability(observations);
         }
     }
 }

@@ -81,8 +81,11 @@ namespace SharpLearning.Neural.Test.Layers
             var inputHeight = 3;
             var inputDepth = 3;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, padding, BorderMode.Valid);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, padding, BorderMode.Valid);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, 
+                stride, padding, BorderMode.Valid);
+
+            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, 
+                stride, padding, BorderMode.Valid);
 
             var k = filterDepth;
 
@@ -92,13 +95,15 @@ namespace SharpLearning.Neural.Test.Layers
 
             Trace.WriteLine(convInput);
 
-            ConvUtils.ReshapeConvolutionsToRowMajor(convInput, inputDepth, inputHeight, inputWidth, filterHeight, filterWidth,
-                padding, padding, stride, stride, BorderMode.Valid, rowWiseInput);
+            ConvUtils.ReshapeConvolutionsToRowMajor(convInput, inputDepth, inputHeight, inputWidth, 
+                filterHeight, filterWidth, padding, padding, stride, stride, 
+                BorderMode.Valid, rowWiseInput);
 
             Trace.WriteLine(rowWiseInput);
 
             var sut = new BatchNormalizationLayer();
-            sut.Initialize(filterGridWidth, filterGridHeight, filterDepth, batchSize, Initialization.GlorotUniform, new Random(232));
+            sut.Initialize(filterGridWidth, filterGridHeight, filterDepth, batchSize, 
+                Initialization.GlorotUniform, new Random(232));
 
             var actual = sut.Forward(rowWiseInput);
 

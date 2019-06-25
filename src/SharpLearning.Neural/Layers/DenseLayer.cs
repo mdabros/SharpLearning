@@ -119,7 +119,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             var fans = WeightInitialization.GetFans(this, inputWidth, inputHeight, inputDepth);
             var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);

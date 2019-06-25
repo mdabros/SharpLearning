@@ -14,7 +14,10 @@ namespace SharpLearning.Neural.Layers
     /// However, the softmax might sacrifice accuracy in order to achieve better probabilities.
     /// </summary>
     [Serializable]
-    public sealed class SoftMaxLayer : ILayer, IOutputLayer, IClassificationLayer
+    public sealed class SoftMaxLayer 
+        : ILayer
+        , IOutputLayer
+        , IClassificationLayer
     {
         Matrix<float> OutputActivations;
         Matrix<float> m_delta;

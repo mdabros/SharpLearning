@@ -95,7 +95,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
             m_delta = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
@@ -115,12 +116,12 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// SquaredErrorRegressionLayer layer does not have any parameters or graidents.
+        /// SquaredErrorRegressionLayer layer does not have any parameters or gradients.
         /// </summary>
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            // SquaredErrorRegressionLayer layer does not have any parameters or graidents.
+            // SquaredErrorRegressionLayer layer does not have any parameters or gradients.
         }
     }
 }

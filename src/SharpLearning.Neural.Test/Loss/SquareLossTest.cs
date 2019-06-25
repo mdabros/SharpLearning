@@ -34,8 +34,11 @@ namespace SharpLearning.Neural.Test.Loss
         [TestMethod]
         public void SquareLoss_Loss_Multi_Dimensional()
         {
-            var targets = Matrix<float>.Build.Dense(3, 3, new float[] { 1.0f, 2.3f, 3.1f, 4.4f, 5.8f, 1.0f, 3.5f, 2f, 5f });
-            var predictions = Matrix<float>.Build.Dense(3, 3, new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 1.0f, 3.7f, 1.6f, 5.4f });
+            var targets = Matrix<float>.Build.Dense(3, 3, 
+                new float[] { 1.0f, 2.3f, 3.1f, 4.4f, 5.8f, 1.0f, 3.5f, 2f, 5f });
+
+            var predictions = Matrix<float>.Build.Dense(3, 3, 
+                new float[] { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 1.0f, 3.7f, 1.6f, 5.4f });
 
             var sut = new SquareLoss();
             var actual = sut.Loss(targets, predictions);

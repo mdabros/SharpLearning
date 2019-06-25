@@ -13,7 +13,10 @@ namespace SharpLearning.Neural.Layers
     /// This can be an advantage when the overall goal is the best possible accuracy. And probability estimates is less important.
     /// </summary>
     [Serializable]
-    public sealed class SvmLayer : ILayer, IOutputLayer, IClassificationLayer
+    public sealed class SvmLayer 
+        : ILayer
+        , IOutputLayer
+        , IClassificationLayer
     {
         Matrix<float> OutputActivations;
         Matrix<float> m_delta;
@@ -123,7 +126,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
             m_delta = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);

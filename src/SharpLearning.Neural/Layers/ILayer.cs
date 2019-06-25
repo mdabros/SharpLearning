@@ -53,7 +53,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize">batch size</param>
         /// <param name="initializtion">Initialization type for layers with weights</param>
         /// <param name="random"></param>
-        void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random);
+        void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random);
 
         /// <summary>
         /// Adds the layers parameters and gradients (if any) to the list.

@@ -25,7 +25,10 @@ namespace SharpLearning.Neural
             var vData = v.Data();
 
             if (v.Count != cols)
-            { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Count); }
+            {
+                throw new ArgumentException("matrix cols: " + cols + 
+                    " differs from vector length: " + v.Count);
+            }
 
             for (int col = 0; col < cols; col++)
             {
@@ -54,7 +57,10 @@ namespace SharpLearning.Neural
             var vData = v.Data();
 
             if (v.Count != cols)
-            { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Count); }
+            {
+                throw new ArgumentException("matrix cols: " + cols + 
+                    " differs from vector length: " + v.Count);
+            }
 
             for (int col = 0; col < cols; col++)
             {
@@ -83,7 +89,10 @@ namespace SharpLearning.Neural
             var vData = v.Data();
 
             if (v.Count != rows)
-            { throw new ArgumentException("matrix rows: " + rows + " differs from vector length: " + v.Count); }
+            {
+                throw new ArgumentException("matrix rows: " + rows + 
+                    " differs from vector length: " + v.Count);
+            }
 
             for (int col = 0; col < cols; col++)
             {
@@ -112,7 +121,10 @@ namespace SharpLearning.Neural
             var vData = v.Data();
 
             if (v.Count != cols)
-            { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Count); }
+            {
+                throw new ArgumentException("matrix cols: " + cols + 
+                    " differs from vector length: " + v.Count);
+            }
 
             for (int col = 0; col < cols; col++)
             {
@@ -136,9 +148,16 @@ namespace SharpLearning.Neural
             var cols = m1.ColumnCount;
 
             if (m2.RowCount != rows)
-            { throw new ArgumentException("m1 rows: " + rows + " differs from m2 rows: " + m2.RowCount); }
+            {
+                throw new ArgumentException("m1 rows: " + rows + 
+                    " differs from m2 rows: " + m2.RowCount);
+            }
+
             if (m2.ColumnCount!= cols)
-            { throw new ArgumentException("m1 cols: " + cols + " differs from m2 cols: " + m2.ColumnCount); }
+            {
+                throw new ArgumentException("m1 cols: " + cols + 
+                    " differs from m2 cols: " + m2.ColumnCount);
+            }
 
             var m1Data = m1.Data();
             var m2Data = m2.Data();
@@ -275,7 +294,7 @@ namespace SharpLearning.Neural
 
         /// <summary>
         /// Gets the underlying data array from the matrix. 
-        /// Data is storred as Column-Major.
+        /// Data is stored as Column-Major.
         /// </summary>
         /// <param name="m"></param>
         /// <returns></returns>

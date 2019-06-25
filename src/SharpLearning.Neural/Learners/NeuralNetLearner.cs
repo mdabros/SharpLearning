@@ -50,8 +50,19 @@ namespace SharpLearning.Neural
         /// <param name="rho">Squared gradient moving average decay factor (Default is 0.95)</param>
         /// <param name="beta1">Exponential decay rate for estimates of first moment vector, should be in range 0 to 1 (Default is 0.9)</param>
         /// <param name="beta2">Exponential decay rate for estimates of second moment vector, should be in range 0 to 1 (Default is 0.999)</param>
-        public NeuralNetLearner(NeuralNet net, ITargetEncoder targetEncoder, ILoss loss, double learningRate = 0.001, int iterations = 100, int batchSize = 128, double l1decay = 0, double l2decay = 0,
-            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, double momentum = 0.9, double rho = 0.95, double beta1 = 0.9, double beta2 = 0.999)
+        public NeuralNetLearner(
+            NeuralNet net, ITargetEncoder targetEncoder, 
+            ILoss loss, 
+            double learningRate = 0.001, 
+            int iterations = 100, 
+            int batchSize = 128, 
+            double l1decay = 0, 
+            double l2decay = 0,
+            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, 
+            double momentum = 0.9, 
+            double rho = 0.95, 
+            double beta1 = 0.9, 
+            double beta2 = 0.999)
         {
             m_net = net ?? throw new ArgumentNullException(nameof(net));
             m_targetEncoder = targetEncoder ?? throw new ArgumentNullException(nameof(targetEncoder));
@@ -72,7 +83,8 @@ namespace SharpLearning.Neural
             m_batchSize = batchSize;
             m_random = new Random(232);
             
-            m_optimizer = new NeuralNetOptimizer(learningRate, batchSize, l1decay, l2decay, optimizerMethod, momentum, rho, beta1, beta2);
+            m_optimizer = new NeuralNetOptimizer(learningRate, batchSize, 
+                l1decay, l2decay, optimizerMethod, momentum, rho, beta1, beta2);
 
             SetupLinerAlgebraProvider();
         }
@@ -97,7 +109,8 @@ namespace SharpLearning.Neural
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public NeuralNet Learn(F64Matrix observations, double[] targets, int[] indices)
+        public NeuralNet Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             return Learn(observations, targets, indices,
                 null, null); // no validation data

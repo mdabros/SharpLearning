@@ -82,7 +82,8 @@ namespace SharpLearning.Neural.Test.Learners
             var sut = new RegressionNeuralNetLearner(net, new AccuracyLoss());
         }
 
-        (F64Matrix observations, double[] targets) CreateData(int numberOfObservations, int numberOfFeatures, Random random)
+        (F64Matrix observations, double[] targets) CreateData(
+            int numberOfObservations, int numberOfFeatures, Random random)
         {
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());

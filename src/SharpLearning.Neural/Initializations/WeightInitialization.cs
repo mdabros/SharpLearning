@@ -10,30 +10,7 @@ namespace SharpLearning.Neural.Initializations
     public static class WeightInitialization
     {
         /// <summary>
-        /// Returns the default initialzation bounds based on the initialization type, fan-in and fan-out.
-        /// </summary>
-        /// <param name="initialization"></param>
-        /// <param name="fans"></param>
-        /// <returns></returns>
-        public static float InitializationBound(Initialization initialization, FanInFanOut fans)
-        {
-            switch (initialization)
-            {
-                case Initialization.GlorotUniform:
-                    return (float)Math.Sqrt(6.0 / (double)(fans.FanIn + fans.FanOut)); 
-                case Initialization.HeUniform:
-                    return (float)Math.Sqrt(2.0 / (double)fans.FanIn);
-                case Initialization.GlorotNormal:
-                    return (float)Math.Sqrt(6.0 / (double)(fans.FanIn + fans.FanOut));
-                case Initialization.HeNormal:
-                    return (float)Math.Sqrt(2.0 / (double)fans.FanIn);
-                default:
-                    throw new ArgumentException("Unsupported Initialization type: " + initialization);
-            }
-        }
-
-        /// <summary>
-        /// Calcualtes the fan-in and fan-out used for weight initialization.
+        /// Calculates the fan-in and fan-out used for weight initialization.
         /// </summary>
         /// <param name="layer"></param>
         /// <param name="inputWidth"></param>
@@ -75,9 +52,10 @@ namespace SharpLearning.Neural.Initializations
         /// <param name="fans"></param>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static IContinuousDistribution GetWeightDistribution(Initialization initialization, FanInFanOut fans, Random random)
+        public static IContinuousDistribution GetWeightDistribution(Initialization initialization, 
+            FanInFanOut fans, Random random)
         {
-            var bound = WeightInitialization.InitializationBound(initialization, fans);
+            var bound = InitializationBound(initialization, fans);
 
             switch (initialization)
             {
@@ -89,6 +67,29 @@ namespace SharpLearning.Neural.Initializations
                     return new Normal(0.0, bound, new Random(random.Next()));
                 case Initialization.HeNormal:
                     return new Normal(0.0, bound, new Random(random.Next()));
+                default:
+                    throw new ArgumentException("Unsupported Initialization type: " + initialization);
+            }
+        }
+
+        /// <summary>
+        /// Returns the default initialization bounds based on the initialization type, fan-in and fan-out.
+        /// </summary>
+        /// <param name="initialization"></param>
+        /// <param name="fans"></param>
+        /// <returns></returns>
+        public static float InitializationBound(Initialization initialization, FanInFanOut fans)
+        {
+            switch (initialization)
+            {
+                case Initialization.GlorotUniform:
+                    return (float)Math.Sqrt(6.0 / (fans.FanIn + fans.FanOut));
+                case Initialization.HeUniform:
+                    return (float)Math.Sqrt(2.0 / fans.FanIn);
+                case Initialization.GlorotNormal:
+                    return (float)Math.Sqrt(6.0 / (fans.FanIn + fans.FanOut));
+                case Initialization.HeNormal:
+                    return (float)Math.Sqrt(2.0 / fans.FanIn);
                 default:
                     throw new ArgumentException("Unsupported Initialization type: " + initialization);
             }

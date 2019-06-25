@@ -27,7 +27,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
 
             var sut = ClassificationNeuralNetModel.Load(() => new StringReader(m_classificationNeuralNetModelText));
 
@@ -53,7 +54,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
 
             var sut = ClassificationNeuralNetModel.Load(() => new StringReader(m_classificationNeuralNetModelText));
 
@@ -75,7 +77,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
 
             var sut = ClassificationNeuralNetModel.Load(() => new StringReader(m_classificationNeuralNetModelText));
 
@@ -101,7 +104,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
 
             var sut = ClassificationNeuralNetModel.Load(() => new StringReader(m_classificationNeuralNetModelText));
 
@@ -123,7 +127,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
 
             var net = new NeuralNet();
             net.Add(new InputLayer(numberOfFeatures));

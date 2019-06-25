@@ -46,22 +46,30 @@ namespace SharpLearning.Neural.Optimizers
         /// </summary>
         /// <param name="learningRate">Controls the step size when updating the weights. (Default is 0.01)</param>
         /// <param name="batchSize">Batch size for mini-batch stochastic gradient descent. (Default is 128)</param>
-        /// <param name="l1decay">L1 reguralization term. (Default is 0, so no reguralization)</param>
-        /// <param name="l2decay">L2 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="l1decay">L1 regularization term. (Default is 0, so no regularization)</param>
+        /// <param name="l2decay">L2 regularization term. (Default is 0, so no regularization)</param>
         /// <param name="optimizerMethod">The method used for optimization (Default is RMSProp)</param>
-        /// <param name="momentum">Momentum for gradient update. Should be between 0 and 1. (Defualt is 0.9)</param>
+        /// <param name="momentum">Momentum for gradient update. Should be between 0 and 1. (Default is 0.9)</param>
         /// <param name="rho">Squared gradient moving average decay factor (Default is 0.95)</param>
         /// <param name="beta1">Exponential decay rate for estimates of first moment vector, should be in range 0 to 1 (Default is 0.9)</param>
         /// <param name="beta2">Exponential decay rate for estimates of second moment vector, should be in range 0 to 1 (Default is 0.999)</param>
-        public NeuralNetOptimizer(double learningRate, int batchSize, double l1decay = 0, double l2decay = 0,
-            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, double momentum = 0.9, double rho = 0.95, double beta1 = 0.9, double beta2 = 0.999)
+        public NeuralNetOptimizer(
+            double learningRate, 
+            int batchSize, 
+            double l1decay = 0, 
+            double l2decay = 0,
+            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, 
+            double momentum = 0.9, 
+            double rho = 0.95, 
+            double beta1 = 0.9, 
+            double beta2 = 0.999)
         {
             if (learningRate <= 0) { throw new ArgumentNullException("learning rate must be larger than 0. Was: " + learningRate); }
             if (batchSize <= 0) { throw new ArgumentNullException("batchSize must be larger than 0. Was: " + batchSize); }
             if (l1decay < 0) { throw new ArgumentNullException("l1decay must be positive. Was: " + l1decay); }
             if (l2decay < 0) { throw new ArgumentNullException("l1decay must be positive. Was: " + l2decay); }
             if (momentum <= 0) { throw new ArgumentNullException("momentum must be larger than 0. Was: " + momentum); }
-            if (rho <= 0) { throw new ArgumentNullException("ro must be larger than 0. Was: " + rho); }
+            if (rho <= 0) { throw new ArgumentNullException("rho must be larger than 0. Was: " + rho); }
             if (beta1 <= 0) { throw new ArgumentNullException("beta1 must be larger than 0. Was: " + beta1); }
             if (beta2 <= 0) { throw new ArgumentNullException("beta2 must be larger than 0. Was: " + beta2); }
 
@@ -87,8 +95,13 @@ namespace SharpLearning.Neural.Optimizers
             m_iterationCounter++;
 
             // initialize accumulators. Will only be done once on first iteration and if optimizer methods is not sgd
-            var useAccumulators = m_gsumWeights.Count == 0 && (m_optimizerMethod != OptimizerMethod.Sgd || m_momentum > 0.0);
-            if (useAccumulators) { InitializeAccumulators(parametersAndGradients); }
+            var useAccumulators = m_gsumWeights.Count == 0 && 
+                (m_optimizerMethod != OptimizerMethod.Sgd || m_momentum > 0.0);
+
+            if (useAccumulators)
+            {
+                InitializeAccumulators(parametersAndGradients);
+            }
 
             UpdateLearningRate();
 

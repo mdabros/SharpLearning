@@ -87,7 +87,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             // input layer does not have anything to initialize.
         }
@@ -98,7 +99,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            // input layer does not have any parameters or graidents.
+            // input layer does not have any parameters or gradients.
         }
 
         /// <summary>

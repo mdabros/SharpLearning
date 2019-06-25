@@ -25,7 +25,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.NextDouble()).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.NextDouble()).ToArray();
 
             var sut = RegressionNeuralNetModel.Load(() => new StringReader(m_regressionNeuralNetModelText));
 
@@ -50,7 +51,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.NextDouble()).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.NextDouble()).ToArray();
 
             var sut = RegressionNeuralNetModel.Load(() => new StringReader(m_regressionNeuralNetModelText));
 
@@ -71,7 +73,8 @@ namespace SharpLearning.Neural.Test.Models
             var random = new Random(32);
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
             observations.Map(() => random.NextDouble());
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.NextDouble()).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.NextDouble()).ToArray();
 
             var net = new NeuralNet();
             net.Add(new InputLayer(numberOfFeatures));

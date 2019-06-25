@@ -60,7 +60,7 @@ namespace SharpLearning.Neural
 
             Layers.Add(layer);
 
-            if(layer is IBatchNormalizable) // consider adding seperate interface for batch normalization
+            if(layer is IBatchNormalizable) // consider adding separate interface for batch normalization
             {
                 if(((IBatchNormalizable)layer).BatchNormalization)
                 {
@@ -132,23 +132,26 @@ namespace SharpLearning.Neural
         {
             if (!(Layers.First() is InputLayer))
             {
-                throw new ArgumentException("First layer must be InputLayer. Was: " + Layers.First().GetType().Name);
+                throw new ArgumentException("First layer must be InputLayer. Was: " + 
+                    Layers.First().GetType().Name);
             }
 
             if(!(Layers.Last() is IOutputLayer))
             {
-                throw new ArgumentException("Last layer must be an output layer type. Was: " + Layers.Last().GetType().Name);
+                throw new ArgumentException("Last layer must be an output layer type. Was: " + 
+                    Layers.Last().GetType().Name);
             }
 
             for (int i = 1; i < Layers.Count; i++)
             {
                 var previousLayer = Layers[i - 1];
-                Layers[i].Initialize(previousLayer.Width, previousLayer.Height, previousLayer.Depth, batchSize, m_initialization, random);
+                Layers[i].Initialize(previousLayer.Width, previousLayer.Height, 
+                    previousLayer.Depth, batchSize, m_initialization, random);
             }
         }
 
         /// <summary>
-        /// Returns all paramters and gradients from the net.
+        /// Returns all parameters and gradients from the net.
         /// </summary>
         public List<ParametersAndGradients> GetParametersAndGradients()
         {
@@ -179,8 +182,8 @@ namespace SharpLearning.Neural
             var rawVariableImportance = GetRawVariableImportance();
 
             return featureNameToIndex.ToDictionary(kvp => kvp.Key, kvp => rawVariableImportance[kvp.Value])
-                        .OrderByDescending(kvp => kvp.Value)
-                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                .OrderByDescending(kvp => kvp.Value)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
 
         /// <summary>
@@ -218,7 +221,8 @@ namespace SharpLearning.Neural
             var dimensions = string.Empty;
             foreach (var layer in Layers)
             {
-                dimensions += string.Format("{0}: {1}x{2}x{3}", layer.GetType().Name, layer.Width, layer.Height, layer.Depth) + Environment.NewLine;
+                dimensions += $"{layer.GetType().Name}: {layer.Width}x{layer.Height}x{layer.Depth}" 
+                    + Environment.NewLine;
             }
 
             return dimensions;
