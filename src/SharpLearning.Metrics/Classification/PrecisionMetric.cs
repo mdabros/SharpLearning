@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
 {
@@ -30,10 +29,12 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public double Error(T[] targets, T[] predictions)
         {
-            var uniques = UniqueTargets(targets, predictions);
+            var uniques = Utilities.UniqueTargetValues(targets, predictions);
 
             if (uniques.Count > 2)
-            { throw new ArgumentException("PrecisionMetric only supports binary classification problems"); }
+            {
+                throw new ArgumentException("PrecisionMetric only supports binary classification problems");
+            }
 
             return 1.0 - Precision(targets, predictions);
         }
@@ -48,11 +49,13 @@ namespace SharpLearning.Metrics.Classification
 
             for (int i = 0; i < targets.Length; i++)
             {
-                if (targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
+                if (targets[i].Equals(m_positiveTarget) && 
+                    predictions[i].Equals(m_positiveTarget))
                 {
                     truePositives++;
                 }
-                else if (!targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
+                else if (!targets[i].Equals(m_positiveTarget) && 
+                    predictions[i].Equals(m_positiveTarget))
                 {
                     falsePositves++;
                 }
@@ -66,16 +69,6 @@ namespace SharpLearning.Metrics.Classification
             return (double)truePositives / ((double)truePositives + (double)falsePositves);
         }
 
-        List<T> UniqueTargets(T[] targets, T[] predictions)
-        {
-            var uniquePredictions = predictions.Distinct();
-            var uniqueTargets = targets.Distinct();
-            var uniques = uniqueTargets.Union(uniquePredictions).ToList();
-
-            uniques.Sort();
-            return uniques;
-        }
-
         /// <summary>
         /// Gets a string representation of the classification matrix with counts and percentages
         /// </summary>
@@ -84,13 +77,8 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public string ErrorString(T[] targets, T[] predictions)
         {
-            var uniques = UniqueTargets(targets, predictions);
-
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = 1.0 - Precision(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            var error = Error(targets, predictions);
+            return Utilities.ClassificationMatrixString(targets, predictions, error);
         }
 
         /// <summary>
@@ -103,13 +91,9 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public string ErrorString(T[] targets, T[] predictions, Dictionary<T, string> targetStringMapping)
         {
-            var uniques = UniqueTargets(targets, predictions);
-
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
             var error = Error(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, targetStringMapping, confusionMatrix, errorMatrix, error);
+            return Utilities.ClassificationMatrixString(targets, predictions, error,
+                targetStringMapping);
         }
     }
 }

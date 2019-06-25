@@ -58,32 +58,18 @@ namespace SharpLearning.Metrics.Classification
             return -1.0 / (double)rows * sum;
         }
 
-        List<double> UniqueTargets(double[] targets, double[] predictions)
-        {
-            var uniquePredictions = predictions.Distinct();
-            var uniqueTargets = targets.Distinct();
-            var uniques = uniqueTargets.Union(uniquePredictions).ToList();
-
-            uniques.Sort();
-            return uniques;
-        }
-
         /// <summary>
         /// Creates an error matrix based on the provided confusion matrix
         /// </summary>
         /// <param name="targets"></param>
-        /// <param name="predictions"></param>
+        /// <param name="probabilityPredictions"></param>
         /// <returns></returns>
-        public string ErrorString(double[] targets, ProbabilityPrediction[] predictions)
+        public string ErrorString(double[] targets, ProbabilityPrediction[] probabilityPredictions)
         {
-            var classPredictions = predictions.Select(p => p.Prediction).ToArray();
-            var uniques = UniqueTargets(targets, classPredictions);
+            var error = Error(targets, probabilityPredictions);
+            var predictions = probabilityPredictions.Select(p => p.Prediction).ToArray();
 
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, classPredictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = Error(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            return Utilities.ClassificationMatrixString(targets, predictions, error);
         }
 
         /// <summary>
@@ -91,19 +77,19 @@ namespace SharpLearning.Metrics.Classification
         /// Using the target names provided in the targetStringMapping
         /// </summary>
         /// <param name="targets"></param>
-        /// <param name="predictions"></param>
+        /// <param name="probabilityPredictions"></param>
         /// <param name="targetStringMapping"></param>
         /// <returns></returns>
-        public string ErrorString(double[] targets, ProbabilityPrediction[] predictions, Dictionary<double, string> targetStringMapping)
+        public string ErrorString(
+            double[] targets, 
+            ProbabilityPrediction[] probabilityPredictions, 
+            Dictionary<double, string> targetStringMapping)
         {
-            var classPredictions = predictions.Select(p => p.Prediction).ToArray();
-            var uniques = UniqueTargets(targets, classPredictions);
+            var error = Error(targets, probabilityPredictions);
+            var predictions = probabilityPredictions.Select(p => p.Prediction).ToArray();
 
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, classPredictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = Error(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, targetStringMapping, confusionMatrix, errorMatrix, error);
+            return Utilities.ClassificationMatrixString(targets, predictions, error,
+                targetStringMapping);
         }
     }
 }

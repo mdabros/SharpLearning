@@ -73,13 +73,8 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public string ErrorString(T[] targets, T[] predictions)
         {
-            var uniques = UniqueTargets(targets, predictions);
-
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = TotalError(uniques, confusionMatrix);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            var error = Error(targets, predictions);
+            return Utilities.ClassificationMatrixString(targets, predictions, error);
         }
 
         /// <summary>
@@ -92,13 +87,9 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public string ErrorString(T[] targets, T[] predictions, Dictionary<T, string> targetStringMapping)
         {
-            var uniques = UniqueTargets(targets, predictions);
-
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
             var error = Error(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, targetStringMapping, confusionMatrix, errorMatrix, error);
+            return Utilities.ClassificationMatrixString(targets, predictions, error,
+                targetStringMapping);
         }
     }
 }
