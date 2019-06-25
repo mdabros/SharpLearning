@@ -108,7 +108,11 @@ namespace SharpLearning.Metrics.Test.Classification
         {
             var targets = new double[] { 0, 1, 0 };
             var predictions = new double[] { 1, 0, 1 };
-            var targetStringMapping = new Dictionary<double, string> { { 0, "Negative" }, { 1, "Positive" } };
+            var targetStringMapping = new Dictionary<double, string>
+            {
+                { 0, "Negative" },
+                { 1, "Positive" }
+            };
 
             var sut = new F1ScoreMetric<double>(1);
             var actual = sut.ErrorString(targets, predictions, targetStringMapping);

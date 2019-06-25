@@ -4,13 +4,13 @@ using System.Linq;
 namespace SharpLearning.Metrics.Regression
 {
     /// <summary>
-    /// Calculaes the normalized gini coefficient
+    /// Calculates the normalized gini coefficient
     /// https://en.wikipedia.org/wiki/Gini_coefficient
     /// </summary>
     public sealed class NormalizedGiniCoefficientRegressionMetric : IRegressionMetric
     {
         /// <summary>
-        /// Calculaes the normalized gini coefficient
+        /// Calculates the normalized gini coefficient
         /// https://en.wikipedia.org/wiki/Gini_coefficient
         /// </summary>
         /// <param name="target"></param>
@@ -32,11 +32,19 @@ namespace SharpLearning.Metrics.Regression
                 if (target.Length != predicted.Length) 
                 { throw new ArgumentException(); }
  
-             var all =
-                 predicted.Zip(target, (pred, actual) => new { actualValue = actual, predictedValue = pred }) // (actual, prediction)
-                     .Zip(Enumerable.Range(1, target.Length), (ap, i) => new { ap.actualValue, ap.predictedValue, originalIndex = i })
-                     .OrderByDescending(ap => ap.predictedValue) // important to sort descending by prediction
-                     .ThenBy(ap => ap.originalIndex); // secondary sorts to ensure unambigious orders
+             var all = predicted.Zip(target, (prediction, actual) => new
+                {
+                    actualValue = actual,
+                    predictedValue = prediction
+                })
+                .Zip(Enumerable.Range(1, target.Length), (ap, i) => new
+                {
+                    ap.actualValue,
+                    ap.predictedValue,
+                    originalIndex = i
+                })
+                .OrderByDescending(ap => ap.predictedValue) // important to sort descending by prediction
+                .ThenBy(ap => ap.originalIndex); // secondary sorts to ensure unambiguous orders
  
              var totalActualLosses = target.Sum();
 

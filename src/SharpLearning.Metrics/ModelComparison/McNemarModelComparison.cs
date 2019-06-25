@@ -5,7 +5,7 @@ using System.Text;
 namespace SharpLearning.Metrics
 {
     /// <summary>
-    /// McNemar test for comparin two models. 
+    /// McNemar test for comparing two models. 
     /// The important part of the comparison is the number of times model1 is right where model2 is wrong and vice-versa.
     /// A clear improvement between two models would be if this number is, say 1 to 10.
     /// https://en.wikipedia.org/wiki/McNemar%27s_test
@@ -27,10 +27,13 @@ namespace SharpLearning.Metrics
         /// <returns></returns>
         public int[][] Compare(double[] model1Predictions, double[] model2Predictions, double[] targets)
         {
-            if (model1Predictions.Length != model2Predictions.Length || model1Predictions.Length != targets.Length)
+            if (model1Predictions.Length != model2Predictions.Length || 
+                model1Predictions.Length != targets.Length)
             {
-                throw new ArgumentException(string.Format("Model prediction lengths differ from target length. Model1: {0}, Model2: {1}, Targets: {2}",
-                    model1Predictions.Length, model2Predictions.Length, targets.Length));
+                throw new ArgumentException("Model prediction lengths differ from target length. " +
+                    $"Model1: {model1Predictions.Length}, " + 
+                    $"Model2: {model2Predictions.Length}, " + 
+                    $"Targets: {targets.Length}");
             }
 
             var modelCount = 2;
@@ -43,13 +46,21 @@ namespace SharpLearning.Metrics
                 var target = targets[i];
 
                 if (model1Prediction == target && model2Prediction == target)
-                { mcNemarmatrix[1][1]++; }
+                {
+                    mcNemarmatrix[1][1]++;
+                }
                 else if (model1Prediction != target && model2Prediction != target)
-                { mcNemarmatrix[0][0]++; }
+                {
+                    mcNemarmatrix[0][0]++;
+                }
                 else if (model1Prediction != target && model2Prediction == target)
-                { mcNemarmatrix[1][0]++; }
+                {
+                    mcNemarmatrix[1][0]++;
+                }
                 else if (model1Prediction == target && model2Prediction != target)
-                { mcNemarmatrix[0][1]++; }
+                {
+                    mcNemarmatrix[0][1]++;
+                }
             }
 
             return mcNemarmatrix;
@@ -73,8 +84,8 @@ namespace SharpLearning.Metrics
             
             var builder = new StringBuilder();
             builder.AppendLine(";Model1Wrong;Model1Right");
-            builder.AppendLine(string.Format("Model2Wrong;{0};{1}", mcNemarMatrix[0][0], mcNemarMatrix[0][1]));
-            builder.Append(string.Format("Model2Right;{0};{1}", mcNemarMatrix[1][0], mcNemarMatrix[1][1]));
+            builder.AppendLine($"Model2Wrong;{mcNemarMatrix[0][0]};{mcNemarMatrix[0][1]}");
+            builder.Append($"Model2Right;{mcNemarMatrix[1][0]};{mcNemarMatrix[1][1]}");
             
             return builder.ToString();
         }

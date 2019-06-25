@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Views;
 using SharpLearning.Metrics.Impurity;
 
 namespace SharpLearning.Metrics.Test.Impurity
