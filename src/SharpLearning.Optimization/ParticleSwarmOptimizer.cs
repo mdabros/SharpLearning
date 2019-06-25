@@ -40,7 +40,13 @@ namespace SharpLearning.Optimization
         /// <param name="c2">Learning factor weighting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
-        public ParticleSwarmOptimizer(IParameterSpec[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42, int maxDegreeOfParallelism = -1)
+        public ParticleSwarmOptimizer(IParameterSpec[] parameters, 
+            int maxIterations, 
+            int numberOfParticles = 10, 
+            double c1 = 2, 
+            double c2 = 2, 
+            int seed = 42, 
+            int maxDegreeOfParallelism = -1)
         {
             if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
             if (numberOfParticles < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
@@ -119,7 +125,8 @@ namespace SharpLearning.Optimization
             // iterate for find best
             for (int iterations = 0; iterations < m_maxIterations; iterations++)
             {
-                Parallel.For(0, m_numberOfParticles, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (i) =>
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+                Parallel.For(0, m_numberOfParticles, options, (i) =>
                 {
                     var result = functionToMinimize(particles[i]);
                     lock (m_bestLocker)

@@ -43,7 +43,11 @@ namespace SharpLearning.Optimization
         public MinMaxParameterSpec(double min, double max, 
             ITransform transform, ParameterType parameterType)
         {
-            if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
+            if (min >= max)
+            {
+                throw new ArgumentException($"min: {min} is larger than or equal to max: {max}");
+            }
+
             m_transform = transform ?? throw new ArgumentNullException(nameof(transform));
 
             Min = min;
