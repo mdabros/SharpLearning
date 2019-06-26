@@ -126,26 +126,6 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
         /// Predicts a set of observations using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
         /// usually this will be a more accurate predictions
@@ -186,10 +166,7 @@ namespace SharpLearning.AdaBoost.Models
         /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_rawVariableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_rawVariableImportance;
 
         /// <summary>
         /// Loads a ClassificationAdaBoostModel.
@@ -211,5 +188,21 @@ namespace SharpLearning.AdaBoost.Models
             new GenericXmlDataContractSerializer()
                 .Serialize(this, writer);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
     }
 }

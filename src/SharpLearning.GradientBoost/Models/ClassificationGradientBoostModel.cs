@@ -192,26 +192,6 @@ namespace SharpLearning.GradientBoost.Models
                 .Serialize(this, writer);
         }
 
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
         double BinaryPredict(double[] observation)
         {
             var probability = Probability(observation, 0);
@@ -256,6 +236,22 @@ namespace SharpLearning.GradientBoost.Models
 
             return new ProbabilityPrediction(prediction, probabilities);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
 
         double Probability(double[] observation, int targetIndex)
         {

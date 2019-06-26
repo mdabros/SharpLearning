@@ -136,10 +136,7 @@ namespace SharpLearning.Neural.Models
         /// Returns 0.0 for all features.
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_neuralNet.GetRawVariableImportance();
-        }
+        public double[] GetRawVariableImportance() => m_neuralNet.GetRawVariableImportance();
 
         /// <summary>
         /// Variable importance is currently not supported by Neural Net.
@@ -147,20 +144,15 @@ namespace SharpLearning.Neural.Models
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
-        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
-        {
-            return m_neuralNet.GetVariableImportance(featureNameToIndex);
-        }
+        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex) 
+            => m_neuralNet.GetVariableImportance(featureNameToIndex);
 
         /// <summary>
         /// Outputs a string representation of the neural net.
         /// Neural net must be initialized before the dimensions are correct.
         /// </summary>
         /// <returns></returns>
-        public string GetLayerDimensions()
-        {
-            return m_neuralNet.GetLayerDimensions();
-        }
+        public string GetLayerDimensions() => m_neuralNet.GetLayerDimensions();
 
         /// <summary>
         /// Loads a ClassificationNeuralNetModel.
@@ -196,14 +188,12 @@ namespace SharpLearning.Neural.Models
         }
 
         /// <summary>
-        /// Predicts a single observation
+        /// Private explicit interface implementation for probability predictions
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
         ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
+            => PredictProbability(observation);
 
         /// <summary>
         /// Private explicit interface implementation for probability predictions
@@ -211,8 +201,6 @@ namespace SharpLearning.Neural.Models
         /// <param name="observations"></param>
         /// <returns></returns>
         ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
+            => PredictProbability(observations);
     }
 }

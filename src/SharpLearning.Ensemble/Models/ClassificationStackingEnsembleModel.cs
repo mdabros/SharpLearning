@@ -117,7 +117,7 @@ namespace SharpLearning.Ensemble.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -171,14 +171,12 @@ namespace SharpLearning.Ensemble.Models
         }
 
         /// <summary>
-        /// Predicts a single observation using the ensembled probabilities
+        /// Private explicit interface implementation for probability predictions
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
         ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
+            => PredictProbability(observation);
 
         /// <summary>
         /// Private explicit interface implementation for probability predictions
@@ -186,9 +184,7 @@ namespace SharpLearning.Ensemble.Models
         /// <param name="observations"></param>
         /// <returns></returns>
         ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
+            => PredictProbability(observations);
 
         string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
         {

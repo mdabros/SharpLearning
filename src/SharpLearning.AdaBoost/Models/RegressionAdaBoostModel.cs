@@ -97,10 +97,7 @@ namespace SharpLearning.AdaBoost.Models
         /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_rawVariableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_rawVariableImportance;
 
         /// <summary>
         /// Loads a RegressionAdaBoostModel.

@@ -68,10 +68,7 @@ namespace SharpLearning.Neural.Models
         /// Returns 0.0 for all features.
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_neuralNet.GetRawVariableImportance();
-        }
+        public double[] GetRawVariableImportance() => m_neuralNet.GetRawVariableImportance();
 
         /// <summary>
         /// Variable importance is currently not supported by Neural Net.
@@ -79,10 +76,8 @@ namespace SharpLearning.Neural.Models
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
-        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
-        {
-            return m_neuralNet.GetVariableImportance(featureNameToIndex);
-        }
+        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex) 
+            => m_neuralNet.GetVariableImportance(featureNameToIndex);
 
         /// <summary>
         /// Outputs a string representation of the neural net.
