@@ -124,10 +124,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="indices"></param>
         /// <returns></returns>
         IPredictorModel<double> IIndexedLearner<double>.Learn(
-            F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
         /// Private explicit interface implementation for learning.
@@ -136,9 +133,6 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <returns></returns>
         IPredictorModel<double> ILearner<double>.Learn(
-            F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
     }
 }

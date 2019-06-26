@@ -17,8 +17,11 @@ namespace SharpLearning.AdaBoost.Learners
     /// Classification AdaBoost learner using the SAMME algorithm for multi-class support:
     /// http://web.stanford.edu/~hastie/Papers/samme.pdf
     /// </summary>
-    public sealed class ClassificationAdaBoostLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
-        ILearner<double>, ILearner<ProbabilityPrediction>
+    public sealed class ClassificationAdaBoostLearner 
+        : IIndexedLearner<double>
+        , IIndexedLearner<ProbabilityPrediction>
+        , ILearner<double>
+        , ILearner<ProbabilityPrediction>
     {
         readonly int m_iterations;
         readonly double m_learningRate;
@@ -30,11 +33,13 @@ namespace SharpLearning.AdaBoost.Learners
         int m_uniqueTargetValues;
         ClassificationDecisionTreeLearner m_modelLearner;
 
-        readonly TotalErrorClassificationMetric<double> m_errorMetric = new TotalErrorClassificationMetric<double>();
+        readonly TotalErrorClassificationMetric<double> m_errorMetric = 
+            new TotalErrorClassificationMetric<double>();
 
         List<double> m_modelErrors = new List<double>();
         List<double> m_modelWeights = new List<double>();
-        List<ClassificationDecisionTreeModel> m_models = new List<ClassificationDecisionTreeModel>();
+        List<ClassificationDecisionTreeModel> m_models = 
+            new List<ClassificationDecisionTreeModel>();
         
         double[] m_workErrors = new double[0];
         double[] m_sampleWeights = new double[0];
@@ -179,10 +184,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="indices"></param>
         /// <returns></returns>
         IPredictorModel<double> IIndexedLearner<double>.Learn(
-            F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
         /// Private explicit interface implementation for indexed probability learning.
@@ -192,22 +194,16 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="indices"></param>
         /// <returns></returns>
         IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(
-            F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
-        /// Private explicit interface implementation for learning.
+        /// Private explicit interface implementation.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
         IPredictorModel<double> ILearner<double>.Learn(
-            F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
 
         /// <summary>
         /// Private explicit interface implementation for probability learning.
@@ -216,10 +212,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="targets"></param>
         /// <returns></returns>
         IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
-            F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
 
         bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)
         {

@@ -205,7 +205,7 @@ namespace SharpLearning.XGBoost.Learners
             F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
-        /// Private explicit interface implementation for indexed learning.
+        /// Private explicit interface implementation.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
@@ -214,7 +214,7 @@ namespace SharpLearning.XGBoost.Learners
             F64Matrix observations, double[] targets) => Learn(observations, targets);
 
         /// <summary>
-        /// Private explicit interface implementation for indexed probability learning.
+        /// Private explicit interface implementation for probability learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>

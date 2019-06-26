@@ -24,7 +24,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
-        /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// This reduces variance in the ensemble and can help counter overfitting</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param> 
         /// <param name="quantile">The quantile used in quantile regression. 
         /// 0.5 is the median and corresponds to absolute loss or LAD regression</param>

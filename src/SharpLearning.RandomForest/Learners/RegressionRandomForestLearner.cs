@@ -142,7 +142,7 @@ namespace SharpLearning.RandomForest.Learners
             F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
-        /// Private explicit interface implementation for indexed learning.
+        /// Private explicit interface implementation for learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>

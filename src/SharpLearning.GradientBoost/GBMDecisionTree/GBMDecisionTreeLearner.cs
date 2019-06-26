@@ -25,7 +25,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         readonly Random m_random = new Random(234);
 
         /// <summary>
-        /// Fites a regression decision tree using a set presorted indices for each feature.
+        /// Fits a regression decision tree using a set presorted indices for each feature.
         /// </summary>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="minimumSplitSize">The minimum size </param>

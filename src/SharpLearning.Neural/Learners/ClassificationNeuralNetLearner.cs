@@ -112,46 +112,42 @@ namespace SharpLearning.Neural.Learners
         }
 
         /// <summary>
-        /// Learns a classification neural network
+        /// Private explicit interface implementation for indexed learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
-        /// Learns a classification neural network
+        /// Private explicit interface implementation for indexed probability learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
         IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(
-            F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
-
-        IPredictorModel<double> IIndexedLearner<double>.Learn(
-            F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
-        /// Learns a classification neural network
+        /// Private explicit interface implementation.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
         IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
-            F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
 
         double[] GetOrderedTargetNames(double[] targets)
         {

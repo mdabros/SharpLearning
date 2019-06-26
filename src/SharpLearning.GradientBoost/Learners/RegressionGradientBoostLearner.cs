@@ -276,23 +276,16 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="indices"></param>
         /// <returns></returns>
         IPredictorModel<double> IIndexedLearner<double>.Learn(
-            F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
-        /// Private explicit interface implementation for indexed learning.
+        /// Private explicit interface implementation for learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
         IPredictorModel<double> ILearner<double>.Learn(
-            F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
-
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
 
         /// <summary>
         /// Creates a matrix of ordered indices. Each row is ordered after the corresponding feature column.
