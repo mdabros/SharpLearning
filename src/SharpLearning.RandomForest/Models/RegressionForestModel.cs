@@ -85,7 +85,7 @@ namespace SharpLearning.RandomForest.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations with certainty predictions
+        /// Predicts a set of observations with certainty predictions
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -121,13 +121,10 @@ namespace SharpLearning.RandomForest.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_rawVariableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_rawVariableImportance;
 
         /// <summary>
         /// Loads a RegressionForestModel.

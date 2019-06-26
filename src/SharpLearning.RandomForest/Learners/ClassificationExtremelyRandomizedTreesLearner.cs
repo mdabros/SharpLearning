@@ -18,8 +18,11 @@ namespace SharpLearning.RandomForest.Learners
     /// Learns a classification version of Extremely randomized trees
     /// http://www.montefiore.ulg.ac.be/~ernst/uploads/news/id63/extremely-randomized-trees.pdf
     /// </summary>
-    public sealed class ClassificationExtremelyRandomizedTreesLearner : IIndexedLearner<double>, IIndexedLearner<ProbabilityPrediction>,
-        ILearner<double>, ILearner<ProbabilityPrediction>
+    public sealed class ClassificationExtremelyRandomizedTreesLearner 
+        : IIndexedLearner<double>
+        , IIndexedLearner<ProbabilityPrediction>
+        , ILearner<double>
+        , ILearner<ProbabilityPrediction>
     {
         readonly int m_trees;
         int m_featuresPrSplit;
@@ -32,7 +35,7 @@ namespace SharpLearning.RandomForest.Learners
 
         /// <summary>
         /// The extremely randomized trees learner is an ensemble learner consisting of a series of randomized decision trees. 
-        /// It takes the randomization a step futher than random forest and also select the splits randomly
+        /// It takes the randomization a step further than random forest and also select the splits randomly
         /// </summary>
         /// <param name="trees">Number of trees to use in the ensemble</param>
         /// <param name="minimumSplitSize">The minimum size for a node to be split</param>
@@ -44,8 +47,14 @@ namespace SharpLearning.RandomForest.Learners
         /// If below 1.0 the algorithm changes to random patches</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public ClassificationExtremelyRandomizedTreesLearner(int trees = 100, int minimumSplitSize = 1, int maximumTreeDepth = 2000, 
-            int featuresPrSplit = 0, double minimumInformationGain = .000001, double subSampleRatio = 1.0, int seed = 42, bool runParallel = true)
+        public ClassificationExtremelyRandomizedTreesLearner(int trees = 100, 
+            int minimumSplitSize = 1, 
+            int maximumTreeDepth = 2000, 
+            int featuresPrSplit = 0, 
+            double minimumInformationGain = .000001, 
+            double subSampleRatio = 1.0, 
+            int seed = 42, 
+            bool runParallel = true)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 1"); }
@@ -84,7 +93,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationForestModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public ClassificationForestModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
@@ -108,7 +118,9 @@ namespace SharpLearning.RandomForest.Learners
             {
                 foreach (var indexToRandom in treeIndexToRandomGenerators)
                 {
-                    var tree = CreateTree(observations, targets, indices, indexToRandom.Random);
+                    var tree = CreateTree(observations, targets, 
+                        indices, indexToRandom.Random);
+
                     results.TryAdd(indexToRandom.Index, tree);
                 }
             }
@@ -117,13 +129,16 @@ namespace SharpLearning.RandomForest.Learners
                 var rangePartitioner = Partitioner.Create(treeIndexToRandomGenerators, true);
                 Parallel.ForEach(rangePartitioner, (indexToRandom, loopState) =>
                 {
-                    var tree = CreateTree(observations, targets, indices, indexToRandom.Random);
+                    var tree = CreateTree(observations, targets, 
+                        indices, indexToRandom.Random);
+
                     results.TryAdd(indexToRandom.Index, tree);
                 });
             }
 
             // Ensure the order of the trees.
             var models = results.OrderBy(v => v.Key).Select(v => v.Value).ToArray();
+
             var rawVariableImportance = VariableImportance(models, observations.ColumnCount);
 
             return new ClassificationForestModel(models, rawVariableImportance);
@@ -136,10 +151,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
         /// Private explicit interface implementation for indexed probability learning.
@@ -148,10 +161,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
         /// Private explicit interface implementation for indexed learning.
@@ -159,10 +170,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
 
         /// <summary>
         /// Private explicit interface implementation for indexed probability learning.
@@ -170,10 +179,8 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
 
         double[] VariableImportance(ClassificationDecisionTreeModel[] models, int numberOfFeatures)
         {
@@ -191,7 +198,8 @@ namespace SharpLearning.RandomForest.Learners
             return rawVariableImportance;
         }
 
-        ClassificationDecisionTreeModel CreateTree(F64Matrix observations, double[] targets, int[] indices, Random random)
+        ClassificationDecisionTreeModel CreateTree(F64Matrix observations, double[] targets, 
+            int[] indices, Random random)
         {
             var learner = new DecisionTreeLearner(
                 new DepthFirstTreeBuilder(m_maximumTreeDepth,
@@ -209,7 +217,8 @@ namespace SharpLearning.RandomForest.Learners
                 treeIndices[j] = indices[random.Next(indices.Length)];
             }
 
-            var model = new ClassificationDecisionTreeModel(learner.Learn(observations, targets, treeIndices));
+            var model = new ClassificationDecisionTreeModel(learner.Learn(
+                observations, targets, treeIndices));
 
             return model;
         }
