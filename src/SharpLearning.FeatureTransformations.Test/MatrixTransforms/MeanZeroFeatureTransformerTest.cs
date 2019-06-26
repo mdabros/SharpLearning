@@ -18,7 +18,9 @@ namespace SharpLearning.FeatureTransformations.Test.MatrixTransforms
 
             sut.Transform(matrix, actual);
 
-            var expected = new F64Matrix(new double[] { 27, -72.666666666666671, -55, 35.333333333333329, 28, 37.333333333333329 }, 3, 2);
+            var expected = new F64Matrix(new double[] { 27, -72.666666666666671,
+                                                       -55, 35.333333333333329,
+                                                        28, 37.333333333333329 }, 3, 2);
 
             Assert.AreEqual(expected, actual);
         }
@@ -44,7 +46,9 @@ namespace SharpLearning.FeatureTransformations.Test.MatrixTransforms
                 }
             }
 
-            var expected = new F64Matrix(new double[] { 27, -72.666666666666671, -55, 35.333333333333329, 28, 37.333333333333329 }, 3, 2);
+            var expected = new F64Matrix(new double[] { 27, -72.666666666666671,
+                                                       -55, 35.333333333333329,
+                                                        28, 37.333333333333329 }, 3, 2);
             Assert.AreEqual(expected, actual);
         }
     }

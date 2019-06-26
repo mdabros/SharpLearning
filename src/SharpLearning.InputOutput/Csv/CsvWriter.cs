@@ -10,7 +10,7 @@ namespace SharpLearning.InputOutput.Csv
     /// </summary>
     public class CsvWriter
     {
-        Func<TextWriter> m_writer;
+        readonly Func<TextWriter> m_writer;
         readonly char m_separator;
 
         /// <summary>
@@ -20,8 +20,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="separator"></param>
         public CsvWriter(Func<TextWriter> writer, char separator = CsvParser.DefaultDelimiter)
         {
-            if (writer == null) { throw new ArgumentException("writer"); }
-            m_writer = writer;
+            m_writer = writer ?? throw new ArgumentException("writer");
             m_separator = separator;
         }
 

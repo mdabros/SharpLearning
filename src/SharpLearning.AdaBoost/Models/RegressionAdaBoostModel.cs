@@ -1,13 +1,11 @@
-﻿using SharpLearning.Containers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.AdaBoost.Models
@@ -32,13 +30,9 @@ namespace SharpLearning.AdaBoost.Models
         public RegressionAdaBoostModel(RegressionDecisionTreeModel[] models, double[] modelWeights,
             double[] rawVariableImportance)
         {
-            if (models == null) { throw new ArgumentNullException("models"); }
-            if (modelWeights == null) { throw new ArgumentNullException("modelWeights"); }
-            if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
-
-            m_models = models;
-            m_modelWeights = modelWeights;
-            m_rawVariableImportance = rawVariableImportance;
+            m_models = models ?? throw new ArgumentNullException(nameof(models));
+            m_modelWeights = modelWeights ?? throw new ArgumentNullException(nameof(modelWeights));
+            m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException(nameof(rawVariableImportance));
             m_predictions = new double[m_models.Length];
         }
 
@@ -65,7 +59,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using weighted median
+        /// Predicts a set of observations using weighted median
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -100,13 +94,10 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_rawVariableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_rawVariableImportance;
 
         /// <summary>
         /// Loads a RegressionAdaBoostModel.

@@ -1,5 +1,4 @@
 ﻿using SharpLearning.GradientBoost.Loss;
-using System;
 
 namespace SharpLearning.GradientBoost.Learners
 {
@@ -25,11 +24,18 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
         /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
-        /// This reduces variance in the ensemble and can help ounter overfitting</param>
+        /// This reduces variance in the ensemble and can help outer overfitting</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param> 
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public RegressionSquareLossGradientBoostLearner(int iterations = 100, double learningRate = 0.1, int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, double minimumInformationGain = 0.000001, double subSampleRatio = 1.0, int featuresPrSplit = 0, bool runParallel = true)
+        public RegressionSquareLossGradientBoostLearner(
+            int iterations = 100, 
+            double learningRate = 0.1, 
+            int maximumTreeDepth = 3,
+            int minimumSplitSize = 1, 
+            double minimumInformationGain = 0.000001, 
+            double subSampleRatio = 1.0, 
+            int featuresPrSplit = 0, 
+            bool runParallel = true)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain, 
                 subSampleRatio, featuresPrSplit, new GradientBoostSquaredLoss(), runParallel)
         {

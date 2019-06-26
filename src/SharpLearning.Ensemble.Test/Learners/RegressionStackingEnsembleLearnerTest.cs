@@ -22,7 +22,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var sut = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
@@ -47,7 +48,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var sut = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
@@ -74,7 +76,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var sut = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), true);
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
@@ -99,7 +102,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var sut = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var sut = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();

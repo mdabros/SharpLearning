@@ -1,12 +1,11 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.Containers.Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.DecisionTrees.SplitSearchers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.DecisionTrees.TreeBuilders
 {
@@ -19,6 +18,9 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
         readonly IImpurityCalculator m_impurityCalculator;
 
         readonly double m_minimumInformationGain;
+        readonly int m_maximumTreeDepth;
+        readonly Random m_random;
+
         int m_featuresPrSplit;
 
         double[] m_workTargets = new double[0];
@@ -30,9 +32,6 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
         int[] m_featureCandidates = new int[0];
 
         int[] m_bestSplitWorkIndices = new int[0];
-        int m_maximumTreeDepth;
-
-        Random m_random;
         bool m_featuresCandidatesSet = false;
 
         // Variable importances are based on the work each variable does (information gain).
@@ -48,25 +47,27 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
         /// </summary>
         /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
         /// <param name="featuresPrSplit">The number of features to be selected between at each split. 
-        /// 0 means use all availible features</param>
+        /// 0 means use all available features</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
         /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
         /// <param name="impurityCalculator">Impurity calculator used to decide which split is optimal</param>
-        public DepthFirstTreeBuilder(int maximumTreeDepth, int featuresPrSplit, double minimumInformationGain, int seed,
-            ISplitSearcher splitSearcher, IImpurityCalculator impurityCalculator)
+        public DepthFirstTreeBuilder(int maximumTreeDepth, 
+            int featuresPrSplit, 
+            double minimumInformationGain, 
+            int seed,
+            ISplitSearcher splitSearcher, 
+            IImpurityCalculator impurityCalculator)
         {
-            if (splitSearcher == null) { throw new ArgumentException("splitSearcher"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 0"); }
-            if (impurityCalculator == null) { throw new ArgumentException("impurityCalculator"); }
+            m_splitSearcher = splitSearcher ?? throw new ArgumentException(nameof(splitSearcher));
+            m_impurityCalculator = impurityCalculator ?? throw new ArgumentException(nameof(impurityCalculator));
 
             m_maximumTreeDepth = maximumTreeDepth;
             m_featuresPrSplit = featuresPrSplit;
-            m_splitSearcher = splitSearcher;
-            m_impurityCalculator = impurityCalculator;
             m_minimumInformationGain = minimumInformationGain;
 
             m_random = new Random(seed);

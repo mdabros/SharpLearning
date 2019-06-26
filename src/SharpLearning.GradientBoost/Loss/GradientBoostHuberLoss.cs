@@ -1,8 +1,8 @@
-﻿using SharpLearning.Containers.Extensions;
-using SharpLearning.GradientBoost.GBMDecisionTree;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.GradientBoost.GBMDecisionTree;
 
 namespace SharpLearning.GradientBoost.Loss
 {
@@ -73,7 +73,7 @@ namespace SharpLearning.GradientBoost.Loss
                 }
             }
 
-            splitInfo.Cost = splitInfo.SumOfSquares - (splitInfo.Sum * splitInfo.Sum / (double)splitInfo.Samples);
+            splitInfo.Cost = splitInfo.SumOfSquares - (splitInfo.Sum * splitInfo.Sum / splitInfo.Samples);
 
             return splitInfo;
         }
@@ -96,7 +96,8 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
         /// <param name="inSample"></param>
-        public void UpdateResiduals(double[] targets, double[] predictions, double[] residuals, bool[] inSample)
+        public void UpdateResiduals(double[] targets, double[] predictions, 
+            double[] residuals, bool[] inSample)
         {
             var absDiff = new double[inSample.Length];
             var difference = new double[inSample.Length];
@@ -140,19 +141,20 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="right"></param>
         /// <param name="target"></param>
         /// <param name="residual"></param>
-        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, double target, double residual)
+        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, 
+            double target, double residual)
         {
             var residual2 = residual * residual;
 
             left.Samples++;
             left.Sum += residual;
             left.SumOfSquares += residual2;
-            left.Cost = left.SumOfSquares - (left.Sum * left.Sum / (double)left.Samples);
+            left.Cost = left.SumOfSquares - (left.Sum * left.Sum / left.Samples);
 
             right.Samples--;
             right.Sum -= residual;
             right.SumOfSquares -= residual2;
-            right.Cost = right.SumOfSquares - (right.Sum * right.Sum / (double)right.Samples);
+            right.Cost = right.SumOfSquares - (right.Sum * right.Sum / right.Samples);
         }
 
         /// <summary>
@@ -172,7 +174,8 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="inSample"></param>
         /// <returns></returns>
-        public double UpdatedLeafValue(double currentLeafValue, double[] targets, double[] predictions, bool[] inSample)
+        public double UpdatedLeafValue(double currentLeafValue, double[] targets, 
+            double[] predictions, bool[] inSample)
         {
             var diff = new List<double>();
             for (int j = 0; j < inSample.Length; j++)
@@ -194,7 +197,7 @@ namespace SharpLearning.GradientBoost.Loss
                 values[j] = sign * Math.Min(Math.Abs(medianDiff), m_gamma); 
             }
 
-            var newValue = median + values.Sum() / (double)values.Length;
+            var newValue = median + values.Sum() / values.Length;
 
             return newValue;
         }

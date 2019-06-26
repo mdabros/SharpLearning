@@ -5,13 +5,11 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// <summary>
     /// Maintains weighted target counts. 
     /// Offset is used for cases with negative target names like -1.
-    /// This is alot faster than mapping using a dictionary since this solution simply indexes into an array
+    /// This is a lot faster than mapping using a dictionary since this solution simply indexes into an array
     /// </summary>
     internal class TargetCounts
     {
-        public double[] Counts;
-        public int OffSet;
-        public int Length;
+        double[] m_counts;
 
         public TargetCounts()
             : this(0, 0)
@@ -22,8 +20,12 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
 	    {
             OffSet = offset;
             Length = offset + size;
-            Counts = new double[Length];
+            m_counts = new double[Length];
 	    }
+
+        public double[] Counts { get => m_counts; }
+        public int OffSet { get; private set; }
+        public int Length { get; private set; }
 
         public double this[int index]
         {
@@ -50,12 +52,12 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             OffSet = offset;
             Length = offset + size;
 
-            Array.Resize(ref Counts, Length);
+            Array.Resize(ref m_counts, Length);
             Array.Clear(Counts, 0, Counts.Length);
         }
 
         /// <summary>
-        /// Sets the counts equal to the prvided counts.
+        /// Sets the counts equal to the provided counts.
         /// </summary>
         /// <param name="newCounts"></param>
         public void SetCounts(TargetCounts newCounts)

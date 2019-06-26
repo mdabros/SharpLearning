@@ -1,5 +1,5 @@
-﻿using SharpLearning.Containers.Extensions;
-using System;
+﻿using System;
+using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.CrossValidation.Samplers
 {

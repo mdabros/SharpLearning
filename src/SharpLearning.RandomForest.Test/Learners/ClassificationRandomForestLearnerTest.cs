@@ -111,7 +111,8 @@ namespace SharpLearning.RandomForest.Test.Learners
         {
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
-            var sut = new ClassificationRandomForestLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, false);
+            var sut = new ClassificationRandomForestLearner(trees, 1, 100, 1, 0.0001, 
+                subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -125,7 +126,8 @@ namespace SharpLearning.RandomForest.Test.Learners
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001, subSampleRatio, 42, false);
+            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001, 
+                subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);

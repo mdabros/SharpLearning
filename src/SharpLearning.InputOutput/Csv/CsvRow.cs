@@ -56,8 +56,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            CsvRow other = obj as CsvRow;
-            if (other != null)
+            if (obj is CsvRow other)
             {
                 return Equals(other);
             }

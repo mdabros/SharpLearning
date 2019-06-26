@@ -1,7 +1,7 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Diagnostics;
+using MathNet.Numerics.LinearAlgebra;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SharpLearning.Neural.Test
 {
@@ -26,8 +26,11 @@ namespace SharpLearning.Neural.Test
             var random = new Random(42);
             var input = Matrix<float>.Build.Random(batchSize, inputWidth * inputHeight * inputDepth, 42);
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, padding, BorderMode.Valid);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, padding, BorderMode.Valid);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, 
+                padding, BorderMode.Valid);
+
+            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, 
+                padding, BorderMode.Valid);
 
             var k = filterWidth * filterHeight * inputDepth;
             var n = batchSize * filterGridWidth * filterGridHeight;
@@ -60,8 +63,11 @@ namespace SharpLearning.Neural.Test
             var inputHeight = 3;
             var inputDepth = 3;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, padding, BorderMode.Valid);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, padding, BorderMode.Valid);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, 
+                padding, BorderMode.Valid);
+
+            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, 
+                padding, BorderMode.Valid);
 
             var k = filterWidth * filterHeight * inputDepth;
             var n = filterGridWidth * filterGridHeight * batchSize;
@@ -96,8 +102,11 @@ namespace SharpLearning.Neural.Test
             var inputHeight = 3;
             var inputDepth = 3;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, padding, BorderMode.Valid);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, padding, BorderMode.Valid);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, 
+                padding, BorderMode.Valid);
+
+            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, 
+                padding, BorderMode.Valid);
 
             var k = filterDepth;
             var crs = inputDepth * filterWidth * filterHeight;
@@ -106,8 +115,8 @@ namespace SharpLearning.Neural.Test
             var convolutedInput = Matrix<float>.Build.Dense(k, npq, new float[] { -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f });
             var actual = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight);
 
-            ConvUtils.ReshapeConvolutionsToRowMajor(convolutedInput, inputDepth, inputHeight, inputWidth, filterHeight, filterWidth,
-                padding, padding, stride, stride, BorderMode.Valid, actual);
+            ConvUtils.ReshapeConvolutionsToRowMajor(convolutedInput, inputDepth, inputHeight, inputWidth, 
+                filterHeight, filterWidth, padding, padding, stride, stride, BorderMode.Valid, actual);
 
             var expected = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight, new float[] { -6.260461f,  -6.260461f,  -6.260461f,  -6.260461f,  -6.260461f,  -7.173417f,  -7.173417f,  -7.173417f,  -7.173417f,  -7.173417f,  -8.999331f,  -8.999331f,  -8.999331f,  -8.999331f,  -8.999331f,  -9.912288f,  -9.912288f,  -9.912288f,  -9.912288f,  -9.912288f,  87.38299f,  87.38299f,  87.38299f,  87.38299f,  87.38299f,  94.47046f,  94.47046f,  94.47046f,  94.47046f,  94.47046f,  108.6454f,  108.6454f,  108.6454f,  108.6454f,  108.6454f,  115.7329f,  115.7329f,  115.7329f,  115.7329f,  115.7329f });
             MatrixAsserts.AreEqual(expected, actual);
@@ -129,8 +138,11 @@ namespace SharpLearning.Neural.Test
             var inputHeight = 3;
             var inputDepth = 3;
 
-            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, padding, BorderMode.Valid);
-            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, padding, BorderMode.Valid);
+            var filterGridWidth = ConvUtils.GetFilterGridLength(inputWidth, filterWidth, stride, 
+                padding, BorderMode.Valid);
+
+            var filterGridHeight = ConvUtils.GetFilterGridLength(inputHeight, filterHeight, stride, 
+                padding, BorderMode.Valid);
 
             var k = filterDepth;
             var crs = inputDepth * filterWidth * filterHeight;
@@ -139,8 +151,8 @@ namespace SharpLearning.Neural.Test
             var rowMajor = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight, new float[] { -6.260461f, -6.260461f, -6.260461f, -6.260461f, -6.260461f, -7.173417f, -7.173417f, -7.173417f, -7.173417f, -7.173417f, -8.999331f, -8.999331f, -8.999331f, -8.999331f, -8.999331f, -9.912288f, -9.912288f, -9.912288f, -9.912288f, -9.912288f, 87.38299f, 87.38299f, 87.38299f, 87.38299f, 87.38299f, 94.47046f, 94.47046f, 94.47046f, 94.47046f, 94.47046f, 108.6454f, 108.6454f, 108.6454f, 108.6454f, 108.6454f, 115.7329f, 115.7329f, 115.7329f, 115.7329f, 115.7329f });
             var actual = Matrix<float>.Build.Dense(k, npq);
 
-            ConvUtils.ReshapeRowMajorToConvolutionLayout(rowMajor, inputDepth, inputHeight, inputWidth, filterHeight, filterWidth,
-                padding, padding, stride, stride, BorderMode.Valid, actual);
+            ConvUtils.ReshapeRowMajorToConvolutionLayout(rowMajor, inputDepth, inputHeight, inputWidth, 
+                filterHeight, filterWidth, padding, padding, stride, stride, BorderMode.Valid, actual);
 
             var expected = Matrix<float>.Build.Dense(k, npq, new float[] { -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f, -6.260461f, 87.38299f, -7.173417f, 94.47046f, -8.999331f, 108.6454f, -9.912288f, 115.7329f });
 

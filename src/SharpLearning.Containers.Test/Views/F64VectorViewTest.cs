@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Containers.Views;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers.Test.Views
 {

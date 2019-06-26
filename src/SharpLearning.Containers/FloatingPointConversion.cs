@@ -54,8 +54,7 @@ namespace SharpLearning.Containers
 
         static double ParseAnyNumberStyle(string value)
         {
-            var result = 0.0;
-            if (double.TryParse(value, NumberStyle, nfi, out result))
+            if (double.TryParse(value, NumberStyle, nfi, out double result))
             {
                 return result;
             }

@@ -1,6 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Loss;
 
 namespace SharpLearning.Neural.Test.Loss

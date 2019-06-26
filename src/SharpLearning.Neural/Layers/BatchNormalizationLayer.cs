@@ -1,10 +1,10 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using SharpLearning.Neural.Activations;
-using SharpLearning.Neural.Initializations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MathNet.Numerics.LinearAlgebra;
+using SharpLearning.Neural.Activations;
+using SharpLearning.Neural.Initializations;
 
 namespace SharpLearning.Neural.Layers
 {
@@ -36,7 +36,7 @@ namespace SharpLearning.Neural.Layers
         public Activation ActivationFunc { get; set; }
 
         /// <summary>
-        /// The weights outputtet by the layer.
+        /// The weights outputted by the layer.
         /// </summary>
         public Matrix<float> OutputActivations;
         Matrix<float> m_inputActivations;
@@ -64,7 +64,7 @@ namespace SharpLearning.Neural.Layers
         Matrix<float> m_delta;
 
         /// <summary>
-        /// The wieghts controlling the linear scaling of the normalization.
+        /// The weights controlling the linear scaling of the normalization.
         /// </summary>
         public Matrix<float> Scale;
 
@@ -152,7 +152,7 @@ namespace SharpLearning.Neural.Layers
             var src = input;
             var dst = OutputActivations.Data();
 
-            int N = input.RowCount; // number of items in mni batch
+            int N = input.RowCount; // number of items in mini batch
             int C = Depth;
             int H = Height;
             int W = Width;
@@ -239,7 +239,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize"></param>
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             Width = inputWidth;
             Height = inputHeight;

@@ -1,11 +1,9 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Ensemble.Strategies;
-using SharpLearning.InputOutput.Serialization;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Models
 {
@@ -23,12 +21,11 @@ namespace SharpLearning.Ensemble.Models
         /// </summary>
         /// <param name="ensembleModels">Models included in the ensemble</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-        public RegressionEnsembleModel(IPredictorModel<double>[] ensembleModels, IRegressionEnsembleStrategy ensembleStrategy)
+        public RegressionEnsembleModel(IPredictorModel<double>[] ensembleModels, 
+            IRegressionEnsembleStrategy ensembleStrategy)
         {
-            if (ensembleModels == null) { throw new ArgumentNullException("ensembleModels"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
-            m_ensembleModels = ensembleModels;
-            m_ensembleStrategy = ensembleStrategy;
+            m_ensembleModels = ensembleModels ?? throw new ArgumentNullException(nameof(ensembleModels));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
         }
 
         /// <summary>
@@ -68,13 +65,13 @@ namespace SharpLearning.Ensemble.Models
         }
         
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
             // return normalized variable importance. 
-            // Individdual models can have very different scaling of importances 
+            // Individual models can have very different scaling of importances 
             var index = 0;
             var dummyFeatureNameToIndex = m_ensembleModels
                 .First().GetRawVariableImportance()

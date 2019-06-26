@@ -22,8 +22,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="treeBuilder"></param>
         public DecisionTreeLearner(ITreeBuilder treeBuilder)
         {
-            if (treeBuilder == null) { throw new ArgumentNullException("treeBuilder"); }
-            m_treeBuilder = treeBuilder;
+            m_treeBuilder = treeBuilder ?? throw new ArgumentNullException(nameof(treeBuilder));
         }
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
-        /// <param name="weights">Provide weights inorder to weigh each sample separetely</param>
+        /// <param name="weights">Provide weights in order to weigh each sample separately</param>
         /// <returns></returns>
         public BinaryTree Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
         {
@@ -101,7 +100,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
-        /// <param name="weights">Provide weights inorder to weigh each sample separetely</param>
+        /// <param name="weights">Provide weights in order to weigh each sample separately</param>
         /// <returns></returns>
         public BinaryTree Learn(F64MatrixView observations, double[] targets, int[] indices, double[] weights)
         {
@@ -114,7 +113,8 @@ namespace SharpLearning.DecisionTrees.Learners
             {
                 if (weights.Length != targets.Length || weights.Length != observations.RowCount)
                 {
-                    throw new ArgumentException($"Weights length differ from observation row count and target length. Weights: {weights.Length}, observation: {observations.RowCount}, targets: {targets.Length}");
+                    throw new ArgumentException($"Weights length differ from observation row count and target length. " +
+                        $"Weights: {weights.Length}, observation: {observations.RowCount}, targets: {targets.Length}");
                 }
             }
             return m_treeBuilder.Build(observations, targets, indices, weights);

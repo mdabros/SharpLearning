@@ -53,7 +53,8 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new StratifiedCrossValidation<double>(folds, 42);
-            var predictions = sut.CrossValidate(new ClassificationDecisionTreeLearner(), observations, targets);
+            var learner = new ClassificationDecisionTreeLearner();
+            var predictions = sut.CrossValidate(learner, observations, targets);
             var metric = new TotalErrorClassificationMetric<double>();
 
             return metric.Error(targets, predictions);
@@ -68,8 +69,8 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             var rowsToCrossvalidate = targets.Length / 2;
             var indices = Enumerable.Range(0, rowsToCrossvalidate).ToArray();
             var predictions = new double[rowsToCrossvalidate];
-
-            sut.CrossValidate(new ClassificationDecisionTreeLearner(), observations, targets, indices, predictions);
+            var learner = new ClassificationDecisionTreeLearner();
+            sut.CrossValidate(learner, observations, targets, indices, predictions);
             var metric = new TotalErrorClassificationMetric<double>();
 
             return metric.Error(targets.Take(rowsToCrossvalidate).ToArray(), predictions);

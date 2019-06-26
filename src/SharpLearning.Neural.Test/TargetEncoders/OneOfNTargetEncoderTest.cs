@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Diagnostics;
+using MathNet.Numerics.LinearAlgebra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.TargetEncoders;
-using MathNet.Numerics.LinearAlgebra;
-using System.Diagnostics;
 
 namespace SharpLearning.Neural.Test.TargetEncoders
 {

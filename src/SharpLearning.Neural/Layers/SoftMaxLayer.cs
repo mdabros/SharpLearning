@@ -1,9 +1,8 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System;
+using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Neural.Layers
 {
@@ -12,10 +11,13 @@ namespace SharpLearning.Neural.Layers
     /// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes. 
     /// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class, 
     /// the Softmax classifier gives a slightly more intuitive output (normalized class probabilities.
-    /// However, the softmax might sacrifice accuracy inorder to achive better propabilities.
+    /// However, the softmax might sacrifice accuracy in order to achieve better probabilities.
     /// </summary>
     [Serializable]
-    public sealed class SoftMaxLayer : ILayer, IOutputLayer, IClassificationLayer
+    public sealed class SoftMaxLayer 
+        : ILayer
+        , IOutputLayer
+        , IClassificationLayer
     {
         Matrix<float> OutputActivations;
         Matrix<float> m_delta;
@@ -49,7 +51,7 @@ namespace SharpLearning.Neural.Layers
         /// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes. 
         /// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class, 
         /// the Softmax classifier gives a slightly more intuitive output (normalized class probabilities.
-        /// However, the softmax might sacrifice accuracy inorder to achive better propabilities.
+        /// However, the softmax might sacrifice accuracy in order to achieve better propabilities.
         /// </summary>
         /// <param name="numberOfClasses"></param>
         public SoftMaxLayer(int numberOfClasses)

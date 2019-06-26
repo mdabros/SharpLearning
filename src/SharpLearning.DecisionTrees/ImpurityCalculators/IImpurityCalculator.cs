@@ -1,9 +1,4 @@
 ﻿using SharpLearning.Containers.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.DecisionTrees.ImpurityCalculators
 {
@@ -15,7 +10,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <summary>
         /// Initialize the calculator with targets, weights and work interval
         /// </summary>
-        /// <param name="uniqueTargets">The availbile target values</param>
+        /// <param name="uniqueTargets">The available target values</param>
         /// <param name="targets"></param>
         /// <param name="weights"></param>
         /// <param name="interval"></param>
@@ -39,7 +34,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         void Reset();
 
         /// <summary>
-        /// Resturn the impurity improvement
+        /// Return the impurity improvement
         /// </summary>
         /// <param name="impurity"></param>
         /// <returns></returns>
@@ -81,7 +76,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <summary>
         /// Calculates the probabilities based in the current work interval. 
         /// Note that LeafProbabilities are only valid for classification impurity calculators.
-        /// Regression impurity calculators will return and empy result. The orders of the probabilities 
+        /// Regression impurity calculators will return and empty result. The orders of the probabilities 
         /// is the same as TargetNames.
         /// </summary>
         /// <returns></returns>

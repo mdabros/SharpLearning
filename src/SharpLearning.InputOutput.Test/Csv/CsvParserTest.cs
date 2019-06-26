@@ -117,31 +117,49 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var columnNameToIndex = new Dictionary<string, int> { { "0", 0 }, { "1", 1 }, { "2", 2 } };
 
-            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "1", "15", "0"}),
-                                                new CsvRow(columnNameToIndex, new string[] { "1", "12", "0"}),
-                                                new CsvRow(columnNameToIndex, new string[] { "4", "6", "0"}) };
+            var expected = new List<CsvRow>
+            {
+                new CsvRow(columnNameToIndex, new string[] { "1", "15", "0"}),
+                new CsvRow(columnNameToIndex, new string[] { "1", "12", "0"}),
+                new CsvRow(columnNameToIndex, new string[] { "4", "6", "0"})
+            };
 
             return expected;
         }
 
         List<CsvRow> Expected()
         {
-            var columnNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, { "PreviousExperience_month", 1 }, { "Pass", 2 } };
+            var columnNameToIndex = new Dictionary<string, int>
+            {
+                { "AptitudeTestScore", 0 },
+                { "PreviousExperience_month", 1 },
+                { "Pass", 2 }
+            };
 
-            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "5", "2", "1"}),
-                                                       new CsvRow(columnNameToIndex, new string[] { "1", "12", "0"}),
-                                                       new CsvRow(columnNameToIndex, new string[] { "3", "18", "0"}) };
+            var expected = new List<CsvRow>
+            {
+                new CsvRow(columnNameToIndex, new string[] { "5", "2", "1"}),
+                new CsvRow(columnNameToIndex, new string[] { "1", "12", "0"}),
+                new CsvRow(columnNameToIndex, new string[] { "3", "18", "0"})
+            };
 
             return expected;
         }
 
         List<CsvRow> Expected_ColumnNames()
         {
-            var columnNameToIndex = new Dictionary<string, int> { { "PreviousExperience_month", 0 }, { "Pass", 1 } };
+            var columnNameToIndex = new Dictionary<string, int>
+            {
+                { "PreviousExperience_month", 0 },
+                { "Pass", 1 }
+            };
 
-            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "2", "1"}),
-                                                       new CsvRow(columnNameToIndex, new string[] { "12", "0"}),
-                                                       new CsvRow(columnNameToIndex, new string[] { "18", "0"}) };
+            var expected = new List<CsvRow>
+            {
+                new CsvRow(columnNameToIndex, new string[] { "2", "1"}),
+                new CsvRow(columnNameToIndex, new string[] { "12", "0"}),
+                new CsvRow(columnNameToIndex, new string[] { "18", "0"})
+            };
 
             return expected;
         }
@@ -150,9 +168,12 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var columnNameToIndex = new Dictionary<string, int> { { "Pass", 0 } };
 
-            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "1" }),
-                                                       new CsvRow(columnNameToIndex, new string[] { "0" }),
-                                                       new CsvRow(columnNameToIndex, new string[] { "0" }) };
+            var expected = new List<CsvRow>
+            {
+                new CsvRow(columnNameToIndex, new string[] { "1" }),
+                new CsvRow(columnNameToIndex, new string[] { "0" }),
+                new CsvRow(columnNameToIndex, new string[] { "0" })
+            };
 
             return expected;
         }
@@ -161,8 +182,11 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var columnNameToIndex = new Dictionary<string, int> { { "c1", 0 }, { "c2", 1 }, { "c3", 2 } };
 
-            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "1", "2", "3"}),
-                                                       new CsvRow(columnNameToIndex, new string[] { "10", "20", "30"}) };
+            var expected = new List<CsvRow>
+            {
+                new CsvRow(columnNameToIndex, new string[] { "1", "2", "3"}),
+                new CsvRow(columnNameToIndex, new string[] { "10", "20", "30"})
+            };
 
             return expected;
         }
@@ -171,8 +195,11 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var columnNameToIndex = new Dictionary<string, int> { { "c1", 0 }, { "c2", 1 }, { "c3", 2 } };
 
-            var expected = new List<CsvRow> { new CsvRow(columnNameToIndex, new string[] { "1", "the following dates;1. jan, 1. april", "3"}),
-                                                       new CsvRow(columnNameToIndex, new string[] { "10", "20", "30"}) };
+            var expected = new List<CsvRow>
+            {
+                new CsvRow(columnNameToIndex, new string[] { "1", "the following dates;1. jan, 1. april", "3"}),
+                new CsvRow(columnNameToIndex, new string[] { "10", "20", "30"})
+            };
 
             return expected;
         }

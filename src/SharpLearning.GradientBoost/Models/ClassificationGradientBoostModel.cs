@@ -1,12 +1,12 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Serialization;
-using SharpLearning.GradientBoost.GBMDecisionTree;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.GradientBoost.GBMDecisionTree;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.GradientBoost.Models
 {
@@ -14,7 +14,9 @@ namespace SharpLearning.GradientBoost.Models
     /// 
     /// </summary>
     [Serializable]
-    public sealed class ClassificationGradientBoostModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
+    public sealed class ClassificationGradientBoostModel 
+        : IPredictorModel<double>
+        , IPredictorModel<ProbabilityPrediction>
     {
         /// <summary>
         /// 
@@ -49,14 +51,18 @@ namespace SharpLearning.GradientBoost.Models
         /// <param name="learningRate"></param>
         /// <param name="initialLoss"></param>
         /// <param name="featureCount"></param>
-        public ClassificationGradientBoostModel(GBMTree[][] trees, double[] targetNames, double learningRate, double initialLoss, int featureCount)
+        public ClassificationGradientBoostModel(
+            GBMTree[][] trees, 
+            double[] targetNames, 
+            double learningRate, 
+            double initialLoss, 
+            int featureCount)
         {
-            if (trees == null) { throw new ArgumentNullException("trees"); }
-            if (targetNames == null) { throw new ArgumentException("targetNames"); }
-            Trees = trees;
+            Trees = trees ?? throw new ArgumentNullException(nameof(trees));
+            TargetNames = targetNames ?? throw new ArgumentException(nameof(targetNames));
+
             LearningRate = learningRate;
             InitialLoss = initialLoss;
-            TargetNames = targetNames;
             FeatureCount = featureCount;
         }
 
@@ -78,26 +84,6 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
         /// Predicts a single observation with probabilities
         /// </summary>
         /// <param name="observation"></param>
@@ -115,7 +101,7 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the combination of all predictors
+        /// Predicts a set of observations using the combination of all predictors
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -168,7 +154,7 @@ namespace SharpLearning.GradientBoost.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -205,7 +191,6 @@ namespace SharpLearning.GradientBoost.Models
             new GenericXmlDataContractSerializer()
                 .Serialize(this, writer);
         }
-
 
         double BinaryPredict(double[] observation)
         {
@@ -251,6 +236,22 @@ namespace SharpLearning.GradientBoost.Models
 
             return new ProbabilityPrediction(prediction, probabilities);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
 
         double Probability(double[] observation, int targetIndex)
         {

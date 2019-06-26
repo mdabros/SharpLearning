@@ -1,9 +1,5 @@
-﻿using SharpLearning.Containers.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.DecisionTrees.ImpurityCalculators
 {
@@ -64,10 +60,8 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="interval"></param>
         public void Init(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval)
         {
-            if (targets == null) { throw new ArgumentException("targets"); }
-            if (weights == null) { throw new ArgumentException("weights"); }
-            m_targets = targets;
-            m_weights = weights;
+            m_targets = targets ?? throw new ArgumentException(nameof(targets));
+            m_weights = weights ?? throw new ArgumentException(nameof(weights));
             m_interval = interval;
 
             m_weightedTotal = 0.0;
@@ -152,7 +146,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             if (m_currentPosition > newPosition)
             {
                 throw new ArgumentException("New position: " + newPosition +
-                    " must be larget than current: " + m_currentPosition);
+                    " must be larger than current: " + m_currentPosition);
             }
 
             var weightsPresent = m_weights.Length != 0;
@@ -240,7 +234,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
-        /// Unique target names are not availible for regression
+        /// Unique target names are not available for regression
         /// </summary>
         public double[] TargetNames
         {
@@ -248,7 +242,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         }
 
         /// <summary>
-        /// Probabilities are not availible for regression
+        /// Probabilities are not available for regression
         /// </summary>
         /// <returns></returns>
         public double[] LeafProbabilities()

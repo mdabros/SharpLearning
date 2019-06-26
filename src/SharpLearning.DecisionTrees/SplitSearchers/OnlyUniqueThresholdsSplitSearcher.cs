@@ -1,7 +1,6 @@
-﻿using SharpLearning.Containers;
+﻿using System;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
-using System;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {
@@ -35,7 +34,11 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="minimumLeafWeight">Minimum leaf weight when splitting</param>
         public OnlyUniqueThresholdsSplitSearcher(int minimumSplitSize, double minimumLeafWeight)
         {
-            if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
+            if (minimumSplitSize <= 0)
+            {
+                throw new ArgumentException("minimum split size must be larger than 0");
+            }
+
             m_minimumSplitSize = minimumSplitSize;
             m_minimumLeafWeight = minimumLeafWeight;
         }

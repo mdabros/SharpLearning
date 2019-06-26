@@ -1,12 +1,10 @@
-﻿using SharpLearning.Containers.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.DecisionTrees.ImpurityCalculators
 {
     /// <summary>
-    /// Base class for classifiction impurity calculators
+    /// Base class for classification impurity calculators
     /// </summary>
     public abstract class ClassificationImpurityCalculator
     {
@@ -90,12 +88,9 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="interval"></param>
         public void Init(double[] targetNames, double[] targets, double[] weights, Interval1D interval)
         {
-            if (targets == null) { throw new ArgumentException("targets"); }
-            if (weights == null) { throw new ArgumentException("weights"); }
-            if (targetNames == null) { throw new ArgumentException("uniqueTargets"); }
-            m_targets = targets;
-            m_weights = weights;
-            m_targetNames = targetNames;
+            m_targets = targets ?? throw new ArgumentException(nameof(targets));
+            m_weights = weights ?? throw new ArgumentException(nameof(weights));
+            m_targetNames = targetNames ?? throw new ArgumentException(nameof(targetNames));
             m_interval = interval;
 
             SetMinMaxTargetNames();
@@ -133,27 +128,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_currentPosition = m_interval.FromInclusive;
             this.Reset();
         }
-        
-        void SetMinMaxTargetNames()
-        {
-            m_maxTargetNameIndex = int.MinValue;
-            m_targetIndexOffSet = int.MaxValue;
-
-            foreach (int value in m_targetNames)
-            {
-                if (value > m_maxTargetNameIndex)
-                {
-                    m_maxTargetNameIndex = value;
-                }
-                else if(value < m_targetIndexOffSet)
-                {
-                    m_targetIndexOffSet = value;
-                }
-            }
-
-            m_maxTargetNameIndex = m_maxTargetNameIndex + 1;
-        }
-        
+               
         /// <summary>
         /// Resets impurity calculator
         /// </summary>
@@ -187,7 +162,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             if(m_currentPosition > newPosition)
             {
                 throw new ArgumentException("New position: " + newPosition +
-                    " must be larget than current: " + m_currentPosition);
+                    " must be larger than current: " + m_currentPosition);
             }
 
             var weightsPresent = m_weights.Length != 0;
@@ -242,5 +217,25 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// </summary>
         /// <returns></returns>
         public abstract double[] LeafProbabilities();
+
+        void SetMinMaxTargetNames()
+        {
+            m_maxTargetNameIndex = int.MinValue;
+            m_targetIndexOffSet = int.MaxValue;
+
+            foreach (int value in m_targetNames)
+            {
+                if (value > m_maxTargetNameIndex)
+                {
+                    m_maxTargetNameIndex = value;
+                }
+                else if (value < m_targetIndexOffSet)
+                {
+                    m_targetIndexOffSet = value;
+                }
+            }
+
+            m_maxTargetNameIndex = m_maxTargetNameIndex + 1;
+        }
     }
 }

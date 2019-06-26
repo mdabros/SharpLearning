@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Metrics.Regression
 {
@@ -19,7 +15,10 @@ namespace SharpLearning.Metrics.Regression
         /// <returns></returns>
         public double Error(double[] targets, double[] predictions)
         {
-            if (targets.Length != predictions.Length) { throw new ArgumentException("targets and predictions length do not match"); }
+            if (targets.Length != predictions.Length)
+            {
+                throw new ArgumentException("targets and predictions length do not match");
+            }
 
             var meanSquareError = 0.0;
             var validEntries = 0;
@@ -28,7 +27,10 @@ namespace SharpLearning.Metrics.Regression
                 var targetValue = targets[i];
                 var estimate = predictions[i];
 
-                if (targetValue == 0.0) { continue; }
+                if (targetValue == 0.0)
+                {
+                    continue;
+                }
 
                 validEntries++;
                 var error = (targetValue - estimate) / targetValue;

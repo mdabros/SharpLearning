@@ -1,8 +1,7 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using SharpLearning.Containers.Extensions;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
+using SharpLearning.Containers.Extensions;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
 
@@ -92,7 +91,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize"></param>
         /// <param name="initializtion">Initialization type for layers with weights</param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             m_random = new Random(random.Next());
             var fanIn = inputWidth * inputHeight * inputDepth;

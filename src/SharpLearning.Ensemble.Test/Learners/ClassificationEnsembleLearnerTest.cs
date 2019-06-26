@@ -23,7 +23,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var sut = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
@@ -47,7 +48,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy(), 0.7);
+            var sut = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy(), 0.7);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
@@ -71,7 +73,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var sut = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 

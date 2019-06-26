@@ -18,145 +18,6 @@ namespace SharpLearning.InputOutput.Csv
         public static readonly Converter<string,double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
 
         /// <summary>
-        /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on. 
-        /// </summary>
-        /// <param name="thisRows"></param>
-        /// <param name="otherRows"></param>
-        /// <param name="key1"></param>
-        /// <param name="key2"></param>
-        /// <param name="removeRepeatedColumns">Should repeated columns be removed</param>
-        /// <returns></returns>
-        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, string key1, string key2, bool removeRepeatedColumns = true)
-        {
-            CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns, out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep);
-
-            var dictThisRows = thisRows.ToDictionary(p => p.GetValue(key1));
-            var dictOtherRows = otherRows.ToDictionary(p => p.GetValue(key2));
-
-            foreach (var key in dictThisRows.Keys)
-            {
-                if (!dictOtherRows.ContainsKey(key)) continue;
-
-                var thisValues = dictThisRows[key].Values;
-                var otherValues = dictOtherRows[key].Values;
-
-                if (!removeRepeatedColumns)
-                {
-                    var newValues = new string[thisValues.Length + otherValues.Length];
-
-                    thisValues.CopyTo(newValues, 0);
-                    otherValues.CopyTo(newValues, thisValues.Length);
-
-                    yield return new CsvRow(newColumnNameToIndex, newValues);
-                }
-                else
-                {
-                    var newValues = new string[newColumnNameToIndex.Count];
-                    var reducedOtherValues = otherValues.GetIndices(columnIndicesToKeep);
-
-                    thisValues.CopyTo(newValues, 0);
-                    reducedOtherValues.CopyTo(newValues, thisValues.Length);
-
-                    yield return new CsvRow(newColumnNameToIndex, newValues);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on. 
-        /// </summary>
-        /// <param name="thisRows"></param>
-        /// <param name="otherRows"></param>
-        /// <param name="rowMatcher"></param>
-        /// <param name="removeRepeatedColumns">Should repeated columns be removed</param>
-        /// <returns></returns>
-        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, Func<CsvRow, CsvRow, bool> rowMatcher, bool removeRepeatedColumns=true)
-        {
-            CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns, out Dictionary<string, int> newColumnNameToIndex, out int [] columnIndicesToKeep);
-
-            foreach (var thisRow in thisRows)
-            {
-                foreach (var otherRow in otherRows)
-                {
-                    var thisValues = thisRow.Values;
-                    var otherValues = otherRow.Values;
-
-                    if(rowMatcher(thisRow, otherRow))
-                    {
-                        if(!removeRepeatedColumns)
-                        {
-                            var newValues = new string[thisValues.Length + otherValues.Length];
-
-                            thisValues.CopyTo(newValues, 0);
-                            otherValues.CopyTo(newValues, thisValues.Length);
-
-                            yield return new CsvRow(newColumnNameToIndex, newValues);
-                            break;
-                        }
-                        else
-                        {
-                            var newValues = new string[newColumnNameToIndex.Count];
-                            var reducedOtherValues = otherValues.GetIndices(columnIndicesToKeep);
-                            
-                            thisValues.CopyTo(newValues, 0);
-                            reducedOtherValues.CopyTo(newValues, thisValues.Length);
-
-                            yield return new CsvRow(newColumnNameToIndex, newValues);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        static void CreateNewColumnNameToIndex(IEnumerable<CsvRow> thisRows, IEnumerable<CsvRow> otherRows, bool removeRepeatedColumns, out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep)
-        {
-            newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
-            var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
-            var columnIndicesToRemove = new List<int>();
-
-            foreach (var kvp in otherColumnNameToIndex)
-            {
-                if (newColumnNameToIndex.ContainsKey(kvp.Key))
-                {
-                    if (!removeRepeatedColumns)
-                    {
-                        newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
-                    }
-                    else
-                    {
-                        columnIndicesToRemove.Add(kvp.Value);
-                    }
-                }
-                else
-                {
-                    newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
-                }
-            }
-
-            columnIndicesToKeep = otherColumnNameToIndex.Values.Except(columnIndicesToRemove).ToArray();
-        }
-
-        static string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
-        {
-            if(!columnNameToIndex.ContainsKey(key))
-            {
-                return key;
-            }
-            else
-            {
-                var index = 1;
-                var newKey = key + "_" + index;
-                while(columnNameToIndex.ContainsKey(newKey))
-                {
-                    index++;
-                    newKey = key + "_" + index;
-                }
-                return newKey;
-            }
-        }
-
-        /// <summary>
         /// Gets the CsvRow value based on the supplied column name
         /// </summary>
         /// <param name="row"></param>
@@ -237,6 +98,13 @@ namespace SharpLearning.InputOutput.Csv
         {
             return ToF64Vector(dataRows, DefaultF64Converter);
         }
+
+        /// <summary>
+        /// Parses the CsvRows to a double array. Only CsvRows with a single column can be used
+        /// </summary>
+        /// <param name="dataRows"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static double[] ToF64Vector(this IEnumerable<CsvRow> dataRows,
             Converter<string, double> converter)
         {
@@ -276,6 +144,13 @@ namespace SharpLearning.InputOutput.Csv
         {
             return ToF64Matrix(dataRows, DefaultF64Converter);
         }
+
+        /// <summary>
+        /// Parses the CsvRows to a F64Matrix
+        /// </summary>
+        /// <param name="dataRows"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static F64Matrix ToF64Matrix(this IEnumerable<CsvRow> dataRows,
             Converter<string, double> converter)
         {
@@ -319,7 +194,8 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="matrix"></param>
         /// <param name="columnNameToIndex"></param>
         /// <returns></returns>
-        public static IEnumerable<CsvRow> EnumerateCsvRows<T>(this IMatrix<T> matrix, Dictionary<string, int> columnNameToIndex)
+        public static IEnumerable<CsvRow> EnumerateCsvRows<T>(this IMatrix<T> matrix, 
+            Dictionary<string, int> columnNameToIndex)
         {
             var rows = matrix.RowCount;
             var cols = matrix.ColumnCount;
@@ -345,8 +221,11 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="dataRows"></param>
         /// <param name="writer"></param>
         /// <param name="separator"></param>
-        /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
-        public static void Write(this IEnumerable<CsvRow> dataRows, Func<TextWriter> writer, char separator = CsvParser.DefaultDelimiter, bool writeHeader = true)
+        /// <param name="writeHeader">True and a header is added to the stream, false and the header is omitted</param>
+        public static void Write(this IEnumerable<CsvRow> dataRows, 
+            Func<TextWriter> writer, 
+            char separator = CsvParser.DefaultDelimiter, 
+            bool writeHeader = true)
         {
             new CsvWriter(writer, separator).Write(dataRows, writeHeader);
         }
@@ -357,10 +236,165 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="dataRows"></param>
         /// <param name="filePath"></param>
         /// <param name="separator"></param>
-        /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
-        public static void WriteFile(this IEnumerable<CsvRow> dataRows, string filePath, char separator = CsvParser.DefaultDelimiter, bool writeHeader = true)
+        /// <param name="writeHeader">True and a header is added to the stream, false and the header is omitted</param>
+        public static void WriteFile(this IEnumerable<CsvRow> dataRows, 
+            string filePath, 
+            char separator = CsvParser.DefaultDelimiter, 
+            bool writeHeader = true)
         {
             Write(dataRows, () => new StreamWriter(filePath), separator, writeHeader);
+        }
+
+        /// <summary>
+        /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on. 
+        /// </summary>
+        /// <param name="thisRows"></param>
+        /// <param name="otherRows"></param>
+        /// <param name="key1"></param>
+        /// <param name="key2"></param>
+        /// <param name="removeRepeatedColumns">Should repeated columns be removed</param>
+        /// <returns></returns>
+        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows,
+            IEnumerable<CsvRow> otherRows,
+            string key1,
+            string key2,
+            bool removeRepeatedColumns = true)
+        {
+            CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns,
+                out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep);
+
+            var dictThisRows = thisRows.ToDictionary(p => p.GetValue(key1));
+            var dictOtherRows = otherRows.ToDictionary(p => p.GetValue(key2));
+
+            foreach (var key in dictThisRows.Keys)
+            {
+                if (!dictOtherRows.ContainsKey(key)) continue;
+
+                var thisValues = dictThisRows[key].Values;
+                var otherValues = dictOtherRows[key].Values;
+
+                if (!removeRepeatedColumns)
+                {
+                    var newValues = new string[thisValues.Length + otherValues.Length];
+
+                    thisValues.CopyTo(newValues, 0);
+                    otherValues.CopyTo(newValues, thisValues.Length);
+
+                    yield return new CsvRow(newColumnNameToIndex, newValues);
+                }
+                else
+                {
+                    var newValues = new string[newColumnNameToIndex.Count];
+                    var reducedOtherValues = otherValues.GetIndices(columnIndicesToKeep);
+
+                    thisValues.CopyTo(newValues, 0);
+                    reducedOtherValues.CopyTo(newValues, thisValues.Length);
+
+                    yield return new CsvRow(newColumnNameToIndex, newValues);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on. 
+        /// </summary>
+        /// <param name="thisRows"></param>
+        /// <param name="otherRows"></param>
+        /// <param name="rowMatcher"></param>
+        /// <param name="removeRepeatedColumns">Should repeated columns be removed</param>
+        /// <returns></returns>
+        public static IEnumerable<CsvRow> KeyCombine(this IEnumerable<CsvRow> thisRows,
+            IEnumerable<CsvRow> otherRows,
+            Func<CsvRow, CsvRow, bool> rowMatcher,
+            bool removeRepeatedColumns = true)
+        {
+            CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns,
+                out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep);
+
+            foreach (var thisRow in thisRows)
+            {
+                foreach (var otherRow in otherRows)
+                {
+                    var thisValues = thisRow.Values;
+                    var otherValues = otherRow.Values;
+
+                    if (rowMatcher(thisRow, otherRow))
+                    {
+                        if (!removeRepeatedColumns)
+                        {
+                            var newValues = new string[thisValues.Length + otherValues.Length];
+
+                            thisValues.CopyTo(newValues, 0);
+                            otherValues.CopyTo(newValues, thisValues.Length);
+
+                            yield return new CsvRow(newColumnNameToIndex, newValues);
+                            break;
+                        }
+                        else
+                        {
+                            var newValues = new string[newColumnNameToIndex.Count];
+                            var reducedOtherValues = otherValues.GetIndices(columnIndicesToKeep);
+
+                            thisValues.CopyTo(newValues, 0);
+                            reducedOtherValues.CopyTo(newValues, thisValues.Length);
+
+                            yield return new CsvRow(newColumnNameToIndex, newValues);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        static void CreateNewColumnNameToIndex(IEnumerable<CsvRow> thisRows,
+            IEnumerable<CsvRow> otherRows,
+            bool removeRepeatedColumns,
+            out Dictionary<string, int> newColumnNameToIndex,
+            out int[] columnIndicesToKeep)
+        {
+            newColumnNameToIndex = thisRows.First().ColumnNameToIndex.ToDictionary(k => k.Key, k => k.Value);
+            var otherColumnNameToIndex = otherRows.First().ColumnNameToIndex;
+            var columnIndicesToRemove = new List<int>();
+
+            foreach (var kvp in otherColumnNameToIndex)
+            {
+                if (newColumnNameToIndex.ContainsKey(kvp.Key))
+                {
+                    if (!removeRepeatedColumns)
+                    {
+                        newColumnNameToIndex.Add(CreateKey(kvp.Key, newColumnNameToIndex), newColumnNameToIndex.Count);
+                    }
+                    else
+                    {
+                        columnIndicesToRemove.Add(kvp.Value);
+                    }
+                }
+                else
+                {
+                    newColumnNameToIndex.Add(kvp.Key, newColumnNameToIndex.Count);
+                }
+            }
+
+            columnIndicesToKeep = otherColumnNameToIndex.Values.Except(columnIndicesToRemove).ToArray();
+        }
+
+        static string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
+        {
+            if (!columnNameToIndex.ContainsKey(key))
+            {
+                return key;
+            }
+            else
+            {
+                var index = 1;
+                var newKey = key + "_" + index;
+                while (columnNameToIndex.ContainsKey(newKey))
+                {
+                    index++;
+                    newKey = key + "_" + index;
+                }
+                return newKey;
+            }
         }
     }
 }

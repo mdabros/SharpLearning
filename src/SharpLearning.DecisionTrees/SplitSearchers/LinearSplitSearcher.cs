@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers.Views;
+﻿using System;
+using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
-using System;
 
 namespace SharpLearning.DecisionTrees.SplitSearchers
 {

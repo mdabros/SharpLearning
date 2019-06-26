@@ -1,10 +1,10 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.Ensemble.Strategies;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.Ensemble.Strategies;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
 {
@@ -19,21 +19,21 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         List<int> m_remainingModelIndices;
         List<int> m_bestModelIndices;
 
-
         /// <summary>
         /// Greedy backward elimination of ensemble models.
         /// </summary>
         /// <param name="metric">Metric to minimize</param>
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
-        public BackwardEliminationRegressionEnsembleSelection(IMetric<double, double> metric, IRegressionEnsembleStrategy ensembleStrategy,
+        public BackwardEliminationRegressionEnsembleSelection(
+            IMetric<double, double> metric, 
+            IRegressionEnsembleStrategy ensembleStrategy,
             int numberOfModelsToSelect)
         {
-            if (metric == null) { throw new ArgumentNullException("metric"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
             if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
-            m_metric = metric;
-            m_ensembleStrategy = ensembleStrategy;
+
             m_numberOfModelsToSelect = numberOfModelsToSelect;
         }
 
@@ -48,7 +48,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 
@@ -74,9 +74,13 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             return m_bestModelIndices.ToArray();
         }
 
-        double SelectNextModelToRemove(F64Matrix crossValidatedModelPredictions, double[] targets, double currentBestError)
+        double SelectNextModelToRemove(F64Matrix crossValidatedModelPredictions, 
+            double[] targets, 
+            double currentBestError)
         {
-            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount, m_remainingModelIndices.Count - 1);
+            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount, 
+                m_remainingModelIndices.Count - 1);
+
             var candidatePredictions = new double[crossValidatedModelPredictions.RowCount];
             var candidateModelIndices = new int[m_remainingModelIndices.Count - 1];
 

@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.CrossValidation.Augmentators
 {
@@ -13,7 +13,7 @@ namespace SharpLearning.CrossValidation.Augmentators
     /// </summary>
     public sealed class NominalMungeAugmentator
     {
-        double m_probabilityParameter;
+        readonly double m_probabilityParameter;
         Random m_random;
 
         /// <summary>

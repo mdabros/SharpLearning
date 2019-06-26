@@ -16,8 +16,11 @@ namespace SharpLearning.Ensemble.Learners
     /// Classification model selecting EnsembleLearner.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
-    public class ClassificationModelSelectingEnsembleLearner : ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>,
-        ILearner<double>, IIndexedLearner<double>
+    public class ClassificationModelSelectingEnsembleLearner 
+        : ILearner<ProbabilityPrediction>
+        , IIndexedLearner<ProbabilityPrediction>
+        , ILearner<double>
+        , IIndexedLearner<double>
     {
         readonly IIndexedLearner<ProbabilityPrediction>[] m_learners;
         readonly ICrossValidation<ProbabilityPrediction> m_crossValidation;
@@ -34,8 +37,11 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
         /// <param name="ensembleSelection">Ensemble selection method used to find the beset subset of models</param>
-        public ClassificationModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, ICrossValidation<ProbabilityPrediction> crossValidation,
-            IClassificationEnsembleStrategy ensembleStrategy, IClassificationEnsembleSelection ensembleSelection)
+        public ClassificationModelSelectingEnsembleLearner(
+            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            ICrossValidation<ProbabilityPrediction> crossValidation,
+            IClassificationEnsembleStrategy ensembleStrategy, 
+            IClassificationEnsembleSelection ensembleSelection)
             : this(learners, crossValidation, () => ensembleStrategy, ensembleSelection)
         {
         }
@@ -50,17 +56,16 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
         /// <param name="ensembleSelection">Ensemble selection method used to find the beset subset of models</param>
-        public ClassificationModelSelectingEnsembleLearner(IIndexedLearner<ProbabilityPrediction>[] learners, ICrossValidation<ProbabilityPrediction> crossValidation,
-            Func<IClassificationEnsembleStrategy> ensembleStrategy, IClassificationEnsembleSelection ensembleSelection)
+        public ClassificationModelSelectingEnsembleLearner(
+            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            ICrossValidation<ProbabilityPrediction> crossValidation,
+            Func<IClassificationEnsembleStrategy> ensembleStrategy, 
+            IClassificationEnsembleSelection ensembleSelection)
         {
-            if (learners == null) { throw new ArgumentNullException("learners"); }
-            if (crossValidation == null) { throw new ArgumentNullException("crossValidation"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
-            if (ensembleSelection == null) { throw new ArgumentNullException("ensembleSelection"); }
-            m_learners = learners;
-            m_crossValidation = crossValidation;
-            m_ensembleStrategy = ensembleStrategy;
-            m_ensembleSelection = ensembleSelection;
+            m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentNullException(nameof(crossValidation));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
+            m_ensembleSelection = ensembleSelection ?? throw new ArgumentNullException(nameof(ensembleSelection));
         }
         
         /// <summary>
@@ -88,7 +93,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationEnsembleModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public ClassificationEnsembleModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
@@ -103,64 +109,6 @@ namespace SharpLearning.Ensemble.Learners
 
             var numberOfClasses = targets.Distinct().Count();
             return new ClassificationEnsembleModel(ensembleModels, m_ensembleStrategy());
-        }
-
-        /// <summary>
-        /// Learns a ClassificationEnsembleModel based on model selection.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// The selection of the best set of models is based on cross validation.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
-
-        /// <summary>
-        /// Learns a ClassificationEnsembleModel based on model selection using the provided indices.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// The selection of the best set of models is based on cross validation.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
-
-        /// <summary>
-        /// Learns a ClassificationEnsembleModel based on model selection.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// The selection of the best set of models is based on cross validation.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
-
-        /// <summary>
-        /// Learns a ClassificationEnsembleModel based on model selection.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// The selection of the best set of models is based on cross validation.
-        /// Trains several models and selects the best subset of models for the ensemble.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
         }
 
         /// <summary>
@@ -182,7 +130,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ProbabilityPrediction[][] LearnMetaFeatures(F64Matrix observations, double[] targets, int[] indices)
+        public ProbabilityPrediction[][] LearnMetaFeatures(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             var cvRows = indices.Length;
             var cvCols = m_learners.Length;
@@ -209,7 +158,10 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="metaObservations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public ClassificationEnsembleModel SelectModels(F64Matrix observations, ProbabilityPrediction[][] metaObservations, double[] targets)
+        public ClassificationEnsembleModel SelectModels(
+            F64Matrix observations,
+            ProbabilityPrediction[][] metaObservations, 
+            double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             var ensembleModelIndices = m_ensembleSelection.Select(metaObservations, targets);
@@ -220,5 +172,43 @@ namespace SharpLearning.Ensemble.Learners
             var numberOfClasses = targets.Distinct().Count();
             return new ClassificationEnsembleModel(ensembleModels, m_ensembleStrategy());
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
+
+        /// <summary>
+        /// Private explicit interface implementation.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
     }
 }

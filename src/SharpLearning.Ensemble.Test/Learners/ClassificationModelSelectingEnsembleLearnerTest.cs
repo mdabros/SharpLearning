@@ -36,9 +36,11 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(
+                metric, ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -72,9 +74,11 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, false);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(
+                metric, ensembleStrategy, 5, 1, false);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -108,9 +112,11 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 3, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+                ensembleStrategy, 5, 3, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -144,9 +150,11 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+                ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -167,10 +175,12 @@ namespace SharpLearning.Ensemble.Test.Learners
         {
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+                ensembleStrategy, 5, 1, true);
             var crossValidation = new RandomCrossValidation<ProbabilityPrediction>(5);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(null, crossValidation, ensembleStrategy, ensembleSelection);
+            var sut = new ClassificationModelSelectingEnsembleLearner(null, crossValidation, 
+                ensembleStrategy, ensembleSelection);
         }
 
         [TestMethod]
@@ -180,9 +190,11 @@ namespace SharpLearning.Ensemble.Test.Learners
             var learners = new IIndexedLearner<ProbabilityPrediction>[4];
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric,
+                ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, null, ensembleStrategy, ensembleSelection);
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, null, 
+                ensembleStrategy, ensembleSelection);
         }
 
         [TestMethod]
@@ -194,7 +206,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
             var crossValidation = new RandomCrossValidation<ProbabilityPrediction>(5);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, crossValidation, ensembleStrategy, null);
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, crossValidation, 
+                ensembleStrategy, null);
         }
     }
 }

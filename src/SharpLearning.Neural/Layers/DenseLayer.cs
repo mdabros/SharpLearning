@@ -1,9 +1,8 @@
-﻿using MathNet.Numerics.Distributions;
+﻿using System;
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
-using System;
-using System.Collections.Generic;
 
 namespace SharpLearning.Neural.Layers
 {
@@ -120,7 +119,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             var fans = WeightInitialization.GetFans(this, inputWidth, inputHeight, inputDepth);
             var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
@@ -161,6 +161,7 @@ namespace SharpLearning.Neural.Layers
 
             copy.Weights = Matrix<float>.Build.Dense(Weights.RowCount, Weights.ColumnCount);
             copy.Bias = Vector<float>.Build.Dense(Bias.Count);
+
             Array.Copy(Weights.Data(), copy.Weights.Data(), Weights.Data().Length);
             Array.Copy(Bias.Data(), copy.Bias.Data(), Bias.Data().Length);
 

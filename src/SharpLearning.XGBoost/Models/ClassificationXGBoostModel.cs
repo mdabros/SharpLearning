@@ -11,7 +11,10 @@ namespace SharpLearning.XGBoost.Models
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ClassificationXGBoostModel : IDisposable, IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
+    public sealed class ClassificationXGBoostModel 
+        : IDisposable
+        , IPredictorModel<double>
+        , IPredictorModel<ProbabilityPrediction>
     {
         readonly Booster m_model;
 
@@ -21,8 +24,7 @@ namespace SharpLearning.XGBoost.Models
         /// <param name="model"></param>
         public ClassificationXGBoostModel(Booster model)
         {
-            if (model == null) throw new ArgumentNullException(nameof(model));
-            m_model = model;
+            m_model = model ?? throw new ArgumentNullException(nameof(model));
         }
 
         /// <summary>
@@ -124,7 +126,7 @@ namespace SharpLearning.XGBoost.Models
         }
 
         /// <summary>
-        /// Raw vaiable importance is not supported by XGBoost models.
+        /// Raw variable importance is not supported by XGBoost models.
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -140,7 +142,9 @@ namespace SharpLearning.XGBoost.Models
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
             var textTrees = m_model.DumpModelEx(fmap: string.Empty, with_stats: 1, format: "text");
-            var rawVariableImportance = FeatureImportanceParser.ParseFromTreeDump(textTrees, featureNameToIndex.Count);
+
+            var rawVariableImportance = FeatureImportanceParser
+                .ParseFromTreeDump(textTrees, featureNameToIndex.Count);
 
             var max = rawVariableImportance.Max();
 
@@ -158,21 +162,14 @@ namespace SharpLearning.XGBoost.Models
         /// </summary>
         /// <param name="modelFilePath"></param>
         /// <returns></returns>
-        public static ClassificationXGBoostModel Load(string modelFilePath)
-        {
-            // load XGBoost model.
-            return new ClassificationXGBoostModel(new Booster(modelFilePath));
-        }
+        public static ClassificationXGBoostModel Load(string modelFilePath) 
+            => new ClassificationXGBoostModel(new Booster(modelFilePath));
 
         /// <summary>
         /// Saves the ClassificationXGBoostModel.
         /// </summary>
         /// <param name="modelFilePath"></param>
-        public void Save(string modelFilePath)
-        {
-            // Save XGBoost model.
-            m_model.Save(modelFilePath);
-        }
+        public void Save(string modelFilePath) => m_model.Save(modelFilePath);
 
         /// <summary>
         /// 
@@ -185,15 +182,11 @@ namespace SharpLearning.XGBoost.Models
             }
         }
 
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation) 
+            => PredictProbability(observation);
 
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations) 
+            => PredictProbability(observations);
 
         static ProbabilityPrediction PredictMultiClassProbability(float[] prediction)
         {

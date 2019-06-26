@@ -1,11 +1,8 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Csv;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.CrossValidation.LearningCurves
 {
@@ -46,8 +43,15 @@ namespace SharpLearning.CrossValidation.LearningCurves
         public static void Write(this List<LearningCurvePoint> points, Func<TextWriter> writer, 
             char separator = CsvParser.DefaultDelimiter)
         {
+            var columnNameToIndex = new Dictionary<string, int>
+            {
+                { "SampleCount", 0 },
+                { "TrainingError", 1 },
+                { "ValidationError", 2 }
+            };
+            
             points.ToF64Matrix()
-                .EnumerateCsvRows(new Dictionary<string, int> { { "SampleCount", 0 }, { "TrainingError", 1 }, { "ValidationError", 2 } })
+                .EnumerateCsvRows(columnNameToIndex)
                 .Write(writer, separator);
         }
 

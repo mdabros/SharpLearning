@@ -23,7 +23,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+            var sut = new ClassificationStackingEnsembleLearner(learners, 
+                new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -48,7 +49,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+            var sut = new ClassificationStackingEnsembleLearner(learners, 
+                new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -75,7 +77,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+            var sut = new ClassificationStackingEnsembleLearner(learners, 
+                new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), true);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -100,7 +103,8 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, new ClassificationDecisionTreeLearner(9),
+            var sut = new ClassificationStackingEnsembleLearner(learners, 
+                new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();

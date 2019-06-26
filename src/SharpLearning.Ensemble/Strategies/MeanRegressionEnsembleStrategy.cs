@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Linq;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Ensemble.Strategies
 {

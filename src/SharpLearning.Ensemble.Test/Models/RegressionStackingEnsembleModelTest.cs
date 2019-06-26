@@ -29,7 +29,8 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var learner = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
             var sut = learner.Learn(observations, targets);
@@ -60,7 +61,8 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var learner = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
             var sut = learner.Learn(observations, targets);
@@ -89,7 +91,8 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var learner = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
             var sut = learner.Learn(observations, targets);
@@ -120,7 +123,8 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, new RegressionDecisionTreeLearner(9),
+            var learner = new RegressionStackingEnsembleLearner(learners, 
+                new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
             var sut = learner.Learn(observations, targets);

@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.InputOutput.Csv;
-using System.IO;
 
 namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 {
@@ -11,24 +11,7 @@ namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
     [TestClass]
     public class ReplaceMissingValuesTransformerTest
     {
-        [TestMethod]
-        public void ReplaceMissingValuesTransformer_Transform()
-        {
-            var sut = new ReplaceMissingValuesTransformer("666", "", "NA", "na");
-
-            var writer = new StringWriter();
-
-            new CsvParser(() => new StringReader(Input))
-            .EnumerateRows()
-            .Transform(r => sut.Transform(r))
-            .Write(() => writer);
-
-            var actual = writer.ToString();
-
-            Assert.AreEqual(Expected, actual);
-        }
-
-        string Expected =
+        readonly string m_expected =
 @"Day
 Monday
 666
@@ -37,7 +20,7 @@ WednessDay
 666
 TuesDay";
 
-        string Input =
+        readonly string m_input =
 @"Day
 Monday
 
@@ -46,5 +29,22 @@ NA
 na
 TuesDay
 ";
+
+        [TestMethod]
+        public void ReplaceMissingValuesTransformer_Transform()
+        {
+            var sut = new ReplaceMissingValuesTransformer("666", "", "NA", "na");
+
+            var writer = new StringWriter();
+
+            new CsvParser(() => new StringReader(m_input))
+            .EnumerateRows()
+            .Transform(r => sut.Transform(r))
+            .Write(() => writer);
+
+            var actual = writer.ToString();
+
+            Assert.AreEqual(m_expected, actual);
+        }
     }
 }

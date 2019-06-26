@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers;
+﻿using System.Collections.Generic;
 using SharpLearning.Common.Interfaces;
-using System.Collections.Generic;
+using SharpLearning.Containers;
 
 namespace SharpLearning.Metrics.Classification
 {
@@ -33,6 +33,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="predictions"></param>
         /// <param name="targetStringMapping"></param>
         /// <returns></returns>
-        string ErrorString(double[] targets, ProbabilityPrediction[] predictions, Dictionary<double, string> targetStringMapping);
+        string ErrorString(double[] targets, ProbabilityPrediction[] predictions, 
+            Dictionary<double, string> targetStringMapping);
      }
 }

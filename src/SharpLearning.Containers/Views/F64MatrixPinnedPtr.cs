@@ -1,6 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Views
 {
@@ -21,7 +21,7 @@ namespace SharpLearning.Containers.Views
         readonly int m_cols;
 
         /// <summary>
-        /// Pinnes the provided F64Matrix
+        /// Pins the provided F64Matrix
         /// </summary>
         /// <param name="matrix"></param>
         public F64MatrixPinnedPtr(F64Matrix matrix)

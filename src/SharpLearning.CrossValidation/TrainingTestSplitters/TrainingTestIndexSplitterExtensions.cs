@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers;
+﻿using System;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
-using System;
 
 namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {
@@ -13,7 +13,7 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         /// <summary>
         /// Splits the observations and targets into a training and a test set.
         /// </summary>
-        /// <param name="splitter">The type of splitter used for dertermining the distribution of observations</param>
+        /// <param name="splitter">The type of splitter used for determining the distribution of observations</param>
         /// <param name="observations">The observations for the problem</param>
         /// <param name="targets">The targets for the problem</param>
         /// <returns></returns>

@@ -57,9 +57,18 @@ namespace SharpLearning.Optimization
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         /// <param name="seed">Seed for random restarts</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
-        public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
-            int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
-            double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324, int maxDegreeOfParallelism = -1)
+        public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters, 
+            int maxRestarts=8, 
+            double noImprovementThreshold = 0.001, 
+            int maxIterationsWithoutImprovement = 5, 
+            int maxIterationsPrRestart = 0, 
+            int maxFunctionEvaluations = 0,
+            double alpha = 1, 
+            double gamma = 2, 
+            double rho = -0.5, 
+            double sigma = 0.5, 
+            int seed = 324, 
+            int maxDegreeOfParallelism = -1)
         {
             if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentException("maxIterationsWithoutImprovement must be at least 1"); }
             if (maxFunctionEvaluations < 0) { throw new ArgumentException("maxFunctionEvaluations must be at least 1"); }
@@ -113,9 +122,14 @@ namespace SharpLearning.Optimization
 
                 var prevBest = EvaluateFunction(functionToMinimize, initialPoint);
                 var iterationsWithoutImprovement = 0;
-                var concurrentResults = new ConcurrentBag<OptimizerResult> { new OptimizerResult(prevBest.ParameterSet, prevBest.Error) };
+                var concurrentResults = new ConcurrentBag<OptimizerResult>
+                {
+                    new OptimizerResult(prevBest.ParameterSet, prevBest.Error)
+                };
 
-                Parallel.For(0, dim, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (i) =>
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+
+                Parallel.For(0, dim, options, (i) =>
                 {
                     var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max - m_parameters[i].Min); // % simplex size between 2%-8% of min(xrange)
 

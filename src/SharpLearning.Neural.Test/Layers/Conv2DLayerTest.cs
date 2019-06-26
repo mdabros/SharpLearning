@@ -1,12 +1,12 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Neural.Layers;
-using MathNet.Numerics.LinearAlgebra;
-using SharpLearning.Neural.Activations;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
+using SharpLearning.Neural.Layers;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -159,7 +159,8 @@ namespace SharpLearning.Neural.Test.Layers
             var batchSize = 1;
 
             var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
-            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 
+                1e-4f, new Random(21));
         }
 
         [TestMethod]
@@ -171,7 +172,8 @@ namespace SharpLearning.Neural.Test.Layers
             var batchSize = 11;
 
             var sut = new Conv2DLayer(2, 2, 2, 1, 0, 0, Activation.Undefined);
-            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 
+                1e-4f, new Random(21));
         }
     }
 }

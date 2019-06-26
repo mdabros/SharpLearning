@@ -10,7 +10,6 @@ namespace SharpLearning.Containers.Views
     {
         const int SizeOfType = sizeof(double);
         readonly double* m_ptr;
-        readonly int m_length;
 
         /// <summary>
         /// Creates a view over an F64Vector
@@ -20,7 +19,7 @@ namespace SharpLearning.Containers.Views
         public F64VectorView(double* dataPtr, int length)
         {
             m_ptr = dataPtr;
-            m_length = length;
+            Length = length;
         }
 
         /// <summary>
@@ -33,14 +32,20 @@ namespace SharpLearning.Containers.Views
             get { return m_ptr[index]; }
             set { m_ptr[index] = value; }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
-        public int Length { get { return m_length; } }
+        public int Length { get; private set; }
+
 
         /// <summary>
-        /// Gets a subview over the specified interval
+        /// Gets the interval of the F64View
+        /// </summary>
+        public Interval1D Interval { get { return Interval1D.Create(0, Length); } }
+
+        /// <summary>
+        /// Gets a sub-view over the specified interval
         /// </summary>
         /// <param name="interval"></param>
         /// <returns></returns>
@@ -53,10 +58,5 @@ namespace SharpLearning.Containers.Views
         {
             return m_ptr + interval.FromInclusive;
         }
-
-        /// <summary>
-        /// Gets the interval of the F64View
-        /// </summary>
-        public Interval1D Interval { get { return Interval1D.Create(0, m_length); } }
     }
 }

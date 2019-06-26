@@ -29,10 +29,14 @@ namespace SharpLearning.Ensemble.Learners
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
-        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
-        /// False; the meta learner only recieves the output of the ensemble models as features. Default is true</param>
-        public RegressionStackingEnsembleLearner(IIndexedLearner<double>[] learners, ILearner<double> metaLearner, bool includeOriginalFeaturesForMetaLearner = true)
-            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets), new RandomCrossValidation<double>(5, 42), includeOriginalFeaturesForMetaLearner)
+        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+        /// False; the meta learner only receives the output of the ensemble models as features. Default is true</param>
+        public RegressionStackingEnsembleLearner(
+            IIndexedLearner<double>[] learners, 
+            ILearner<double> metaLearner, 
+            bool includeOriginalFeaturesForMetaLearner = true)
+            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets), 
+                new RandomCrossValidation<double>(5, 42), includeOriginalFeaturesForMetaLearner)
         {
         }
 
@@ -44,11 +48,15 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
         /// <param name="crossValidation">Cross validation method</param>
-        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
-        /// False; the meta learner only recieves the output of the ensemble models as features. Default is true</param>
-        public RegressionStackingEnsembleLearner(IIndexedLearner<double>[] learners, ILearner<double> metaLearner,
-            ICrossValidation<double> crossValidation, bool includeOriginalFeaturesForMetaLearner = true)
-            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets), crossValidation, includeOriginalFeaturesForMetaLearner)
+        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+        /// False; the meta learner only receives the output of the ensemble models as features. Default is true</param>
+        public RegressionStackingEnsembleLearner(
+            IIndexedLearner<double>[] learners, 
+            ILearner<double> metaLearner,
+            ICrossValidation<double> crossValidation, 
+            bool includeOriginalFeaturesForMetaLearner = true)
+            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets), 
+                crossValidation, includeOriginalFeaturesForMetaLearner)
         {
         }
 
@@ -60,17 +68,17 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
         /// <param name="crossValidation">Cross validation method</param>
-        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
-        /// False; the meta learner only recieves the output of the ensemble models as features</param>
-        public RegressionStackingEnsembleLearner(IIndexedLearner<double>[] learners, Func<F64Matrix, double[], IPredictorModel<double>> metaLearner,
-            ICrossValidation<double> crossValidation, bool includeOriginalFeaturesForMetaLearner = true)
+        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+        /// False; the meta learner only receives the output of the ensemble models as features</param>
+        public RegressionStackingEnsembleLearner(
+            IIndexedLearner<double>[] learners, 
+            Func<F64Matrix, double[], IPredictorModel<double>> metaLearner,
+            ICrossValidation<double> crossValidation, 
+            bool includeOriginalFeaturesForMetaLearner = true)
         {
-            if (learners == null) { throw new ArgumentException("learners"); }
-            if (crossValidation == null) { throw new ArgumentException("crossValidation"); }
-            if (metaLearner == null) { throw new ArgumentException("metaLearner"); }
-            m_learners = learners;
-            m_crossValidation = crossValidation;
-            m_metaLearner = metaLearner;
+            m_learners = learners ?? throw new ArgumentException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentException(nameof(crossValidation));
+            m_metaLearner = metaLearner ?? throw new ArgumentException(nameof(metaLearner));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
         }
 
@@ -93,7 +101,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public RegressionStackingEnsembleModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public RegressionStackingEnsembleModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
@@ -102,32 +111,11 @@ namespace SharpLearning.Ensemble.Learners
 
             var metaModelTargets = targets.GetIndices(indices);
             var metaModel = m_metaLearner(metaObservations, metaModelTargets);
-            var ensembleModels = m_learners.Select(learner => learner.Learn(observations, targets, indices)).ToArray();
+            var ensembleModels = m_learners.Select(learner => learner.Learn(observations, targets, indices))
+                .ToArray();
 
-            return new RegressionStackingEnsembleModel(ensembleModels, metaModel, m_includeOriginalFeaturesForMetaLearner);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
+            return new RegressionStackingEnsembleModel(ensembleModels, metaModel, 
+                m_includeOriginalFeaturesForMetaLearner);
         }
 
         /// <summary>
@@ -149,7 +137,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public F64Matrix LearnMetaFeatures(F64Matrix observations, double[] targets, int[] indices)
+        public F64Matrix LearnMetaFeatures(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             var cvRows = indices.Length;
             var cvCols = m_learners.Length;
@@ -166,7 +155,9 @@ namespace SharpLearning.Ensemble.Learners
                 Trace.WriteLine("Training model: " + (i + 1));
 
                 var learner = m_learners[i];
-                m_crossValidation.CrossValidate(learner, observations, targets, indices, modelPredictions);
+                m_crossValidation.CrossValidate(learner, observations, targets, 
+                    indices, modelPredictions);
+
                 for (int j = 0; j < modelPredictions.Length; j++)
                 {
                     cvPredictions[j, i] = modelPredictions[j];
@@ -193,7 +184,10 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="metaObservations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public RegressionStackingEnsembleModel LearnStackingModel(F64Matrix observations, F64Matrix metaObservations, double[] targets)
+        public RegressionStackingEnsembleModel LearnStackingModel(
+            F64Matrix observations, 
+            F64Matrix metaObservations, 
+            double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             var metaModel = m_metaLearner(metaObservations, targets);
@@ -201,5 +195,24 @@ namespace SharpLearning.Ensemble.Learners
 
             return new RegressionStackingEnsembleModel(ensembleModels, metaModel, m_includeOriginalFeaturesForMetaLearner);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
+
+        /// <summary>
+        /// Private explicit interface implementation for learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
     }
 }

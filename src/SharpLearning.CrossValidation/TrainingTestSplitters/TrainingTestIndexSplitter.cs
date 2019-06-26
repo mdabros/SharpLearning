@@ -1,6 +1,6 @@
-﻿using SharpLearning.CrossValidation.Samplers;
-using System;
+﻿using System;
 using System.Linq;
+using SharpLearning.CrossValidation.Samplers;
 
 namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {
@@ -21,10 +21,9 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         /// <param name="trainingPercentage">What percentage of the indices should go to the training set</param>
         public TrainingTestIndexSplitter(IIndexSampler<T> shuffler, double trainingPercentage)
         {
-            if (shuffler == null) { throw new ArgumentNullException("shuffler"); }
+            m_indexSampler = shuffler ?? throw new ArgumentNullException(nameof(shuffler));
             if (trainingPercentage <= 0.0 || trainingPercentage >= 1.0)
             { throw new ArgumentException("Training percentage must be larger than 0.0 and smaller than 1.0"); }
-            m_indexSampler = shuffler;
             m_trainingPercentage = trainingPercentage; 
         }
 

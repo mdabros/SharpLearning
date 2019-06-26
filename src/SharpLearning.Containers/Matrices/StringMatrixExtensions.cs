@@ -23,6 +23,12 @@ namespace SharpLearning.Containers.Matrices
             return ToF64Matrix(stringMatrix, DefaultConverter);
         }
 
+        /// <summary>
+        /// Converts StringMatrix to F64Matrix.
+        /// </summary>
+        /// <param name="stringMatrix"></param>
+        /// <param name="converter"></param>
+        /// <returns></returns>
         public static F64Matrix ToF64Matrix(this StringMatrix stringMatrix,
             Converter<string, double> converter)
         {
@@ -54,7 +60,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Combines vector1 and vector2 columnwise. Vector2 is added to the end of vector1 
+        /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1 
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
@@ -84,7 +90,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Combines matrix and vector columnwise. Vector is added to the end of the matrix 
+        /// Combines matrix and vector column-wise. Vector is added to the end of the matrix 
         /// </summary>
         /// <param name="m"></param>
         /// <param name="v"></param>
@@ -120,7 +126,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Combines vector and and matrix  columnwise. Vector is added to the front of the matrix 
+        /// Combines vector and and matrix  column-wise. Vector is added to the front of the matrix 
         /// </summary>
         /// <param name="v"></param>
         /// <param name="m"></param>
@@ -153,7 +159,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Combines matrix1 and matrix2 columnwise. Matrix2 is added to the end of matrix1 
+        /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1 
         /// </summary>
         /// <param name="m1"></param>
         /// <param name="m2"></param>
@@ -162,7 +168,7 @@ namespace SharpLearning.Containers.Matrices
         {
             if (m1.RowCount != m2.RowCount)
             {
-                throw new ArgumentException("matrices must have same number of rows inorder to be combined");
+                throw new ArgumentException("matrices must have same number of rows in order to be combined");
             }
 
             var rows = m1.RowCount;
@@ -190,7 +196,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Combines matrix1 and matrix2 rowwise. Matrix2 is added to the end of matrix1 
+        /// Combines matrix1 and matrix2 row-wise. Matrix2 is added to the end of matrix1 
         /// </summary>
         /// <param name="m1"></param>
         /// <param name="m2"></param>
@@ -199,7 +205,7 @@ namespace SharpLearning.Containers.Matrices
         {
             if (m1.ColumnCount != m2.ColumnCount)
             {
-                throw new ArgumentException("matrices must have same number of rows inorder to be combined");
+                throw new ArgumentException("matrices must have same number of rows in order to be combined");
             }
 
             var rows = m1.RowCount + m2.RowCount;

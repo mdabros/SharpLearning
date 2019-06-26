@@ -1,7 +1,7 @@
 ﻿using SharpLearning.Containers.Views;
 
 namespace SharpLearning.DecisionTrees.Nodes
-{   
+{
     /// <summary>
     /// Structure used for decision tree learning
     /// </summary>
@@ -40,7 +40,8 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="interval"></param>
         /// <param name="impurity"></param>
         /// <param name="nodeDepth"></param>
-        public DecisionNodeCreationItem(int parentIndex, NodePositionType nodeType, Interval1D interval, double impurity, int nodeDepth)
+        public DecisionNodeCreationItem(int parentIndex, NodePositionType nodeType, Interval1D interval, 
+            double impurity, int nodeDepth)
         {
             ParentIndex = parentIndex;
             NodeType = nodeType;

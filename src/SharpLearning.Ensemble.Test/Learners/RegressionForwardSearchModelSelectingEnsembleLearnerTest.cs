@@ -68,7 +68,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new MeanSquaredErrorRegressionMetric();
 
             var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5,
-                new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), metric, 1, false);
+                new RandomCrossValidation<double>(5, 42), 
+                new MeanRegressionEnsembleStrategy(), metric, 1, false);
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
@@ -103,7 +104,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new MeanSquaredErrorRegressionMetric();
 
             var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5,
-                new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), metric, 3, false);
+                new RandomCrossValidation<double>(5, 42), 
+                new MeanRegressionEnsembleStrategy(), metric, 3, false);
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 

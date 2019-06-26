@@ -1,11 +1,11 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Neural.Initializations;
-using SharpLearning.Neural.Layers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Neural.Initializations;
+using SharpLearning.Neural.Layers;
 
 namespace SharpLearning.Neural.Test.Layers
 {
@@ -62,7 +62,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             var actual = sut.Forward(input);
@@ -89,7 +90,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, new Random(232));
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, new Random(232));
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -115,7 +117,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, new Random(232));
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, new Random(232));
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -142,7 +145,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);
@@ -173,7 +177,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, random);
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -203,7 +208,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, random);
 
             var inputData = new float[] { 3, 0, 0, 6, 0, 2, 3, 0, 0, 8, 10, 0, 4, 6, 0, 7, 4, 0, 2, 0, 0, 8, 3, 5, 10, 0, 12, 0, 6, 5, 3, 2 };
             var input = Matrix<float>.Build.Dense(batchSize, fanIn, inputData);
@@ -233,7 +239,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             var expected = Matrix<float>.Build.Dense(batchSize, fanOut);
@@ -263,7 +270,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, Initialization.GlorotUniform, random);
+            sut.Initialize(inputWidth, inputHeight, inputDepth, batchSize, 
+                Initialization.GlorotUniform, random);
 
             var input = Matrix<float>.Build.Random(batchSize, fanIn, random.Next());
             sut.Forward(input);
@@ -294,7 +302,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 
+                1e-4f, new Random(21));
         }
 
         // currently it is not possible to gradient check layers without weights and gradients
@@ -312,7 +321,8 @@ namespace SharpLearning.Neural.Test.Layers
             const int width = 2;
             const int height = 2;
             var sut = new MaxPool2DLayer(width, height);
-            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 1e-4f, new Random(21));
+            GradientCheckTools.CheckLayer(sut, inputWidth, inputHeight, inputDepth, batchSize, 
+                1e-4f, new Random(21));
         }
     }
 }

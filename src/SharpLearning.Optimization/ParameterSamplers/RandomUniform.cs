@@ -27,7 +27,10 @@ namespace SharpLearning.Optimization.ParameterSamplers
         /// <returns></returns>
         public double Sample(double min, double max, ParameterType parameterType)
         {
-            if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
+            if (min >= max)
+            {
+                throw new ArgumentException($"min: {min} is larger than or equal to max: {max}");
+            }
 
             switch (parameterType)
             {

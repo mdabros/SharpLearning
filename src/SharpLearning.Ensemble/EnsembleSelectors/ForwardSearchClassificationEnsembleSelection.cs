@@ -1,10 +1,10 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers;
-using SharpLearning.Ensemble.Strategies;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
+using SharpLearning.Ensemble.Strategies;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
 {
@@ -31,16 +31,19 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// The top n models will be selected based in their solo performance</param>
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
-        public ForwardSearchClassificationEnsembleSelection(IMetric<double, ProbabilityPrediction> metric, IClassificationEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, int numberOfModelsFromStart, bool selectWithReplacement)
+        public ForwardSearchClassificationEnsembleSelection(
+            IMetric<double, ProbabilityPrediction> metric, 
+            IClassificationEnsembleStrategy ensembleStrategy,
+            int numberOfModelsToSelect, 
+            int numberOfModelsFromStart, 
+            bool selectWithReplacement)
         {
-            if (metric == null) { throw new ArgumentNullException("metric"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
             if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
             if (numberOfModelsFromStart < 1) { throw new ArgumentException("numberOfModelsFromStart must be at least 1"); }
             if (numberOfModelsFromStart > numberOfModelsToSelect) { throw new ArgumentException("numberOfModelsFromStart must be smaller than numberOfModelsToSelect"); }
-            m_metric = metric;
-            m_ensembleStrategy = ensembleStrategy;
+
             m_numberOfModelsToSelect = numberOfModelsToSelect;
             m_numberOfModelsFromStart = numberOfModelsFromStart;
             m_selectWithReplacement = selectWithReplacement;
@@ -57,7 +60,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.Length +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 
@@ -97,7 +100,9 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             return m_selectedModelIndices.ToArray();
         }
 
-        double SelectNextModelToAdd(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets, double currentBestError)
+        double SelectNextModelToAdd(ProbabilityPrediction[][] crossValidatedModelPredictions, 
+            double[] targets, 
+            double currentBestError)
         {
             var rows = crossValidatedModelPredictions.First().Length;
             var candidateModelMatrix = new ProbabilityPrediction[m_selectedModelIndices.Count + 1][];

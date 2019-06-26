@@ -1,9 +1,8 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.CrossValidation.Samplers;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.CrossValidation.CrossValidators
 {
@@ -24,10 +23,9 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
         public CrossValidation(IIndexSampler<double> sampler, int crossValidationFolds)
         {
-            if (sampler == null) { throw new ArgumentNullException("shuffler"); }
+            m_indexedSampler = sampler ?? throw new ArgumentNullException(nameof(sampler));
             if (crossValidationFolds < 1) { throw new ArgumentException("CrossValidationFolds "); }
 
-            m_indexedSampler = sampler;
             m_crossValidationFolds = crossValidationFolds;
         }
         
@@ -59,7 +57,11 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="targets"></param>
         /// <param name="crossValidationIndices"></param>
         /// <param name="crossValidatedPredictions"></param>
-        public void CrossValidate(IIndexedLearner<TPrediction> learner, F64Matrix observations, double[] targets, int[] crossValidationIndices, TPrediction[] crossValidatedPredictions)
+        public void CrossValidate(IIndexedLearner<TPrediction> learner, 
+            F64Matrix observations, 
+            double[] targets, 
+            int[] crossValidationIndices, 
+            TPrediction[] crossValidatedPredictions)
         {
             var rows = crossValidatedPredictions.Length;
             if (m_crossValidationFolds > rows)

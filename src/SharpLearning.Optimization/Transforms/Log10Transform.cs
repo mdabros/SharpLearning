@@ -18,7 +18,11 @@ namespace SharpLearning.Optimization.Transforms
         /// <returns></returns>
         public double Transform(double min, double max, ParameterType parameterType, IParameterSampler sampler)
         {
-            if (min <= 0 || max <= 0) { throw new ArgumentException($"logarithmic scale requires min: {min} and max: {max} to be larger than zero"); }
+            if (min <= 0 || max <= 0)
+            {
+                throw new ArgumentException("logarithmic scale requires min: " + 
+                    $"{min} and max: {max} to be larger than zero");
+            }
             var a = Math.Log10(min);
             var b = Math.Log10(max);
 

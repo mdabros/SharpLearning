@@ -27,7 +27,11 @@ namespace SharpLearning.Optimization
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
-        public RandomSearchOptimizer(IParameterSpec[] parameters, int iterations, int seed=42, bool runParallel = true, int maxDegreeOfParallelism = -1)
+        public RandomSearchOptimizer(IParameterSpec[] parameters, 
+            int iterations, 
+            int seed=42, 
+            bool runParallel = true, 
+            int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
@@ -74,7 +78,8 @@ namespace SharpLearning.Optimization
             else
             {
                 var rangePartitioner = Partitioner.Create(parameterSets, true);
-                Parallel.ForEach(rangePartitioner, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (param, loopState) =>
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+                Parallel.ForEach(rangePartitioner, options, (param, loopState) =>
                 {
                     // Get the current parameters for the current point
                     var result = functionToMinimize(param);

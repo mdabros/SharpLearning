@@ -17,7 +17,8 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -33,7 +34,8 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, maxTrainingSetSize: 10);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -49,7 +51,8 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, retrainInterval: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -65,7 +68,8 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, maxTrainingSetSize: 30, retrainInterval: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -112,7 +116,8 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
         }
 
         [TestMethod]
@@ -123,7 +128,8 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 300);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
         }
 
         [TestMethod]
