@@ -56,7 +56,7 @@ namespace SharpLearning.XGBoost.Models
         }
 
         /// <summary>
-        /// Raw vaiable importance is not supported by XGBoost models.
+        /// Raw variable importance is not supported by XGBoost models.
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -72,7 +72,9 @@ namespace SharpLearning.XGBoost.Models
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
             var textTrees = m_model.DumpModelEx(fmap: string.Empty, with_stats: 1, format: "text");
-            var rawVariableImportance = FeatureImportanceParser.ParseFromTreeDump(textTrees, featureNameToIndex.Count);
+
+            var rawVariableImportance = FeatureImportanceParser
+                .ParseFromTreeDump(textTrees, featureNameToIndex.Count);
 
             var max = rawVariableImportance.Max();
 
@@ -91,21 +93,15 @@ namespace SharpLearning.XGBoost.Models
         /// </summary>
         /// <param name="modelFilePath"></param>
         /// <returns></returns>
-        public static RegressionXGBoostModel Load(string modelFilePath)
-        {
-            // load XGBoost model.
-            return new RegressionXGBoostModel(new Booster(modelFilePath));
-        }
+        public static RegressionXGBoostModel Load(string modelFilePath) 
+            => new RegressionXGBoostModel(new Booster(modelFilePath));
 
         /// <summary>
         /// Saves the RegressionXGBoostModel.
         /// </summary>
         /// <param name="modelFilePath"></param>
-        public void Save(string modelFilePath)
-        {
-            // Save XGBoost model.
+        public void Save(string modelFilePath) =>
             m_model.Save(modelFilePath);
-        }
 
         /// <summary>
         /// 

@@ -11,14 +11,17 @@ namespace SharpLearning.XGBoost.Learners
     /// <summary>
     /// Classification learner for XGBoost
     /// </summary>
-    public sealed class ClassificationXGBoostLearner : ILearner<double>, IIndexedLearner<double>,
-        ILearner<ProbabilityPrediction>, IIndexedLearner<ProbabilityPrediction>
+    public sealed class ClassificationXGBoostLearner 
+        : ILearner<double>
+        , IIndexedLearner<double>
+        , ILearner<ProbabilityPrediction>
+        , IIndexedLearner<ProbabilityPrediction>
     {
         IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
         /// <summary>
         /// Classification learner for XGBoost. For classification problems, 
-        /// XGBoost requires that target values are sequntial and start at 0.
+        /// XGBoost requires that target values are sequential and start at 0.
         /// </summary>
         /// <param name="maximumTreeDepth">Maximum tree depth for base learners. (default is 3)</param>
         /// <param name="learningRate">Boosting learning rate (xgb's "eta"). 0 indicates no limit. (default is 0.1)</param>
@@ -36,20 +39,22 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="skipDrop">Probability of skipping the dropout procedure during a boosting iteration. (default is 0.0)
         /// If a dropout is skipped, new trees are added in the same manner as gbtree.
         /// Note that non-zero skip_drop has higher priority than rate_drop or one_drop.</param>
-        /// <param name="numberOfThreads">Number of parallel threads used to run xgboost. -1 means use all thread avialable. (default is -1)</param>
+        /// <param name="numberOfThreads">Number of parallel threads used to run xgboost. -1 means use all thread available. (default is -1)</param>
         /// <param name="gamma">Minimum loss reduction required to make a further partition on a leaf node of the tree. (default is 0) </param>
-        /// <param name="minChildWeight">Minimum sum of instance weight(hessian) needed in a child. (default is 1)</param>
+        /// <param name="minChildWeight">Minimum sum of instance weight(Hessian) needed in a child. (default is 1)</param>
         /// <param name="maxDeltaStep">Maximum delta step we allow each tree's weight estimation to be. (default is 0)</param>
         /// <param name="subSample">Subsample ratio of the training instance. (default is 1)</param>
-        /// <param name="colSampleByTree">Subsample ratio of columns when constructing each tree. (defualt is 1)</param>
-        /// <param name="colSampleByLevel">Subsample ratio of columns for each split, in each level. (defualt is 1)</param>
+        /// <param name="colSampleByTree">Subsample ratio of columns when constructing each tree. (default is 1)</param>
+        /// <param name="colSampleByLevel">Subsample ratio of columns for each split, in each level. (default is 1)</param>
         /// <param name="l1Regularization">L1 regularization term on weights. Also known as RegAlpha. (default is 0)</param>
         /// <param name="l2Reguralization">L2 regularization term on weights. Also known as regLambda. (default is 1)</param>
         /// <param name="scalePosWeight">Balancing of positive and negative weights. (default is 1)</param>
         /// <param name="baseScore">The initial prediction score of all instances, global bias. (default is 0.5)</param>
-        /// <param name="seed">Random number seed. (defaukt is 0)</param>
+        /// <param name="seed">Random number seed. (default is 0)</param>
         /// <param name="missing">Value in the data which needs to be present as a missing value. (default is NaN)</param>
-        public ClassificationXGBoostLearner(int maximumTreeDepth = 3, double learningRate = 0.1, int estimators = 100,
+        public ClassificationXGBoostLearner(int maximumTreeDepth = 3, 
+            double learningRate = 0.1, 
+            int estimators = 100,
             bool silent = true,
             ClassificationObjective objective = ClassificationObjective.Softmax,
             BoosterType boosterType = BoosterType.GBTree,
@@ -59,10 +64,17 @@ namespace SharpLearning.XGBoost.Learners
             double dropoutRate = 0.0,
             bool oneDrop = false,
             double skipDrop = 0.0,
-            int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
-            int maxDeltaStep = 0, double subSample = 1, double colSampleByTree = 1,
-            double colSampleByLevel = 1, double l1Regularization = 0, double l2Reguralization = 1,
-            double scalePosWeight = 1, double baseScore = 0.5, int seed = 0,
+            int numberOfThreads = -1, 
+            double gamma = 0, 
+            int minChildWeight = 1,
+            int maxDeltaStep = 0, 
+            double subSample = 1, 
+            double colSampleByTree = 1,
+            double colSampleByLevel = 1, 
+            double l1Regularization = 0, 
+            double l2Reguralization = 1,
+            double scalePosWeight = 1, 
+            double baseScore = 0.5, int seed = 0,
             double missing = double.NaN)
         {
             ArgumentChecks.ThrowOnArgumentLessThan(nameof(maximumTreeDepth), maximumTreeDepth, 0);
@@ -151,7 +163,8 @@ namespace SharpLearning.XGBoost.Learners
 
             // Only specify XGBoost number of classes if the objective is multi-class.
             var objective = (string)m_parameters[ParameterNames.objective];
-            if (objective == ClassificationObjective.Softmax.ToXGBoostString() || objective == ClassificationObjective.SoftProb.ToXGBoostString())
+            if (objective == ClassificationObjective.Softmax.ToXGBoostString() || 
+                objective == ClassificationObjective.SoftProb.ToXGBoostString())
             {
                 var numberOfClasses = floatTargets.Distinct().Count();
                 m_parameters[ParameterNames.NumberOfClasses] = numberOfClasses;
@@ -171,32 +184,15 @@ namespace SharpLearning.XGBoost.Learners
             }
         }
 
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
-
         /// <summary>
-        /// Learns an XGBoost regression model.
+        /// Private explicit interface implementation for indexed learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
+        /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability learning.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
         /// Private explicit interface implementation for indexed probability learning.
@@ -205,9 +201,25 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+        IPredictorModel<ProbabilityPrediction> IIndexedLearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed probability learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
     }
 }

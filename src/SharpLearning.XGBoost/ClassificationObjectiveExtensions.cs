@@ -8,7 +8,7 @@ namespace SharpLearning.XGBoost
     public static class ClassificationObjectiveExtensions
     {
         /// <summary>
-        /// Convert classificaiton objective to the xgboost parameter string.
+        /// Convert classification objective to the xgboost parameter string.
         /// </summary>
         /// <param name="objective"></param>
         /// <returns></returns>

@@ -218,7 +218,8 @@ namespace SharpLearning.XGBoost.Test.Learners
             }
         }
 
-        static ClassificationXGBoostLearner CreateLearner(ClassificationObjective objective = ClassificationObjective.SoftProb)
+        static ClassificationXGBoostLearner CreateLearner(
+            ClassificationObjective objective = ClassificationObjective.SoftProb)
         {
             return new ClassificationXGBoostLearner(maximumTreeDepth: 3,
                 learningRate: 0.1,
