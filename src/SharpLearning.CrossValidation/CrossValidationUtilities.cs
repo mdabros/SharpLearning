@@ -37,7 +37,6 @@ namespace SharpLearning.CrossValidation
             IIndexSampler<double> sampler, int foldCount, double[] targets, int[] indices)
         {
             var samplesPerFold = indices.Length / foldCount;
-            var hasRemainder = indices.Length % foldCount != 0;
 
             var currentIndices = indices.ToArray();
             var crossValidationIndexSets = new List<(int[] training, int[] validation)>();
@@ -45,9 +44,9 @@ namespace SharpLearning.CrossValidation
             for (int i = 0; i < foldCount; i++)
             {
                 var lastFold = (i == foldCount - 1);
-
                 int[] validationIndices;
-                if (lastFold && hasRemainder)
+
+                if (lastFold) // handle remainders.
                 {
                     // Last fold. Add remaining indices.
                     // This is done to ensure that all indices are included,
