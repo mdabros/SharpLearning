@@ -43,12 +43,26 @@ namespace SharpLearning.CrossValidation
 
             for (int i = 0; i < foldCount; i++)
             {
-                var holdoutSample = sampler.Sample(targets, samplesPerFold, currentIndices);
-                // Sample only from remaining indices.
-                currentIndices = currentIndices.Except(holdoutSample).ToArray();
-                // Training sample is all indices except the current hold out sample.
-                var trainingSample = indices.Except(holdoutSample).ToArray();
-                crossValidationIndexSets.Add((trainingSample, holdoutSample));
+                int[] validationIndices;
+                if ((i == foldCount - 1) && targets.Length % foldCount != 0)
+                {
+                    // Last fold. Add remaining indices.
+                    // This is done to ensure that all indices are included,
+                    // even if the targets.Length % foldCount != 0.
+                    // Note, that this will make the ratio between training and validation
+                    // different for the last set compared to the others.
+                    validationIndices = currentIndices.ToArray();
+                }
+                else
+                {
+                    validationIndices = sampler.Sample(targets, samplesPerFold, currentIndices);
+                    // Sample only from remaining indices.
+                    currentIndices = currentIndices.Except(validationIndices).ToArray();
+                }
+
+                // Training sample is all indices except the current validation sample.
+                var trainingIndices = indices.Except(validationIndices).ToArray();
+                crossValidationIndexSets.Add((trainingIndices, validationIndices));
             }
 
             return crossValidationIndexSets;
