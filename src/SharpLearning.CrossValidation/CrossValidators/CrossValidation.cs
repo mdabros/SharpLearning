@@ -28,7 +28,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
 
             m_crossValidationFolds = crossValidationFolds;
         }
-        
+
         /// <summary>
         /// Returns an array of cross validated predictions
         /// </summary>
@@ -36,7 +36,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public TPrediction[] CrossValidate(IIndexedLearner<TPrediction> learner, 
+        public TPrediction[] CrossValidate(IIndexedLearner<TPrediction> learner,
             F64Matrix observations, double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
@@ -57,10 +57,10 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="targets"></param>
         /// <param name="crossValidationIndices"></param>
         /// <param name="crossValidatedPredictions"></param>
-        public void CrossValidate(IIndexedLearner<TPrediction> learner, 
-            F64Matrix observations, 
-            double[] targets, 
-            int[] crossValidationIndices, 
+        public void CrossValidate(IIndexedLearner<TPrediction> learner,
+            F64Matrix observations,
+            double[] targets,
+            int[] crossValidationIndices,
             TPrediction[] crossValidatedPredictions)
         {
             var rows = crossValidatedPredictions.Length;
@@ -70,9 +70,6 @@ namespace SharpLearning.CrossValidation.CrossValidators
                 " for number of cross validation folds: " + m_crossValidationFolds);
             }
 
-            var holdOutSamples = new int[m_crossValidationFolds][];
-            var samplesPrFold = rows / m_crossValidationFolds;
-
             var indices = crossValidationIndices.ToArray();
 
             // Map the provided crossValidationIndices to crossValidatedPredictions
@@ -81,38 +78,24 @@ namespace SharpLearning.CrossValidation.CrossValidators
             var cvPredictionIndiceMap = Enumerable.Range(0, crossValidatedPredictions.Length)
                 .ToDictionary(i => indices[i], i => i);
 
-            for (int i = 0; i < m_crossValidationFolds; i++)
-            {
-                if (i == m_crossValidationFolds - 1)
-                {
-                    // last fold. Add remaining indices.  
-                    holdOutSamples[i] = indices.ToArray();
-                }
-                else
-                {
-                    var holdoutSample = m_indexedSampler.Sample(targets, samplesPrFold, indices);
-                    holdOutSamples[i] = holdoutSample;
-                    indices = indices.Except(holdoutSample).ToArray();
-                }
-            }
+            var crossValidationIndexSets = CrossValidationUtilities.GetCrossValidationIndexSets(
+                m_indexedSampler, m_crossValidationFolds, targets, indices);
 
             var observation = new double[observations.ColumnCount];
-            for (int i = 0; i < m_crossValidationFolds; i++)
+            foreach (var (trainingIndices, validationIndices) in crossValidationIndexSets)
             {
-                var holdoutIndices = holdOutSamples[i];
-                var trainingIndices = crossValidationIndices.Except(holdoutIndices).ToArray();
                 var model = learner.Learn(observations, targets, trainingIndices);
-                var predictions = new TPrediction[holdoutIndices.Length];
+                var predictions = new TPrediction[validationIndices.Length];
 
                 for (int l = 0; l < predictions.Length; l++)
                 {
-                    observations.Row(holdoutIndices[l], observation);
+                    observations.Row(validationIndices[l], observation);
                     predictions[l] = model.Predict(observation);
                 }
 
-                for (int j = 0; j < holdoutIndices.Length; j++)
+                for (int j = 0; j < validationIndices.Length; j++)
                 {
-                    crossValidatedPredictions[cvPredictionIndiceMap[holdoutIndices[j]]] = predictions[j];
+                    crossValidatedPredictions[cvPredictionIndiceMap[validationIndices[j]]] = predictions[j];
                 }
 
                 ModelDisposer.DisposeIfDisposable(model);
