@@ -78,7 +78,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
             var cvPredictionIndiceMap = Enumerable.Range(0, crossValidatedPredictions.Length)
                 .ToDictionary(i => indices[i], i => i);
 
-            var crossValidationIndexSets = CrossValidationUtilities.GetCrossValidationIndexSets(
+            var crossValidationIndexSets = CrossValidationUtilities.GetKFoldCrossValidationIndexSets(
                 m_indexedSampler, m_crossValidationFolds, targets, indices);
 
             var observation = new double[observations.ColumnCount];

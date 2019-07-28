@@ -9,11 +9,11 @@ namespace SharpLearning.CrossValidation.Test
     public class CrossValidationUtilitiesTest
     {
         [TestMethod]
-        public void CrossValidationUtilities_GetCrossValidationIndexSets_Handle_Remainder()
+        public void CrossValidationUtilities_GetKFoldCrossValidationIndexSets_Handle_Remainder()
         {
             var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3 };
             var sampler = new StratifiedIndexSampler<double>(seed: 242);
-            var actuals = CrossValidationUtilities.GetCrossValidationIndexSets(sampler, 
+            var actuals = CrossValidationUtilities.GetKFoldCrossValidationIndexSets(sampler, 
                 foldCount: 4, targets: targets);
 
             var expecteds = new List<(int[] trainingIndices, int[] validationIndices)>
@@ -37,11 +37,11 @@ namespace SharpLearning.CrossValidation.Test
         }
 
         [TestMethod]
-        public void CrossValidationUtilities_GetCrossValidationIndexSets()
+        public void CrossValidationUtilities_GetKFoldCrossValidationIndexSets()
         {
             var targets = new double[] { 1, 1, 1, 1 , 2, 2, 2, 2, 3, 3, 3, 3 };
             var sampler = new StratifiedIndexSampler<double>(seed: 242);
-            var actuals = CrossValidationUtilities.GetCrossValidationIndexSets(sampler,
+            var actuals = CrossValidationUtilities.GetKFoldCrossValidationIndexSets(sampler,
                 foldCount: 4, targets: targets);
 
             var expecteds = new List<(int[] trainingIndices, int[] validationIndices)>
@@ -63,12 +63,12 @@ namespace SharpLearning.CrossValidation.Test
         }
 
         [TestMethod]
-        public void CrossValidationUtilities_GetCrossValidationIndexSets_Indices()
+        public void CrossValidationUtilities_GetKFoldCrossValidationIndexSets_Indices()
         {
             var targets = new double[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 };
             var indices = new int[] { 0, 1, 2, 3, 4, 5, 6 };
             var sampler = new StratifiedIndexSampler<double>(seed: 242);
-            var actuals = CrossValidationUtilities.GetCrossValidationIndexSets(sampler,
+            var actuals = CrossValidationUtilities.GetKFoldCrossValidationIndexSets(sampler,
                 foldCount: 2, targets: targets, indices: indices);
 
             TraceIndexSets(actuals);
