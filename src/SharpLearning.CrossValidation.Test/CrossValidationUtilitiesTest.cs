@@ -62,8 +62,35 @@ namespace SharpLearning.CrossValidation.Test
             }
         }
 
+        [TestMethod]
+        public void CrossValidationUtilities_GetCrossValidationIndexSets_Indices()
+        {
+            var targets = new double[] { 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 };
+            var indices = new int[] { 0, 1, 2, 3, 4, 5, 6 };
+            var sampler = new StratifiedIndexSampler<double>(seed: 242);
+            var actuals = CrossValidationUtilities.GetCrossValidationIndexSets(sampler,
+                foldCount: 2, targets: targets, indices: indices);
 
-        void TraceIndexSets(List<(int[] trainingIndices, int[] validationIndices)> indexSets)
+            TraceIndexSets(actuals);
+
+            var expecteds = new List<(int[] trainingIndices, int[] validationIndices)>
+            {
+                // Sets contains values from the indices array only.
+                (new int[] { 1, 3, 4, 5 }, new int[] { 2, 6, 0 }),
+                (new int[] { 0, 2, 6 }, new int[] { 1, 3, 4, 5 }),
+            };
+
+            Assert.AreEqual(expecteds.Count, actuals.Count);
+            for (int i = 0; i < expecteds.Count; i++)
+            {
+                var expected = expecteds[i];
+                var actual = actuals[i];
+                CollectionAssert.AreEqual(expected.trainingIndices, actual.trainingIndices);
+                CollectionAssert.AreEqual(expected.validationIndices, actual.validationIndices);
+            }
+        }
+
+        void TraceIndexSets(IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> indexSets)
         {
             const string Separator = ", ";
             foreach (var set in indexSets)
