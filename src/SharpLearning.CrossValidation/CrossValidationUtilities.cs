@@ -17,8 +17,8 @@ namespace SharpLearning.CrossValidation
         /// <param name="foldCount"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public static IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> GetKFoldCrossValidationIndexSets(
-            IIndexSampler<double> sampler, int foldCount, double[] targets)
+        public static IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> GetKFoldCrossValidationIndexSets<T>(
+            IIndexSampler<T> sampler, int foldCount, T[] targets)
         {
             var allIndices = Enumerable.Range(0, targets.Length).ToArray();
             return GetKFoldCrossValidationIndexSets(sampler, foldCount, targets, allIndices);
@@ -33,8 +33,8 @@ namespace SharpLearning.CrossValidation
         /// <param name="targets"></param>
         /// <param name="indices">indices to use for the cross validation sets</param>
         /// <returns></returns>
-        public static IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> GetKFoldCrossValidationIndexSets(
-            IIndexSampler<double> sampler, int foldCount, double[] targets, int[] indices)
+        public static IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> GetKFoldCrossValidationIndexSets<T>(
+            IIndexSampler<T> sampler, int foldCount, T[] targets, int[] indices)
         {
             var samplesPerFold = indices.Length / foldCount;
 
