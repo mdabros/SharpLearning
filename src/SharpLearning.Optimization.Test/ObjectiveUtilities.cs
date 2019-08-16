@@ -5,6 +5,7 @@ namespace SharpLearning.Optimization.Test
     public static class ObjectiveUtilities
     {
         public const double Delta = 0.000001;
+        static Random _random = new Random(42);
 
         public static OptimizerResult Minimize(double[] x)
         {
@@ -24,6 +25,11 @@ namespace SharpLearning.Optimization.Test
             }
 
             return new OptimizerResult(parameters, cost);
+        }
+
+        public static OptimizerResult MinimizeNonDeterministic(double[] x)
+        {
+            return new OptimizerResult(x, x[0] < 0.5d ? _random.Next(2, 3) : 2);
         }
     }
 }
