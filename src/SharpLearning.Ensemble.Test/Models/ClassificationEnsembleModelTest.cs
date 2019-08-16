@@ -1,15 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
-using SharpLearning.Ensemble.Test.Properties;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Test.Models
 {
@@ -19,10 +16,7 @@ namespace SharpLearning.Ensemble.Test.Models
         [TestMethod]
         public void ClassificationEnsembleModel_Predict_single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
             {
@@ -32,9 +26,12 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -50,10 +47,7 @@ namespace SharpLearning.Ensemble.Test.Models
         [TestMethod]
         public void ClassificationEnsembleModel_Predict_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
             {
@@ -63,7 +57,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -77,10 +73,7 @@ namespace SharpLearning.Ensemble.Test.Models
         [TestMethod]
         public void ClassificationEnsembleModel_PredictProbability_single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
             {
@@ -90,9 +83,12 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
+            var rows = targets.Length;
             var predictions = new ProbabilityPrediction[rows];
             for (int i = 0; i < rows; i++)
             {
@@ -108,10 +104,7 @@ namespace SharpLearning.Ensemble.Test.Models
         [TestMethod]
         public void ClassificationEnsembleModel_PredictProbability_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
             {
@@ -121,7 +114,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.PredictProbability(observations);
@@ -135,9 +130,8 @@ namespace SharpLearning.Ensemble.Test.Models
         [TestMethod]
         public void ClassificationEnsembleModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
             var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
                 { "PreviousExperience_month", 1 } };
 
@@ -149,7 +143,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
@@ -169,9 +165,7 @@ namespace SharpLearning.Ensemble.Test.Models
         [TestMethod]
         public void ClassificationEnsembleModel_GetRawVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
             {
@@ -181,7 +175,9 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, new MeanProbabilityClassificationEnsembleStrategy());
+            var learner = new ClassificationEnsembleLearner(learners, 
+                new MeanProbabilityClassificationEnsembleStrategy());
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();

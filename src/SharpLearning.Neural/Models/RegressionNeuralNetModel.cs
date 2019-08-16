@@ -1,11 +1,11 @@
-﻿using MathNet.Numerics.LinearAlgebra.Storage;
-using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MathNet.Numerics.LinearAlgebra.Storage;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.Neural.Models
 {
@@ -24,8 +24,7 @@ namespace SharpLearning.Neural.Models
         /// <param name="model"></param>
         public RegressionNeuralNetModel(NeuralNet model)
         {
-            if (model == null) { throw new ArgumentNullException("model"); }
-            m_neuralNet = model;
+            m_neuralNet = model ?? throw new ArgumentNullException(nameof(model));
         }
 
         /// <summary>
@@ -69,10 +68,7 @@ namespace SharpLearning.Neural.Models
         /// Returns 0.0 for all features.
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_neuralNet.GetRawVariableImportance();
-        }
+        public double[] GetRawVariableImportance() => m_neuralNet.GetRawVariableImportance();
 
         /// <summary>
         /// Variable importance is currently not supported by Neural Net.
@@ -80,10 +76,8 @@ namespace SharpLearning.Neural.Models
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
-        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
-        {
-            return m_neuralNet.GetVariableImportance(featureNameToIndex);
-        }
+        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex) 
+            => m_neuralNet.GetVariableImportance(featureNameToIndex);
 
         /// <summary>
         /// Outputs a string representation of the neural net.

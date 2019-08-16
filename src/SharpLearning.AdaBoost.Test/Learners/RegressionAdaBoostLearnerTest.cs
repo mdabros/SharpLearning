@@ -1,13 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.AdaBoost.Learners;
-using SharpLearning.AdaBoost.Test.Properties;
-using SharpLearning.Containers;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Metrics.Regression;
-using SharpLearning.Containers.Extensions;
-using System;
-using System.IO;
+﻿using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.AdaBoost.Learners;
+using SharpLearning.Containers.Extensions;
+using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.AdaBoost.Test.Learners
 {
@@ -17,9 +13,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void RegressionAdaBoostLearner_Learn_AptitudeData_LinearLoss()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new RegressionAdaBoostLearner(10);
             
@@ -35,9 +29,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void RegressionAdaBoostLearner_Learn_AptitudeData_SquaredLoss()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new RegressionAdaBoostLearner(10, 1, 0, AdaBoostRegressionLoss.Squared);
 
@@ -53,9 +45,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void RegressionAdaBoostLearner_Learn_AptitudeData_ExponentialLoss()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new RegressionAdaBoostLearner(10, 1, 0, AdaBoostRegressionLoss.Exponential);
 
@@ -71,9 +61,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void RegressionAdaBoostLearner_Learn_Glass()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new RegressionAdaBoostLearner(10);
 
@@ -89,9 +77,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
         [TestMethod]
         public void RegressionAdaBoostLearner_Learn_Glass_Indexed()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new RegressionAdaBoostLearner(10, 1, 5);
 

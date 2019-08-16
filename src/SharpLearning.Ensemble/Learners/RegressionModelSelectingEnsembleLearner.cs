@@ -33,8 +33,11 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
         /// <param name="ensembleSelection">Ensemble selection method used to find the beset subset of models</param>
-        public RegressionModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
-            IRegressionEnsembleStrategy ensembleStrategy, IRegressionEnsembleSelection ensembleSelection)
+        public RegressionModelSelectingEnsembleLearner(
+            IIndexedLearner<double>[] learners, 
+            ICrossValidation<double> crossValidation,
+            IRegressionEnsembleStrategy ensembleStrategy, 
+            IRegressionEnsembleSelection ensembleSelection)
             : this(learners, crossValidation, () => ensembleStrategy, ensembleSelection)
         {
         }
@@ -49,18 +52,17 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="crossValidation">Cross validation method</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-        /// <param name="ensembleSelection">Enemble selection method used to find the beset subset of models</param>
-        public RegressionModelSelectingEnsembleLearner(IIndexedLearner<double>[] learners, ICrossValidation<double> crossValidation,
-            Func<IRegressionEnsembleStrategy> ensembleStrategy, IRegressionEnsembleSelection ensembleSelection)
+        /// <param name="ensembleSelection">Ensemble selection method used to find the beset subset of models</param>
+        public RegressionModelSelectingEnsembleLearner(
+            IIndexedLearner<double>[] learners, 
+            ICrossValidation<double> crossValidation,
+            Func<IRegressionEnsembleStrategy> ensembleStrategy, 
+            IRegressionEnsembleSelection ensembleSelection)
         {
-            if (learners == null) { throw new ArgumentNullException("learners"); }
-            if (crossValidation == null) { throw new ArgumentNullException("crossValidation"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
-            if (ensembleSelection == null) { throw new ArgumentNullException("ensembleSelection"); }
-            m_learners = learners;
-            m_crossValidation = crossValidation;
-            m_ensembleStrategy = ensembleStrategy;
-            m_ensembleSelection = ensembleSelection;
+            m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentNullException(nameof(crossValidation));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
+            m_ensembleSelection = ensembleSelection ?? throw new ArgumentNullException(nameof(ensembleSelection));
         }
 
         /// <summary>
@@ -85,7 +87,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public RegressionEnsembleModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public RegressionEnsembleModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
@@ -93,35 +96,13 @@ namespace SharpLearning.Ensemble.Learners
             var metaObservations = LearnMetaFeatures(observations, targets, indices);
 
             var metaModelTargets = targets.GetIndices(indices);
-            var ensembleModelIndices = m_ensembleSelection.Select(metaObservations, metaModelTargets);
+            var ensembleModelIndices = m_ensembleSelection.Select(metaObservations, 
+                metaModelTargets);
             
             var ensembleModels = m_learners.GetIndices(ensembleModelIndices)
                 .Select(learner => learner.Learn(observations, targets, indices)).ToArray();
 
             return new RegressionEnsembleModel(ensembleModels, m_ensembleStrategy());
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <param name="indices"></param>
-        /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
         }
 
         /// <summary>
@@ -143,7 +124,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public F64Matrix LearnMetaFeatures(F64Matrix observations, double[] targets, int[] indices)
+        public F64Matrix LearnMetaFeatures(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             var cvRows = indices.Length;
             var cvCols = m_learners.Length;
@@ -154,7 +136,9 @@ namespace SharpLearning.Ensemble.Learners
             {
                 Trace.WriteLine("Training model: " + (i + 1));
                 var learner = m_learners[i];
-                m_crossValidation.CrossValidate(learner, observations, targets, indices, modelPredictions);
+                m_crossValidation.CrossValidate(learner, observations, targets, 
+                    indices, modelPredictions);
+
                 for (int j = 0; j < modelPredictions.Length; j++)
                 {
                     cvPredictions[j, i] = modelPredictions[j];
@@ -172,7 +156,10 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="metaObservations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public RegressionEnsembleModel SelectModels(F64Matrix observations, F64Matrix metaObservations, double[] targets)
+        public RegressionEnsembleModel SelectModels(
+            F64Matrix observations, 
+            F64Matrix metaObservations, 
+            double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             var ensembleModelIndices = m_ensembleSelection.Select(metaObservations, targets);
@@ -182,5 +169,24 @@ namespace SharpLearning.Ensemble.Learners
 
             return new RegressionEnsembleModel(ensembleModels, m_ensembleStrategy());
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
+
+        /// <summary>
+        /// Private explicit interface implementation for learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
     }
 }

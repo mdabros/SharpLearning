@@ -1,6 +1,5 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
 using SharpLearning.GradientBoost.Loss;
 
 namespace SharpLearning.GradientBoost.Test.Loss

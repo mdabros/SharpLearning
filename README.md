@@ -1,8 +1,7 @@
+[![Build Status](https://machinelearning.visualstudio.com/sharplearning-github-build/_apis/build/status/sharplearning-CI?branchName=master)](https://machinelearning.visualstudio.com/sharplearning-github-build/_build/latest?definitionId=28&branchName=master)
 
 SharpLearning
 =================
-
-![Build status](https://machinelearning.visualstudio.com/_apis/public/build/definitions/1bfe43f8-2f3d-449c-bc6e-2491e646764d/8/badge)
 
 SharpLearning is an opensource machine learning library for C# .Net. 
 The goal of SharpLearning is to provide .Net developers with easy access to machine learning algorithms and models.
@@ -47,6 +46,7 @@ However, several optimization methods are available for hyperparameter tuning:
 * RandomSearch
 * ParticleSwarm
 * GlobalizedBoundedNelderMead
+* Hyperband
 * BayesianOptimization  
 
 License

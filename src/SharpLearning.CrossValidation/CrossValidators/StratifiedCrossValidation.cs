@@ -10,7 +10,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
     public sealed class StratifiedCrossValidation<TPrediction> : CrossValidation<TPrediction>
     {
         /// <summary>
-        /// Cross validation for evaluating how learning algorithms generalise on new data
+        /// Cross validation for evaluating how learning algorithms generalize on new data
         /// </summary>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
         /// <param name="seed"></param>

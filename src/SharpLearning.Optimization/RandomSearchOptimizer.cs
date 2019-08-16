@@ -26,8 +26,12 @@ namespace SharpLearning.Optimization
         /// <param name="iterations">The number of iterations to perform</param>
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
-        public RandomSearchOptimizer(IParameterSpec[] parameters, int iterations, int seed=42, bool runParallel = true, int maxDegreeOfParallelism = -1)
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
+        public RandomSearchOptimizer(IParameterSpec[] parameters, 
+            int iterations, 
+            int seed=42, 
+            bool runParallel = true, 
+            int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
@@ -37,25 +41,27 @@ namespace SharpLearning.Optimization
         }
 
         /// <summary>
-        /// Random search optimizer initializes random parameters between min and max of the provided.
+        /// Random search optimizer initializes random parameters between min and max of the provided bounds.
         /// Returns the result which best minimizes the provided function.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
-        /// Random search optimizer initializes random parameters between min and max of the provided
-        /// Returns all results ordered from best to worst (minimized).
+        /// Random search optimizer initializes random parameters between min and max of the provided bounds.
+        /// Returns all results, chronologically ordered. 
+        /// Note that the order of results might be affected if running parallel.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
-            var parameterSets = CreateParameterSets(m_parameters);
+            var parameterSets = SampleRandomParameterSets(m_iterations, 
+                m_parameters, m_sampler);
 
             // Initialize the search
             var results = new ConcurrentBag<OptimizerResult>();
@@ -72,7 +78,8 @@ namespace SharpLearning.Optimization
             else
             {
                 var rangePartitioner = Partitioner.Create(parameterSets, true);
-                Parallel.ForEach(rangePartitioner, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (param, loopState) =>
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+                Parallel.ForEach(rangePartitioner, options, (param, loopState) =>
                 {
                     // Get the current parameters for the current point
                     var result = functionToMinimize(param);
@@ -80,28 +87,46 @@ namespace SharpLearning.Optimization
                 });
             }
 
-
-            // return all results ordered
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return results.ToArray();
         }
 
-
-        double[][] CreateParameterSets(IParameterSpec[] parameters)
+        /// <summary>
+        /// Samples a set of random parameter sets.
+        /// </summary>
+        /// <param name="parameterSetCount"></param>
+        /// <param name="parameters"></param>
+        /// <param name="sampler"></param>
+        /// <returns></returns>
+        public static double[][] SampleRandomParameterSets(int parameterSetCount, 
+            IParameterSpec[] parameters, IParameterSampler sampler)
         {
-            var newSearchSpace = new double[m_iterations][];
-            for (int i = 0; i < newSearchSpace.Length; i++)
-			{
-                var newParameters = new double[parameters.Length];
-                var index = 0;
-                foreach (var param in parameters)
-                {
-                    newParameters[index] = param.SampleValue(m_sampler);
-                    index++;
-                }
-                newSearchSpace[i] = newParameters;
-			}
+            var parameterSets = new double[parameterSetCount][];
+            for (int i = 0; i < parameterSetCount; i++)
+            {
+                parameterSets[i] = SampleParameterSet(parameters, sampler);
+            }
 
-            return newSearchSpace;
+            return parameterSets;
+        }
+
+        /// <summary>
+        /// Samples a random parameter set.
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <param name="sampler"></param>
+        /// <returns></returns>
+        public static double[] SampleParameterSet(IParameterSpec[] parameters, 
+            IParameterSampler sampler)
+        {
+            var parameterSet = new double[parameters.Length];
+
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                var parameter = parameters[i];
+                parameterSet[i] = parameter.SampleValue(sampler);
+            }
+
+            return parameterSet;
         }
     }
 }

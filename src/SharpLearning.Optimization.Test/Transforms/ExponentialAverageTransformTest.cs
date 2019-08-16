@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Optimization.ParameterSamplers;
 using SharpLearning.Optimization.Transforms;
@@ -23,11 +22,7 @@ namespace SharpLearning.Optimization.Test.Transforms
             }
 
             var expected = new double[] { 0.992278411595665, 0.997409150148125, 0.998132430514324, 0.994020430192635, 0.979715997610774, 0.988851171960333, 0.996926149242493, 0.990178958939479, 0.925360566800827, 0.998595637693094 };
-            Assert.AreEqual(expected.Length, actual.Length);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);
-            }
+            ArrayAssert.AssertAreEqual(expected, actual);
         }
 
         [TestMethod]

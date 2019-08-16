@@ -1,10 +1,10 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.Ensemble.Strategies;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.Ensemble.Strategies;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
 {
@@ -34,13 +34,12 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         public ForwardSearchRegressionEnsembleSelection(IMetric<double, double> metric, IRegressionEnsembleStrategy ensembleStrategy,
             int numberOfModelsToSelect, int numberOfModelsFromStart, bool selectWithReplacement)
         {
-            if (metric == null) { throw new ArgumentNullException("metric"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
             if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
             if (numberOfModelsFromStart < 1) { throw new ArgumentException("numberOfModelsFromStart must be at least 1"); }
             if (numberOfModelsFromStart > numberOfModelsToSelect) { throw new ArgumentException("numberOfModelsFromStart must be smaller than numberOfModelsToSelect"); }
-            m_metric = metric;
-            m_ensembleStrategy = ensembleStrategy;
+
             m_numberOfModelsToSelect = numberOfModelsToSelect;
             m_numberOfModelsFromStart = numberOfModelsFromStart;
             m_selectWithReplacement = selectWithReplacement;
@@ -57,7 +56,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 

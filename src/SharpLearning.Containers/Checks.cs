@@ -36,7 +36,8 @@ namespace SharpLearning.Containers
         /// <param name="observationsRowCount"></param>
         /// <param name="observationsColumnCount"></param>
         /// <param name="targetLength"></param>
-        public static void VerifyObservationsAndTargets(int observationsRowCount, int observationsColumnCount, int targetLength)
+        public static void VerifyObservationsAndTargets(int observationsRowCount, 
+            int observationsColumnCount, int targetLength)
         {
             VerifyObservations(observationsRowCount, observationsColumnCount);
             VerifyTargets(targetLength);
@@ -82,7 +83,8 @@ namespace SharpLearning.Containers
         {
             if(observationRowCount != targetLength)
             {
-                throw new ArgumentException($"Observations and targets mismatch. Observations row count: {observationRowCount}, targets row count: {targetLength}");
+                throw new ArgumentException($"Observations and targets mismatch." + 
+                    $"Observations row count: {observationRowCount}, targets row count: {targetLength}");
             }           
         }
 
@@ -119,16 +121,23 @@ namespace SharpLearning.Containers
             var min = indices.Min();
             if(min < 0)
             {
-                throw new ArgumentException($"Indices contains negative values: {string.Join(",", indices.Where(v => v < 0))}");
+                throw new ArgumentException($"Indices contains negative " + 
+                    $"values: {string.Join(",", indices.Where(v => v < 0))}");
             }
 
             var max = indices.Max();
             if (max >= observationRowCount || max >= targetLength)
             {
-                throw new ArgumentException($"Indices contains elements exceeding the row count of observations and targets. Indices Max: {max}, observations row count: {observationRowCount}, target length: {targetLength}");
+                throw new ArgumentException($"Indices contains elements exceeding the row count of observations and targets. " +  
+                    $"Indices Max: {max}, observations row count: {observationRowCount}, target length: {targetLength}");
             }
         }
 
+        /// <summary>
+        /// Verify that featuresToUse is smaller or equal to featureCount.
+        /// </summary>
+        /// <param name="featuresToUse"></param>
+        /// <param name="featureCount"></param>
         public static void VerifyFeaturesToUse(int featuresToUse, int featureCount)
         {
             if (featuresToUse > featureCount)

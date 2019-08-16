@@ -1,20 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
-using System.Linq;
 
 namespace SharpLearning.Containers.Test.Matrices
 {
     [TestClass]
     public class F64MatrixExtensionsTest
     {
-        readonly double[] InputData = new double[] { 1, 2, 3, 4, 5, 6 };
-        readonly double[] CombineDataCol = new double[] { 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6 };
-        readonly double[] CombineDataRows = new double[] { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6 };
+        readonly double[] m_inputData = new double[] { 1, 2, 3, 4, 5, 6 };
+        readonly double[] m_combineDataCol = new double[] { 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6 };
+        readonly double[] m_combineDataRows = new double[] { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6 };
 
         [TestMethod]
         public void F64MatrixExtensions_Clear()
         {
-            var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
+            var matrix = new F64Matrix(m_inputData.ToArray(), 2, 3);
             matrix.Clear();
 
             CollectionAssert.AreEqual(new double[2 * 3], matrix.Data());
@@ -23,7 +23,7 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void F64MatrixExtensions_Map()
         {
-            var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
+            var matrix = new F64Matrix(m_inputData.ToArray(), 2, 3);
             matrix.Map(() => 10);
 
             var expected = Enumerable.Range(0, matrix.Data().Length).Select(v => 10.0).ToArray();
@@ -33,7 +33,7 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void F64MatrixExtensions_Map2()
         {
-            var matrix = new F64Matrix(InputData.ToArray(), 2, 3);
+            var matrix = new F64Matrix(m_inputData.ToArray(), 2, 3);
             matrix.Map(() => 10);
             matrix.Map(v => v + 1);
 
@@ -44,28 +44,30 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void F64MatrixExtensions_ToStringMatrix()
         {
-            var matrix = new F64Matrix(InputData, 2, 3);
+            var matrix = new F64Matrix(m_inputData, 2, 3);
             var actual = matrix.ToStringMatrix();
 
-            var expected = new StringMatrix(InputData.Select(v => FloatingPointConversion.ToString(v)).ToArray(), 2, 3);
+            var expected = new StringMatrix(m_inputData.Select(v => 
+                FloatingPointConversion.ToString(v)).ToArray(), 2, 3);
+
             Assert.AreEqual(expected, actual);
         }
 
         [TestMethod]
         public void F64MatrixExtensions_CombineF64Matrices()
         {
-            var matrix1 = new F64Matrix(InputData, 2, 3);
-            var matrix2 = new F64Matrix(InputData, 2, 3);
+            var matrix1 = new F64Matrix(m_inputData, 2, 3);
+            var matrix2 = new F64Matrix(m_inputData, 2, 3);
 
             var actual = matrix1.CombineCols(matrix2);
 
-            Assert.AreEqual(new F64Matrix(CombineDataCol, 2, 6), actual);
+            Assert.AreEqual(new F64Matrix(m_combineDataCol, 2, 6), actual);
         }
 
         [TestMethod]
         public void F64MatrixExtensions_CombineF64MatrixAndVector()
         {
-            var matrix = new F64Matrix(InputData, 2, 3);
+            var matrix = new F64Matrix(m_inputData, 2, 3);
             var vector = new double[] { 3, 6 };
 
             var expected = new F64Matrix(new double[] {1, 2, 3, 3,
@@ -78,7 +80,7 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void F64MatrixExtensions_CombineVectorAndF64Matrix()
         {
-            var matrix = new F64Matrix(InputData, 2, 3);
+            var matrix = new F64Matrix(m_inputData, 2, 3);
             var vector = new double[] { 3, 6 };
 
             var expected = new F64Matrix(new double[] {3, 1, 2, 3,
@@ -111,7 +113,7 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void F64MatrixExtensions_CombineRows_F64MatrixAndVector()
         {
-            var matrix = new F64Matrix(InputData, 2, 3);
+            var matrix = new F64Matrix(m_inputData, 2, 3);
             var vector = new double[] { 3, 6, 7 };
 
             var expected = new F64Matrix(new double[] {1, 2, 3, 
@@ -125,7 +127,7 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void F64MatrixExtensions_CombineRows_VectorAndF64Matrix()
         {
-            var matrix = new F64Matrix(InputData, 2, 3);
+            var matrix = new F64Matrix(m_inputData, 2, 3);
             var vector = new double[] { 3, 6, 7 };
 
             var expected = new F64Matrix(new double[] {3, 6, 7,
@@ -140,12 +142,12 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void F64MatrixExtensions_CombineRows_F64Matrices()
         {
-            var matrix1 = new F64Matrix(InputData, 2, 3);
-            var matrix2 = new F64Matrix(InputData, 2, 3);
+            var matrix1 = new F64Matrix(m_inputData, 2, 3);
+            var matrix2 = new F64Matrix(m_inputData, 2, 3);
 
             var actual = matrix1.CombineRows(matrix2);
 
-            Assert.AreEqual(new F64Matrix(CombineDataRows, 4, 3), actual);
+            Assert.AreEqual(new F64Matrix(m_combineDataRows, 4, 3), actual);
         }
     }
 }

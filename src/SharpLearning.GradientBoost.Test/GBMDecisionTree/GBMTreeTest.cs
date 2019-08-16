@@ -1,9 +1,5 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using SharpLearning.GradientBoost.Test.Properties;
-using SharpLearning.InputOutput.Csv;
-using System.Linq;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.GBMDecisionTree;
 
@@ -15,9 +11,7 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
         [TestMethod]
         public void GBMTree_AddRawFeatureImportances()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var inSample = targets.Select(t => true).ToArray();
             var orderedElements = new int[observations.ColumnCount][];

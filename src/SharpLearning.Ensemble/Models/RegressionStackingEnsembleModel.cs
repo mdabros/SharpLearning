@@ -1,7 +1,7 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Ensemble.Models
 {
@@ -19,14 +19,12 @@ namespace SharpLearning.Ensemble.Models
         /// </summary>
         /// <param name="ensembleModels">Models included in the ensemble</param>
         /// <param name="metaModel">Meta or top level model to combine the ensemble models</param>
-        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
-        /// False; the meta learner only recieves the output of the ensemble models as features</param>
+        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+        /// False; the meta learner only receives the output of the ensemble models as features</param>
         public RegressionStackingEnsembleModel(IPredictorModel<double>[] ensembleModels, IPredictorModel<double> metaModel, bool includeOriginalFeaturesForMetaLearner)
         {
-            if (ensembleModels == null) { throw new ArgumentException("ensembleModels"); }
-            if (metaModel == null) { throw new ArgumentException("metaModel"); }
-            m_ensembleModels = ensembleModels;
-            m_metaModel = metaModel;
+            m_ensembleModels = ensembleModels ?? throw new ArgumentException(nameof(ensembleModels));
+            m_metaModel = metaModel ?? throw new ArgumentException(nameof(metaModel));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
         }
 
@@ -76,13 +74,10 @@ namespace SharpLearning.Ensemble.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_metaModel.GetRawVariableImportance();
-        }
+        public double[] GetRawVariableImportance() => m_metaModel.GetRawVariableImportance();
 
         /// <summary>
         /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name

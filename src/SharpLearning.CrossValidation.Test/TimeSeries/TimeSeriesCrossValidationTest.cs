@@ -1,11 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.CrossValidation.Test.Properties;
 using SharpLearning.CrossValidation.TimeSeries;
 using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.CrossValidation.Test.TimeSeries
@@ -16,14 +13,12 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
         [TestMethod]
         public void TimeSeriesCrossValidation_Validate()
         {
-            var targetName = "T";
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
-            
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -35,14 +30,12 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
         [TestMethod]
         public void TimeSeriesCrossValidation_Validate_MaxTrainingSetSize()
         {
-            var targetName = "T";
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, maxTrainingSetSize: 10);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -54,14 +47,12 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
         [TestMethod]
         public void TimeSeriesCrossValidation_Validate_RetrainInterval()
         {
-            var targetName = "T";
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, retrainInterval: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -73,14 +64,12 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
         [TestMethod]
         public void TimeSeriesCrossValidation_Validate_MaxTrainingSetSize_And_RetrainInterval()
         {
-            var targetName = "T";
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5, maxTrainingSetSize: 30, retrainInterval: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
             var timeSeriesTargets = sut.GetValidationTargets(targets);
 
             var metric = new MeanSquaredErrorRegressionMetric();
@@ -122,28 +111,25 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
         [ExpectedException(typeof(ArgumentException))]
         public void TimeSeriesCrossValidation_Validate_Observations_And_Targets_Length_Does_Not_Match()
         {
-            var targetName = "T";
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).Take(100).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+            targets = targets.Take(100).ToArray();
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 5);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TimeSeriesCrossValidation_Validate_InitialTrainingSize_Is_Larger_Than_Obsevations_Length()
         {
-            var targetName = "T";
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows(v => !v.Contains(targetName)).ToF64Matrix();
-            var targets = parser.EnumerateRows(targetName).ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var sut = new TimeSeriesCrossValidation<double>(initialTrainingSize: 300);
 
-            var timeSeriesPredictions = sut.Validate(new RegressionDecisionTreeLearner(), observations, targets);
+            var learner = new RegressionDecisionTreeLearner();
+            var timeSeriesPredictions = sut.Validate(learner, observations, targets);
         }
 
         [TestMethod]

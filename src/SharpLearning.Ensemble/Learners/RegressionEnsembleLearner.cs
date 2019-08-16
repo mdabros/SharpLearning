@@ -28,9 +28,12 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
         /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
         /// <param name="seed">Seed for the bagging when used</param>
-        public RegressionEnsembleLearner(IIndexedLearner<double>[] learners, double subSampleRatio = 1.0, int seed = 24)
+        public RegressionEnsembleLearner(
+            IIndexedLearner<double>[] learners, 
+            double subSampleRatio = 1.0, 
+            int seed = 24)
             : this(learners.Select(l => new Func<F64Matrix, double[], int[], IPredictorModel<double>>((o, t, i) => l.Learn(o, t, i))).ToArray(),
-            () => new MeanRegressionEnsembleStrategy(), subSampleRatio, seed)
+                () => new MeanRegressionEnsembleStrategy(), subSampleRatio, seed)
         {
         }
 
@@ -38,14 +41,17 @@ namespace SharpLearning.Ensemble.Learners
         /// Regression ensemble learner. Combines several models into a single ensemble model.
         /// </summary>
         /// <param name="learners">Learners in the ensemble</param>
-        /// <param name="ensembleStrategy">Strategy on how to combine the models. Default is mean of all models in the ensmble</param>
+        /// <param name="ensembleStrategy">Strategy on how to combine the models. Default is mean of all models in the ensemble</param>
         /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
         /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
         /// <param name="seed">Seed for the bagging when used</param>
-        public RegressionEnsembleLearner(IIndexedLearner<double>[] learners, IRegressionEnsembleStrategy ensembleStrategy,
-            double subSampleRatio = 1.0, int seed = 24)
+        public RegressionEnsembleLearner(
+            IIndexedLearner<double>[] learners, 
+            IRegressionEnsembleStrategy ensembleStrategy,
+            double subSampleRatio = 1.0, 
+            int seed = 24)
             : this(learners.Select(l => new Func<F64Matrix, double[], int[], IPredictorModel<double>>((o, t, i) => l.Learn(o, t, i))).ToArray(), 
-            () => ensembleStrategy, subSampleRatio, seed)
+                () => ensembleStrategy, subSampleRatio, seed)
         {
         }
 
@@ -57,14 +63,16 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
         /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
         /// <param name="seed">Seed for the bagging when used</param>
-        public RegressionEnsembleLearner(Func<F64Matrix, double[], int[], IPredictorModel<double>>[] learners, Func<IRegressionEnsembleStrategy> ensembleStrategy,
-            double subSampleRatio = 1.0, int seed = 24)
+        public RegressionEnsembleLearner(
+            Func<F64Matrix, double[], int[], IPredictorModel<double>>[] learners, 
+            Func<IRegressionEnsembleStrategy> ensembleStrategy,
+            double subSampleRatio = 1.0, 
+            int seed = 24)
         {
-            if (learners == null) { throw new ArgumentNullException("learners"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_learners = learners ??  throw new ArgumentNullException("learners"); 
             if (learners.Length < 1) { throw new ArgumentException("there must be at least 1 learner"); }
-            m_learners = learners;
-            m_ensembleStrategy = ensembleStrategy;
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException("ensembleStrategy");
+
             m_random = new Random(seed);
             m_subSampleRatio = subSampleRatio;
         }
@@ -88,7 +96,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public RegressionEnsembleModel Learn(F64Matrix observations, double[] targets, int[] indices)
+        public RegressionEnsembleModel Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
@@ -129,26 +138,22 @@ namespace SharpLearning.Ensemble.Learners
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="targets"></param>
-        /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
-
-        /// <summary>
-        /// 
+        /// Private explicit interface implementation for indexed learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
+
+        /// <summary>
+        /// Private explicit interface implementation for learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
     }
 }

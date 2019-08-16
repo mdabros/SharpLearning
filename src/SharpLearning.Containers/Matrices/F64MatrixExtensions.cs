@@ -1,7 +1,5 @@
 ﻿using System;
 using SharpLearning.Containers.Extensions;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Containers.Matrices
 {
@@ -59,7 +57,7 @@ namespace SharpLearning.Containers.Matrices
 
 
         /// <summary>
-        /// Combines vector1 and vector2 columnwise. Vector2 is added to the end of vector1 
+        /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1 
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
@@ -89,7 +87,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Combines matrix and vector columnwise. Vector is added to the end of the matrix 
+        /// Combines matrix and vector column-wise. Vector is added to the end of the matrix 
         /// </summary>
         /// <param name="m"></param>
         /// <param name="v"></param>
@@ -125,7 +123,7 @@ namespace SharpLearning.Containers.Matrices
         }
 
         /// <summary>
-        /// Combines vector and matrix columnwise. Matrix is added to the left of the vector 
+        /// Combines vector and matrix column-wise. Matrix is added to the left of the vector 
         /// </summary>
         /// <param name="m"></param>
         /// <param name="v"></param>
@@ -160,7 +158,7 @@ namespace SharpLearning.Containers.Matrices
 
 
         /// <summary>
-        /// Combines matrix1 and matrix2 columnwise. Matrix2 is added to the end of matrix1
+        /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1
         /// </summary>
         /// <param name="m1"></param>
         /// <param name="m2"></param>
@@ -169,7 +167,7 @@ namespace SharpLearning.Containers.Matrices
         {
             if (m1.RowCount != m2.RowCount)
             {
-                throw new ArgumentException("matrices must have same number of rows inorder to be combined");
+                throw new ArgumentException("matrices must have same number of rows in order to be combined");
             }
 
             var rows = m1.RowCount;
@@ -232,7 +230,7 @@ namespace SharpLearning.Containers.Matrices
         {
             if (m.ColumnCount != v.Length)
             {
-                throw new ArgumentException("matrix must have same number of colums as vector");
+                throw new ArgumentException("matrix must have same number of columns as vector");
             }
 
             var rows = m.RowCount + 1;
@@ -257,7 +255,7 @@ namespace SharpLearning.Containers.Matrices
         {
             if (m.ColumnCount != v.Length)
             {
-                throw new ArgumentException("matrix must have same number of colums as vector");
+                throw new ArgumentException("matrix must have same number of columns as vector");
             }
 
             var rows = m.RowCount + 1;
@@ -283,7 +281,7 @@ namespace SharpLearning.Containers.Matrices
         {
             if (m1.ColumnCount != m2.ColumnCount)
             {
-                throw new ArgumentException("matrices must have same number of columns inorder to be combined");
+                throw new ArgumentException("matrices must have same number of columns in order to be combined");
             }
 
             var rows = m1.RowCount + m2.RowCount;

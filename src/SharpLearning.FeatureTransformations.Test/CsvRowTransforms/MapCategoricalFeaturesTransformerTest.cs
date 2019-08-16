@@ -1,39 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.InputOutput.Csv;
-using System.IO;
 
 namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 {
     [TestClass]
     public class MapCategoricalFeaturesTransformerTest
     {
-        [TestMethod]
-        public void MapCategoricalFeaturesTransformer_Transform()
-        {
-            var sut = new MapCategoricalFeaturesTransformer("Day");
-
-            var writer = new StringWriter();
-
-            new CsvParser(() => new StringReader(Input))
-            .EnumerateRows()
-            .Transform(r => sut.Transform(r))
-            .Write(() => writer);
-
-            var actual = writer.ToString();
-
-            Assert.AreEqual(Expected, actual);
-        }
-
-        string Expected =
+        readonly string m_expected =
 @"Day
 0
 1
 2
 0
 1";
-
-        string Input =
+        readonly string m_input =
 @"Day
 Monday
 TuesDay
@@ -41,5 +23,22 @@ WednessDay
 Monday
 TuesDay
 ";
+
+        [TestMethod]
+        public void MapCategoricalFeaturesTransformer_Transform()
+        {
+            var sut = new MapCategoricalFeaturesTransformer("Day");
+
+            var writer = new StringWriter();
+
+            new CsvParser(() => new StringReader(m_input))
+            .EnumerateRows()
+            .Transform(r => sut.Transform(r))
+            .Write(() => writer);
+
+            var actual = writer.ToString();
+
+            Assert.AreEqual(m_expected, actual);
+        }
     }
 }

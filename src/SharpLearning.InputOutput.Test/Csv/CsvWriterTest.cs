@@ -1,7 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
-using System.IO;
-using SharpLearning.InputOutput.Test.Properties;
 
 namespace SharpLearning.InputOutput.Test.Csv
 {
@@ -14,7 +13,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvWriter_Write()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeTestData));
+            var parser = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
             var data = parser.EnumerateRows();
 
             var writer = new StringWriter();
@@ -29,7 +28,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         [TestMethod]
         public void CsvWriter_Write_Append()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeTestData));
+            var parser = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
             var data = parser.EnumerateRows();
 
             var writer = new StringWriter();

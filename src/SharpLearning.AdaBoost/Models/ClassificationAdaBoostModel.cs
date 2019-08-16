@@ -1,11 +1,11 @@
-﻿using SharpLearning.Containers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.AdaBoost.Models
@@ -30,13 +30,9 @@ namespace SharpLearning.AdaBoost.Models
         public ClassificationAdaBoostModel(ClassificationDecisionTreeModel[] models, double[] modelWeights,
             double[] rawVariableImportance)
         {
-            if (models == null) { throw new ArgumentNullException("models"); }
-            if (modelWeights == null) { throw new ArgumentNullException("modelWeights"); }
-            if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
-
-            m_models = models;
-            m_modelWeights = modelWeights;
-            m_rawVariableImportance = rawVariableImportance;
+            m_models = models ?? throw new ArgumentNullException(nameof(models));
+            m_modelWeights = modelWeights ?? throw new ArgumentNullException(nameof(modelWeights));
+            m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException(nameof(rawVariableImportance));
         }
 
         /// <summary>
@@ -68,7 +64,7 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using weighted majority vote
+        /// Predicts a set of observations using weighted majority vote
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -87,7 +83,7 @@ namespace SharpLearning.AdaBoost.Models
         /// <summary>
         /// Predicts a single observation using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -130,29 +126,9 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
-        /// Predicts a set of obervations using the ensembled probabilities
+        /// Predicts a set of observations using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -187,13 +163,10 @@ namespace SharpLearning.AdaBoost.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_rawVariableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_rawVariableImportance;
 
         /// <summary>
         /// Loads a ClassificationAdaBoostModel.
@@ -215,5 +188,21 @@ namespace SharpLearning.AdaBoost.Models
             new GenericXmlDataContractSerializer()
                 .Serialize(this, writer);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
     }
 }

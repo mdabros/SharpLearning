@@ -1,11 +1,11 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Containers.Views;
 using SharpLearning.Ensemble.Strategies;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.EnsembleSelectors
 {
@@ -32,16 +32,19 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
         /// <param name="seed"></param>
-        public RandomRegressionEnsembleSelection(IMetric<double, double> metric, IRegressionEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, int iterations, bool selectWithReplacement, int seed=42)
+        public RandomRegressionEnsembleSelection(
+            IMetric<double, double> metric, 
+            IRegressionEnsembleStrategy ensembleStrategy,
+            int numberOfModelsToSelect, 
+            int iterations, 
+            bool selectWithReplacement, 
+            int seed=42)
         {
-            if (metric == null) { throw new ArgumentNullException("metric"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
+            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
             if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
             if (iterations < 1) { throw new ArgumentException("Number of iterations"); }
 
-            m_metric = metric;
-            m_ensembleStrategy = ensembleStrategy;
             m_numberOfModelsToSelect = numberOfModelsToSelect;
             m_selectWithReplacement = selectWithReplacement;
             m_iterations = iterations;
@@ -59,7 +62,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         {
             if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Availible models: " + crossValidatedModelPredictions.ColumnCount +
+                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
             }
 

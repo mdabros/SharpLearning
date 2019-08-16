@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.Ensemble.EnsembleSelectors;
 using SharpLearning.Ensemble.Strategies;
 using SharpLearning.Metrics.Classification;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Test.EnsembleSelectors
 {
@@ -16,21 +16,24 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentNullException))]
         public void ForwardSearchClassificationEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(null, new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
+            var sut = new ForwardSearchClassificationEnsembleSelection(null, 
+                new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void ForwardSearchClassificationEnsembleSelection_Constructor_EnsembleStratey_Null()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(), null, 5, 1, true);
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(), null, 5, 1, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ForwardSearchClassificationEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(), 
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(), 
                 new MeanProbabilityClassificationEnsembleStrategy(), 0, 1, true);
         }
 
@@ -38,7 +41,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentException))]
         public void ForwardSearchClassificationEnsembleSelection_Constructor_Number_Of_Models_From_Start_Too_Low()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 5, 0, true);
         }
 
@@ -46,7 +50,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentException))]
         public void ForwardSearchClassificationEnsembleSelection_Constructor_Number_Of_Models_From_Start_Larger_Than_Number_Of_Models_To_Select()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 3, 5, true);
         }
 
@@ -54,7 +59,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentException))]
         public void ForwardSearchClassificationEnsembleSelection_Constructor_Number_Of_Availible_Models_Lower_Than_Number_Of_Models_To_Select()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
 
 
@@ -68,7 +74,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [TestMethod]
         public void ForwardSearchClassificationEnsembleSelection_Select()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 3, 1, true);
 
             var random = new Random(42);
@@ -85,7 +92,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [TestMethod]
         public void ForwardSearchClassificationEnsembleSelection_Select_Start_With_2_Models()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 3, 2, true);
 
             var random = new Random(42);
@@ -102,7 +110,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [TestMethod]
         public void ForwardSearchClassificationEnsembleSelection_Select_No_Replacements()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new ForwardSearchClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 3, 1, false);
 
             var random = new Random(42);

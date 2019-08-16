@@ -1,36 +1,38 @@
-﻿using SharpLearning.Containers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Models;
-using SharpLearning.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.RandomForest.Models
 {
     /// <summary>
-    /// Classification forest model consiting of a series of decision trees
+    /// Classification forest model consisting of a series of decision trees
     /// </summary>
     [Serializable]
     public sealed class ClassificationForestModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
     {
-        readonly ClassificationDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;
 
         /// <summary>
-        /// Classification forest model consiting of a series of decision trees
+        /// Classification forest model consisting of a series of decision trees
         /// </summary>
         /// <param name="models">The decision tree models</param>
         /// <param name="rawVariableImportance">The summed variable importance from all decision trees</param>
         public ClassificationForestModel(ClassificationDecisionTreeModel[] models, double[] rawVariableImportance)
         {
-            if (models == null) { throw new ArgumentNullException("models"); }
-            if (rawVariableImportance == null) { throw new ArgumentNullException("rawVariableImportance"); }
-            m_models = models;
-            m_rawVariableImportance = rawVariableImportance;
+            Trees = models ?? throw new ArgumentNullException("models");
+            m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException("rawVariableImportance");
         }
+
+        /// <summary>
+        /// Individual trees from the ensemble.
+        /// </summary>
+        public ClassificationDecisionTreeModel[] Trees { get; }
 
         /// <summary>
         /// Predicts a single observations using majority vote
@@ -39,7 +41,7 @@ namespace SharpLearning.RandomForest.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            var prediction = m_models.Select(m => m.Predict(observation))
+            var prediction = Trees.Select(m => m.Predict(observation))
                 .GroupBy(p => p).OrderByDescending(g => g.Count())
                 .First().Key;
             
@@ -47,27 +49,7 @@ namespace SharpLearning.RandomForest.Models
         }
 
         /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
-        /// Predicts a set of obervations using majority vote
+        /// Predicts a set of observations using majority vote
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -86,14 +68,14 @@ namespace SharpLearning.RandomForest.Models
         /// <summary>
         /// Predicts a single observation using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// Usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
         public ProbabilityPrediction PredictProbability(double[] observation)
         {
             var probabilities = new Dictionary<double, double>();
-            var modelsProbability = m_models.Select(m => m.PredictProbability(observation).Probabilities)
+            var modelsProbability = Trees.Select(m => m.PredictProbability(observation).Probabilities)
                 .ToArray();
 
             foreach (var model in modelsProbability)
@@ -114,7 +96,7 @@ namespace SharpLearning.RandomForest.Models
             var keys = probabilities.Keys.ToList();
             foreach (var target in keys)
             {
-                probabilities[target] /= m_models.Length;
+                probabilities[target] /= Trees.Length;
             }
 
             var prediction = probabilities.OrderByDescending(p => p.Value)
@@ -124,9 +106,9 @@ namespace SharpLearning.RandomForest.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the ensembled probabilities
+        /// Predicts a set of observations using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// Usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -161,13 +143,10 @@ namespace SharpLearning.RandomForest.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_rawVariableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_rawVariableImportance;
 
         /// <summary>
         /// Loads a ClassificationForestModel.
@@ -189,5 +168,21 @@ namespace SharpLearning.RandomForest.Models
             new GenericXmlDataContractSerializer()
                 .Serialize(this, writer);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation) 
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations) 
+            => PredictProbability(observations);
     }
 }

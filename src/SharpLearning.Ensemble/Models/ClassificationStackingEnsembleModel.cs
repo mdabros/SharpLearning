@@ -1,9 +1,9 @@
-﻿using SharpLearning.Common.Interfaces;
-using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Ensemble.Models
 {
@@ -23,16 +23,16 @@ namespace SharpLearning.Ensemble.Models
         /// </summary>
         /// <param name="ensembleModels">Models included in the ensemble</param>
         /// <param name="metaModel">Meta or top level model to combine the ensemble models</param>
-        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also recieves the original features. 
-        /// False; the meta learner only recieves the output of the ensemble models as features</param>
+        /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+        /// False; the meta learner only receives the output of the ensemble models as features</param>
         /// <param name="numberOfClasses">Number of classes in the classification problem</param>
-        public ClassificationStackingEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels, IPredictorModel<ProbabilityPrediction> metaModel,
-            bool includeOriginalFeaturesForMetaLearner, int numberOfClasses)
+        public ClassificationStackingEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels, 
+            IPredictorModel<ProbabilityPrediction> metaModel,
+            bool includeOriginalFeaturesForMetaLearner, 
+            int numberOfClasses)
         {
-            if (ensembleModels == null) { throw new ArgumentException("ensembleModels"); }
-            if (metaModel == null) { throw new ArgumentException("metaModel"); }
-            m_ensembleModels = ensembleModels;
-            m_metaModel = metaModel;
+            m_ensembleModels = ensembleModels ?? throw new ArgumentException(nameof(ensembleModels));
+            m_metaModel = metaModel ?? throw new ArgumentException(nameof(metaModel));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
             m_numberOfClasses = numberOfClasses;
         }
@@ -63,26 +63,6 @@ namespace SharpLearning.Ensemble.Models
             }
 
             return predictions;
-        }
-
-        /// <summary>
-        /// Predicts a single observation using the ensembled probabilities
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
         }
 
         /// <summary>
@@ -137,7 +117,7 @@ namespace SharpLearning.Ensemble.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
@@ -189,6 +169,22 @@ namespace SharpLearning.Ensemble.Models
 
             return m_metaModel.GetVariableImportance(ensembleFeatureNameToIndex);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
 
         string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
         {

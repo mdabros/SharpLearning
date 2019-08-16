@@ -1,17 +1,14 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Ensemble.Learners;
-using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.CrossValidation.CrossValidators;
-using SharpLearning.InputOutput.Csv;
-using System.IO;
-using SharpLearning.Ensemble.Test.Properties;
-using SharpLearning.Metrics.Classification;
-using System.Linq;
-using SharpLearning.Ensemble.Strategies;
+using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Ensemble.EnsembleSelectors;
+using SharpLearning.Ensemble.Learners;
+using SharpLearning.Ensemble.Strategies;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.Ensemble.Test.Learners
 {
@@ -39,14 +36,14 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(
+                metric, ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.PredictProbability(observations);
@@ -77,14 +74,14 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, false);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(
+                metric, ensembleStrategy, 5, 1, false);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.PredictProbability(observations);
@@ -115,14 +112,14 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 3, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+                ensembleStrategy, 5, 3, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.PredictProbability(observations);
@@ -153,14 +150,15 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+                ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, new RandomCrossValidation<ProbabilityPrediction>(5, 23),
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
+
             var indices = Enumerable.Range(0, 25).ToArray();
 
             var model = sut.Learn(observations, targets, indices);
@@ -177,10 +175,12 @@ namespace SharpLearning.Ensemble.Test.Learners
         {
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+                ensembleStrategy, 5, 1, true);
             var crossValidation = new RandomCrossValidation<ProbabilityPrediction>(5);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(null, crossValidation, ensembleStrategy, ensembleSelection);
+            var sut = new ClassificationModelSelectingEnsembleLearner(null, crossValidation, 
+                ensembleStrategy, ensembleSelection);
         }
 
         [TestMethod]
@@ -190,9 +190,11 @@ namespace SharpLearning.Ensemble.Test.Learners
             var learners = new IIndexedLearner<ProbabilityPrediction>[4];
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, ensembleStrategy, 5, 1, true);
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric,
+                ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, null, ensembleStrategy, ensembleSelection);
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, null, 
+                ensembleStrategy, ensembleSelection);
         }
 
         [TestMethod]
@@ -204,7 +206,8 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
             var crossValidation = new RandomCrossValidation<ProbabilityPrediction>(5);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, crossValidation, ensembleStrategy, null);
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, crossValidation, 
+                ensembleStrategy, null);
         }
     }
 }

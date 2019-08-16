@@ -1,26 +1,23 @@
-﻿using SharpLearning.Containers.Views;
-using System.Collections.Generic;
-
-namespace SharpLearning.DecisionTrees.ImpurityCalculators
+﻿namespace SharpLearning.DecisionTrees.ImpurityCalculators
 {
     /// <summary>
-    /// Classifiction impurity calculator using the gini impurity.
+    /// Classification impurity calculator using the Gini impurity.
     /// </summary>
     public sealed class GiniClassificationImpurityCalculator : ClassificationImpurityCalculator, IImpurityCalculator
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        public GiniClassificationImpurityCalculator()
+        {
+        }
+
         /// <summary>
         /// Gets the unique target names
         /// </summary>
         public double[] TargetNames
         {
             get { return m_targetNames; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public GiniClassificationImpurityCalculator()
-        {
         }
 
         /// <summary>

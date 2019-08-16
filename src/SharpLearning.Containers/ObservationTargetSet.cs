@@ -1,9 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers
 {
@@ -29,10 +26,8 @@ namespace SharpLearning.Containers
         /// <param name="targets"></param>
         public ObservationTargetSet(F64Matrix observations, double[] targets)
 	    {
-            if (observations == null) { throw new ArgumentNullException("observations"); }
-            if (targets == null) { throw new ArgumentNullException("targets"); }
-            Observations = observations;
-            Targets = targets;
+            Observations = observations ?? throw new ArgumentNullException(nameof(observations));
+            Targets = targets ?? throw new ArgumentNullException(nameof(targets));
 	    }
 
         /// <summary>
@@ -42,8 +37,8 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public bool Equals(ObservationTargetSet other)
         {
-            if (!this.Observations.Equals(other.Observations)) { return false; }
-            if (!this.Targets.SequenceEqual(other.Targets)) { return false; }
+            if (!Observations.Equals(other.Observations)) { return false; }
+            if (!Targets.SequenceEqual(other.Targets)) { return false; }
 
             return true;
         }
@@ -55,8 +50,7 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            ObservationTargetSet other = obj as ObservationTargetSet;
-            if (other != null && Equals(other))
+            if (obj is ObservationTargetSet other &&  this.Equals(other))
             {
                 return true;
             }

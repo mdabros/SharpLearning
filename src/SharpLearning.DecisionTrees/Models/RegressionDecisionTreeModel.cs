@@ -1,10 +1,10 @@
-﻿using SharpLearning.Containers.Matrices;
-using SharpLearning.DecisionTrees.Nodes;
-using SharpLearning.Common.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers.Matrices;
+using SharpLearning.DecisionTrees.Nodes;
 using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.DecisionTrees.Models
@@ -27,8 +27,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <param name="tree"></param>
         public RegressionDecisionTreeModel(BinaryTree tree)
         {
-            if (tree == null) { throw new ArgumentNullException("root"); }
-            Tree = tree;
+            Tree = tree ?? throw new ArgumentNullException(nameof(tree));
             m_variableImportance = Tree.VariableImportance;
         }
 
@@ -96,13 +95,10 @@ namespace SharpLearning.DecisionTrees.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_variableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_variableImportance;
 
         /// <summary>
         /// Loads a RegressionDecisionTreeModel.

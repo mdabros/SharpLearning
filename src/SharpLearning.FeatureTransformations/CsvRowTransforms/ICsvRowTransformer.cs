@@ -1,5 +1,5 @@
-﻿using SharpLearning.InputOutput.Csv;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SharpLearning.InputOutput.Csv;
 
 namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {

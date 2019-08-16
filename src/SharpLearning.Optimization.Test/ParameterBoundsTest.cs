@@ -10,7 +10,9 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void ParameterBounds_NextValue()
         {
-            var sut = new MinMaxParameterSpec(min: 20, max: 200, transform: Transform.Linear);
+            var sut = new MinMaxParameterSpec(min: 20, max: 200, 
+                transform: Transform.Linear);
+
             var sampler = new RandomUniform(seed: 32);
 
             var actual = new double[10];
@@ -19,7 +21,20 @@ namespace SharpLearning.Optimization.Test
                 actual[i] = sut.SampleValue(sampler: sampler);
             }
 
-            var expected = new double[] { 99.8935983236384, 57.2098020451189, 44.4149092419142, 89.9002946307418, 137.643828772774, 114.250629522954, 63.8914499915631, 109.294177409864, 188.567149950455, 33.2731248034505 };
+            var expected = new double[] 
+            {
+                99.8935983236384,
+                57.2098020451189,
+                44.4149092419142,
+                89.9002946307418,
+                137.643828772774,
+                114.250629522954,
+                63.8914499915631,
+                109.294177409864,
+                188.567149950455,
+                33.2731248034505
+            };
+
             Assert.AreEqual(expected.Length, actual.Length);
             for (int i = 0; i < expected.Length; i++)
             {
@@ -45,7 +60,8 @@ namespace SharpLearning.Optimization.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void ParameterBounds_Throw_On_Transform_Is_Null()
         {
-            new MinMaxParameterSpec(min: 10, max: 30, transform: null, parameterType: ParameterType.Continuous);
+            new MinMaxParameterSpec(min: 10, max: 30, transform: null, 
+                parameterType: ParameterType.Continuous);
         }
     }
 }

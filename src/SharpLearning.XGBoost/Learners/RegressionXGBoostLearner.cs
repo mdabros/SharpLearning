@@ -34,20 +34,23 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="skipDrop">Probability of skipping the dropout procedure during a boosting iteration. (default is 0.0)
         /// If a dropout is skipped, new trees are added in the same manner as gbtree.
         /// Note that non-zero skip_drop has higher priority than rate_drop or one_drop.</param>
-        /// <param name="numberOfThreads">Number of parallel threads used to run xgboost. -1 means use all thread avialable. (default is -1)</param>
+        /// <param name="numberOfThreads">Number of parallel threads used to run xgboost. -1 means use all thread available. (default is -1)</param>
         /// <param name="gamma">Minimum loss reduction required to make a further partition on a leaf node of the tree. (default is 0) </param>
-        /// <param name="minChildWeight">Minimum sum of instance weight(hessian) needed in a child. (default is 1)</param>
+        /// <param name="minChildWeight">Minimum sum of instance weight(Hessian) needed in a child. (default is 1)</param>
         /// <param name="maxDeltaStep">Maximum delta step we allow each tree's weight estimation to be. (default is 0)</param>
         /// <param name="subSample">Subsample ratio of the training instance. (default is 1)</param>
-        /// <param name="colSampleByTree">Subsample ratio of columns when constructing each tree. (defualt is 1)</param>
-        /// <param name="colSampleByLevel">Subsample ratio of columns for each split, in each level. (defualt is 1)</param>
+        /// <param name="colSampleByTree">Subsample ratio of columns when constructing each tree. (default is 1)</param>
+        /// <param name="colSampleByLevel">Subsample ratio of columns for each split, in each level. (default is 1)</param>
         /// <param name="l1Regularization">L1 regularization term on weights. Also known as RegAlpha. (default is 0)</param>
         /// <param name="l2Reguralization">L2 regularization term on weights. Also known as regLambda. (default is 1)</param>
         /// <param name="scalePosWeight">Balancing of positive and negative weights. (default is 1)</param>
         /// <param name="baseScore">The initial prediction score of all instances, global bias. (default is 0.5)</param>
-        /// <param name="seed">Random number seed. (defaukt is 0)</param>
+        /// <param name="seed">Random number seed. (default is 0)</param>
         /// <param name="missing">Value in the data which needs to be present as a missing value. (default is NaN)</param>
-        public RegressionXGBoostLearner(int maximumTreeDepth = 3, double learningRate = 0.1, int estimators = 100,
+        public RegressionXGBoostLearner(
+            int maximumTreeDepth = 3, 
+            double learningRate = 0.1, 
+            int estimators = 100,
             bool silent = true,
             RegressionObjective objective = RegressionObjective.LinearRegression,
             BoosterType boosterType = BoosterType.GBTree,
@@ -57,10 +60,18 @@ namespace SharpLearning.XGBoost.Learners
             double dropoutRate = 0.0,
             bool oneDrop = false,
             double skipDrop = 0.0,
-            int numberOfThreads = -1, double gamma = 0, int minChildWeight = 1,
-            int maxDeltaStep = 0, double subSample = 1, double colSampleByTree = 1,
-            double colSampleByLevel = 1, double l1Regularization = 0, double l2Reguralization = 1,
-            double scalePosWeight = 1, double baseScore = 0.5, int seed = 0,
+            int numberOfThreads = -1, 
+            double gamma = 0, 
+            int minChildWeight = 1,
+            int maxDeltaStep = 0, 
+            double subSample = 1, 
+            double colSampleByTree = 1,
+            double colSampleByLevel = 1, 
+            double l1Regularization = 0, 
+            double l2Reguralization = 1,
+            double scalePosWeight = 1, 
+            double baseScore = 0.5,
+            int seed = 0,
             double missing = double.NaN)
         {
             ArgumentChecks.ThrowOnArgumentLessThan(nameof(maximumTreeDepth), maximumTreeDepth, 0);
@@ -149,20 +160,23 @@ namespace SharpLearning.XGBoost.Learners
             }
         }
 
-        IPredictorModel<double> IIndexedLearner<double>.Learn(F64Matrix observations, double[] targets, int[] indices)
-        {
-            return Learn(observations, targets, indices);
-        }
+        /// <summary>
+        /// Private explicit interface implementation for indexed learning.
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="indices"></param>
+        /// <returns></returns>
+        IPredictorModel<double> IIndexedLearner<double>.Learn(
+            F64Matrix observations, double[] targets, int[] indices) => Learn(observations, targets, indices);
 
         /// <summary>
-        /// Learns an XGBoost regression model.
+        /// Private explicit interface implementation for indexed learning.
         /// </summary>
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        IPredictorModel<double> ILearner<double>.Learn(F64Matrix observations, double[] targets)
-        {
-            return Learn(observations, targets);
-        }
+        IPredictorModel<double> ILearner<double>.Learn(
+            F64Matrix observations, double[] targets) => Learn(observations, targets);
     }
 }

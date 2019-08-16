@@ -1,9 +1,8 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System;
+using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Neural.Layers
 {
@@ -14,7 +13,10 @@ namespace SharpLearning.Neural.Layers
     /// This can be an advantage when the overall goal is the best possible accuracy. And probability estimates is less important.
     /// </summary>
     [Serializable]
-    public sealed class SvmLayer : ILayer, IOutputLayer, IClassificationLayer
+    public sealed class SvmLayer 
+        : ILayer
+        , IOutputLayer
+        , IClassificationLayer
     {
         Matrix<float> OutputActivations;
         Matrix<float> m_delta;
@@ -124,19 +126,20 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
             m_delta = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
         }
 
         /// <summary>
-        /// SvmLayer layer does not have any parameters or graidents.
+        /// SvmLayer layer does not have any parameters or gradients.
         /// </summary>
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            // SvmLayer layer does not have any parameters or graidents.
+            // SvmLayer layer does not have any parameters or gradients.
         }
 
         /// <summary>

@@ -20,8 +20,10 @@ namespace SharpLearning.Optimization
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
-        public GridSearchOptimizer(IParameterSpec[] parameters, bool runParallel = true, int maxDegreeOfParallelism = -1)
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
+        public GridSearchOptimizer(IParameterSpec[] parameters, 
+            bool runParallel = true, 
+            int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
@@ -36,11 +38,12 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
         /// Simple grid search that tries all combinations of the provided parameters.
-        /// Returns all results ordered from best to worst (minimized).
+        /// Returns all results, chronologically ordered. 
+        /// Note that the order of results might be affected if running parallel.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
@@ -63,7 +66,9 @@ namespace SharpLearning.Optimization
             else
             {
                 var rangePartitioner = Partitioner.Create(grid, true);
-                Parallel.ForEach(rangePartitioner, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (param, loopState) =>
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+
+                Parallel.ForEach(rangePartitioner, options, (param, loopState) =>
                 {
                     // Get the current parameters for the current point
                     var result = functionToMinimize(param);
@@ -71,8 +76,7 @@ namespace SharpLearning.Optimization
                 });
             }
 
-            // return all results ordered
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return results.ToArray();
         }
 
         static double[][] CartesianProduct(IParameterSpec[] sequences)

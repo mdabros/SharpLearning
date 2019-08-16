@@ -18,8 +18,8 @@ namespace SharpLearning.Optimization.Transforms
             {
                 case Transform.Linear:
                     return new LinearTransform();
-                case Transform.Logarithmic:
-                    return new LogarithmicTransform();
+                case Transform.Log10:
+                    return new Log10Transform();
                 case Transform.ExponentialAverage:
                     return new ExponentialAverageTransform();
                 default:

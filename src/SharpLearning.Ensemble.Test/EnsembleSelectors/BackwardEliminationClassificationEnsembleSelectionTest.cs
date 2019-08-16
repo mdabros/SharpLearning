@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.Ensemble.EnsembleSelectors;
 using SharpLearning.Ensemble.Strategies;
 using SharpLearning.Metrics.Classification;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Test.EnsembleSelectors
 {
@@ -16,28 +16,32 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentNullException))]
         public void BackwardEliminationClassificationEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new BackwardEliminationClassificationEnsembleSelection(null, new MeanProbabilityClassificationEnsembleStrategy(), 5);
+            var sut = new BackwardEliminationClassificationEnsembleSelection(null, 
+                new MeanProbabilityClassificationEnsembleStrategy(), 5);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void BackwardEliminationClassificationEnsembleSelection_Constructor_EnsembleStratey_Null()
         {
-            var sut = new BackwardEliminationClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(), null, 5);
+            var sut = new BackwardEliminationClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(), null, 5);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void BackwardEliminationClassificationEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
-            var sut = new BackwardEliminationClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(), 
+            var sut = new BackwardEliminationClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(), 
                 new MeanProbabilityClassificationEnsembleStrategy(), 0);
         }
 
         [TestMethod]
         public void BackwardEliminationClassificationEnsembleSelection_Select()
         {
-            var sut = new BackwardEliminationClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new BackwardEliminationClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 3);
 
             var random = new Random(42);

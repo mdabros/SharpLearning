@@ -8,7 +8,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
     /// Bias variance analysis calculator for constructing learning curves.
     /// Learning curves can be used to determine if a model has high bias or high variance.
     /// 
-    /// The order of the data is stratified to have similar destributions in training and validation set.
+    /// The order of the data is stratified to have similar distributions in training and validation set.
     /// 
     /// Solutions for model with high bias:
     ///  - Add more features.
@@ -26,7 +26,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
         /// Bias variance analysis calculator for constructing learning curves.
         /// Learning curves can be used to determine if a model has high bias or high variance.
         /// 
-        /// The order of the data is stratified to have similar destributions in training and validation set.
+        /// The order of the data is stratified to have similar distributions in training and validation set.
         /// </summary>
         /// <param name="metric">The error metric used</param>
         /// <param name="samplePercentages">A list of sample percentages determining the 

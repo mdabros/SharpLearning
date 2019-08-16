@@ -30,8 +30,8 @@
         GPULogistic,
 
         /// <summary>
-        /// poisson regression for count data, output mean of poisson distribution,
-        /// max_delta_step is set to 0.7 by default in poisson regression (used to safeguard optimization).
+        /// Poisson regression for count data, output mean of Poisson distribution,
+        /// max_delta_step is set to 0.7 by default in Poisson regression (used to safeguard optimization).
         /// </summary>
         CountPoisson,
 

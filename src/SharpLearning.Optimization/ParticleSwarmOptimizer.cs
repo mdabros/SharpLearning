@@ -39,8 +39,14 @@ namespace SharpLearning.Optimization
         /// <param name="c1">Learning factor weighting local particle best solution. (default is 2)</param>
         /// <param name="c2">Learning factor weighting global best solution. (default is 2)</param>
         /// <param name="seed">Seed for the random initialization and velocity corrections</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
-        public ParticleSwarmOptimizer(IParameterSpec[] parameters, int maxIterations, int numberOfParticles = 10, double c1 = 2, double c2 = 2, int seed = 42, int maxDegreeOfParallelism = -1)
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
+        public ParticleSwarmOptimizer(IParameterSpec[] parameters, 
+            int maxIterations, 
+            int numberOfParticles = 10, 
+            double c1 = 2, 
+            double c2 = 2, 
+            int seed = 42, 
+            int maxDegreeOfParallelism = -1)
         {
             if (maxIterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
             if (numberOfParticles < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
@@ -67,11 +73,10 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
-        /// Optimization using swarm optimization.
-        /// Returns the final results ordered from best to worst (minimized).
+        /// Optimization using swarm optimization. Returns results for all particles.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
@@ -114,13 +119,14 @@ namespace SharpLearning.Optimization
             // random initialize particles
             for (int i = 0; i < m_numberOfParticles; i++)
             {
-                particles[i] = CreateParticle();
+                particles[i] = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
             }
 
             // iterate for find best
             for (int iterations = 0; iterations < m_maxIterations; iterations++)
             {
-                Parallel.For(0, m_numberOfParticles, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (i) =>
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+                Parallel.For(0, m_numberOfParticles, options, (i) =>
                 {
                     var result = functionToMinimize(particles[i]);
                     lock (m_bestLocker)
@@ -160,7 +166,7 @@ namespace SharpLearning.Optimization
                 results.Add(new OptimizerResult(pBest[i], pBestScores[i]));
             }
 
-            return results.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return results.ToArray();
         }
 
         void BoundCheck(double[] newValues, double[] maxValues, double[] minValues)
@@ -169,19 +175,6 @@ namespace SharpLearning.Optimization
             {
                 newValues[i] = Math.Max(minValues[i], Math.Min(newValues[i], maxValues[i]));
             }
-        }
-
-        double[] CreateParticle()
-        {
-            var newPoint = new double[m_parameters.Length];
-
-            for (int i = 0; i < m_parameters.Length; i++)
-            {
-                var parameter = m_parameters[i];
-                newPoint[i] = parameter.SampleValue(m_sampler);
-            }
-
-            return newPoint;
         }
     }
 }

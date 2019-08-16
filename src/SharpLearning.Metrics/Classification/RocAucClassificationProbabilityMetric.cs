@@ -1,7 +1,7 @@
-﻿using SharpLearning.Containers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SharpLearning.Containers;
 
 namespace SharpLearning.Metrics.Classification
 {
@@ -31,21 +31,31 @@ namespace SharpLearning.Metrics.Classification
         public double Error(double[] targets, ProbabilityPrediction[] predictions)
         {
             if (targets.Distinct().Count() > 2)
-            { throw new ArgumentException("RocAucClassificationProbabilityMetric only supports binary classification problems"); }
+            {
+                throw new ArgumentException("Only binary classification problems supported");
+            }
 
             if (targets.Distinct().Count() == 1)
-            { throw new ArgumentException("Only one class present, RocAucClassificationProbabilityMetric is only defined for binary classification problems."); }
+            {
+                throw new ArgumentException("Only one class present, " + 
+                    "Only binary classification problems supported.");
+            }
 
-            var positiveTargetProbabilities = predictions.Select(p => p.Probabilities[m_positiveTarget])
+            var positiveTargetProbabilities = predictions
+                .Select(p => p.Probabilities[m_positiveTarget])
                 .ToArray();
 
-            var targetProbabilities = targets.Zip(positiveTargetProbabilities, (l, s) => new { target = l, Probability = s });
+            var targetProbabilities = targets.Zip(positiveTargetProbabilities, 
+                (l, s) => new { target = l, Probability = s });
             targetProbabilities = targetProbabilities.OrderByDescending(l => l.Probability);
 
-            var counts = targetProbabilities.GroupBy(l => l.target).Select(l => new { Label = l.Key, Count = l.Count() });
+            var counts = targetProbabilities.GroupBy(l => l.target)
+                .Select(l => new { Label = l.Key, Count = l.Count() });
                 
-            int negativeCount = counts.Where(s => !s.Label.Equals(m_positiveTarget)).Select(s => s.Count).Sum();;
-            int positivesCount = counts.Where(s => s.Label.Equals(m_positiveTarget)).Select(s => s.Count).Sum();
+            int negativeCount = counts.Where(s => !s.Label.Equals(m_positiveTarget))
+                .Select(s => s.Count).Sum();;
+            int positivesCount = counts.Where(s => s.Label.Equals(m_positiveTarget))
+                .Select(s => s.Count).Sum();
 
             double auc = 0;
             double previousProbability = int.MinValue;
@@ -58,8 +68,11 @@ namespace SharpLearning.Metrics.Classification
 
                 if (probability != previousProbability)
                 {
-                    auc = auc +  trapezoidArea(fpCount * 1.0 / negativeCount, previousFpCount * 1.0 / negativeCount, 
-                                               tpCount * 1.0 / positivesCount, previousTpCount * 1.0 / positivesCount);
+                    auc = auc +  trapezoidArea(
+                        fpCount * 1.0 / negativeCount, 
+                        previousFpCount * 1.0 / negativeCount, 
+                        tpCount * 1.0 / positivesCount, 
+                        previousTpCount * 1.0 / positivesCount);
 
                     previousProbability = probability;
                     previousFpCount = fpCount;
@@ -71,14 +84,16 @@ namespace SharpLearning.Metrics.Classification
                     fpCount = fpCount + 1;
             }
 
-            auc = auc + trapezoidArea(1.0, previousFpCount * 1.0 / negativeCount, 
-                                      1.0, previousTpCount * 1.0 / positivesCount);
+            auc = auc + trapezoidArea(
+                1.0, previousFpCount * 1.0 / negativeCount, 
+                1.0, previousTpCount * 1.0 / positivesCount);
+
             return 1.0 - auc;
         }
 
         
         /// <summary>
-        /// Caculate the trapezoidal area bound by the quad (X1,X2,Y1,Y2) 
+        /// Calculate the trapezoidal area bound by the quad (X1,X2,Y1,Y2) 
         /// </summary>
         /// <param name="X1"></param>
         /// <param name="X2"></param>
@@ -92,32 +107,18 @@ namespace SharpLearning.Metrics.Classification
             return (b * height);
         }
 
-        List<double> UniqueTargets(double[] targets, double[] predictions)
-        {
-            var uniquePredictions = predictions.Distinct();
-            var uniqueTargets = targets.Distinct();
-            var uniques = uniqueTargets.Union(uniquePredictions).ToList();
-
-            uniques.Sort();
-            return uniques;
-        }
-
         /// <summary>
         /// Creates an error matrix based on the provided confusion matrix
         /// </summary>
         /// <param name="targets"></param>
-        /// <param name="predictions"></param>
+        /// <param name="probabilityPredictions"></param>
         /// <returns></returns>
-        public string ErrorString(double[] targets, ProbabilityPrediction[] predictions)
+        public string ErrorString(double[] targets, ProbabilityPrediction[] probabilityPredictions)
         {
-            var classPredictions = predictions.Select(p => p.Prediction).ToArray();
-            var uniques = UniqueTargets(targets, classPredictions);
+            var error = Error(targets, probabilityPredictions);
+            var predictions = probabilityPredictions.Select(p => p.Prediction).ToArray();
 
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, classPredictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = Error(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            return Utilities.ClassificationMatrixString(targets, predictions, error);
         }
 
         /// <summary>
@@ -125,19 +126,19 @@ namespace SharpLearning.Metrics.Classification
         /// Using the target names provided in the targetStringMapping
         /// </summary>
         /// <param name="targets"></param>
-        /// <param name="predictions"></param>
+        /// <param name="probabilityPredictions"></param>
         /// <param name="targetStringMapping"></param>
         /// <returns></returns>
-        public string ErrorString(double[] targets, ProbabilityPrediction[] predictions, Dictionary<double, string> targetStringMapping)
+        public string ErrorString(
+            double[] targets,
+            ProbabilityPrediction[] probabilityPredictions,
+            Dictionary<double, string> targetStringMapping)
         {
-            var classPredictions = predictions.Select(p => p.Prediction).ToArray();
-            var uniques = UniqueTargets(targets, classPredictions);
+            var error = Error(targets, probabilityPredictions);
+            var predictions = probabilityPredictions.Select(p => p.Prediction).ToArray();
 
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, classPredictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = Error(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, targetStringMapping, confusionMatrix, errorMatrix, error);
+            return Utilities.ClassificationMatrixString(targets, predictions, error,
+                targetStringMapping);
         }
     }
 }

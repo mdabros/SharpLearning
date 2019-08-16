@@ -25,10 +25,8 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         /// <param name="testIndices"></param>
         public TrainingTestIndexSplit(int[] trainingIndices, int[] testIndices)
         {
-            if (trainingIndices == null) { throw new ArgumentNullException("trainingIndices"); }
-            if (testIndices == null) { throw new ArgumentNullException("validationIndices"); }
-            TrainingIndices = trainingIndices;
-            TestIndices = testIndices;
+            TrainingIndices = trainingIndices ?? throw new ArgumentNullException(nameof(trainingIndices));
+            TestIndices = testIndices ?? throw new ArgumentNullException(nameof(testIndices));
         }
 
         /// <summary>
@@ -51,8 +49,7 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            TrainingTestIndexSplit other = obj as TrainingTestIndexSplit;
-            if (other != null && Equals(other))
+            if (obj is TrainingTestIndexSplit other && this.Equals(other))
             {
                 return true;
             }

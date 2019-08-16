@@ -1,11 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.Ensemble.EnsembleSelectors;
 using SharpLearning.Ensemble.Strategies;
 using SharpLearning.Metrics.Classification;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Test.EnsembleSelectors
 {
@@ -16,21 +16,24 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentNullException))]
         public void RandomClassificationEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new RandomClassificationEnsembleSelection(null, new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
+            var sut = new RandomClassificationEnsembleSelection(null, 
+                new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void RandomClassificationEnsembleSelection_Constructor_EnsembleStratey_Null()
         {
-            var sut = new RandomClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(), null, 5, 1, true);
+            var sut = new RandomClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(), null, 5, 1, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void RandomClassificationEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
-            var sut = new RandomClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(), 
+            var sut = new RandomClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(), 
                 new MeanProbabilityClassificationEnsembleStrategy(), 0, 1, true);
         }
 
@@ -38,9 +41,9 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentException))]
         public void RandomClassificationEnsembleSelection_Constructor_Number_Of_Availible_Models_Lower_Than_Number_Of_Models_To_Select()
         {
-            var sut = new RandomClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new RandomClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
-
 
             var observations = new ProbabilityPrediction[3][];
             observations.Select(t => new ProbabilityPrediction[10]).ToArray();
@@ -52,7 +55,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [TestMethod]
         public void RandomClassificationEnsembleSelection_Select()
         {
-            var sut = new RandomClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new RandomClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 3, 10, true);
 
             var random = new Random(42);
@@ -69,7 +73,8 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [TestMethod]
         public void RandomClassificationEnsembleSelection_Select_No_Replacements()
         {
-            var sut = new RandomClassificationEnsembleSelection(new LogLossClassificationProbabilityMetric(),
+            var sut = new RandomClassificationEnsembleSelection(
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 3, 10, false);
 
             var random = new Random(42);

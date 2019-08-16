@@ -1,9 +1,5 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Arithmetic
 {
@@ -24,7 +20,10 @@ namespace SharpLearning.Containers.Arithmetic
             var cols = m.ColumnCount;
 
             if (v.Length != rows) 
-            { throw new ArgumentException("matrix rows: " + rows + " differs from vector length: " + v.Length); }
+            {
+                throw new ArgumentException("matrix rows: " + rows + 
+                    " differs from vector length: " + v.Length);
+            }
 
             for (int i = 0; i < cols; i++)
             {
@@ -36,14 +35,17 @@ namespace SharpLearning.Containers.Arithmetic
         }
 
         /// <summary>
-        /// Adds two vectos of equal lengths
+        /// Adds two vectors of equal lengths
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         public static double[] AddF64(double[] v1, double[] v2)
         {
             if (v1.Length != v2.Length)
-            { throw new ArgumentException("v1 length: " + v1.Length + " differs from v2 length: " + v2.Length); }
+            {
+                throw new ArgumentException("v1 length: " + v1.Length + 
+                    " differs from v2 length: " + v2.Length);
+            }
 
             var v3 = new double[v1.Length];
 

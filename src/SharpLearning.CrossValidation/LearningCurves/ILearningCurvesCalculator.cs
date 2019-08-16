@@ -1,6 +1,6 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System.Collections.Generic;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
-using System.Collections.Generic;
 
 namespace SharpLearning.CrossValidation.LearningCurves
 {

@@ -1,10 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers;
 using SharpLearning.Metrics.Classification;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 
 namespace SharpLearning.Metrics.Test.Classification
 {
@@ -152,7 +151,11 @@ namespace SharpLearning.Metrics.Test.Classification
             var targets = new double[] { 0, 1 };
             var probabilities = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
             var sut = new RocAucClassificationProbabilityMetric(1);
-            var targetStringMapping = new Dictionary<double, string> { { 0, "Negative" }, { 1, "Positive" } };
+            var targetStringMapping = new Dictionary<double, string>
+            {
+                { 0, "Negative" },
+                { 1, "Positive" }
+            };
             
             var actual = sut.ErrorString(targets, probabilities, targetStringMapping);
             var expected = ";Negative;Positive;Negative;Positive\r\nNegative;1.000;0.000;100.000;0.000\r\nPositive;0.000;1.000;0.000;100.000\r\nError: 0.000\r\n";

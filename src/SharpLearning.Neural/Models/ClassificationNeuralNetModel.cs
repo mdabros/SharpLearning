@@ -1,11 +1,11 @@
-﻿using MathNet.Numerics.LinearAlgebra.Storage;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using MathNet.Numerics.LinearAlgebra.Storage;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Serialization;
-using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace SharpLearning.Neural.Models
 {
@@ -14,7 +14,9 @@ namespace SharpLearning.Neural.Models
     /// Classification neural net model.
     /// </summary>
     [Serializable]
-    public sealed class ClassificationNeuralNetModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
+    public sealed class ClassificationNeuralNetModel 
+        : IPredictorModel<double>
+        , IPredictorModel<ProbabilityPrediction>
     {
         readonly NeuralNet m_neuralNet;
         readonly double[] m_targetNames;
@@ -26,11 +28,8 @@ namespace SharpLearning.Neural.Models
         /// <param name="targetNames"></param>
         public ClassificationNeuralNetModel(NeuralNet model, double[] targetNames)
         {
-            if (model == null) { throw new ArgumentNullException("model"); }
-            if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
-
-            m_neuralNet = model;
-            m_targetNames = targetNames;
+            m_neuralNet = model ?? throw new ArgumentNullException(nameof(model));
+            m_targetNames = targetNames ?? throw new ArgumentNullException(nameof(targetNames));
         }
 
         /// <summary>
@@ -61,26 +60,6 @@ namespace SharpLearning.Neural.Models
         }
 
         /// <summary>
-        /// Predicts a single observation
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
-        }
-
-        /// <summary>
         /// Predicts a set of observations
         /// </summary>
         /// <param name="observations"></param>
@@ -103,7 +82,7 @@ namespace SharpLearning.Neural.Models
         /// <summary>
         /// Predicts a single observation using the ensembled probabilities
         /// Note this can yield a different result than using regular predict
-        /// Usally this will be a more accurate predictions
+        /// Usually this will be a more accurate predictions
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -133,7 +112,7 @@ namespace SharpLearning.Neural.Models
         }
 
         /// <summary>
-        /// Predicts a set of obervations using the ensembled probabilities
+        /// Predicts a set of observations using the ensembled probabilities
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
@@ -157,10 +136,7 @@ namespace SharpLearning.Neural.Models
         /// Returns 0.0 for all features.
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_neuralNet.GetRawVariableImportance();
-        }
+        public double[] GetRawVariableImportance() => m_neuralNet.GetRawVariableImportance();
 
         /// <summary>
         /// Variable importance is currently not supported by Neural Net.
@@ -168,20 +144,15 @@ namespace SharpLearning.Neural.Models
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
-        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
-        {
-            return m_neuralNet.GetVariableImportance(featureNameToIndex);
-        }
+        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex) 
+            => m_neuralNet.GetVariableImportance(featureNameToIndex);
 
         /// <summary>
         /// Outputs a string representation of the neural net.
         /// Neural net must be initialized before the dimensions are correct.
         /// </summary>
         /// <returns></returns>
-        public string GetLayerDimensions()
-        {
-            return m_neuralNet.GetLayerDimensions();
-        }
+        public string GetLayerDimensions() => m_neuralNet.GetLayerDimensions();
 
         /// <summary>
         /// Loads a ClassificationNeuralNetModel.
@@ -215,5 +186,21 @@ namespace SharpLearning.Neural.Models
             new GenericXmlDataContractSerializer(types)
                 .Serialize(this, writer);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
     }
 }

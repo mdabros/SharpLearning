@@ -1,5 +1,4 @@
 ﻿using SharpLearning.CrossValidation.Samplers;
-using System;
 
 namespace SharpLearning.CrossValidation.TrainingTestSplitters
 {

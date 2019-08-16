@@ -1,7 +1,6 @@
-﻿using SharpLearning.Containers.Matrices;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Threading.Tasks;
+using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Arithmetic
 {
@@ -25,7 +24,10 @@ namespace SharpLearning.Containers.Arithmetic
             var output = new double[rows];
 
             if (cols != v.Length) 
-            { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Length); }
+            {
+                throw new ArgumentException("matrix cols: " + cols + 
+                    " differs from vector length: " + v.Length);
+            }
 
             for (int i = 0; i < rows; ++i)
             {

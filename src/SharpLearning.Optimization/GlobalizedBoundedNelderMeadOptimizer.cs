@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -55,10 +56,19 @@ namespace SharpLearning.Optimization
         /// <param name="rho">Coefficient for contraction part of the algorithm (default is -0.5)</param>
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         /// <param name="seed">Seed for random restarts</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is unlimited)</param>
-        public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters, int maxRestarts=8, double noImprovementThreshold = 0.001, 
-            int maxIterationsWithoutImprovement = 5, int maxIterationsPrRestart = 0, int maxFunctionEvaluations = 0,
-            double alpha = 1, double gamma = 2, double rho = -0.5, double sigma = 0.5, int seed = 324, int maxDegreeOfParallelism = -1)
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
+        public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters, 
+            int maxRestarts=8, 
+            double noImprovementThreshold = 0.001, 
+            int maxIterationsWithoutImprovement = 5, 
+            int maxIterationsPrRestart = 0, 
+            int maxFunctionEvaluations = 0,
+            double alpha = 1, 
+            double gamma = 2, 
+            double rho = -0.5, 
+            double sigma = 0.5, 
+            int seed = 324, 
+            int maxDegreeOfParallelism = -1)
         {
             if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentException("maxIterationsWithoutImprovement must be at least 1"); }
             if (maxFunctionEvaluations < 0) { throw new ArgumentException("maxFunctionEvaluations must be at least 1"); }
@@ -88,11 +98,12 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize) =>
             // Return the best model found.
-            Optimize(functionToMinimize).First();
+            Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
         /// Optimization using Globalized bounded Nelder-Mead method.
-        /// Returns the final results ordered from best to worst (minimized).
+        /// Returns all results, chronologically ordered. 
+        /// Note that the order of results might be affected if running parallel.
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
@@ -111,9 +122,14 @@ namespace SharpLearning.Optimization
 
                 var prevBest = EvaluateFunction(functionToMinimize, initialPoint);
                 var iterationsWithoutImprovement = 0;
-                var results = new List<OptimizerResult> { new OptimizerResult(prevBest.ParameterSet, prevBest.Error) };
+                var concurrentResults = new ConcurrentBag<OptimizerResult>
+                {
+                    new OptimizerResult(prevBest.ParameterSet, prevBest.Error)
+                };
 
-                Parallel.For(0, dim, new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism }, (i) =>
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+
+                Parallel.For(0, dim, options, (i) =>
                 {
                     var a = (0.02 + 0.08 * m_random.NextDouble()) * (m_parameters[i].Max - m_parameters[i].Min); // % simplex size between 2%-8% of min(xrange)
 
@@ -133,12 +149,10 @@ namespace SharpLearning.Optimization
 
                     BoundCheck(x);
                     var score = EvaluateFunction(functionToMinimize, x);
-                    results.Add(score);
-
-                    //Console.WriteLine("Intials: " + score.Error + " " + string.Join(", ", score.ParameterSet));
+                    concurrentResults.Add(score);
                 });
 
-                // Console.WriteLine(restarts);
+                var results = concurrentResults.ToList();
 
                 // simplex iter
                 var iterations = 0;
@@ -155,7 +169,6 @@ namespace SharpLearning.Optimization
                     }
 
                     iterations++;
-                    // Console.WriteLine("Current best:" + best.Error + " " + string.Join(", ", best.ParameterSet));
 
                     if (best.Error < (prevBest.Error - m_noImprovementThreshold))
                     {
@@ -262,7 +275,7 @@ namespace SharpLearning.Optimization
                 }
             }
 
-            return allResults.Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).ToArray();
+            return allResults.ToArray();
         }
 
         OptimizerResult EvaluateFunction(Func<double[], OptimizerResult> functionToMinimize, double[] parameters)

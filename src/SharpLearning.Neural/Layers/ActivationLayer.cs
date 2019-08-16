@@ -1,8 +1,8 @@
-﻿using MathNet.Numerics.LinearAlgebra;
+﻿using System;
+using System.Collections.Generic;
+using MathNet.Numerics.LinearAlgebra;
 using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
-using System;
-using System.Collections.Generic;
 
 namespace SharpLearning.Neural.Layers
 {
@@ -13,7 +13,7 @@ namespace SharpLearning.Neural.Layers
     public class ActivationLayer : ILayer
     {
         /// <summary>
-        /// The weights outputtet by the layer.
+        /// The weights outputted by the layer.
         /// </summary>
         public Matrix<float> OutputActivations;
         Matrix<float> m_inputActivations;
@@ -107,7 +107,8 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize"></param>
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+            Initialization initializtion, Random random)
         {
             Width = inputWidth;
             Height = inputHeight;
@@ -121,12 +122,12 @@ namespace SharpLearning.Neural.Layers
         }
 
         /// <summary>
-        /// The activation layer does not have any parameters or graidents. So adds nothing.
+        /// The activation layer does not have any parameters or gradients. So adds nothing.
         /// </summary>
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            // activation layer does not have any parameters or graidents.
+            // activation layer does not have any parameters or gradients.
         }
 
         /// <summary>

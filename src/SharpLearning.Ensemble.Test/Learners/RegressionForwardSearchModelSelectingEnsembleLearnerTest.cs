@@ -1,16 +1,11 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Common.Interfaces;
-using SharpLearning.InputOutput.Csv;
-using SharpLearning.Ensemble.Strategies;
-using SharpLearning.Ensemble.Learners;
-using SharpLearning.Ensemble.EnsembleSelectors;
-using SharpLearning.Metrics.Regression;
 using SharpLearning.CrossValidation.CrossValidators;
-using SharpLearning.Ensemble.Test.Properties;
-using System.IO;
-using System.Linq;
+using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.Ensemble.Learners;
+using SharpLearning.Ensemble.Strategies;
+using SharpLearning.Metrics.Regression;
 
 namespace SharpLearning.Ensemble.Test.Learners
 {
@@ -39,9 +34,7 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5);
 
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -75,11 +68,10 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new MeanSquaredErrorRegressionMetric();
 
             var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5,
-                new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), metric, 1, false);
+                new RandomCrossValidation<double>(5, 42), 
+                new MeanRegressionEnsembleStrategy(), metric, 1, false);
 
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -112,11 +104,10 @@ namespace SharpLearning.Ensemble.Test.Learners
             var metric = new MeanSquaredErrorRegressionMetric();
 
             var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5,
-                new RandomCrossValidation<double>(5, 42), new MeanRegressionEnsembleStrategy(), metric, 3, false);
+                new RandomCrossValidation<double>(5, 42), 
+                new MeanRegressionEnsembleStrategy(), metric, 3, false);
 
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
@@ -147,9 +138,8 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5);
 
-            var parser = new CsvParser(() => new StringReader(Resources.DecisionTreeData));
-            var observations = parser.EnumerateRows("F1", "F2").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+
             var indices = Enumerable.Range(0, 25).ToArray();
 
             var model = sut.Learn(observations, targets, indices);

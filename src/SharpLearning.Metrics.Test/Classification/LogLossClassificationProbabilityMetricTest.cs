@@ -1,8 +1,7 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.Metrics.Classification;
 using SharpLearning.Containers;
-using System.Collections.Generic;
+using SharpLearning.Metrics.Classification;
 
 namespace SharpLearning.Metrics.Test.Classification
 {

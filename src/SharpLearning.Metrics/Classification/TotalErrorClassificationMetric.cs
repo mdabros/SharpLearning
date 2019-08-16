@@ -9,9 +9,6 @@ namespace SharpLearning.Metrics.Classification
     /// <typeparam name="T"></typeparam>
     public sealed class TotalErrorClassificationMetric<T> : IClassificationMetric<T>
     {
-        //readonly ClassificationMatrixStringConverter m_converter = new ClassificationMatrixStringConverter();
-        //readonly ClassificationMatrix m_classificationMatrix = new ClassificationMatrix();
-
         /// <summary>
         /// Calculates the total error metric on a multi label or binary classification problem
         /// </summary>
@@ -28,17 +25,34 @@ namespace SharpLearning.Metrics.Classification
             return TotalError(uniques, confusionMatrix);
         }
 
-        double TotalError(List<T> uniques, int[][] confusionMatrix)
+        double TotalError(List<T> uniques, int[,] confusionMatrix)
         {
-            var totalSum = confusionMatrix.SelectMany(v => v).Sum();
+            var totalSum = Sum(confusionMatrix);
             var errorSum = totalSum;
 
             for (int row = 0; row < uniques.Count; ++row)
             {
-                errorSum -= confusionMatrix[row][row];
+                errorSum -= confusionMatrix[row,row];
             }
 
-            return (double)errorSum / (double)totalSum;
+            return (double)errorSum / totalSum;
+        }
+
+        int Sum(int[,] confusionMatrix)
+        {
+            var rows = confusionMatrix.GetLength(0);
+            var cols = confusionMatrix.GetLength(1);
+
+            var sum = 0;
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    sum += confusionMatrix[r, c];
+                }
+            }
+
+            return sum;
         }
 
         List<T> UniqueTargets(T[] targets, T[] predictions)
@@ -59,13 +73,8 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public string ErrorString(T[] targets, T[] predictions)
         {
-            var uniques = UniqueTargets(targets, predictions);
-
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
-            var error = TotalError(uniques, confusionMatrix);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, errorMatrix, error);
+            var error = Error(targets, predictions);
+            return Utilities.ClassificationMatrixString(targets, predictions, error);
         }
 
         /// <summary>
@@ -78,13 +87,9 @@ namespace SharpLearning.Metrics.Classification
         /// <returns></returns>
         public string ErrorString(T[] targets, T[] predictions, Dictionary<T, string> targetStringMapping)
         {
-            var uniques = UniqueTargets(targets, predictions);
-
-            var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
-            var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
             var error = Error(targets, predictions);
-
-            return ClassificationMatrixStringConverter.Convert(uniques, targetStringMapping, confusionMatrix, errorMatrix, error);
+            return Utilities.ClassificationMatrixString(targets, predictions, error,
+                targetStringMapping);
         }
     }
 }

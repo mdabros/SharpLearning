@@ -1,11 +1,11 @@
-﻿using SharpLearning.Containers;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
+using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Nodes;
-using SharpLearning.Common.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.DecisionTrees.Models
@@ -29,8 +29,7 @@ namespace SharpLearning.DecisionTrees.Models
         /// <param name="tree"></param>
         public ClassificationDecisionTreeModel(BinaryTree tree)
         {
-            if (tree == null) { throw new ArgumentNullException("root"); }
-            Tree = tree;
+            Tree = tree ?? throw new ArgumentNullException(nameof(tree));
             m_variableImportance = tree.VariableImportance;
         }
 
@@ -77,26 +76,6 @@ namespace SharpLearning.DecisionTrees.Models
             }
 
             return predictions;
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
         }
 
         /// <summary>
@@ -164,13 +143,10 @@ namespace SharpLearning.DecisionTrees.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            return m_variableImportance;
-        }
+        public double[] GetRawVariableImportance() => m_variableImportance;
 
         /// <summary>
         /// Loads a ClassificationDecisionTreeModel.
@@ -192,5 +168,21 @@ namespace SharpLearning.DecisionTrees.Models
             new GenericXmlDataContractSerializer()
                 .Serialize(this, writer);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
     }
 }

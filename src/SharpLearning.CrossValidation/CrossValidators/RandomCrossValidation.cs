@@ -1,5 +1,5 @@
-﻿using SharpLearning.CrossValidation.Samplers;
-using System;
+﻿using System;
+using SharpLearning.CrossValidation.Samplers;
 
 namespace SharpLearning.CrossValidation.CrossValidators
 {
@@ -10,7 +10,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
     public class RandomCrossValidation<TPrediction> : CrossValidation<TPrediction>
     {
         /// <summary>
-        /// Cross validation for evaluating how learning algorithms generalise on new data
+        /// Cross validation for evaluating how learning algorithms generalize on new data
         /// </summary>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
         public RandomCrossValidation(int crossValidationFolds)
@@ -19,7 +19,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
         }
 
         /// <summary>
-        /// Cross validation for evaluating how learning algorithms generalise on new data
+        /// Cross validation for evaluating how learning algorithms generalize on new data
         /// </summary>
         /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
         /// <param name="seed"></param>

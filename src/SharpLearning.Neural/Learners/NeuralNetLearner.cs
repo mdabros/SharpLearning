@@ -43,39 +43,48 @@ namespace SharpLearning.Neural
         /// <param name="learningRate">Controls the step size when updating the weights. (Default is 0.001)</param>
         /// <param name="iterations">The maximum number of iterations before termination. (Default is 100)</param>
         /// <param name="batchSize">Batch size for mini-batch stochastic gradient descent. (Default is 128)</param>
-        /// <param name="l1decay">L1 reguralization term. (Default is 0, so no reguralization)</param>
-        /// <param name="l2decay">L2 reguralization term. (Default is 0, so no reguralization)</param>
+        /// <param name="l1decay">L1 regularization term. (Default is 0, so no regularization)</param>
+        /// <param name="l2decay">L2 regularization term. (Default is 0, so no regularization)</param>
         /// <param name="optimizerMethod">The method used for optimization (Default is RMSProp)</param>
-        /// <param name="momentum">Momentum for gradient update. Should be between 0 and 1. (Defualt is 0.9)</param>
+        /// <param name="momentum">Momentum for gradient update. Should be between 0 and 1. (Default is 0.9)</param>
         /// <param name="rho">Squared gradient moving average decay factor (Default is 0.95)</param>
         /// <param name="beta1">Exponential decay rate for estimates of first moment vector, should be in range 0 to 1 (Default is 0.9)</param>
         /// <param name="beta2">Exponential decay rate for estimates of second moment vector, should be in range 0 to 1 (Default is 0.999)</param>
-        public NeuralNetLearner(NeuralNet net, ITargetEncoder targetEncoder, ILoss loss, double learningRate = 0.001, int iterations = 100, int batchSize = 128, double l1decay = 0, double l2decay = 0,
-            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, double momentum = 0.9, double rho = 0.95, double beta1 = 0.9, double beta2 = 0.999)
+        public NeuralNetLearner(
+            NeuralNet net, ITargetEncoder targetEncoder, 
+            ILoss loss, 
+            double learningRate = 0.001, 
+            int iterations = 100, 
+            int batchSize = 128, 
+            double l1decay = 0, 
+            double l2decay = 0,
+            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, 
+            double momentum = 0.9, 
+            double rho = 0.95, 
+            double beta1 = 0.9, 
+            double beta2 = 0.999)
         {
-            if (net == null) { throw new ArgumentNullException("net"); }
-            if (targetEncoder == null) { throw new ArgumentNullException("targetEncoder"); }
-            if (loss == null) { throw new ArgumentNullException("loss"); }
+            m_net = net ?? throw new ArgumentNullException(nameof(net));
+            m_targetEncoder = targetEncoder ?? throw new ArgumentNullException(nameof(targetEncoder));
+            m_loss = loss ?? throw new ArgumentNullException(nameof(loss));
             if (learningRate <= 0) { throw new ArgumentNullException("learning rate must be larger than 0. Was: " + learningRate); }
             if (iterations <= 0) { throw new ArgumentNullException("Iterations must be larger than 0. Was: " + iterations); }
             if (batchSize <= 0) { throw new ArgumentNullException("batchSize must be larger than 0. Was: " + batchSize); }
             if (l1decay < 0) { throw new ArgumentNullException("l1decay must be positive. Was: " + l1decay); }
             if (l2decay < 0) { throw new ArgumentNullException("l1decay must be positive. Was: " + l2decay); }
             if (momentum <= 0) { throw new ArgumentNullException("momentum must be larger than 0. Was: " + momentum); }
-            if (rho <= 0) { throw new ArgumentNullException("ro must be larger than 0. Was: " + rho); }
+            if (rho <= 0) { throw new ArgumentNullException("rho must be larger than 0. Was: " + rho); }
             if (beta1 <= 0) { throw new ArgumentNullException("beta1 must be larger than 0. Was: " + beta1); }
             if (beta2 <= 0) { throw new ArgumentNullException("beta2 must be larger than 0. Was: " + beta2); }
 
-            m_net = net;
-            m_targetEncoder = targetEncoder;
-            m_loss = loss;
             m_learningRate = learningRate;
             m_iterations = iterations;
             m_momentum = momentum;
             m_batchSize = batchSize;
             m_random = new Random(232);
             
-            m_optimizer = new NeuralNetOptimizer(learningRate, batchSize, l1decay, l2decay, optimizerMethod, momentum, rho, beta1, beta2);
+            m_optimizer = new NeuralNetOptimizer(learningRate, batchSize, 
+                l1decay, l2decay, optimizerMethod, momentum, rho, beta1, beta2);
 
             SetupLinerAlgebraProvider();
         }
@@ -100,7 +109,8 @@ namespace SharpLearning.Neural
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public NeuralNet Learn(F64Matrix observations, double[] targets, int[] indices)
+        public NeuralNet Learn(F64Matrix observations, double[] targets, 
+            int[] indices)
         {
             return Learn(observations, targets, indices,
                 null, null); // no validation data

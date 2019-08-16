@@ -1,13 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Extensions;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
 using SharpLearning.RandomForest.Learners;
-using SharpLearning.RandomForest.Test.Properties;
 
 namespace SharpLearning.RandomForest.Test.Learners
 {
@@ -75,10 +71,7 @@ namespace SharpLearning.RandomForest.Test.Learners
         [TestMethod]
         public void ClassificationRandomForestLearner_Learn_Glass_100_Indices()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, false);
             
@@ -100,9 +93,7 @@ namespace SharpLearning.RandomForest.Test.Learners
         [TestMethod]
         public void ClassificationRandomForestLearner_Learn_Glass_100_Trees_Parallel()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, true);
 
@@ -118,12 +109,10 @@ namespace SharpLearning.RandomForest.Test.Learners
 
         double ClassificationRandomForestLearner_Learn_Glass(int trees, double subSampleRatio = 1.0)
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
-            var sut = new ClassificationRandomForestLearner(trees, 1, 100, 1, 0.0001, subSampleRatio, 42, false);
+            var sut = new ClassificationRandomForestLearner(trees, 1, 100, 1, 0.0001, 
+                subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
@@ -135,12 +124,10 @@ namespace SharpLearning.RandomForest.Test.Learners
 
         double ClassificationRandomLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
         {
-            var parser = new CsvParser(() => new StringReader(Resources.AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001, subSampleRatio, 42, false);
+            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001, 
+                subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);

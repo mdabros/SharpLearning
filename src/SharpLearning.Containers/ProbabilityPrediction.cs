@@ -27,8 +27,7 @@ namespace SharpLearning.Containers
         /// <param name="probabilities">Dictionary containing the class name to class probability</param>
         public ProbabilityPrediction(double prediction, Dictionary<double, double> probabilities)
         {
-            if (probabilities == null) { throw new ArgumentNullException("probabilities"); }
-            Probabilities = probabilities;
+            Probabilities = probabilities ?? throw new ArgumentNullException(nameof(probabilities));
             Prediction = prediction;
         }
 

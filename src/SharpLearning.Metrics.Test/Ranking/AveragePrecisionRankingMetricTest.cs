@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Metrics.Ranking;
-using System.Linq;
 
 namespace SharpLearning.Metrics.Test.Ranking
 {

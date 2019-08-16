@@ -1,10 +1,10 @@
-﻿using SharpLearning.Common.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Ensemble.Strategies;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SharpLearning.Ensemble.Models
 {
@@ -22,12 +22,11 @@ namespace SharpLearning.Ensemble.Models
         /// </summary>
         /// <param name="ensembleModels">Models included in the ensemble</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-        public ClassificationEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels, IClassificationEnsembleStrategy ensembleStrategy)
+        public ClassificationEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels, 
+            IClassificationEnsembleStrategy ensembleStrategy)
         {
-            if (ensembleModels == null) { throw new ArgumentNullException("ensembleModels"); }
-            if (ensembleStrategy == null) { throw new ArgumentNullException("ensembleStrategy"); }
-            m_ensembleModels = ensembleModels;
-            m_ensembleStrategy = ensembleStrategy;
+            m_ensembleModels = ensembleModels ?? throw new ArgumentNullException(nameof(ensembleModels));
+            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
         }
 
         /// <summary>
@@ -56,26 +55,6 @@ namespace SharpLearning.Ensemble.Models
             }
 
             return predictions;
-        }
-
-        /// <summary>
-        /// Predicts a single observation using the ensembled probabilities
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
-        {
-            return PredictProbability(observation);
-        }
-
-        /// <summary>
-        /// Private explicit interface implementation for probability predictions
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
-        {
-            return PredictProbability(observations);
         }
 
         /// <summary>
@@ -115,13 +94,13 @@ namespace SharpLearning.Ensemble.Models
         }
 
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         public double[] GetRawVariableImportance()
         {
             // return normalized variable importance. 
-            // Individdual models can have very different scaling of importances 
+            // Individual models can have very different scaling of importances 
             var index = 0;
             var dummyFeatureNameToIndex = m_ensembleModels
                 .First().GetRawVariableImportance()
@@ -154,5 +133,21 @@ namespace SharpLearning.Ensemble.Models
                  .OrderByDescending(kvp => kvp.Value)
                  .ToDictionary(k => k.Key, v => (v.Value / max) * 100.0);
         }
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observation"></param>
+        /// <returns></returns>
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
+            => PredictProbability(observation);
+
+        /// <summary>
+        /// Private explicit interface implementation for probability predictions
+        /// </summary>
+        /// <param name="observations"></param>
+        /// <returns></returns>
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
+            => PredictProbability(observations);
     }
 }

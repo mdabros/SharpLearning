@@ -8,7 +8,6 @@ using SharpLearning.InputOutput.Csv;
 using SharpLearning.Metrics.Classification;
 using SharpLearning.XGBoost.Learners;
 using SharpLearning.XGBoost.Models;
-using SharpLearning.XGBoost.Test.Properties;
 
 namespace SharpLearning.XGBoost.Test.Learners
 {
@@ -20,14 +19,13 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_Predict_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var learner = CreateLearner();
+
             using (var sut = learner.Learn(observations, targets))
             {
+                var rows = targets.Length;
                 var predictions = new double[rows];
                 for (int i = 0; i < rows; i++)
                 {
@@ -44,7 +42,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_Predict_Single_BinaryLogistic()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var parser = new CsvParser(() => new StringReader(DataSetUtilities.GlassData));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
 
             var binaryTargets = parser.EnumerateRows("Target").ToF64Vector()
@@ -71,9 +69,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_Predict_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var learner = CreateLearner();
 
@@ -91,14 +87,12 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_PredictProbability_Single()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var learner = CreateLearner();
             using (var sut = learner.Learn(observations, targets))
             {
+                var rows = targets.Length;
                 var actual = new ProbabilityPrediction[rows];
                 for (int i = 0; i < rows; i++)
                 {
@@ -118,7 +112,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_PredictProbability_Single_BinaryLogistic()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
+            var parser = new CsvParser(() => new StringReader(DataSetUtilities.GlassData));
             var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
 
             var binaryTargets = parser.EnumerateRows("Target").ToF64Vector()
@@ -148,14 +142,12 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_PredictProbability_Multiple()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            var rows = targets.Length;
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var learner = CreateLearner();
             using (var sut = learner.Learn(observations, targets))
             {
+                var rows = targets.Length;
                 var actual = sut.PredictProbability(observations);
                 var evaluator = new TotalErrorClassificationMetric<double>();
                 var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
@@ -170,9 +162,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_Save_Load()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var leaner = CreateLearner();
             var modelFilePath = "model.xgb";
@@ -192,9 +182,7 @@ namespace SharpLearning.XGBoost.Test.Learners
         [TestMethod]
         public void ClassificationXGBoostModel_GetVariableImportance()
         {
-            var parser = new CsvParser(() => new StringReader(Resources.Glass));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
+            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var index = 0;
             var name = "f";
@@ -230,7 +218,8 @@ namespace SharpLearning.XGBoost.Test.Learners
             }
         }
 
-        static ClassificationXGBoostLearner CreateLearner(ClassificationObjective objective = ClassificationObjective.SoftProb)
+        static ClassificationXGBoostLearner CreateLearner(
+            ClassificationObjective objective = ClassificationObjective.SoftProb)
         {
             return new ClassificationXGBoostLearner(maximumTreeDepth: 3,
                 learningRate: 0.1,

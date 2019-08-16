@@ -1,8 +1,6 @@
-﻿using SharpLearning.Containers;
-using SharpLearning.Containers.Matrices;
-using SharpLearning.Containers.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SharpLearning.Containers;
 
 namespace SharpLearning.DecisionTrees.Nodes
 {
@@ -43,18 +41,14 @@ namespace SharpLearning.DecisionTrees.Nodes
         public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames, 
             double[] variableImportance)
         {
-            if (nodes == null) { throw new ArgumentNullException("nodes"); }
-            if (probabilities == null) { throw new ArgumentNullException("probabilities"); }
-            if (targetNames == null) { throw new ArgumentNullException("targetNames"); }
-            if (variableImportance == null) { throw new ArgumentNullException("variableImportance"); }
-            Nodes = nodes;
-            Probabilities = probabilities;
-            TargetNames = targetNames;
-            VariableImportance = variableImportance;
+            Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
+            Probabilities = probabilities ?? throw new ArgumentNullException(nameof(probabilities));
+            TargetNames = targetNames ?? throw new ArgumentNullException(nameof(targetNames));
+            VariableImportance = variableImportance ?? throw new ArgumentNullException(nameof(variableImportance));
         }
 
         /// <summary>
-        /// Predicts using a continous node strategy
+        /// Predicts using a continuous node strategy
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -64,7 +58,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Predict probabilities using a continous node strategy
+        /// Predict probabilities using a continuous node strategy
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
@@ -74,7 +68,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Predicts using a continous node strategy
+        /// Predicts using a continuous node strategy
         /// </summary>
         /// <param name="node"></param>
         /// <param name="observation"></param>
@@ -99,7 +93,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Returns the prediction node using a continous node strategy
+        /// Returns the prediction node using a continuous node strategy
         /// </summary>
         /// <param name="node"></param>
         /// <param name="observation"></param>
@@ -124,7 +118,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         }
 
         /// <summary>
-        /// Predict probabilities using a continous node strategy
+        /// Predict probabilities using a continuous node strategy
         /// </summary>
         /// <param name="node"></param>
         /// <param name="observation"></param>

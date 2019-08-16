@@ -7,9 +7,9 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 {
     /// <summary>
     /// Transforms the selected features with multiple values into a set of binary features.
-    /// This is refered to as one-hot encoding:
+    /// This is refereed to as one-hot encoding:
     /// https://en.wikipedia.org/wiki/One-hot
-    /// Forexample day { monday, tuesday } becomes
+    /// For example day { monday, tuesday } becomes
     /// day_monday { 1, 0}
     /// day_tuesday {0, 1}
     /// </summary>
@@ -21,9 +21,9 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 
         /// <summary>
         /// Transforms the selected features with multiple values into a set of binary features.
-        /// This is refered to as one-hot encoding:
+        /// This is refereed to as one-hot encoding:
         /// https://en.wikipedia.org/wiki/One-hot
-        /// Forexample day { monday, tuesday } becomes
+        /// For example day { monday, tuesday } becomes
         /// day_monday { 1, 0}
         /// day_tuesday {0, 1}
         /// </summary>
@@ -35,9 +35,9 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
 
         /// <summary>
         /// Transforms the selected features with multiple values into a set of binary features.
-        /// This is refered to as one-hot encoding:
+        /// This is refereed to as one-hot encoding:
         /// https://en.wikipedia.org/wiki/One-hot
-        /// Forexample day { monday, tuesday } becomes
+        /// For example day { monday, tuesday } becomes
         /// day_monday { 1, 0}
         /// day_tuesday {0, 1}
         /// </summary>
@@ -56,13 +56,14 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
             // build map
             BuildFeatureMap(rows, m_columnsToMap);
 
-            // add encoded fetures
+            // add encoded features
             var newColumnNameToIndex = NewColumnNameToIndex(rows);
             var additionalFeatures = m_featureMap.Select(v => v.Value.Count).Sum();
 
             foreach (var row in rows)
             {
-                var newValues = Enumerable.Range(0, row.Values.Length + additionalFeatures).Select(v => "0").ToArray();
+                var newValues = Enumerable.Range(0, row.Values.Length + additionalFeatures)
+                    .Select(v => "0").ToArray();
 
                 row.Values.CopyTo(newValues, 0);
                 foreach (var column in m_columnsToMap)

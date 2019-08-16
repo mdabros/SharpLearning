@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Arithmetic;
 using SharpLearning.Containers.Matrices;
-using System;
 
 namespace SharpLearning.Containers.Test.Arithmetic
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SharpLearning.Common.Interfaces
 {
@@ -12,7 +8,7 @@ namespace SharpLearning.Common.Interfaces
     public interface IModelVariableImportance
     {
         /// <summary>
-        /// Gets the raw unsorted vatiable importance scores
+        /// Gets the raw unsorted variable importance scores
         /// </summary>
         /// <returns></returns>
         double[] GetRawVariableImportance();
