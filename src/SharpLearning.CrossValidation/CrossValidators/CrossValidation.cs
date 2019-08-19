@@ -37,6 +37,33 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="targets"></param>
         /// <returns></returns>
         public TPrediction[] CrossValidate(IIndexedLearner<TPrediction> learner,
+            F64Matrix observations, double[] targets) => 
+                CrossValidate((o, t, i) => learner.Learn(o, t, i).Predict, observations, targets);
+
+        /// <summary>
+        /// Cross validated predictions. 
+        /// Only crossValidates within the provided indices.
+        /// The predictions are returned in the predictions array.
+        /// </summary>
+        /// <param name="learner"></param>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <param name="crossValidationIndices"></param>
+        /// <param name="crossValidatedPredictions"></param>
+        public void CrossValidate(IIndexedLearner<TPrediction> learner,
+            F64Matrix observations, double[] targets, 
+            int[] crossValidationIndices, TPrediction[] crossValidatedPredictions) => 
+                CrossValidate((o, t, i) => learner.Learn(o, t, i).Predict, 
+                    observations, targets, crossValidationIndices, crossValidatedPredictions);
+
+        /// <summary>
+        /// Returns an array of cross validated predictions
+        /// </summary>
+        /// <param name="learner"></param>
+        /// <param name="observations"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public TPrediction[] CrossValidate(ModelLearner<TPrediction> learner,
             F64Matrix observations, double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
@@ -57,7 +84,7 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="targets"></param>
         /// <param name="crossValidationIndices"></param>
         /// <param name="crossValidatedPredictions"></param>
-        public void CrossValidate(IIndexedLearner<TPrediction> learner,
+        public void CrossValidate(ModelLearner<TPrediction> learner,
             F64Matrix observations,
             double[] targets,
             int[] crossValidationIndices,
@@ -84,21 +111,19 @@ namespace SharpLearning.CrossValidation.CrossValidators
             var observation = new double[observations.ColumnCount];
             foreach (var (trainingIndices, validationIndices) in crossValidationIndexSets)
             {
-                var model = learner.Learn(observations, targets, trainingIndices);
+                var model = learner(observations, targets, trainingIndices);
                 var predictions = new TPrediction[validationIndices.Length];
 
                 for (int l = 0; l < predictions.Length; l++)
                 {
                     observations.Row(validationIndices[l], observation);
-                    predictions[l] = model.Predict(observation);
+                    predictions[l] = model(observation);
                 }
 
                 for (int j = 0; j < validationIndices.Length; j++)
                 {
                     crossValidatedPredictions[cvPredictionIndiceMap[validationIndices[j]]] = predictions[j];
                 }
-
-                ModelDisposer.DisposeIfDisposable(model);
             }
         }
     }
