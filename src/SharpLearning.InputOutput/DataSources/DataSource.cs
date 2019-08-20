@@ -4,6 +4,13 @@ using System.Linq;
 
 namespace SharpLearning.InputOutput.DataSources
 {
+    /// <summary>
+    /// Data source for serving batches of data.
+    /// This is convenient when data sets becomes to large to fit in memory.
+    /// Typically this will be used with algorithms that supports streaming data, 
+    /// like stochastic gradient descent.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class DataSource<T>
     {
         readonly IReadOnlyDictionary<string, DataLoader<T>> m_idToDataLoader;
@@ -11,11 +18,19 @@ namespace SharpLearning.InputOutput.DataSources
         readonly bool m_shuffle;
 
         readonly Random m_random;
-        readonly int[] m_currentSweepIndeces;
+        readonly int[] m_currentSweepIndices;
 
         int m_currentBatchStartIndex = -1;
-        int[] m_batchIndeces = Array.Empty<int>();
+        int[] m_batchIndices = Array.Empty<int>();
 
+        /// <summary>
+        /// Data source for serving batches of data.
+        /// </summary>
+        /// <param name="idToDataLoader">Map from string id to data loader. 
+        /// For instance, a separate loader could be used for loading the features/observations, and the targets.</param>
+        /// <param name="batchSize">Sample count in each batch.</param>
+        /// <param name="shuffle">Randomize the order the data is loaded in.</param>
+        /// <param name="seed">Seed for randomization if enabled.</param>
         public DataSource(IReadOnlyDictionary<string, DataLoader<T>> idToDataLoader,
             int batchSize, bool shuffle, int seed)
         {
@@ -32,19 +47,25 @@ namespace SharpLearning.InputOutput.DataSources
                     throw new ArgumentException("");
                 }
             }
+
+            m_currentSweepIndices = Enumerable.Range(0, sampleCount).ToArray();
         }
 
+        /// <summary>
+        /// Gets the next batch of data.
+        /// Returns a dictionary mapping from id to the corresponding data batch.
+        /// </summary>
+        /// <returns></returns>
         public (IReadOnlyDictionary<string, DataBatch<T>>, bool isSweepEnd) GetNextBatch()
         {
             CheckIfNewSweepAndShuffle();
-            UpdateBatchIndeces(m_batchSize, m_currentBatchStartIndex);
-
+            UpdateBatchIndices(m_batchSize, m_currentBatchStartIndex);
             var batch = NextBatch();
 
             m_currentBatchStartIndex += m_batchSize;
 
             // Start over if sweep end
-            var isSweepEnd = m_currentBatchStartIndex >= m_currentSweepIndeces.Length;
+            var isSweepEnd = m_currentBatchStartIndex >= m_currentSweepIndices.Length;
             if (isSweepEnd)
             {
                 m_currentBatchStartIndex = -1;
@@ -60,7 +81,7 @@ namespace SharpLearning.InputOutput.DataSources
             {
                 var id = idToLoader.Key;
                 var loader = idToLoader.Value;
-                var data = loader.Load(m_batchIndeces);
+                var data = loader.Load(m_batchIndices);
 
                 batch.Add(id, data);
             }
@@ -75,24 +96,24 @@ namespace SharpLearning.InputOutput.DataSources
                 if (m_shuffle)
                 {
                     // Start new sweep by shuffling indexes in place.
-                    Shuffle(m_currentSweepIndeces, m_random);
+                    Shuffle(m_currentSweepIndices, m_random);
                 }
                 m_currentBatchStartIndex = 0;
             }
         }
 
-        void UpdateBatchIndeces(int minibatchSizeInSamples, int batchStartIndex)
+        void UpdateBatchIndices(int minibatchSizeInSamples, int batchStartIndex)
         {
-            if (m_batchIndeces.Length != minibatchSizeInSamples)
+            if (m_batchIndices.Length != minibatchSizeInSamples)
             {
-                m_batchIndeces = new int[minibatchSizeInSamples];
+                m_batchIndices = new int[minibatchSizeInSamples];
             }
 
             for (int i = 0; i < minibatchSizeInSamples; i++)
             {
                 // Repeat the start so we can fulfill the requested batch size
-                var sweepIndex = (i + batchStartIndex) % m_currentSweepIndeces.Length;
-                m_batchIndeces[i] = m_currentSweepIndeces[sweepIndex];
+                var sweepIndex = (i + batchStartIndex) % m_currentSweepIndices.Length;
+                m_batchIndices[i] = m_currentSweepIndices[sweepIndex];
             }
         }
 
