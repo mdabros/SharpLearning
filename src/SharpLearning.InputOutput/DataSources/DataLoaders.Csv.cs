@@ -16,13 +16,13 @@ namespace SharpLearning.InputOutput.DataSources
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="csvTextData"></param>
-        /// <param name="columnTransform"></param>
+        /// <param name="columnParser"></param>
         /// <param name="columnNames"></param>
         /// <returns></returns>
         public static DataLoader<T> FromCsvText<T>(string csvTextData,
-            Func<string, T> columnTransform,
+            Func<string, T> columnParser,
             params string[] columnNames) => FromCsv<T>(CsvParser.FromText(csvTextData),
-                columnTransform, columnNames, new int[] { columnNames.Length });
+                columnParser, columnNames, new int[] { columnNames.Length });
 
         /// <summary>
         /// Creates DataLoader from Csv file.
@@ -31,25 +31,25 @@ namespace SharpLearning.InputOutput.DataSources
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="filePath"></param>
-        /// <param name="columnTransform"></param>
+        /// <param name="columnParser"></param>
         /// <param name="columnNames"></param>
         /// <returns></returns>
         public static DataLoader<T> FromCsvFile<T>(string filePath,
-            Func<string, T> columnTransform,
+            Func<string, T> columnParser,
             params string[] columnNames) => FromCsv<T>(CsvParser.FromFile(filePath),
-                columnTransform, columnNames, new int[] { columnNames.Length });
+                columnParser, columnNames, new int[] { columnNames.Length });
         
         /// <summary>
         /// Creates a DataLoader reading from Csv Data.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="parser"></param>
-        /// <param name="columnTransform"></param>
+        /// <param name="columnParser"></param>
         /// <param name="columnNames"></param>
         /// <param name="sampleShape"></param>
         /// <returns></returns>
         public static DataLoader<T> FromCsv<T>(CsvParser parser,
-            Func<string, T> columnTransform,
+            Func<string, T> columnParser,
             string[] columnNames,
             int[] sampleShape)
         {
@@ -68,7 +68,7 @@ namespace SharpLearning.InputOutput.DataSources
                     if(indices.Contains(index))
                     {
                         var transformed = row.Values
-                            .Select(v => columnTransform(v))
+                            .Select(v => columnParser(v))
                             .ToArray();
 
                         Array.Copy(transformed, 0, data, 
