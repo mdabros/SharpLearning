@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.InputOutput.DataSources;
@@ -50,18 +48,16 @@ namespace SharpLearning.InputOutput.Test.DataSources
         static Dictionary<string, DataLoader<double>> CreateDataLoaders()
         {
             // observations loader.
-            var observationsLoader = DataLoaders.CsvDataLoader(
-                CsvParser.FromString(DataSetUtilities.AptitudeData),
+            var observationsLoader = DataLoaders.FromCsvText(
+                DataSetUtilities.AptitudeData,
                 s => CsvRowExtensions.DefaultF64Converter(s),
-                columnNames: new[] { "AptitudeTestScore", "PreviousExperience_month" },
-                sampleShape: new[] { 2 });
+                "AptitudeTestScore", "PreviousExperience_month");
 
             // targets loader.
-            var targetsLoader = DataLoaders.CsvDataLoader(
-                CsvParser.FromString(DataSetUtilities.AptitudeData),
+            var targetsLoader = DataLoaders.FromCsvText(
+                DataSetUtilities.AptitudeData,
                 s => CsvRowExtensions.DefaultF64Converter(s),
-                columnNames: new[] { "Pass" },
-                sampleShape: new[] { 1 });
+                "Pass");
 
             var idToLoaders = new Dictionary<string, DataLoader<double>>
             {

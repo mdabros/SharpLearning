@@ -125,7 +125,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="quoteInclosedColumns"></param>
         /// <param name="hasHeader"></param>
         /// <returns></returns>
-        public static CsvParser FromString(string csvData,
+        public static CsvParser FromText(string csvData,
             char separator = DefaultDelimiter,
             bool quoteInclosedColumns = false,
             bool hasHeader = true)

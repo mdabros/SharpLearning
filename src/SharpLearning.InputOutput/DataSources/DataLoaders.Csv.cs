@@ -10,6 +10,36 @@ namespace SharpLearning.InputOutput.DataSources
     public static partial class DataLoaders
     {
         /// <summary>
+        /// Creates DataLoader from Csv Text.
+        /// Note that the sample shape is inferred from the number of column names.
+        /// So rank 1 is assumed.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="csvTextData"></param>
+        /// <param name="columnTransform"></param>
+        /// <param name="columnNames"></param>
+        /// <returns></returns>
+        public static DataLoader<T> FromCsvText<T>(string csvTextData,
+            Func<string, T> columnTransform,
+            params string[] columnNames) => FromCsv<T>(CsvParser.FromText(csvTextData),
+                columnTransform, columnNames, new int[] { columnNames.Length });
+
+        /// <summary>
+        /// Creates DataLoader from Csv file.
+        /// Note that the sample shape is inferred from the number of column names.
+        /// So rank 1 is assumed.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filePath"></param>
+        /// <param name="columnTransform"></param>
+        /// <param name="columnNames"></param>
+        /// <returns></returns>
+        public static DataLoader<T> FromCsvFile<T>(string filePath,
+            Func<string, T> columnTransform,
+            params string[] columnNames) => FromCsv<T>(CsvParser.FromFile(filePath),
+                columnTransform, columnNames, new int[] { columnNames.Length });
+        
+        /// <summary>
         /// Creates a DataLoader reading from Csv Data.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -18,7 +48,7 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="columnNames"></param>
         /// <param name="sampleShape"></param>
         /// <returns></returns>
-        public static DataLoader<T> CsvDataLoader<T>(CsvParser parser,
+        public static DataLoader<T> FromCsv<T>(CsvParser parser,
             Func<string, T> columnTransform,
             string[] columnNames,
             int[] sampleShape)
