@@ -117,6 +117,40 @@ namespace SharpLearning.InputOutput.Csv
             }
         }
 
+        /// <summary>
+        /// Creates an instance of CsvParser from a string.
+        /// </summary>
+        /// <param name="csvData">string csv data to parse.</param>
+        /// <param name="separator"></param>
+        /// <param name="quoteInclosedColumns"></param>
+        /// <param name="hasHeader"></param>
+        /// <returns></returns>
+        public static CsvParser FromString(string csvData,
+            char separator = DefaultDelimiter,
+            bool quoteInclosedColumns = false,
+            bool hasHeader = true)
+        {
+            return new CsvParser(() => new StringReader(csvData),
+                            separator, quoteInclosedColumns, hasHeader);
+        }
+
+        /// <summary>
+        /// Creates an instance of CsvParser from a file path.
+        /// </summary>
+        /// <param name="filePath">File path of the csv file to parse.</param>
+        /// <param name="separator"></param>
+        /// <param name="quoteInclosedColumns"></param>
+        /// <param name="hasHeader"></param>
+        /// <returns></returns>
+        public static CsvParser FromFile(string filePath,
+            char separator = DefaultDelimiter,
+            bool quoteInclosedColumns = false,
+            bool hasHeader = true)
+        {
+            return new CsvParser(() => new StreamReader(filePath),
+                            separator, quoteInclosedColumns, hasHeader);
+        }
+        
         IEnumerable<CsvRow> EnumerateRowsHeader()
         {
             using (var reader = m_getReader())
