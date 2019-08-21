@@ -39,10 +39,10 @@ namespace SharpLearning.InputOutput.DataSources
             m_shuffle = shuffle;
             m_random = new Random(seed);
 
-            var sampleCount = m_idToDataLoader.Values.First().SampleCount;
+            var sampleCount = m_idToDataLoader.Values.First().TotalSampleCount;
             foreach (var loader in m_idToDataLoader.Values)
             {
-                if(loader.SampleCount != sampleCount)
+                if(loader.TotalSampleCount != sampleCount)
                 {
                     throw new ArgumentException("");
                 }
