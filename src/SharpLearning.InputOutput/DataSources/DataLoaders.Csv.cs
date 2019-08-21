@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SharpLearning.InputOutput.Csv;
 
@@ -10,35 +11,24 @@ namespace SharpLearning.InputOutput.DataSources
     public static partial class DataLoaders
     {
         /// <summary>
-        /// Creates DataLoader from Csv Text.
-        /// Note that the sample shape is inferred from the number of column names.
-        /// So rank 1 is assumed.
+        /// Creates a DataLoader reading from Csv Data.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="csvTextData"></param>
+        /// <param name="parser"></param>
         /// <param name="columnParser"></param>
-        /// <param name="columnNames"></param>
+        /// <param name="selectColumnNames"></param>
+        /// <param name="sampleShape"></param>
         /// <returns></returns>
-        public static DataLoader<T> FromCsvText<T>(string csvTextData,
+        public static DataLoader<T> FromCsv<T>(CsvParser parser,
             Func<string, T> columnParser,
-            params string[] columnNames) => FromCsv<T>(CsvParser.FromText(csvTextData),
-                columnParser, columnNames, new int[] { columnNames.Length });
+            Func<string, bool> selectColumnNames,
+            int[] sampleShape)
+        {
+            var rows = parser.EnumerateRows(selectColumnNames);
+            var totalSampleCount = rows.Count();
+            return FromCsv<T>(rows, columnParser, sampleShape, totalSampleCount);
+        }
 
-        /// <summary>
-        /// Creates DataLoader from Csv file.
-        /// Note that the sample shape is inferred from the number of column names.
-        /// So rank 1 is assumed.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="filePath"></param>
-        /// <param name="columnParser"></param>
-        /// <param name="columnNames"></param>
-        /// <returns></returns>
-        public static DataLoader<T> FromCsvFile<T>(string filePath,
-            Func<string, T> columnParser,
-            params string[] columnNames) => FromCsv<T>(CsvParser.FromFile(filePath),
-                columnParser, columnNames, new int[] { columnNames.Length });
-        
         /// <summary>
         /// Creates a DataLoader reading from Csv Data.
         /// </summary>
@@ -53,11 +43,21 @@ namespace SharpLearning.InputOutput.DataSources
             string[] columnNames,
             int[] sampleShape)
         {
+            var rows = parser.EnumerateRows(columnNames);
+            var totalSampleCount = rows.Count();
+            return FromCsv<T>(rows, columnParser, sampleShape, totalSampleCount);
+        }
+
+        static DataLoader<T> FromCsv<T>(
+            IEnumerable<CsvRow> rows,
+            Func<string, T> columnParser,
+            int[] sampleShape,
+            int totalSampleCount)
+        {
             var sampleSize = sampleShape.Aggregate((v1, v2) => v1 * v2);
 
             DataBatch<T> LoadCsvData(int[] indices)
             {
-                var rows = parser.EnumerateRows(columnNames);
                 var batchSampleCount = indices.Length;
                 var data = new T[batchSampleCount * sampleSize];
                 var currentIndex = 0;
@@ -65,13 +65,13 @@ namespace SharpLearning.InputOutput.DataSources
 
                 foreach (var row in rows)
                 {
-                    if(indices.Contains(currentIndex))
+                    if (indices.Contains(currentIndex))
                     {
                         var parsedValues = row.Values
                             .Select(v => columnParser(v))
                             .ToArray();
 
-                        Array.Copy(parsedValues, 0, data, 
+                        Array.Copy(parsedValues, 0, data,
                             copyIndexStart, sampleSize);
 
                         copyIndexStart += sampleSize;
@@ -82,7 +82,6 @@ namespace SharpLearning.InputOutput.DataSources
                 return new DataBatch<T>(data, sampleShape, batchSampleCount);
             }
 
-            var totalSampleCount = parser.EnumerateRows(columnNames).Count();
             return new DataLoader<T>(LoadCsvData, totalSampleCount);
         }
     }

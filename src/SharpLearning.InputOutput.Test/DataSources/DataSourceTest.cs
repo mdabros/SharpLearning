@@ -48,16 +48,18 @@ namespace SharpLearning.InputOutput.Test.DataSources
         static Dictionary<string, DataLoader<double>> CreateDataLoaders()
         {
             // observations loader.
-            var observationsLoader = DataLoaders.FromCsvText(
-                DataSetUtilities.AptitudeData,
+            var observationsLoader = DataLoaders.FromCsv(
+                CsvParser.FromText(DataSetUtilities.AptitudeData),
                 s => CsvRowExtensions.DefaultF64Converter(s),
-                "AptitudeTestScore", "PreviousExperience_month");
+                columnNames: new[] { "AptitudeTestScore", "PreviousExperience_month" },
+                sampleShape: new[] { 2 });
 
             // targets loader.
-            var targetsLoader = DataLoaders.FromCsvText(
-                DataSetUtilities.AptitudeData,
+            var targetsLoader = DataLoaders.FromCsv(
+                CsvParser.FromText(DataSetUtilities.AptitudeData),
                 s => CsvRowExtensions.DefaultF64Converter(s),
-                "Pass");
+                columnNames: new[] { "Pass" },
+                sampleShape: new[] { 1 });
 
             var idToLoaders = new Dictionary<string, DataLoader<double>>
             {
