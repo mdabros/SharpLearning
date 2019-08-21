@@ -11,9 +11,9 @@ namespace SharpLearning.InputOutput.Test.DataSources
         [TestMethod]
         public void DataSource_Csv_GetNextBatch()
         {
-            var idToLoaders = CreateDataLoaders();
+            var idToLoader = CreateDataLoaders();
 
-            var sut = new DataSource<double>(idToLoaders, batchSize: 3, 
+            var sut = new DataSource<double>(idToLoader, batchSize: 3, 
                 shuffle: false, seed: 32);
 
             var (actual, isSweepEnd) = sut.GetNextBatch();
@@ -29,9 +29,9 @@ namespace SharpLearning.InputOutput.Test.DataSources
         [TestMethod]
         public void DataSource_Csv_GetNextBatch_Shuffle()
         {
-            var idToLoaders = CreateDataLoaders();
+            var idToLoader = CreateDataLoaders();
 
-            var sut = new DataSource<double>(idToLoaders, batchSize: 3,
+            var sut = new DataSource<double>(idToLoader, batchSize: 3,
                 shuffle: true, seed: 32);
 
             var (actual, isSweepEnd) = sut.GetNextBatch();
@@ -61,13 +61,13 @@ namespace SharpLearning.InputOutput.Test.DataSources
                 columnNames: new[] { "Pass" },
                 sampleShape: new[] { 1 });
 
-            var idToLoaders = new Dictionary<string, DataLoader<double>>
+            var idToLoader = new Dictionary<string, DataLoader<double>>
             {
                 { "observations", observationsLoader },
                 { "targets", targetsLoader },
             };
 
-            return idToLoaders;
+            return idToLoader;
         }
     }
 }
