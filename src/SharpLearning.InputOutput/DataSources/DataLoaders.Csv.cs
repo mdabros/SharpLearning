@@ -60,23 +60,23 @@ namespace SharpLearning.InputOutput.DataSources
                 var rows = parser.EnumerateRows(columnNames);
                 var batchSampleCount = indices.Length;
                 var data = new T[batchSampleCount * sampleSize];
-                var index = 0;
-                var startIndex = 0;
+                var currentIndex = 0;
+                var copyIndexStart = 0;
 
                 foreach (var row in rows)
                 {
-                    if(indices.Contains(index))
+                    if(indices.Contains(currentIndex))
                     {
-                        var transformed = row.Values
+                        var parsedValues = row.Values
                             .Select(v => columnParser(v))
                             .ToArray();
 
-                        Array.Copy(transformed, 0, data, 
-                            startIndex, sampleSize);
+                        Array.Copy(parsedValues, 0, data, 
+                            copyIndexStart, sampleSize);
 
-                        startIndex += sampleSize;
+                        copyIndexStart += sampleSize;
                     }
-                    index++;
+                    currentIndex++;
                 }
 
                 return new DataBatch<T>(data, sampleShape, batchSampleCount);
