@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.InputOutput.DataSources;
@@ -11,7 +12,7 @@ namespace SharpLearning.InputOutput.Test.DataSources
         [TestMethod]
         public void DataSource_Csv_GetNextBatch()
         {
-            var idToLoader = CreateDataLoaders();
+            var idToLoader = CreateCsvDataLoaders();
 
             var sut = new DataSource<double>(idToLoader, batchSize: 3, 
                 shuffle: false, seed: 32);
@@ -29,7 +30,7 @@ namespace SharpLearning.InputOutput.Test.DataSources
         [TestMethod]
         public void DataSource_Csv_GetNextBatch_Shuffle()
         {
-            var idToLoader = CreateDataLoaders();
+            var idToLoader = CreateCsvDataLoaders();
 
             var sut = new DataSource<double>(idToLoader, batchSize: 3,
                 shuffle: true, seed: 32);
@@ -45,7 +46,19 @@ namespace SharpLearning.InputOutput.Test.DataSources
             AssertUtilities.AssertAreEqual(expected, actual);
         }
 
-        static Dictionary<string, DataLoader<double>> CreateDataLoaders()
+        [TestMethod]
+        public void DataSource_Image_GetNextBatch()
+        {
+            // TODO: Add in-memory test 
+            var idToLoader = CreateImageDataLoaders();
+
+            var sut = new DataSource<float>(idToLoader, batchSize: 32,
+                shuffle: false, seed: 32);
+
+            var (actual, isSweepEnd) = sut.GetNextBatch();
+        }
+
+        static Dictionary<string, DataLoader<double>> CreateCsvDataLoaders()
         {
             // observations loader.
             var observationsLoader = DataLoaders.Csv.FromText(
@@ -64,6 +77,32 @@ namespace SharpLearning.InputOutput.Test.DataSources
             var idToLoader = new Dictionary<string, DataLoader<double>>
             {
                 { "observations", observationsLoader },
+                { "targets", targetsLoader },
+            };
+
+            return idToLoader;
+        }
+
+        static Dictionary<string, DataLoader<float>> CreateImageDataLoaders()
+        {
+            
+            // targets loader.
+            var targetsLoader = DataLoaders.Csv.FromParser(
+                new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t'),
+                s => float.Parse(s),
+                columnNames: new[] { "target" },
+                sampleShape: new[] { 1 });
+
+            // images loader.
+            var imageLoader = DataLoaders.Image.FromCsvParser(
+                new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t'),
+                imageNameColumnName: "filepath",
+                imageDirectoryPath: @"E:\DataSets\CIFAR10\test",
+                sampleShape: new int[] { 32, 32, 3 });
+
+            var idToLoader = new Dictionary<string, DataLoader<float>>
+            {
+                { "images", imageLoader },
                 { "targets", targetsLoader },
             };
 
