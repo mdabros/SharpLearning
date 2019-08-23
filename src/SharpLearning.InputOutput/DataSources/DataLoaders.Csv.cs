@@ -10,6 +10,9 @@ namespace SharpLearning.InputOutput.DataSources
     /// </summary>
     public static partial class DataLoaders
     {
+        /// <summary>
+        /// Load data from Csv sources.
+        /// </summary>
         public static class Csv
         {
             /// <summary>
