@@ -27,9 +27,7 @@ namespace SharpLearning.InputOutput.DataSources
                 int[] sampleShape)
             {
                 var parser = CsvParser.FromText(csvText);
-                var rows = parser.EnumerateRows(selectColumnNames);
-                var totalSampleCount = rows.Count();
-                return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
+                return FromParser(parser, columnParser, selectColumnNames, sampleShape);
             }
 
             /// <summary>
@@ -47,9 +45,7 @@ namespace SharpLearning.InputOutput.DataSources
                 int[] sampleShape)
             {
                 var parser = CsvParser.FromText(csvText);
-                var rows = parser.EnumerateRows(columnNames);
-                var totalSampleCount = rows.Count();
-                return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
+                return FromParser(parser, columnParser, columnNames, sampleShape);
             }
 
             /// <summary>
@@ -67,9 +63,7 @@ namespace SharpLearning.InputOutput.DataSources
                 int[] sampleShape)
             {
                 var parser = CsvParser.FromFile(csvFilePath);
-                var rows = parser.EnumerateRows(selectColumnNames);
-                var totalSampleCount = rows.Count();
-                return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
+                return FromParser(parser, columnParser, selectColumnNames, sampleShape);
             }
 
             /// <summary>
@@ -87,9 +81,7 @@ namespace SharpLearning.InputOutput.DataSources
                 int[] sampleShape)
             {
                 var parser = CsvParser.FromFile(csvFilePath);
-                var rows = parser.EnumerateRows(columnNames);
-                var totalSampleCount = rows.Count();
-                return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
+                return FromParser(parser, columnParser, columnNames, sampleShape);
             }
 
             /// <summary>
