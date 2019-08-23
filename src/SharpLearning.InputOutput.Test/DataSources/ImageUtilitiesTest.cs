@@ -11,6 +11,7 @@ namespace SharpLearning.InputOutput.Test.DataSources
         [TestMethod]
         public void Integration_Test()
         {
+            // TODO: Add in memory tests.
             var imageGetter = ImageUtilities.GetImageLoader<Rgb24>(@"E:\mada\Dropbox\Images\image1.JPG");
             var transforms = new ImageTransformer<Rgb24>[] 
             {

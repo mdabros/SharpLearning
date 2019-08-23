@@ -13,6 +13,31 @@ namespace SharpLearning.InputOutput.DataSources
         /// </summary>
         public static class Image
         {
+            /// <summary>
+            /// Load images from csv image name columns, and image directory path.
+            /// </summary>
+            /// <param name="csvText"></param>
+            /// <param name="imageNameColumnName"></param>
+            /// <param name="imageDirectoryPath"></param>
+            /// <param name="sampleShape"></param>
+            /// <returns></returns>
+            public static DataLoader<float> FromCsvText(string csvText,
+                string imageNameColumnName,
+                string imageDirectoryPath,
+                int[] sampleShape)
+            {
+                var parser = CsvParser.FromText(csvText);
+                return FromCsvParser(parser, imageNameColumnName, imageDirectoryPath, sampleShape);
+            }
+
+            /// <summary>
+            /// Load images from csv image name columns, and image directory path.
+            /// </summary>
+            /// <param name="csvFilePath"></param>
+            /// <param name="imageNameColumnName"></param>
+            /// <param name="imageDirectoryPath"></param>
+            /// <param name="sampleShape"></param>
+            /// <returns></returns>
             public static DataLoader<float> FromCsvFile(string csvFilePath,
                 string imageNameColumnName,
                 string imageDirectoryPath,
@@ -22,6 +47,14 @@ namespace SharpLearning.InputOutput.DataSources
                 return FromCsvParser(parser, imageNameColumnName, imageDirectoryPath, sampleShape);
             }
 
+            /// <summary>
+            /// Load images from csv image name columns, and image directory path.
+            /// </summary>
+            /// <param name="parser"></param>
+            /// <param name="imageNameColumnName"></param>
+            /// <param name="imageDirectoryPath"></param>
+            /// <param name="sampleShape"></param>
+            /// <returns></returns>
             public static DataLoader<float> FromCsvParser(CsvParser parser,
                 string imageNameColumnName,
                 string imageDirectoryPath,
@@ -34,6 +67,12 @@ namespace SharpLearning.InputOutput.DataSources
                 return FromImageFilePaths(imageFilePaths, sampleShape);
             }
 
+            /// <summary>
+            /// Load images from image file paths.
+            /// </summary>
+            /// <param name="imageFilePaths"></param>
+            /// <param name="sampleShape"></param>
+            /// <returns></returns>
             public static DataLoader<float> FromImageFilePaths(
                 string[] imageFilePaths,
                 int[] sampleShape)
