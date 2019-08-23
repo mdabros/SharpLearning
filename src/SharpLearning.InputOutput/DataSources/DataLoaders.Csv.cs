@@ -56,17 +56,17 @@ namespace SharpLearning.InputOutput.DataSources
             /// Creates a DataLoader reading from Csv Data.
             /// </summary>
             /// <typeparam name="T"></typeparam>
-            /// <param name="filePath"></param>
+            /// <param name="csvFilePath"></param>
             /// <param name="columnParser"></param>
             /// <param name="selectColumnNames"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
-            public static DataLoader<T> FromFile<T>(string filePath,
+            public static DataLoader<T> FromFile<T>(string csvFilePath,
                 Func<string, T> columnParser,
                 Func<string, bool> selectColumnNames,
                 int[] sampleShape)
             {
-                var parser = CsvParser.FromFile(filePath);
+                var parser = CsvParser.FromFile(csvFilePath);
                 var rows = parser.EnumerateRows(selectColumnNames);
                 var totalSampleCount = rows.Count();
                 return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
@@ -76,17 +76,17 @@ namespace SharpLearning.InputOutput.DataSources
             /// Creates a DataLoader reading from Csv Data.
             /// </summary>
             /// <typeparam name="T"></typeparam>
-            /// <param name="filePath"></param>
+            /// <param name="csvFilePath"></param>
             /// <param name="columnParser"></param>
             /// <param name="columnNames"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
-            public static DataLoader<T> FromFile<T>(string filePath,
+            public static DataLoader<T> FromFile<T>(string csvFilePath,
                 Func<string, T> columnParser,
                 string[] columnNames,
                 int[] sampleShape)
             {
-                var parser = CsvParser.FromFile(filePath);
+                var parser = CsvParser.FromFile(csvFilePath);
                 var rows = parser.EnumerateRows(columnNames);
                 var totalSampleCount = rows.Count();
                 return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
