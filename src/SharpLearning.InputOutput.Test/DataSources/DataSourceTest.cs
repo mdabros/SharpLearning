@@ -94,15 +94,15 @@ namespace SharpLearning.InputOutput.Test.DataSources
                 sampleShape: new[] { 1 });
 
             // images loader.
-            var imageLoader = DataLoaders.Image.FromCsvParser(
+            var imagesLoader = DataLoaders.Image.FromCsvParser(
                 new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t'),
                 imageNameColumnName: "filepath",
-                imageDirectoryPath: @"E:\DataSets\CIFAR10\test",
+                imagesDirectoryPath: @"E:\DataSets\CIFAR10\test",
                 sampleShape: new int[] { 32, 32, 3 });
 
             var idToLoader = new Dictionary<string, DataLoader<float>>
             {
-                { "images", imageLoader },
+                { "images", imagesLoader },
                 { "targets", targetsLoader },
             };
 

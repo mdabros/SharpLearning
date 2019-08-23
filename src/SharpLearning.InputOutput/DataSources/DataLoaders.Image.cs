@@ -18,16 +18,16 @@ namespace SharpLearning.InputOutput.DataSources
             /// </summary>
             /// <param name="csvText"></param>
             /// <param name="imageNameColumnName"></param>
-            /// <param name="imageDirectoryPath"></param>
+            /// <param name="imagesDirectoryPath"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
             public static DataLoader<float> FromCsvText(string csvText,
                 string imageNameColumnName,
-                string imageDirectoryPath,
+                string imagesDirectoryPath,
                 int[] sampleShape)
             {
                 var parser = CsvParser.FromText(csvText);
-                return FromCsvParser(parser, imageNameColumnName, imageDirectoryPath, sampleShape);
+                return FromCsvParser(parser, imageNameColumnName, imagesDirectoryPath, sampleShape);
             }
 
             /// <summary>
@@ -35,16 +35,16 @@ namespace SharpLearning.InputOutput.DataSources
             /// </summary>
             /// <param name="csvFilePath"></param>
             /// <param name="imageNameColumnName"></param>
-            /// <param name="imageDirectoryPath"></param>
+            /// <param name="imagesDirectoryPath"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
             public static DataLoader<float> FromCsvFile(string csvFilePath,
                 string imageNameColumnName,
-                string imageDirectoryPath,
+                string imagesDirectoryPath,
                 int[] sampleShape)
             {
                 var parser = CsvParser.FromFile(csvFilePath);
-                return FromCsvParser(parser, imageNameColumnName, imageDirectoryPath, sampleShape);
+                return FromCsvParser(parser, imageNameColumnName, imagesDirectoryPath, sampleShape);
             }
 
             /// <summary>
@@ -52,16 +52,16 @@ namespace SharpLearning.InputOutput.DataSources
             /// </summary>
             /// <param name="parser"></param>
             /// <param name="imageNameColumnName"></param>
-            /// <param name="imageDirectoryPath"></param>
+            /// <param name="imagesDirectoryPath"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
             public static DataLoader<float> FromCsvParser(CsvParser parser,
                 string imageNameColumnName,
-                string imageDirectoryPath,
+                string imagesDirectoryPath,
                 int[] sampleShape)
             {
                 var imageFilePaths = parser.EnumerateRows(imageNameColumnName)
-                    .ToStringVector().Select(filename => Path.Combine(imageDirectoryPath, filename))
+                    .ToStringVector().Select(filename => Path.Combine(imagesDirectoryPath, filename))
                     .ToArray();
 
                 return FromImageFilePaths(imageFilePaths, sampleShape);
