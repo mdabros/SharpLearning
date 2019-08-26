@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using SixLabors.ImageSharp;
@@ -13,7 +14,15 @@ namespace SharpLearning.InputOutput.DataSources
     /// <typeparam name="TPixel"></typeparam>
     /// <param name="imageGetter"></param>
     /// <returns></returns>
-    public delegate Func<Image<TPixel>> ImageTransformer<TPixel>(Func<Image<TPixel>> imageGetter)
+    public delegate ImageGetter<TPixel> ImageTransformer<TPixel>(ImageGetter<TPixel> imageGetter)
+        where TPixel : struct, IPixel<TPixel>;
+
+    /// <summary>
+    /// Image getter delegate
+    /// </summary>
+    /// <typeparam name="TPixel"></typeparam>
+    /// <returns></returns>
+    public delegate Image<TPixel> ImageGetter<TPixel>()
         where TPixel : struct, IPixel<TPixel>;
 
     /// <summary>
@@ -27,7 +36,7 @@ namespace SharpLearning.InputOutput.DataSources
         /// <typeparam name="TPixel"></typeparam>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static Func<Image<TPixel>> GetImageLoader<TPixel>(string filePath) 
+        public static ImageGetter<TPixel> GetImageLoader<TPixel>(string filePath) 
             where TPixel : struct, IPixel<TPixel>
         {
             return () => Image.Load<TPixel>(filePath);
@@ -37,13 +46,13 @@ namespace SharpLearning.InputOutput.DataSources
         /// Combines transforms.
         /// </summary>
         /// <typeparam name="TPixel"></typeparam>
-        /// <param name="imageLoader"></param>
+        /// <param name="imageGetter"></param>
         /// <param name="imageTransforms"></param>
         /// <returns></returns>
-        public static Func<Image<TPixel>> GetImageTransformer<TPixel>(Func<Image<TPixel>> imageLoader,
+        public static ImageGetter<TPixel> GetImageTransformer<TPixel>(ImageGetter<TPixel> imageGetter,
             ImageTransformer<TPixel>[] imageTransforms) where TPixel : struct, IPixel<TPixel>
         {
-            Func<Image<TPixel>> imageTransformer = imageLoader;
+            ImageGetter<TPixel> imageTransformer = imageGetter;
             foreach (var transform in imageTransforms)
             {
                 imageTransformer = transform(imageTransformer);
@@ -58,7 +67,7 @@ namespace SharpLearning.InputOutput.DataSources
         /// <typeparam name="TPixel"></typeparam>
         /// <param name="imageGetter"></param>
         /// <returns></returns>
-        public static byte[] ConvertImageToBytes<TPixel>(Func<Image<TPixel>> imageGetter)
+        public static byte[] ConvertImageToBytes<TPixel>(ImageGetter<TPixel> imageGetter)
             where TPixel : struct, IPixel<TPixel>
         {
             using (var image = imageGetter())
@@ -76,6 +85,21 @@ namespace SharpLearning.InputOutput.DataSources
         public static float[] ConvertBytesToFloat(byte[] bytes)
         {
             return bytes.Select(v => (float)v).ToArray();
+        }
+
+        /// <summary>
+        /// Enumerates a list of images filepaths.
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        /// <param name="imageFilePaths"></param>
+        /// <returns></returns>
+        public static IEnumerable<ImageGetter<TPixel>> EnumerateImages<TPixel>(string[] imageFilePaths)
+             where TPixel : struct, IPixel<TPixel>
+        {
+            foreach (var imageFilePath in imageFilePaths)
+            {
+                yield return GetImageLoader<TPixel>(imageFilePath);
+            }
         }
     }
 }

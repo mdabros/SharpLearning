@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SharpLearning.InputOutput.Csv;
@@ -21,13 +22,13 @@ namespace SharpLearning.InputOutput.DataSources
             /// <param name="imagesDirectoryPath"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
-            public static DataLoader<float> FromCsvText(string csvText,
+            public static DataLoader<float> FromCsvText<TPixel>(string csvText,
                 string imageNameColumnName,
                 string imagesDirectoryPath,
-                int[] sampleShape)
+                int[] sampleShape) where TPixel : struct, IPixel<TPixel>
             {
                 var parser = CsvParser.FromText(csvText);
-                return FromCsvParser(parser, imageNameColumnName, imagesDirectoryPath, sampleShape);
+                return FromCsvParser<TPixel>(parser, imageNameColumnName, imagesDirectoryPath, sampleShape);
             }
 
             /// <summary>
@@ -38,13 +39,13 @@ namespace SharpLearning.InputOutput.DataSources
             /// <param name="imagesDirectoryPath"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
-            public static DataLoader<float> FromCsvFile(string csvFilePath,
+            public static DataLoader<float> FromCsvFile<TPixel>(string csvFilePath,
                 string imageNameColumnName,
                 string imagesDirectoryPath,
-                int[] sampleShape)
+                int[] sampleShape) where TPixel : struct, IPixel<TPixel>
             {
                 var parser = CsvParser.FromFile(csvFilePath);
-                return FromCsvParser(parser, imageNameColumnName, imagesDirectoryPath, sampleShape);
+                return FromCsvParser<TPixel>(parser, imageNameColumnName, imagesDirectoryPath, sampleShape);
             }
 
             /// <summary>
@@ -55,16 +56,17 @@ namespace SharpLearning.InputOutput.DataSources
             /// <param name="imagesDirectoryPath"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
-            public static DataLoader<float> FromCsvParser(CsvParser parser,
+            public static DataLoader<float> FromCsvParser<TPixel>(CsvParser parser,
                 string imageNameColumnName,
                 string imagesDirectoryPath,
-                int[] sampleShape)
+                int[] sampleShape) where TPixel : struct, IPixel<TPixel>
             {
                 var imageFilePaths = parser.EnumerateRows(imageNameColumnName)
                     .ToStringVector().Select(filename => Path.Combine(imagesDirectoryPath, filename))
                     .ToArray();
 
-                return FromImageFilePaths(imageFilePaths, sampleShape);
+                var imageGetters = ImageUtilities.EnumerateImages<TPixel>(imageFilePaths);
+                return FromImageGetters(imageGetters, sampleShape);
             }
 
             /// <summary>
@@ -73,9 +75,9 @@ namespace SharpLearning.InputOutput.DataSources
             /// <param name="imageFilePaths"></param>
             /// <param name="sampleShape"></param>
             /// <returns></returns>
-            public static DataLoader<float> FromImageFilePaths(
-                string[] imageFilePaths,
-                int[] sampleShape)
+            public static DataLoader<float> FromImageGetters<TPixel>(
+                IEnumerable<ImageGetter<TPixel>> imageGetters,
+                int[] sampleShape) where TPixel : struct, IPixel<TPixel>
             {
                 var sampleSize = sampleShape.Aggregate((v1, v2) => v1 * v2);
 
@@ -86,13 +88,12 @@ namespace SharpLearning.InputOutput.DataSources
                     var currentIndex = 0;
                     var copyIndexStart = 0;
 
-                    foreach (var imageFilePath in imageFilePaths)
+                    foreach (var imageGetter in imageGetters)
                     {
                         if (indices.Contains(currentIndex))
                         {
                             // TODO: Add conversion func.to select byte, float, double, etc.
                             // TODO: Consider augmentations.
-                            var imageGetter = ImageUtilities.GetImageLoader<Rgba32>(imageFilePath);
                             var bytes = ImageUtilities.ConvertImageToBytes(imageGetter);
                             var floats = ImageUtilities.ConvertBytesToFloat(bytes);
 
@@ -106,7 +107,7 @@ namespace SharpLearning.InputOutput.DataSources
                     return new DataBatch<float>(data, sampleShape, batchSampleCount);
                 }
 
-                var totalSampleCount = imageFilePaths.Length;
+                var totalSampleCount = imageGetters.Count();
                 return new DataLoader<float>(LoadImageData, totalSampleCount);
             }
         }

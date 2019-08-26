@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.InputOutput.DataSources;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace SharpLearning.InputOutput.Test.DataSources
 {
@@ -94,7 +95,7 @@ namespace SharpLearning.InputOutput.Test.DataSources
                 sampleShape: new[] { 1 });
 
             // images loader.
-            var imagesLoader = DataLoaders.Image.FromCsvParser(
+            var imagesLoader = DataLoaders.Image.FromCsvParser<Rgba32>(
                 new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t'),
                 imageNameColumnName: "filepath",
                 imagesDirectoryPath: @"E:\DataSets\CIFAR10\test",

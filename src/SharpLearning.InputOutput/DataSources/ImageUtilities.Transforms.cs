@@ -23,7 +23,7 @@ namespace SharpLearning.InputOutput.DataSources
             /// <param name="width"></param>
             /// <param name="height"></param>
             /// <returns></returns>
-            public static Func<Image<TPixel>> Resize<TPixel>(Func<Image<TPixel>> imageGetter, int width, int height)
+            public static ImageGetter<TPixel> Resize<TPixel>(ImageGetter<TPixel> imageGetter, int width, int height)
                 where TPixel : struct, IPixel<TPixel>
             {
                 Image<TPixel> Transform()
@@ -42,7 +42,7 @@ namespace SharpLearning.InputOutput.DataSources
             /// <param name="imageGetter"></param>
             /// <param name="degrees"></param>
             /// <returns></returns>
-            public static Func<Image<TPixel>> Rotate<TPixel>(Func<Image<TPixel>> imageGetter, float degrees)
+            public static ImageGetter<TPixel> Rotate<TPixel>(ImageGetter<TPixel> imageGetter, float degrees)
                 where TPixel : struct, IPixel<TPixel>
             {
                 Image<TPixel> Transform()
