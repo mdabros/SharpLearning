@@ -18,7 +18,7 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="columnParser"></param>
         /// <param name="sampleShape"></param>
         /// <returns></returns>
-        public static DataLoader<T> ToDataLoader<T>(
+        public static DataLoader<T> ToCsvDataLoader<T>(
             this IEnumerable<CsvRow> rows,
             Func<string, T> columnParser,
             params int[] sampleShape)

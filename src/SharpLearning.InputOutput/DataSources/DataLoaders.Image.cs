@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace SharpLearning.InputOutput.DataSources
@@ -8,21 +10,67 @@ namespace SharpLearning.InputOutput.DataSources
     public static partial class DataLoaders
     {
         /// <summary>
+        /// Enumerates a list of image filepaths.
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        /// <param name="imageFilePaths"></param>
+        /// <returns></returns>
+        public static IEnumerable<ImageGetter<TPixel>> EnumerateImages<TPixel>(IEnumerable<string> imageFilePaths)
+             where TPixel : struct, IPixel<TPixel>
+        {
+            foreach (var imageFilePath in imageFilePaths)
+            {
+                yield return () => Image.Load<TPixel>(imageFilePath);
+            }
+        }
+
+        /// <summary>
+        /// Enumerates a list of byte array images.
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        /// <param name="arrays"></param>
+        /// <returns></returns>
+        public static IEnumerable<ImageGetter<TPixel>> EnumerateImages<TPixel>(IEnumerable<byte[]> arrays)
+             where TPixel : struct, IPixel<TPixel>
+        {
+            foreach (var array in arrays)
+            {
+                yield return () => Image.Load<TPixel>(array);
+            }
+        }
+
+        /// <summary>
+        /// Enumerates a list of stream images.
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        /// <param name="streams"></param>
+        /// <returns></returns>
+        public static IEnumerable<ImageGetter<TPixel>> EnumerateImages<TPixel>(IEnumerable<Stream> streams)
+             where TPixel : struct, IPixel<TPixel>
+        {
+            foreach (var stream in streams)
+            {
+                yield return () => Image.Load<TPixel>(stream);
+            }
+        }
+        
+        /// <summary>
         /// Creates DataLoader from ImageGetters.
         /// </summary>
         /// <param name="imageGetters"></param>
         /// <param name="sampleShape"></param>
         /// <returns></returns>
-        public static DataLoader<float> ToDataLoader<TPixel>(
+        public static DataLoader<TData> ToImageDataLoader<TPixel, TData>(
             this IEnumerable<ImageGetter<TPixel>> imageGetters,
-            int[] sampleShape) where TPixel : struct, IPixel<TPixel>
+            Func<byte[], TData[]> pixelConverter,
+            params int[] sampleShape) where TPixel : struct, IPixel<TPixel>
         {
             var sampleSize = sampleShape.Aggregate((v1, v2) => v1 * v2);
 
-            DataBatch<float> LoadImageData(int[] indices)
+            DataBatch<TData> LoadImageData(int[] indices)
             {
                 var batchSampleCount = indices.Length;
-                var data = new float[batchSampleCount * sampleSize];
+                var data = new TData[batchSampleCount * sampleSize];
                 var currentIndex = 0;
                 var copyIndexStart = 0;
 
@@ -30,23 +78,20 @@ namespace SharpLearning.InputOutput.DataSources
                 {
                     if (indices.Contains(currentIndex))
                     {
-                        // TODO: Add conversion func.to select byte, float, double, etc.
-                        // TODO: Consider augmentations.
-                        var bytes = ImageUtilities.ConvertImageToBytes(imageGetter);
-                        var floats = ImageUtilities.ConvertBytesToFloat(bytes);
-
-                        Array.Copy(floats, 0, data, copyIndexStart, sampleSize);
+                        var bytes = ImageSharpUtilities.ToBytes(imageGetter);
+                        var imageData = pixelConverter(bytes);
+                        Array.Copy(imageData, 0, data, copyIndexStart, sampleSize);
 
                         copyIndexStart += sampleSize;
                     }
                     currentIndex++;
                 }
 
-                return new DataBatch<float>(data, sampleShape, batchSampleCount);
+                return new DataBatch<TData>(data, sampleShape, batchSampleCount);
             }
 
             var totalSampleCount = imageGetters.Count();
-            return new DataLoader<float>(LoadImageData, totalSampleCount);
+            return new DataLoader<TData>(LoadImageData, totalSampleCount);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -65,12 +66,12 @@ namespace SharpLearning.InputOutput.Test.DataSources
             // observations loader.
             var observationsLoader = CsvParser.FromText(DataSetUtilities.AptitudeData)
                 .EnumerateRows("AptitudeTestScore", "PreviousExperience_month")
-                .ToDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 2);
+                .ToCsvDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 2);
 
             // targets loader.
             var targetsLoader = CsvParser.FromText(DataSetUtilities.AptitudeData)
                 .EnumerateRows("Pass")
-                .ToDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 1);
+                .ToCsvDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 1);
 
             var idToLoader = new Dictionary<string, DataLoader<double>>
             {
@@ -83,21 +84,23 @@ namespace SharpLearning.InputOutput.Test.DataSources
 
         static Dictionary<string, DataLoader<float>> CreateImageDataLoaders()
         {
-
-            // targets loader.
-            var targetsLoader = new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t')
+            // targets data loader.
+            var targetsLoader = CsvParser.FromFile(@"E:\DataSets\CIFAR10\test_map.csv", separator: '\t')
                 .EnumerateRows("target")
-                .ToDataLoader(columnParser: s => float.Parse(s), sampleShape: 1);
+                .ToCsvDataLoader(columnParser: s => float.Parse(s), sampleShape: 1);
 
-            // images loader.
-            var imagesLoader = Images.FromCsvParser<Rgba32>(
-                new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t'),
-                imageNameColumnName: "filepath",
-                imagesDirectoryPath: @"E:\DataSets\CIFAR10\test")
-                // Add augmentations. TODO: Add augmentation class (random element), not just fixed transform.
-                .Select(i => i.Resize(20, 20).Rotate(degrees: 90))
-                // Create DataLoader.
-                .ToDataLoader(sampleShape: new int[] { 20, 20, 3 });
+            // enumerate images.
+            var imagesDirectoryPath = @"E:\DataSets\CIFAR10\test";
+            var imageFilePaths = CsvParser.FromFile(@"E:\DataSets\CIFAR10\test_map.csv", separator: '\t')
+                .EnumerateRows("filepath").ToStringVector()
+                .Select(filename => Path.Combine(imagesDirectoryPath, filename));
+
+            // images data loader.
+            var random = new Random(Seed: 232);
+            var imagesLoader = DataLoaders.EnumerateImages<Rgba32>(imageFilePaths)
+                // Add augmentations
+                .Select(i => i.Resize(20, 20).Rotate(maxDegrees: 20, random))
+                .ToImageDataLoader(pixelConverter: Converters.ToFloat, sampleShape: new[] { 20, 20, 3 });
 
             var idToLoader = new Dictionary<string, DataLoader<float>>
             {
