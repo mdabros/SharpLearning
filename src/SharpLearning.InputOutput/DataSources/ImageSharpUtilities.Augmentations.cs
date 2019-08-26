@@ -118,7 +118,7 @@ namespace SharpLearning.InputOutput.DataSources
 
             Image<TPixel> Transform()
             {
-                var zoom = random.Sample(maxZoom);
+                var zoom = random.Sample(1, maxZoom);
                 var image = imageGetter();
 
                 var width = image.Width;
@@ -129,6 +129,7 @@ namespace SharpLearning.InputOutput.DataSources
                 var resizeHeight = (int)(height * zoom);
 
                 // enlarge and crop to zoom.
+                // TODO: Add random topleft for crop (currently always 0.0).
                 image.Mutate(x => x.Resize(resizeWidth, resizeHeight).Crop(width, height));
                 return image;
             }
