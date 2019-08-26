@@ -11,156 +11,48 @@ namespace SharpLearning.InputOutput.DataSources
     public static partial class DataLoaders
     {
         /// <summary>
-        /// Load data from Csv sources.
+        /// Creates DataLoader from CsvRows.
         /// </summary>
-        public static class Csv
+        /// <typeparam name="T"></typeparam>
+        /// <param name="rows"></param>
+        /// <param name="columnParser"></param>
+        /// <param name="sampleShape"></param>
+        /// <returns></returns>
+        public static DataLoader<T> ToDataLoader<T>(
+            this IEnumerable<CsvRow> rows,
+            Func<string, T> columnParser,
+            params int[] sampleShape)
         {
-            /// <summary>
-            /// Creates a DataLoader reading from Csv Data.
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="csvText"></param>
-            /// <param name="columnParser"></param>
-            /// <param name="selectColumnNames"></param>
-            /// <param name="sampleShape"></param>
-            /// <returns></returns>
-            public static DataLoader<T> FromText<T>(string csvText,
-                Func<string, T> columnParser,
-                Func<string, bool> selectColumnNames,
-                int[] sampleShape)
-            {
-                var parser = CsvParser.FromText(csvText);
-                return FromParser(parser, columnParser, selectColumnNames, sampleShape);
-            }
+            var sampleSize = sampleShape.Aggregate((v1, v2) => v1 * v2);
 
-            /// <summary>
-            /// Creates a DataLoader reading from Csv Data.
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="csvText"></param>
-            /// <param name="columnParser"></param>
-            /// <param name="columnNames"></param>
-            /// <param name="sampleShape"></param>
-            /// <returns></returns>
-            public static DataLoader<T> FromText<T>(string csvText,
-                Func<string, T> columnParser,
-                string[] columnNames,
-                int[] sampleShape)
+            DataBatch<T> LoadCsvData(int[] indices)
             {
-                var parser = CsvParser.FromText(csvText);
-                return FromParser(parser, columnParser, columnNames, sampleShape);
-            }
+                var batchSampleCount = indices.Length;
+                var data = new T[batchSampleCount * sampleSize];
+                var currentIndex = 0;
+                var copyIndexStart = 0;
 
-            /// <summary>
-            /// Creates a DataLoader reading from Csv Data.
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="csvFilePath"></param>
-            /// <param name="columnParser"></param>
-            /// <param name="selectColumnNames"></param>
-            /// <param name="sampleShape"></param>
-            /// <returns></returns>
-            public static DataLoader<T> FromFile<T>(string csvFilePath,
-                Func<string, T> columnParser,
-                Func<string, bool> selectColumnNames,
-                int[] sampleShape)
-            {
-                var parser = CsvParser.FromFile(csvFilePath);
-                return FromParser(parser, columnParser, selectColumnNames, sampleShape);
-            }
-
-            /// <summary>
-            /// Creates a DataLoader reading from Csv Data.
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="csvFilePath"></param>
-            /// <param name="columnParser"></param>
-            /// <param name="columnNames"></param>
-            /// <param name="sampleShape"></param>
-            /// <returns></returns>
-            public static DataLoader<T> FromFile<T>(string csvFilePath,
-                Func<string, T> columnParser,
-                string[] columnNames,
-                int[] sampleShape)
-            {
-                var parser = CsvParser.FromFile(csvFilePath);
-                return FromParser(parser, columnParser, columnNames, sampleShape);
-            }
-
-            /// <summary>
-            /// Creates a DataLoader reading from Csv Data.
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="parser"></param>
-            /// <param name="columnParser"></param>
-            /// <param name="selectColumnNames"></param>
-            /// <param name="sampleShape"></param>
-            /// <returns></returns>
-            public static DataLoader<T> FromParser<T>(CsvParser parser,
-                Func<string, T> columnParser,
-                Func<string, bool> selectColumnNames,
-                int[] sampleShape)
-            {
-                var rows = parser.EnumerateRows(selectColumnNames);
-                var totalSampleCount = rows.Count();
-                return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
-            }
-
-            /// <summary>
-            /// Creates a DataLoader reading from Csv Data.
-            /// </summary>
-            /// <typeparam name="T"></typeparam>
-            /// <param name="parser"></param>
-            /// <param name="columnParser"></param>
-            /// <param name="columnNames"></param>
-            /// <param name="sampleShape"></param>
-            /// <returns></returns>
-            public static DataLoader<T> FromParser<T>(CsvParser parser,
-                Func<string, T> columnParser,
-                string[] columnNames,
-                int[] sampleShape)
-            {
-                var rows = parser.EnumerateRows(columnNames);
-                var totalSampleCount = rows.Count();
-                return FromCsvRows<T>(rows, columnParser, sampleShape, totalSampleCount);
-            }
-
-            static DataLoader<T> FromCsvRows<T>(
-                IEnumerable<CsvRow> rows,
-                Func<string, T> columnParser,
-                int[] sampleShape,
-                int totalSampleCount)
-            {
-                var sampleSize = sampleShape.Aggregate((v1, v2) => v1 * v2);
-
-                DataBatch<T> LoadCsvData(int[] indices)
+                foreach (var row in rows)
                 {
-                    var batchSampleCount = indices.Length;
-                    var data = new T[batchSampleCount * sampleSize];
-                    var currentIndex = 0;
-                    var copyIndexStart = 0;
-
-                    foreach (var row in rows)
+                    if (indices.Contains(currentIndex))
                     {
-                        if (indices.Contains(currentIndex))
-                        {
-                            var parsedValues = row.Values
-                                .Select(v => columnParser(v))
-                                .ToArray();
+                        var parsedValues = row.Values
+                            .Select(v => columnParser(v))
+                            .ToArray();
 
-                            Array.Copy(parsedValues, 0, data,
-                                copyIndexStart, sampleSize);
+                        Array.Copy(parsedValues, 0, data,
+                            copyIndexStart, sampleSize);
 
-                            copyIndexStart += sampleSize;
-                        }
-                        currentIndex++;
+                        copyIndexStart += sampleSize;
                     }
-
-                    return new DataBatch<T>(data, sampleShape, batchSampleCount);
+                    currentIndex++;
                 }
 
-                return new DataLoader<T>(LoadCsvData, totalSampleCount);
+                return new DataBatch<T>(data, sampleShape, batchSampleCount);
             }
+
+            var totalSampleCount = rows.Count();
+            return new DataLoader<T>(LoadCsvData, totalSampleCount);
         }
     }
 }

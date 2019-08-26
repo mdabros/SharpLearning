@@ -63,18 +63,14 @@ namespace SharpLearning.InputOutput.Test.DataSources
         static Dictionary<string, DataLoader<double>> CreateCsvDataLoaders()
         {
             // observations loader.
-            var observationsLoader = DataLoaders.Csv.FromText(
-                DataSetUtilities.AptitudeData,
-                s => CsvRowExtensions.DefaultF64Converter(s),
-                columnNames: new[] { "AptitudeTestScore", "PreviousExperience_month" },
-                sampleShape: new[] { 2 });
+            var observationsLoader = CsvParser.FromText(DataSetUtilities.AptitudeData)
+                .EnumerateRows("AptitudeTestScore", "PreviousExperience_month")
+                .ToDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 2);
 
             // targets loader.
-            var targetsLoader = DataLoaders.Csv.FromText(
-                DataSetUtilities.AptitudeData,
-                s => CsvRowExtensions.DefaultF64Converter(s),
-                columnNames: new[] { "Pass" },
-                sampleShape: new[] { 1 });
+            var targetsLoader = CsvParser.FromText(DataSetUtilities.AptitudeData)
+                .EnumerateRows("Pass")
+                .ToDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 1);
 
             var idToLoader = new Dictionary<string, DataLoader<double>>
             {
@@ -87,13 +83,11 @@ namespace SharpLearning.InputOutput.Test.DataSources
 
         static Dictionary<string, DataLoader<float>> CreateImageDataLoaders()
         {
-            
+
             // targets loader.
-            var targetsLoader = DataLoaders.Csv.FromParser(
-                new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t'),
-                s => float.Parse(s),
-                columnNames: new[] { "target" },
-                sampleShape: new[] { 1 });
+            var targetsLoader = new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t')
+                .EnumerateRows("target")
+                .ToDataLoader(columnParser: s => float.Parse(s), sampleShape: 1);
 
             // images loader.
             var imagesLoader = Images.FromCsvParser<Rgba32>(
