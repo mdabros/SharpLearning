@@ -104,6 +104,38 @@ namespace SharpLearning.InputOutput.DataSources
         }
 
         /// <summary>
+        /// Zoom to alter the image. 
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        /// <param name="imageGetter"></param>
+        /// <param name="maxZoom">minimum value is 1.0</param>
+        /// <param name="random"></param>
+        /// <returns></returns>
+        public static ImageGetter<TPixel> Zoom<TPixel>(this ImageGetter<TPixel> imageGetter, float maxZoom, Random random)
+            where TPixel : struct, IPixel<TPixel>
+        {
+            if (maxZoom < 1) throw new ArgumentException("Zoom must be at least 1.0");
+
+            Image<TPixel> Transform()
+            {
+                var zoom = random.Sample(maxZoom);
+                var image = imageGetter();
+
+                var width = image.Width;
+                var height = image.Height;
+
+                // trunk 
+                var resizeWidth = (int)(width * zoom);
+                var resizeHeight = (int)(height * zoom);
+
+                // enlarge and crop to zoom.
+                image.Mutate(x => x.Resize(resizeWidth, resizeHeight).Crop(width, height));
+                return image;
+            }
+            return () => Transform();
+        }
+
+        /// <summary>
         /// Custom operation.
         /// </summary>
         /// <typeparam name="TPixel"></typeparam>
