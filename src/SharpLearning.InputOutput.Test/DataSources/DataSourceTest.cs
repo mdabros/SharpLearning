@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
 using SharpLearning.InputOutput.DataSources;
@@ -95,11 +96,14 @@ namespace SharpLearning.InputOutput.Test.DataSources
                 sampleShape: new[] { 1 });
 
             // images loader.
-            var imagesLoader = DataLoaders.Image.FromCsvParser<Rgba32>(
+            var imagesLoader = Images.FromCsvParser<Rgba32>(
                 new CsvParser(() => new StreamReader(@"E:\DataSets\CIFAR10\test_map.csv"), separator: '\t'),
                 imageNameColumnName: "filepath",
-                imagesDirectoryPath: @"E:\DataSets\CIFAR10\test",
-                sampleShape: new int[] { 32, 32, 3 });
+                imagesDirectoryPath: @"E:\DataSets\CIFAR10\test")
+                // Add augmentations. TODO: Add augmentation class (random element), not just fixed transform.
+                .Select(i => i.Resize(20, 20).Rotate(degrees: 90))
+                // Create DataLoader.
+                .ToDataLoader(sampleShape: new int[] { 20, 20, 3 });
 
             var idToLoader = new Dictionary<string, DataLoader<float>>
             {

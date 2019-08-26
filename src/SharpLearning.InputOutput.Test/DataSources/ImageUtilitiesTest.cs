@@ -15,8 +15,8 @@ namespace SharpLearning.InputOutput.Test.DataSources
             var imageGetter = ImageUtilities.GetImageLoader<Rgb24>(@"E:\mada\Dropbox\Images\image1.JPG");
             var transforms = new ImageTransformer<Rgb24>[] 
             {
-                getter => ImageUtilities.Transforms.Resize(getter, 200, 200),
-                getter => ImageUtilities.Transforms.Rotate(getter, 90)
+                getter => ImageUtilities.Resize(getter, 200, 200),
+                getter => ImageUtilities.Rotate(getter, 90)
             };
 
             var imageTransformer = ImageUtilities.GetImageTransformer(imageGetter, transforms);
