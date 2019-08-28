@@ -25,7 +25,7 @@ namespace SharpLearning.DataSource
         {
             Image<TPixel> Transform()
             {
-                var degrees = random.Sample(maxDegrees);
+                var degrees = random.SampleUniform(0, maxDegrees);
                 var image = imageGetter();
                 image.Mutate(x => x.Rotate(degrees));
                 return image;
@@ -74,8 +74,8 @@ namespace SharpLearning.DataSource
         {
             Image<TPixel> Transform()
             {
-                var degreesX = random.Sample(maxDegreesX);
-                var degreesY = random.Sample(maxDegreesY);
+                var degreesX = random.SampleUniform(0, maxDegreesX);
+                var degreesY = random.SampleUniform(0, maxDegreesY);
 
                 var image = imageGetter();
                 image.Mutate(x => x.Skew(degreesX, degreesY));
@@ -106,15 +106,15 @@ namespace SharpLearning.DataSource
                 var height = image.Height;
 
                 // Enlarge width/height, keep ratio.
-                var scale = random.Sample(1, maxZoom);
+                var scale = random.SampleUniform(1, maxZoom);
                 var resizeWidth = (int)Math.Round(width * scale);
                 var resizeHeight = (int)Math.Round(height * scale);
 
                 // Find random crop location to get original size.
                 var maxX = resizeWidth - width;
                 var maxY = resizeHeight - height;
-                var x = (int)Math.Round(random.Sample(0, maxX));
-                var y = (int)Math.Round(random.Sample(0, maxY));
+                var x = (int)Math.Round(random.SampleUniform(0, maxX));
+                var y = (int)Math.Round(random.SampleUniform(0, maxY));
                 var cropRectangle = new Rectangle(x, y, width, height);
 
                 // Enlarge and crop to zoom.                
@@ -141,7 +141,7 @@ namespace SharpLearning.DataSource
         {
             Image<TPixel> Transform()
             {
-                var amount = random.Sample(minAmount, maxAmount);
+                var amount = random.SampleUniform(minAmount, maxAmount);
                 var image = imageGetter();
                 image.Mutate(x => x.Brightness(amount));
                 return image;
