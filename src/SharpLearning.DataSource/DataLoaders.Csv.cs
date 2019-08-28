@@ -10,7 +10,7 @@ namespace SharpLearning.DataSource
     public static partial class DataLoaders
     {
         /// <summary>
-        /// Creates DataLoader from CsvRows.
+        /// Creates DataLoader from csv rows.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="rows"></param>
