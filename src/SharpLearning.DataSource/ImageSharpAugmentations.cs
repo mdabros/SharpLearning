@@ -7,9 +7,9 @@ using SixLabors.Primitives;
 namespace SharpLearning.DataSource
 {
     /// <summary>
-    /// Methods for handling images via ImageSharp.
+    /// Image augmentation methods using ImageSharp.
     /// </summary>
-    public static partial class ImageSharpUtilities
+    public static class ImageSharpAugmentations
     {
         /// <summary>
         /// Rotate the image.
@@ -23,14 +23,14 @@ namespace SharpLearning.DataSource
             float maxDegrees, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
-            Image<TPixel> Transform()
+            Image<TPixel> Augment()
             {
                 var degrees = random.SampleUniform(0, maxDegrees);
                 var image = imageGetter();
                 image.Mutate(x => x.Rotate(degrees));
                 return image;
             }
-            return () => Transform();
+            return () => Augment();
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace SharpLearning.DataSource
             FlipMode flipMode, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
-            Image<TPixel> Transform()
+            Image<TPixel> Augment()
             {
                 var flip = random.NextDouble() > 0.5;
                 var image = imageGetter();
@@ -56,7 +56,7 @@ namespace SharpLearning.DataSource
 
                 return image;
             }
-            return () => Transform();
+            return () => Augment();
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace SharpLearning.DataSource
             float maxDegreesX, float maxDegreesY, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
-            Image<TPixel> Transform()
+            Image<TPixel> Augment()
             {
                 var degreesX = random.SampleUniform(0, maxDegreesX);
                 var degreesY = random.SampleUniform(0, maxDegreesY);
@@ -82,7 +82,7 @@ namespace SharpLearning.DataSource
 
                 return image;
             }
-            return () => Transform();
+            return () => Augment();
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace SharpLearning.DataSource
         {
             if (maxZoom < 1) throw new ArgumentException("Zoom must be at least 1.0");
 
-            Image<TPixel> Transform()
+            Image<TPixel> Augment()
             {
                 var image = imageGetter();
                 var width = image.Width;
@@ -123,7 +123,7 @@ namespace SharpLearning.DataSource
 
                 return image;
             }
-            return () => Transform();
+            return () => Augment();
         }
 
         /// <summary>
@@ -139,14 +139,14 @@ namespace SharpLearning.DataSource
             float minAmount, float maxAmount, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
-            Image<TPixel> Transform()
+            Image<TPixel> Augment()
             {
                 var amount = random.SampleUniform(minAmount, maxAmount);
                 var image = imageGetter();
                 image.Mutate(x => x.Brightness(amount));
                 return image;
             }
-            return () => Transform();
+            return () => Augment();
         }
 
         /// <summary>
@@ -160,13 +160,13 @@ namespace SharpLearning.DataSource
             Action<Image<TPixel>> operation)
             where TPixel : struct, IPixel<TPixel>
         {
-            Image<TPixel> Transform()
+            Image<TPixel> Augment()
             {
                 var image = imageGetter();
                 image.Mutate(x => x.Apply(operation));
                 return image;
             }
-            return () => Transform();
+            return () => Augment();
         }
     }
 }

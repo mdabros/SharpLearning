@@ -5,9 +5,9 @@ using SixLabors.ImageSharp.Processing;
 namespace SharpLearning.DataSource
 {
     /// <summary>
-    /// Methods for handling images via ImageSharp.
+    /// Image trandform methods using ImageSharp.
     /// </summary>
-    public static partial class ImageSharpUtilities
+    public static class ImageSharpTransforms
     {
         /// <summary>
         /// 

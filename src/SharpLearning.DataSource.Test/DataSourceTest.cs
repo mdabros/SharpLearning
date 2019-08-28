@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.InputOutput.Csv;
-using SharpLearning.DataSource;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace SharpLearning.DataSource.Test.DataSources
