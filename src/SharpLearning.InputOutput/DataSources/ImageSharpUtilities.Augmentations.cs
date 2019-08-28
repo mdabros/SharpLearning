@@ -35,29 +35,6 @@ namespace SharpLearning.InputOutput.DataSources
         }
 
         /// <summary>
-        /// Alter the brightness component of the image.
-        /// </summary>
-        /// <typeparam name="TPixel"></typeparam>
-        /// <param name="imageGetter"></param>
-        /// <param name="minAmount"></param>
-        /// <param name="maxAmount"></param>
-        /// <param name="random"></param>
-        /// <returns></returns>
-        public static ImageGetter<TPixel> Brightness<TPixel>(this ImageGetter<TPixel> imageGetter,
-            float minAmount, float maxAmount, Random random)
-            where TPixel : struct, IPixel<TPixel>
-        {
-            Image<TPixel> Transform()
-            {
-                var amount = random.Sample(minAmount, maxAmount);
-                var image = imageGetter();
-                image.Mutate(x => x.Brightness(amount));
-                return image;
-            }
-            return () => Transform();
-        }
-
-        /// <summary>
         /// Flip image, in selected mode, randomly.
         /// </summary>
         /// <typeparam name="TPixel"></typeparam>
@@ -145,6 +122,29 @@ namespace SharpLearning.InputOutput.DataSources
                 image.Mutate(v => v.Resize(resizeWidth, resizeHeight)
                     .Crop(cropRectangle));
 
+                return image;
+            }
+            return () => Transform();
+        }
+
+        /// <summary>
+        /// Alter the brightness component of the image.
+        /// </summary>
+        /// <typeparam name="TPixel"></typeparam>
+        /// <param name="imageGetter"></param>
+        /// <param name="minAmount"></param>
+        /// <param name="maxAmount"></param>
+        /// <param name="random"></param>
+        /// <returns></returns>
+        public static ImageGetter<TPixel> Brightness<TPixel>(this ImageGetter<TPixel> imageGetter,
+            float minAmount, float maxAmount, Random random)
+            where TPixel : struct, IPixel<TPixel>
+        {
+            Image<TPixel> Transform()
+            {
+                var amount = random.Sample(minAmount, maxAmount);
+                var image = imageGetter();
+                image.Mutate(x => x.Brightness(amount));
                 return image;
             }
             return () => Transform();
