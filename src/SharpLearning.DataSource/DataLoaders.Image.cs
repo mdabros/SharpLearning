@@ -78,10 +78,12 @@ namespace SharpLearning.DataSource
                 {
                     if (indices.Contains(currentIndex))
                     {
-                        var bytes = ImageSharpUtilities.ToBytes(imageGetter);
-                        var imageData = pixelConverter(bytes);
-                        Array.Copy(imageData, 0, data, copyIndexStart, sampleSize);
-
+                        using(var image = imageGetter())
+                        {
+                            var bytes = image.ToBytes();
+                            var imageData = pixelConverter(bytes);
+                            Array.Copy(imageData, 0, data, copyIndexStart, sampleSize);
+                        }
                         copyIndexStart += sampleSize;
                     }
                     currentIndex++;

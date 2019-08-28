@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -13,16 +14,9 @@ namespace SharpLearning.DataSource
         /// Converts image to byte array.
         /// </summary>
         /// <typeparam name="TPixel"></typeparam>
-        /// <param name="imageGetter"></param>
+        /// <param name="image"></param>
         /// <returns></returns>
-        public static byte[] ToBytes<TPixel>(ImageGetter<TPixel> imageGetter)
-            where TPixel : struct, IPixel<TPixel>
-        {
-            using (var image = imageGetter())
-            {
-                var bytes = MemoryMarshal.AsBytes(image.GetPixelSpan()).ToArray();
-                return bytes;
-            }
-        }
+        public static byte[] ToBytes<TPixel>(this Image<TPixel> image) where TPixel : struct, IPixel<TPixel>
+            => MemoryMarshal.AsBytes(image.GetPixelSpan()).ToArray();
     }
 }
