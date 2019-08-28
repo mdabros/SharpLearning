@@ -19,7 +19,7 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="sampleShape"></param>
         /// <returns></returns>
         public static DataLoader<T> ToCsvDataLoader<T>(
-            this IEnumerable<CsvRow> rows,
+            this IEnumerable<IReadOnlyList<string>> rows,
             Func<string, T> columnParser,
             params int[] sampleShape)
         {
@@ -36,7 +36,7 @@ namespace SharpLearning.InputOutput.DataSources
                 {
                     if (indices.Contains(currentIndex))
                     {
-                        var parsedValues = row.Values
+                        var parsedValues = row
                             .Select(v => columnParser(v))
                             .ToArray();
 

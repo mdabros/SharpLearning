@@ -65,12 +65,12 @@ namespace SharpLearning.InputOutput.Test.DataSources
         {
             // observations loader.
             var observationsLoader = CsvParser.FromText(DataSetUtilities.AptitudeData)
-                .EnumerateRows("AptitudeTestScore", "PreviousExperience_month")
+                .EnumerateRows("AptitudeTestScore", "PreviousExperience_month").Select(v => v.Values)
                 .ToCsvDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 2);
 
             // targets loader.
             var targetsLoader = CsvParser.FromText(DataSetUtilities.AptitudeData)
-                .EnumerateRows("Pass")
+                .EnumerateRows("Pass").Select(v => v.Values)
                 .ToCsvDataLoader(columnParser: s => CsvRowExtensions.DefaultF64Converter(s), sampleShape: 1);
 
             var idToLoader = new Dictionary<string, DataLoader<double>>
@@ -86,7 +86,7 @@ namespace SharpLearning.InputOutput.Test.DataSources
         {
             // targets data loader.
             var targetsLoader = CsvParser.FromFile(@"E:\DataSets\CIFAR10\test_map.csv", separator: '\t')
-                .EnumerateRows("target")
+                .EnumerateRows("target").Select(v => v.Values)
                 .ToCsvDataLoader(columnParser: s => float.Parse(s), sampleShape: 1);
 
             // enumerate images.
