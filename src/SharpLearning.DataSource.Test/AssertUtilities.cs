@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SharpLearning.DataSource;
 
 namespace SharpLearning.DataSource.Test
 {
@@ -17,7 +16,7 @@ namespace SharpLearning.DataSource.Test
             foreach (var key in expected.Keys)
             {
                 Assert.IsTrue(actual.ContainsKey(key));
-                AssertAreEqual(expected[key], actual[key]);
+                AssertAreEqual(expected[key], actual[key], delta);
             }
         }
 
