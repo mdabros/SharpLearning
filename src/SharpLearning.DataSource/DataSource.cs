@@ -42,7 +42,7 @@ namespace SharpLearning.DataSource
             var sampleCount = m_idToDataLoader.Values.First().TotalSampleCount;
             foreach (var loader in m_idToDataLoader.Values)
             {
-                if(loader.TotalSampleCount != sampleCount)
+                if (loader.TotalSampleCount != sampleCount)
                 {
                     throw new ArgumentException("");
                 }
@@ -50,6 +50,11 @@ namespace SharpLearning.DataSource
 
             m_currentSweepIndices = Enumerable.Range(0, sampleCount).ToArray();
         }
+
+        /// <summary>
+        /// Gets the total sample count available in one sweep from the DataSource.
+        /// </summary>
+        public int TotalSampleCount => m_currentSweepIndices.Length;
 
         /// <summary>
         /// Gets the next batch of data.
