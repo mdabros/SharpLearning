@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput.Test", "src\SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
 EndProject
@@ -64,6 +64,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost", "src\SharpLearning.XGBoost\SharpLearning.XGBoost.csproj", "{6637B36B-35E2-4FDB-8166-6472307D45BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost.Test", "src\SharpLearning.XGBoost.Test\SharpLearning.XGBoost.Test.csproj", "{FFD79827-ED40-47EB-9CB8-2E683DEA3606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.DataSource", "src\SharpLearning.DataSource\SharpLearning.DataSource.csproj", "{406BC84A-4084-4A09-AEFF-C06591B7F993}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLearning.DataSource.Test", "src\SharpLearning.DataSource.Test\SharpLearning.DataSource.Test.csproj", "{ECAE76B0-0056-4D8E-9437-78FDF9FC118A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -179,6 +183,14 @@ Global
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{406BC84A-4084-4A09-AEFF-C06591B7F993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{406BC84A-4084-4A09-AEFF-C06591B7F993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{406BC84A-4084-4A09-AEFF-C06591B7F993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{406BC84A-4084-4A09-AEFF-C06591B7F993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECAE76B0-0056-4D8E-9437-78FDF9FC118A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECAE76B0-0056-4D8E-9437-78FDF9FC118A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECAE76B0-0056-4D8E-9437-78FDF9FC118A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECAE76B0-0056-4D8E-9437-78FDF9FC118A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
