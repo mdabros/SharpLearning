@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Numerics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using SixLabors.Primitives;
 
 namespace SharpLearning.InputOutput.DataSources
 {
@@ -18,7 +20,8 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="maxDegrees"></param>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static ImageGetter<TPixel> Rotate<TPixel>(this ImageGetter<TPixel> imageGetter, float maxDegrees, Random random)
+        public static ImageGetter<TPixel> Rotate<TPixel>(this ImageGetter<TPixel> imageGetter,
+            float maxDegrees, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
             Image<TPixel> Transform()
@@ -40,7 +43,8 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="maxAmount"></param>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static ImageGetter<TPixel> Brightness<TPixel>(this ImageGetter<TPixel> imageGetter, float minAmount, float maxAmount, Random random)
+        public static ImageGetter<TPixel> Brightness<TPixel>(this ImageGetter<TPixel> imageGetter,
+            float minAmount, float maxAmount, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
             Image<TPixel> Transform()
@@ -61,18 +65,19 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="flipMode"></param>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static ImageGetter<TPixel> Flip<TPixel>(this ImageGetter<TPixel> imageGetter, FlipMode flipMode, Random random)
+        public static ImageGetter<TPixel> Flip<TPixel>(this ImageGetter<TPixel> imageGetter,
+            FlipMode flipMode, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
             Image<TPixel> Transform()
             {
                 var flip = random.NextDouble() > 0.5;
                 var image = imageGetter();
-                if(flip)
+                if (flip)
                 {
                     image.Mutate(x => x.Flip(flipMode));
                 }
-                
+
                 return image;
             }
             return () => Transform();
@@ -87,7 +92,8 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="maxDegreesY"></param>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static ImageGetter<TPixel> Skew<TPixel>(this ImageGetter<TPixel> imageGetter, float maxDegreesX, float maxDegreesY, Random random)
+        public static ImageGetter<TPixel> Skew<TPixel>(this ImageGetter<TPixel> imageGetter,
+            float maxDegreesX, float maxDegreesY, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
             Image<TPixel> Transform()
@@ -111,39 +117,48 @@ namespace SharpLearning.InputOutput.DataSources
         /// <param name="maxZoom">minimum value is 1.0</param>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static ImageGetter<TPixel> Zoom<TPixel>(this ImageGetter<TPixel> imageGetter, float maxZoom, Random random)
+        public static ImageGetter<TPixel> Zoom<TPixel>(this ImageGetter<TPixel> imageGetter,
+            float maxZoom, Random random)
             where TPixel : struct, IPixel<TPixel>
         {
             if (maxZoom < 1) throw new ArgumentException("Zoom must be at least 1.0");
 
             Image<TPixel> Transform()
             {
-                var zoom = random.Sample(1, maxZoom);
                 var image = imageGetter();
-
                 var width = image.Width;
                 var height = image.Height;
 
-                // trunk 
-                var resizeWidth = (int)(width * zoom);
-                var resizeHeight = (int)(height * zoom);
+                // Enlarge width/height, keep ratio.
+                var scale = random.Sample(1, maxZoom);
+                var resizeWidth = (int)Math.Round(width * scale);
+                var resizeHeight = (int)Math.Round(height * scale);
 
-                // enlarge and crop to zoom.
-                // TODO: Add random topleft for crop (currently always 0.0).
-                image.Mutate(x => x.Resize(resizeWidth, resizeHeight).Crop(width, height));
+                // Find random crop location to get original size.
+                var maxX = resizeWidth - width;
+                var maxY = resizeHeight - height;
+                var x = (int)Math.Round(random.Sample(0, maxX));
+                var y = (int)Math.Round(random.Sample(0, maxY));
+                var cropRectangle = new Rectangle(x, y, width, height);
+
+                // Enlarge and crop to zoom.                
+                image.Mutate(v => v.Resize(resizeWidth, resizeHeight)
+                    .Crop(cropRectangle));
+
                 return image;
             }
             return () => Transform();
         }
 
         /// <summary>
-        /// Custom operation.
+        /// Custom augmentation operation.
         /// </summary>
         /// <typeparam name="TPixel"></typeparam>
         /// <param name="imageGetter"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        public static ImageGetter<TPixel> Apply<TPixel>(this ImageGetter<TPixel> imageGetter, Action<Image<TPixel>> operation)
+        public static ImageGetter<TPixel> Apply<TPixel>(this ImageGetter<TPixel> imageGetter,
+            Action<Image<TPixel>> operation)
             where TPixel : struct, IPixel<TPixel>
         {
             Image<TPixel> Transform()
@@ -154,11 +169,5 @@ namespace SharpLearning.InputOutput.DataSources
             }
             return () => Transform();
         }
-
-        // TODO: Add remaining operators:
-
-        //public static void Flip<TPixel>(Image<TPixel> image, FlipMode flipMode)
-        //    where TPixel : struct, IPixel<TPixel> => image.Mutate(x => x.Flip(flipMode));
-
     }
 }
