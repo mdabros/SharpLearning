@@ -195,10 +195,10 @@ namespace SharpLearning.Containers.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <param name="interval"></param>
-        /// <param name="distination"></param>
-        public static void CopyTo<T>(this T[] source, Interval1D interval, T[] distination)
+        /// <param name="destination"></param>
+        public static void CopyTo<T>(this T[] source, Interval1D interval, T[] destination)
         {
-            Array.Copy(source, interval.FromInclusive, distination, interval.FromInclusive, interval.Length);
+            Array.Copy(source, interval.FromInclusive, destination, interval.FromInclusive, interval.Length);
         }
 
         /// <summary>
@@ -225,7 +225,7 @@ namespace SharpLearning.Containers.Extensions
         /// <param name="source"></param>
         /// <param name="interval"></param>
         /// <param name="destination"></param>
-        public static void IndexedCopy(this int[] indices, F64MatrixColumnView source, 
+        public static void IndexedCopy(this int[] indices, F64MatrixColumnView source,
             Interval1D interval, double[] destination)
         {
             for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
@@ -354,8 +354,8 @@ namespace SharpLearning.Containers.Extensions
             var index = percentile * (values.Length - 1.0);
             var i = (int)index;
             var diff = index - i;
-            
-            if(diff != 0.0)
+
+            if (diff != 0.0)
             {
                 var j = i + 1;
                 var v1 = array[i];
@@ -363,11 +363,21 @@ namespace SharpLearning.Containers.Extensions
 
                 var v2 = array[j];
                 var w2 = index - i;
-                
+
                 return (v1 * w1 + v2 * w2) / (w1 + w2);
             }
 
             return array[i];
+        }
+
+        /// <summary>
+        /// Converts an array of arrays to an F64Matrix
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public static F64Matrix ToF64Matrix(this double[][] m)
+        {
+            return ToF64Matrix(m.ToList());
         }
 
         /// <summary>
@@ -456,7 +466,7 @@ namespace SharpLearning.Containers.Extensions
         {
             if (data.Length < sampleSize)
             {
-                throw new ArgumentException("SampleSize " + sampleSize + 
+                throw new ArgumentException("SampleSize " + sampleSize +
                     " is larger than data size " + data.Length);
             }
 
@@ -467,7 +477,7 @@ namespace SharpLearning.Containers.Extensions
             {
                 if (kvp.Value == 0)
                 {
-                    throw new ArgumentException("Sample size is too small for value: " + 
+                    throw new ArgumentException("Sample size is too small for value: " +
                         kvp.Key + " to be included.");
                 }
             }
@@ -477,12 +487,12 @@ namespace SharpLearning.Containers.Extensions
             indices.Shuffle(random);
 
             var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
-            
+
             // might be slightly different than the specified depending on data distribution
             var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
-            
+
             // if actual sample size is different from specified add/subtract duff from largest class
-            if(actualSampleSize != sampleSize)
+            if (actualSampleSize != sampleSize)
             {
                 var diff = sampleSize - actualSampleSize;
                 var largestClassKey = requiredSamples.OrderByDescending(s => s.Value).First().Key;
@@ -491,12 +501,12 @@ namespace SharpLearning.Containers.Extensions
 
             var sampleIndices = new int[sampleSize];
             var sampleIndex = 0;
-                        
+
             for (int i = 0; i < data.Length; i++)
             {
                 var index = indices[i];
                 var value = data[index];
-                if(currentSampleCount[value] != requiredSamples[value])
+                if (currentSampleCount[value] != requiredSamples[value])
                 {
                     sampleIndices[sampleIndex++] = index;
                     currentSampleCount[value]++;
@@ -531,15 +541,15 @@ namespace SharpLearning.Containers.Extensions
         /// <returns></returns>
         public static int[] StratifiedIndexSampling<T>(this T[] data, int sampleSize, int[] dataIndices, Random random)
         {
-            if (dataIndices.Length < sampleSize) 
+            if (dataIndices.Length < sampleSize)
             {
-                throw new ArgumentException("SampleSize " + sampleSize + 
+                throw new ArgumentException("SampleSize " + sampleSize +
                     " is larger than dataIndices size " + dataIndices.Length);
             }
 
-            if (data.Length < dataIndices.Length) 
+            if (data.Length < dataIndices.Length)
             {
-                throw new ArgumentException("dataIndices " + dataIndices.Length + 
+                throw new ArgumentException("dataIndices " + dataIndices.Length +
                     " is larger than data size " + data.Length);
             }
 
@@ -550,7 +560,7 @@ namespace SharpLearning.Containers.Extensions
             {
                 if (kvp.Value == 0)
                 {
-                    throw new ArgumentException("Sample size is too small for value: " + 
+                    throw new ArgumentException("Sample size is too small for value: " +
                         kvp.Key + " to be included.");
                 }
             }
@@ -558,7 +568,7 @@ namespace SharpLearning.Containers.Extensions
             var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
             // might be slightly different than the specified depending on data distribution
             var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
-            
+
             // if actual sample size is different from specified add/subtract difference from largest class
             if (actualSampleSize != sampleSize)
             {
@@ -584,7 +594,7 @@ namespace SharpLearning.Containers.Extensions
                     currentSampleCount[value]++;
                 }
 
-                if(sampleIndex == sampleSize)
+                if (sampleIndex == sampleSize)
                 {
                     break;
                 }
