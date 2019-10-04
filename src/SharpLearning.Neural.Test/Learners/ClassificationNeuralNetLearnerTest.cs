@@ -123,11 +123,12 @@ namespace SharpLearning.Neural.Test.Learners
         (double[][] observations, double[] targets) CreateArrayData(
             int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random)
         {
-            var observations = Enumerable.Range(0, numberOfObservations).Select(i => Enumerable.Range(0, numberOfFeatures).Select(ii => random.NextDouble()).ToArray()).ToArray();
-            var targets = Enumerable.Range(0, numberOfObservations).Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
+            var observations = Enumerable.Range(0, numberOfObservations).Select(i => Enumerable.Range(0, numberOfFeatures)
+                .Select(ii => random.NextDouble()).ToArray()).ToArray();
+            var targets = Enumerable.Range(0, numberOfObservations)
+                .Select(i => (double)random.Next(0, numberOfClasses)).ToArray();
 
             return (observations, targets);
         }
-
     }
 }
