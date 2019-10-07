@@ -19,12 +19,12 @@ namespace SharpLearning.Optimization.Test
             var sut = new BayesianOptimizer(parameters, 100, 5, 1, maxDegreeOfParallelism: 1);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(-0.706891104009228, actual.Error, 0.0001);
+            Assert.AreEqual(-0.74765422244251278, actual.Error, 0.0001);
             Assert.AreEqual(3, actual.ParameterSet.Length);
 
-            Assert.AreEqual(1.48822282975923, actual.ParameterSet[0], Delta);
-            Assert.AreEqual(-2.90695000109586, actual.ParameterSet[1], Delta);
-            Assert.AreEqual(-0.371192242191729, actual.ParameterSet[2], Delta);
+            Assert.AreEqual(-5.00656832708352, actual.ParameterSet[0], Delta);
+            Assert.AreEqual(-9.67008227467075, actual.ParameterSet[1], Delta);
+            Assert.AreEqual(-0.241737044528936, actual.ParameterSet[2], Delta);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace SharpLearning.Optimization.Test
             var expected = new OptimizerResult[]
                 {
                     new OptimizerResult(new double[] { 90.513222660177 }, 114559.431919558),
-                    new OptimizerResult(new double[] { 37.948484550206 },   111.6175259058)
+                    new OptimizerResult(new double[] { 24.2043804024367 }, 7601.00809036235)
                 };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
@@ -77,7 +77,7 @@ namespace SharpLearning.Optimization.Test
             {
                 new MinMaxParameterSpec(0.0, 1.0, Transform.Linear)
             };
-            var sut = new BayesianOptimizer(parameters, 100, 10, 5, allowMultipleEvaluations: true);
+            var sut = new BayesianOptimizer(parameters, 100, 10, 5);
             var results = sut.Optimize(MinimizeNonDeterministic);
             var actual = new OptimizerResult[] { results.First(), results.Last() }.OrderByDescending(o => o.Error);
 

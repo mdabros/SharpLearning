@@ -49,6 +49,7 @@ namespace SharpLearning.Optimization
 
         // Acquisition function to maximize
         readonly AcquisitionFunction m_acquisitionFunc;
+        private bool m_isFirst;
 
         /// <summary>
         /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
@@ -144,7 +145,7 @@ namespace SharpLearning.Optimization
             int maxDegreeOfParallelism = -1,
             bool allowMultipleEvaluations = false)
         {
-            if (iterations <= 0) { throw new ArgumentNullException("maxIterations must be at least 1"); }
+            if (iterations <= 0) { throw new ArgumentNullException("iterations must be at least 1"); }
             if (previousParameterSets.Count != previousParameterSetScores.Count)
             {
                 throw new ArgumentException("previousParameterSets length: "
@@ -212,11 +213,7 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            var bestParameterSet = new double[m_parameters.Length];
-            var bestParameterSetScore = double.MaxValue;
-            var parameterSets = new ConcurrentBag<double[]>();
-            var parameterSetScores = new ConcurrentBag<double>();
-
+            var parameterSets = new BlockingCollection<(double[] Parameters, double Error)>();
             var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
 
             int iterations = 0;
@@ -225,22 +222,12 @@ namespace SharpLearning.Optimization
             {
                 for (int i = 0; i < m_previousParameterSets.Count; i++)
                 {
-                    parameterSets.Add(m_previousParameterSets[i]);
-                    parameterSetScores.Add(m_previousParameterSetScores[i]);
-                }
-
-                Parallel.For(0, parameterSets.Count, m_parallelOptions, i =>
-                {
-                    var score = parameterSetScores.ElementAt(i);
+                    var score = m_previousParameterSetScores[i];
                     if (!double.IsNaN(score))
                     {
-                        if (score < bestParameterSetScore)
-                        {
-                            bestParameterSetScore = score;
-                            bestParameterSet = parameterSets.ElementAt(i);
-                        }
+                        parameterSets.Add((m_previousParameterSets[i], score));
                     }
-                });
+                }
             }
             else
             {
@@ -253,41 +240,31 @@ namespace SharpLearning.Optimization
 
                     if (!double.IsNaN(score))
                     {
-                        parameterSets.Add(set);
-                        parameterSetScores.Add(score);
-
-                        if (score < bestParameterSetScore)
-                        {
-                            bestParameterSetScore = score;
-                            bestParameterSet = set;
-                        }
+                        parameterSets.Add((set, score));
                     }
                 });
             }
-
-            var previousSets = new ConcurrentBag<double[]>();
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
-                // fit model
-                var observations = parameterSets.ToList().ToF64Matrix();
-                var targets = parameterSetScores.ToArray();
+                // fit model			
+                var observations = parameterSets.Select(s => s.Parameters).ToList().ToF64Matrix();
+                var targets = parameterSets.Select(s => s.Error).ToArray();
                 var model = m_learner.Learn(observations, targets);
 
-                var bestScore = parameterSetScores.Min();
+                var bestScore = parameterSets.Min(m => m.Error);
                 var candidates = FindNextCandidates(model, bestScore);
 
-                var first = true;
+                m_isFirst = true;
 
                 Parallel.ForEach(candidates, m_parallelOptions, candidate =>
                 {
                     var parameterSet = candidate.ParameterSet;
 
                     // skip evaluation if parameters have not changed unless explicitly allowed
-                    if (m_allowMultipleEvaluations || first || !Contains(previousSets, parameterSet))
+                    if (m_allowMultipleEvaluations || IsFirstEvaluation() || !Contains(parameterSets, parameterSet))
                     {
-                        first = false;
 
-                        if (!m_allowMultipleEvaluations && Equals(bestParameterSet, parameterSet))
+                        if (!m_allowMultipleEvaluations && Equals(GetBestParameterSet(parameterSets), parameterSet))
                         {
                             // if the best parameter set is sampled again.
                             // Add a new random parameter set.
@@ -295,39 +272,36 @@ namespace SharpLearning.Optimization
                                 .SampleParameterSet(m_parameters, m_sampler);
                         }
 
-                        previousSets.Add(parameterSet);
-
                         var result = functionToMinimize(parameterSet);
                         iterations++;
-
+                        
                         if (!double.IsNaN(result.Error))
                         {
-
-                            // update best
-                            if (result.Error < bestParameterSetScore)
-                            {
-                                bestParameterSetScore = result.Error;
-                                bestParameterSet = result.ParameterSet;
-                                //System.Diagnostics.Trace.WriteLine(iterations + ";" + result.Error);
-                            }
-
                             // add point to parameter set list for next iterations model
-                            parameterSets.Add(result.ParameterSet);
-                            parameterSetScores.Add(result.Error);
+                            parameterSets.Add((parameterSet, result.Error));
                         }
 
                     }
                 });
+
             }
 
-            var results = new List<OptimizerResult>();
+            return parameterSets.Select(p => new OptimizerResult(p.Parameters, p.Error)).ToArray();
+        }
 
-            for (int i = 0; i < parameterSets.Count; i++)
+        bool IsFirstEvaluation()
+        {
+            lock (m_locker)
             {
-                results.Add(new OptimizerResult(parameterSets.ElementAt(i), parameterSetScores.ElementAt(i)));
+                if (m_isFirst)
+                {
+                    m_isFirst = false;
+                    return true;
+                }
+
             }
 
-            return results.ToArray();
+            return m_isFirst;
         }
 
         OptimizerResult[] FindNextCandidates(RegressionForestModel model, double bestScore)
@@ -349,6 +323,11 @@ namespace SharpLearning.Optimization
 
         bool Equals(double[] p1, double[] p2)
         {
+            if (p1 == null)
+            {
+                return false;
+            }
+
             for (int i = 0; i < p1.Length; i++)
             {
                 if (!Equal(p1[i], p2[i]))
@@ -360,11 +339,11 @@ namespace SharpLearning.Optimization
             return true;
         }
 
-        bool Contains(ConcurrentBag<double[]> many, double[] one)
+        bool Contains(BlockingCollection<(double[] Parameters, double Error)> many, double[] single)
         {
             lock (m_locker)
             {
-                return many.Any(m => Equals(m, one));
+                return many.Any(m => Equals(m.Parameters, single));
             }
         }
 
@@ -377,6 +356,14 @@ namespace SharpLearning.Optimization
             }
 
             return false;
+        }
+
+        double[] GetBestParameterSet(BlockingCollection<(double[] Parameters, double Error)> parameterSets)
+        {
+            lock (m_locker)
+            {
+                return parameterSets.FirstOrDefault(f => f.Error == parameterSets.Min(p => p.Error)).Parameters;
+            }
         }
     }
 }
