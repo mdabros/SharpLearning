@@ -61,6 +61,9 @@ namespace SharpLearning.Neural.Layers
                 case Activation.Relu:
                     m_activation = new ReluActivation();
                     break;
+                case Activation.Sigmoid:
+                    m_activation = new SigmoidActivation();
+                    break;
                 default:
                     throw new ArgumentException("Unsupported activation type: " + activation);
             }
