@@ -14,5 +14,6 @@
         /// Relu activation.
         /// </summary>
         Relu,
+        Sigmoid
     }
 }
