@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Matrices;
+using System;
 
 namespace SharpLearning.Containers.Test.Matrices
 {
@@ -101,7 +102,7 @@ namespace SharpLearning.Containers.Test.Matrices
         {
             var sut = CreateFeatures();
             var actual = new F64Matrix(2, 3);
-            sut.Rows(new int [] { 0, 2}, actual);
+            sut.Rows(new int[] { 0, 2 }, actual);
             var expected = GetExpectedRowSubMatrix();
 
             Assert.IsTrue(expected.Equals(actual));
@@ -126,6 +127,19 @@ namespace SharpLearning.Containers.Test.Matrices
             var expected = GetExpectedColSubMatrix();
 
             Assert.IsTrue(expected.Equals(actual));
+        }
+
+        [TestMethod]
+        public void F64Matrix_Implicit_Conversion()
+        {
+            Func<F64Matrix, F64Matrix> converter = m => m;
+
+            var actual = converter(new double[][] { new double[] { 0, 1 }, new double[] { 2, 3 } });
+
+           Assert.AreEqual(0, actual.At(0,0));
+           Assert.AreEqual(1, actual.At(0,1));
+           Assert.AreEqual(2, actual.At(1,0));
+           Assert.AreEqual(3, actual.At(1,1));
         }
 
         double[] GetExpectedColumn()

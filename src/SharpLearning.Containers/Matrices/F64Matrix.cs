@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 using SharpLearning.Containers.Views;
+using SharpLearning.Containers.Extensions;
 
 namespace SharpLearning.Containers.Matrices
 {
     /// <summary>
     /// Matrix of doubles
     /// </summary>
+    /// <remarks>Can be implicitly converted from double[][]</remarks>
     public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     {
         double[] m_featureArray;
@@ -301,5 +303,7 @@ namespace SharpLearning.Containers.Matrices
                 return hash;
             }
         }
+
+        public static implicit operator F64Matrix(double[][] b) => b.ToF64Matrix();
     }
 }
