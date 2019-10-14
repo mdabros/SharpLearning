@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
@@ -7,6 +8,10 @@ namespace SharpLearning.Optimization.Test
     [TestClass]
     public class BayesianOptimizerTest
     {
+
+        private const int Seed = 42;
+        private static Random Random = new Random(Seed);
+
         [TestMethod]
         public void BayesianOptimizer_OptimizeBest()
         {
@@ -36,12 +41,16 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
-            //high variance on few iterations
-            var sut = new BayesianOptimizer(parameters, 100, 5, 2);
+            //high variance without fixed seed
+            var sut = new BayesianOptimizer(parameters, 100, 5, 2, seed: Seed);
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(-0.947532236193108, actual.Error, 1);
+            Assert.AreEqual(-0.736123479387088, actual.Error, Delta);
             Assert.AreEqual(3, actual.ParameterSet.Length);
+
+            Assert.AreEqual(-4.37019084318084, actual.ParameterSet[0], Delta);
+            Assert.AreEqual(-3.05224638108734, actual.ParameterSet[1], Delta);
+            Assert.AreEqual(0.274598500819224, actual.ParameterSet[2], Delta);
         }
 
         [TestMethod]
@@ -75,14 +84,15 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new MinMaxParameterSpec[]
             {
-                new MinMaxParameterSpec(0.0, 1.0, Transform.Linear)
+                new MinMaxParameterSpec(0, 1, Transform.Linear, ParameterType.Discrete)
             };
-            var sut = new BayesianOptimizer(parameters, 100, 10, 5);
-            var results = sut.Optimize(MinimizeNonDeterministic);
+            var sut = new BayesianOptimizer(parameters, iterations: 240, randomStartingPointCount: 5, functionEvaluationsPerIteration: 5,
+                seed: Seed, maxDegreeOfParallelism: -1, allowMultipleEvaluations: true);
+            var results = sut.Optimize(p => MinimizeNonDeterministic(p, Random));
             var actual = new OptimizerResult[] { results.First(), results.Last() }.OrderByDescending(o => o.Error);
 
-            Assert.AreEqual(2d, actual.First().Error);
-            Assert.AreEqual(0.421397202844451, actual.First().ParameterSet.First(), 0.5);
+            Assert.AreEqual(1, actual.First().Error);
+            Assert.AreEqual(1, (int)actual.First().ParameterSet[0]);
         }
 
     }
