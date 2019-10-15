@@ -124,7 +124,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            // dropout layer does not have any parameters or graidents.
+            // dropout layer does not have any parameters or gradients.
         }
 
         /// <summary>
