@@ -26,8 +26,8 @@ namespace SharpLearning.Optimization
     {
         readonly IParameterSpec[] m_parameters;
         readonly int m_iterations;
-        readonly int m_randomStartingPointCount;
-        readonly int m_functionEvaluationsPerIteration;
+        readonly int m_randomStartingPointsCount;
+        readonly int m_functionEvaluationsPerIterationCount;
         private readonly bool m_runParallel;
         private readonly ParallelOptions m_parallelOptions;
         private readonly bool m_allowMultipleEvaluations;
@@ -83,8 +83,8 @@ namespace SharpLearning.Optimization
 
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_iterations = iterations;
-            m_randomStartingPointCount = randomStartingPointCount;
-            m_functionEvaluationsPerIteration = functionEvaluationsPerIteration;
+            m_randomStartingPointsCount = randomStartingPointCount;
+            m_functionEvaluationsPerIterationCount = functionEvaluationsPerIteration;
             m_runParallel = maxDegreeOfParallelism != 1;
             m_parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
             m_allowMultipleEvaluations = allowMultipleEvaluations;
@@ -164,7 +164,7 @@ namespace SharpLearning.Optimization
             m_previousParameterSetScores = previousParameterSetScores ?? throw new ArgumentNullException(nameof(previousParameterSetScores));
 
             m_iterations = iterations;
-            m_functionEvaluationsPerIteration = functionEvaluationsPerIteration;
+            m_functionEvaluationsPerIterationCount = functionEvaluationsPerIteration;
             m_parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
             m_runParallel = maxDegreeOfParallelism != 1;
             m_allowMultipleEvaluations = allowMultipleEvaluations;
@@ -206,88 +206,113 @@ namespace SharpLearning.Optimization
             Optimize(functionToMinimize).Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error).First();
 
         /// <summary>
-        /// Optimization using Sequential Model-based optimization.
-        /// Returns all results, chronologically ordered. 
+        /// Minimizes the provided function
         /// </summary>
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            var parameterSets = new BlockingCollection<(double[] Parameters, double Error)>();
-            var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
+            var initialParameterSets = ProposeParameterSets(m_randomStartingPointsCount, null);
 
-            int iterations = 0;
+            // Initialize the search
+            var results = new List<OptimizerResult>();
+            var initializationResults = RunParameterSets(functionToMinimize, initialParameterSets);
+            results.AddRange(initializationResults);
 
-            if (usePreviousResults)
-            {
-                for (int i = 0; i < m_previousParameterSets.Count; i++)
-                {
-                    var score = m_previousParameterSetScores[i];
-                    if (!double.IsNaN(score))
-                    {
-                        parameterSets.Add((m_previousParameterSets[i], score));
-                    }
-                }
-            }
-            else
-            {
-                // initialize random starting points for the first iteration
-                Parallel.For(0, m_randomStartingPointCount, m_parallelOptions, i =>
-                {
-                    var set = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
-                    var score = functionToMinimize(set).Error;
-                    iterations++;
-
-                    if (!double.IsNaN(score))
-                    {
-                        parameterSets.Add((set, score));
-                    }
-                });
-            }
             for (int iteration = 0; iteration < m_iterations; iteration++)
             {
-                // fit model			
-                var observations = parameterSets.Select(s => s.Parameters).ToList().ToF64Matrix();
-                var targets = parameterSets.Select(s => s.Error).ToArray();
-                var model = m_learner.Learn(observations, targets);
-
-                var bestScore = parameterSets.Min(m => m.Error);
-                var candidates = FindNextCandidates(model, bestScore);
-
-                m_isFirst = true;
-
-                Parallel.ForEach(candidates, m_parallelOptions, candidate =>
-                {
-                    var parameterSet = candidate.ParameterSet;
-
-                    // skip evaluation if parameters have not changed unless explicitly allowed
-                    if (m_allowMultipleEvaluations || IsFirstEvaluation() || !Contains(parameterSets, parameterSet))
-                    {
-
-                        if (!m_allowMultipleEvaluations && Equals(GetBestParameterSet(parameterSets), parameterSet))
-                        {
-                            // if the best parameter set is sampled again.
-                            // Add a new random parameter set.
-                            parameterSet = RandomSearchOptimizer
-                                .SampleParameterSet(m_parameters, m_sampler);
-                        }
-
-                        var result = functionToMinimize(parameterSet);
-                        iterations++;
-                        
-                        if (!double.IsNaN(result.Error))
-                        {
-                            // add point to parameter set list for next iterations model
-                            parameterSets.Add((parameterSet, result.Error));
-                        }
-
-                    }
-                });
-
+                var parameterSets = ProposeParameterSets(m_functionEvaluationsPerIterationCount, results);
+                var iterationResults = RunParameterSets(functionToMinimize, parameterSets);
+                results.AddRange(iterationResults);
             }
 
-            return parameterSets.Select(p => new OptimizerResult(p.Parameters, p.Error)).ToArray();
+            return results.ToArray();
         }
+
+
+        ///// <summary>
+        ///// Optimization using Sequential Model-based optimization.
+        ///// Returns all results, chronologically ordered. 
+        ///// </summary>
+        ///// <param name="functionToMinimize"></param>
+        ///// <returns></returns>
+        //public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
+        //{
+        //    var parameterSets = new BlockingCollection<(double[] Parameters, double Error)>();
+        //    var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
+
+        //    int iterations = 0;
+
+        //    if (usePreviousResults)
+        //    {
+        //        for (int i = 0; i < m_previousParameterSets.Count; i++)
+        //        {
+        //            var score = m_previousParameterSetScores[i];
+        //            if (!double.IsNaN(score))
+        //            {
+        //                parameterSets.Add((m_previousParameterSets[i], score));
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        // initialize random starting points for the first iteration
+        //        Parallel.For(0, m_randomStartingPointsCount, m_parallelOptions, i =>
+        //        {
+        //            var set = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
+        //            var score = functionToMinimize(set).Error;
+        //            iterations++;
+
+        //            if (!double.IsNaN(score))
+        //            {
+        //                parameterSets.Add((set, score));
+        //            }
+        //        });
+        //    }
+        //    for (int iteration = 0; iteration < m_iterations; iteration++)
+        //    {
+        //        // fit model			
+        //        var observations = parameterSets.Select(s => s.Parameters).ToList().ToF64Matrix();
+        //        var targets = parameterSets.Select(s => s.Error).ToArray();
+        //        var model = m_learner.Learn(observations, targets);
+
+        //        var bestScore = parameterSets.Min(m => m.Error);
+        //        var candidates = FindNextCandidates(model, bestScore);
+
+        //        m_isFirst = true;
+
+        //        Parallel.ForEach(candidates, m_parallelOptions, candidate =>
+        //        {
+        //            var parameterSet = candidate.ParameterSet;
+
+        //            // skip evaluation if parameters have not changed unless explicitly allowed
+        //            if (m_allowMultipleEvaluations || IsFirstEvaluation() || !Contains(parameterSets, parameterSet))
+        //            {
+
+        //                if (!m_allowMultipleEvaluations && Equals(GetBestParameterSet(parameterSets), parameterSet))
+        //                {
+        //                    // if the best parameter set is sampled again.
+        //                    // Add a new random parameter set.
+        //                    parameterSet = RandomSearchOptimizer
+        //                        .SampleParameterSet(m_parameters, m_sampler);
+        //                }
+
+        //                var result = functionToMinimize(parameterSet);
+        //                iterations++;
+
+        //                if (!double.IsNaN(result.Error))
+        //                {
+        //                    // add point to parameter set list for next iterations model
+        //                    parameterSets.Add((parameterSet, result.Error));
+        //                }
+
+        //            }
+        //        });
+
+        //    }
+
+        //    return parameterSets.Select(p => new OptimizerResult(p.Parameters, p.Error)).ToArray();
+        //}
 
         bool IsFirstEvaluation()
         {
@@ -304,6 +329,85 @@ namespace SharpLearning.Optimization
             return m_isFirst;
         }
 
+        /// <summary>
+        /// Runs a set of parameter sets and returns the results.
+        /// </summary>
+        /// <param name="functionToMinimize"></param>
+        /// <param name="parameterSets"></param>
+        /// <returns></returns>
+        public List<OptimizerResult> RunParameterSets(Func<double[], OptimizerResult> functionToMinimize,
+            double[][] parameterSets)
+        {
+            var results = new List<OptimizerResult>();
+            foreach (var parameterSet in parameterSets)
+            {
+                // Get the current parameters for the current point
+                var result = functionToMinimize(parameterSet);
+                results.Add(result);
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Propose a new list of parameter sets.
+        /// </summary>
+        /// <param name="parameterSetCount">The number of parameter sets to propose</param>
+        /// <param name="previousResults">Results from previous runs.  
+        /// These are used in the model for proposing new parameter sets.
+        /// If no results are provided, random parameter sets will be returned.</param>
+        /// <returns></returns>
+        public double[][] ProposeParameterSets(int parameterSetCount,
+            IReadOnlyList<OptimizerResult> previousResults = null)
+        {
+            var previousParameterSetCount = previousResults == null ? 0 : previousResults.Count;
+            if (previousParameterSetCount < m_randomStartingPointsCount)
+            {
+                var randomParameterSetCount = Math.Min(parameterSetCount,
+                    m_randomStartingPointsCount - previousParameterSetCount);
+
+                var randomParameterSets = RandomSearchOptimizer.SampleRandomParameterSets(
+                    randomParameterSetCount, m_parameters, m_sampler);
+
+                return randomParameterSets;
+            }
+
+            var validParameterSets = previousResults.Where(v => !double.IsNaN(v.Error));
+            var model = FitModel(validParameterSets);
+
+            return GenerateCandidateParameterSets(parameterSetCount, validParameterSets.ToList(), model);
+        }
+
+        RegressionForestModel FitModel(IEnumerable<OptimizerResult> validParameterSets)
+        {
+            var observations = validParameterSets
+                .Select(v => v.ParameterSet).ToList()
+                .ToF64Matrix();
+
+            var targets = validParameterSets
+                .Select(v => v.Error).ToArray();
+
+            return m_learner.Learn(observations, targets);
+        }
+
+        double[][] GenerateCandidateParameterSets(int parameterSetCount,
+            IReadOnlyList<OptimizerResult> previousResults, RegressionForestModel model)
+        {
+            // TODO: Handle maximization and minimization. Currently minimizes.
+            var best = previousResults.Min(v => v.Error);
+
+            // Use maximizer for sampling potential new candidates.
+            var results = FindNextCandidates(model, best);
+
+            // Return the top candidate sets requested.
+            var candidates = results
+                .Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error)
+                .Take(parameterSetCount)
+                .Select(p => p.ParameterSet).ToArray();
+
+            return candidates;
+        }
+
         OptimizerResult[] FindNextCandidates(RegressionForestModel model, double bestScore)
         {
             OptimizerResult minimize(double[] param)
@@ -316,9 +420,7 @@ namespace SharpLearning.Optimization
                     -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
             }
 
-            return m_maximizer.Optimize(minimize)
-                .Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error)
-                .Take(m_functionEvaluationsPerIteration).ToArray();
+            return m_maximizer.Optimize(minimize);
         }
 
         bool Equals(double[] p1, double[] p2)
