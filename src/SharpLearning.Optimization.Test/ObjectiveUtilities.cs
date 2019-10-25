@@ -25,5 +25,11 @@ namespace SharpLearning.Optimization.Test
 
             return new OptimizerResult(parameters, cost);
         }
+
+        public static OptimizerResult MinimizeNonDeterministic(double[] x, Random random)
+        {
+            //less than 1 has lower reward
+            return new OptimizerResult(x, x[0] < 1 ? random.NextDouble() : 1);
+        }
     }
 }
