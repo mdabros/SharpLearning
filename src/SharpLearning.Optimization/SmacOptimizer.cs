@@ -79,7 +79,6 @@ namespace SharpLearning.Optimization
             m_random = new Random(seed);
             // Use member to seed the random uniform sampler.
             m_sampler = new RandomUniform(m_random.Next());
-            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_iterations = iterations;
             m_randomStartingPointsCount = randomStartingPointCount;
             m_functionEvaluationsPerIterationCount = functionEvaluationsPerIterationCount;
