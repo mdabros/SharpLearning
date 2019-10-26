@@ -71,7 +71,7 @@ namespace SharpLearning.Optimization
             int functionEvaluationsPerIterationCount = 1,
             int randomSearchPointCount = 1000,
             int seed = 42,
-            bool runParallel = true,
+            bool runParallel = false,
             int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
