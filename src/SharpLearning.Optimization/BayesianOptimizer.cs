@@ -52,12 +52,19 @@ namespace SharpLearning.Optimization
         /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
         /// </summary>
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
-        /// <param name="iterations">Number of iterations. Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
-        /// <param name="randomStartingPointCount">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
+        /// <param name="iterations">The number of iterations to perform.
+        /// Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
+        /// <param name="randomStartingPointCount">Number of randomly parameter sets used 
+        /// for initialization (default is 20)</param>
         /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration. 
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
-        /// <param name="seed">Seed for the random initialization</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations. Default is -1 (unlimited)</param>
+        /// <param name="randomSearchPointCount">The number of random parameter sets
+        /// used when maximizing the expected improvement acquisition function (default is 1000)</param>
+        /// <param name="seed"></param>
+        /// <param name="runParallel">Use multi threading to speed up execution (default is false).
+        /// Note that the order of results returned the Optimize method will not be reproducible when running in parallel.
+        /// Results will be the same, only the order is not reproducible</param>
+        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
         public BayesianOptimizer(IParameterSpec[] parameters,
             int iterations,
             int randomStartingPointCount = 5,
