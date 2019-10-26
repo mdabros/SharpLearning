@@ -14,7 +14,7 @@ namespace SharpLearning.Neural.Layers
     /// However, the softmax might sacrifice accuracy in order to achieve better probabilities.
     /// </summary>
     [Serializable]
-    public sealed class SoftMaxLayer 
+    public sealed class SoftMaxLayer
         : ILayer
         , IOutputLayer
         , IClassificationLayer
@@ -120,7 +120,7 @@ namespace SharpLearning.Neural.Layers
             {
                 var rowSum = 0.0f;
                 var max = double.MinValue;
-                                
+
                 for (int col = 0; col < x.ColumnCount; ++col)
                 {
                     var index = col * rows + row;
@@ -154,7 +154,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="parametersAndGradients"></param>
         public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
         {
-            // classification layer does not have any parameters or graidents.
+            // classification layer does not have any parameters or gradients.
         }
 
         /// <summary>
