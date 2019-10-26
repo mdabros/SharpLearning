@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SharpLearning.Containers.Extensions;
@@ -25,25 +24,21 @@ namespace SharpLearning.Optimization
     /// </summary>
     public sealed class BayesianOptimizer : IOptimizer
     {
+        readonly Random m_random;
         readonly IParameterSpec[] m_parameters;
+        readonly IParameterSampler m_sampler;
         readonly int m_iterations;
         readonly int m_randomStartingPointsCount;
         readonly int m_functionEvaluationsPerIterationCount;
+        readonly int m_randomSearchPointCount;
+        
         readonly int m_maxDegreeOfParallelism;
         readonly bool m_runParallel;
-        readonly IParameterSampler m_sampler;
-        readonly Random m_random;
 
         // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
         // instead of: (currentValue + prevValue) * 0.5; like in random forest.
         readonly RegressionExtremelyRandomizedTreesLearner m_learner;
-
-        // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
-        readonly IOptimizer m_maximizer;
-
-        // Acquisition function to maximize
-        readonly AcquisitionFunction m_acquisitionFunc;
 
         /// <summary>
         /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
@@ -59,36 +54,42 @@ namespace SharpLearning.Optimization
         /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
         /// <param name="iterations">Number of iterations. Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
         /// <param name="randomStartingPointCount">Number of randomly created starting points to use for the initial model in the first iteration (default is 5)</param>
-        /// <param name="functionEvaluationsPerIteration">The number of function evaluations per iteration. 
+        /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration. 
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations. Default is -1 (unlimited)</param>
         public BayesianOptimizer(IParameterSpec[] parameters,
             int iterations,
             int randomStartingPointCount = 5,
-            int functionEvaluationsPerIteration = 1,
+            int functionEvaluationsPerIterationCount = 1,
+            int randomSearchPointCount = 1000,
             int seed = 42,
             bool runParallel = true,
             int maxDegreeOfParallelism = -1)
         {
-            if (iterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
-            if (randomStartingPointCount < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
-
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-            m_iterations = iterations;
-            m_randomStartingPointsCount = randomStartingPointCount;
-            m_functionEvaluationsPerIterationCount = functionEvaluationsPerIteration;
 
-            m_runParallel = runParallel;
-            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
-            
+            if (iterations < 1) throw new ArgumentException(nameof(iterations) +
+                 "must be at least 1. Was: " + iterations);
+            if (randomStartingPointCount < 1) throw new ArgumentException(nameof(randomStartingPointCount) +
+                "must be at least 1. Was: " + randomStartingPointCount);
+            if (functionEvaluationsPerIterationCount < 1) throw new ArgumentException(nameof(functionEvaluationsPerIterationCount) +
+                "must be at least 1. Was: " + functionEvaluationsPerIterationCount);
+            if (randomSearchPointCount < 1) throw new ArgumentException(nameof(randomSearchPointCount) +
+                "must be at least 1. Was: " + randomSearchPointCount);
+
             m_random = new Random(seed);
-
             // Use member to seed the random uniform sampler.
             m_sampler = new RandomUniform(m_random.Next());
+            m_iterations = iterations;
+            m_randomStartingPointsCount = randomStartingPointCount;
+            m_functionEvaluationsPerIterationCount = functionEvaluationsPerIterationCount;
+            m_randomSearchPointCount = randomSearchPointCount;
 
-            // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
-            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
+            // Hyper parameters for regression extra trees learner. 
+            // These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
+            // However, according to the author Frank Hutter, 
+            // the hyper parameters for the forest model should not matter that much.
             m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
                 minimumSplitSize: 10,
                 maximumTreeDepth: 2000,
@@ -98,8 +99,8 @@ namespace SharpLearning.Optimization
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
                 runParallel: false);
 
-            // Acquisition function to maximize.
-            m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
+            m_runParallel = runParallel;
+            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
         }
 
         /// <summary>
@@ -240,7 +241,6 @@ namespace SharpLearning.Optimization
         {
             // Additional set of random parameterSets to choose from during local search.
             var results = new List<OptimizerResult>();
-            var m_randomSearchPointCount = 1000;
             for (int i = 0; i < m_randomSearchPointCount; i++)
             {
                 var parameterSet = RandomSearchOptimizer
