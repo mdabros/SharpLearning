@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SharpLearning.Containers.Extensions;
@@ -28,16 +29,10 @@ namespace SharpLearning.Optimization
         readonly int m_iterations;
         readonly int m_randomStartingPointsCount;
         readonly int m_functionEvaluationsPerIterationCount;
-        private readonly bool m_runParallel;
-        private readonly ParallelOptions m_parallelOptions;
-        private readonly bool m_allowMultipleEvaluations;
+        readonly int m_maxDegreeOfParallelism;
+        readonly bool m_runParallel;
         readonly IParameterSampler m_sampler;
         readonly Random m_random;
-        readonly object m_locker;
-        const double m_tolerence = 0.00001;
-
-        readonly List<double[]> m_previousParameterSets;
-        readonly List<double> m_previousParameterSetScores;
 
         // Important to use extra trees learner to have split between features calculated as: 
         // m_random.NextDouble() * (max - min) + min; 
@@ -49,7 +44,6 @@ namespace SharpLearning.Optimization
 
         // Acquisition function to maximize
         readonly AcquisitionFunction m_acquisitionFunc;
-        private bool m_isFirst;
 
         /// <summary>
         /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
@@ -69,14 +63,13 @@ namespace SharpLearning.Optimization
         /// The parameter sets are included in order of most promising outcome (default is 1)</param>
         /// <param name="seed">Seed for the random initialization</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations. Default is -1 (unlimited)</param>
-        /// <param name="allowMultipleEvaluations">Enables re-evaluation of duplicate parameter sets for non-deterministic functions</param>
         public BayesianOptimizer(IParameterSpec[] parameters,
             int iterations,
             int randomStartingPointCount = 5,
             int functionEvaluationsPerIteration = 1,
             int seed = 42,
-            int maxDegreeOfParallelism = -1,
-            bool allowMultipleEvaluations = false)
+            bool runParallel = true,
+            int maxDegreeOfParallelism = -1)
         {
             if (iterations <= 0) { throw new ArgumentException("maxIterations must be at least 1"); }
             if (randomStartingPointCount < 1) { throw new ArgumentException("numberOfParticles must be at least 1"); }
@@ -85,11 +78,10 @@ namespace SharpLearning.Optimization
             m_iterations = iterations;
             m_randomStartingPointsCount = randomStartingPointCount;
             m_functionEvaluationsPerIterationCount = functionEvaluationsPerIteration;
-            m_runParallel = maxDegreeOfParallelism != 1;
-            m_parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
-            m_allowMultipleEvaluations = allowMultipleEvaluations;
-            m_locker = new object();
 
+            m_runParallel = runParallel;
+            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
+            
             m_random = new Random(seed);
 
             // Use member to seed the random uniform sampler.
@@ -104,92 +96,7 @@ namespace SharpLearning.Optimization
                 minimumInformationGain: 1e-6,
                 subSampleRatio: 1.0,
                 seed: m_random.Next(), // Use member to seed the random uniform sampler.
-                runParallel: m_runParallel);
-
-            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
-            m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
-                seed: m_random.Next(), // Use member to seed the random uniform sampler.
-                runParallel: maxDegreeOfParallelism > 1);
-
-            // Acquisition function to maximize.
-            m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
-        }
-
-
-        /// <summary>
-        /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
-        /// This model is used to sample new promising parameter candidates which are evaluated and added to the existing parameter sets.
-        /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
-        /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
-        /// But in that case it can usually reduce the number of iterations required to reach a good solution compared to less sophisticated methods.
-        /// Implementation loosely based on:
-        /// http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf
-        /// https://papers.nips.cc/paper/4522-practical-bayesian-optimization-of-machine-learning-algorithms.pdf
-        /// https://papers.nips.cc/paper/4443-algorithms-for-hyper-parameter-optimization.pdf
-        /// </summary>
-        /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
-        /// <param name="iterations">Maximum number of iterations. MaxIteration * numberOfCandidatesEvaluatedPrIteration = totalFunctionEvaluations</param>
-        /// <param name="previousParameterSets">Parameter sets from previous run</param>
-        /// <param name="previousParameterSetScores">Scores from previous run corresponding to each parameter set</param>
-        /// <param name="functionEvaluationsPerIteration">How many candidate parameter set should by sampled from the model in each iteration. 
-        /// The parameter sets are included in order of most promising outcome (default is 1)</param>
-        /// <param name="seed">Seed for the random initialization</param>
-        /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations. Default is -1 (unlimited)</param>
-        /// <param name="allowMultipleEvaluations">Enables re-evaluation of duplicate parameter sets for non-deterministic functions</param>
-        public BayesianOptimizer(IParameterSpec[] parameters,
-            int iterations,
-            List<double[]> previousParameterSets,
-            List<double> previousParameterSetScores,
-            int functionEvaluationsPerIteration = 1,
-            int seed = 42,
-            int maxDegreeOfParallelism = -1,
-            bool allowMultipleEvaluations = false)
-        {
-            if (iterations <= 0) { throw new ArgumentNullException("iterations must be at least 1"); }
-            if (previousParameterSets.Count != previousParameterSetScores.Count)
-            {
-                throw new ArgumentException("previousParameterSets length: "
-                    + previousParameterSets.Count + " does not correspond with previousResults length: "
-                    + previousParameterSetScores.Count);
-            }
-
-            if (previousParameterSetScores.Count < 2 || previousParameterSets.Count < 2)
-            {
-                throw new ArgumentException("previousParameterSets length and previousResults length must be at least 2 and was: "
-                    + previousParameterSetScores.Count);
-            }
-
-            m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-            m_previousParameterSets = previousParameterSets ?? throw new ArgumentNullException(nameof(previousParameterSets));
-            m_previousParameterSetScores = previousParameterSetScores ?? throw new ArgumentNullException(nameof(previousParameterSetScores));
-
-            m_iterations = iterations;
-            m_functionEvaluationsPerIterationCount = functionEvaluationsPerIteration;
-            m_parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
-            m_runParallel = maxDegreeOfParallelism != 1;
-            m_allowMultipleEvaluations = allowMultipleEvaluations;
-            m_locker = new object();
-
-            m_random = new Random(seed);
-
-            // Use member to seed the random uniform sampler.
-            m_sampler = new RandomUniform(m_random.Next());
-
-            // Hyper parameters for regression extra trees learner. These are based on the values suggested in http://www.cs.ubc.ca/~hutter/papers/10-TR-SMAC.pdf.
-            // However, according to the author Frank Hutter, the hyper parameters for the forest model should not matter that much.
-            m_learner = new RegressionExtremelyRandomizedTreesLearner(trees: 30,
-                minimumSplitSize: 10,
-                maximumTreeDepth: 2000,
-                featuresPrSplit: parameters.Length,
-                minimumInformationGain: 1e-6,
-                subSampleRatio: 1.0,
-                seed: m_random.Next(), // Use member to seed the random uniform sampler.
-                runParallel: m_runParallel);
-
-            // Optimizer for finding maximum expectation (most promising hyper parameters) from extra trees model.
-            m_maximizer = new RandomSearchOptimizer(m_parameters, iterations: 1000,
-                seed: m_random.Next(), // Use member to seed the random uniform sampler.
-                runParallel: m_runParallel);
+                runParallel: false);
 
             // Acquisition function to maximize.
             m_acquisitionFunc = AcquisitionFunctions.ExpectedImprovement;
@@ -229,106 +136,6 @@ namespace SharpLearning.Optimization
             return results.ToArray();
         }
 
-
-        ///// <summary>
-        ///// Optimization using Sequential Model-based optimization.
-        ///// Returns all results, chronologically ordered. 
-        ///// </summary>
-        ///// <param name="functionToMinimize"></param>
-        ///// <returns></returns>
-        //public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
-        //{
-        //    var parameterSets = new BlockingCollection<(double[] Parameters, double Error)>();
-        //    var usePreviousResults = m_previousParameterSetScores != null && m_previousParameterSets != null;
-
-        //    int iterations = 0;
-
-        //    if (usePreviousResults)
-        //    {
-        //        for (int i = 0; i < m_previousParameterSets.Count; i++)
-        //        {
-        //            var score = m_previousParameterSetScores[i];
-        //            if (!double.IsNaN(score))
-        //            {
-        //                parameterSets.Add((m_previousParameterSets[i], score));
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // initialize random starting points for the first iteration
-        //        Parallel.For(0, m_randomStartingPointsCount, m_parallelOptions, i =>
-        //        {
-        //            var set = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
-        //            var score = functionToMinimize(set).Error;
-        //            iterations++;
-
-        //            if (!double.IsNaN(score))
-        //            {
-        //                parameterSets.Add((set, score));
-        //            }
-        //        });
-        //    }
-        //    for (int iteration = 0; iteration < m_iterations; iteration++)
-        //    {
-        //        // fit model			
-        //        var observations = parameterSets.Select(s => s.Parameters).ToList().ToF64Matrix();
-        //        var targets = parameterSets.Select(s => s.Error).ToArray();
-        //        var model = m_learner.Learn(observations, targets);
-
-        //        var bestScore = parameterSets.Min(m => m.Error);
-        //        var candidates = FindNextCandidates(model, bestScore);
-
-        //        m_isFirst = true;
-
-        //        Parallel.ForEach(candidates, m_parallelOptions, candidate =>
-        //        {
-        //            var parameterSet = candidate.ParameterSet;
-
-        //            // skip evaluation if parameters have not changed unless explicitly allowed
-        //            if (m_allowMultipleEvaluations || IsFirstEvaluation() || !Contains(parameterSets, parameterSet))
-        //            {
-
-        //                if (!m_allowMultipleEvaluations && Equals(GetBestParameterSet(parameterSets), parameterSet))
-        //                {
-        //                    // if the best parameter set is sampled again.
-        //                    // Add a new random parameter set.
-        //                    parameterSet = RandomSearchOptimizer
-        //                        .SampleParameterSet(m_parameters, m_sampler);
-        //                }
-
-        //                var result = functionToMinimize(parameterSet);
-        //                iterations++;
-
-        //                if (!double.IsNaN(result.Error))
-        //                {
-        //                    // add point to parameter set list for next iterations model
-        //                    parameterSets.Add((parameterSet, result.Error));
-        //                }
-
-        //            }
-        //        });
-
-        //    }
-
-        //    return parameterSets.Select(p => new OptimizerResult(p.Parameters, p.Error)).ToArray();
-        //}
-
-        bool IsFirstEvaluation()
-        {
-            lock (m_locker)
-            {
-                if (m_isFirst)
-                {
-                    m_isFirst = false;
-                    return true;
-                }
-
-            }
-
-            return m_isFirst;
-        }
-
         /// <summary>
         /// Runs a set of parameter sets and returns the results.
         /// </summary>
@@ -338,15 +145,29 @@ namespace SharpLearning.Optimization
         public List<OptimizerResult> RunParameterSets(Func<double[], OptimizerResult> functionToMinimize,
             double[][] parameterSets)
         {
-            var results = new List<OptimizerResult>();
-            foreach (var parameterSet in parameterSets)
+            var results = new ConcurrentBag<OptimizerResult>();
+            if (!m_runParallel)
             {
-                // Get the current parameters for the current point
-                var result = functionToMinimize(parameterSet);
-                results.Add(result);
+                foreach (var parameterSet in parameterSets)
+                {
+                    // Get the current parameters for the current point
+                    var result = functionToMinimize(parameterSet);
+                    results.Add(result);
+                }
+            }
+            else
+            {
+                var rangePartitioner = Partitioner.Create(parameterSets, true);
+                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
+                Parallel.ForEach(rangePartitioner, options, (param, loopState) =>
+                {
+                    // Get the current parameters for the current point
+                    var result = functionToMinimize(param);
+                    results.Add(result);
+                });
             }
 
-            return results;
+            return results.ToList();
         }
 
         /// <summary>
@@ -372,7 +193,11 @@ namespace SharpLearning.Optimization
                 return randomParameterSets;
             }
 
-            var validParameterSets = previousResults.Where(v => !double.IsNaN(v.Error));
+            // Filter away NaNs, and ensure result order is preserved, when fitting the model.
+            var validParameterSets = previousResults
+                .Where(v => !double.IsNaN(v.Error))
+                .OrderBy(v => v.Error); // TODO: This might still fail to provide same order if two different parameter sets yield the same error.
+            
             var model = FitModel(validParameterSets);
 
             return GenerateCandidateParameterSets(parameterSetCount, validParameterSets.ToList(), model);
@@ -396,12 +221,15 @@ namespace SharpLearning.Optimization
             // TODO: Handle maximization and minimization. Currently minimizes.
             var best = previousResults.Min(v => v.Error);
 
-            // Use maximizer for sampling potential new candidates.
+            // Sample new candidates.
             var results = FindNextCandidates(model, best);
 
             // Return the top candidate sets requested.
+            // Error is used to store ExpectedImprovement, so we want the maximum value
+            // not the minimum.
             var candidates = results
-                .Where(v => !double.IsNaN(v.Error)).OrderBy(r => r.Error)
+                .Where(v => !double.IsNaN(v.Error))
+                .OrderByDescending(r => r.Error) 
                 .Take(parameterSetCount)
                 .Select(p => p.ParameterSet).ToArray();
 
@@ -410,62 +238,27 @@ namespace SharpLearning.Optimization
 
         OptimizerResult[] FindNextCandidates(RegressionForestModel model, double bestScore)
         {
-            OptimizerResult minimize(double[] param)
+            // Additional set of random parameterSets to choose from during local search.
+            var results = new List<OptimizerResult>();
+            var m_randomSearchPointCount = 1000;
+            for (int i = 0; i < m_randomSearchPointCount; i++)
             {
-                // use the model to predict the expected performance, mean and variance, of the parameter set.
-                var p = model.PredictCertainty(param);
+                var parameterSet = RandomSearchOptimizer
+                    .SampleParameterSet(m_parameters, m_sampler);
 
-                return new OptimizerResult(param,
-                    // negative, since we want to "maximize" the acquisition function.
-                    -m_acquisitionFunc(bestScore, p.Prediction, p.Variance));
+                var expectedImprovement = ComputeExpectedImprovement(bestScore, parameterSet, model);
+                results.Add(new OptimizerResult(parameterSet, expectedImprovement));
             }
 
-            return m_maximizer.Optimize(minimize);
+            return results.ToArray();
         }
 
-        bool Equals(double[] p1, double[] p2)
+        double ComputeExpectedImprovement(double best, double[] parameterSet, RegressionForestModel model)
         {
-            if (p1 == null)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < p1.Length; i++)
-            {
-                if (!Equal(p1[i], p2[i]))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        bool Contains(BlockingCollection<(double[] Parameters, double Error)> many, double[] single)
-        {
-            lock (m_locker)
-            {
-                return many.Any(m => Equals(m.Parameters, single));
-            }
-        }
-
-        bool Equal(double a, double b)
-        {
-            var diff = Math.Abs(a * m_tolerence);
-            if (Math.Abs(a - b) <= diff)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        double[] GetBestParameterSet(BlockingCollection<(double[] Parameters, double Error)> parameterSets)
-        {
-            lock (m_locker)
-            {
-                return parameterSets.FirstOrDefault(f => f.Error == parameterSets.Min(p => p.Error)).Parameters;
-            }
+            var prediction = model.PredictCertainty(parameterSet);
+            var mean = prediction.Prediction;
+            var variance = prediction.Variance;
+            return AcquisitionFunctions.ExpectedImprovement(best, mean, variance);
         }
     }
 }
