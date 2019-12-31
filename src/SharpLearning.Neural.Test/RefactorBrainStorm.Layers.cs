@@ -317,6 +317,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
             NeuralNetStorage storage, Random random,
             Initialization initializtion = Initialization.GlorotUniform)
         {
+            Input = inputVariable;
             UpdateDimensions(batchSize);
 
             var c = inputVariable.Dimensions[1];
