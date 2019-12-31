@@ -238,6 +238,149 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class ConvolutionLayer : ILayer
+    {
+        readonly Operators.ConvolutionDescriptor m_convolutionDescriptor;
+
+        Variable Weights;
+        Variable Bias;
+
+        Variable Im2Col;
+        Variable Conv;
+
+        BorderMode m_borderMode;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filterChannels"></param>
+        /// <param name="filterH"></param>
+        /// <param name="filterW"></param>
+        /// <param name="strideH"></param>
+        /// <param name="strideW"></param>
+        /// <param name="padH"></param>
+        /// <param name="padW"></param>
+        public ConvolutionLayer(int filterChannels, int filterH, int filterW,
+                int strideH, int strideW,
+                int padH, int padW, BorderMode borderMode)
+        {
+            m_convolutionDescriptor = new Operators.ConvolutionDescriptor(filterChannels, 
+                filterH, filterW, 
+                strideH, strideW, 
+                padH, padW);
+
+            m_borderMode = borderMode;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Variable Output { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Variable Input { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="storage"></param>
+        /// <param name="training"></param>
+        public void Forward(NeuralNetStorage storage)
+        {
+            Operators.Convolution.Forward(Input, Im2Col, Conv, m_convolutionDescriptor,
+                Weights, Bias, m_borderMode, Output, storage);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="storage"></param>
+        public void Backward(NeuralNetStorage storage)
+        {
+            Operators.Convolution.Backward(Input, Im2Col, Conv, m_convolutionDescriptor, 
+                Weights, Bias, m_borderMode, Output, storage);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputVariable"></param>
+        /// <param name="storage"></param>
+        /// <param name="random"></param>
+        /// <param name="initializtion"></param>
+        public void Initialize(Variable inputVariable, int batchSize,
+            NeuralNetStorage storage, Random random,
+            Initialization initializtion = Initialization.GlorotUniform)
+        {
+            UpdateDimensions(batchSize);
+
+            var c = inputVariable.Dimensions[1];
+            var h = inputVariable.Dimensions[2];
+            var w = inputVariable.Dimensions[3];
+
+            // Calculations of dimensions based on:
+            // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
+            var filterCubeSize = c * m_convolutionDescriptor.FilterW * m_convolutionDescriptor.FilterH;
+            var receptiveFieldSize = m_convolutionDescriptor.FilterW * m_convolutionDescriptor.FilterH;
+
+            var fanIn = filterCubeSize;
+            var fanOut = m_convolutionDescriptor.FilterChannels * receptiveFieldSize;
+            var fans = new FanInFanOut(fanIn, fanOut);
+            var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
+
+            Weights = Variable.CreateTrainable(m_convolutionDescriptor.FilterChannels, filterCubeSize);
+            storage.AssignTensor(Weights, () => (float)distribution.Sample());
+
+            Bias = Variable.CreateTrainable(m_convolutionDescriptor.FilterChannels);
+            storage.AssignTensor(Bias, () => 0.0f);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="input"></param>
+        public void UpdateDimensions(int batchSize)
+        {
+            //Input = input;
+
+            //var batchSize = Input.Dimensions[0];
+            var c = Input.Dimensions[1];
+            var h = Input.Dimensions[2];
+            var w = Input.Dimensions[3];
+
+            var filterGridWidth = ConvUtils.GetFilterGridLength(w, m_convolutionDescriptor.FilterW,
+                m_convolutionDescriptor.StrideW, m_convolutionDescriptor.PadW, m_borderMode);
+            var filterGridHeight = ConvUtils.GetFilterGridLength(h, m_convolutionDescriptor.FilterH,
+                m_convolutionDescriptor.StrideH, m_convolutionDescriptor.PadW, m_borderMode);
+
+            // Calculations of dimensions based on:
+            // Nvidia, cuDNN: Efficient Primitives for Deep Learning: https://arxiv.org/pdf/1410.0759.pdf
+            var filterCubeSize = c * m_convolutionDescriptor.FilterH * m_convolutionDescriptor.FilterW;
+            var filterGridSize = filterGridWidth * filterGridHeight;
+
+            Im2Col = Variable.Create(filterGridSize * batchSize, filterCubeSize);
+
+            Conv = Variable.Create(m_convolutionDescriptor.FilterChannels, batchSize,
+                filterGridHeight, filterGridWidth);
+
+            Output = Variable.Create(batchSize, m_convolutionDescriptor.FilterChannels,
+                filterGridHeight, filterGridWidth);
+        }
+
+        public int ParameterCount()
+        {
+            var weightCount = Weights.ElementCount;
+            var biasCount = Bias.ElementCount;
+
+            return weightCount + biasCount;
+        }
+    }
+
     public sealed class ReluLayer : ActivationLayer
     {
         public ReluLayer()
