@@ -20,20 +20,21 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
             //       Only calculated output and gradients should be on the storage.
 
             /// Note that layourt is: Batch, Channel, height, Width
-            var inputShape = new TensorShape(1, 28, 28);
+            var inputShape = new TensorShape(1, 1, 28);
             var targetShape = new TensorShape(1);
 
             var net = new NeuralNet();
             net.Add(new InputLayer(inputShape.Dimensions));
+            
             net.Add(new ConvolutionLayer(8, 1, 3, 1, 1, 0, 0, BorderMode.Valid));
-            //net.Add(new DenseLayer(units: 128));
             net.Add(new ReluLayer());
-            //net.Add(new DenseLayer(units: 256));
-            //net.Add(new ConvolutionLayer(16, 3, 3, 1, 1, 0, 0, BorderMode.Same));
-            //net.Add(new ReluLayer());
-            ////net.Add(new DenseLayer(units: 512));
-            //net.Add(new ConvolutionLayer(32, 3, 3, 1, 1, 0, 0, BorderMode.Same));
+            
+            net.Add(new ConvolutionLayer(16, 1, 3, 1, 1, 0, 0, BorderMode.Valid));
             net.Add(new ReluLayer());
+            
+            net.Add(new ConvolutionLayer(32, 1, 3, 1, 1, 0, 0, BorderMode.Valid));
+            net.Add(new ReluLayer());
+            
             net.Add(new DenseLayer(units: 1));
 
             var loss = new MeanSquareLoss();
@@ -47,7 +48,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
 
             var minibatchSource = new MinibatchSource(inputShape, targetShape, seed: random.Next());
 
-            var iterations = 6000;
+            var iterations = 20000;
 
             var optimizer = new SgdOptimizer(learningRate: 0.01f, batchSize: batchSize);
 
@@ -77,7 +78,7 @@ namespace SharpLearning.Neural.Test.RefactorBranStorm
                 lossSum += batchLoss;
                 totalSampleCount += batchSize;
 
-                if (iteration % 2000 == 0)
+                if (iteration % 200 == 0)
                 {
                     var currentLoss = lossSum / totalSampleCount;
                     lossSum = 0;
