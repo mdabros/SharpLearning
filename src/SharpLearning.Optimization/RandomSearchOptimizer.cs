@@ -16,7 +16,7 @@ namespace SharpLearning.Optimization
         readonly IParameterSpec[] m_parameters;
         readonly int m_iterations;
         readonly IParameterSampler m_sampler;
-        readonly int m_maxDegreeOfParallelism = -1;
+        readonly ParallelOptions m_parallelOptions;
 
         /// <summary>
         /// Random search optimizer initializes random parameters between min and max of the provided parameters.
@@ -27,17 +27,20 @@ namespace SharpLearning.Optimization
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
-        public RandomSearchOptimizer(IParameterSpec[] parameters, 
-            int iterations, 
-            int seed=42, 
-            bool runParallel = true, 
+        public RandomSearchOptimizer(IParameterSpec[] parameters,
+            int iterations,
+            int seed = 42,
+            bool runParallel = true,
             int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
             m_sampler = new RandomUniform(seed);
             m_iterations = iterations;
-            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
+            m_parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = maxDegreeOfParallelism
+            };
         }
 
         /// <summary>
@@ -75,12 +78,7 @@ namespace SharpLearning.Optimization
             }
             else
             {
-                var options = new ParallelOptions
-                { 
-                    MaxDegreeOfParallelism = m_maxDegreeOfParallelism 
-                };
-
-                Parallel.For(0, parameterSets.Length, options, (index, loopState) =>
+                Parallel.For(0, parameterSets.Length, m_parallelOptions, (index, loopState) =>
                 {
                     RunParameterSet(index, parameterSets, 
                         functionToMinimize, parameterIndexToResult);
