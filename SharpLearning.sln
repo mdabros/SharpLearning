@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput.Test", "src\SharpLearning.InputOutput.Test\SharpLearning.InputOutput.Test.csproj", "{9B29211D-9211-4C36-872D-5747D6C51878}"
 EndProject
@@ -64,6 +64,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost", "src\SharpLearning.XGBoost\SharpLearning.XGBoost.csproj", "{6637B36B-35E2-4FDB-8166-6472307D45BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost.Test", "src\SharpLearning.XGBoost.Test\SharpLearning.XGBoost.Test.csproj", "{FFD79827-ED40-47EB-9CB8-2E683DEA3606}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Onnx.Test", "src\SharpLearning.Onnx.Test\SharpLearning.Onnx.Test.csproj", "{C5F63584-1CC0-4805-A8A8-BE71017A9293}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -179,6 +181,10 @@ Global
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFD79827-ED40-47EB-9CB8-2E683DEA3606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5F63584-1CC0-4805-A8A8-BE71017A9293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5F63584-1CC0-4805-A8A8-BE71017A9293}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5F63584-1CC0-4805-A8A8-BE71017A9293}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5F63584-1CC0-4805-A8A8-BE71017A9293}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
