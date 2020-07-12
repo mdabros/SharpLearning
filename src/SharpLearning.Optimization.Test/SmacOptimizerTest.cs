@@ -17,14 +17,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = new SmacOptimizer(parameters,
-                iterations: 80,
-                randomStartingPointCount: 20,
-                functionEvaluationsPerIterationCount: 1,
-                localSearchPointCount: 10,
-                randomSearchPointCount: 1000,
-                epsilon: 0.00001,
-                seed: 42);
+            var sut = CreateSut(parameters);
 
             var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
 
@@ -42,14 +35,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
 
-            var sut = new SmacOptimizer(parameters,
-                iterations: 80,
-                randomStartingPointCount: 20,
-                functionEvaluationsPerIterationCount: 1,
-                localSearchPointCount: 10,
-                randomSearchPointCount: 1000,
-                epsilon: 0.00001,
-                seed: 42);
+            var sut = CreateSut(parameters);
 
             var actual = sut.OptimizeBest(Minimize);
 
@@ -69,14 +55,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = new SmacOptimizer(parameters,
-                iterations: 80,
-                randomStartingPointCount: 20,
-                functionEvaluationsPerIterationCount: 1,
-                localSearchPointCount: 10,
-                randomSearchPointCount: 1000,
-                epsilon: 0.00001,
-                seed: 42);
+            var sut = CreateSut(parameters);
 
             var actual = sut.Optimize(MinimizeWeightFromHeight);
 
@@ -201,6 +180,18 @@ namespace SharpLearning.Optimization.Test
         {
             var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
                 10, 20, 30, 40, 0);
+        }
+
+        static SmacOptimizer CreateSut(MinMaxParameterSpec[] parameters)
+        {
+            return new SmacOptimizer(parameters,
+                iterations: 80,
+                randomStartingPointCount: 20,
+                functionEvaluationsPerIterationCount: 1,
+                localSearchPointCount: 10,
+                randomSearchPointCount: 1000,
+                epsilon: 0.00001,
+                seed: 42);
         }
 
         OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
