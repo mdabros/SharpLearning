@@ -49,17 +49,17 @@ namespace SharpLearning.Optimization.Test
             };
 
             var sut = maxDegreeOfParallelism.HasValue ? 
-                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10, 
+                new GlobalizedBoundedNelderMeadOptimizer(parameters, 50, 1e-5, 10, 
                     maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
-                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
+                new GlobalizedBoundedNelderMeadOptimizer(parameters, 50, 1e-5, 10);
 
             var results = sut.Optimize(MinimizeWeightFromHeight);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.71314535727786 }, 109.34381396310141),
-                new OptimizerResult(new double[] { 37.7131485180996 }, 109.34381396350526)
+                new OptimizerResult(new double[] { 37.71314634450421 }, 109.3438139631394),
+                new OptimizerResult(new double[] { 37.713142445047254 }, 109.34381396345546)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
