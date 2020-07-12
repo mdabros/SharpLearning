@@ -10,16 +10,18 @@ namespace SharpLearning.Optimization.Test
     public class BayesianOptimizerTest
     {
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void BayesianOptimizer_OptimizeBest_SingleParameter(bool runParallel)
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void BayesianOptimizer_OptimizeBest_SingleParameter(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = CreateSut(runParallel, parameters);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
 
@@ -28,9 +30,11 @@ namespace SharpLearning.Optimization.Test
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void BayesianOptimizer_OptimizeBest_MultipleParameters(bool runParallel)
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void BayesianOptimizer_OptimizeBest_MultipleParameters(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
@@ -39,7 +43,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
 
-            var sut = CreateSut(runParallel, parameters);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var actual = sut.OptimizeBest(Minimize);
 
@@ -52,16 +56,18 @@ namespace SharpLearning.Optimization.Test
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void BayesianOptimizer_Optimize(bool runParallel)
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void BayesianOptimizer_Optimize(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = CreateSut(runParallel, parameters);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var results = sut.Optimize(MinimizeWeightFromHeight);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
@@ -182,16 +188,15 @@ namespace SharpLearning.Optimization.Test
         }
 
         static BayesianOptimizer CreateSut(
-            bool runParallel,
-            //int? maybeMaxDegreeOfParallelism,
+            int? maybeMaxDegreeOfParallelism,
             MinMaxParameterSpec[] parameters)
         {
             const int DefaultMaxDegreeOfParallelism = -1;
 
-            //var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
-            //    maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+            var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
+                maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
 
-            //var runParallel = maybeMaxDegreeOfParallelism.HasValue;
+            var runParallel = maybeMaxDegreeOfParallelism.HasValue;
 
             var sut = new BayesianOptimizer(parameters,
                 iterations: 30,
@@ -199,7 +204,8 @@ namespace SharpLearning.Optimization.Test
                 functionEvaluationsPerIterationCount: 5,
                 randomSearchPointCount: 1000,
                 seed: 42,
-                runParallel: runParallel);
+                runParallel: runParallel,
+                maxDegreeOfParallelism: maxDegreeOfParallelism);
 
             return sut;
         }
