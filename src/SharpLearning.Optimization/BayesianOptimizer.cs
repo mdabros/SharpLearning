@@ -31,8 +31,8 @@ namespace SharpLearning.Optimization
         readonly int m_randomStartingPointsCount;
         readonly int m_functionEvaluationsPerIterationCount;
         readonly int m_randomSearchPointCount;
-        
-        readonly int m_maxDegreeOfParallelism;
+
+        readonly ParallelOptions m_parallelOptions;
         readonly bool m_runParallel;
 
         // Important to use extra trees learner to have split between features calculated as: 
@@ -107,7 +107,10 @@ namespace SharpLearning.Optimization
                 runParallel: false);
 
             m_runParallel = runParallel;
-            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
+            m_parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = maxDegreeOfParallelism
+            };
         }
 
         /// <summary>
@@ -153,29 +156,25 @@ namespace SharpLearning.Optimization
         public List<OptimizerResult> RunParameterSets(Func<double[], OptimizerResult> functionToMinimize,
             double[][] parameterSets)
         {
-            var results = new ConcurrentBag<OptimizerResult>();
+            var results = new ConcurrentDictionary<int, OptimizerResult>();
             if (!m_runParallel)
             {
-                foreach (var parameterSet in parameterSets)
+                for (int index = 0; index < parameterSets.Length; index++)
                 {
-                    // Get the current parameters for the current point
-                    var result = functionToMinimize(parameterSet);
-                    results.Add(result);
+                    RunParameterSet(index, parameterSets,
+                        functionToMinimize, results);
                 }
             }
             else
             {
-                var rangePartitioner = Partitioner.Create(parameterSets, true);
-                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
-                Parallel.ForEach(rangePartitioner, options, (param, loopState) =>
+                Parallel.For(0, parameterSets.Length, m_parallelOptions, (index, loopState) =>
                 {
-                    // Get the current parameters for the current point
-                    var result = functionToMinimize(param);
-                    results.Add(result);
+                    RunParameterSet(index, parameterSets,
+                        functionToMinimize, results);
                 });
             }
 
-            return results.ToList();
+            return results.Values.ToList();
         }
 
         /// <summary>
@@ -266,6 +265,16 @@ namespace SharpLearning.Optimization
             var mean = prediction.Prediction;
             var variance = prediction.Variance;
             return AcquisitionFunctions.ExpectedImprovement(best, mean, variance);
+        }
+
+        static void RunParameterSet(int paramterSetIndex,
+            double[][] parameterSets,
+            Func<double[], OptimizerResult> functionToMinimize,
+            ConcurrentDictionary<int, OptimizerResult> parameterIndexToResult)
+        {
+            var parameterSet = parameterSets[paramterSetIndex];
+            var result = functionToMinimize(parameterSet);
+            parameterIndexToResult.AddOrUpdate(paramterSetIndex, result, (index, r) => r);
         }
     }
 }
