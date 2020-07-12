@@ -13,7 +13,7 @@ namespace SharpLearning.Optimization
     {
         readonly bool m_runParallel;
         readonly IParameterSpec[] m_parameters;
-        readonly int m_maxDegreeOfParallelism = -1;
+        readonly ParallelOptions m_parallelOptions;
 
         /// <summary>
         /// 
@@ -27,7 +27,10 @@ namespace SharpLearning.Optimization
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
-            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
+            m_parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = maxDegreeOfParallelism
+            };
         }
 
         /// <summary>
@@ -50,33 +53,31 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate the cartesian product between all parameters
-            var grid = CartesianProduct(m_parameters);
+            var parameterSets = CartesianProduct(m_parameters);
 
-            // Initialize the search
-            var results = new ConcurrentBag<OptimizerResult>();
+            var parameterIndexToResult = new ConcurrentDictionary<int, OptimizerResult>();
             if (!m_runParallel)
             {
-                foreach (var param in grid)
+                for (int index = 0; index < parameterSets.Length; index++)
                 {
-                    // Get the current parameters for the current point
-                    var result = functionToMinimize(param);
-                    results.Add(result);
+                    RunParameterSet(index, parameterSets,
+                        functionToMinimize, parameterIndexToResult);
                 }
             }
             else
             {
-                var rangePartitioner = Partitioner.Create(grid, true);
-                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
-
-                Parallel.ForEach(rangePartitioner, options, (param, loopState) =>
+                Parallel.For(0, parameterSets.Length, m_parallelOptions, (index, loopState) =>
                 {
-                    // Get the current parameters for the current point
-                    var result = functionToMinimize(param);
-                    results.Add(result);
+                    RunParameterSet(index, parameterSets,
+                        functionToMinimize, parameterIndexToResult);
                 });
             }
 
-            return results.ToArray();
+            var results = parameterIndexToResult.OrderBy(v => v.Key)
+                .Select(v => v.Value)
+                .ToArray();
+
+            return results;
         }
 
         static double[][] CartesianProduct(IParameterSpec[] sequences)
@@ -95,6 +96,15 @@ namespace SharpLearning.Optimization
                     from item in sequence
                     select accseq.Concat(new[] { item }));
         }
-    }
 
+        static void RunParameterSet(int paramterSetIndex,
+            double[][] parameterSets,
+            Func<double[], OptimizerResult> functionToMinimize,
+            ConcurrentDictionary<int, OptimizerResult> parameterIndexToResult)
+        {
+            var parameterSet = parameterSets[paramterSetIndex];
+            var result = functionToMinimize(parameterSet);
+            parameterIndexToResult.AddOrUpdate(paramterSetIndex, result, (index, r) => r);
+        }
+    }
 }
