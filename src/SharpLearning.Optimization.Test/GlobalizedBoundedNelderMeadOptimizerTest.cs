@@ -21,19 +21,16 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
 
-            var sut = maxDegreeOfParallelism.HasValue ? 
-                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10, 
-                    maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
-                new GlobalizedBoundedNelderMeadOptimizer(parameters, 5, 1e-5, 10);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(actual.Error, -0.99999949547279676, Delta);
+            Assert.AreEqual(actual.Error, -0.99999960731425908, Delta);
             Assert.AreEqual(actual.ParameterSet.Length, 3);
 
-            Assert.AreEqual(actual.ParameterSet[0], -7.8547285710964134, Delta);
-            Assert.AreEqual(actual.ParameterSet[1], 6.2835515298977995, Delta);
-            Assert.AreEqual(actual.ParameterSet[2], -1.5851024386788885E-07, Delta);
+            Assert.AreEqual(actual.ParameterSet[0], -1.5711056814954487, Delta);
+            Assert.AreEqual(actual.ParameterSet[1], -6.283490634742785, Delta);
+            Assert.AreEqual(actual.ParameterSet[2], -2.9822323517533149E-07, Delta);
         }
 
         [TestMethod]
@@ -48,10 +45,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = maxDegreeOfParallelism.HasValue ? 
-                new GlobalizedBoundedNelderMeadOptimizer(parameters, 50, 1e-5, 10, 
-                    maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
-                new GlobalizedBoundedNelderMeadOptimizer(parameters, 50, 1e-5, 10);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var results = sut.Optimize(MinimizeWeightFromHeight);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
@@ -69,6 +63,31 @@ namespace SharpLearning.Optimization.Test
             Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
             Assert.AreEqual(expected.Last().ParameterSet.First(), 
                 actual.Last().ParameterSet.First(), Delta);
+        }
+
+        static GlobalizedBoundedNelderMeadOptimizer CreateSut(
+            int? maybeMaxDegreeOfParallelism, 
+            MinMaxParameterSpec[] parameters)
+        {
+            const int DefaultMaxDegreeOfParallelism = -1;
+
+            var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
+                maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+
+            var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters,
+                maxRestarts: 50,
+                noImprovementThreshold: 1e-5,
+                maxIterationsWithoutImprovement: 10,
+                maxIterationsPrRestart: 0,
+                maxFunctionEvaluations: 0,
+                alpha: 1,
+                gamma: 2,
+                rho: -0.5,
+                sigma: 0.5,
+                seed: 324,
+                maxDegreeOfParallelism: maxDegreeOfParallelism);
+
+            return sut;
         }
     }
 }
