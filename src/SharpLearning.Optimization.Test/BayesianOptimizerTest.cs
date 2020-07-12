@@ -10,33 +10,31 @@ namespace SharpLearning.Optimization.Test
     public class BayesianOptimizerTest
     {
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void BayesianOptimizer_OptimizeBest_SingleParameter(bool runParallel)
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void BayesianOptimizer_OptimizeBest_SingleParameter(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = new BayesianOptimizer(parameters,
-                iterations: 80,
-                randomStartingPointCount: 20,
-                functionEvaluationsPerIterationCount: 1,
-                randomSearchPointCount: 1000,
-                seed: 42,
-                runParallel: runParallel);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
 
-            Assert.AreEqual(126.50056735005998, actual.Error, Delta);
-            Assert.AreEqual(38.359608938153649, actual.ParameterSet.Single(), Delta);
+            Assert.AreEqual(110.050490091126, actual.Error, Delta);
+            Assert.AreEqual(37.84434624847227, actual.ParameterSet.Single(), Delta);
         }
 
         [TestMethod]
-        [DataRow(false)]
-        [DataRow(true)]
-        public void BayesianOptimizer_OptimizeBest_MultipleParameters(bool runParallel)
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void BayesianOptimizer_OptimizeBest_MultipleParameters(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
@@ -45,49 +43,39 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
 
-            var sut = new BayesianOptimizer(parameters,
-                iterations: 100,
-                randomStartingPointCount: 5,
-                functionEvaluationsPerIterationCount: 1,
-                randomSearchPointCount: 1000,
-                seed: 42,
-                runParallel: runParallel);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(-0.76070603822760785, actual.Error, Delta);
+            Assert.AreEqual(-0.59028531714984367, actual.Error, Delta);
             Assert.AreEqual(3, actual.ParameterSet.Length);
 
-            Assert.AreEqual(1.6078245041928358, actual.ParameterSet[0], Delta);
-            Assert.AreEqual(-8.9735394990879769, actual.ParameterSet[1], Delta);
-            Assert.AreEqual(-0.18217921731163855, actual.ParameterSet[2], Delta);
+            Assert.AreEqual(3.9675549296511132, actual.ParameterSet[0], Delta);
+            Assert.AreEqual(6.8542302757754143, actual.ParameterSet[1], Delta);
+            Assert.AreEqual(-0.047884811669533178, actual.ParameterSet[2], Delta);
         }
 
         [TestMethod]
-        public void BayesianOptimizer_Optimize()
+        [DataRow(1)]
+        [DataRow(2)]
+        [DataRow(-1)]
+        [DataRow(null)]
+        public void BayesianOptimizer_Optimize(int? maxDegreeOfParallelism)
         {
             var parameters = new MinMaxParameterSpec[]
             {
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = new BayesianOptimizer(parameters,
-                iterations: 120,
-                randomStartingPointCount: 5,
-                functionEvaluationsPerIterationCount: 1,
-                randomSearchPointCount: 1000,
-                seed: 42,
-                runParallel: false); // Note, since the returned results are not ordered on error, 
-                                     // running with parallel computations will not return reproducible order of results,
-                                     // so runParallel must be false for this test.
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var results = sut.Optimize(MinimizeWeightFromHeight);
             var actual = new OptimizerResult[] { results.First(), results.Last() };
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 43.216748276360683 }, 1352.8306605984087),
-                new OptimizerResult(new double[] { 38.201425707992833 }, 119.1316225267316)
+                new OptimizerResult(new double[] { 90.513222660177036 }, 114559.43191955783),
+                new OptimizerResult(new double[] { 41.752538896050559 }, 779.196560786838)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
@@ -199,6 +187,30 @@ namespace SharpLearning.Optimization.Test
                 10, 20, 30, 0);
         }
 
+        static BayesianOptimizer CreateSut(
+            int? maybeMaxDegreeOfParallelism,
+            MinMaxParameterSpec[] parameters)
+        {
+            const int DefaultMaxDegreeOfParallelism = -1;
+
+            var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
+                maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+
+            var runParallel = maybeMaxDegreeOfParallelism.HasValue;
+
+            var sut = new BayesianOptimizer(parameters,
+                iterations: 30,
+                randomStartingPointCount: 5,
+                functionEvaluationsPerIterationCount: 5,
+                randomSearchPointCount: 1000,
+                seed: 42,
+                runParallel: runParallel,
+                maxDegreeOfParallelism: maxDegreeOfParallelism);
+
+            return sut;
+        }
+
+
         OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
         {
             var parameters = new MinMaxParameterSpec[]
@@ -217,7 +229,9 @@ namespace SharpLearning.Optimization.Test
                 randomStartingPointCount: randomStartingPointsCount,
                 functionEvaluationsPerIterationCount: functionEvaluationsPerIterationCount,
                 randomSearchPointCount: 1000,
-                seed: 42);
+                seed: 42,
+                runParallel: false,
+                maxDegreeOfParallelism: 1);
 
             // Using BayesianOptimizer in an open loop.
             var initialParameterSets = sut.ProposeParameterSets(randomStartingPointsCount, results);

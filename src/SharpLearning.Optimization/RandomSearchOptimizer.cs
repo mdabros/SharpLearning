@@ -16,7 +16,7 @@ namespace SharpLearning.Optimization
         readonly IParameterSpec[] m_parameters;
         readonly int m_iterations;
         readonly IParameterSampler m_sampler;
-        readonly int m_maxDegreeOfParallelism = -1;
+        readonly ParallelOptions m_parallelOptions;
 
         /// <summary>
         /// Random search optimizer initializes random parameters between min and max of the provided parameters.
@@ -27,17 +27,20 @@ namespace SharpLearning.Optimization
         /// <param name="seed"></param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
-        public RandomSearchOptimizer(IParameterSpec[] parameters, 
-            int iterations, 
-            int seed=42, 
-            bool runParallel = true, 
+        public RandomSearchOptimizer(IParameterSpec[] parameters,
+            int iterations,
+            int seed = 42,
+            bool runParallel = true,
             int maxDegreeOfParallelism = -1)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
             m_runParallel = runParallel;
             m_sampler = new RandomUniform(seed);
             m_iterations = iterations;
-            m_maxDegreeOfParallelism = maxDegreeOfParallelism;
+            m_parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = maxDegreeOfParallelism
+            };
         }
 
         /// <summary>
@@ -59,35 +62,34 @@ namespace SharpLearning.Optimization
         /// <returns></returns>
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
-            // Generate the cartesian product between all parameters
+            // Generate parameter sets.
             var parameterSets = SampleRandomParameterSets(m_iterations, 
                 m_parameters, m_sampler);
 
-            // Initialize the search
-            var results = new ConcurrentBag<OptimizerResult>();
-
+            // Run parameter sets.
+            var parameterIndexToResult = new ConcurrentDictionary<int, OptimizerResult>();
             if(!m_runParallel)
             {
-                foreach (var parameterSet in parameterSets)
+                for (int index = 0; index < parameterSets.Length; index++)
                 {
-                    // Get the current parameters for the current point
-                    var result = functionToMinimize(parameterSet);
-                    results.Add(result);
+                    RunParameterSet(index, parameterSets, 
+                        functionToMinimize, parameterIndexToResult);
                 }
             }
             else
             {
-                var rangePartitioner = Partitioner.Create(parameterSets, true);
-                var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
-                Parallel.ForEach(rangePartitioner, options, (param, loopState) =>
+                Parallel.For(0, parameterSets.Length, m_parallelOptions, (index, loopState) =>
                 {
-                    // Get the current parameters for the current point
-                    var result = functionToMinimize(param);
-                    results.Add(result);
+                    RunParameterSet(index, parameterSets, 
+                        functionToMinimize, parameterIndexToResult);
                 });
             }
 
-            return results.ToArray();
+            var results = parameterIndexToResult.OrderBy(v => v.Key)
+                .Select(v => v.Value)
+                .ToArray();
+
+            return results;
         }
 
         /// <summary>
@@ -127,6 +129,16 @@ namespace SharpLearning.Optimization
             }
 
             return parameterSet;
+        }
+
+        static void RunParameterSet(int paramterSetIndex,
+            double[][] parameterSets,
+            Func<double[], OptimizerResult> functionToMinimize,
+            ConcurrentDictionary<int, OptimizerResult> parameterIndexToResult)
+        {
+            var parameterSet = parameterSets[paramterSetIndex];
+            var result = functionToMinimize(parameterSet);
+            parameterIndexToResult.AddOrUpdate(paramterSetIndex, result, (index, r) => r);
         }
     }
 }

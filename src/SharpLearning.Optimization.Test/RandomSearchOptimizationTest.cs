@@ -43,15 +43,15 @@ namespace SharpLearning.Optimization.Test
             };
 
             var sut = maxDegreeOfParallelism.HasValue ? 
-                new RandomSearchOptimizer(parameters, 2, 42, true, maxDegreeOfParallelism.Value) : 
-                new RandomSearchOptimizer(parameters, 2);
+                new RandomSearchOptimizer(parameters, 100, 42, true, maxDegreeOfParallelism.Value) : 
+                new RandomSearchOptimizer(parameters, 100);
 
             var actual = sut.Optimize(MinimizeWeightFromHeight);
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 13.8749507052707 }, 23438.2157641635),
                 new OptimizerResult(new double[] { 28.3729278125674 },  3690.81119818742),
+                new OptimizerResult(new double[] { 19.1529422843144 }, 14251.396910816733),
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

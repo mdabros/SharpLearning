@@ -120,12 +120,9 @@ namespace SharpLearning.Optimization
             {
                 RandomRestartPoint(initialPoint);
 
-                var prevBest = EvaluateFunction(functionToMinimize, initialPoint);
+                var previousBest = EvaluateFunction(functionToMinimize, initialPoint);
                 var iterationsWithoutImprovement = 0;
-                var concurrentResults = new ConcurrentBag<OptimizerResult>
-                {
-                    new OptimizerResult(prevBest.ParameterSet, prevBest.Error)
-                };
+                var concurrentResults = new ConcurrentDictionary<int, OptimizerResult>();
 
                 var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
 
@@ -148,11 +145,13 @@ namespace SharpLearning.Optimization
                     }
 
                     BoundCheck(x);
-                    var score = EvaluateFunction(functionToMinimize, x);
-                    concurrentResults.Add(score);
+                    var result = EvaluateFunction(functionToMinimize, x);
+                    concurrentResults.AddOrUpdate(i, result, (index, r) => r);
                 });
 
-                var results = concurrentResults.ToList();
+                var results = concurrentResults.Values.ToList();
+                // Add previous best result for simplex iteration.
+                results.Add(previousBest);
 
                 // simplex iter
                 var iterations = 0;
@@ -170,10 +169,10 @@ namespace SharpLearning.Optimization
 
                     iterations++;
 
-                    if (best.Error < (prevBest.Error - m_noImprovementThreshold))
+                    if (best.Error < (previousBest.Error - m_noImprovementThreshold))
                     {
                         iterationsWithoutImprovement = 0;
-                        prevBest = best;
+                        previousBest = best;
                     }
                     else
                     {
@@ -278,7 +277,8 @@ namespace SharpLearning.Optimization
             return allResults.ToArray();
         }
 
-        OptimizerResult EvaluateFunction(Func<double[], OptimizerResult> functionToMinimize, double[] parameters)
+        OptimizerResult EvaluateFunction(Func<double[], OptimizerResult> functionToMinimize, 
+            double[] parameters)
         {
             m_totalFunctionEvaluations++;
             return functionToMinimize(parameters);
