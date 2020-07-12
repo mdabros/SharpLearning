@@ -21,9 +21,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
             };
 
-            var sut = maxDegreeOfParallelism.HasValue ? 
-                new ParticleSwarmOptimizer(parameters, 100, maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
-                new ParticleSwarmOptimizer(parameters, 100);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var actual = sut.OptimizeBest(Minimize);
 
@@ -47,9 +45,7 @@ namespace SharpLearning.Optimization.Test
                 new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
             };
 
-            var sut = maxDegreeOfParallelism.HasValue ? 
-                new ParticleSwarmOptimizer(parameters, 100, maxDegreeOfParallelism: maxDegreeOfParallelism.Value) : 
-                new ParticleSwarmOptimizer(parameters, 100);
+            var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
             var results = sut.Optimize(MinimizeWeightFromHeight);
 
@@ -68,6 +64,26 @@ namespace SharpLearning.Optimization.Test
             Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
             Assert.AreEqual(expected.Last().ParameterSet.First(), 
                 actual.Last().ParameterSet.First(), Delta);
+        }
+
+        static ParticleSwarmOptimizer CreateSut(
+            int? maybeMaxDegreeOfParallelism,
+            MinMaxParameterSpec[] parameters)
+        {
+            const int DefaultMaxDegreeOfParallelism = -1;
+
+            var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
+                maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+
+            var sut = new ParticleSwarmOptimizer(parameters,
+            maxIterations: 100,
+            numberOfParticles:10,
+            c1: 2,
+            c2: 2,
+            seed: 42,
+            maxDegreeOfParallelism: maxDegreeOfParallelism);
+
+            return sut;
         }
     }
 }
