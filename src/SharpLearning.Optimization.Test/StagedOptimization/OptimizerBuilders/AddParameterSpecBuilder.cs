@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SharpLearning.Optimization.Test.StagedOptimization
+namespace SharpLearning.Optimization.Test.StagedOptimization.OptimizerBuilders
 {
     public class AddParameterSpecBuilder : IParameterSpecsBuilder
     {

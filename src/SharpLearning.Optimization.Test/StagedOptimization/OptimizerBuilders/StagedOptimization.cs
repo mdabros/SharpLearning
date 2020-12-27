@@ -1,6 +1,6 @@
-﻿namespace SharpLearning.Optimization.Test.StagedOptimization
+﻿namespace SharpLearning.Optimization.Test.StagedOptimization.OptimizerBuilders
 {
-    public static class StagedOptimization
+    public static class CreateOptimizerBuilder
     {
         public static IParameterSpecsBuilder New()
         {

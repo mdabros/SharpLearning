@@ -1,4 +1,4 @@
-﻿namespace SharpLearning.Optimization.Test.StagedOptimization
+﻿namespace SharpLearning.Optimization.Test.StagedOptimization.OptimizerBuilders
 {
     public interface IParameterSpecsBuilder
     {

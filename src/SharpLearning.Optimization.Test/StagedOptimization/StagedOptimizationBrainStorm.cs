@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SharpLearning.Optimization.Test.StagedOptimization.OptimizerBuilders;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
 namespace SharpLearning.Optimization.Test.StagedOptimization
@@ -30,7 +31,7 @@ namespace SharpLearning.Optimization.Test.StagedOptimization
             //
             //
 
-            var runOptimizer = StagedOptimization.New()
+            var runOptimizer = CreateOptimizerBuilder.New()
                 .AddParameterSpec(new MinMaxParameterSpec(10, 100, Transform.Linear))
                 .BuildOptimizer()
                 .AddOptimizer(r => new RandomSearchOptimizer(r, iterations: 100))

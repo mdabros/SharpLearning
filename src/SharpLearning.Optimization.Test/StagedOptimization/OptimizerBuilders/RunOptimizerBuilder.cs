@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpLearning.Optimization.Test.StagedOptimization
+namespace SharpLearning.Optimization.Test.StagedOptimization.OptimizerBuilders
 {
     public class RunOptimizerBuilder : IRunOptimizerBuilder
     {
