@@ -3,19 +3,16 @@ using System.Collections.Generic;
 
 namespace SharpLearning.Optimization.Test.StagedOptimization
 {
-    public class ControlFlowDoer<TControllableStep> : IControlFlowDoer<TControllableStep>
-        where TControllableStep : IControlFlowStep
+    public class ControlFlowDoer : IControlFlowDoer
     {
-        private protected ControlFlowThenDoer<TControllableStep> m_controlFlowThenDoer;
-        internal protected List<Type> m_mostRecentCollectionOfConcurrentSteps;
-        internal protected List<List<Type>> m_sequenceOfGroupsOfStepsToExecute = new List<List<Type>>();
+        internal protected List<StageStep> m_steps = new List<StageStep>();
 
-        public IControlFlowStepThenDoer<TControllableStep> Do<TControllableStepAlias>() 
-            where TControllableStepAlias : TControllableStep
+        public IControlFlowDoer Do(StageStep step) 
         {
-            m_mostRecentCollectionOfConcurrentSteps
-                .Add(typeof(TControllableStepAlias));
-            return m_controlFlowThenDoer;
+            m_steps.Add(step);
+            return this;
         }
+
+        public IReadOnlyList<StageStep> Steps() => m_steps;
     }
 }

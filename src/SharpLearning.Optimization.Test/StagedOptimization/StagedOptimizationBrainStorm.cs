@@ -3,12 +3,77 @@ using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Optimization.Test.StagedOptimization.OptimizerBuilders;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
+using System;
+using System.Collections.Generic;
 
 namespace SharpLearning.Optimization.Test.StagedOptimization
 {
     [TestClass]
     public class StagedOptimizationBrainStorm
     {
+        [TestMethod]
+        public void RunExample_3()
+        {
+            Func<IControlFlowDoer> inititFlow = () => new ControlFlowDoer();
+            var stageScheduler = new ControlFlowScheduler(inititFlow);
+            stageScheduler.Initialize()            
+                .Do(r =>
+                {
+                    Trace.WriteLine("Running RandomStage");
+
+                    var parameterSpecs = new IParameterSpec[] { new MinMaxParameterSpec(10, 100) };
+                    var randomSearch = new RandomSearchOptimizer(parameterSpecs, iterations: 10);
+                    var results = randomSearch.Optimize(MinimizeWeightFromHeight);
+
+                    r.Add("randomResults", results);
+                })
+                .Do(r =>
+                {
+                    Trace.WriteLine("Running GridStage");
+
+                    var parameterSpecs = new IParameterSpec[] { new GridParameterSpec(1, 5, 10, 20, 40, 80, 100) };
+                    var gridSearch = new GridSearchOptimizer(parameterSpecs);
+                    var results = gridSearch.Optimize(MinimizeWeightFromHeight);
+
+                    r.Add("gridResults", results);
+                })
+                .Do(r =>
+                {
+                    Trace.WriteLine("Running SmacStage");
+
+                    var randomResults = (OptimizerResult[])r["randomResults"];
+                    var gridResults = (OptimizerResult[])r["gridResults"];
+
+                    var previousResults = new List<OptimizerResult>();
+                    previousResults.AddRange(randomResults);
+                    previousResults.AddRange(gridResults);
+
+                    var parameterSpecs = new IParameterSpec[] { new MinMaxParameterSpec(10, 100) };
+                    var smac = new SmacOptimizer(parameterSpecs, iterations: 10);
+
+                    var iterations = 10;
+                    var smacResults = new List<OptimizerResult>();
+
+                    for (int iteration = 0; iteration < iterations; iteration++)
+                    {
+                        var suggestedParameters = smac.ProposeParameterSets(1, previousResults);
+                        var results = smac.RunParameterSets(MinimizeWeightFromHeight, suggestedParameters);
+                        smacResults.AddRange(results);
+                        previousResults.AddRange(results);
+                    }
+                    r.Add("smacResults", smacResults);
+                });
+
+            var repository = stageScheduler.Execute();
+            var randomBest = (OptimizerResult[])repository["randomResults"];
+            var gridBest = (OptimizerResult[])repository["gridResults"];
+            var smacBest = (List<OptimizerResult>)repository["smacResults"];
+
+            Trace.WriteLine("RandomBest: " + randomBest.OrderBy(r => r.Error).First().Error);
+            Trace.WriteLine("gridBest: " + gridBest.OrderBy(r => r.Error).First().Error);
+            Trace.WriteLine("SmacBest: " + smacBest.OrderBy(r => r.Error).First().Error);
+        }
+
         [TestMethod]
         public void RunExample_2()
         {

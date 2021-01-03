@@ -5,60 +5,33 @@ using System.Threading.Tasks;
 
 namespace SharpLearning.Optimization.Test.StagedOptimization
 {
-    public class ControlFlowScheduler<TControllableStep> : IControlFlowScheduler<TControllableStep>
-        where TControllableStep : IControlFlowStep
+    public class ControlFlowScheduler : IControlFlowScheduler
     {
-        readonly Func<IControlFlowStepThenDoer<TControllableStep>> m_controlFlowStepGrouperFactory;
-        IControlFlowStepThenDoer<TControllableStep> m_controlFlowStepThenDoer;
-        IDictionary<Type, IControlFlowStep> m_controllableStepsDictionary;
+        readonly Func<IControlFlowDoer> m_controlFlowFactory;
+        IControlFlowDoer m_controlFlowDoer;
 
         public ControlFlowScheduler(
-            Func<IControlFlowStepThenDoer<TControllableStep>> controlFlowStepGrouperFactory,
-            IEnumerable<TControllableStep> controllableSteps)
+            Func<IControlFlowDoer> controlFlowFactory)
         {
-            m_controlFlowStepGrouperFactory = controlFlowStepGrouperFactory;
-            m_controllableStepsDictionary = new Dictionary<Type, IControlFlowStep>();
-            foreach (var controllableStep in controllableSteps)
+            m_controlFlowFactory = controlFlowFactory;
+        }
+
+        public IControlFlowDoer Initialize()
+        {
+            m_controlFlowDoer = m_controlFlowFactory.Invoke();
+            return m_controlFlowDoer;
+        }
+
+        public IDictionary<string, object> Execute()
+        {
+            var stagesRepository = new Dictionary<string, object>();
+
+            foreach (var stageStep in ((ControlFlowDoer)m_controlFlowDoer).Steps())
             {
-                m_controllableStepsDictionary.Add(controllableStep.GetType(), controllableStep);
+                stageStep(stagesRepository);
             }
-        }
 
-        public IControlFlowStepThenDoer<TControllableStep> Initialize()
-        {
-            m_controlFlowStepThenDoer = m_controlFlowStepGrouperFactory.Invoke();
-            return m_controlFlowStepThenDoer;
+            return stagesRepository;
         }
-
-        public void Execute()
-        { 
-            foreach (IReadOnlyCollection<Type> groupsOfStepsToExecute in 
-                ((ControlFlowDoer<TControllableStep>)(m_controlFlowStepThenDoer)).m_sequenceOfGroupsOfStepsToExecute)
-            {
-                if (groupsOfStepsToExecute.Count == 1)
-                    ExecuteStep(groupsOfStepsToExecute.First());
-                else
-                    ExecuteSteps(groupsOfStepsToExecute);
-            }
-        }
-
-        private void ExecuteStep(Type type)
-        {
-            IControlFlowStep sequentialStep = m_controllableStepsDictionary[type];
-            sequentialStep.Execute();
-        }
-
-        private void ExecuteSteps(IEnumerable<Type> types)
-        {
-            Parallel.ForEach
-            (
-                types, async (type) => 
-                {
-                    IControlFlowStep aConcurrentStep = m_controllableStepsDictionary[type];
-                    await aConcurrentStep.ExecuteAsync();
-                }
-            );
-        }
-
     }
 }
