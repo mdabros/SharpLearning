@@ -41,8 +41,8 @@ namespace SharpLearning.Optimization.Test.StagedOptimization
                 {
                     Trace.WriteLine("Running SmacStage");
 
-                    var randomResults = (OptimizerResult[])r["randomResults"];
-                    var gridResults = (OptimizerResult[])r["gridResults"];
+                    var randomResults = r.Get<OptimizerResult[]>("randomResults");
+                    var gridResults = r.Get<OptimizerResult[]>("gridResults");
 
                     var previousResults = new List<OptimizerResult>();
                     previousResults.AddRange(randomResults);
@@ -65,9 +65,9 @@ namespace SharpLearning.Optimization.Test.StagedOptimization
                 });
 
             var repository = stageScheduler.Execute();
-            var randomBest = (OptimizerResult[])repository["randomResults"];
-            var gridBest = (OptimizerResult[])repository["gridResults"];
-            var smacBest = (List<OptimizerResult>)repository["smacResults"];
+            var randomBest = repository.Get<OptimizerResult[]>("randomResults");
+            var gridBest = repository.Get<OptimizerResult[]>("gridResults");
+            var smacBest = repository.Get<List<OptimizerResult>> ("smacResults");
 
             Trace.WriteLine("RandomBest: " + randomBest.OrderBy(r => r.Error).First().Error);
             Trace.WriteLine("gridBest: " + gridBest.OrderBy(r => r.Error).First().Error);

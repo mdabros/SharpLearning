@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpLearning.Optimization.Test.StagedOptimization
 {
@@ -22,9 +19,9 @@ namespace SharpLearning.Optimization.Test.StagedOptimization
             return m_controlFlowDoer;
         }
 
-        public IDictionary<string, object> Execute()
+        public IRepository Execute()
         {
-            var stagesRepository = new Dictionary<string, object>();
+            var stagesRepository = new Repository();
 
             foreach (var stageStep in ((ControlFlowDoer)m_controlFlowDoer).Steps())
             {

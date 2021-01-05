@@ -2,5 +2,5 @@
 
 namespace SharpLearning.Optimization.Test.StagedOptimization
 {
-    public delegate void StageStep(IDictionary<string, object> stageRepository);
+    public delegate void StageStep(IRepository stageRepository);
 }

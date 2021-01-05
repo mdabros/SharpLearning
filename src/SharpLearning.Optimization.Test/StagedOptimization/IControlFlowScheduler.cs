@@ -17,6 +17,6 @@ namespace SharpLearning.Optimization.Test.StagedOptimization
         /// <summary>
         /// executes the currently defined sequence 
         /// </summary>
-        IDictionary<string, object> Execute();
+        IRepository Execute();
     }
 }
