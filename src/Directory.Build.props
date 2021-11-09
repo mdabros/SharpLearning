@@ -12,5 +12,7 @@
     <PackageLicenseUrl>https://github.com/mdabros/SharpLearning/blob/master/LICENSE.md</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/mdabros/SharpLearning</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mdabros/SharpLearning</RepositoryUrl>
+
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 </Project>
