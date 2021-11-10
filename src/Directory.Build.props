@@ -13,6 +13,6 @@
     <PackageProjectUrl>https://github.com/mdabros/SharpLearning</PackageProjectUrl>
     <RepositoryUrl>https://github.com/mdabros/SharpLearning</RepositoryUrl>
 
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 </Project>
