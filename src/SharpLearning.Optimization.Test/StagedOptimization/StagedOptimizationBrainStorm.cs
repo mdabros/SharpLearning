@@ -70,7 +70,7 @@ namespace SharpLearning.Optimization.Test.StagedOptimization
             var smacBest = repository.Get<List<OptimizerResult>> ("smacResults");
 
             Trace.WriteLine("RandomBest: " + randomBest.OrderBy(r => r.Error).First().Error);
-            Trace.WriteLine("gridBest: " + gridBest.OrderBy(r => r.Error).First().Error);
+            Trace.WriteLine("GridBest: " + gridBest.OrderBy(r => r.Error).First().Error);
             Trace.WriteLine("SmacBest: " + smacBest.OrderBy(r => r.Error).First().Error);
         }
 
