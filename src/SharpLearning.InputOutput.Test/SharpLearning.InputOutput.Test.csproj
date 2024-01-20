@@ -4,6 +4,12 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <!--Enables the use of unsafe BinaryFormatterSerialization. See:
+  https://learn.microsoft.com/en-us/dotnet/core/compatibility/serialization/7.0/binaryformatter-apis-produce-errors#recommended-action-->
+  <PropertyGroup>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+  </PropertyGroup>
+  
   <PropertyGroup>
     <TargetFramework>net8</TargetFramework>
 
