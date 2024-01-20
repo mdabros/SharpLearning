@@ -1,3 +1,5 @@
+MIT License
+
 COPYRIGHT
 
 All contributions by Mads Dabros:

@@ -1,4 +1,7 @@
-[![Build Status](https://machinelearning.visualstudio.com/sharplearning-github-build/_apis/build/status/sharplearning-CI?branchName=master)](https://machinelearning.visualstudio.com/sharplearning-github-build/_build/latest?definitionId=28&branchName=master)
+[![Build Status](https://github.com/mdabros/SharpLearning/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/mdabros/SharpLearning/actions/workflows/dotnet.yml)
+[![Nuget](https://img.shields.io/nuget/v/SharpLearning.Containers?color=purple)](https://www.nuget.org/packages/SharpLearning.Containers/)
+[![downloads](https://img.shields.io/nuget/dt/SharpLearning.Containers)](https://www.nuget.org/packages/SharpLearning.Containers)
+[![License](https://img.shields.io/github/license/mdabros/SharpLearning)](https://github.com/mdabros/SharpLearning/blob/master/LICENSE.md)
 
 SharpLearning
 =================
