@@ -1,24 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFrameworks>$(LibraryTargetFramework)</TargetFrameworks>
     <PackageId>SharpLearning.FeatureTransformations</PackageId>
     <Description>Provides matrix and CsvRow transforms.</Description>
-    <PackageTags>normalization minmax onehot missingvalues</PackageTags>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>..\..\Build\Release\netstandard2.0\SharpLearning.FeatureTransformations.xml</DocumentationFile>
-    <OutputPath>..\..\Build\Release\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Build\Debug\</OutputPath>
+    <PackageTags>normalization min-max one-hot missing-values</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

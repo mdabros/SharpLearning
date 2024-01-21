@@ -1,24 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks>$(LibraryTargetFramework)</TargetFrameworks>
     <PackageId>SharpLearning.XGBoost</PackageId>
     <Description>Provides learning algorithms and models for XGBoost regression and classification.</Description>
-    <PackageTags>XGBoost machinelearning classification regression machine learning</PackageTags>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>..\..\Build\Release\netstandard2.0\SharpLearning.XGBoost.xml</DocumentationFile>
-    <OutputPath>..\..\Build\Release\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Build\Debug\</OutputPath>
+    <PackageTags>XGBoost machine-learning classification regression machine learning</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

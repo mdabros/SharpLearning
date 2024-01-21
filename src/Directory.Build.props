@@ -32,10 +32,11 @@
     
   </PropertyGroup>
   
-  <!--Only generatre documentation file for release builds-->
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <!--Only generate documentation file for release builds-->
+  <!--Disable documentation for now.-->
+  <!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
+  </PropertyGroup>-->
 
   <Import Project="$(MSBuildThisFileDirectory)\OutputBuildProps.props" />
 
