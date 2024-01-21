@@ -7,11 +7,16 @@
     <!--https://github.com/dotnet/sourcelink/blob/main/docs/README.md#includesourcerevisionininformationalversion-->
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/mdabros/SharpLearning</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/mdabros/SharpLearning</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>mdabros</Authors>
     <Copyright>Copyright © mdabros 2024</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
-    
+
     <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
     <TestTargetFramework>net8</TestTargetFramework>
 
@@ -30,7 +35,7 @@
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>-->
-    <NoWarn>1701;1702;1705;CS1591</NoWarn>
+    <NoWarn>CS1591</NoWarn>
 
   </PropertyGroup>
   
