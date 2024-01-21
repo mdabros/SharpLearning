@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>$(TestTargetFramework)</TargetFramework>
+    <!--Disable warnings specifically for this project-->
+    <NoWarn>$(NoWarn);NU1701;MSB3270</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
