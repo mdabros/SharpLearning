@@ -4,22 +4,25 @@
     <FileVersion>0.31.9</FileVersion>
     <InformationalVersion>$(FileVersion)</InformationalVersion>
     <PackageVersion>$(InformationalVersion)</PackageVersion>
+    <!--https://github.com/dotnet/sourcelink/blob/main/docs/README.md#includesourcerevisionininformationalversion-->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 
     <NeutralLanguage>en</NeutralLanguage>
     <Authors>mdabros</Authors>
     <Copyright>Copyright © mdabros 2024</Copyright>
-    <PackageLicenseUrl>https://github.com/mdabros/SharpLearning/blob/master/LICENSE.md</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/mdabros/SharpLearning</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/mdabros/SharpLearning</RepositoryUrl>
-
-    <!--https://github.com/dotnet/sourcelink/blob/main/docs/README.md#includesourcerevisionininformationalversion-->
-    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
-
+    <NeutralLanguage>en</NeutralLanguage>
+    
     <LibraryTargetFramework>netstandard2.0</LibraryTargetFramework>
     <TestTargetFramework>net8</TestTargetFramework>
 
-    <Deterministic>true</Deterministic>
     <LangVersion>12.0</LangVersion>
+    <Deterministic>true</Deterministic>
+    <DebugType>portable</DebugType>
+
+    <PublishRelease>true</PublishRelease>
+    <PackRelease>true</PackRelease>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <!--Disabled for now-->
     <!--<AnalysisLevel>latest</AnalysisLevel>
@@ -27,17 +30,10 @@
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>-->
+    <NoWarn>1701;1702;1705;CS1591</NoWarn>
 
-    <NoWarn>1701;1702;1705</NoWarn>
-    
   </PropertyGroup>
   
-  <!--Only generate documentation file for release builds-->
-  <!--Disable documentation for now.-->
-  <!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>-->
-
   <Import Project="$(MSBuildThisFileDirectory)\OutputBuildProps.props" />
 
   <Import Project="$(MSBuildThisFileDirectory)\SourceLink.Github.props" />
