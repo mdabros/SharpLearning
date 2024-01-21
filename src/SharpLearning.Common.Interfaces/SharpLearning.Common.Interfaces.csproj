@@ -1,25 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFrameworks>$(LibraryTargetFramework)</TargetFrameworks>
     <PackageId>SharpLearning.Common.Interfaces</PackageId>
     <Description>Provides common interfaces for SharpLearning.</Description>
-    <Copyright>Copyright © Mads Dabros 2014</Copyright>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>..\..\Build\Release\netstandard2.0\SharpLearning.Common.Interfaces.xml</DocumentationFile>
-    <OutputPath>..\..\Build\Release\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Build\Debug\</OutputPath>
-    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

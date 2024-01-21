@@ -5,20 +5,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <TargetFrameworks>$(LibraryTargetFramework)</TargetFrameworks>
     <PackageId>SharpLearning.Neural</PackageId>
     <Description>Provides learning algorithms and models for neural net regression and classification.</Description>
-    <PackageTags>neural network convolutional deep learning machinelearning classification regression machine</PackageTags>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>..\..\Build\Release\netstandard2.0\SharpLearning.Neural.xml</DocumentationFile>
-    <OutputPath>..\..\Build\Release\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Build\Debug\</OutputPath>
+    <PackageTags>neural network convolutional deep learning machine-learning classification regression</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

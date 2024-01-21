@@ -53,16 +53,34 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.Neural.Test",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.InputOutput", "src\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj", "{D283D41E-AA14-44C5-AFB0-EBE6B34F3B7D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{55C8F585-6918-4373-A349-EDF167D77FBB}"
-	ProjectSection(SolutionItems) = preProject
-		CONTRIBUTING.md = CONTRIBUTING.md
-		src\Directory.Build.props = src\Directory.Build.props
-		README.md = README.md
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost", "src\SharpLearning.XGBoost\SharpLearning.XGBoost.csproj", "{6637B36B-35E2-4FDB-8166-6472307D45BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpLearning.XGBoost.Test", "src\SharpLearning.XGBoost.Test\SharpLearning.XGBoost.Test.csproj", "{FFD79827-ED40-47EB-9CB8-2E683DEA3606}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{45CBAF1D-3116-41E9-A374-231B544B3A9E}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{D83436F7-2EE6-4D59-ACC3-355C973BCDAF}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		CONTRIBUTING.md = CONTRIBUTING.md
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2204FA16-973A-48CF-A9FD-94FA72424BA4}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		OutputBuildProject.props = OutputBuildProject.props
+		OutputBuildProps.props = OutputBuildProps.props
+		OutputBuildTargets.props = OutputBuildTargets.props
+		SourceLink.GitHub.props = SourceLink.GitHub.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

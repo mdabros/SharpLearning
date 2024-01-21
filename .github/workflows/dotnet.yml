@@ -7,11 +7,11 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Release version to tag and create'
-        required: false
+  # workflow_dispatch:
+  #   inputs:
+  #     version:
+  #       description: 'Release version to tag and create'
+  #       required: false
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1

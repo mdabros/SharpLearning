@@ -1,21 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <TargetFramework>net8</TargetFramework>
-
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\BuildTest\Release\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\BuildTest\Debug\</OutputPath>
+    <TargetFramework>$(TestTargetFramework)</TargetFramework>
+    <!--Disable warnings specifically for this project-->
+    <NoWarn>$(NoWarn);NU1701;MSB3270</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
