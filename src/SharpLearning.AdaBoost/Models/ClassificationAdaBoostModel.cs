@@ -19,7 +19,7 @@ namespace SharpLearning.AdaBoost.Models
         readonly double[] m_modelWeights;
         readonly ClassificationDecisionTreeModel[] m_models;
         readonly double[] m_rawVariableImportance;
-        Dictionary<double, double> m_predictions = new Dictionary<double, double>();
+        readonly Dictionary<double, double> m_predictions = new Dictionary<double, double>();
 
         /// <summary>
         /// AdaBoost classification model. Consist of a series of tree model and corresponding weights

@@ -22,7 +22,7 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
         readonly double m_max;
         readonly LinearNormalizer m_normalizer = new LinearNormalizer();
 
-        Dictionary<int, FeatureMinMax> m_featureMinMax;
+        readonly Dictionary<int, FeatureMinMax> m_featureMinMax;
 
         /// <summary>
         /// Normalizes features within the specified range (min, max)

@@ -15,7 +15,7 @@ namespace SharpLearning.CrossValidation.Augmentators
     {
         readonly double m_probabilityParameter;
         readonly double m_localVariance;
-        Random m_random;
+        readonly Random m_random;
 
         /// <summary>
         /// Augmentates continuous data according to the MUNGE method:

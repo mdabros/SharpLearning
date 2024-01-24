@@ -14,7 +14,7 @@ namespace SharpLearning.CrossValidation.Augmentators
     public sealed class NominalMungeAugmentator
     {
         readonly double m_probabilityParameter;
-        Random m_random;
+        readonly Random m_random;
 
         /// <summary>
         /// Augmentates nominal data according to the MUNGE method:

@@ -24,7 +24,7 @@ namespace SharpLearning.Neural.Layers
         public Matrix<float> ActivationDerivative;
         Matrix<float> m_delta;
 
-        IActivation m_activation;
+        readonly IActivation m_activation;
 
         /// <summary>
         /// 

@@ -36,9 +36,9 @@ namespace SharpLearning.AdaBoost.Learners
         readonly TotalErrorClassificationMetric<double> m_errorMetric =
             new TotalErrorClassificationMetric<double>();
 
-        List<double> m_modelErrors = new List<double>();
-        List<double> m_modelWeights = new List<double>();
-        List<ClassificationDecisionTreeModel> m_models =
+        readonly List<double> m_modelErrors = new List<double>();
+        readonly List<double> m_modelWeights = new List<double>();
+        readonly List<ClassificationDecisionTreeModel> m_models =
             new List<ClassificationDecisionTreeModel>();
 
         double[] m_workErrors = new double[0];

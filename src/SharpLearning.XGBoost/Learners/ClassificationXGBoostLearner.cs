@@ -17,7 +17,7 @@ namespace SharpLearning.XGBoost.Learners
         , ILearner<ProbabilityPrediction>
         , IIndexedLearner<ProbabilityPrediction>
     {
-        IDictionary<string, object> m_parameters = new Dictionary<string, object>();
+        readonly IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
         /// <summary>
         /// Classification learner for XGBoost. For classification problems, 

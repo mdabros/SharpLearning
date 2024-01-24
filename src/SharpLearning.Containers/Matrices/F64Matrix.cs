@@ -11,7 +11,7 @@ namespace SharpLearning.Containers.Matrices
     /// <remarks>Can be implicitly converted from double[][]</remarks>
     public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     {
-        double[] m_featureArray;
+        readonly double[] m_featureArray;
 
         /// <summary>
         /// Creates a zero-matrix with the specified number of rows and cols
