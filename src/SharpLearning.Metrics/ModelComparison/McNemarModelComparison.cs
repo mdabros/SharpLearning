@@ -78,7 +78,7 @@ namespace SharpLearning.Metrics
         /// <param name="model2Predictions"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public string CompareString(double[] model1Predictions, double[] model2Predictions, double[] targets)
+        public static string CompareString(double[] model1Predictions, double[] model2Predictions, double[] targets)
         {
             var mcNemarMatrix = Compare(model1Predictions, model2Predictions, targets);
 
