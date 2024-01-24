@@ -113,7 +113,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             CollectionAssert.AreEqual(Expected_NoHeader(), actual.ToList());
         }
 
-        List<CsvRow> Expected_NoHeader()
+        static List<CsvRow> Expected_NoHeader()
         {
             var columnNameToIndex = new Dictionary<string, int> { { "0", 0 }, { "1", 1 }, { "2", 2 } };
 
@@ -127,7 +127,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             return expected;
         }
 
-        List<CsvRow> Expected()
+        static List<CsvRow> Expected()
         {
             var columnNameToIndex = new Dictionary<string, int>
             {
@@ -146,7 +146,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             return expected;
         }
 
-        List<CsvRow> Expected_ColumnNames()
+        static List<CsvRow> Expected_ColumnNames()
         {
             var columnNameToIndex = new Dictionary<string, int>
             {
@@ -164,7 +164,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             return expected;
         }
 
-        List<CsvRow> Expected_Select_ColumnNames()
+        static List<CsvRow> Expected_Select_ColumnNames()
         {
             var columnNameToIndex = new Dictionary<string, int> { { "Pass", 0 } };
 
@@ -178,7 +178,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             return expected;
         }
 
-        List<CsvRow> Expected_Quote_Inclosed_Columns()
+        static List<CsvRow> Expected_Quote_Inclosed_Columns()
         {
             var columnNameToIndex = new Dictionary<string, int> { { "c1", 0 }, { "c2", 1 }, { "c3", 2 } };
 
@@ -191,7 +191,7 @@ namespace SharpLearning.InputOutput.Test.Csv
             return expected;
         }
 
-        List<CsvRow> Expected_Quote_Inclosed_Columns_Separator_In_Text()
+        static List<CsvRow> Expected_Quote_Inclosed_Columns_Separator_In_Text()
         {
             var columnNameToIndex = new Dictionary<string, int> { { "c1", 0 }, { "c2", 1 }, { "c3", 2 } };
 

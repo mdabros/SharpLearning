@@ -142,17 +142,17 @@ namespace SharpLearning.Containers.Test.Matrices
             Assert.AreEqual(3, actual.At(1, 1));
         }
 
-        double[] GetExpectedColumn()
+        static double[] GetExpectedColumn()
         {
             return new double[3] { 2, 20, 200 };
         }
 
-        double[] GetExpectedRow()
+        static double[] GetExpectedRow()
         {
             return new double[3] { 10, 20, 30 };
         }
 
-        F64Matrix GetExpectedColSubMatrix()
+        static F64Matrix GetExpectedColSubMatrix()
         {
             var features = new double[6] { 1, 3,
                                         10, 30,
@@ -161,7 +161,7 @@ namespace SharpLearning.Containers.Test.Matrices
             return new F64Matrix(features, 3, 2);
         }
 
-        F64Matrix GetExpectedRowSubMatrix()
+        static F64Matrix GetExpectedRowSubMatrix()
         {
             var features = new double[6] { 1, 2, 3,
                                         100, 200, 300};
@@ -169,7 +169,7 @@ namespace SharpLearning.Containers.Test.Matrices
             return new F64Matrix(features, 2, 3);
         }
 
-        F64Matrix CreateFeatures()
+        static F64Matrix CreateFeatures()
         {
             var features = new double[9] { 1, 2, 3,
                                         10, 20, 30,

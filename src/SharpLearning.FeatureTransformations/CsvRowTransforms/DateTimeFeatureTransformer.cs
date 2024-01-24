@@ -49,7 +49,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// <summary>
         /// 
         /// </summary>
-        public string[] FeatureNames
+        public static string[] FeatureNames
         {
             get => new[] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
         }
@@ -116,7 +116,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
             return timeValues;
         }
 
-        string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
+        static string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
         {
             if (!columnNameToIndex.ContainsKey(key))
             {

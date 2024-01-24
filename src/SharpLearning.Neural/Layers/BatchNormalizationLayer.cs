@@ -211,7 +211,7 @@ namespace SharpLearning.Neural.Layers
             return OutputActivations;
         }
 
-        float MovingAverage(float currentValue, float value, float momentum = 0.99f)
+        static float MovingAverage(float currentValue, float value, float momentum = 0.99f)
         {
             var newValue = currentValue * momentum + value * (1.0f - momentum);
             return newValue;

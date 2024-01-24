@@ -106,7 +106,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             Assert.AreEqual(0.22701441864756075, error, m_delta);
         }
 
-        double RegressionRandomForestLearnerTest_Learn_Glass(int trees, double subSampleRatio = 1.0)
+        static double RegressionRandomForestLearnerTest_Learn_Glass(int trees, double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
@@ -121,7 +121,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             return error;
         }
 
-        double RegressionRandomForestLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
+        static double RegressionRandomForestLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 

@@ -194,7 +194,7 @@ namespace SharpLearning.Optimization.Test
                 seed: 42);
         }
 
-        OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
+        static OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
         {
             var parameters = new MinMaxParameterSpec[]
             {
@@ -218,13 +218,13 @@ namespace SharpLearning.Optimization.Test
 
             // Using SmacOptimizer in an open loop.
             var initialParameterSets = sut.ProposeParameterSets(randomStartingPointsCount, results);
-            var initializationResults = sut.RunParameterSets(Minimize, initialParameterSets);
+            var initializationResults = SmacOptimizer.RunParameterSets(Minimize, initialParameterSets);
             results.AddRange(initializationResults);
 
             for (int i = 0; i < iterations; i++)
             {
                 var parameterSets = sut.ProposeParameterSets(functionEvaluationsPerIterationCount, results);
-                var iterationResults = sut.RunParameterSets(Minimize, parameterSets);
+                var iterationResults = SmacOptimizer.RunParameterSets(Minimize, parameterSets);
                 results.AddRange(iterationResults);
             }
 

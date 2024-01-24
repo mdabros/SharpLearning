@@ -80,7 +80,7 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
                 {
                     var value = matrix[j, i];
                     var minMax = m_featureMinMax[i];
-                    var newValue = m_normalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
+                    var newValue = LinearNormalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
                     output[j, i] = newValue;
                 }
             }
@@ -141,7 +141,7 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
             {
                 var value = vector[i];
                 var minMax = m_featureMinMax[i];
-                var newValue = m_normalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
+                var newValue = LinearNormalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
                 output[i] = newValue;
             }
         }

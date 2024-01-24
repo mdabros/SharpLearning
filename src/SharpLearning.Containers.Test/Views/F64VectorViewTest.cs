@@ -54,7 +54,7 @@ namespace SharpLearning.Containers.Test.Views
             }
         }
 
-        void AssertVectorView(double[] vector, F64VectorView view)
+        static void AssertVectorView(double[] vector, F64VectorView view)
         {
             for (int i = 0; i < vector.Length; i++)
             {

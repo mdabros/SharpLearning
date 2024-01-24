@@ -140,7 +140,7 @@ namespace SharpLearning.Ensemble.Test.Models
             }
         }
 
-        void WriteRawImportances(double[] featureImportance)
+        static void WriteRawImportances(double[] featureImportance)
         {
             var result = "new double[] {";
             foreach (var item in featureImportance)
@@ -151,7 +151,7 @@ namespace SharpLearning.Ensemble.Test.Models
             Trace.WriteLine(result);
         }
 
-        void WriteImportances(Dictionary<string, double> featureImportance)
+        static void WriteImportances(Dictionary<string, double> featureImportance)
         {
             var result = "new Dictionary<string, double> {";
             foreach (var item in featureImportance)

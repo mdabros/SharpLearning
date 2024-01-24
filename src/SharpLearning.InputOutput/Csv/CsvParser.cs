@@ -225,7 +225,7 @@ namespace SharpLearning.InputOutput.Csv
             return split;
         }
 
-        string[] SplitText(string csvText, char separator)
+        static string[] SplitText(string csvText, char separator)
         {
             List<string> tokens = new List<string>();
 

@@ -133,7 +133,7 @@ namespace SharpLearning.GradientBoost.Loss
             right.BestConstant = BinomialBestConstant(right.Sum, right.BinomialSum);
         }
 
-        double BinomialBestConstant(double sum, double binomialSum)
+        static double BinomialBestConstant(double sum, double binomialSum)
         {
             if (binomialSum != 0.0)
             {

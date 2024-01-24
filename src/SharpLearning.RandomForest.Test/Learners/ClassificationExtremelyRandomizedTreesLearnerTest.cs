@@ -107,7 +107,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             Assert.AreEqual(0.0560747663551402, error, m_delta);
         }
 
-        double ClassificationExtremelyRandomizedTreesLearner_Learn_Glass(int trees,
+        static double ClassificationExtremelyRandomizedTreesLearner_Learn_Glass(int trees,
             double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -123,7 +123,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             return error;
         }
 
-        double ClassificationExtremelyRandomizedTreesLearner_Learn_Aptitude(int trees,
+        static double ClassificationExtremelyRandomizedTreesLearner_Learn_Aptitude(int trees,
             double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();

@@ -149,7 +149,7 @@ namespace SharpLearning.Neural.Learners
         IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
             F64Matrix observations, double[] targets) => Learn(observations, targets);
 
-        double[] GetOrderedTargetNames(double[] targets)
+        static double[] GetOrderedTargetNames(double[] targets)
         {
             return targets.Distinct().OrderBy(v => v).ToArray();
         }

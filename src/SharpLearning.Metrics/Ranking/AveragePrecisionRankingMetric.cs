@@ -59,7 +59,7 @@ namespace SharpLearning.Metrics.Ranking
             return 1.0 - score / minLength;
         }
 
-        bool Contains(T[] predictions, int i, T prediction)
+        static bool Contains(T[] predictions, int i, T prediction)
         {
             var predictionFound = false;
             for (int j = 0; j < i; j++)

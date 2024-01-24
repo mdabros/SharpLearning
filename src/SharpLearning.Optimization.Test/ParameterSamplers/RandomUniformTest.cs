@@ -26,7 +26,7 @@ namespace SharpLearning.Optimization.Test.ParameterSamplers
             }
         }
 
-        public void RandomUniformIntergers_Sample_Integer()
+        public static void RandomUniformIntergers_Sample_Integer()
         {
             var sut = new RandomUniform(32);
 

@@ -210,8 +210,7 @@ namespace SharpLearning.Optimization.Test
             return sut;
         }
 
-
-        OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
+        static OptimizerResult RunOpenLoopOptimizationTest(List<OptimizerResult> results)
         {
             var parameters = new MinMaxParameterSpec[]
             {

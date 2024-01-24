@@ -208,7 +208,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             Assert.AreEqual(0.19230769230769232, error, 0.0000001);
         }
 
-        void Write(ProbabilityPrediction[] predictions)
+        static void Write(ProbabilityPrediction[] predictions)
         {
             var value = "new ProbabilityPrediction[] {";
             foreach (var item in predictions)

@@ -25,7 +25,7 @@ namespace SharpLearning.Metrics
         /// <param name="model2Predictions"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public int[][] Compare(double[] model1Predictions, double[] model2Predictions, double[] targets)
+        public static int[][] Compare(double[] model1Predictions, double[] model2Predictions, double[] targets)
         {
             if (model1Predictions.Length != model2Predictions.Length ||
                 model1Predictions.Length != targets.Length)

@@ -49,7 +49,7 @@ namespace SharpLearning.Ensemble.Strategies
             }
         }
 
-        double GeometricMean(double[] values)
+        static double GeometricMean(double[] values)
         {
             var geoMean = 0.0;
             for (int i = 0; i < values.Length; i++)

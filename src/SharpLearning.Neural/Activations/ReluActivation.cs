@@ -33,12 +33,12 @@ namespace SharpLearning.Neural.Activations
             }
         }
 
-        float Relu(float input)
+        static float Relu(float input)
         {
             return Math.Max(0, input);
         }
 
-        float Derivative(float input)
+        static float Derivative(float input)
         {
             if (input > 0.0)
                 return 1.0f;

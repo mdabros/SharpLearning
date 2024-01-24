@@ -109,7 +109,7 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             Assert.AreEqual(2.0, actual, 0.000001);
         }
 
-        double Weight(double t)
+        static double Weight(double t)
         {
             if (t == 2.0)
                 return 10.0;

@@ -92,7 +92,7 @@ namespace SharpLearning.CrossValidation.Test
             }
         }
 
-        void TraceIndexSets(IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> indexSets)
+        static void TraceIndexSets(IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> indexSets)
         {
             const string Separator = ", ";
             foreach (var set in indexSets)

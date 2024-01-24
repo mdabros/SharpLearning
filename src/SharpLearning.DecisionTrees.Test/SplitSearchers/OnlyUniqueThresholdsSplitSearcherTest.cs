@@ -121,7 +121,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             Assert.AreEqual(expected, actual);
         }
 
-        double Weight(double v, double weight)
+        static double Weight(double v, double weight)
         {
             if (v == 1.0)
                 return weight;

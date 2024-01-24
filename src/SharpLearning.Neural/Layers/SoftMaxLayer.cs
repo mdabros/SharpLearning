@@ -110,7 +110,7 @@ namespace SharpLearning.Neural.Layers
         /// Softmax activation for neural net.
         /// </summary>
         /// <param name="x"></param>
-        public void SoftMax(Matrix<float> x)
+        public static void SoftMax(Matrix<float> x)
         {
             var xData = x.Data();
             var rows = x.RowCount;

@@ -186,7 +186,7 @@ namespace SharpLearning.Ensemble.Models
         ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
             => PredictProbability(observations);
 
-        string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
+        static string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
         {
             if (ensembleFeatureNameToIndex.ContainsKey(name))
             {

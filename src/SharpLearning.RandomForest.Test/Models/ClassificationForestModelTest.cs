@@ -195,7 +195,7 @@ namespace SharpLearning.RandomForest.Test.Models
             Assert.AreEqual(0.42307692307692307, error, m_delta);
         }
 
-        void Write(ProbabilityPrediction[] predictions)
+        static void Write(ProbabilityPrediction[] predictions)
         {
             var value = "new ProbabilityPrediction[] {";
             foreach (var item in predictions)

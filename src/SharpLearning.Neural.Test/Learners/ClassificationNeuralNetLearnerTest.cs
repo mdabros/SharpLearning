@@ -110,7 +110,7 @@ namespace SharpLearning.Neural.Test.Learners
             var sut = new ClassificationNeuralNetLearner(net, new AccuracyLoss());
         }
 
-        (F64Matrix observations, double[] targets) CreateData(
+        static (F64Matrix observations, double[] targets) CreateData(
             int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random)
         {
             var observations = new F64Matrix(numberOfObservations, numberOfFeatures);
@@ -120,7 +120,7 @@ namespace SharpLearning.Neural.Test.Learners
             return (observations, targets);
         }
 
-        (double[][] observations, double[] targets) CreateArrayData(
+        static (double[][] observations, double[] targets) CreateArrayData(
             int numberOfObservations, int numberOfFeatures, int numberOfClasses, Random random)
         {
             var observations = Enumerable.Range(0, numberOfObservations).Select(i => Enumerable.Range(0, numberOfFeatures)

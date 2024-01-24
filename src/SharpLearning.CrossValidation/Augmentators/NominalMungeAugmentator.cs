@@ -105,8 +105,7 @@ namespace SharpLearning.CrossValidation.Augmentators
             return augmentation;
         }
 
-
-        double GetHammingDistance(double[] a, double[] b)
+        static double GetHammingDistance(double[] a, double[] b)
         {
             if (a.Length != b.Length) throw new ArgumentOutOfRangeException("lengths are not equal");
             int count = 0;

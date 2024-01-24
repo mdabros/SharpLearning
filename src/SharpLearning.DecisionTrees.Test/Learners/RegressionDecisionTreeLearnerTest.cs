@@ -112,7 +112,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             return error;
         }
 
-        double Weight(double v, double weight)
+        static double Weight(double v, double weight)
         {
             if (v < 3.0)
                 return weight;

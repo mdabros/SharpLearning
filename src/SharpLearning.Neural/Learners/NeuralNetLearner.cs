@@ -290,7 +290,7 @@ namespace SharpLearning.Neural
             }
         }
 
-        void SetupLinerAlgebraProvider()
+        static void SetupLinerAlgebraProvider()
         {
             if (Control.TryUseNativeMKL())
             {
@@ -308,7 +308,7 @@ namespace SharpLearning.Neural
             }
         }
 
-        void CopyBatchTargets(Matrix<float> targets, Matrix<float> batch, int[] indices)
+        static void CopyBatchTargets(Matrix<float> targets, Matrix<float> batch, int[] indices)
         {
             var cols = targets.ColumnCount;
             var batchRow = 0;
@@ -322,7 +322,7 @@ namespace SharpLearning.Neural
             }
         }
 
-        void CopyBatch(F64Matrix observations, Matrix<float> batch, int[] indices)
+        static void CopyBatch(F64Matrix observations, Matrix<float> batch, int[] indices)
         {
             var cols = observations.ColumnCount;
             var batchRow = 0;

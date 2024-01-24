@@ -31,7 +31,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             CrossValidate(2000);
         }
 
-        double CrossValidate(int folds)
+        static double CrossValidate(int folds)
         {
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 

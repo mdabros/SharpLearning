@@ -512,7 +512,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="observations"></param>
         /// <param name="rows"></param>
         /// <returns></returns>
-        int[][] CreateOrderedElements(F64Matrix observations, int rows)
+        static int[][] CreateOrderedElements(F64Matrix observations, int rows)
         {
             var orderedElements = new int[observations.ColumnCount][];
 

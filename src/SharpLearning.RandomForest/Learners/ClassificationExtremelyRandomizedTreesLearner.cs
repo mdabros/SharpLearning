@@ -182,7 +182,7 @@ namespace SharpLearning.RandomForest.Learners
         IPredictorModel<ProbabilityPrediction> ILearner<ProbabilityPrediction>.Learn(
             F64Matrix observations, double[] targets) => Learn(observations, targets);
 
-        double[] VariableImportance(ClassificationDecisionTreeModel[] models, int numberOfFeatures)
+        static double[] VariableImportance(ClassificationDecisionTreeModel[] models, int numberOfFeatures)
         {
             var rawVariableImportance = new double[numberOfFeatures];
 

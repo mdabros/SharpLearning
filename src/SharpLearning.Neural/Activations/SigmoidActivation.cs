@@ -32,13 +32,13 @@ namespace SharpLearning.Neural.Activations
             }
         }
 
-        float Sigmoid(float input)
+        static float Sigmoid(float input)
         {
             return Convert.ToSingle(1 / (1 + Math.Pow(Math.E, -input)));
         }
 
         //this input should be already activated input = sigmmoid(x)
-        float Derivative(float input)
+        static float Derivative(float input)
         {
             var de = input * (1 - input);
 

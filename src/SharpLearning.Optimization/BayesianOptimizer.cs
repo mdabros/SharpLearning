@@ -259,7 +259,7 @@ namespace SharpLearning.Optimization
             return results.ToArray();
         }
 
-        double ComputeExpectedImprovement(double best, double[] parameterSet, RegressionForestModel model)
+        static double ComputeExpectedImprovement(double best, double[] parameterSet, RegressionForestModel model)
         {
             var prediction = model.PredictCertainty(parameterSet);
             var mean = prediction.Prediction;

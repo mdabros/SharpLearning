@@ -100,7 +100,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="Y1"></param>
         /// <param name="Y2"></param>
         /// <returns></returns>
-        double trapezoidArea(double X1, double X2, double Y1, double Y2)
+        static double trapezoidArea(double X1, double X2, double Y1, double Y2)
         {
             double b = Math.Abs(X1 - X2);
             double height = (Y1 + Y2) / 2.0;

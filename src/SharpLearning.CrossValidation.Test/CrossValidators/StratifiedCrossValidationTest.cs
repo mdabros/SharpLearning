@@ -48,7 +48,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             CrossValidate(200);
         }
 
-        double CrossValidate(int folds)
+        static double CrossValidate(int folds)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
@@ -60,7 +60,7 @@ namespace SharpLearning.CrossValidation.CrossValidators.Test
             return metric.Error(targets, predictions);
         }
 
-        double CrossValidate_Provide_Indices(int folds)
+        static double CrossValidate_Provide_Indices(int folds)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 

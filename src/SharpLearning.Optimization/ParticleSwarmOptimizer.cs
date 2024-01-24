@@ -169,7 +169,7 @@ namespace SharpLearning.Optimization
             return results.ToArray();
         }
 
-        void BoundCheck(double[] newValues, double[] maxValues, double[] minValues)
+        static void BoundCheck(double[] newValues, double[] maxValues, double[] minValues)
         {
             for (int i = 0; i < newValues.Length; i++)
             {

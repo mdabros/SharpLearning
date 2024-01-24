@@ -189,7 +189,7 @@ namespace SharpLearning.GradientBoost.Test.Models
             Assert.AreEqual(0.15384615384615385, error, 0.0000001);
         }
 
-        void Write(ProbabilityPrediction[] predictions)
+        static void Write(ProbabilityPrediction[] predictions)
         {
             var value = "new ProbabilityPrediction[] {";
             foreach (var item in predictions)

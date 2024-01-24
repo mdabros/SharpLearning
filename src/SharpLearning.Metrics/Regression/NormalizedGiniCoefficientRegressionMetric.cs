@@ -27,7 +27,7 @@ namespace SharpLearning.Metrics.Regression
         /// <param name="target"></param>
         /// <param name="predicted"></param>
         /// <returns></returns>
-        double GiniCoefficient(double[] target, double[] predicted)
+        static double GiniCoefficient(double[] target, double[] predicted)
         {
             if (target.Length != predicted.Length)
             { throw new ArgumentException(); }

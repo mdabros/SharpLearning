@@ -146,7 +146,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             Assert.AreEqual(0.14018691588785046, error, 0.0000001);
         }
 
-        double ClassificationDecisionTreeLearner_Learn_Glass(int treeDepth)
+        static double ClassificationDecisionTreeLearner_Learn_Glass(int treeDepth)
         {
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
@@ -160,7 +160,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             return error;
         }
 
-        double ClassificationDecisionTreeLearner_Learn_Aptitude(int treeDepth)
+        static double ClassificationDecisionTreeLearner_Learn_Aptitude(int treeDepth)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
@@ -205,7 +205,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             return error;
         }
 
-        public double Weight(double v, double targetToWeigh, double weight)
+        public static double Weight(double v, double targetToWeigh, double weight)
         {
             if (v == targetToWeigh)
                 return weight;

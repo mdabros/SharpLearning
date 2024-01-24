@@ -13,7 +13,7 @@ namespace SharpLearning.Metrics.Test.ModelComparison
             var model2 = new double[] { 1, 1, 3, 4, 3, 4, 2, 3, 1, 1 };
 
             var sut = new McNemarModelComparison();
-            var actual = sut.Compare(model1, model2, targets);
+            var actual = McNemarModelComparison.Compare(model1, model2, targets);
 
             CollectionAssert.AreEqual(new int[] { 1, 2 }, actual[0]);
             CollectionAssert.AreEqual(new int[] { 3, 4 }, actual[1]);

@@ -127,17 +127,17 @@ namespace SharpLearning.Containers.Test.Matrices
             Assert.IsTrue(expected.Equals(actual));
         }
 
-        string[] GetExpectedColumn()
+        static string[] GetExpectedColumn()
         {
             return new string[] { "2", "20", "200" };
         }
 
-        string[] GetExpectedRow()
+        static string[] GetExpectedRow()
         {
             return new string[] { "10", "20", "30" };
         }
 
-        StringMatrix GetExpectedColSubMatrix()
+        static StringMatrix GetExpectedColSubMatrix()
         {
             var features = new string[] { "1", "3",
                                           "10", "30",
@@ -146,7 +146,7 @@ namespace SharpLearning.Containers.Test.Matrices
             return new StringMatrix(features, 3, 2);
         }
 
-        StringMatrix GetExpectedRowSubMatrix()
+        static StringMatrix GetExpectedRowSubMatrix()
         {
             var features = new string[] { "1", "2", "3",
                                           "100", "200", "300"};
@@ -154,7 +154,7 @@ namespace SharpLearning.Containers.Test.Matrices
             return new StringMatrix(features, 2, 3);
         }
 
-        StringMatrix CreateFeatures()
+        static StringMatrix CreateFeatures()
         {
             var features = new string[] { "1", "2", "3",
                                           "10", "20", "30",

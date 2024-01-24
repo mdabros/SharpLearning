@@ -15,7 +15,7 @@ namespace SharpLearning.FeatureTransformations.Normalization
         /// <param name="oldMax"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public double Normalize(double newMin, double newMax, double oldMin, double oldMax, double value)
+        public static double Normalize(double newMin, double newMax, double oldMin, double oldMax, double value)
         {
             if (value == oldMin)
             {

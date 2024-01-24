@@ -120,7 +120,7 @@ namespace SharpLearning.CrossValidation.Augmentators
             return randNormal;
         }
 
-        double GetDistance(double[] p, double[] q)
+        static double GetDistance(double[] p, double[] q)
         {
             double distance = 0;
             double diff = 0;

@@ -399,7 +399,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             }
         }
 
-        int NextAllowedIndex(int start, int[] orderedIndexes, bool[] inSample)
+        static int NextAllowedIndex(int start, int[] orderedIndexes, bool[] inSample)
         {
 
             for (int i = start; i < orderedIndexes.Length; i++)
@@ -412,7 +412,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             return (orderedIndexes.Length + 1);
         }
 
-        void SetParentLeafIndex(int nodeIndex, GBMTreeCreationItem parentItem)
+        static void SetParentLeafIndex(int nodeIndex, GBMTreeCreationItem parentItem)
         {
             if (parentItem.Values.Position == NodePositionType.Left)
             {

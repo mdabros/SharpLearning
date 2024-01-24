@@ -139,7 +139,7 @@ namespace SharpLearning.Optimization
         /// <param name="functionToMinimize"></param>
         /// <param name="parameterSets"></param>
         /// <returns></returns>
-        public List<OptimizerResult> RunParameterSets(Func<double[], OptimizerResult> functionToMinimize,
+        public static List<OptimizerResult> RunParameterSets(Func<double[], OptimizerResult> functionToMinimize,
             double[][] parameterSets)
         {
             var results = new List<OptimizerResult>();
@@ -215,7 +215,7 @@ namespace SharpLearning.Optimization
             return InterLeaveModelBasedAndRandomParameterSets(challengers, randomChallengers);
         }
 
-        double[][] InterLeaveModelBasedAndRandomParameterSets(double[][] challengers,
+        static double[][] InterLeaveModelBasedAndRandomParameterSets(double[][] challengers,
             double[][] randomChallengers)
         {
             var finalParameterSets = new double[challengers.Length + randomChallengers.Length][];
@@ -313,7 +313,7 @@ namespace SharpLearning.Optimization
             return neighbors;
         }
 
-        double ComputeExpectedImprovement(double best, double[] parameterSet, RegressionForestModel model)
+        static double ComputeExpectedImprovement(double best, double[] parameterSet, RegressionForestModel model)
         {
             var prediction = model.PredictCertainty(parameterSet);
             var mean = prediction.Prediction;

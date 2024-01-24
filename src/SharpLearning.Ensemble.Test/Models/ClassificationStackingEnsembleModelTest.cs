@@ -199,7 +199,7 @@ namespace SharpLearning.Ensemble.Test.Models
             }
         }
 
-        void WriteImportances(Dictionary<string, double> featureImportance)
+        static void WriteImportances(Dictionary<string, double> featureImportance)
         {
             var result = "new Dictionary<string, double> {";
             foreach (var item in featureImportance)

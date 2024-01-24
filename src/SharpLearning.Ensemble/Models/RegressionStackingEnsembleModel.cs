@@ -118,7 +118,7 @@ namespace SharpLearning.Ensemble.Models
             return m_metaModel.GetVariableImportance(ensembleFeatureNameToIndex);
         }
 
-        string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
+        static string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
         {
             if (ensembleFeatureNameToIndex.ContainsKey(name))
             {
