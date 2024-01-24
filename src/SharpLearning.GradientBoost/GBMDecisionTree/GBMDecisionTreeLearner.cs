@@ -22,7 +22,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         readonly bool m_runParallel;
         readonly IGradientBoostLoss m_loss;
         int m_featuresPrSplit;
-        readonly Random m_random = new Random(234);
+        readonly Random m_random = new(234);
 
         /// <summary>
         /// Fits a regression decision tree using a set presorted indices for each feature.

@@ -6,10 +6,10 @@ namespace SharpLearning.Containers.Test
     [TestClass]
     public class ProbabilityPredictionTest
     {
-        readonly ProbabilityPrediction m_sut = new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 1.0, .9 }, { 0.0, 0.3 } });
-        readonly ProbabilityPrediction m_equal = new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 1.0, .9 }, { 0.0, 0.3 } });
-        readonly ProbabilityPrediction m_notEqual1 = new ProbabilityPrediction(0.0, new Dictionary<double, double> { { 1.0, .3 }, { 0.0, 0.8 } });
-        readonly ProbabilityPrediction m_notEqual2 = new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 1.0, .78 }, { 0.0, 0.22 } });
+        readonly ProbabilityPrediction m_sut = new(1.0, new Dictionary<double, double> { { 1.0, .9 }, { 0.0, 0.3 } });
+        readonly ProbabilityPrediction m_equal = new(1.0, new Dictionary<double, double> { { 1.0, .9 }, { 0.0, 0.3 } });
+        readonly ProbabilityPrediction m_notEqual1 = new(0.0, new Dictionary<double, double> { { 1.0, .3 }, { 0.0, 0.8 } });
+        readonly ProbabilityPrediction m_notEqual2 = new(1.0, new Dictionary<double, double> { { 1.0, .78 }, { 0.0, 0.22 } });
 
 
         [TestMethod]

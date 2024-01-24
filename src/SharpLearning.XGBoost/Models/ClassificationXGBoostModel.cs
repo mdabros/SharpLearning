@@ -163,7 +163,7 @@ namespace SharpLearning.XGBoost.Models
         /// <param name="modelFilePath"></param>
         /// <returns></returns>
         public static ClassificationXGBoostModel Load(string modelFilePath)
-            => new ClassificationXGBoostModel(new Booster(modelFilePath));
+            => new(new Booster(modelFilePath));
 
         /// <summary>
         /// Saves the ClassificationXGBoostModel.

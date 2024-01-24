@@ -24,8 +24,8 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
 
             var expected = new List<LearningCurvePoint>()
             {
-                new LearningCurvePoint(4, 0, 0.39999999999999997),
-                new LearningCurvePoint(16, 0.0625, 0.33333333333333331)
+                new(4, 0, 0.39999999999999997),
+                new(16, 0.0625, 0.33333333333333331)
             };
 
             CollectionAssert.AreEqual(expected, actual);

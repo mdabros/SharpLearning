@@ -142,7 +142,7 @@ namespace SharpLearning.XGBoost.Test.Models
 			12:leaf=-0.0020202,cover=98
 		6:leaf=0.3,cover=2";
 
-        static readonly List<GBMNode> m_tree1Nodes = new List<GBMNode>
+        static readonly List<GBMNode> m_tree1Nodes = new()
         {
            /*-1*/ new GBMNode
             {
@@ -228,7 +228,7 @@ namespace SharpLearning.XGBoost.Test.Models
 			11:leaf=0.0257847,cover=54
 			12:leaf=-0.00524031,cover=98";
 
-        static readonly List<GBMNode> m_tree2Nodes = new List<GBMNode>
+        static readonly List<GBMNode> m_tree2Nodes = new()
         {
            /*-1*/ new GBMNode
             {

@@ -13,9 +13,9 @@ namespace SharpLearning.Metrics.Test.Classification
         {
             var sut = new LogLossClassificationProbabilityMetric(1e-15);
             var predictions = new ProbabilityPrediction[] {
-                new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 0.0 }, { 2, 0.0 } }),
-                new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
-                new ProbabilityPrediction(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
+                new(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 0.0 }, { 2, 0.0 } }),
+                new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
+                new(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
             };
 
             var targets = new double[] { 0, 1, 2 };
@@ -29,9 +29,9 @@ namespace SharpLearning.Metrics.Test.Classification
         {
             var sut = new LogLossClassificationProbabilityMetric(1e-15);
             var predictions = new ProbabilityPrediction[] {
-                new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 1.0 }, { 2, 1.0 } }),
-                new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
-                new ProbabilityPrediction(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
+                new(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 1.0 }, { 2, 1.0 } }),
+                new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
+                new(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
             };
 
             var targets = new double[] { 0, 1, 2 };
@@ -45,9 +45,9 @@ namespace SharpLearning.Metrics.Test.Classification
         {
             var sut = new LogLossClassificationProbabilityMetric(1e-15);
             var predictions = new ProbabilityPrediction[] {
-                new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 1.0 }, { 2, 1.0 } }),
-                new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
-                new ProbabilityPrediction(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
+                new(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 1.0 }, { 2, 1.0 } }),
+                new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
+                new(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
             };
 
             var targets = new double[] { 0, 1, 2 };
@@ -63,9 +63,9 @@ namespace SharpLearning.Metrics.Test.Classification
         {
             var sut = new LogLossClassificationProbabilityMetric(1e-15);
             var predictions = new ProbabilityPrediction[] {
-                new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 1.0 }, { 2, 1.0 } }),
-                new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
-                new ProbabilityPrediction(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
+                new(0, new Dictionary<double, double> { { 0, 1.0 }, { 1, 1.0 }, { 2, 1.0 } }),
+                new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1, 1.0 }, { 2, 0.0 } }),
+                new(2, new Dictionary<double, double> { { 0, 0.0 }, { 1, 0.0 }, { 2, 1.0 } }),
             };
 
             var targets = new double[] { 0, 1, 2 };

@@ -10,7 +10,7 @@ namespace SharpLearning.DecisionTrees.Test.Nodes
         [TestMethod]
         public void NodeExtensions_UpdateParent()
         {
-            var nodes = new List<Node> { new Node(-1, 2.0, -1, -1, 0, -1) };
+            var nodes = new List<Node> { new(-1, 2.0, -1, -1, 0, -1) };
             var left = new Node(1, 5.0, -1, -1, 1, -1);
             var right = new Node(1, 5.0, -1, -1, 2, -1);
 

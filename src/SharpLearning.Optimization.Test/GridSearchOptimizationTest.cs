@@ -17,7 +17,7 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new GridParameterSpec[]
             {
-                new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
+                new(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
             };
 
             var sut = maxDegreeOfParallelism.HasValue ?
@@ -39,7 +39,7 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new GridParameterSpec[]
             {
-                new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
+                new(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
             };
 
             var sut = maxDegreeOfParallelism.HasValue ?
@@ -50,8 +50,8 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-              new OptimizerResult(new double[] { 10 }, 31638.9579),
-              new OptimizerResult(new double[] { 60 }, 20500.6279)
+              new(new double[] { 10 }, 31638.9579),
+              new(new double[] { 60 }, 20500.6279)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

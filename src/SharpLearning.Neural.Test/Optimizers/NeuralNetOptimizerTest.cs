@@ -13,8 +13,8 @@ namespace SharpLearning.Neural.Test.Optimizers
         {
             var parametersAndGradients = new List<ParametersAndGradients>
             {
-                new ParametersAndGradients(new float[10], new float[10]),
-                new ParametersAndGradients(new float[10], new float[10]),
+                new(new float[10], new float[10]),
+                new(new float[10], new float[10]),
             };
 
             foreach (OptimizerMethod optimizer in Enum.GetValues(typeof(OptimizerMethod)))

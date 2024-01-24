@@ -94,7 +94,7 @@ namespace SharpLearning.XGBoost.Models
         /// <param name="modelFilePath"></param>
         /// <returns></returns>
         public static RegressionXGBoostModel Load(string modelFilePath)
-            => new RegressionXGBoostModel(new Booster(modelFilePath));
+            => new(new Booster(modelFilePath));
 
         /// <summary>
         /// Saves the RegressionXGBoostModel.

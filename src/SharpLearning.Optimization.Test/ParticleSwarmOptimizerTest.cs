@@ -16,9 +16,9 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new MinMaxParameterSpec[]
             {
-                new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
-                new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
-                new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
+                new(-10.0, 10.0, Transform.Linear),
+                new(-10.0, 10.0, Transform.Linear),
+                new(-10.0, 10.0, Transform.Linear),
             };
 
             var sut = CreateSut(maxDegreeOfParallelism, parameters);
@@ -42,7 +42,7 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new MinMaxParameterSpec[]
             {
-                new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
+                new(0.0, 100.0, Transform.Linear)
             };
 
             var sut = CreateSut(maxDegreeOfParallelism, parameters);
@@ -53,8 +53,8 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 38.1151505704492 }, 115.978346548015),
-                new OptimizerResult(new double[] { 37.2514904205637 }, 118.093289672808),
+                new(new double[] { 38.1151505704492 }, 115.978346548015),
+                new(new double[] { 37.2514904205637 }, 118.093289672808),
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

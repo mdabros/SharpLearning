@@ -8,7 +8,7 @@ namespace SharpLearning.InputOutput.Test.Serialization
     [TestClass]
     public class GenericBinarySerializerTest
     {
-        readonly Dictionary<string, int> m_serializationData = new Dictionary<string, int>
+        readonly Dictionary<string, int> m_serializationData = new()
         {
             {"Test1", 0}, {"Test2", 1}, {"Test3", 2}, {"Test4", 3}, {"Test5", 4}
         };

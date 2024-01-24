@@ -17,8 +17,8 @@ namespace SharpLearning.Neural.Optimizers
         readonly float m_momentum;
         readonly int m_batchSize;
 
-        readonly List<double[]> m_gsumWeights = new List<double[]>(); // last iteration gradients (used for momentum calculations)
-        readonly List<double[]> m_xsumWeights = new List<double[]>(); // used in adam or adadelta
+        readonly List<double[]> m_gsumWeights = new(); // last iteration gradients (used for momentum calculations)
+        readonly List<double[]> m_xsumWeights = new(); // used in adam or adadelta
 
         readonly OptimizerMethod m_optimizerMethod = OptimizerMethod.Sgd;
         readonly float m_rho = 0.95f;

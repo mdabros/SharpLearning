@@ -28,7 +28,7 @@ namespace SharpLearning.GradientBoost.Learners
         readonly double m_learningRate;
         readonly int m_iterations;
         readonly double m_subSampleRatio;
-        readonly Random m_random = new Random(42);
+        readonly Random m_random = new(42);
         readonly IGradientBoostLoss m_loss;
 
         /// <summary>

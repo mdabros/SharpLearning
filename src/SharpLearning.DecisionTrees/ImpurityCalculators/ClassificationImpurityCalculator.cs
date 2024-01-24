@@ -33,9 +33,9 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// </summary>
         protected double m_weightedRight = 0.0;
 
-        internal TargetCounts m_weightedTargetCount = new TargetCounts();
-        internal TargetCounts m_weightedTargetCountLeft = new TargetCounts();
-        internal TargetCounts m_weightedTargetCountRight = new TargetCounts();
+        internal TargetCounts m_weightedTargetCount = new();
+        internal TargetCounts m_weightedTargetCountLeft = new();
+        internal TargetCounts m_weightedTargetCountRight = new();
 
         /// <summary>
         /// 

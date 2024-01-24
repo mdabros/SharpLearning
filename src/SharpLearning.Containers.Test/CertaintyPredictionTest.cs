@@ -5,10 +5,10 @@ namespace SharpLearning.Containers.Test
     [TestClass]
     public class CertaintyPredictionTest
     {
-        readonly CertaintyPrediction m_sut = new CertaintyPrediction(1.0, 0.4);
-        readonly CertaintyPrediction m_equal = new CertaintyPrediction(1.0, 0.4);
-        readonly CertaintyPrediction m_notEqual1 = new CertaintyPrediction(0.0, 0.4);
-        readonly CertaintyPrediction m_notEqual2 = new CertaintyPrediction(1.0, 0.65);
+        readonly CertaintyPrediction m_sut = new(1.0, 0.4);
+        readonly CertaintyPrediction m_equal = new(1.0, 0.4);
+        readonly CertaintyPrediction m_notEqual1 = new(0.0, 0.4);
+        readonly CertaintyPrediction m_notEqual2 = new(1.0, 0.65);
 
         [TestMethod]
         public void CertaintyPrediction_Prediction_Equals()

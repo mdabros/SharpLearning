@@ -29,12 +29,12 @@ namespace SharpLearning.AdaBoost.Learners
 
         RegressionDecisionTreeLearner m_modelLearner;
 
-        readonly MeanAbsolutErrorRegressionMetric m_errorMetric = new MeanAbsolutErrorRegressionMetric();
+        readonly MeanAbsolutErrorRegressionMetric m_errorMetric = new();
         readonly AdaBoostRegressionLoss m_loss;
 
-        readonly List<double> m_modelErrors = new List<double>();
-        readonly List<double> m_modelWeights = new List<double>();
-        readonly List<RegressionDecisionTreeModel> m_models = new List<RegressionDecisionTreeModel>();
+        readonly List<double> m_modelErrors = new();
+        readonly List<double> m_modelWeights = new();
+        readonly List<RegressionDecisionTreeModel> m_models = new();
 
         double[] m_workErrors = new double[0];
         double[] m_sampleWeights = new double[0];
