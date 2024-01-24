@@ -73,13 +73,6 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         public double WeightedRight { get { return m_weightedRight; } }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public ClassificationImpurityCalculator()
-        {
-        }
-
-        /// <summary>
         /// Initialize the calculator with targets, weights and work interval
         /// </summary>
         /// <param name="targetNames"></param>
