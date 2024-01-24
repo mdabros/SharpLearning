@@ -30,9 +30,9 @@ namespace SharpLearning.CrossValidation.CrossValidators
         /// <param name="crossValidationIndices"></param>
         /// <param name="crossValidatedPredictions"></param>
         void CrossValidate(IIndexedLearner<TPrediction> learner,
-            F64Matrix observations, 
-            double[] targets, 
-            int[] crossValidationIndices, 
+            F64Matrix observations,
+            double[] targets,
+            int[] crossValidationIndices,
             TPrediction[] crossValidatedPredictions);
     }
 }

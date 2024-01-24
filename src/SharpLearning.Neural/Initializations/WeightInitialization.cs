@@ -52,7 +52,7 @@ namespace SharpLearning.Neural.Initializations
         /// <param name="fans"></param>
         /// <param name="random"></param>
         /// <returns></returns>
-        public static IContinuousDistribution GetWeightDistribution(Initialization initialization, 
+        public static IContinuousDistribution GetWeightDistribution(Initialization initialization,
             FanInFanOut fans, Random random)
         {
             var bound = InitializationBound(initialization, fans);

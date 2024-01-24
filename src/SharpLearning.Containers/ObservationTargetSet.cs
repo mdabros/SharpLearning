@@ -25,10 +25,10 @@ namespace SharpLearning.Containers
         /// <param name="observations"></param>
         /// <param name="targets"></param>
         public ObservationTargetSet(F64Matrix observations, double[] targets)
-	    {
+        {
             Observations = observations ?? throw new ArgumentNullException(nameof(observations));
             Targets = targets ?? throw new ArgumentNullException(nameof(targets));
-	    }
+        }
 
         /// <summary>
         /// 
@@ -50,7 +50,7 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is ObservationTargetSet other &&  this.Equals(other))
+            if (obj is ObservationTargetSet other && this.Equals(other))
             {
                 return true;
             }

@@ -41,12 +41,12 @@ namespace SharpLearning.Neural
         /// <param name="padding"></param>
         /// <param name="borderMode"></param>
         /// <returns></returns>
-        public static int GetFilterGridLength(int inputLength, int filterSize, 
+        public static int GetFilterGridLength(int inputLength, int filterSize,
             int stride, int padding, BorderMode borderMode)
         {
             // BorderMode.Same pads with half the filter size on both sides (one less on
             // the second side for an even filter size)
-            if (borderMode == BorderMode.Same && filterSize % 2 == 0) 
+            if (borderMode == BorderMode.Same && filterSize % 2 == 0)
             {
                 return (int)Math.Floor((inputLength + (padding + padding - 1) - filterSize) / (double)stride + 1);
             }
@@ -66,7 +66,7 @@ namespace SharpLearning.Neural
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static float GetValueFromIndex(this Matrix<float> m, int n, int c, int h, int w, 
+        public static float GetValueFromIndex(this Matrix<float> m, int n, int c, int h, int w,
             int depth, int width, int height)
         {
             var indexInBatchItem = c * width * height + h * width + w;
@@ -86,7 +86,7 @@ namespace SharpLearning.Neural
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static int GetDataIndex(this Matrix<float> m, int n, int c, int h, int w, 
+        public static int GetDataIndex(this Matrix<float> m, int n, int c, int h, int w,
             int depth, int width, int height)
         {
             var indexInBatchItem = c * width * height + h * width + w;
@@ -110,7 +110,7 @@ namespace SharpLearning.Neural
         /// <param name="borderMode"></param>
         /// <param name="data_col"></param>
         public static void Batch_Im2Col(Matrix<float> data_im, int channels, int height, int width,
-            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, 
+            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w,
             BorderMode borderMode, Matrix<float> data_col)
         {
             int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
@@ -142,7 +142,7 @@ namespace SharpLearning.Neural
                             int w_pad = w * stride_w - pad_w + w_offset;
 
                             var outColIndex = batchRowOffSet + rowOffSet + w;
-                            var outputIndex = outColIndex * data_col.RowCount + c;                                                   
+                            var outputIndex = outColIndex * data_col.RowCount + c;
 
                             var inputColIndex = (cImRowOffSet + h_pad) * width + w_pad;
                             var inputIndex = inputColIndex * batchSize + batchItem;
@@ -176,9 +176,9 @@ namespace SharpLearning.Neural
         /// <param name="stride_w"></param>
         /// <param name="borderMode"></param>
         /// /// <param name="data_convolutedRowMajor"></param>
-        public static void ReshapeConvolutionsToRowMajor(Matrix<float> convoluted, 
+        public static void ReshapeConvolutionsToRowMajor(Matrix<float> convoluted,
             int channels, int height, int width,
-            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, 
+            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w,
             BorderMode borderMode, Matrix<float> data_convolutedRowMajor)
         {
             int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
@@ -228,9 +228,9 @@ namespace SharpLearning.Neural
         /// <param name="stride_w"></param>
         /// <param name="borderMode"></param>
         /// <param name="convoluted"></param>
-        public static void ReshapeRowMajorToConvolutionLayout(Matrix<float> data_convolutedRowMajor, 
+        public static void ReshapeRowMajorToConvolutionLayout(Matrix<float> data_convolutedRowMajor,
             int channels, int height, int width,
-            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w, 
+            int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w,
             BorderMode borderMode, Matrix<float> convoluted)
         {
             int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
@@ -281,7 +281,7 @@ namespace SharpLearning.Neural
         /// <param name="borderMode"></param>
         /// <param name="data_im"></param>
         public static void Batch_Col2Im(Matrix<float> data_col, int channels, int height, int width,
-            int patch_h, int patch_w, int pad_h, int pad_w, int stride_h, int stride_w, 
+            int patch_h, int patch_w, int pad_h, int pad_w, int stride_h, int stride_w,
             BorderMode borderMode, Matrix<float> data_im)
         {
             int height_col = GetFilterGridLength(height, patch_h, stride_h, pad_h, borderMode);
@@ -310,7 +310,7 @@ namespace SharpLearning.Neural
 
                         for (int w = 0; w < width_col; ++w)
                         {
-                            
+
                             int w_pad = w * stride_w - pad_w + w_offset;
                             if (h_pad >= 0 && h_pad < height && w_pad >= 0 && w_pad < width)
                             {

@@ -74,7 +74,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new ClassificationRandomForestLearner(100, 1, 100, 1, 0.0001, 1.0, 42, false);
-            
+
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
             indices = indices.Take((int)(targets.Length * 0.7))
@@ -107,11 +107,11 @@ namespace SharpLearning.RandomForest.Test.Learners
             Assert.AreEqual(0.018691588785046728, error, m_delta);
         }
 
-        double ClassificationRandomForestLearner_Learn_Glass(int trees, double subSampleRatio = 1.0)
+        static double ClassificationRandomForestLearner_Learn_Glass(int trees, double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
-            var sut = new ClassificationRandomForestLearner(trees, 1, 100, 1, 0.0001, 
+            var sut = new ClassificationRandomForestLearner(trees, 1, 100, 1, 0.0001,
                 subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
@@ -122,11 +122,11 @@ namespace SharpLearning.RandomForest.Test.Learners
             return error;
         }
 
-        double ClassificationRandomLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
+        static double ClassificationRandomLearner_Learn_Aptitude(int trees, double subSampleRatio = 1.0)
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001, 
+            var sut = new ClassificationRandomForestLearner(trees, 5, 100, 1, 0.0001,
                 subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 

@@ -25,7 +25,7 @@ namespace SharpLearning.DecisionTrees.Test.Models
             var predictions = new double[rows];
             for (int i = 0; i < rows; i++)
             {
-                predictions[i] = sut.Predict(observations.Row(i)); 
+                predictions[i] = sut.Predict(observations.Row(i));
             }
 
             var evaluator = new MeanSquaredErrorRegressionMetric();

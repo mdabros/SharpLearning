@@ -10,7 +10,7 @@ namespace SharpLearning.Metrics.Ranking
     public sealed class AveragePrecisionRankingMetric<T> : IRankingMetric<T>
     {
         readonly int m_k;
-        readonly HashSet<T> m_workTargets = new HashSet<T>();
+        readonly HashSet<T> m_workTargets = new();
 
         /// <summary>
         /// Takes the top k predictions to consider
@@ -46,7 +46,7 @@ namespace SharpLearning.Metrics.Ranking
             for (int i = 0; i < length; i++)
             {
                 var prediction = predictions[i];
-                if(m_workTargets.Contains(prediction) &&
+                if (m_workTargets.Contains(prediction) &&
                     !Contains(predictions, i, prediction))
                 {
                     hits += 1.0;
@@ -59,7 +59,7 @@ namespace SharpLearning.Metrics.Ranking
             return 1.0 - score / minLength;
         }
 
-        bool Contains(T[] predictions, int i, T prediction)
+        static bool Contains(T[] predictions, int i, T prediction)
         {
             var predictionFound = false;
             for (int j = 0; j < i; j++)

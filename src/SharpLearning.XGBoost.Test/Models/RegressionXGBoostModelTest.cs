@@ -102,7 +102,7 @@ namespace SharpLearning.XGBoost.Test.Learners
                     { "f1", 9.00304680229703 },
                     { "f5", 7.10296482157573 },
                     { "f4", 6.43327754840246 },
-                    { "f8", 4.61553313147666 },                
+                    { "f8", 4.61553313147666 },
                 };
 
                 Assert.AreEqual(expected.Count, actual.Count);

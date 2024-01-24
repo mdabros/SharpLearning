@@ -40,7 +40,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
         /// <param name="points"></param>
         /// <param name="writer"></param>
         /// <param name="separator"></param>
-        public static void Write(this List<LearningCurvePoint> points, Func<TextWriter> writer, 
+        public static void Write(this List<LearningCurvePoint> points, Func<TextWriter> writer,
             char separator = CsvParser.DefaultDelimiter)
         {
             var columnNameToIndex = new Dictionary<string, int>
@@ -49,7 +49,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
                 { "TrainingError", 1 },
                 { "ValidationError", 2 }
             };
-            
+
             points.ToF64Matrix()
                 .EnumerateCsvRows(columnNameToIndex)
                 .Write(writer, separator);

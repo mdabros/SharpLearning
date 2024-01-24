@@ -60,8 +60,8 @@ namespace SharpLearning.Containers.Test
                 PositiveInfinitySymbol = text[0],
                 NegativeInfinitySymbol = text[1],
             };
-            
-            var actual = text.Select(x => FloatingPointConversion.ToF64(x, 
+
+            var actual = text.Select(x => FloatingPointConversion.ToF64(x,
                 converter: t => double.Parse(t, nfi))).ToArray();
 
             var expected = new double[] { double.PositiveInfinity, double.NegativeInfinity, 0.0, 75357.987 };

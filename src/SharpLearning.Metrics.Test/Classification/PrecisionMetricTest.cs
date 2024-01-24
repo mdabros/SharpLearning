@@ -57,7 +57,7 @@ namespace SharpLearning.Metrics.Test.Classification
         [TestMethod]
         public void PrecisionMetric_Error()
         {
-            var targets = new double[] { 0, 1, 1, 1, 1, 0, 0, 1};
+            var targets = new double[] { 0, 1, 1, 1, 1, 0, 0, 1 };
             var predictions = new double[] { 1, 1, 1, 0, 0, 0, 1, 1 };
 
             var sut = new PrecisionMetric<double>(1);

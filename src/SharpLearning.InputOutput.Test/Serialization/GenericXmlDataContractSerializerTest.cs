@@ -8,7 +8,7 @@ namespace SharpLearning.InputOutput.Test.Serialization
     [TestClass]
     public class GenericXmlDataContractSerializerTest
     {
-        readonly Dictionary<string, int> m_serializationData = new Dictionary<string, int>
+        readonly Dictionary<string, int> m_serializationData = new()
         {
             {"Test1", 0}, {"Test2", 1}, {"Test3", 2}, {"Test4", 3}, {"Test5", 4}
         };
@@ -22,7 +22,7 @@ namespace SharpLearning.InputOutput.Test.Serialization
             var writer = new StringWriter();
 
             var sut = new GenericXmlDataContractSerializer();
-            sut.Serialize(m_serializationData,() => writer);
+            sut.Serialize(m_serializationData, () => writer);
 
             Assert.AreEqual(m_serializationString, writer.ToString());
         }

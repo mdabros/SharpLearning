@@ -43,10 +43,10 @@ namespace SharpLearning.Metrics.Classification
                 var target = targets[i];
                 var probabilitySum = probabilities.Select(p => p.Value)
                     .Sum();
-                
+
                 foreach (var probability in probabilities)
                 {
-                    if(probability.Key == target)
+                    if (probability.Key == target)
                     {
                         var prop = Math.Max(m_epsilon, probability.Value);
                         prop = Math.Min(1.0 - m_epsilon, prop);
@@ -81,8 +81,8 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="targetStringMapping"></param>
         /// <returns></returns>
         public string ErrorString(
-            double[] targets, 
-            ProbabilityPrediction[] probabilityPredictions, 
+            double[] targets,
+            ProbabilityPrediction[] probabilityPredictions,
             Dictionary<double, string> targetStringMapping)
         {
             var error = Error(targets, probabilityPredictions);

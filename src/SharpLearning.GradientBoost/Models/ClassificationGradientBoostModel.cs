@@ -14,7 +14,7 @@ namespace SharpLearning.GradientBoost.Models
     /// 
     /// </summary>
     [Serializable]
-    public sealed class ClassificationGradientBoostModel 
+    public sealed class ClassificationGradientBoostModel
         : IPredictorModel<double>
         , IPredictorModel<ProbabilityPrediction>
     {
@@ -22,22 +22,22 @@ namespace SharpLearning.GradientBoost.Models
         /// 
         /// </summary>
         public readonly GBMTree[][] Trees;
-        
+
         /// <summary>
         /// 
         /// </summary>
         public readonly double LearningRate;
-        
+
         /// <summary>
         /// 
         /// </summary>
         public readonly double InitialLoss;
-        
+
         /// <summary>
         /// 
         /// </summary>
         public readonly double[] TargetNames;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -52,14 +52,14 @@ namespace SharpLearning.GradientBoost.Models
         /// <param name="initialLoss"></param>
         /// <param name="featureCount"></param>
         public ClassificationGradientBoostModel(
-            GBMTree[][] trees, 
-            double[] targetNames, 
-            double learningRate, 
-            double initialLoss, 
+            GBMTree[][] trees,
+            double[] targetNames,
+            double learningRate,
+            double initialLoss,
             int featureCount)
         {
             Trees = trees ?? throw new ArgumentNullException(nameof(trees));
-            TargetNames = targetNames ?? throw new ArgumentException(nameof(targetNames));
+            TargetNames = targetNames ?? throw new ArgumentNullException(nameof(targetNames));
 
             LearningRate = learningRate;
             InitialLoss = initialLoss;
@@ -73,7 +73,7 @@ namespace SharpLearning.GradientBoost.Models
         /// <returns></returns>
         public double Predict(double[] observation)
         {
-            if(TargetNames.Length == 2)
+            if (TargetNames.Length == 2)
             {
                 return BinaryPredict(observation);
             }
@@ -266,7 +266,7 @@ namespace SharpLearning.GradientBoost.Models
             return Sigmoid(prediction);
         }
 
-        double Sigmoid(double z)
+        static double Sigmoid(double z)
         {
             return 1.0 / (1.0 + Math.Exp(-z));
         }

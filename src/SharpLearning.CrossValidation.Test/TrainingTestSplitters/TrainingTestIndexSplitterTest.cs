@@ -13,7 +13,7 @@ namespace SharpLearning.CrossValidation.Test.TrainingTestSplitters
         {
             var sut = new TrainingTestIndexSplitter<double>(
                 new NoShuffleIndexSampler<double>(), 0.8);
-            
+
             var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             var actual = sut.Split(targets);

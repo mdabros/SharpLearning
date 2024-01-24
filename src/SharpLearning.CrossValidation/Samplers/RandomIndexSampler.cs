@@ -39,13 +39,13 @@ namespace SharpLearning.CrossValidation.Samplers
         {
             if (data.Length < sampleSize)
             {
-                throw new ArgumentException("Sample size " + sampleSize + 
+                throw new ArgumentException("Sample size " + sampleSize +
                     " is larger than data size " + data.Length);
             }
 
             var indices = Enumerable.Range(0, data.Length).ToArray();
             indices.Shuffle(m_random);
-            
+
             return indices.Take(sampleSize).ToArray();
         }
 
@@ -59,15 +59,15 @@ namespace SharpLearning.CrossValidation.Samplers
         /// <returns></returns>
         public int[] Sample(T[] data, int sampleSize, int[] dataIndices)
         {
-            if (data.Length < sampleSize) 
+            if (data.Length < sampleSize)
             {
-                throw new ArgumentException("Sample size " + sampleSize + 
+                throw new ArgumentException("Sample size " + sampleSize +
                     " is larger than data size " + data.Length);
             }
 
-            if (data.Length < dataIndices.Length) 
+            if (data.Length < dataIndices.Length)
             {
-                throw new ArgumentException("dataIndice size " + dataIndices.Length + 
+                throw new ArgumentException("dataIndice size " + dataIndices.Length +
                     " is larger than data size " + data.Length);
             }
 

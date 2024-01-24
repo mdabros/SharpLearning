@@ -24,7 +24,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var onlyOneUniqueObservations = (F64Matrix)observations.Rows(0, 1, 2, 3, 4);
             var onlyOneUniquetargets = Enumerable.Range(0, onlyOneUniqueObservations.RowCount).Select(v => onlyUniqueTargetValue).ToArray();
             var model = sut.Learn(onlyOneUniqueObservations, onlyOneUniquetargets);
-                
+
             var predictions = model.Predict(onlyOneUniqueObservations);
             // no valid split, so should result in the model always returning the onlyUniqueTargetValue.
             for (int i = 0; i < predictions.Length; i++)
@@ -82,7 +82,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             Assert.AreEqual(0.032256921590414704, error, 0.0000001);
         }
 
-        private static double RegressionDecisionTreeLearner_Learn(int treeDepth)
+        static double RegressionDecisionTreeLearner_Learn(int treeDepth)
         {
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
@@ -97,7 +97,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             return error;
         }
 
-        private double RegressionDecisionTreeLearner_Learn_Weighted(int treeDepth, double weight)
+        double RegressionDecisionTreeLearner_Learn_Weighted(int treeDepth, double weight)
         {
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
@@ -112,7 +112,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             return error;
         }
 
-        double Weight(double v, double weight)
+        static double Weight(double v, double weight)
         {
             if (v < 3.0)
                 return weight;

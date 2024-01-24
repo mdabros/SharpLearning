@@ -17,7 +17,7 @@ namespace SharpLearning.Containers.Test.Matrices
             var stringMatrix = new StringMatrix(m_inputData, 2, 3);
             var actual = stringMatrix.ToF64Matrix();
 
-            var expected = new F64Matrix(m_inputData.Select(v => 
+            var expected = new F64Matrix(m_inputData.Select(v =>
                 FloatingPointConversion.ToF64(v)).ToArray(), 2, 3);
 
             Assert.AreEqual(expected, actual);
@@ -47,8 +47,8 @@ namespace SharpLearning.Containers.Test.Matrices
         [TestMethod]
         public void StringMatrixExtensions_CombineStringMatrices_Cols()
         {
-            var matrix1 = new StringMatrix(m_inputData,2, 3);
-            var matrix2 = new StringMatrix(m_inputData,2, 3);
+            var matrix1 = new StringMatrix(m_inputData, 2, 3);
+            var matrix2 = new StringMatrix(m_inputData, 2, 3);
 
             var actual = matrix1.CombineCols(matrix2);
 

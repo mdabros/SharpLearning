@@ -26,7 +26,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         public BackwardEliminationRegressionEnsembleSelection(
-            IMetric<double, double> metric, 
+            IMetric<double, double> metric,
             IRegressionEnsembleStrategy ensembleStrategy,
             int numberOfModelsToSelect)
         {
@@ -46,7 +46,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(F64Matrix crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
+            if (crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
                 throw new ArgumentException("Available models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
@@ -61,7 +61,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             {
                 var error = SelectNextModelToRemove(crossValidatedModelPredictions, targets, currentError);
 
-                if(error < currentError && m_remainingModelIndices.Count <= m_numberOfModelsToSelect)
+                if (error < currentError && m_remainingModelIndices.Count <= m_numberOfModelsToSelect)
                 {
                     currentError = error;
                     m_bestModelIndices = m_remainingModelIndices.ToList();
@@ -69,16 +69,16 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 }
             }
 
-                Trace.WriteLine("Selected model indices: " + string.Join(", ", m_bestModelIndices.ToArray()));
+            Trace.WriteLine("Selected model indices: " + string.Join(", ", m_bestModelIndices.ToArray()));
 
             return m_bestModelIndices.ToArray();
         }
 
-        double SelectNextModelToRemove(F64Matrix crossValidatedModelPredictions, 
-            double[] targets, 
+        double SelectNextModelToRemove(F64Matrix crossValidatedModelPredictions,
+            double[] targets,
             double currentBestError)
         {
-            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount, 
+            var candidateModelMatrix = new F64Matrix(crossValidatedModelPredictions.RowCount,
                 m_remainingModelIndices.Count - 1);
 
             var candidatePredictions = new double[crossValidatedModelPredictions.RowCount];
@@ -93,14 +93,14 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 for (int i = 0; i < m_remainingModelIndices.Count; i++)
                 {
                     var curIndex = m_remainingModelIndices[i];
-                    if(curIndex != index)
+                    if (curIndex != index)
                     {
                         candidateModelIndices[candidateIndex++] = m_remainingModelIndices[i];
                     }
                 }
 
                 crossValidatedModelPredictions.Columns(candidateModelIndices, candidateModelMatrix);
-                
+
                 m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
                 var error = m_metric.Error(targets, candidatePredictions);
 

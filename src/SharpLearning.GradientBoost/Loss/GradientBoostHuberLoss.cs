@@ -96,7 +96,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
         /// <param name="inSample"></param>
-        public void UpdateResiduals(double[] targets, double[] predictions, 
+        public void UpdateResiduals(double[] targets, double[] predictions,
             double[] residuals, bool[] inSample)
         {
             var absDiff = new double[inSample.Length];
@@ -104,7 +104,7 @@ namespace SharpLearning.GradientBoost.Loss
 
             for (int i = 0; i < inSample.Length; i++)
             {
-                if(inSample[i])
+                if (inSample[i])
                 {
                     var value = targets[i] - predictions[i];
                     difference[i] = value;
@@ -116,7 +116,7 @@ namespace SharpLearning.GradientBoost.Loss
 
             for (int i = 0; i < inSample.Length; i++)
             {
-                if(inSample[i])
+                if (inSample[i])
                 {
                     var diff = absDiff[i];
 
@@ -141,7 +141,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="right"></param>
         /// <param name="target"></param>
         /// <param name="residual"></param>
-        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, 
+        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right,
             double target, double residual)
         {
             var residual2 = residual * residual;
@@ -174,13 +174,13 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="inSample"></param>
         /// <returns></returns>
-        public double UpdatedLeafValue(double currentLeafValue, double[] targets, 
+        public double UpdatedLeafValue(double currentLeafValue, double[] targets,
             double[] predictions, bool[] inSample)
         {
             var diff = new List<double>();
             for (int j = 0; j < inSample.Length; j++)
             {
-                if(inSample[j])
+                if (inSample[j])
                 {
                     diff.Add(targets[j] - predictions[j]);
                 }
@@ -194,7 +194,7 @@ namespace SharpLearning.GradientBoost.Loss
                 var medianDiff = diff[j] - median;
                 var sign = Math.Sign(medianDiff);
 
-                values[j] = sign * Math.Min(Math.Abs(medianDiff), m_gamma); 
+                values[j] = sign * Math.Min(Math.Abs(medianDiff), m_gamma);
             }
 
             var newValue = median + values.Sum() / values.Length;

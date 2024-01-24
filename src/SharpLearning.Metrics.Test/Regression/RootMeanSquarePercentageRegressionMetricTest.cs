@@ -12,7 +12,7 @@ namespace SharpLearning.Metrics.Test.Regression
             var targets = new double[] { 1.0, 2.3, 3.1, 4.4, 5.8 };
             var predictions = new double[] { 1.0, 2.0, 3.0, 4.0, 5.0 };
             var sut = new RootMeanSquarePercentageRegressionMetric();
-            
+
             var result = sut.Error(targets, predictions);
             Assert.AreEqual(0.0952294579674858, result, 0.00001);
         }

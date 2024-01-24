@@ -15,13 +15,13 @@ namespace SharpLearning.Containers.Arithmetic
         /// <param name="v"></param>
         /// <param name="output"></param>
         public static void AddF64(F64Matrix m, double[] v, F64Matrix output)
-        {    
+        {
             var rows = m.RowCount;
             var cols = m.ColumnCount;
 
-            if (v.Length != rows) 
+            if (v.Length != rows)
             {
-                throw new ArgumentException("matrix rows: " + rows + 
+                throw new ArgumentException("matrix rows: " + rows +
                     " differs from vector length: " + v.Length);
             }
 
@@ -43,7 +43,7 @@ namespace SharpLearning.Containers.Arithmetic
         {
             if (v1.Length != v2.Length)
             {
-                throw new ArgumentException("v1 length: " + v1.Length + 
+                throw new ArgumentException("v1 length: " + v1.Length +
                     " differs from v2 length: " + v2.Length);
             }
 

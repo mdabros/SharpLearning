@@ -25,7 +25,7 @@ namespace SharpLearning.Metrics.Test.Classification
         public void RocAucClassificationMetric_Error_No_Error()
         {
             var targets = new double[] { 0, 1 };
-            var probabilities = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
+            var probabilities = new ProbabilityPrediction[] { new(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
             var sut = new RocAucClassificationProbabilityMetric(1);
             var actual = sut.Error(targets, probabilities);
 
@@ -36,7 +36,7 @@ namespace SharpLearning.Metrics.Test.Classification
         public void RocAucClassificationMetric_Error()
         {
             var targets = new double[] { 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1 };
-            var probabilities = new ProbabilityPrediction[] { new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.052380952 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.993377483 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.111111111 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.193377483 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.793377483 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.012345679 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.885860173 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.714285714 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.993377483 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.993377483 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.954545455 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }) };
+            var probabilities = new ProbabilityPrediction[] { new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.052380952 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.993377483 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.111111111 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.193377483 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.793377483 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.012345679 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.885860173 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.714285714 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.993377483 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.993377483 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.954545455 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new(0, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.020725389 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 0.985860173 } }) };
 
             var sut = new RocAucClassificationProbabilityMetric(1);
             var actual = sut.Error(targets, probabilities);
@@ -73,7 +73,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var targets = positives.ToArray();
 
             var probabilities = targets
-                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double,double> { { 0.0, 0.0 }, { 1.0, 0.0 } } ) :
+                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double, double> { { 0.0, 0.0 }, { 1.0, 0.0 } }) :
                                       new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 0.0, 0.0 }, { 1.0, 0.0 } }))
                 .ToArray();
 
@@ -92,7 +92,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var targets = positives.ToArray();
 
             var probabilities = targets
-                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double,double> { { 0.0, 1.0 }, { 1.0, 1.0 } } ) :
+                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double, double> { { 0.0, 1.0 }, { 1.0, 1.0 } }) :
                                       new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 0.0, 1.0 }, { 1.0, 1.0 } }))
                 .ToArray();
 
@@ -136,7 +136,7 @@ namespace SharpLearning.Metrics.Test.Classification
         public void RocAucClassificationMetric_ErrorString()
         {
             var targets = new double[] { 0, 1 };
-            var probabilities = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
+            var probabilities = new ProbabilityPrediction[] { new(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
             var sut = new RocAucClassificationProbabilityMetric(1);
             var actual = sut.ErrorString(targets, probabilities);
 
@@ -149,14 +149,14 @@ namespace SharpLearning.Metrics.Test.Classification
         public void RocAucClassificationMetric_ErrorString_TargetStringMapping()
         {
             var targets = new double[] { 0, 1 };
-            var probabilities = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
+            var probabilities = new ProbabilityPrediction[] { new(0, new Dictionary<double, double> { { 0, 0 }, { 1.0, 0.0 } }), new(1, new Dictionary<double, double> { { 0, 0.0 }, { 1.0, 1 } }) };
             var sut = new RocAucClassificationProbabilityMetric(1);
             var targetStringMapping = new Dictionary<double, string>
             {
                 { 0, "Negative" },
                 { 1, "Positive" }
             };
-            
+
             var actual = sut.ErrorString(targets, probabilities, targetStringMapping);
             var expected = ";Negative;Positive;Negative;Positive\r\nNegative;1.000;0.000;100.000;0.000\r\nPositive;0.000;1.000;0.000;100.000\r\nError: 0.000\r\n";
 

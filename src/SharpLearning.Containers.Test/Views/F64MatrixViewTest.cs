@@ -26,9 +26,9 @@ namespace SharpLearning.Containers.Test.Views
             {
                 var view = pinnedMatrix.View();
                 for (int i = 0; i < matrix.ColumnCount; i++)
-			    {
+                {
                     AssertColumnView(matrix.Column(i), view.ColumnView(i));
-			    }                
+                }
             }
         }
 
@@ -39,7 +39,7 @@ namespace SharpLearning.Containers.Test.Views
             using (var pinnedMatrix = matrix.GetPinnedPointer())
             {
                 var subView = pinnedMatrix.View().View(
-                    Interval2D.Create(Interval1D.Create(0, 2), 
+                    Interval2D.Create(Interval1D.Create(0, 2),
                     Interval1D.Create(0, 3)));
 
                 var subMatrix = matrix.Rows(new int[] { 0, 1 });
@@ -85,12 +85,12 @@ namespace SharpLearning.Containers.Test.Views
 
         /// <remarks>A matrix which needs a byte pointer offset larger than
         /// int.MaxValue to access all records in the backing array</remarks>
-        private F64Matrix LargeMatrix()
+        static F64Matrix LargeMatrix()
         {
             return new F64Matrix(int.MaxValue / sizeof(double) + 2, 1);
         }
 
-        private F64Matrix Matrix()
+        static F64Matrix Matrix()
         {
             var features = new double[9] { 1, 2, 3,
                                         10, 20, 30,
@@ -99,7 +99,7 @@ namespace SharpLearning.Containers.Test.Views
             return new F64Matrix(features, 3, 3);
         }
 
-        private unsafe void AssertColumnView(double[] column, F64MatrixColumnView columnView)
+        static unsafe void AssertColumnView(double[] column, F64MatrixColumnView columnView)
         {
             for (int i = 0; i < column.Length; i++)
             {
@@ -108,7 +108,7 @@ namespace SharpLearning.Containers.Test.Views
         }
 
 
-        private unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
+        unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
         {
             for (int i = 0; i < matrix.RowCount; i++)
             {

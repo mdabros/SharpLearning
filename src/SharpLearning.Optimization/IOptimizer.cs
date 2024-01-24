@@ -13,7 +13,7 @@ namespace SharpLearning.Optimization
         /// <param name="functionToMinimize"></param>
         /// <returns></returns>
         OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize);
-        
+
         /// <summary>
         /// Returns all results ordered from best to worst (minimized). 
         /// </summary>

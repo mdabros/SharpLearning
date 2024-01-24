@@ -26,7 +26,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, 
+            var learner = new ClassificationEnsembleLearner(learners,
                 new MeanProbabilityClassificationEnsembleStrategy());
 
             var sut = learner.Learn(observations, targets);
@@ -57,7 +57,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, 
+            var learner = new ClassificationEnsembleLearner(learners,
                 new MeanProbabilityClassificationEnsembleStrategy());
 
             var sut = learner.Learn(observations, targets);
@@ -83,7 +83,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, 
+            var learner = new ClassificationEnsembleLearner(learners,
                 new MeanProbabilityClassificationEnsembleStrategy());
 
             var sut = learner.Learn(observations, targets);
@@ -114,7 +114,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, 
+            var learner = new ClassificationEnsembleLearner(learners,
                 new MeanProbabilityClassificationEnsembleStrategy());
 
             var sut = learner.Learn(observations, targets);
@@ -132,7 +132,7 @@ namespace SharpLearning.Ensemble.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
+            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
                 { "PreviousExperience_month", 1 } };
 
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
@@ -143,13 +143,13 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, 
+            var learner = new ClassificationEnsembleLearner(learners,
                 new MeanProbabilityClassificationEnsembleStrategy());
 
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
-            var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 }, 
+            var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
                 { "AptitudeTestScore", 15.6771501925546 } };
 
             Assert.AreEqual(expected.Count, actual.Count);
@@ -175,7 +175,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationEnsembleLearner(learners, 
+            var learner = new ClassificationEnsembleLearner(learners,
                 new MeanProbabilityClassificationEnsembleStrategy());
 
             var sut = learner.Learn(observations, targets);

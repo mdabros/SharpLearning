@@ -43,7 +43,7 @@ namespace SharpLearning.XGBoost.Models
             return new GBMTree(nodes);
         }
 
-        private static List<GBMNode> ConvertXGBoostNodesToGBMNodes(string textTree)
+        static List<GBMNode> ConvertXGBoostNodesToGBMNodes(string textTree)
         {
             var newLine = new string[] { "\n" };
             var lines = textTree.Split(newLine, StringSplitOptions.RemoveEmptyEntries);
@@ -51,8 +51,7 @@ namespace SharpLearning.XGBoost.Models
             var nodes = new List<GBMNode>
             {
                 // Add special root node for sharplearning
-                new GBMNode
-                {
+                new() {
                     FeatureIndex = -1,
                     SplitValue = -1,
                     LeftConstant = 0.5,

@@ -14,7 +14,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// Tree Nodes
         /// </summary>
         public readonly List<Node> Nodes;
-        
+
         /// <summary>
         /// Leaf node probabilities
         /// </summary>
@@ -30,7 +30,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// </summary>
         public readonly double[] VariableImportance;
 
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -38,7 +38,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="probabilities"></param>
         /// <param name="targetNames"></param>
         /// <param name="variableImportance"></param>
-        public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames, 
+        public BinaryTree(List<Node> nodes, List<double[]> probabilities, double[] targetNames,
             double[] variableImportance)
         {
             Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));

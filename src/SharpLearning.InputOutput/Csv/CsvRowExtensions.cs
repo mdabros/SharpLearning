@@ -15,7 +15,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <summary>
         /// 
         /// </summary>
-        public static readonly Converter<string,double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
+        public static readonly Converter<string, double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
 
         /// <summary>
         /// Gets the CsvRow value based on the supplied column name
@@ -194,7 +194,7 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="matrix"></param>
         /// <param name="columnNameToIndex"></param>
         /// <returns></returns>
-        public static IEnumerable<CsvRow> EnumerateCsvRows<T>(this IMatrix<T> matrix, 
+        public static IEnumerable<CsvRow> EnumerateCsvRows<T>(this IMatrix<T> matrix,
             Dictionary<string, int> columnNameToIndex)
         {
             var rows = matrix.RowCount;
@@ -222,9 +222,9 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="writer"></param>
         /// <param name="separator"></param>
         /// <param name="writeHeader">True and a header is added to the stream, false and the header is omitted</param>
-        public static void Write(this IEnumerable<CsvRow> dataRows, 
-            Func<TextWriter> writer, 
-            char separator = CsvParser.DefaultDelimiter, 
+        public static void Write(this IEnumerable<CsvRow> dataRows,
+            Func<TextWriter> writer,
+            char separator = CsvParser.DefaultDelimiter,
             bool writeHeader = true)
         {
             new CsvWriter(writer, separator).Write(dataRows, writeHeader);
@@ -237,9 +237,9 @@ namespace SharpLearning.InputOutput.Csv
         /// <param name="filePath"></param>
         /// <param name="separator"></param>
         /// <param name="writeHeader">True and a header is added to the stream, false and the header is omitted</param>
-        public static void WriteFile(this IEnumerable<CsvRow> dataRows, 
-            string filePath, 
-            char separator = CsvParser.DefaultDelimiter, 
+        public static void WriteFile(this IEnumerable<CsvRow> dataRows,
+            string filePath,
+            char separator = CsvParser.DefaultDelimiter,
             bool writeHeader = true)
         {
             Write(dataRows, () => new StreamWriter(filePath), separator, writeHeader);

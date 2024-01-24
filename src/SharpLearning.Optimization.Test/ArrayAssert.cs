@@ -6,7 +6,7 @@ namespace SharpLearning.Optimization.Test
     {
         const double m_defaultDelta = 0.000001;
 
-        public static void AssertAreEqual(double[] expected, double[] actual, 
+        public static void AssertAreEqual(double[] expected, double[] actual,
             double delta = m_defaultDelta)
         {
             Assert.AreEqual(expected.Length, actual.Length);

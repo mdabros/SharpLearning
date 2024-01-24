@@ -23,8 +23,8 @@ namespace SharpLearning.Ensemble.Models
         /// False; the meta learner only receives the output of the ensemble models as features</param>
         public RegressionStackingEnsembleModel(IPredictorModel<double>[] ensembleModels, IPredictorModel<double> metaModel, bool includeOriginalFeaturesForMetaLearner)
         {
-            m_ensembleModels = ensembleModels ?? throw new ArgumentException(nameof(ensembleModels));
-            m_metaModel = metaModel ?? throw new ArgumentException(nameof(metaModel));
+            m_ensembleModels = ensembleModels ?? throw new ArgumentNullException(nameof(ensembleModels));
+            m_metaModel = metaModel ?? throw new ArgumentNullException(nameof(metaModel));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
         }
 
@@ -102,7 +102,7 @@ namespace SharpLearning.Ensemble.Models
                 {
                     duplicateModelCount[name] += 1;
                 }
-                    
+
                 ensembleFeatureNameToIndex.Add(name + "_" + duplicateModelCount[name].ToString(), index++);
             }
 
@@ -118,7 +118,7 @@ namespace SharpLearning.Ensemble.Models
             return m_metaModel.GetVariableImportance(ensembleFeatureNameToIndex);
         }
 
-        string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
+        static string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
         {
             if (ensembleFeatureNameToIndex.ContainsKey(name))
             {

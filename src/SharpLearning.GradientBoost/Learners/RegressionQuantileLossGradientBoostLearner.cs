@@ -30,14 +30,14 @@ namespace SharpLearning.GradientBoost.Learners
         /// 0.5 is the median and corresponds to absolute loss or LAD regression</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
         public RegressionQuantileLossGradientBoostLearner(
-            int iterations = 100, 
-            double learningRate = 0.1, 
+            int iterations = 100,
+            double learningRate = 0.1,
             int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, 
-            double minimumInformationGain = 0.000001, 
-            double subSampleRatio = 1.0, 
-            int featuresPrSplit = 0, 
-            double quantile = 0.9, 
+            int minimumSplitSize = 1,
+            double minimumInformationGain = 0.000001,
+            double subSampleRatio = 1.0,
+            int featuresPrSplit = 0,
+            double quantile = 0.9,
             bool runParallel = true)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
                 subSampleRatio, featuresPrSplit, new GradientBoostQuantileLoss(quantile), runParallel)

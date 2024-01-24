@@ -16,7 +16,7 @@ namespace SharpLearning.Containers
         /// <summary>
         /// 
         /// </summary>
-        public static readonly NumberFormatInfo nfi = new NumberFormatInfo();
+        public static readonly NumberFormatInfo nfi = new();
 
         /// <summary>
         /// Default NumberStyle is Any.
@@ -60,7 +60,7 @@ namespace SharpLearning.Containers
             }
             else
             {
-                throw new ArgumentException($"Unable to parse \"{ value }\" to double");
+                throw new ArgumentException($"Unable to parse \"{value}\" to double");
             }
         }
     }

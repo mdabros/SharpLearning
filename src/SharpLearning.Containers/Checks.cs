@@ -36,7 +36,7 @@ namespace SharpLearning.Containers
         /// <param name="observationsRowCount"></param>
         /// <param name="observationsColumnCount"></param>
         /// <param name="targetLength"></param>
-        public static void VerifyObservationsAndTargets(int observationsRowCount, 
+        public static void VerifyObservationsAndTargets(int observationsRowCount,
             int observationsColumnCount, int targetLength)
         {
             VerifyObservations(observationsRowCount, observationsColumnCount);
@@ -51,7 +51,7 @@ namespace SharpLearning.Containers
         /// <param name="columnCount"></param>
         public static void VerifyObservations(int rowCount, int columnCount)
         {
-            if(rowCount == 0)
+            if (rowCount == 0)
             {
                 throw new ArgumentException("Observations does not contain any rows");
             }
@@ -81,11 +81,11 @@ namespace SharpLearning.Containers
         /// <param name="targetLength"></param>
         public static void VerifyObservationsAndTargetsDimensions(int observationRowCount, int targetLength)
         {
-            if(observationRowCount != targetLength)
+            if (observationRowCount != targetLength)
             {
-                throw new ArgumentException($"Observations and targets mismatch." + 
+                throw new ArgumentException($"Observations and targets mismatch." +
                     $"Observations row count: {observationRowCount}, targets row count: {targetLength}");
-            }           
+            }
         }
 
         /// <summary>
@@ -119,16 +119,16 @@ namespace SharpLearning.Containers
         public static void VerifyIndices(int[] indices, int observationRowCount, int targetLength)
         {
             var min = indices.Min();
-            if(min < 0)
+            if (min < 0)
             {
-                throw new ArgumentException($"Indices contains negative " + 
+                throw new ArgumentException($"Indices contains negative " +
                     $"values: {string.Join(",", indices.Where(v => v < 0))}");
             }
 
             var max = indices.Max();
             if (max >= observationRowCount || max >= targetLength)
             {
-                throw new ArgumentException($"Indices contains elements exceeding the row count of observations and targets. " +  
+                throw new ArgumentException($"Indices contains elements exceeding the row count of observations and targets. " +
                     $"Indices Max: {max}, observations row count: {observationRowCount}, target length: {targetLength}");
             }
         }

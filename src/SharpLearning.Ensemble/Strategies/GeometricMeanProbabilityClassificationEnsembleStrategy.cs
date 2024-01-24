@@ -24,7 +24,7 @@ namespace SharpLearning.Ensemble.Strategies
 
             var sum = averageProbabilities.Values.Sum();
             averageProbabilities = averageProbabilities.ToDictionary(p => p.Key, p => p.Value / sum);
-            
+
             var prediction = averageProbabilities.OrderByDescending(d => d.Value).First().Key;
 
             return new ProbabilityPrediction(prediction, averageProbabilities);
@@ -49,12 +49,12 @@ namespace SharpLearning.Ensemble.Strategies
             }
         }
 
-        double GeometricMean(double[] values)
+        static double GeometricMean(double[] values)
         {
             var geoMean = 0.0;
             for (int i = 0; i < values.Length; i++)
             {
-                if(i == 0)
+                if (i == 0)
                 {
                     geoMean = values[i];
                 }

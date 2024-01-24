@@ -34,8 +34,8 @@ namespace SharpLearning.Containers.Views
         /// </summary>
         /// <returns></returns>
         public F64VectorView View()
-        { 
-            return new F64VectorView(m_ptr, m_length); 
+        {
+            return new F64VectorView(m_ptr, m_length);
         }
 
         /// <summary>

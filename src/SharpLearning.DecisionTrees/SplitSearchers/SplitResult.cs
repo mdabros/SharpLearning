@@ -124,7 +124,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
 
         const double m_tolerence = 0.00001;
 
-        bool Equal(double a, double b)
+        static bool Equal(double a, double b)
         {
             var diff = Math.Abs(a * m_tolerence);
             if (Math.Abs(a - b) <= diff)

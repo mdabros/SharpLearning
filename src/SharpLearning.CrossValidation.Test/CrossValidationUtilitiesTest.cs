@@ -69,7 +69,7 @@ namespace SharpLearning.CrossValidation.Test
         {
             var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3 };
             var sampler = new StratifiedIndexSampler<double>(seed: 242);
-            var actuals = CrossValidationUtilities.GetKFoldCrossValidationIndexSets(sampler, 
+            var actuals = CrossValidationUtilities.GetKFoldCrossValidationIndexSets(sampler,
                 foldCount: 4, targets: targets);
 
             var expecteds = new List<(int[] trainingIndices, int[] validationIndices)>
@@ -92,7 +92,7 @@ namespace SharpLearning.CrossValidation.Test
             }
         }
 
-        void TraceIndexSets(IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> indexSets)
+        static void TraceIndexSets(IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> indexSets)
         {
             const string Separator = ", ";
             foreach (var set in indexSets)

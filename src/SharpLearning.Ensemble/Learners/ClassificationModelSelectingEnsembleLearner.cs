@@ -16,7 +16,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Classification model selecting EnsembleLearner.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
-    public class ClassificationModelSelectingEnsembleLearner 
+    public class ClassificationModelSelectingEnsembleLearner
         : ILearner<ProbabilityPrediction>
         , IIndexedLearner<ProbabilityPrediction>
         , ILearner<double>
@@ -38,9 +38,9 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
         /// <param name="ensembleSelection">Ensemble selection method used to find the beset subset of models</param>
         public ClassificationModelSelectingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             ICrossValidation<ProbabilityPrediction> crossValidation,
-            IClassificationEnsembleStrategy ensembleStrategy, 
+            IClassificationEnsembleStrategy ensembleStrategy,
             IClassificationEnsembleSelection ensembleSelection)
             : this(learners, crossValidation, () => ensembleStrategy, ensembleSelection)
         {
@@ -57,9 +57,9 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
         /// <param name="ensembleSelection">Ensemble selection method used to find the beset subset of models</param>
         public ClassificationModelSelectingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             ICrossValidation<ProbabilityPrediction> crossValidation,
-            Func<IClassificationEnsembleStrategy> ensembleStrategy, 
+            Func<IClassificationEnsembleStrategy> ensembleStrategy,
             IClassificationEnsembleSelection ensembleSelection)
         {
             m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
@@ -67,7 +67,7 @@ namespace SharpLearning.Ensemble.Learners
             m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
             m_ensembleSelection = ensembleSelection ?? throw new ArgumentNullException(nameof(ensembleSelection));
         }
-        
+
         /// <summary>
         /// Learns a ClassificationEnsembleModel based on model selection.
         /// Trains several models and selects the best subset of models for the ensemble.
@@ -93,7 +93,7 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationEnsembleModel Learn(F64Matrix observations, double[] targets, 
+        public ClassificationEnsembleModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
@@ -130,7 +130,7 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ProbabilityPrediction[][] LearnMetaFeatures(F64Matrix observations, double[] targets, 
+        public ProbabilityPrediction[][] LearnMetaFeatures(F64Matrix observations, double[] targets,
             int[] indices)
         {
             var cvRows = indices.Length;
@@ -160,7 +160,7 @@ namespace SharpLearning.Ensemble.Learners
         /// <returns></returns>
         public ClassificationEnsembleModel SelectModels(
             F64Matrix observations,
-            ProbabilityPrediction[][] metaObservations, 
+            ProbabilityPrediction[][] metaObservations,
             double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();

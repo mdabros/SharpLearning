@@ -7,21 +7,21 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
     /// Offset is used for cases with negative target names like -1.
     /// This is a lot faster than mapping using a dictionary since this solution simply indexes into an array
     /// </summary>
-    internal class TargetCounts
+    class TargetCounts
     {
         double[] m_counts;
 
         public TargetCounts()
             : this(0, 0)
         {
-	    }
+        }
 
-        public TargetCounts (int size, int offset)
-	    {
+        public TargetCounts(int size, int offset)
+        {
             OffSet = offset;
             Length = offset + size;
             m_counts = new double[Length];
-	    }
+        }
 
         public double[] Counts { get => m_counts; }
         public int OffSet { get; private set; }

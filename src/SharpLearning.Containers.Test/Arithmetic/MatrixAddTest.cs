@@ -61,7 +61,7 @@ namespace SharpLearning.Containers.Test.Matrices
         public void MatrixAdd_Add_Vectors_Different_Lengths()
         {
             var v1 = new double[] { 2, 3, 5, 10 };
-            var v2 = new double[] { 1, 1  };
+            var v2 = new double[] { 1, 1 };
 
             v1.Add(v2);
         }

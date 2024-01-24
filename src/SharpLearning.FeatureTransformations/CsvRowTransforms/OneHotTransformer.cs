@@ -45,7 +45,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// <returns></returns>
         public IEnumerable<CsvRow> Transform(IEnumerable<CsvRow> rows)
         {
-            if(m_featureMap.Count == 0)
+            if (m_featureMap.Count == 0)
             {
                 foreach (var column in m_columnsToMap)
                 {

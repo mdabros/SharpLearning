@@ -41,7 +41,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// <param name="startDate"></param>
         public DateTimeFeatureTransformer(string dateTimeColumn, DateTime startDate)
         {
-            if (startDate == null) { throw new ArgumentException("startDate"); }
+            if (startDate == null) { throw new ArgumentNullException("startDate"); }
             m_dateTimeColumn = dateTimeColumn;
             m_startDate = startDate;
         }
@@ -49,9 +49,9 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// <summary>
         /// 
         /// </summary>
-        public string[] FeatureNames
+        public static string[] FeatureNames
         {
-            get => new [] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
+            get => new[] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
             return timeValues;
         }
 
-        string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
+        static string CreateKey(string key, Dictionary<string, int> columnNameToIndex)
         {
             if (!columnNameToIndex.ContainsKey(key))
             {

@@ -10,7 +10,7 @@ namespace SharpLearning.Metrics
     /// A clear improvement between two models would be if this number is, say 1 to 10.
     /// https://en.wikipedia.org/wiki/McNemar%27s_test
     /// </summary>
-    public sealed class McNemarModelComparison
+    public static class McNemarModelComparison
     {
         /// <summary>
         /// Compares two model using the McNemar test.
@@ -25,14 +25,14 @@ namespace SharpLearning.Metrics
         /// <param name="model2Predictions"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public int[][] Compare(double[] model1Predictions, double[] model2Predictions, double[] targets)
+        public static int[][] Compare(double[] model1Predictions, double[] model2Predictions, double[] targets)
         {
-            if (model1Predictions.Length != model2Predictions.Length || 
+            if (model1Predictions.Length != model2Predictions.Length ||
                 model1Predictions.Length != targets.Length)
             {
                 throw new ArgumentException("Model prediction lengths differ from target length. " +
-                    $"Model1: {model1Predictions.Length}, " + 
-                    $"Model2: {model2Predictions.Length}, " + 
+                    $"Model1: {model1Predictions.Length}, " +
+                    $"Model2: {model2Predictions.Length}, " +
                     $"Targets: {targets.Length}");
             }
 
@@ -78,15 +78,15 @@ namespace SharpLearning.Metrics
         /// <param name="model2Predictions"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public string CompareString(double[] model1Predictions, double[] model2Predictions, double[] targets)
+        public static string CompareString(double[] model1Predictions, double[] model2Predictions, double[] targets)
         {
             var mcNemarMatrix = Compare(model1Predictions, model2Predictions, targets);
-            
+
             var builder = new StringBuilder();
             builder.AppendLine(";Model1Wrong;Model1Right");
             builder.AppendLine($"Model2Wrong;{mcNemarMatrix[0][0]};{mcNemarMatrix[0][1]}");
             builder.Append($"Model2Right;{mcNemarMatrix[1][0]};{mcNemarMatrix[1][1]}");
-            
+
             return builder.ToString();
         }
     }

@@ -39,7 +39,7 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(
                 metric, ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners,
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
@@ -77,7 +77,7 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(
                 metric, ensembleStrategy, 5, 1, false);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners,
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
@@ -112,10 +112,10 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric,
                 ensembleStrategy, 5, 3, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners,
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
@@ -150,10 +150,10 @@ namespace SharpLearning.Ensemble.Test.Learners
 
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric,
                 ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, 
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners,
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23),
                 ensembleStrategy, ensembleSelection);
 
@@ -175,11 +175,11 @@ namespace SharpLearning.Ensemble.Test.Learners
         {
             var metric = new LogLossClassificationProbabilityMetric();
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric, 
+            var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric,
                 ensembleStrategy, 5, 1, true);
             var crossValidation = new RandomCrossValidation<ProbabilityPrediction>(5);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(null, crossValidation, 
+            var sut = new ClassificationModelSelectingEnsembleLearner(null, crossValidation,
                 ensembleStrategy, ensembleSelection);
         }
 
@@ -193,7 +193,7 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleSelection = new ForwardSearchClassificationEnsembleSelection(metric,
                 ensembleStrategy, 5, 1, true);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, null, 
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, null,
                 ensembleStrategy, ensembleSelection);
         }
 
@@ -206,7 +206,7 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
             var crossValidation = new RandomCrossValidation<ProbabilityPrediction>(5);
 
-            var sut = new ClassificationModelSelectingEnsembleLearner(learners, crossValidation, 
+            var sut = new ClassificationModelSelectingEnsembleLearner(learners, crossValidation,
                 ensembleStrategy, null);
         }
     }

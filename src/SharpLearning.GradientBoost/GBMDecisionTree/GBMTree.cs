@@ -16,7 +16,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// 
         /// </summary>
         public readonly List<GBMNode> Nodes;
-                
+
         /// <summary>
         /// Creates a GBMTree from the provided nodes
         /// </summary>
@@ -93,7 +93,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="rawVariableImportances"></param>
         public void AddRawVariableImportances(double[] rawVariableImportances)
         {
-            if(Nodes.Count == 1) { return; } // no splits no importance
+            if (Nodes.Count == 1) { return; } // no splits no importance
 
             var rootError = Nodes[0].LeftError;
             var totalSampleCount = Nodes[0].SampleCount;
@@ -133,7 +133,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                     text += string.Format("{0:0.000} I:{1} ",
                         node.Node.SplitValue, node.Node.FeatureIndex);
 
-                    if(node.Node.LeftIndex == -1)
+                    if (node.Node.LeftIndex == -1)
                     {
                         text += string.Format("L: {0:0.000} ", node.Node.LeftConstant);
                     }

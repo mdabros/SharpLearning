@@ -76,7 +76,7 @@ namespace SharpLearning.Neural.Models
         /// </summary>
         /// <param name="featureNameToIndex"></param>
         /// <returns></returns>
-        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex) 
+        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
             => m_neuralNet.GetVariableImportance(featureNameToIndex);
 
         /// <summary>

@@ -29,8 +29,8 @@ namespace SharpLearning.Metrics.Regression
             {
                 SSres += Math.Pow(targets[i] - predictions[i], 2);
             }
-                
-            return SStot != 0.0?1 - SSres / SStot:0;
+
+            return SStot != 0.0 ? 1 - SSres / SStot : 0;
         }
     }
 }

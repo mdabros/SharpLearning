@@ -13,7 +13,7 @@ namespace SharpLearning.InputOutput.Csv
         /// Values
         /// </summary>
         public readonly string[] Values;
-        
+
         /// <summary>
         /// Column name to index
         /// </summary>
@@ -27,7 +27,7 @@ namespace SharpLearning.InputOutput.Csv
         public CsvRow(Dictionary<string, int> columnNameToIndex, params string[] data)
         {
             if (data == null) { throw new ArgumentException("row"); }
-            if (columnNameToIndex == null) { throw new ArgumentException("columnNameToIndex"); }
+            if (columnNameToIndex == null) { throw new ArgumentNullException(nameof(columnNameToIndex)); }
             if (data.Length != columnNameToIndex.Count) { throw new ArgumentException("data and columNameToIndex lengths does not match"); }
             Values = data;
             ColumnNameToIndex = columnNameToIndex;

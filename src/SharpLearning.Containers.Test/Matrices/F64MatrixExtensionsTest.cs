@@ -29,7 +29,7 @@ namespace SharpLearning.Containers.Test.Matrices
             var expected = Enumerable.Range(0, matrix.Data().Length).Select(v => 10.0).ToArray();
             CollectionAssert.AreEqual(expected, matrix.Data());
         }
-        
+
         [TestMethod]
         public void F64MatrixExtensions_Map2()
         {
@@ -40,14 +40,14 @@ namespace SharpLearning.Containers.Test.Matrices
             var expected = Enumerable.Range(0, matrix.Data().Length).Select(v => 11.0).ToArray();
             CollectionAssert.AreEqual(expected, matrix.Data());
         }
-        
+
         [TestMethod]
         public void F64MatrixExtensions_ToStringMatrix()
         {
             var matrix = new F64Matrix(m_inputData, 2, 3);
             var actual = matrix.ToStringMatrix();
 
-            var expected = new StringMatrix(m_inputData.Select(v => 
+            var expected = new StringMatrix(m_inputData.Select(v =>
                 FloatingPointConversion.ToString(v)).ToArray(), 2, 3);
 
             Assert.AreEqual(expected, actual);
@@ -73,7 +73,7 @@ namespace SharpLearning.Containers.Test.Matrices
             var expected = new F64Matrix(new double[] {1, 2, 3, 3,
                                                        4, 5, 6, 6}, 2, 4);
             var actual = matrix.CombineCols(vector);
-            
+
             Assert.AreEqual(expected, actual);
         }
 
@@ -97,7 +97,7 @@ namespace SharpLearning.Containers.Test.Matrices
             var v2 = new double[] { 1, 2, 3, 4 };
 
             var actual = v1.CombineCols(v2);
-            Assert.AreEqual(new F64Matrix(new double[] { 1, 1, 2, 2, 3, 3, 4, 4}, 4, 2), actual);
+            Assert.AreEqual(new F64Matrix(new double[] { 1, 1, 2, 2, 3, 3, 4, 4 }, 4, 2), actual);
         }
 
         [TestMethod]
@@ -116,8 +116,8 @@ namespace SharpLearning.Containers.Test.Matrices
             var matrix = new F64Matrix(m_inputData, 2, 3);
             var vector = new double[] { 3, 6, 7 };
 
-            var expected = new F64Matrix(new double[] {1, 2, 3, 
-                                                       4, 5, 6, 
+            var expected = new F64Matrix(new double[] {1, 2, 3,
+                                                       4, 5, 6,
                                                        3, 6, 7}, 3, 3);
             var actual = matrix.CombineRows(vector);
 
@@ -131,8 +131,8 @@ namespace SharpLearning.Containers.Test.Matrices
             var vector = new double[] { 3, 6, 7 };
 
             var expected = new F64Matrix(new double[] {3, 6, 7,
-                                                       1, 2, 3, 
-                                                       4, 5, 6 
+                                                       1, 2, 3,
+                                                       4, 5, 6
                                                        }, 3, 3);
             var actual = vector.CombineRows(matrix);
 

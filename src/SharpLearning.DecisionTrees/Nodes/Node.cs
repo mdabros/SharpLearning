@@ -22,7 +22,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// Right child tree index
         /// </summary>
         public readonly int RightIndex;
-        
+
         /// <summary>
         /// Left child tree index
         /// </summary>
@@ -47,7 +47,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="rightIndex"></param>
         /// <param name="nodeIndex"></param>
         /// <param name="leafProbabilityIndex"></param>
-        public Node(int featureIndex, double value, int leftIndex, 
+        public Node(int featureIndex, double value, int leftIndex,
             int rightIndex, int nodeIndex, int leafProbabilityIndex)
         {
             FeatureIndex = featureIndex;
