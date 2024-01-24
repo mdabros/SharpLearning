@@ -40,8 +40,8 @@ namespace SharpLearning.Neural.Activations
         //this input should be already activated input = sigmmoid(x)
         float Derivative(float input)
         {
-            var de = input * (1- input);
-            
+            var de = input * (1 - input);
+
             return de == 0 ? 1 : de; //this avoid the 0 multiplication when dx is 0.
         }
     }

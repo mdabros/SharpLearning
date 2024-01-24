@@ -65,13 +65,13 @@ namespace SharpLearning.InputOutput.Serialization
                 using (var xmlWriter = XmlWriter.Create(texWriter, settings))
                 {
                     var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings()
-					{
-						KnownTypes = m_knownTypes,
-						MaxItemsInObjectGraph = int.MaxValue,
-						IgnoreExtensionDataObject = false,
-						PreserveObjectReferences = m_preserveObjectReferences,
-						DataContractResolver = new GenericResolver()
-					});
+                    {
+                        KnownTypes = m_knownTypes,
+                        MaxItemsInObjectGraph = int.MaxValue,
+                        IgnoreExtensionDataObject = false,
+                        PreserveObjectReferences = m_preserveObjectReferences,
+                        DataContractResolver = new GenericResolver()
+                    });
 
                     serializer.WriteObject(xmlWriter, data);
                 }
@@ -86,20 +86,20 @@ namespace SharpLearning.InputOutput.Serialization
         /// <returns></returns>
         public T Deserialize<T>(Func<TextReader> reader)
         {
-            using(var textReader = reader())
+            using (var textReader = reader())
             {
                 using (var xmlReader = XmlReader.Create(textReader))
                 {
                     var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings()
-					{
-						KnownTypes = m_knownTypes,
-						MaxItemsInObjectGraph = int.MaxValue,
-						IgnoreExtensionDataObject = false,
-						PreserveObjectReferences = m_preserveObjectReferences,
-						DataContractResolver = new GenericResolver()
-					});
+                    {
+                        KnownTypes = m_knownTypes,
+                        MaxItemsInObjectGraph = int.MaxValue,
+                        IgnoreExtensionDataObject = false,
+                        PreserveObjectReferences = m_preserveObjectReferences,
+                        DataContractResolver = new GenericResolver()
+                    });
 
-					return (T)serializer.ReadObject(xmlReader);
+                    return (T)serializer.ReadObject(xmlReader);
                 }
             }
         }
@@ -165,9 +165,9 @@ namespace SharpLearning.InputOutput.Serialization
                 return new GenericResolver(types.ToArray());
             }
 
-            public override Type ResolveName(string typeName, 
-                string typeNamespace, 
-                Type declaredType, 
+            public override Type ResolveName(string typeName,
+                string typeNamespace,
+                Type declaredType,
                 DataContractResolver knownTypeResolver)
             {
                 if (m_namesToType.ContainsKey(typeNamespace))
@@ -180,10 +180,10 @@ namespace SharpLearning.InputOutput.Serialization
                 return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, null);
             }
 
-            public override bool TryResolveType(Type type, 
-                Type declaredType, 
-                DataContractResolver knownTypeResolver, 
-                out XmlDictionaryString typeName, 
+            public override bool TryResolveType(Type type,
+                Type declaredType,
+                DataContractResolver knownTypeResolver,
+                out XmlDictionaryString typeName,
                 out XmlDictionaryString typeNamespace)
             {
                 if (m_typeToNames.ContainsKey(type))
@@ -196,7 +196,7 @@ namespace SharpLearning.InputOutput.Serialization
                 }
                 else
                 {
-                    return knownTypeResolver.TryResolveType(type, declaredType, null, 
+                    return knownTypeResolver.TryResolveType(type, declaredType, null,
                         out typeName, out typeNamespace);
                 }
             }

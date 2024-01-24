@@ -22,8 +22,8 @@ namespace SharpLearning.Optimization
         /// Default is Linear.</param>
         /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continuous values.
         /// Default is Continuous.</param>
-        public MinMaxParameterSpec(double min, double max, 
-            Transform transform = Transform.Linear, ParameterType parameterType  = ParameterType.Continuous)
+        public MinMaxParameterSpec(double min, double max,
+            Transform transform = Transform.Linear, ParameterType parameterType = ParameterType.Continuous)
         {
             if (min >= max) { throw new ArgumentException($"min: {min} is larger than or equal to max: {max}"); }
 
@@ -40,7 +40,7 @@ namespace SharpLearning.Optimization
         /// <param name="max">maximum bound.</param>
         /// <param name="transform">Transform for controlling the scale of the parameter sampled between min and max bounds.</param>
         /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.</param>
-        public MinMaxParameterSpec(double min, double max, 
+        public MinMaxParameterSpec(double min, double max,
             ITransform transform, ParameterType parameterType)
         {
             if (min >= max)

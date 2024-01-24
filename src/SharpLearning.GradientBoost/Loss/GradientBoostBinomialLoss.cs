@@ -93,7 +93,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
         /// <param name="inSample"></param>
-        public void UpdateResiduals(double[] targets, double[] predictions, 
+        public void UpdateResiduals(double[] targets, double[] predictions,
             double[] residuals, bool[] inSample)
         {
             for (int i = 0; i < residuals.Length; i++)
@@ -112,7 +112,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="right"></param>
         /// <param name="target"></param>
         /// <param name="residual"></param>
-        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, 
+        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right,
             double target, double residual)
         {
             var residual2 = residual * residual;
@@ -153,7 +153,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="inSample"></param>
         /// <returns></returns>
-        public double UpdatedLeafValue(double currentLeafValue, double[] targets, 
+        public double UpdatedLeafValue(double currentLeafValue, double[] targets,
             double[] predictions, bool[] inSample)
         {
             // no update needed for binomial loss

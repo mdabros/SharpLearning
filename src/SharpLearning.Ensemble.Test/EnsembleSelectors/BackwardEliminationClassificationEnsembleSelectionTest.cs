@@ -16,7 +16,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentNullException))]
         public void BackwardEliminationClassificationEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new BackwardEliminationClassificationEnsembleSelection(null, 
+            var sut = new BackwardEliminationClassificationEnsembleSelection(null,
                 new MeanProbabilityClassificationEnsembleStrategy(), 5);
         }
 
@@ -33,7 +33,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         public void BackwardEliminationClassificationEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
             var sut = new BackwardEliminationClassificationEnsembleSelection(
-                new LogLossClassificationProbabilityMetric(), 
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 0);
         }
 

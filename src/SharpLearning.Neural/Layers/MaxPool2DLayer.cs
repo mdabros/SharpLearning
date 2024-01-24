@@ -117,7 +117,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="stride">Controls the distance between each neighboring pool areas (default is 2)</param>
         /// <param name="borderMode">Border mode of the max pool operation. 
         /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid).</param>
-        public MaxPool2DLayer(int poolWidth, int poolHeight, int stride = 2, 
+        public MaxPool2DLayer(int poolWidth, int poolHeight, int stride = 2,
             BorderMode borderMode = BorderMode.Valid)
             : this(poolWidth, poolHeight, stride,
                   ConvUtils.PaddingFromBorderMode(poolWidth, borderMode),
@@ -215,12 +215,12 @@ namespace SharpLearning.Neural.Layers
 
                         var outputColIndex = poolRowOffSet + pw + outputDeptOffSet;
                         var outputIndex = outputColIndex * output.RowCount + batchItem;
-                        outputData[outputIndex] = currentMax;                      
+                        outputData[outputIndex] = currentMax;
                     }
                 }
             }
         }
-        
+
         void BackwardSingleItem(Matrix<float> inputGradient, Matrix<float> outputGradient, int batchItem)
         {
             var batchSize = inputGradient.RowCount;
@@ -237,7 +237,7 @@ namespace SharpLearning.Neural.Layers
                 var outputDeptOffSet = depth * Height * Width;
 
                 var x = -this.m_padWidth;
-               // var y = -this.m_padHeight;
+                // var y = -this.m_padHeight;
                 for (var ax = 0; ax < this.Width; x += this.m_stride, ax++)
                 {
                     var y = -this.m_padHeight;
@@ -276,7 +276,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random)
         {
             InputWidth = inputWidth;
@@ -286,10 +286,10 @@ namespace SharpLearning.Neural.Layers
             // computed
             this.Depth = this.InputDepth;
 
-            this.Width = ConvUtils.GetFilterGridLength(InputWidth, m_poolWidth, 
+            this.Width = ConvUtils.GetFilterGridLength(InputWidth, m_poolWidth,
                 m_stride, m_padWidth, BorderMode);
 
-            this.Height = ConvUtils.GetFilterGridLength(InputHeight, m_poolHeight, 
+            this.Height = ConvUtils.GetFilterGridLength(InputHeight, m_poolHeight,
                 m_stride, m_padHeight, BorderMode);
 
             // store switches for x,y coordinates for where the max comes from, for each output neuron
@@ -313,7 +313,7 @@ namespace SharpLearning.Neural.Layers
         public void CopyLayerForPredictionModel(List<ILayer> layers)
         {
             var batchSize = 1;
-            var copy = new MaxPool2DLayer(m_poolWidth, m_poolHeight, 
+            var copy = new MaxPool2DLayer(m_poolWidth, m_poolHeight,
                 m_stride, m_padWidth, m_padHeight);
 
             copy.BorderMode = BorderMode;

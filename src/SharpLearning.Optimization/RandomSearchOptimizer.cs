@@ -63,16 +63,16 @@ namespace SharpLearning.Optimization
         public OptimizerResult[] Optimize(Func<double[], OptimizerResult> functionToMinimize)
         {
             // Generate parameter sets.
-            var parameterSets = SampleRandomParameterSets(m_iterations, 
+            var parameterSets = SampleRandomParameterSets(m_iterations,
                 m_parameters, m_sampler);
 
             // Run parameter sets.
             var parameterIndexToResult = new ConcurrentDictionary<int, OptimizerResult>();
-            if(!m_runParallel)
+            if (!m_runParallel)
             {
                 for (int index = 0; index < parameterSets.Length; index++)
                 {
-                    RunParameterSet(index, parameterSets, 
+                    RunParameterSet(index, parameterSets,
                         functionToMinimize, parameterIndexToResult);
                 }
             }
@@ -80,7 +80,7 @@ namespace SharpLearning.Optimization
             {
                 Parallel.For(0, parameterSets.Length, m_parallelOptions, (index, loopState) =>
                 {
-                    RunParameterSet(index, parameterSets, 
+                    RunParameterSet(index, parameterSets,
                         functionToMinimize, parameterIndexToResult);
                 });
             }
@@ -99,7 +99,7 @@ namespace SharpLearning.Optimization
         /// <param name="parameters"></param>
         /// <param name="sampler"></param>
         /// <returns></returns>
-        public static double[][] SampleRandomParameterSets(int parameterSetCount, 
+        public static double[][] SampleRandomParameterSets(int parameterSetCount,
             IParameterSpec[] parameters, IParameterSampler sampler)
         {
             var parameterSets = new double[parameterSetCount][];
@@ -117,7 +117,7 @@ namespace SharpLearning.Optimization
         /// <param name="parameters"></param>
         /// <param name="sampler"></param>
         /// <returns></returns>
-        public static double[] SampleParameterSet(IParameterSpec[] parameters, 
+        public static double[] SampleParameterSet(IParameterSpec[] parameters,
             IParameterSampler sampler)
         {
             var parameterSet = new double[parameters.Length];

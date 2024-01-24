@@ -17,7 +17,7 @@ namespace SharpLearning.AdaBoost.Learners
     /// Classification AdaBoost learner using the SAMME algorithm for multi-class support:
     /// http://web.stanford.edu/~hastie/Papers/samme.pdf
     /// </summary>
-    public sealed class ClassificationAdaBoostLearner 
+    public sealed class ClassificationAdaBoostLearner
         : IIndexedLearner<double>
         , IIndexedLearner<ProbabilityPrediction>
         , ILearner<double>
@@ -33,14 +33,14 @@ namespace SharpLearning.AdaBoost.Learners
         int m_uniqueTargetValues;
         ClassificationDecisionTreeLearner m_modelLearner;
 
-        readonly TotalErrorClassificationMetric<double> m_errorMetric = 
+        readonly TotalErrorClassificationMetric<double> m_errorMetric =
             new TotalErrorClassificationMetric<double>();
 
         List<double> m_modelErrors = new List<double>();
         List<double> m_modelWeights = new List<double>();
-        List<ClassificationDecisionTreeModel> m_models = 
+        List<ClassificationDecisionTreeModel> m_models =
             new List<ClassificationDecisionTreeModel>();
-        
+
         double[] m_workErrors = new double[0];
         double[] m_sampleWeights = new double[0];
         double[] m_indexedTargets = new double[0];
@@ -56,10 +56,10 @@ namespace SharpLearning.AdaBoost.Learners
         /// 0 will set the depth equal to the number of classes in the problem</param>
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-        public ClassificationAdaBoostLearner(int iterations = 50, 
-            double learningRate = 1, 
-            int maximumTreeDepth = 0, 
-            int minimumSplitSize = 1, 
+        public ClassificationAdaBoostLearner(int iterations = 50,
+            double learningRate = 1,
+            int maximumTreeDepth = 0,
+            int minimumSplitSize = 1,
             double minimumInformationGain = 0.000001)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -67,7 +67,7 @@ namespace SharpLearning.AdaBoost.Learners
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
-            
+
             m_iterations = iterations;
             m_learningRate = learningRate;
 
@@ -95,7 +95,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets, 
+        public ClassificationAdaBoostModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
@@ -119,7 +119,7 @@ namespace SharpLearning.AdaBoost.Learners
                 m_maximumTreeDepth = m_uniqueTargetValues;
             }
 
-            m_modelLearner = new ClassificationDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, 
+            m_modelLearner = new ClassificationDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize,
                 observations.ColumnCount, m_minimumInformationGain, 42);
 
             m_modelErrors.Clear();
@@ -216,7 +216,7 @@ namespace SharpLearning.AdaBoost.Learners
 
         bool Boost(F64Matrix observations, double[] targets, int[] indices, int iteration)
         {
-            var model = m_modelLearner.Learn(observations, targets, 
+            var model = m_modelLearner.Learn(observations, targets,
                 indices, m_sampleWeights);
 
             var predictions = model.Predict(observations, indices);
@@ -252,7 +252,7 @@ namespace SharpLearning.AdaBoost.Learners
             }
 
             var modelWeight = m_learningRate * (
-                Math.Log((1.0 - modelError) / modelError) + 
+                Math.Log((1.0 - modelError) / modelError) +
                 Math.Log(m_uniqueTargetValues - 1.0));
 
             // Only boost if not last iteration
@@ -262,7 +262,7 @@ namespace SharpLearning.AdaBoost.Learners
                 {
                     var index = indices[i];
                     var sampleWeight = m_sampleWeights[index];
-                    if(sampleWeight > 0.0 || modelWeight < 0.0)
+                    if (sampleWeight > 0.0 || modelWeight < 0.0)
                     {
                         m_sampleWeights[index] = sampleWeight * Math.Exp(modelWeight * m_workErrors[index]);
                     }
@@ -280,7 +280,7 @@ namespace SharpLearning.AdaBoost.Learners
         {
             var rows = indices.Length;
             var predictions = new double[rows];
-            
+
             for (int i = 0; i < rows; i++)
             {
                 var index = indices[i];

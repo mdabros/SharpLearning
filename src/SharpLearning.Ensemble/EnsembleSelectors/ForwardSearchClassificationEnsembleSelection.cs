@@ -32,10 +32,10 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
         public ForwardSearchClassificationEnsembleSelection(
-            IMetric<double, ProbabilityPrediction> metric, 
+            IMetric<double, ProbabilityPrediction> metric,
             IClassificationEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, 
-            int numberOfModelsFromStart, 
+            int numberOfModelsToSelect,
+            int numberOfModelsFromStart,
             bool selectWithReplacement)
         {
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
@@ -58,7 +58,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
+            if (crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
             {
                 throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
@@ -83,7 +83,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             {
                 var error = SelectNextModelToAdd(crossValidatedModelPredictions, targets, currentError);
 
-                if(error < currentError)
+                if (error < currentError)
                 {
                     currentError = error;
                     Trace.WriteLine("Models Selected: " + i + " Error: " + error);
@@ -100,8 +100,8 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             return m_selectedModelIndices.ToArray();
         }
 
-        double SelectNextModelToAdd(ProbabilityPrediction[][] crossValidatedModelPredictions, 
-            double[] targets, 
+        double SelectNextModelToAdd(ProbabilityPrediction[][] crossValidatedModelPredictions,
+            double[] targets,
             double currentBestError)
         {
             var rows = crossValidatedModelPredictions.First().Length;
@@ -132,11 +132,11 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 }
             }
 
-            if(bestIndex != -1)
+            if (bestIndex != -1)
             {
                 m_selectedModelIndices.Add(bestIndex);
-                
-                if(!m_selectWithReplacement)
+
+                if (!m_selectWithReplacement)
                 {
                     m_remainingModelIndices.Remove(bestIndex);
                 }

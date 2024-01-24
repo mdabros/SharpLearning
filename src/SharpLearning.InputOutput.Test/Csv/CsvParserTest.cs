@@ -112,7 +112,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
             CollectionAssert.AreEqual(Expected_NoHeader(), actual.ToList());
         }
-        
+
         List<CsvRow> Expected_NoHeader()
         {
             var columnNameToIndex = new Dictionary<string, int> { { "0", 0 }, { "1", 1 }, { "2", 2 } };

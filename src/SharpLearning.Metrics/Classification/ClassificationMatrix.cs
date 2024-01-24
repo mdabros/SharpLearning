@@ -32,7 +32,7 @@ namespace SharpLearning.Metrics.Classification
 
             return confusionMatrix;
         }
-        
+
         /// <summary>
         /// Creates an error matrix based on the provided confusion matrix
         /// </summary>

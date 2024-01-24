@@ -26,16 +26,16 @@ namespace SharpLearning.CrossValidation.Test.TrainingTestSplitters
             var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
             var splitter = new NoShuffleTrainingTestIndexSplitter<double>(0.6);
-            
+
             var actual = splitter.SplitSet(observations, targets);
 
             var trainingIndices = Enumerable.Range(0, 6).ToArray();
             var testIndices = Enumerable.Range(6, 4).ToArray();
 
             var expected = new TrainingTestSetSplit(
-                new ObservationTargetSet((F64Matrix)observations.Rows(trainingIndices), 
+                new ObservationTargetSet((F64Matrix)observations.Rows(trainingIndices),
                     targets.GetIndices(trainingIndices)),
-                new ObservationTargetSet((F64Matrix)observations.Rows(testIndices), 
+                new ObservationTargetSet((F64Matrix)observations.Rows(testIndices),
                     targets.GetIndices(testIndices)));
 
             Assert.AreEqual(expected, actual);

@@ -18,11 +18,11 @@ namespace SharpLearning.Ensemble.Test.Learners
         {
             var metric = new MeanSquaredErrorRegressionMetric();
             var ensembleStrategy = new MeanRegressionEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchRegressionEnsembleSelection(metric, 
+            var ensembleSelection = new ForwardSearchRegressionEnsembleSelection(metric,
                 ensembleStrategy, 5, 1, true);
             var crossValidation = new RandomCrossValidation<double>(5);
 
-            var sut = new RegressionModelSelectingEnsembleLearner(null, crossValidation, 
+            var sut = new RegressionModelSelectingEnsembleLearner(null, crossValidation,
                 ensembleStrategy, ensembleSelection);
         }
 
@@ -30,13 +30,13 @@ namespace SharpLearning.Ensemble.Test.Learners
         [ExpectedException(typeof(ArgumentNullException))]
         public void RegressionModelSelectingEnsembleLearner_Constructor_CrossValidation_Null()
         {
-            var learners = new IIndexedLearner <double>[4];
+            var learners = new IIndexedLearner<double>[4];
             var metric = new MeanSquaredErrorRegressionMetric();
             var ensembleStrategy = new MeanRegressionEnsembleStrategy();
-            var ensembleSelection = new ForwardSearchRegressionEnsembleSelection(metric, 
+            var ensembleSelection = new ForwardSearchRegressionEnsembleSelection(metric,
                 ensembleStrategy, 5, 1, true);
 
-            var sut = new RegressionModelSelectingEnsembleLearner(learners, null, 
+            var sut = new RegressionModelSelectingEnsembleLearner(learners, null,
                 ensembleStrategy, ensembleSelection);
         }
 

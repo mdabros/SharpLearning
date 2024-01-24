@@ -55,9 +55,9 @@ namespace SharpLearning.Optimization.Test
             }
 
             var sut = new HyperbandOptimizer(
-                parameters, 
-                maximumBudget: 81, 
-                eta: 5, 
+                parameters,
+                maximumBudget: 81,
+                eta: 5,
                 skipLastIterationOfEachRound: false,
                 seed: 34);
 

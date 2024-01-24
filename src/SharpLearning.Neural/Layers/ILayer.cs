@@ -14,7 +14,7 @@ namespace SharpLearning.Neural.Layers
         /// <summary>
         /// Width of this layer
         /// </summary>
-        int Width { get;  }
+        int Width { get; }
 
         /// <summary>
         /// Height of this layer
@@ -53,7 +53,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize">batch size</param>
         /// <param name="initializtion">Initialization type for layers with weights</param>
         /// <param name="random"></param>
-        void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random);
 
         /// <summary>

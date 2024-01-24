@@ -51,7 +51,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// </summary>
         public string[] FeatureNames
         {
-            get => new [] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
+            get => new[] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
         }
 
         /// <summary>

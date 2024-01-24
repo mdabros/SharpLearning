@@ -19,7 +19,7 @@ namespace SharpLearning.GradientBoost.Test.Learners
             var model = sut.Learn(observations, targets);
 
             var predictions = model.Predict(observations);
-            
+
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);
 

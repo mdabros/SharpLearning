@@ -19,18 +19,18 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         double m_meanLeft = 0.0;
         double m_meanRight = 0.0;
         double m_meanTotal = 0.0;
-               
+
         double m_sqSumLeft = 0.0;
         double m_sqSumRight = 0.0;
         double m_sqSumTotal = 0.0;
-               
+
         double m_varLeft = 0.0;
         double m_varRight = 0.0;
-       
+
         double m_sumLeft = 0.0;
         double m_sumRight = 0.0;
         double m_sumTotal = 0.0;
-        
+
         double[] m_targets;
         double[] m_weights;
 
@@ -152,7 +152,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             var weightsPresent = m_weights.Length != 0;
             var w = 1.0;
             var w_diff = 0.0;
-            
+
             for (int i = m_currentPosition; i < newPosition; i++)
             {
                 if (weightsPresent)

@@ -73,7 +73,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var targets = positives.ToArray();
 
             var probabilities = targets
-                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double,double> { { 0.0, 0.0 }, { 1.0, 0.0 } } ) :
+                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double, double> { { 0.0, 0.0 }, { 1.0, 0.0 } }) :
                                       new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 0.0, 0.0 }, { 1.0, 0.0 } }))
                 .ToArray();
 
@@ -92,7 +92,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var targets = positives.ToArray();
 
             var probabilities = targets
-                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double,double> { { 0.0, 1.0 }, { 1.0, 1.0 } } ) :
+                .Select(s => s == 0 ? new ProbabilityPrediction(0.0, new Dictionary<double, double> { { 0.0, 1.0 }, { 1.0, 1.0 } }) :
                                       new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 0.0, 1.0 }, { 1.0, 1.0 } }))
                 .ToArray();
 
@@ -156,7 +156,7 @@ namespace SharpLearning.Metrics.Test.Classification
                 { 0, "Negative" },
                 { 1, "Positive" }
             };
-            
+
             var actual = sut.ErrorString(targets, probabilities, targetStringMapping);
             var expected = ";Negative;Positive;Negative;Positive\r\nNegative;1.000;0.000;100.000;0.000\r\nPositive;0.000;1.000;0.000;100.000\r\nError: 0.000\r\n";
 

@@ -34,11 +34,11 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="loss">loss function used</param>
         /// <param name="runParallel">Use multi threading to speed up execution</param>
         public GBMDecisionTreeLearner(
-            int maximumTreeDepth, 
-            int minimumSplitSize, 
-            double minimumInformationGain, 
-            int featuresPrSplit, 
-            IGradientBoostLoss loss, 
+            int maximumTreeDepth,
+            int minimumSplitSize,
+            double minimumInformationGain,
+            int featuresPrSplit,
+            IGradientBoostLoss loss,
             bool runParallel)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
@@ -62,12 +62,12 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         public GBMDecisionTreeLearner(
-            int maximumTreeDepth = 2000, 
-            int minimumSplitSize = 1, 
-            double minimumInformationGain = 1E-6, 
+            int maximumTreeDepth = 2000,
+            int minimumSplitSize = 1,
+            double minimumInformationGain = 1E-6,
             int featuresPrSplit = 0)
-            : this(maximumTreeDepth, minimumSplitSize, 
-                minimumInformationGain, featuresPrSplit, 
+            : this(maximumTreeDepth, minimumSplitSize,
+                minimumInformationGain, featuresPrSplit,
                 new GradientBoostSquaredLoss(), true)
         {
         }
@@ -83,17 +83,17 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// <param name="inSample">Bool array containing the samples to use</param>
         /// <returns></returns>
         public GBMTree Learn(
-            F64Matrix observations, 
-            double[] targets, 
-            double[] residuals, 
+            F64Matrix observations,
+            double[] targets,
+            double[] residuals,
             double[] predictions,
-            int[][] orderedElements, 
+            int[][] orderedElements,
             bool[] inSample)
         {
             var rootValues = m_loss.InitSplit(targets, residuals, inSample);
             var bestConstant = rootValues.BestConstant;
 
-            if(m_loss.UpdateLeafValues())
+            if (m_loss.UpdateLeafValues())
             {
                 bestConstant = m_loss.UpdatedLeafValue(bestConstant,
                                     targets, predictions, inSample);
@@ -109,7 +109,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                 RightConstant = bestConstant,
                 SampleCount = rootValues.Samples
             };
-            
+
             var nodes = new List<GBMNode> { root };
 
             var queue = new Queue<GBMTreeCreationItem>(100);
@@ -156,7 +156,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                     allFeatureIndices.Shuffle(m_random);
                     Array.Copy(allFeatureIndices, featuresPrSplit, featuresPrSplit.Length);
                 }
-                
+
                 if (!m_runParallel)
                 {
                     foreach (var i in featuresPrSplit)
@@ -175,7 +175,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                     }
 
                     void FindSplit() => SplitWorker(
-                        observations, residuals, targets, predictions, 
+                        observations, residuals, targets, predictions,
                         orderedElements, parentItem, parentInSample, workItems, splitResults);
 
                     var workers = new List<Action>();
@@ -299,32 +299,32 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             while (splitResults.TryTake(out GBMSplitResult result)) ;
         }
 
-        void SplitWorker(F64Matrix observations, 
-            double[] residuals, 
-            double[] targets, 
-            double[] predictions, 
-            int[][] orderedElements, 
-            GBMTreeCreationItem parentItem, 
-            bool[] parentInSample, 
-            ConcurrentQueue<int> featureIndices, 
+        void SplitWorker(F64Matrix observations,
+            double[] residuals,
+            double[] targets,
+            double[] predictions,
+            int[][] orderedElements,
+            GBMTreeCreationItem parentItem,
+            bool[] parentInSample,
+            ConcurrentQueue<int> featureIndices,
             ConcurrentBag<GBMSplitResult> results)
         {
             int featureIndex = -1;
             while (featureIndices.TryDequeue(out featureIndex))
             {
-                FindBestSplit(observations, residuals, targets, predictions, orderedElements, 
+                FindBestSplit(observations, residuals, targets, predictions, orderedElements,
                     parentItem, parentInSample, featureIndex, results);
             }
         }
 
-        void FindBestSplit(F64Matrix observations, 
-            double[] residuals, 
-            double[] targets, 
-            double[] predictions, 
-            int[][] orderedElements, 
-            GBMTreeCreationItem parentItem, 
-            bool[] parentInSample, 
-            int featureIndex, 
+        void FindBestSplit(F64Matrix observations,
+            double[] residuals,
+            double[] targets,
+            double[] predictions,
+            int[][] orderedElements,
+            GBMTreeCreationItem parentItem,
+            bool[] parentInSample,
+            int featureIndex,
             ConcurrentBag<GBMSplitResult> results)
         {
             var bestSplit = new GBMSplit
@@ -355,12 +355,12 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
             }
 
             var currentIndex = orderedIndices[j];
-      
+
             m_loss.UpdateSplitConstants(ref left, ref right, targets[currentIndex], residuals[currentIndex]);
 
             var previousValue = observations.At(currentIndex, featureIndex);
-                      
-            while(right.Samples > 0)
+
+            while (right.Samples > 0)
             {
                 j = NextAllowedIndex(j + 1, orderedIndices, parentInSample);
                 currentIndex = orderedIndices[j];
@@ -393,7 +393,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
                 previousValue = currentValue;
             }
 
-            if(bestSplit.FeatureIndex != -1)
+            if (bestSplit.FeatureIndex != -1)
             {
                 results.Add(new GBMSplitResult { BestSplit = bestSplit, Left = bestLeft, Right = bestRight });
             }

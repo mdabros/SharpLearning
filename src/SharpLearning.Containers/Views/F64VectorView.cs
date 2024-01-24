@@ -53,7 +53,7 @@ namespace SharpLearning.Containers.Views
         {
             return new F64VectorView(GetSubViewDataPointer(interval), interval.Length);
         }
-        
+
         double* GetSubViewDataPointer(Interval1D interval)
         {
             return m_ptr + interval.FromInclusive;

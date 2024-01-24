@@ -26,7 +26,7 @@ namespace SharpLearning.CrossValidation.Augmentators
         /// <param name="probabilityParameter">The probability that a feature will be altered with its nearest neighbour. 
         /// Must be between 0.0 and 1.0. (Default is 0.2)</param>
         /// <param name="seed">Seed for random augmentation</param>
-        public NominalMungeAugmentator(double probabilityParameter=0.2, int seed = 432)
+        public NominalMungeAugmentator(double probabilityParameter = 0.2, int seed = 432)
         {
             if (probabilityParameter > 1.0 || probabilityParameter < 0.0)
             { throw new ArgumentException("probabilityParameter must be between 0.0 and 1.0. Was: " + probabilityParameter); }
@@ -69,14 +69,14 @@ namespace SharpLearning.CrossValidation.Augmentators
                     dataset.Row(f, candidate);
 
                     var distance = GetHammingDistance(sample, candidate);
-                    if(distance < closestDistance)
+                    if (distance < closestDistance)
                     {
                         closestDistance = distance;
                         closestIndex = f;
                     }
                 }
 
-                if(closestIndex != -1)
+                if (closestIndex != -1)
                 {
                     dataset.Row(closestIndex, candidate);
                     indicesVisited.Add(closestIndex);
@@ -92,7 +92,7 @@ namespace SharpLearning.CrossValidation.Augmentators
                             augmentation.At(j, h, candiateValue);
                             augmentation.At(closestIndex, h, sampleValue);
                         }
-                        else 
+                        else
                         {
                             // keep values
                             augmentation.At(j, h, sampleValue);
@@ -104,7 +104,7 @@ namespace SharpLearning.CrossValidation.Augmentators
 
             return augmentation;
         }
-       
+
 
         double GetHammingDistance(double[] a, double[] b)
         {

@@ -23,7 +23,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
             Assert.IsFalse(sut.Equals(notEqual1));
             Assert.IsTrue(sut != notEqual1);
             Assert.IsFalse(sut == notEqual1);
-            
+
             Assert.IsFalse(sut.Equals(notEqual2));
             Assert.IsTrue(sut != notEqual2);
             Assert.IsFalse(sut == notEqual2);

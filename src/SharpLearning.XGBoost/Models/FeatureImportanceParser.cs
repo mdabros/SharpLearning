@@ -25,7 +25,7 @@ namespace SharpLearning.XGBoost.Models
                 var lines = tree.Split(newLine, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines)
                 {
-                    if(!line.Contains("[") || line.Contains("booster"))
+                    if (!line.Contains("[") || line.Contains("booster"))
                     {
                         // Continue if line does not contain a split.
                         continue;
@@ -38,7 +38,7 @@ namespace SharpLearning.XGBoost.Models
                     var featureIndex = int.Parse(name.Split('f')[1]);
 
                     // extract gain or cover
-                    var gain = FloatingPointConversion.ToF64(line.Split(importanceType, 
+                    var gain = FloatingPointConversion.ToF64(line.Split(importanceType,
                         StringSplitOptions.RemoveEmptyEntries)[1].Split(',')[0]);
 
                     // add to featureImportance
@@ -47,6 +47,6 @@ namespace SharpLearning.XGBoost.Models
             }
 
             return rawFeatureImportance;
-        }               
+        }
     }
 }

@@ -32,7 +32,7 @@ namespace SharpLearning.XGBoost.Test.Models
             {
                 Assert.AreEqual(expected[i], actual[i], m_delta);
             }
-        }    
+        }
 
         readonly string[] m_textTrees = new string[] { m_tree1, m_tree2 };
 

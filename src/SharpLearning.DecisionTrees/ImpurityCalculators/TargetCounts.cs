@@ -14,14 +14,14 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         public TargetCounts()
             : this(0, 0)
         {
-	    }
+        }
 
-        public TargetCounts (int size, int offset)
-	    {
+        public TargetCounts(int size, int offset)
+        {
             OffSet = offset;
             Length = offset + size;
             m_counts = new double[Length];
-	    }
+        }
 
         public double[] Counts { get => m_counts; }
         public int OffSet { get; private set; }

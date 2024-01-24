@@ -94,13 +94,13 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_interval = interval;
 
             SetMinMaxTargetNames();
-            if(m_targetIndexOffSet > 0)
+            if (m_targetIndexOffSet > 0)
             {
                 m_targetIndexOffSet = 0;
             }
             else
             {
-                m_targetIndexOffSet = m_targetIndexOffSet * -1; 
+                m_targetIndexOffSet = m_targetIndexOffSet * -1;
             }
 
             m_weightedTargetCount.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
@@ -128,7 +128,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
             m_currentPosition = m_interval.FromInclusive;
             this.Reset();
         }
-               
+
         /// <summary>
         /// Resets impurity calculator
         /// </summary>
@@ -159,7 +159,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="newPosition"></param>
         public void UpdateIndex(int newPosition)
         {
-            if(m_currentPosition > newPosition)
+            if (m_currentPosition > newPosition)
             {
                 throw new ArgumentException("New position: " + newPosition +
                     " must be larger than current: " + m_currentPosition);

@@ -109,7 +109,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
             var error = evaluator.Error(targets, actual.Select(p => p.Prediction).ToArray());
 
             Assert.AreEqual(0.23076923076923078, error, 0.0000001);
- 
+
             var expected = new ProbabilityPrediction[] { new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.571428571428571 }, { 1, 0.428571428571429 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.428571428571429 }, { 1, 0.571428571428571 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.857142857142857 }, { 1, 0.142857142857143 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.571428571428571 }, { 1, 0.428571428571429 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.428571428571429 }, { 1, 0.571428571428571 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.75 }, { 1, 0.25 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.285714285714286 }, { 1, 0.714285714285714 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.75 }, { 1, 0.25 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.857142857142857 }, { 1, 0.142857142857143 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.285714285714286 }, { 1, 0.714285714285714 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.571428571428571 }, { 1, 0.428571428571429 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.857142857142857 }, { 1, 0.142857142857143 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.428571428571429 }, { 1, 0.571428571428571 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.571428571428571 }, { 1, 0.428571428571429 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.428571428571429 }, { 1, 0.571428571428571 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.75 }, { 1, 0.25 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.75 }, { 1, 0.25 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.285714285714286 }, { 1, 0.714285714285714 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.285714285714286 }, { 1, 0.714285714285714 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.571428571428571 }, { 1, 0.428571428571429 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.857142857142857 }, { 1, 0.142857142857143 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.285714285714286 }, { 1, 0.714285714285714 }, }), new ProbabilityPrediction(1, new Dictionary<double, double> { { 0, 0.428571428571429 }, { 1, 0.571428571428571 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.75 }, { 1, 0.25 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.75 }, { 1, 0.25 }, }), new ProbabilityPrediction(0, new Dictionary<double, double> { { 0, 0.857142857142857 }, { 1, 0.142857142857143 }, }), };
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -144,7 +144,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
 
             var learner = new ClassificationDecisionTreeLearner(100, 1, 2, 0.001, 42);
             var sut = learner.Learn(observations, targets);
-            
+
             var actual = sut.GetVariableImportance(featureNameToIndex);
             var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 }, { "AptitudeTestScore", 19.5121951219512 } };
 
@@ -173,7 +173,7 @@ namespace SharpLearning.DecisionTrees.Test.suts
 
             for (int i = 0; i < expected.Length; i++)
             {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);                
+                Assert.AreEqual(expected[i], actual[i], 0.000001);
             }
         }
 
@@ -184,10 +184,10 @@ namespace SharpLearning.DecisionTrees.Test.suts
 
             var learner = new ClassificationDecisionTreeLearner(2);
             var sut = learner.Learn(observations, targets);
-            
+
             var writer = new StringWriter();
             sut.Save(() => writer);
-            
+
             var actual = writer.ToString();
             Assert.AreEqual(m_classificationDecisionTreeModelString, actual);
         }

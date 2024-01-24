@@ -22,7 +22,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         public void CsvRowExtensions_GetValues()
         {
             var sut = new CsvRow(m_columnNameToIndex, m_data);
-            var actual = sut.GetValues(new string[] {"1", "3"});
+            var actual = sut.GetValues(new string[] { "1", "3" });
             var expected = new string[] { "1", "3" };
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -32,7 +32,7 @@ namespace SharpLearning.InputOutput.Test.Csv
         {
             var sut = new CsvRow(m_columnNameToIndex, m_data.ToArray());
             sut.SetValue("3", "33");
-            
+
             var actual = sut.GetValue("3");
             Assert.AreEqual("33", actual);
         }
@@ -53,7 +53,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
             var actual = sut.Keep("1", "2").ToList().First();
             var expected = new CsvRow(
-                new Dictionary<string, int> { { "1", 0 }, { "2", 1 } }, 
+                new Dictionary<string, int> { { "1", 0 }, { "2", 1 } },
                 new string[] { "1", "2" });
 
             Assert.AreEqual(expected, actual);
@@ -66,7 +66,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
             var actual = sut.Remove("3").ToList().First();
             var expected = new CsvRow(
-                new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "4", 2 } }, 
+                new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "4", 2 } },
                 new string[] { "1", "2", "4" });
 
             Assert.AreEqual(expected, actual);
@@ -148,7 +148,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
 
             var actualColumnNameToIndex = rows.First().ColumnNameToIndex;
-            var expectedColumnNameToIndex = new Dictionary<string, int> { {"Date", 0}, {"Open", 1}, {"High", 2}, {"Low", 3}, {"Close", 4}, {"Volume", 5}, {"Adj Close", 6}, {"Date_1", 7}, {"Open_1", 8}, {"High_1", 9}, {"Low_1", 10}, {"Close_1", 11}, {"Volume_1", 12}, {"Adj Close_1", 13}};
+            var expectedColumnNameToIndex = new Dictionary<string, int> { { "Date", 0 }, { "Open", 1 }, { "High", 2 }, { "Low", 3 }, { "Close", 4 }, { "Volume", 5 }, { "Adj Close", 6 }, { "Date_1", 7 }, { "Open_1", 8 }, { "High_1", 9 }, { "Low_1", 10 }, { "Close_1", 11 }, { "Volume_1", 12 }, { "Adj Close_1", 13 } };
 
             CollectionAssert.AreEqual(expectedColumnNameToIndex, actualColumnNameToIndex);
         }
@@ -172,7 +172,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
 
             var actualColumnNameToIndex = rows.First().ColumnNameToIndex;
-            var expectedColumnNameToIndex = new Dictionary<string, int> { {"Date", 0}, {"Open", 1}, {"High", 2}, {"Low", 3}, {"Close", 4}, {"Volume", 5}, {"Adj Close", 6}, {"OpenOther", 7}, {"CloseOther", 8} };
+            var expectedColumnNameToIndex = new Dictionary<string, int> { { "Date", 0 }, { "Open", 1 }, { "High", 2 }, { "Low", 3 }, { "Close", 4 }, { "Volume", 5 }, { "Adj Close", 6 }, { "OpenOther", 7 }, { "CloseOther", 8 } };
 
             CollectionAssert.AreEqual(expectedColumnNameToIndex, actualColumnNameToIndex);
         }
@@ -196,7 +196,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
 
             var actualColumnNameToIndex = rows.First().ColumnNameToIndex;
-            var expectedColumnNameToIndex = new Dictionary<string, int> { {"Date", 0}, {"Open", 1}, {"High", 2}, {"Low", 3}, {"Close", 4}, {"Volume", 5}, {"Adj Close", 6}, {"Date_1", 7}, {"Open_1", 8}, {"High_1", 9}, {"Low_1", 10}, {"Close_1", 11}, {"Volume_1", 12}, {"Adj Close_1", 13}};
+            var expectedColumnNameToIndex = new Dictionary<string, int> { { "Date", 0 }, { "Open", 1 }, { "High", 2 }, { "Low", 3 }, { "Close", 4 }, { "Volume", 5 }, { "Adj Close", 6 }, { "Date_1", 7 }, { "Open_1", 8 }, { "High_1", 9 }, { "Low_1", 10 }, { "Close_1", 11 }, { "Volume_1", 12 }, { "Adj Close_1", 13 } };
 
             CollectionAssert.AreEqual(expectedColumnNameToIndex, actualColumnNameToIndex);
         }
@@ -220,7 +220,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
 
             var actualColumnNameToIndex = rows.First().ColumnNameToIndex;
-            var expectedColumnNameToIndex = new Dictionary<string, int> { {"Date", 0}, {"Open", 1}, {"High", 2}, {"Low", 3}, {"Close", 4}, {"Volume", 5}, {"Adj Close", 6}, {"OpenOther", 7}, {"CloseOther", 8} };
+            var expectedColumnNameToIndex = new Dictionary<string, int> { { "Date", 0 }, { "Open", 1 }, { "High", 2 }, { "Low", 3 }, { "Close", 4 }, { "Volume", 5 }, { "Adj Close", 6 }, { "OpenOther", 7 }, { "CloseOther", 8 } };
 
             CollectionAssert.AreEqual(expectedColumnNameToIndex, actualColumnNameToIndex);
         }

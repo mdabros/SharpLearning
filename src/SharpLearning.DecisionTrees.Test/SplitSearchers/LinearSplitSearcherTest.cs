@@ -39,7 +39,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
                 interval, impurity);
 
             var expected = new SplitResult(15, 3.5, 0.037941545633853213,
-                0.39111111111111119, 0.49586776859504134); 
+                0.39111111111111119, 0.49586776859504134);
 
             Assert.AreEqual(expected, actual);
         }
@@ -61,12 +61,12 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
             var impurity = impurityCalculator.NodeImpurity();
 
             var sut = new LinearSplitSearcher(1);
-            
+
             var actual = sut.FindBestSplit(impurityCalculator, feature, targets,
                 interval, impurity);
 
             var expected = new SplitResult(15, 3.5, 0.045729402872260017,
-                0.375, 0.49382716049382713); 
+                0.375, 0.49382716049382713);
 
             Assert.AreEqual(expected, actual);
         }
@@ -92,7 +92,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
                 interval, impurity);
 
             var expected = new SplitResult(75, 0.397254, 309.6695422760252,
-                0.30040476584587461, -9.0812926380897121); 
+                0.30040476584587461, -9.0812926380897121);
 
             Assert.AreEqual(expected, actual);
         }
@@ -116,7 +116,7 @@ namespace SharpLearning.DecisionTrees.Test.SplitSearchers
                 interval, impurity);
 
             var expected = new SplitResult(6391, 1.7005986908310751, 0.02182606648710006,
-                0.70606468409101264, 0.597976432567197); 
+                0.70606468409101264, 0.597976432567197);
 
             Assert.AreEqual(expected, actual);
         }

@@ -24,7 +24,7 @@ namespace SharpLearning.Metrics.Impurity
             {
                 var targetKey = (int)values[i];
 
-                if(!m_dictionary.ContainsKey(targetKey))
+                if (!m_dictionary.ContainsKey(targetKey))
                 {
                     m_dictionary.Add(targetKey, 1);
                 }

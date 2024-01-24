@@ -14,7 +14,7 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
         [Serializable]
         class FeatureMinMax
         {
-            public double Min {get; set;}
+            public double Min { get; set; }
             public double Max { get; set; }
         }
 
@@ -83,7 +83,7 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
                     var newValue = m_normalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
                     output[j, i] = newValue;
                 }
-            }        
+            }
         }
 
         void CreateFeatureMinMax(F64Matrix matrix)
@@ -104,9 +104,9 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
                     else if (value > minMax.Max)
                     {
                         minMax.Max = value;
-                    }       
+                    }
                 }
-            }        
+            }
         }
 
         /// <summary>

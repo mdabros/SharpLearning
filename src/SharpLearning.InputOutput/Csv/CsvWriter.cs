@@ -29,9 +29,9 @@ namespace SharpLearning.InputOutput.Csv
         /// </summary>
         /// <param name="rows">the rows to write</param>
         /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
-        public void Write(IEnumerable<CsvRow> rows, bool writeHeader=true)
+        public void Write(IEnumerable<CsvRow> rows, bool writeHeader = true)
         {
-            using(var writer = m_writer())
+            using (var writer = m_writer())
             {
                 if (writeHeader)
                 {

@@ -15,19 +15,19 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="weights"></param>
         /// <param name="interval"></param>
         void Init(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval);
-        
+
         /// <summary>
         /// Update the work interval.
         /// </summary>
         /// <param name="newInterval"></param>
         void UpdateInterval(Interval1D newInterval);
-        
+
         /// <summary>
         /// Update the split index
         /// </summary>
         /// <param name="newPosition"></param>
         void UpdateIndex(int newPosition);
-        
+
         /// <summary>
         /// Reset the calculation within the current work interval
         /// </summary>
@@ -61,7 +61,7 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// Returns the weighted size of the current right split
         /// </summary>
         double WeightedRight { get; }
-        
+
         /// <summary>
         /// Calculates the leaf value based on the current work interval
         /// </summary>

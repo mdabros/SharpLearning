@@ -24,7 +24,7 @@ namespace SharpLearning.Metrics.Test.Classification
         [TestMethod]
         public void ClassificationMatrix_ErrorMatrix()
         {
-            var uniqueTargets = new List<double> {0, 1, 2};
+            var uniqueTargets = new List<double> { 0, 1, 2 };
             var confusionmatrix = new int[,] { { 1, 0, 0 }, { 0, 1, 1 }, { 0, 0, 0 } };
 
             var actual = ClassificationMatrix.ErrorMatrix(uniqueTargets, confusionmatrix);

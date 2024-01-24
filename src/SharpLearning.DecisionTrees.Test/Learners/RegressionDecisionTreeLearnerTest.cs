@@ -24,7 +24,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             var onlyOneUniqueObservations = (F64Matrix)observations.Rows(0, 1, 2, 3, 4);
             var onlyOneUniquetargets = Enumerable.Range(0, onlyOneUniqueObservations.RowCount).Select(v => onlyUniqueTargetValue).ToArray();
             var model = sut.Learn(onlyOneUniqueObservations, onlyOneUniquetargets);
-                
+
             var predictions = model.Predict(onlyOneUniqueObservations);
             // no valid split, so should result in the model always returning the onlyUniqueTargetValue.
             for (int i = 0; i < predictions.Length; i++)

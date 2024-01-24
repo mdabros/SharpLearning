@@ -43,7 +43,7 @@ namespace SharpLearning.Containers.Test.Matrices
         {
             var sut = CreateFeatures();
             var item = "123.0";
-            sut[1, 1]= item;
+            sut[1, 1] = item;
 
             var value = sut.At(1, 1);
             Assert.AreEqual(item, value);
@@ -121,7 +121,7 @@ namespace SharpLearning.Containers.Test.Matrices
         {
             var sut = CreateFeatures();
             var actual = new StringMatrix(3, 2);
-            sut.Columns(new int [] { 0, 2 }, actual);
+            sut.Columns(new int[] { 0, 2 }, actual);
             var expected = GetExpectedColSubMatrix();
 
             Assert.IsTrue(expected.Equals(actual));

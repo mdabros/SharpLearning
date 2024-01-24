@@ -15,7 +15,7 @@ namespace SharpLearning.AdaBoost.Test
 
             var actual = new int[indices.Length];
             sut.Sample(indices, weights, actual);
-            
+
             var expected = new int[] { 2, 5, 6, 7, 7, 8, 8, 8, 9, 9 };
             CollectionAssert.AreEqual(expected, actual);
         }

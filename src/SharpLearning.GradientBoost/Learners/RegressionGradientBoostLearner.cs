@@ -45,14 +45,14 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="loss">loss function used</param>
         /// <param name="runParallel">Use multi threading to speed up execution</param>
         public RegressionGradientBoostLearner(
-            int iterations, 
-            double learningRate, 
+            int iterations,
+            double learningRate,
             int maximumTreeDepth,
-            int minimumSplitSize, 
-            double minimumInformationGain, 
-            double subSampleRatio, 
-            int featuresPrSplit, 
-            IGradientBoostLoss loss, 
+            int minimumSplitSize,
+            double minimumInformationGain,
+            double subSampleRatio,
+            int featuresPrSplit,
+            IGradientBoostLoss loss,
             bool runParallel)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -67,7 +67,7 @@ namespace SharpLearning.GradientBoost.Learners
             m_iterations = iterations;
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
-            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, 
+            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize,
                 minimumInformationGain, featuresPrSplit, m_loss, runParallel);
         }
 
@@ -85,12 +85,12 @@ namespace SharpLearning.GradientBoost.Learners
         /// This reduces variance in the ensemble and can help outer overfitting</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         public RegressionGradientBoostLearner(
-            int iterations = 100, 
-            double learningRate = 0.1, 
+            int iterations = 100,
+            double learningRate = 0.1,
             int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, 
-            double minimumInformationGain = 0.000001, 
-            double subSampleRatio = 1.0, 
+            int minimumSplitSize = 1,
+            double minimumInformationGain = 0.000001,
+            double subSampleRatio = 1.0,
             int featuresPrSplit = 0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
                 subSampleRatio, featuresPrSplit, new GradientBoostSquaredLoss(), true)
@@ -116,7 +116,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public RegressionGradientBoostModel Learn(F64Matrix observations, double[] targets, 
+        public RegressionGradientBoostModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
@@ -145,7 +145,7 @@ namespace SharpLearning.GradientBoost.Learners
                 {
                     sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
                     var currentInSample = Sample(sampleSize, workIndices, targets.Length);
-                    
+
                     trees[iteration] = m_learner.Learn(observations, targets, residuals,
                         predictions, orderedElements, currentInSample);
 
@@ -163,7 +163,7 @@ namespace SharpLearning.GradientBoost.Learners
                 }
             }
 
-            return new RegressionGradientBoostModel(trees, m_learningRate, initialLoss, 
+            return new RegressionGradientBoostModel(trees, m_learningRate, initialLoss,
                 observations.ColumnCount);
         }
 
@@ -183,16 +183,16 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="earlyStoppingRounds">This controls how often the validation error is checked to estimate the best number of iterations.</param>
         /// <returns>RegressionGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
         public RegressionGradientBoostModel LearnWithEarlyStopping(
-            F64Matrix trainingObservations, 
+            F64Matrix trainingObservations,
             double[] trainingTargets,
-            F64Matrix validationObservations, 
+            F64Matrix validationObservations,
             double[] validationTargets,
-            IMetric<double, double> metric, 
+            IMetric<double, double> metric,
             int earlyStoppingRounds)
         {
-            if(earlyStoppingRounds >= m_iterations)
+            if (earlyStoppingRounds >= m_iterations)
             {
-                throw new ArgumentException("Number of iterations " + m_iterations + 
+                throw new ArgumentException("Number of iterations " + m_iterations +
                     " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
             }
 
@@ -248,7 +248,7 @@ namespace SharpLearning.GradientBoost.Learners
                 // If the validation error has increased, stop the learning and return the model with the best number of iterations (trees).
                 if (iteration % earlyStoppingRounds == 0)
                 {
-                    var model = new RegressionGradientBoostModel(trees.Take(iteration).ToArray(), 
+                    var model = new RegressionGradientBoostModel(trees.Take(iteration).ToArray(),
                         m_learningRate, initialLoss, trainingObservations.ColumnCount);
 
                     var validPredictions = model.Predict(validationObservations);

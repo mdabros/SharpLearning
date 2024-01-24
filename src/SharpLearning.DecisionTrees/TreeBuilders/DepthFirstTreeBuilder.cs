@@ -53,11 +53,11 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
         /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
         /// <param name="impurityCalculator">Impurity calculator used to decide which split is optimal</param>
-        public DepthFirstTreeBuilder(int maximumTreeDepth, 
-            int featuresPrSplit, 
-            double minimumInformationGain, 
+        public DepthFirstTreeBuilder(int maximumTreeDepth,
+            int featuresPrSplit,
+            double minimumInformationGain,
             int seed,
-            ISplitSearcher splitSearcher, 
+            ISplitSearcher splitSearcher,
             IImpurityCalculator impurityCalculator)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
@@ -95,7 +95,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
             {
                 m_featuresPrSplit = numberOfFeatures;
             }
-          
+
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
             m_bestSplitWorkIndices.Clear();
             Array.Resize(ref m_variableImportance, numberOfFeatures);
@@ -250,7 +250,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
                 nodes.Add(leaf);
             }
 
-            return new BinaryTree(nodes, probabilities, targetNames, 
+            return new BinaryTree(nodes, probabilities, targetNames,
                 m_variableImportance.ToArray());
         }
 

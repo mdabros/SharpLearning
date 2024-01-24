@@ -27,12 +27,12 @@ namespace SharpLearning.Metrics
         /// <returns></returns>
         public int[][] Compare(double[] model1Predictions, double[] model2Predictions, double[] targets)
         {
-            if (model1Predictions.Length != model2Predictions.Length || 
+            if (model1Predictions.Length != model2Predictions.Length ||
                 model1Predictions.Length != targets.Length)
             {
                 throw new ArgumentException("Model prediction lengths differ from target length. " +
-                    $"Model1: {model1Predictions.Length}, " + 
-                    $"Model2: {model2Predictions.Length}, " + 
+                    $"Model1: {model1Predictions.Length}, " +
+                    $"Model2: {model2Predictions.Length}, " +
                     $"Targets: {targets.Length}");
             }
 
@@ -81,12 +81,12 @@ namespace SharpLearning.Metrics
         public string CompareString(double[] model1Predictions, double[] model2Predictions, double[] targets)
         {
             var mcNemarMatrix = Compare(model1Predictions, model2Predictions, targets);
-            
+
             var builder = new StringBuilder();
             builder.AppendLine(";Model1Wrong;Model1Right");
             builder.AppendLine($"Model2Wrong;{mcNemarMatrix[0][0]};{mcNemarMatrix[0][1]}");
             builder.Append($"Model2Right;{mcNemarMatrix[1][0]};{mcNemarMatrix[1][1]}");
-            
+
             return builder.ToString();
         }
     }

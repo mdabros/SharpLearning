@@ -44,7 +44,7 @@ namespace SharpLearning.RandomForest.Models
             var prediction = Trees.Select(m => m.Predict(observation))
                 .GroupBy(p => p).OrderByDescending(g => g.Count())
                 .First().Key;
-            
+
             return prediction;
         }
 
@@ -82,7 +82,7 @@ namespace SharpLearning.RandomForest.Models
             {
                 foreach (var probability in model)
                 {
-                    if(probabilities.ContainsKey(probability.Key))
+                    if (probabilities.ContainsKey(probability.Key))
                     {
                         probabilities[probability.Key] += probability.Value;
                     }
@@ -174,7 +174,7 @@ namespace SharpLearning.RandomForest.Models
         /// </summary>
         /// <param name="observation"></param>
         /// <returns></returns>
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation) 
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
             => PredictProbability(observation);
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace SharpLearning.RandomForest.Models
         /// </summary>
         /// <param name="observations"></param>
         /// <returns></returns>
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations) 
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
             => PredictProbability(observations);
     }
 }

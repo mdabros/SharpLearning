@@ -24,10 +24,10 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         public RegressionBackwardEliminationModelSelectingEnsembleLearner(
-            IIndexedLearner<double>[] learners, 
+            IIndexedLearner<double>[] learners,
             int numberOfModelsToSelect)
-            : this(learners, numberOfModelsToSelect, 
-                new RandomCrossValidation<double>(5, 42), 
+            : this(learners, numberOfModelsToSelect,
+                new RandomCrossValidation<double>(5, 42),
                 new MeanRegressionEnsembleStrategy(),
                 new MeanSquaredErrorRegressionMetric())
         {
@@ -45,13 +45,13 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="metric">Metric to minimize</param>
         public RegressionBackwardEliminationModelSelectingEnsembleLearner(
-            IIndexedLearner<double>[] learners, 
+            IIndexedLearner<double>[] learners,
             int numberOfModelsToSelect,
-            ICrossValidation<double> crossValidation, 
-            IRegressionEnsembleStrategy ensembleStrategy, 
+            ICrossValidation<double> crossValidation,
+            IRegressionEnsembleStrategy ensembleStrategy,
             IMetric<double, double> metric)
-            : base(learners, crossValidation, ensembleStrategy, 
-                new BackwardEliminationRegressionEnsembleSelection(metric, 
+            : base(learners, crossValidation, ensembleStrategy,
+                new BackwardEliminationRegressionEnsembleSelection(metric,
                     ensembleStrategy, numberOfModelsToSelect))
         {
         }

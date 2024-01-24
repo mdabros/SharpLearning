@@ -49,7 +49,7 @@ namespace SharpLearning.XGBoost
             {
                 var inputRow = rowIndices[outputRow];
                 var rowArray = new float[cols];
-                
+
                 for (int col = 0; col < cols; col++)
                 {
                     rowArray[col] = (float)matrix.At(inputRow, col);
@@ -78,7 +78,7 @@ namespace SharpLearning.XGBoost
         /// <returns></returns>
         public static float[] ToFloat(this double[] array, int[] indices)
         {
-            return indices.Select(i => (float)array[i]).ToArray();            
+            return indices.Select(i => (float)array[i]).ToArray();
         }
 
         /// <summary>

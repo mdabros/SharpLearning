@@ -43,7 +43,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
                 for (int i = 0; i < values.Length; i++)
                 {
                     var value = values[i];
-                    if(m_missingValueIdentifiers.ContainsKey(value))
+                    if (m_missingValueIdentifiers.ContainsKey(value))
                     {
                         values[i] = m_replacementValue;
                     }

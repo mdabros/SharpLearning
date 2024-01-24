@@ -102,7 +102,7 @@ namespace SharpLearning.Ensemble.Models
                 {
                     duplicateModelCount[name] += 1;
                 }
-                    
+
                 ensembleFeatureNameToIndex.Add(name + "_" + duplicateModelCount[name].ToString(), index++);
             }
 

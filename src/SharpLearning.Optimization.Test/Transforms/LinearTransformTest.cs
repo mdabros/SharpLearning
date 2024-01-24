@@ -16,7 +16,7 @@ namespace SharpLearning.Optimization.Test.Transforms
             var actual = new double[10];
             for (int i = 0; i < actual.Length; i++)
             {
-                actual[i] = sut.Transform(min: 20, max: 200, 
+                actual[i] = sut.Transform(min: 20, max: 200,
                     parameterType: ParameterType.Continuous, sampler: sampler);
             }
 

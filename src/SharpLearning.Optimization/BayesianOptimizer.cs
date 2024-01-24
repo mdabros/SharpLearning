@@ -204,7 +204,7 @@ namespace SharpLearning.Optimization
             var validParameterSets = previousResults
                 .Where(v => !double.IsNaN(v.Error))
                 .OrderBy(v => v.Error); // TODO: This might still fail to provide same order if two different parameter sets yield the same error.
-            
+
             var model = FitModel(validParameterSets);
 
             return GenerateCandidateParameterSets(parameterSetCount, validParameterSets.ToList(), model);
@@ -236,7 +236,7 @@ namespace SharpLearning.Optimization
             // not the minimum.
             var candidates = results
                 .Where(v => !double.IsNaN(v.Error))
-                .OrderByDescending(r => r.Error) 
+                .OrderByDescending(r => r.Error)
                 .Take(parameterSetCount)
                 .Select(p => p.ParameterSet).ToArray();
 

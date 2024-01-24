@@ -43,7 +43,7 @@ namespace SharpLearning.CrossValidation.Test.TrainingTestSplitters
         [ExpectedException(typeof(ArgumentNullException))]
         public void TrainingTestSetSplit_TrainingSet_Null()
         {
-            new TrainingTestSetSplit(null, 
+            new TrainingTestSetSplit(null,
                 new ObservationTargetSet(new F64Matrix(new double[] { 1, 2, 3, 4 }, 2, 2), new double[] { 1, 2 }));
         }
 

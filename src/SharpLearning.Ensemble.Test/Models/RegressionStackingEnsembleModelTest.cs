@@ -29,7 +29,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, 
+            var learner = new RegressionStackingEnsembleLearner(learners,
                 new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
@@ -61,7 +61,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, 
+            var learner = new RegressionStackingEnsembleLearner(learners,
                 new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
@@ -80,7 +80,7 @@ namespace SharpLearning.Ensemble.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
+            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
                 { "PreviousExperience_month", 1 } };
 
             var learners = new IIndexedLearner<double>[]
@@ -91,7 +91,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, 
+            var learner = new RegressionStackingEnsembleLearner(learners,
                 new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 
@@ -123,7 +123,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionStackingEnsembleLearner(learners, 
+            var learner = new RegressionStackingEnsembleLearner(learners,
                 new RegressionDecisionTreeLearner(9),
                 new RandomCrossValidation<double>(5, 23), false);
 

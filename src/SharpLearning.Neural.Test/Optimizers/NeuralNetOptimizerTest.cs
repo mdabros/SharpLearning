@@ -22,7 +22,7 @@ namespace SharpLearning.Neural.Test.Optimizers
                 var sut = new NeuralNetOptimizer(0.001, 10, optimizerMethod: optimizer);
                 sut.UpdateParameters(parametersAndGradients);
                 sut.Reset();
-            }           
+            }
         }
     }
 }

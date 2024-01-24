@@ -43,13 +43,13 @@ namespace SharpLearning.RandomForest.Learners
         /// If below 1.0 the algorithm changes to random patches</param>
         /// <param name="seed">Seed for the random number generator</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
-        public RegressionExtremelyRandomizedTreesLearner(int trees = 100, 
-            int minimumSplitSize = 1, 
+        public RegressionExtremelyRandomizedTreesLearner(int trees = 100,
+            int minimumSplitSize = 1,
             int maximumTreeDepth = 2000,
-            int featuresPrSplit = 0, 
-            double minimumInformationGain = .000001, 
-            double subSampleRatio = 1.0 , 
-            int seed = 42, 
+            int featuresPrSplit = 0,
+            double minimumInformationGain = .000001,
+            double subSampleRatio = 1.0,
+            int seed = 42,
             bool runParallel = true)
         {
             if (trees < 1) { throw new ArgumentException("trees must be at least 1"); }
@@ -57,7 +57,7 @@ namespace SharpLearning.RandomForest.Learners
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
-          
+
             m_trees = trees;
             m_minimumSplitSize = minimumSplitSize;
             m_maximumTreeDepth = maximumTreeDepth;
@@ -88,7 +88,7 @@ namespace SharpLearning.RandomForest.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public RegressionForestModel Learn(F64Matrix observations, double[] targets, 
+        public RegressionForestModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
@@ -113,7 +113,7 @@ namespace SharpLearning.RandomForest.Learners
             {
                 foreach (var indexToRandom in treeIndexToRandomGenerators)
                 {
-                    var tree = CreateTree(observations, targets, 
+                    var tree = CreateTree(observations, targets,
                         indices, indexToRandom.Random);
 
                     results.TryAdd(indexToRandom.Index, tree);
@@ -124,7 +124,7 @@ namespace SharpLearning.RandomForest.Learners
                 var rangePartitioner = Partitioner.Create(treeIndexToRandomGenerators, true);
                 Parallel.ForEach(rangePartitioner, (indexToRandom, loopState) =>
                 {
-                    var tree = CreateTree(observations, targets, 
+                    var tree = CreateTree(observations, targets,
                         indices, indexToRandom.Random);
 
                     results.TryAdd(indexToRandom.Index, tree);
@@ -173,7 +173,7 @@ namespace SharpLearning.RandomForest.Learners
             return rawVariableImportance;
         }
 
-        RegressionDecisionTreeModel CreateTree(F64Matrix observations, double[] targets, 
+        RegressionDecisionTreeModel CreateTree(F64Matrix observations, double[] targets,
             int[] indices, Random random)
         {
             var learner = new DecisionTreeLearner(

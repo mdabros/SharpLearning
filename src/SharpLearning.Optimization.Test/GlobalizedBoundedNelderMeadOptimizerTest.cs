@@ -57,16 +57,16 @@ namespace SharpLearning.Optimization.Test
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-            Assert.AreEqual(expected.First().ParameterSet.First(), 
+            Assert.AreEqual(expected.First().ParameterSet.First(),
                 actual.First().ParameterSet.First(), Delta);
 
             Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-            Assert.AreEqual(expected.Last().ParameterSet.First(), 
+            Assert.AreEqual(expected.Last().ParameterSet.First(),
                 actual.Last().ParameterSet.First(), Delta);
         }
 
         static GlobalizedBoundedNelderMeadOptimizer CreateSut(
-            int? maybeMaxDegreeOfParallelism, 
+            int? maybeMaxDegreeOfParallelism,
             MinMaxParameterSpec[] parameters)
         {
             const int DefaultMaxDegreeOfParallelism = -1;

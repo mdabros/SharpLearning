@@ -15,13 +15,13 @@ namespace SharpLearning.Optimization.Test
         [DataRow(null)]
         public void GridSearchOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
         {
-            var parameters = new GridParameterSpec[] 
+            var parameters = new GridParameterSpec[]
             {
                 new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
             };
 
-            var sut = maxDegreeOfParallelism.HasValue ? 
-                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : 
+            var sut = maxDegreeOfParallelism.HasValue ?
+                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) :
                 new GridSearchOptimizer(parameters);
 
             var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
@@ -37,25 +37,25 @@ namespace SharpLearning.Optimization.Test
         [DataRow(null)]
         public void GridSearchOptimizer_Optimize(int? maxDegreeOfParallelism)
         {
-            var parameters = new GridParameterSpec[] 
+            var parameters = new GridParameterSpec[]
             {
                 new GridParameterSpec(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
             };
 
-            var sut = maxDegreeOfParallelism.HasValue ? 
-                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) : 
+            var sut = maxDegreeOfParallelism.HasValue ?
+                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) :
                 new GridSearchOptimizer(parameters);
 
             var actual = sut.Optimize(MinimizeWeightFromHeight);
 
-            var expected = new OptimizerResult[] 
-            { 
+            var expected = new OptimizerResult[]
+            {
               new OptimizerResult(new double[] { 10 }, 31638.9579),
-              new OptimizerResult(new double[] { 60 }, 20500.6279) 
+              new OptimizerResult(new double[] { 60 }, 20500.6279)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-            Assert.AreEqual(expected.First().ParameterSet.First(), 
+            Assert.AreEqual(expected.First().ParameterSet.First(),
                 actual.First().ParameterSet.First(), Delta);
 
             Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);

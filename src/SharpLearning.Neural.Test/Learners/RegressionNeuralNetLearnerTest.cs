@@ -20,7 +20,7 @@ namespace SharpLearning.Neural.Test.Learners
 
             var random = new Random(32);
 
-            var (observations, targets) = CreateData(numberOfObservations, 
+            var (observations, targets) = CreateData(numberOfObservations,
                 numberOfFeatures, random);
 
             var net = new NeuralNet();
@@ -47,10 +47,10 @@ namespace SharpLearning.Neural.Test.Learners
 
             var random = new Random(32);
 
-            var (observations, targets) = CreateData(numberOfObservations, 
+            var (observations, targets) = CreateData(numberOfObservations,
                 numberOfFeatures, random);
 
-            var (validationObservations, validationTargets) = CreateData(numberOfObservations, 
+            var (validationObservations, validationTargets) = CreateData(numberOfObservations,
                 numberOfFeatures, random);
 
             var net = new NeuralNet();

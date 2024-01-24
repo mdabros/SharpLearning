@@ -44,7 +44,7 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
         {
             new GBMDecisionTreeLearner(1, 1, 1.0, 1, null, false);
         }
-      
+
         [TestMethod]
         public void GBMDecisionTreeLearner_Learn()
         {
@@ -55,16 +55,16 @@ namespace SharpLearning.GradientBoost.Test.GBMDecisionTree
             var rows = observations.RowCount;
 
             for (int i = 0; i < observations.ColumnCount; i++)
-			{
-			    var feature = observations.Column(i);
+            {
+                var feature = observations.Column(i);
                 var indices = Enumerable.Range(0, rows).ToArray();
                 feature.SortWith(indices);
                 orderedElements[i] = indices;
-			}
+            }
 
             var sut = new GBMDecisionTreeLearner(10);
             var tree = sut.Learn(observations, targets, targets, targets, orderedElements, inSample);
-            
+
             var predictions = tree.Predict(observations);
             var evaluator = new MeanSquaredErrorRegressionMetric();
             var actual = evaluator.Error(targets, predictions);

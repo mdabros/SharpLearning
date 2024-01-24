@@ -22,7 +22,7 @@ namespace SharpLearning.Optimization.Transforms
         {
             if (min >= 1 || max >= 1)
             {
-                throw new ArgumentException("ExponentialAverage scale requires min: " + 
+                throw new ArgumentException("ExponentialAverage scale requires min: " +
                     $" {min} and max: {max} to be smaller than one");
             }
 

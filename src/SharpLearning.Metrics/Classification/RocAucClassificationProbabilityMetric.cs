@@ -37,7 +37,7 @@ namespace SharpLearning.Metrics.Classification
 
             if (targets.Distinct().Count() == 1)
             {
-                throw new ArgumentException("Only one class present, " + 
+                throw new ArgumentException("Only one class present, " +
                     "Only binary classification problems supported.");
             }
 
@@ -45,15 +45,15 @@ namespace SharpLearning.Metrics.Classification
                 .Select(p => p.Probabilities[m_positiveTarget])
                 .ToArray();
 
-            var targetProbabilities = targets.Zip(positiveTargetProbabilities, 
+            var targetProbabilities = targets.Zip(positiveTargetProbabilities,
                 (l, s) => new { target = l, Probability = s });
             targetProbabilities = targetProbabilities.OrderByDescending(l => l.Probability);
 
             var counts = targetProbabilities.GroupBy(l => l.target)
                 .Select(l => new { Label = l.Key, Count = l.Count() });
-                
+
             int negativeCount = counts.Where(s => !s.Label.Equals(m_positiveTarget))
-                .Select(s => s.Count).Sum();;
+                .Select(s => s.Count).Sum(); ;
             int positivesCount = counts.Where(s => s.Label.Equals(m_positiveTarget))
                 .Select(s => s.Count).Sum();
 
@@ -68,10 +68,10 @@ namespace SharpLearning.Metrics.Classification
 
                 if (probability != previousProbability)
                 {
-                    auc = auc +  trapezoidArea(
-                        fpCount * 1.0 / negativeCount, 
-                        previousFpCount * 1.0 / negativeCount, 
-                        tpCount * 1.0 / positivesCount, 
+                    auc = auc + trapezoidArea(
+                        fpCount * 1.0 / negativeCount,
+                        previousFpCount * 1.0 / negativeCount,
+                        tpCount * 1.0 / positivesCount,
                         previousTpCount * 1.0 / positivesCount);
 
                     previousProbability = probability;
@@ -85,13 +85,13 @@ namespace SharpLearning.Metrics.Classification
             }
 
             auc = auc + trapezoidArea(
-                1.0, previousFpCount * 1.0 / negativeCount, 
+                1.0, previousFpCount * 1.0 / negativeCount,
                 1.0, previousTpCount * 1.0 / positivesCount);
 
             return 1.0 - auc;
         }
 
-        
+
         /// <summary>
         /// Calculate the trapezoidal area bound by the quad (X1,X2,Y1,Y2) 
         /// </summary>

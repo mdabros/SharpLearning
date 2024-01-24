@@ -32,7 +32,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var error = RegressionExtremelyRandomizedTreesLearner_Learn_Aptitude(100);
             Assert.AreEqual(0.0879343920732049, error, m_delta);
         }
-        
+
         [TestMethod]
         public void RegressionExtremelyRandomizedTreesLearnerTest_Learn_Aptitude_Trees_100_SubSample()
         {
@@ -74,7 +74,7 @@ namespace SharpLearning.RandomForest.Test.Learners
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
             var sut = new RegressionExtremelyRandomizedTreesLearner(100, 1, 100, 1, 0.0001, 1.0, 42, false);
-            
+
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             indices.Shuffle(new Random(42));
             indices = indices.Take((int)(targets.Length * 0.7))
@@ -111,7 +111,7 @@ namespace SharpLearning.RandomForest.Test.Learners
         {
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, 
+            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001,
                 subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 
@@ -126,7 +126,7 @@ namespace SharpLearning.RandomForest.Test.Learners
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001, 
+            var sut = new RegressionExtremelyRandomizedTreesLearner(trees, 1, 100, 1, 0.0001,
                 subSampleRatio, 42, false);
             var model = sut.Learn(observations, targets);
 

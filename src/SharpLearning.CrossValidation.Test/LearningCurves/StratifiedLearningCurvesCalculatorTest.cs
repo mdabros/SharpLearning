@@ -14,7 +14,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
         {
             var sut = new StratifiedLearningCurvesCalculator<double>(
                 new TotalErrorClassificationMetric<double>(),
-                new double[] { 0.2, 0.8 }, 
+                new double[] { 0.2, 0.8 },
                 0.8, 5, 42);
 
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
@@ -24,7 +24,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
 
             var expected = new List<LearningCurvePoint>()
             {
-                new LearningCurvePoint(4, 0, 0.39999999999999997), 
+                new LearningCurvePoint(4, 0, 0.39999999999999997),
                 new LearningCurvePoint(16, 0.0625, 0.33333333333333331)
             };
 

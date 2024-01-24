@@ -18,8 +18,8 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
         {
             var sut = new LearningCurvesCalculator<double>(
                 new RandomTrainingTestIndexSplitter<double>(0.8, 42),
-                new RandomIndexSampler<double>(42), 
-                new MeanSquaredErrorRegressionMetric(), 
+                new RandomIndexSampler<double>(42),
+                new MeanSquaredErrorRegressionMetric(),
                 new double[] { 0.2, 0.8 });
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
@@ -29,10 +29,10 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
 
             var expected = new List<LearningCurvePoint>()
             {
-                new LearningCurvePoint(32, 0, 0.141565953928265), 
+                new LearningCurvePoint(32, 0, 0.141565953928265),
                 new LearningCurvePoint(128, 0.0, 0.068970597423950036)
             };
-            
+
             CollectionAssert.AreEqual(expected, actual);
         }
 
@@ -40,11 +40,11 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
         public void LearningCurvesCalculator_Calculate_Indices_Provided()
         {
             var splitter = new RandomTrainingTestIndexSplitter<double>(0.8, 42);
-            
+
             var sut = new LearningCurvesCalculator<double>(
-                splitter, 
+                splitter,
                 new RandomIndexSampler<double>(42),
-                new MeanSquaredErrorRegressionMetric(), 
+                new MeanSquaredErrorRegressionMetric(),
                 new double[] { 0.2, 0.8 });
 
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
@@ -55,7 +55,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
 
             var expected = new List<LearningCurvePoint>()
             {
-                new LearningCurvePoint(32, 0, 0.141565953928265), 
+                new LearningCurvePoint(32, 0, 0.141565953928265),
                 new LearningCurvePoint(128, 0.0, 0.068970597423950036)
             };
 
@@ -69,8 +69,8 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
             new LearningCurvesCalculator<double>(
                 new RandomTrainingTestIndexSplitter<double>(0.8, 42),
                 new RandomIndexSampler<double>(42),
-                null, 
-                new double[] { 0.2, 0.8 } );
+                null,
+                new double[] { 0.2, 0.8 });
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
             new LearningCurvesCalculator<double>(
                 new RandomTrainingTestIndexSplitter<double>(0.8, 42),
                 new RandomIndexSampler<double>(42),
-                new MeanSquaredErrorRegressionMetric(), 
+                new MeanSquaredErrorRegressionMetric(),
                 null);
         }
 
@@ -91,7 +91,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
             new LearningCurvesCalculator<double>(
                 new RandomTrainingTestIndexSplitter<double>(0.8, 42),
                 new RandomIndexSampler<double>(42),
-                new MeanSquaredErrorRegressionMetric(), 
+                new MeanSquaredErrorRegressionMetric(),
                 new double[] { });
         }
 
@@ -102,7 +102,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
             var sut = new LearningCurvesCalculator<double>(
                 new RandomTrainingTestIndexSplitter<double>(0.8, 42),
                 new RandomIndexSampler<double>(42),
-                new MeanSquaredErrorRegressionMetric(), 
+                new MeanSquaredErrorRegressionMetric(),
                 new double[] { 0.0, 0.8 });
 
             var observations = new F64Matrix(10, 10);
@@ -119,7 +119,7 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
             var sut = new LearningCurvesCalculator<double>(
                 new RandomTrainingTestIndexSplitter<double>(0.8, 42),
                 new RandomIndexSampler<double>(42),
-                new MeanSquaredErrorRegressionMetric(), 
+                new MeanSquaredErrorRegressionMetric(),
                 new double[] { 1.1, 0.8 });
 
             var observations = new F64Matrix(10, 10);
@@ -127,6 +127,6 @@ namespace SharpLearning.CrossValidation.Test.LearningCurves
 
             sut.Calculate(new RegressionDecisionTreeLearner(),
                 observations, targets);
-        } 
+        }
     }
 }

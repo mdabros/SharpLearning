@@ -16,7 +16,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new ClassificationAdaBoostLearner(10);
-            
+
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
 
@@ -49,7 +49,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
             var indices = new int[] { 22, 6, 23, 12 };
 
             var sut = new ClassificationAdaBoostLearner(10);
-            
+
             var model = sut.Learn(observations, targets, indices);
             var predictions = model.Predict(observations);
             var indexedPredictions = predictions.GetIndices(indices);

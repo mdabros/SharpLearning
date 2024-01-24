@@ -124,7 +124,7 @@ namespace SharpLearning.RandomForest.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
+            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
                 { "PreviousExperience_month", 1 } };
 
             var learner = new RegressionRandomForestLearner(100, 5, 100, 1, 0.0001, 1.0, 42, false);

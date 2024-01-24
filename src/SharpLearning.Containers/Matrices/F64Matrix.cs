@@ -35,7 +35,7 @@ namespace SharpLearning.Containers.Matrices
             if (values.Length != rows * cols) { throw new ArgumentException("feature array length does not match row * cols"); }
             if (rows < 1) { throw new ArgumentException("matrix must have at least 1 row"); }
             if (cols < 1) { throw new ArgumentException("matrix must have at least 1 col"); }
-            
+
             m_featureArray = values;
             RowCount = rows;
             ColumnCount = cols;

@@ -19,7 +19,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public sealed class RandomShuffleLearningCurvesCalculator<TPrediction> : 
+    public sealed class RandomShuffleLearningCurvesCalculator<TPrediction> :
         LearningCurvesCalculator<TPrediction>
     {
         /// <summary>
@@ -33,7 +33,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
         /// training data used in each point of the learning curve</param>
         /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
         /// <param name="trainingPercentage">Total percentage of data used for training</param>
-        public RandomShuffleLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages, 
+        public RandomShuffleLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
             double trainingPercentage, int numberOfShufflesPrSample = 5)
             : base(new RandomTrainingTestIndexSplitter<double>(trainingPercentage),
                    new RandomIndexSampler<double>(), metric, samplePercentages, numberOfShufflesPrSample)

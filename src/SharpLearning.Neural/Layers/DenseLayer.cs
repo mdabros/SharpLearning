@@ -56,7 +56,7 @@ namespace SharpLearning.Neural.Layers
         /// Bias gradients.
         /// </summary>
         public Vector<float> BiasGradients;
-        
+
         /// <summary>
         /// Output activation
         /// </summary>
@@ -88,10 +88,10 @@ namespace SharpLearning.Neural.Layers
             // calculate gradients
             m_inputActivations.TransposeThisAndMultiply(delta, WeightsGradients);
             delta.SumColumns(BiasGradients);
-            
+
             // calculate delta for next layer
             delta.TransposeAndMultiply(Weights, m_delta);
-            
+
             return m_delta;
         }
 
@@ -119,12 +119,12 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random)
         {
             var fans = WeightInitialization.GetFans(this, inputWidth, inputHeight, inputDepth);
             var distribution = WeightInitialization.GetWeightDistribution(initializtion, fans, random);
-            
+
             Weights = Matrix<float>.Build.Random(fans.FanIn, fans.FanOut, distribution);
             Bias = Vector<float>.Build.Dense(fans.FanOut, 0.0f);
 

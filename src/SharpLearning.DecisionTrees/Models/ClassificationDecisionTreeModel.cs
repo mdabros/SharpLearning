@@ -132,7 +132,7 @@ namespace SharpLearning.DecisionTrees.Models
         public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
         {
             var max = m_variableImportance.Max();
-            
+
             var scaledVariableImportance = m_variableImportance
                 .Select(v => (v / max) * 100.0)
                 .ToArray();

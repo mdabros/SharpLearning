@@ -19,7 +19,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
     ///  - Use more training samples.
     ///  - Increase Regularization.
     /// </summary>
-    public sealed class StratifiedLearningCurvesCalculator<TPrediction> : 
+    public sealed class StratifiedLearningCurvesCalculator<TPrediction> :
         LearningCurvesCalculator<TPrediction>
     {
         /// <summary>

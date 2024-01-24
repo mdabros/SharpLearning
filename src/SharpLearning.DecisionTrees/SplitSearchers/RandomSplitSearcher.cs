@@ -41,27 +41,27 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="parentInterval"></param>
         /// <param name="parentImpurity"></param>
         /// <returns></returns>
-        public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets, 
+        public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets,
             Interval1D parentInterval, double parentImpurity)
         {
             var min = double.MaxValue;
             var max = double.MinValue;
-            
+
             for (int i = parentInterval.FromInclusive; i < parentInterval.ToExclusive; i++)
             {
                 var value = feature[i];
-                
-                if(value < min)
+
+                if (value < min)
                 {
                     min = value;
                 }
-                else if(value > max)
+                else if (value > max)
                 {
                     max = value;
                 }
             }
 
-            if(min == max)
+            if (min == max)
             {
                 return SplitResult.Initial();
             }
@@ -77,7 +77,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
             var impurityImprovement = 0.0;
             var impurityLeft = 0.0;
             var impurityRight = 0.0;
-            
+
             var currentFeature = double.MinValue;
 
             for (int i = parentInterval.FromInclusive; i < parentInterval.ToExclusive; i++)
@@ -90,11 +90,11 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                 if (currentFeature > threshold && Math.Min(leftSize, rightSize) >= m_minimumSplitSize)
                 {
                     splitIndex = i;
-                    
+
                     impurityCalculator.UpdateInterval(parentInterval);
                     impurityCalculator.UpdateIndex(i);
                     impurityImprovement = impurityCalculator.ImpurityImprovement(parentImpurity);
-                    
+
                     var childImpurities = impurityCalculator.ChildImpurities();
                     impurityLeft = childImpurities.Left;
                     impurityRight = childImpurities.Right;

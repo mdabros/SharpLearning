@@ -15,7 +15,7 @@ namespace SharpLearning.Neural.Learners
     /// ClassificationNeuralNet learner using mini-batch gradient descent. 
     /// Several optimization methods is available through the constructor.
     /// </summary>
-    public sealed class ClassificationNeuralNetLearner 
+    public sealed class ClassificationNeuralNetLearner
         : IIndexedLearner<double>
         , IIndexedLearner<ProbabilityPrediction>
         , ILearner<double>
@@ -39,26 +39,26 @@ namespace SharpLearning.Neural.Learners
         /// <param name="rho">Squared gradient moving average decay factor (Default is 0.95)</param>
         /// <param name="beta1">Exponential decay rate for estimates of first moment vector, should be in range 0 to 1 (Default is 0.9)</param>
         /// <param name="beta2">Exponential decay rate for estimates of second moment vector, should be in range 0 to 1 (Default is 0.999)</param>
-        public ClassificationNeuralNetLearner(NeuralNet net, 
-            ILoss loss, 
-            double learningRate = 0.001, 
-            int iterations = 100, 
-            int batchSize = 128, 
+        public ClassificationNeuralNetLearner(NeuralNet net,
+            ILoss loss,
+            double learningRate = 0.001,
+            int iterations = 100,
+            int batchSize = 128,
             double l1decay = 0, double l2decay = 0,
-            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, 
-            double momentum = 0.9, 
-            double rho = 0.95, 
-            double beta1 = 0.9, 
+            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp,
+            double momentum = 0.9,
+            double rho = 0.95,
+            double beta1 = 0.9,
             double beta2 = 0.999)
         {
             if (!(net.Layers.Last() is IClassificationLayer))
             {
-                throw new ArgumentException("Last layer must be a classification layer type. Was: " 
+                throw new ArgumentException("Last layer must be a classification layer type. Was: "
                     + net.Layers.Last().GetType().Name);
             }
 
             m_learner = new NeuralNetLearner(net, new OneOfNTargetEncoder(), loss,
-                learningRate, iterations, batchSize, l1decay, l2decay, 
+                learningRate, iterations, batchSize, l1decay, l2decay,
                 optimizerMethod, momentum, rho, beta1, beta2);
         }
 
@@ -82,7 +82,7 @@ namespace SharpLearning.Neural.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationNeuralNetModel Learn(F64Matrix observations, double[] targets, 
+        public ClassificationNeuralNetModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             var targetNames = GetOrderedTargetNames(targets);
@@ -105,7 +105,7 @@ namespace SharpLearning.Neural.Learners
         {
             var targetNames = GetOrderedTargetNames(targets);
 
-            var model = m_learner.Learn(observations, targets, 
+            var model = m_learner.Learn(observations, targets,
                 validationObservations, validationTargets);
 
             return new ClassificationNeuralNetModel(model, targetNames);

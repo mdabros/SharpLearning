@@ -9,7 +9,7 @@ namespace SharpLearning.Metrics.Test.Regression
         [TestMethod]
         public void MeanSquaredErrorRegressionMetric_Error_Zero_Error()
         {
-            var targets = new double[] { 0, 0, 0 ,0, 0, 0 };
+            var targets = new double[] { 0, 0, 0, 0, 0, 0 };
             var predictions = new double[] { 0, 0, 0, 0, 0, 0 };
 
             var sut = new MeanSquaredErrorRegressionMetric();

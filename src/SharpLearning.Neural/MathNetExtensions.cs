@@ -26,7 +26,7 @@ namespace SharpLearning.Neural
 
             if (v.Count != cols)
             {
-                throw new ArgumentException("matrix cols: " + cols + 
+                throw new ArgumentException("matrix cols: " + cols +
                     " differs from vector length: " + v.Count);
             }
 
@@ -58,7 +58,7 @@ namespace SharpLearning.Neural
 
             if (v.Count != cols)
             {
-                throw new ArgumentException("matrix cols: " + cols + 
+                throw new ArgumentException("matrix cols: " + cols +
                     " differs from vector length: " + v.Count);
             }
 
@@ -90,7 +90,7 @@ namespace SharpLearning.Neural
 
             if (v.Count != rows)
             {
-                throw new ArgumentException("matrix rows: " + rows + 
+                throw new ArgumentException("matrix rows: " + rows +
                     " differs from vector length: " + v.Count);
             }
 
@@ -122,7 +122,7 @@ namespace SharpLearning.Neural
 
             if (v.Count != cols)
             {
-                throw new ArgumentException("matrix cols: " + cols + 
+                throw new ArgumentException("matrix cols: " + cols +
                     " differs from vector length: " + v.Count);
             }
 
@@ -149,13 +149,13 @@ namespace SharpLearning.Neural
 
             if (m2.RowCount != rows)
             {
-                throw new ArgumentException("m1 rows: " + rows + 
+                throw new ArgumentException("m1 rows: " + rows +
                     " differs from m2 rows: " + m2.RowCount);
             }
 
-            if (m2.ColumnCount!= cols)
+            if (m2.ColumnCount != cols)
             {
-                throw new ArgumentException("m1 cols: " + cols + 
+                throw new ArgumentException("m1 cols: " + cols +
                     " differs from m2 cols: " + m2.ColumnCount);
             }
 
@@ -179,7 +179,7 @@ namespace SharpLearning.Neural
         public static void ColumnWiseMean(this Matrix<float> m, Vector<float> v)
         {
             var rows = m.RowCount;
-            
+
             var mData = m.Data();
             var vData = v.Data();
 

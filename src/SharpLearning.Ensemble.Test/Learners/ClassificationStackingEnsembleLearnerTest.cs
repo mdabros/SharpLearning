@@ -23,7 +23,7 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, 
+            var sut = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 
@@ -49,7 +49,7 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, 
+            var sut = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 
@@ -77,7 +77,7 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, 
+            var sut = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), true);
 
@@ -103,7 +103,7 @@ namespace SharpLearning.Ensemble.Test.Learners
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var sut = new ClassificationStackingEnsembleLearner(learners, 
+            var sut = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
 

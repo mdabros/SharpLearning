@@ -16,7 +16,7 @@ namespace SharpLearning.AdaBoost.Test.Learners
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
             var sut = new RegressionAdaBoostLearner(10);
-            
+
             var model = sut.Learn(observations, targets);
             var predictions = model.Predict(observations);
 

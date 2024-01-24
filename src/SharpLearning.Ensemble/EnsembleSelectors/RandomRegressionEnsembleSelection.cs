@@ -33,12 +33,12 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
         /// <param name="seed"></param>
         public RandomRegressionEnsembleSelection(
-            IMetric<double, double> metric, 
+            IMetric<double, double> metric,
             IRegressionEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, 
-            int iterations, 
-            bool selectWithReplacement, 
-            int seed=42)
+            int numberOfModelsToSelect,
+            int iterations,
+            bool selectWithReplacement,
+            int seed = 42)
         {
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
             m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
@@ -60,7 +60,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(F64Matrix crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
+            if (crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
                 throw new ArgumentException("Available models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
@@ -99,7 +99,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
 
         void SelectNextRandomIndices(int[] candidateModelIndices)
         {
-            if(m_selectWithReplacement)
+            if (m_selectWithReplacement)
             {
                 for (int i = 0; i < candidateModelIndices.Length; i++)
                 {

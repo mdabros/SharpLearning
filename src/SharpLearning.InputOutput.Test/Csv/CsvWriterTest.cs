@@ -33,7 +33,7 @@ namespace SharpLearning.InputOutput.Test.Csv
 
             var writer = new StringWriter();
             var sut = new CsvWriter(() => writer);
-            
+
             sut.Write(data, false);
 
             var actual = writer.ToString();

@@ -37,9 +37,9 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters
         /// <param name="trainingTargets"></param>
         /// <param name="testObservations"></param>
         /// <param name="testTargets"></param>
-        public TrainingTestSetSplit(F64Matrix trainingObservations, double[] trainingTargets, 
+        public TrainingTestSetSplit(F64Matrix trainingObservations, double[] trainingTargets,
             F64Matrix testObservations, double[] testTargets)
-            : this(new ObservationTargetSet(trainingObservations, trainingTargets), 
+            : this(new ObservationTargetSet(trainingObservations, trainingTargets),
             new ObservationTargetSet(testObservations, testTargets))
         {
         }

@@ -16,7 +16,7 @@ namespace SharpLearning.FeatureTransformations
         /// <param name="rows"></param>
         /// <param name="transformFunc"></param>
         /// <returns></returns>
-        public static IEnumerable<CsvRow> Transform(this IEnumerable<CsvRow> rows, 
+        public static IEnumerable<CsvRow> Transform(this IEnumerable<CsvRow> rows,
             Func<IEnumerable<CsvRow>, IEnumerable<CsvRow>> transformFunc)
         {
             return transformFunc(rows);
@@ -28,7 +28,7 @@ namespace SharpLearning.FeatureTransformations
         /// <param name="matrix"></param>
         /// <param name="transformFunc"></param>
         /// <returns></returns>
-        public static StringMatrix Transform(this StringMatrix matrix, 
+        public static StringMatrix Transform(this StringMatrix matrix,
             Action<StringMatrix, StringMatrix> transformFunc)
         {
             transformFunc(matrix, matrix);
@@ -41,7 +41,7 @@ namespace SharpLearning.FeatureTransformations
         /// <param name="matrix"></param>
         /// <param name="transformFunc"></param>
         /// <returns></returns>
-        public static F64Matrix Transform(this F64Matrix matrix, 
+        public static F64Matrix Transform(this F64Matrix matrix,
             Action<F64Matrix, F64Matrix> transformFunc)
         {
             transformFunc(matrix, matrix);

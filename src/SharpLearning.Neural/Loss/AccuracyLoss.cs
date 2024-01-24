@@ -26,14 +26,14 @@ namespace SharpLearning.Neural.Loss
                 for (int col = 0; col < targets.ColumnCount; col++)
                 {
                     var predictionValue = predictions.At(row, col);
-                    if(predictionValue > max)
+                    if (predictionValue > max)
                     {
                         max = predictionValue;
                         maxIndex = col;
                     }
                 }
 
-                if(targets.At(row, maxIndex) == 1.0)
+                if (targets.At(row, maxIndex) == 1.0)
                 {
                     correctCount++;
                 }

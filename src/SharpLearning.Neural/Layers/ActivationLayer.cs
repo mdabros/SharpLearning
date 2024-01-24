@@ -110,7 +110,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize"></param>
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random)
         {
             Width = inputWidth;
@@ -147,7 +147,7 @@ namespace SharpLearning.Neural.Layers
             copy.Depth = this.Depth;
 
             var fanOut = Width * Height * Depth;
-            
+
             copy.OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOut);
             copy.ActivationDerivative = Matrix<float>.Build.Dense(batchSize, fanOut);
 

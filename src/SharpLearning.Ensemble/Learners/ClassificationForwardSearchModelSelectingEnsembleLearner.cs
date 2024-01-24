@@ -25,10 +25,10 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         public ClassificationForwardSearchModelSelectingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             int numberOfModelsToSelect)
-            : this(learners, numberOfModelsToSelect, 
-                new StratifiedCrossValidation<ProbabilityPrediction>(5, 42), 
+            : this(learners, numberOfModelsToSelect,
+                new StratifiedCrossValidation<ProbabilityPrediction>(5, 42),
                 new MeanProbabilityClassificationEnsembleStrategy(),
                 new LogLossClassificationProbabilityMetric())
         {
@@ -50,16 +50,16 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
         /// This will correspond to weighting the models. If false each model can only be selected once. Default is true</param>
         public ClassificationForwardSearchModelSelectingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             int numberOfModelsToSelect,
-            ICrossValidation<ProbabilityPrediction> crossValidation, 
-            IClassificationEnsembleStrategy ensembleStrategy, 
-            IMetric<double, ProbabilityPrediction> metric, 
-            int numberOfModelsFromStart = 1, 
+            ICrossValidation<ProbabilityPrediction> crossValidation,
+            IClassificationEnsembleStrategy ensembleStrategy,
+            IMetric<double, ProbabilityPrediction> metric,
+            int numberOfModelsFromStart = 1,
             bool selectWithReplacement = true)
-            : base(learners, crossValidation, ensembleStrategy, 
+            : base(learners, crossValidation, ensembleStrategy,
                   new ForwardSearchClassificationEnsembleSelection(
-                      metric, ensembleStrategy, numberOfModelsToSelect, 
+                      metric, ensembleStrategy, numberOfModelsToSelect,
                       numberOfModelsFromStart, selectWithReplacement))
         {
         }

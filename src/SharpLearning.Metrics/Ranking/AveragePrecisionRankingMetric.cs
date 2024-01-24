@@ -46,7 +46,7 @@ namespace SharpLearning.Metrics.Ranking
             for (int i = 0; i < length; i++)
             {
                 var prediction = predictions[i];
-                if(m_workTargets.Contains(prediction) &&
+                if (m_workTargets.Contains(prediction) &&
                     !Contains(predictions, i, prediction))
                 {
                     hits += 1.0;

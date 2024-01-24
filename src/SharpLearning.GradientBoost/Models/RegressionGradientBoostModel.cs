@@ -19,17 +19,17 @@ namespace SharpLearning.GradientBoost.Models
         /// 
         /// </summary>
         public readonly GBMTree[] Trees;
-        
+
         /// <summary>
         /// 
         /// </summary>
         public readonly double LearningRate;
-        
+
         /// <summary>
         /// 
         /// </summary>
         public readonly double InitialLoss;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -42,7 +42,7 @@ namespace SharpLearning.GradientBoost.Models
         /// <param name="learningRate"></param>
         /// <param name="initialLoss"></param>
         /// <param name="featureCount"></param>
-        public RegressionGradientBoostModel(GBMTree[] trees, double learningRate, 
+        public RegressionGradientBoostModel(GBMTree[] trees, double learningRate,
             double initialLoss, int featureCount)
         {
             Trees = trees ?? throw new ArgumentNullException(nameof(trees));

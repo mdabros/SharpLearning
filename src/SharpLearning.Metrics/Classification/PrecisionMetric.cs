@@ -49,19 +49,19 @@ namespace SharpLearning.Metrics.Classification
 
             for (int i = 0; i < targets.Length; i++)
             {
-                if (targets[i].Equals(m_positiveTarget) && 
+                if (targets[i].Equals(m_positiveTarget) &&
                     predictions[i].Equals(m_positiveTarget))
                 {
                     truePositives++;
                 }
-                else if (!targets[i].Equals(m_positiveTarget) && 
+                else if (!targets[i].Equals(m_positiveTarget) &&
                     predictions[i].Equals(m_positiveTarget))
                 {
                     falsePositves++;
                 }
             }
 
-            if(truePositives + falsePositves == 0)
+            if (truePositives + falsePositves == 0)
             {
                 return 0.0;
             }

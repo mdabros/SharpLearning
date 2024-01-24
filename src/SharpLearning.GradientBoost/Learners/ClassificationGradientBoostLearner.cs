@@ -18,7 +18,7 @@ namespace SharpLearning.GradientBoost.Learners
     /// The resulting models are ensembled together using addition. Implementation based on:
     /// http://gradientboostedmodels.googlecode.com/files/report.pdf
     /// </summary>
-    public class ClassificationGradientBoostLearner 
+    public class ClassificationGradientBoostLearner
         : IIndexedLearner<double>
         , IIndexedLearner<ProbabilityPrediction>
         , ILearner<double>
@@ -47,14 +47,14 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="loss">loss function used</param>
         /// <param name="runParallel">Use multi threading to speed up execution</param>
         public ClassificationGradientBoostLearner(
-            int iterations, 
-            double learningRate, 
+            int iterations,
+            double learningRate,
             int maximumTreeDepth,
-            int minimumSplitSize, 
-            double minimumInformationGain, 
-            double subSampleRatio, 
-            int featuresPrSplit, 
-            IGradientBoostLoss loss, 
+            int minimumSplitSize,
+            double minimumInformationGain,
+            double subSampleRatio,
+            int featuresPrSplit,
+            IGradientBoostLoss loss,
             bool runParallel)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -69,7 +69,7 @@ namespace SharpLearning.GradientBoost.Learners
             m_iterations = iterations;
             m_learningRate = learningRate;
             m_subSampleRatio = subSampleRatio;
-            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize, 
+            m_learner = new GBMDecisionTreeLearner(maximumTreeDepth, minimumSplitSize,
                 minimumInformationGain, featuresPrSplit, m_loss, runParallel);
         }
 
@@ -87,12 +87,12 @@ namespace SharpLearning.GradientBoost.Learners
         /// This reduces variance in the ensemble and can help counter overfitting</param>
         /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
         public ClassificationGradientBoostLearner(
-            int iterations = 100, 
-            double learningRate = 0.1, 
+            int iterations = 100,
+            double learningRate = 0.1,
             int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, 
-            double minimumInformationGain = 0.000001, 
-            double subSampleRatio = 1.0, 
+            int minimumSplitSize = 1,
+            double minimumInformationGain = 0.000001,
+            double subSampleRatio = 1.0,
             int featuresPrSplit = 0)
             : this(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
                 subSampleRatio, featuresPrSplit, new GradientBoostBinomialLoss(), true)
@@ -118,7 +118,7 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationGradientBoostModel Learn(F64Matrix observations, double[] targets, 
+        public ClassificationGradientBoostModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
@@ -139,7 +139,7 @@ namespace SharpLearning.GradientBoost.Learners
             double[][] residuals = null;
             GBMTree[][] trees = null;
 
-            if(uniqueTargets.Length == 2) // Binary case - only need to fit to one class and use (1.0 - probability)
+            if (uniqueTargets.Length == 2) // Binary case - only need to fit to one class and use (1.0 - probability)
             {
                 trees = new GBMTree[][] { new GBMTree[m_iterations] };
                 predictions = new double[][] { targets.Select(_ => initialLoss).ToArray() };
@@ -172,7 +172,7 @@ namespace SharpLearning.GradientBoost.Learners
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
                 {
-                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget], 
+                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget],
                         residuals[itarget], inSample);
 
                     var sampleSize = targets.Length;
@@ -181,12 +181,12 @@ namespace SharpLearning.GradientBoost.Learners
                         sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
                         var currentInSample = Sample(sampleSize, workIndices, targets.Length);
 
-                        trees[itarget][iteration] = m_learner.Learn(observations, oneVsAllTargets[itarget], 
+                        trees[itarget][iteration] = m_learner.Learn(observations, oneVsAllTargets[itarget],
                             residuals[itarget], predictions[itarget], orderedElements, currentInSample);
                     }
                     else
                     {
-                        trees[itarget][iteration] = m_learner.Learn(observations, oneVsAllTargets[itarget], 
+                        trees[itarget][iteration] = m_learner.Learn(observations, oneVsAllTargets[itarget],
                             residuals[itarget], predictions[itarget], orderedElements, inSample);
                     }
 
@@ -198,7 +198,7 @@ namespace SharpLearning.GradientBoost.Learners
                 }
             }
 
-            return new ClassificationGradientBoostModel(trees, uniqueTargets, m_learningRate, 
+            return new ClassificationGradientBoostModel(trees, uniqueTargets, m_learningRate,
                 initialLoss, observations.ColumnCount);
         }
 
@@ -218,16 +218,16 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="earlyStoppingRounds">This controls how often the validation error is checked to estimate the best number of iterations.</param>
         /// <returns>ClassificationGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
         public ClassificationGradientBoostModel LearnWithEarlyStopping(
-            F64Matrix trainingObservations, 
+            F64Matrix trainingObservations,
             double[] trainingTargets,
-            F64Matrix validationObservations, 
+            F64Matrix validationObservations,
             double[] validationTargets,
-            IMetric<double, double> metric, 
+            IMetric<double, double> metric,
             int earlyStoppingRounds)
         {
             if (earlyStoppingRounds >= m_iterations)
             {
-                throw new ArgumentException("Number of iterations " + m_iterations + 
+                throw new ArgumentException("Number of iterations " + m_iterations +
                     " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
             }
 
@@ -286,7 +286,7 @@ namespace SharpLearning.GradientBoost.Learners
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
                 {
-                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget], 
+                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget],
                         residuals[itarget], inSample);
 
                     var sampleSize = trainingTargets.Length;
@@ -295,12 +295,12 @@ namespace SharpLearning.GradientBoost.Learners
                         sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
                         var currentInSample = Sample(sampleSize, workIndices, trainingTargets.Length);
 
-                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget], 
+                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget],
                             residuals[itarget], predictions[itarget], orderedElements, currentInSample);
                     }
                     else
                     {
-                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget], 
+                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget],
                             residuals[itarget], predictions[itarget], orderedElements, inSample);
                     }
 
@@ -310,10 +310,10 @@ namespace SharpLearning.GradientBoost.Learners
                         predictions[itarget][i] += m_learningRate * predictWork[i];
                     }
                 }
-                
+
                 // When using early stopping, Check that the validation error is not increasing between earlyStoppingRounds
                 // If the validation error has increased, stop the learning and return the model with the best number of iterations (trees).
-                if(iteration % earlyStoppingRounds == 0)
+                if (iteration % earlyStoppingRounds == 0)
                 {
                     var model = new ClassificationGradientBoostModel(
                         trees.Select(t => t.Take(iteration).ToArray()).ToArray(),
@@ -333,7 +333,7 @@ namespace SharpLearning.GradientBoost.Learners
             }
 
             return new ClassificationGradientBoostModel(
-                trees.Select(t => t.Take(bestIterationCount).ToArray()).ToArray(), 
+                trees.Select(t => t.Take(bestIterationCount).ToArray()).ToArray(),
                 uniqueTargets, m_learningRate, initialLoss, trainingObservations.ColumnCount);
         }
 
@@ -353,16 +353,16 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="earlyStoppingRounds">This controls how often the validation error is checked to estimate the best number of iterations</param>
         /// <returns>ClassificationGradientBoostModel with early stopping. The number of iterations will equal the number of trees in the model</returns>
         public ClassificationGradientBoostModel LearnWithEarlyStopping(
-            F64Matrix trainingObservations, 
+            F64Matrix trainingObservations,
             double[] trainingTargets,
-            F64Matrix validationObservations, 
+            F64Matrix validationObservations,
             double[] validationTargets,
-            IMetric<double, ProbabilityPrediction> metric, 
+            IMetric<double, ProbabilityPrediction> metric,
             int earlyStoppingRounds)
         {
             if (earlyStoppingRounds >= m_iterations)
             {
-                throw new ArgumentException("Number of iterations " + m_iterations + 
+                throw new ArgumentException("Number of iterations " + m_iterations +
                     " is smaller than earlyStoppingRounds " + earlyStoppingRounds);
             }
 
@@ -417,7 +417,7 @@ namespace SharpLearning.GradientBoost.Learners
             {
                 for (int itarget = 0; itarget < trees.Length; itarget++)
                 {
-                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget], 
+                    m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget],
                         residuals[itarget], inSample);
 
                     var sampleSize = trainingTargets.Length;
@@ -426,12 +426,12 @@ namespace SharpLearning.GradientBoost.Learners
                         sampleSize = (int)Math.Round(m_subSampleRatio * workIndices.Length);
                         var currentInSample = Sample(sampleSize, workIndices, trainingTargets.Length);
 
-                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget], 
+                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget],
                             residuals[itarget], predictions[itarget], orderedElements, currentInSample);
                     }
                     else
                     {
-                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget], 
+                        trees[itarget][iteration] = m_learner.Learn(trainingObservations, oneVsAllTargets[itarget],
                             residuals[itarget], predictions[itarget], orderedElements, inSample);
                     }
 

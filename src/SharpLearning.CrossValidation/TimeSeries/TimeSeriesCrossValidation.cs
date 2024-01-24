@@ -34,28 +34,28 @@ namespace SharpLearning.CrossValidation.TimeSeries
         {
             if (initialTrainingSize <= 0)
             {
-                throw new ArgumentException($"{nameof(initialTrainingSize)} " + 
+                throw new ArgumentException($"{nameof(initialTrainingSize)} " +
                     $"much be larger than 0, was {initialTrainingSize}");
             }
 
             if (maxTrainingSetSize < 0)
             {
-                throw new ArgumentException($"{nameof(maxTrainingSetSize)} " + 
+                throw new ArgumentException($"{nameof(maxTrainingSetSize)} " +
                     $"much be larger than 0, was {maxTrainingSetSize}");
             }
 
             if ((maxTrainingSetSize != 0) && (initialTrainingSize > maxTrainingSetSize))
             {
-                throw new ArgumentException($"{nameof(initialTrainingSize)} = {initialTrainingSize} " + 
+                throw new ArgumentException($"{nameof(initialTrainingSize)} = {initialTrainingSize} " +
                     $"is larger than {nameof(maxTrainingSetSize)} = {maxTrainingSetSize}");
             }
 
             if (retrainInterval < 1)
             {
-                throw new ArgumentException($"{nameof(retrainInterval)} much be larger than 1, " + 
+                throw new ArgumentException($"{nameof(retrainInterval)} much be larger than 1, " +
                     $"was {retrainInterval}");
             }
-            
+
             m_initialTrainingSize = initialTrainingSize;
             m_maxTrainingSetSize = maxTrainingSetSize;
             m_retrainInterval = retrainInterval;
@@ -77,13 +77,13 @@ namespace SharpLearning.CrossValidation.TimeSeries
         {
             if (observations.RowCount != targets.Length)
             {
-                throw new ArgumentException($"observation row count {observations.RowCount} " + 
+                throw new ArgumentException($"observation row count {observations.RowCount} " +
                     $"must match target length {targets.Length}");
             }
 
             if (m_initialTrainingSize >= observations.RowCount)
             {
-                throw new ArgumentException($"observation row count {observations.RowCount} " + 
+                throw new ArgumentException($"observation row count {observations.RowCount} " +
                     $"is smaller than initial training size {m_initialTrainingSize}");
             }
 
@@ -99,7 +99,7 @@ namespace SharpLearning.CrossValidation.TimeSeries
             for (int i = 0; i < predictions.Length; i++)
             {
                 // Only train a new model at each retrain interval.
-                if((m_retrainInterval == 1 || i % m_retrainInterval == 0) && i != 0)
+                if ((m_retrainInterval == 1 || i % m_retrainInterval == 0) && i != 0)
                 {
                     model = learner.Learn(observations, targets, trainingIndices);
                 }
@@ -109,12 +109,12 @@ namespace SharpLearning.CrossValidation.TimeSeries
                 predictions[i] = model.Predict(observation);
 
                 lastTrainingIndex++;
-                
+
                 // determine start index and length of the training period, if maxTrainingSetSize is specified. 
-                var startIndex = m_maxTrainingSetSize != 0 ? 
+                var startIndex = m_maxTrainingSetSize != 0 ?
                     Math.Max(0, (lastTrainingIndex + 1) - m_maxTrainingSetSize) : 0;
 
-                var length = m_maxTrainingSetSize != 0 ? 
+                var length = m_maxTrainingSetSize != 0 ?
                     Math.Min(m_maxTrainingSetSize, lastTrainingIndex) : lastTrainingIndex;
 
                 trainingIndices = Enumerable.Range(startIndex, length).ToArray();

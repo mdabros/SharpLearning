@@ -13,7 +13,7 @@ namespace SharpLearning.InputOutput.Csv
         /// Values
         /// </summary>
         public readonly string[] Values;
-        
+
         /// <summary>
         /// Column name to index
         /// </summary>

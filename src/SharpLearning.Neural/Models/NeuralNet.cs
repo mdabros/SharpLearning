@@ -47,12 +47,12 @@ namespace SharpLearning.Neural
         public void Add(ILayer layer)
         {
             var unitsOfPreviousLayer = 0;
-            if(Layers.Count > 0)
+            if (Layers.Count > 0)
             {
                 unitsOfPreviousLayer = Layers[Layers.Count - 1].Width;
             }
 
-            if(layer is IOutputLayer)
+            if (layer is IOutputLayer)
             {
                 var denseLayer = new DenseLayer(layer.Depth, Activation.Undefined);
                 Layers.Add(denseLayer);
@@ -60,15 +60,15 @@ namespace SharpLearning.Neural
 
             Layers.Add(layer);
 
-            if(layer is IBatchNormalizable) // consider adding separate interface for batch normalization
+            if (layer is IBatchNormalizable) // consider adding separate interface for batch normalization
             {
-                if(((IBatchNormalizable)layer).BatchNormalization)
+                if (((IBatchNormalizable)layer).BatchNormalization)
                 {
                     Layers.Add(new BatchNormalizationLayer());
                 }
             }
 
-            if(layer.ActivationFunc != Activation.Undefined)
+            if (layer.ActivationFunc != Activation.Undefined)
             {
                 Layers.Add(new ActivationLayer(layer.ActivationFunc));
             }
@@ -82,7 +82,7 @@ namespace SharpLearning.Neural
         {
             for (int i = Layers.Count; i-- > 0;)
             {
-                delta = Layers[i].Backward(delta);                
+                delta = Layers[i].Backward(delta);
             }
         }
 
@@ -132,20 +132,20 @@ namespace SharpLearning.Neural
         {
             if (!(Layers.First() is InputLayer))
             {
-                throw new ArgumentException("First layer must be InputLayer. Was: " + 
+                throw new ArgumentException("First layer must be InputLayer. Was: " +
                     Layers.First().GetType().Name);
             }
 
-            if(!(Layers.Last() is IOutputLayer))
+            if (!(Layers.Last() is IOutputLayer))
             {
-                throw new ArgumentException("Last layer must be an output layer type. Was: " + 
+                throw new ArgumentException("Last layer must be an output layer type. Was: " +
                     Layers.Last().GetType().Name);
             }
 
             for (int i = 1; i < Layers.Count; i++)
             {
                 var previousLayer = Layers[i - 1];
-                Layers[i].Initialize(previousLayer.Width, previousLayer.Height, 
+                Layers[i].Initialize(previousLayer.Width, previousLayer.Height,
                     previousLayer.Depth, batchSize, m_initialization, random);
             }
         }
@@ -221,7 +221,7 @@ namespace SharpLearning.Neural
             var dimensions = string.Empty;
             foreach (var layer in Layers)
             {
-                dimensions += $"{layer.GetType().Name}: {layer.Width}x{layer.Height}x{layer.Depth}" 
+                dimensions += $"{layer.GetType().Name}: {layer.Width}x{layer.Height}x{layer.Depth}"
                     + Environment.NewLine;
             }
 

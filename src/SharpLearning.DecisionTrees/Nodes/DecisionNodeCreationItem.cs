@@ -40,7 +40,7 @@ namespace SharpLearning.DecisionTrees.Nodes
         /// <param name="interval"></param>
         /// <param name="impurity"></param>
         /// <param name="nodeDepth"></param>
-        public DecisionNodeCreationItem(int parentIndex, NodePositionType nodeType, Interval1D interval, 
+        public DecisionNodeCreationItem(int parentIndex, NodePositionType nodeType, Interval1D interval,
             double impurity, int nodeDepth)
         {
             ParentIndex = parentIndex;

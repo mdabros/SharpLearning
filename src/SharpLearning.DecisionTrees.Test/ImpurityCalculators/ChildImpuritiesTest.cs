@@ -10,7 +10,7 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
         public void ChildImpurities_Equal()
         {
             var sut = new ChildImpurities(0.23, 0.55);
-            
+
             var equal = new ChildImpurities(0.23, 0.55);
             var notEqual1 = new ChildImpurities(0.19, 0.55);
             var notEqual2 = new ChildImpurities(0.23, 0.213);

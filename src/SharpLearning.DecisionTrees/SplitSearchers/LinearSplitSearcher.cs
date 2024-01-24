@@ -54,7 +54,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
         /// <param name="parentInterval"></param>
         /// <param name="parentImpurity"></param>
         /// <returns></returns>
-        public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets, 
+        public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets,
             Interval1D parentInterval, double parentImpurity)
         {
 
@@ -63,7 +63,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
             var bestImpurityImprovement = 0.0;
             var bestImpurityLeft = 0.0;
             var bestImpurityRight = 0.0;
-            
+
             int prevSplit = parentInterval.FromInclusive;
             var prevValue = feature[prevSplit];
             var prevTarget = targets[prevSplit];
@@ -83,7 +83,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers
                     if (Math.Min(leftSize, rightSize) >= m_minimumSplitSize)
                     {
                         impurityCalculator.UpdateIndex(currentSplit);
-                        
+
                         if (impurityCalculator.WeightedLeft < m_minimumLeafWeight ||
                             impurityCalculator.WeightedRight < m_minimumLeafWeight)
                         {

@@ -10,12 +10,12 @@
         /// Best split found
         /// </summary>
         public GBMSplit BestSplit;
-        
+
         /// <summary>
         /// Left values corresponding to best split
         /// </summary>
         public GBMSplitInfo Left;
-        
+
         /// <summary>
         /// Right values corresponding to best split
         /// </summary>

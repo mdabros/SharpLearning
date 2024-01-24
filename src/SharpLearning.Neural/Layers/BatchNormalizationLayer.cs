@@ -239,7 +239,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize"></param>
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random)
         {
             Width = inputWidth;

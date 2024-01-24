@@ -54,14 +54,14 @@ namespace SharpLearning.Neural.Optimizers
         /// <param name="beta1">Exponential decay rate for estimates of first moment vector, should be in range 0 to 1 (Default is 0.9)</param>
         /// <param name="beta2">Exponential decay rate for estimates of second moment vector, should be in range 0 to 1 (Default is 0.999)</param>
         public NeuralNetOptimizer(
-            double learningRate, 
-            int batchSize, 
-            double l1decay = 0, 
+            double learningRate,
+            int batchSize,
+            double l1decay = 0,
             double l2decay = 0,
-            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, 
-            double momentum = 0.9, 
-            double rho = 0.95, 
-            double beta1 = 0.9, 
+            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp,
+            double momentum = 0.9,
+            double rho = 0.95,
+            double beta1 = 0.9,
             double beta2 = 0.999)
         {
             if (learningRate <= 0) { throw new ArgumentNullException("learning rate must be larger than 0. Was: " + learningRate); }
@@ -95,7 +95,7 @@ namespace SharpLearning.Neural.Optimizers
             m_iterationCounter++;
 
             // initialize accumulators. Will only be done once on first iteration and if optimizer methods is not sgd
-            var useAccumulators = m_gsumWeights.Count == 0 && 
+            var useAccumulators = m_gsumWeights.Count == 0 &&
                 (m_optimizerMethod != OptimizerMethod.Sgd || m_momentum > 0.0);
 
             if (useAccumulators)
@@ -124,8 +124,8 @@ namespace SharpLearning.Neural.Optimizers
             for (var i = 0; i < parametersAndGradients.Count; i++)
             {
                 m_gsumWeights.Add(new double[parametersAndGradients[i].Parameters.Length]);
-                if (m_optimizerMethod == OptimizerMethod.Adam || 
-                    m_optimizerMethod == OptimizerMethod.Adadelta || 
+                if (m_optimizerMethod == OptimizerMethod.Adam ||
+                    m_optimizerMethod == OptimizerMethod.Adadelta ||
                     m_optimizerMethod == OptimizerMethod.AdaMax ||
                     m_optimizerMethod == OptimizerMethod.Nadam)
                 {
@@ -192,8 +192,8 @@ namespace SharpLearning.Neural.Optimizers
                             if (m_momentum > 0.0) // sgd + momentum
                             {
                                 var dx = m_momentum * gsumi[j] - m_learningRate * gij;
-                                gsumi[j] = dx; 
-                                parameters[j] += (float)dx; 
+                                gsumi[j] = dx;
+                                parameters[j] += (float)dx;
                             }
                             else // standard sgd
                             {
@@ -203,7 +203,7 @@ namespace SharpLearning.Neural.Optimizers
                         break;
                     case OptimizerMethod.Adam:
                         {
-                            gsumi[j] = m_beta1 * gsumi[j] + (1.0 - m_beta1) * gij; 
+                            gsumi[j] = m_beta1 * gsumi[j] + (1.0 - m_beta1) * gij;
                             xsumi[j] = m_beta2 * xsumi[j] + (1.0 - m_beta2) * gij * gij;
 
                             var dx = -m_learningRate * gsumi[j] / (Math.Sqrt(xsumi[j]) + m_eps);
@@ -212,8 +212,8 @@ namespace SharpLearning.Neural.Optimizers
                         break;
                     case OptimizerMethod.AdaMax:
                         {
-                            gsumi[j] = m_beta1 * gsumi[j] + (1.0 - m_beta1) * gij; 
-                            xsumi[j] = Math.Max(m_beta2 * xsumi[j], Math.Abs(gij)); 
+                            gsumi[j] = m_beta1 * gsumi[j] + (1.0 - m_beta1) * gij;
+                            xsumi[j] = Math.Max(m_beta2 * xsumi[j], Math.Abs(gij));
 
                             var dx = -m_learningRate * gsumi[j] / (xsumi[j] + m_eps);
                             parameters[j] += (float)dx;
@@ -250,9 +250,9 @@ namespace SharpLearning.Neural.Optimizers
                     case OptimizerMethod.Adadelta:
                         {
                             gsumi[j] = m_rho * gsumi[j] + (1 - m_rho) * gij * gij;
-                            
+
                             // learning rate multiplication left out since recommended default is 1.0. 
-                            var dx = - gij * Math.Sqrt(xsumi[j] + m_eps) / Math.Sqrt(gsumi[j] + m_eps); 
+                            var dx = -gij * Math.Sqrt(xsumi[j] + m_eps) / Math.Sqrt(gsumi[j] + m_eps);
                             xsumi[j] = m_rho * xsumi[j] + (1 - m_rho) * dx * dx;
 
                             parameters[j] += (float)dx;

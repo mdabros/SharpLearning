@@ -10,11 +10,11 @@ namespace SharpLearning.Neural.Test
 {
     public static class GradientCheckTools
     {
-        public static void CheckLayer(ILayer layer, int fanInWidth, int fanInHeight, int fanInDepth, 
+        public static void CheckLayer(ILayer layer, int fanInWidth, int fanInHeight, int fanInDepth,
             int batchSize, float epsilon, Random random)
         {
             var accuracyCondition = 1e-2;
-            layer.Initialize(fanInWidth, fanInHeight, fanInDepth, batchSize, 
+            layer.Initialize(fanInWidth, fanInHeight, fanInDepth, batchSize,
                 Initialization.GlorotUniform, random);
 
             var fanIn = fanInWidth * fanInHeight * fanInDepth;

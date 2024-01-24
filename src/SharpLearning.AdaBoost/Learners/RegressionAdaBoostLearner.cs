@@ -35,7 +35,7 @@ namespace SharpLearning.AdaBoost.Learners
         List<double> m_modelErrors = new List<double>();
         List<double> m_modelWeights = new List<double>();
         List<RegressionDecisionTreeModel> m_models = new List<RegressionDecisionTreeModel>();
-        
+
         double[] m_workErrors = new double[0];
         double[] m_sampleWeights = new double[0];
         double[] m_indexedTargets = new double[0];
@@ -56,12 +56,12 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for the random sampling</param>
-        public RegressionAdaBoostLearner(int iterations = 50, 
-            double learningRate = 1, 
-            int maximumTreeDepth = 0, 
-            AdaBoostRegressionLoss loss = AdaBoostRegressionLoss.Linear, 
-            int minimumSplitSize = 1, 
-            double minimumInformationGain = 0.000001, 
+        public RegressionAdaBoostLearner(int iterations = 50,
+            double learningRate = 1,
+            int maximumTreeDepth = 0,
+            AdaBoostRegressionLoss loss = AdaBoostRegressionLoss.Linear,
+            int minimumSplitSize = 1,
+            double minimumInformationGain = 0.000001,
             int seed = 42)
         {
             if (iterations < 1) { throw new ArgumentException("Iterations must be at least 1"); }
@@ -69,7 +69,7 @@ namespace SharpLearning.AdaBoost.Learners
             if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
             if (maximumTreeDepth < 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
-            
+
             m_iterations = iterations;
             m_learningRate = learningRate;
 
@@ -100,7 +100,7 @@ namespace SharpLearning.AdaBoost.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets, 
+        public RegressionAdaBoostModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
@@ -111,7 +111,7 @@ namespace SharpLearning.AdaBoost.Learners
                 m_maximumTreeDepth = 3;
             }
 
-            m_modelLearner = new RegressionDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize, 
+            m_modelLearner = new RegressionDecisionTreeLearner(m_maximumTreeDepth, m_minimumSplitSize,
                 observations.ColumnCount, m_minimumInformationGain, 42);
 
             m_modelErrors.Clear();
@@ -194,7 +194,7 @@ namespace SharpLearning.AdaBoost.Learners
 
             var model = m_modelLearner.Learn(observations, targets,
                 m_sampleIndices); // weighted sampling is used instead of weights in training
-                
+
 
             var predictions = model.Predict(observations, indices);
 
@@ -211,7 +211,7 @@ namespace SharpLearning.AdaBoost.Learners
 
                 var error = m_workErrors[i];
 
-                if(maxError != 0.0)
+                if (maxError != 0.0)
                 {
                     error = error / maxError;
                 }
@@ -229,7 +229,7 @@ namespace SharpLearning.AdaBoost.Learners
                     default:
                         throw new ArgumentException("Unsupported loss type");
                 }
-                                
+
                 m_workErrors[i] = error;
             }
 
@@ -274,7 +274,7 @@ namespace SharpLearning.AdaBoost.Learners
         {
             var rows = indices.Length;
             var predictions = new double[rows];
-            
+
             for (int i = 0; i < rows; i++)
             {
                 var index = indices[i];

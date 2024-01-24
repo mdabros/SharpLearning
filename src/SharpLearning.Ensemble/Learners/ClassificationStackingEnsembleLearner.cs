@@ -14,7 +14,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Stacking Classification Ensemble Learner.
     /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
-    public sealed class ClassificationStackingEnsembleLearner 
+    public sealed class ClassificationStackingEnsembleLearner
         : ILearner<ProbabilityPrediction>
         , IIndexedLearner<ProbabilityPrediction>
         , ILearner<double>
@@ -36,11 +36,11 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
         /// False; the meta learner only receives the output of the ensemble models as features. Default is true</param>
         public ClassificationStackingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
-            ILearner<ProbabilityPrediction> metaLearner, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
+            ILearner<ProbabilityPrediction> metaLearner,
             bool includeOriginalFeaturesForMetaLearner = true)
-            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets), 
-                new RandomCrossValidation<ProbabilityPrediction>(5, 42), 
+            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets),
+                new RandomCrossValidation<ProbabilityPrediction>(5, 42),
                 includeOriginalFeaturesForMetaLearner)
         {
         }
@@ -57,11 +57,11 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
         /// False; the meta learner only receives the output of the ensemble models as features. Default is true</param>
         public ClassificationStackingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             ILearner<ProbabilityPrediction> metaLearner,
-            ICrossValidation<ProbabilityPrediction> crossValidation, 
+            ICrossValidation<ProbabilityPrediction> crossValidation,
             bool includeOriginalFeaturesForMetaLearner = true)
-            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets), 
+            : this(learners, (obs, targets) => metaLearner.Learn(obs, targets),
                 crossValidation, includeOriginalFeaturesForMetaLearner)
         {
         }
@@ -77,9 +77,9 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
         /// False; the meta learner only receives the output of the ensemble models as features</param>
         public ClassificationStackingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             Func<F64Matrix, double[], IPredictorModel<ProbabilityPrediction>> metaLearner,
-            ICrossValidation<ProbabilityPrediction> crossValidation, 
+            ICrossValidation<ProbabilityPrediction> crossValidation,
             bool includeOriginalFeaturesForMetaLearner = true)
         {
             m_learners = learners ?? throw new ArgumentException(nameof(learners));
@@ -107,7 +107,7 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationStackingEnsembleModel Learn(F64Matrix observations, double[] targets, 
+        public ClassificationStackingEnsembleModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
@@ -121,7 +121,7 @@ namespace SharpLearning.Ensemble.Learners
                 .ToArray();
 
             var numberOfClasses = targets.Distinct().Count();
-            return new ClassificationStackingEnsembleModel(ensembleModels, metaModel, 
+            return new ClassificationStackingEnsembleModel(ensembleModels, metaModel,
                 m_includeOriginalFeaturesForMetaLearner, numberOfClasses);
         }
 
@@ -144,7 +144,7 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public F64Matrix LearnMetaFeatures(F64Matrix observations, double[] targets, 
+        public F64Matrix LearnMetaFeatures(F64Matrix observations, double[] targets,
             int[] indices)
         {
             var numberOfClasses = targets.Distinct().Count();
@@ -164,7 +164,7 @@ namespace SharpLearning.Ensemble.Learners
             {
                 Trace.WriteLine("Training model: " + (i + 1));
                 var learner = m_learners[i];
-                m_crossValidation.CrossValidate(learner, observations, targets, 
+                m_crossValidation.CrossValidate(learner, observations, targets,
                     indices, modelPredictions);
 
                 for (int j = 0; j < modelPredictions.Length; j++)
@@ -200,8 +200,8 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <returns></returns>
         public ClassificationStackingEnsembleModel LearnStackingModel(
-            F64Matrix observations, 
-            F64Matrix metaObservations, 
+            F64Matrix observations,
+            F64Matrix metaObservations,
             double[] targets)
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
@@ -209,7 +209,7 @@ namespace SharpLearning.Ensemble.Learners
             var ensembleModels = m_learners.Select(learner => learner.Learn(observations, targets, indices)).ToArray();
 
             var numberOfClasses = targets.Distinct().Count();
-            return new ClassificationStackingEnsembleModel(ensembleModels, metaModel, 
+            return new ClassificationStackingEnsembleModel(ensembleModels, metaModel,
                 m_includeOriginalFeaturesForMetaLearner, numberOfClasses);
         }
 

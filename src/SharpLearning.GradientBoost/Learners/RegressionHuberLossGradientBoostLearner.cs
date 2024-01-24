@@ -29,14 +29,14 @@ namespace SharpLearning.GradientBoost.Learners
         /// <param name="huberQuantile">The quantile used for deciding when to switch between square and absolute loss</param>
         /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
         public RegressionHuberLossGradientBoostLearner(
-            int iterations = 100, 
-            double learningRate = 0.1, 
+            int iterations = 100,
+            double learningRate = 0.1,
             int maximumTreeDepth = 3,
-            int minimumSplitSize = 1, 
-            double minimumInformationGain = 0.000001, 
-            double subSampleRatio = 1.0, 
-            int featuresPrSplit = 0, 
-            double huberQuantile = 0.9, 
+            int minimumSplitSize = 1,
+            double minimumInformationGain = 0.000001,
+            double subSampleRatio = 1.0,
+            int featuresPrSplit = 0,
+            double huberQuantile = 0.9,
             bool runParallel = true)
             : base(iterations, learningRate, maximumTreeDepth, minimumSplitSize, minimumInformationGain,
                 subSampleRatio, featuresPrSplit, new GradientBoostHuberLoss(huberQuantile), runParallel)

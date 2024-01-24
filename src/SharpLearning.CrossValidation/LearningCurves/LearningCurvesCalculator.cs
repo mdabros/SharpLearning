@@ -49,7 +49,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
             if (samplePercentages == null) { throw new ArgumentNullException("samplePercentages"); }
             if (samplePercentages.Length < 1) { throw new ArgumentException("SamplePercentages length must be at least 1"); }
             if (numberOfShufflesPrSample < 1) { throw new ArgumentNullException("numberOfShufflesPrSample must be at least 1"); }
-            
+
             m_samplePercentages = samplePercentages;
             m_numberOfShufflesPrSample = numberOfShufflesPrSample;
             m_random = new Random(42);
@@ -67,7 +67,7 @@ namespace SharpLearning.CrossValidation.LearningCurves
             F64Matrix observations, double[] targets)
         {
             var trainingValidationIndices = m_trainingValidationIndexSplitter.Split(targets);
-            
+
             return Calculate(learnerFactory, observations, targets,
                 trainingValidationIndices.TrainingIndices,
                 trainingValidationIndices.TestIndices);
@@ -94,15 +94,15 @@ namespace SharpLearning.CrossValidation.LearningCurves
             foreach (var samplePercentage in m_samplePercentages)
             {
                 if (samplePercentage <= 0.0 || samplePercentage > 1.0)
-                { 
-                    throw new ArgumentException("Sample percentage must be larger than 0.0 and smaller than or equal to 1.0"); 
+                {
+                    throw new ArgumentException("Sample percentage must be larger than 0.0 and smaller than or equal to 1.0");
                 }
 
                 var sampleSize = (int)Math.Round(samplePercentage * (double)trainingIndices.Length);
                 if (sampleSize <= 0)
-                { 
-                    throw new ArgumentException("Sample percentage " + samplePercentage + 
-                        " too small for training set size " +trainingIndices.Length); 
+                {
+                    throw new ArgumentException("Sample percentage " + samplePercentage +
+                        " too small for training set size " + trainingIndices.Length);
                 }
 
                 var trainError = 0.0;
@@ -134,9 +134,9 @@ namespace SharpLearning.CrossValidation.LearningCurves
 
                 trainError = trainError / m_numberOfShufflesPrSample;
                 validationError = validationError / m_numberOfShufflesPrSample;
-                
+
                 learningCurves.Add(new LearningCurvePoint(sampleSize,
-                    trainError , validationError));
+                    trainError, validationError));
             }
 
             return learningCurves;

@@ -20,7 +20,7 @@ namespace SharpLearning.Optimization.Transforms
         {
             if (min <= 0 || max <= 0)
             {
-                throw new ArgumentException("logarithmic scale requires min: " + 
+                throw new ArgumentException("logarithmic scale requires min: " +
                     $"{min} and max: {max} to be larger than zero");
             }
             var a = Math.Log10(min);

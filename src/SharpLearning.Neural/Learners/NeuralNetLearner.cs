@@ -51,17 +51,17 @@ namespace SharpLearning.Neural
         /// <param name="beta1">Exponential decay rate for estimates of first moment vector, should be in range 0 to 1 (Default is 0.9)</param>
         /// <param name="beta2">Exponential decay rate for estimates of second moment vector, should be in range 0 to 1 (Default is 0.999)</param>
         public NeuralNetLearner(
-            NeuralNet net, ITargetEncoder targetEncoder, 
-            ILoss loss, 
-            double learningRate = 0.001, 
-            int iterations = 100, 
-            int batchSize = 128, 
-            double l1decay = 0, 
+            NeuralNet net, ITargetEncoder targetEncoder,
+            ILoss loss,
+            double learningRate = 0.001,
+            int iterations = 100,
+            int batchSize = 128,
+            double l1decay = 0,
             double l2decay = 0,
-            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp, 
-            double momentum = 0.9, 
-            double rho = 0.95, 
-            double beta1 = 0.9, 
+            OptimizerMethod optimizerMethod = OptimizerMethod.RMSProp,
+            double momentum = 0.9,
+            double rho = 0.95,
+            double beta1 = 0.9,
             double beta2 = 0.999)
         {
             m_net = net ?? throw new ArgumentNullException(nameof(net));
@@ -82,8 +82,8 @@ namespace SharpLearning.Neural
             m_momentum = momentum;
             m_batchSize = batchSize;
             m_random = new Random(232);
-            
-            m_optimizer = new NeuralNetOptimizer(learningRate, batchSize, 
+
+            m_optimizer = new NeuralNetOptimizer(learningRate, batchSize,
                 l1decay, l2decay, optimizerMethod, momentum, rho, beta1, beta2);
 
             SetupLinerAlgebraProvider();
@@ -109,7 +109,7 @@ namespace SharpLearning.Neural
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public NeuralNet Learn(F64Matrix observations, double[] targets, 
+        public NeuralNet Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             return Learn(observations, targets, indices,
@@ -131,7 +131,7 @@ namespace SharpLearning.Neural
         {
             var indices = Enumerable.Range(0, targets.Length).ToArray();
             return Learn(observations, targets, indices,
-                validationObservations, validationTargets); 
+                validationObservations, validationTargets);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace SharpLearning.Neural
             }
 
             var currentLoss = 0.0;
-            
+
             // initialize net
             m_net.Initialize(m_batchSize, m_random);
 
@@ -248,7 +248,7 @@ namespace SharpLearning.Neural
 
                 currentLoss = accumulatedLoss / (double)indices.Length;
 
-                if(earlyStopping)
+                if (earlyStopping)
                 {
                     var candidate = m_net.CopyNetForPredictionModel();
                     candidate.Forward(floatValidationObservations, floatValidationPredictions);
@@ -259,7 +259,7 @@ namespace SharpLearning.Neural
                     Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Validation: {2:0.00000} - Time (ms): {3}",
                         (iteration + 1), currentLoss, validationLoss, timer.ElapsedMilliseconds));
 
-                    if(validationLoss < bestLoss)
+                    if (validationLoss < bestLoss)
                     {
                         bestLoss = validationLoss;
                         bestNeuralNet = candidate;
@@ -280,7 +280,7 @@ namespace SharpLearning.Neural
                 }
             }
 
-            if(earlyStopping)
+            if (earlyStopping)
             {
                 return bestNeuralNet;
             }

@@ -146,7 +146,7 @@ namespace SharpLearning.Optimization.Test
         [ExpectedException(typeof(ArgumentException))]
         public void SmacOptimizer_ArgumentCheck_Iterations()
         {
-            var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 
+            var sut = new SmacOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
                 0);
         }
 

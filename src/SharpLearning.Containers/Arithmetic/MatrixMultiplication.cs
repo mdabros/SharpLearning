@@ -19,13 +19,13 @@ namespace SharpLearning.Containers.Arithmetic
         {
             var rows = a.RowCount;
             var cols = a.ColumnCount;
-            
+
             var data = a.Data();
             var output = new double[rows];
 
-            if (cols != v.Length) 
+            if (cols != v.Length)
             {
-                throw new ArgumentException("matrix cols: " + cols + 
+                throw new ArgumentException("matrix cols: " + cols +
                     " differs from vector length: " + v.Length);
             }
 
@@ -83,7 +83,7 @@ namespace SharpLearning.Containers.Arithmetic
                 vs[i] = v[i] * s;
             }
             return vs;
-        }        
+        }
 
         /// <summary>
         /// Multiply vector v with scalar a
@@ -95,8 +95,8 @@ namespace SharpLearning.Containers.Arithmetic
         {
             return MultiplyScalarF64(v, s);
         }
-        
-        
+
+
         /// <summary>
         /// Multiply vector v with matrix a
         /// </summary>
@@ -169,8 +169,10 @@ namespace SharpLearning.Containers.Arithmetic
 
 
             if (output.RowCount != aRows)
-            { throw new ArgumentException("output matrix rows: " + output.RowCount 
-                + " differs from matrix a rows: " + aRows); }
+            {
+                throw new ArgumentException("output matrix rows: " + output.RowCount
+                + " differs from matrix a rows: " + aRows);
+            }
 
             if (output.ColumnCount != bCols)
             {
@@ -190,7 +192,7 @@ namespace SharpLearning.Containers.Arithmetic
             });
         }
 
-        
+
         /// <summary>
         /// Multiply matrix a with matrix b
         /// </summary>

@@ -16,7 +16,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="predictions"></param>
         /// <returns></returns>
         new double Error(T[] targets, T[] predictions);
-        
+
         /// <summary>
         /// Gives a string representation of the classification matrix
         /// </summary>

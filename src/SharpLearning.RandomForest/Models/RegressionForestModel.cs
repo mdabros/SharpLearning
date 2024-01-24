@@ -43,7 +43,7 @@ namespace SharpLearning.RandomForest.Models
         {
             var prediction = Trees.Select(m => m.Predict(observation))
                 .Average();
-            
+
             return prediction;
         }
 

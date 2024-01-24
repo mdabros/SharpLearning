@@ -136,10 +136,10 @@ namespace SharpLearning.Containers.Test.Matrices
 
             var actual = converter(new double[][] { new double[] { 0, 1 }, new double[] { 2, 3 } });
 
-           Assert.AreEqual(0, actual.At(0,0));
-           Assert.AreEqual(1, actual.At(0,1));
-           Assert.AreEqual(2, actual.At(1,0));
-           Assert.AreEqual(3, actual.At(1,1));
+            Assert.AreEqual(0, actual.At(0, 0));
+            Assert.AreEqual(1, actual.At(0, 1));
+            Assert.AreEqual(2, actual.At(1, 0));
+            Assert.AreEqual(3, actual.At(1, 1));
         }
 
         double[] GetExpectedColumn()

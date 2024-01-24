@@ -123,7 +123,7 @@ namespace SharpLearning.Neural.Test.Layers
             var delta = Matrix<float>.Build.Dense(batchSize, neuronCount, 1.0f);
             var expected = Matrix<float>.Build.Dense(batchSize, fanIn);
             sut.Backward(delta).CopyTo(expected);
-            
+
             for (int i = 0; i < 20; i++)
             {
                 var actual = sut.Backward(delta);

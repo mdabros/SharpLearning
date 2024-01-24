@@ -77,7 +77,7 @@ namespace SharpLearning.Containers.Views
         /// <returns></returns>
         public bool Equals(Interval1D other)
         {
-            return (this.FromInclusive == other.FromInclusive) && 
+            return (this.FromInclusive == other.FromInclusive) &&
                    (this.ToExclusive == other.ToExclusive) &&
                    (this.Length == other.Length);
         }

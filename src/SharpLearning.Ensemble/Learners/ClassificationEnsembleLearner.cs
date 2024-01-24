@@ -13,7 +13,7 @@ namespace SharpLearning.Ensemble.Learners
     /// Classification ensemble learner.
     /// http://mlwave.com/kaggle-ensembling-guide/
     /// </summary>
-    public sealed class ClassificationEnsembleLearner 
+    public sealed class ClassificationEnsembleLearner
         : ILearner<ProbabilityPrediction>
         , IIndexedLearner<ProbabilityPrediction>
         , ILearner<double>
@@ -33,8 +33,8 @@ namespace SharpLearning.Ensemble.Learners
         /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
         /// <param name="seed">Seed for the bagging when used</param>
         public ClassificationEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
-            double subSampleRatio = 1.0, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
+            double subSampleRatio = 1.0,
             int seed = 24)
             : this(learners.Select(l => new Func<F64Matrix, double[], int[], IPredictorModel<ProbabilityPrediction>>((o, t, i) => l.Learn(o, t, i))).ToArray(),
                 () => new MeanProbabilityClassificationEnsembleStrategy(), subSampleRatio, seed)
@@ -50,11 +50,11 @@ namespace SharpLearning.Ensemble.Learners
         /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
         /// <param name="seed">Seed for the bagging when used</param>
         public ClassificationEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             IClassificationEnsembleStrategy ensembleStrategy,
-            double subSampleRatio = 1.0, 
+            double subSampleRatio = 1.0,
             int seed = 24)
-            : this(learners.Select(l => new Func<F64Matrix, double[], int[], IPredictorModel<ProbabilityPrediction>>((o, t, i) => l.Learn(o, t, i))).ToArray(), 
+            : this(learners.Select(l => new Func<F64Matrix, double[], int[], IPredictorModel<ProbabilityPrediction>>((o, t, i) => l.Learn(o, t, i))).ToArray(),
                 () => ensembleStrategy, subSampleRatio, seed)
         {
         }
@@ -68,9 +68,9 @@ namespace SharpLearning.Ensemble.Learners
         /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
         /// <param name="seed">Seed for the bagging when used</param>
         public ClassificationEnsembleLearner(
-            Func<F64Matrix, double[], int[], IPredictorModel<ProbabilityPrediction>>[] learners, 
+            Func<F64Matrix, double[], int[], IPredictorModel<ProbabilityPrediction>>[] learners,
             Func<IClassificationEnsembleStrategy> ensembleStrategy,
-            double subSampleRatio = 1.0, 
+            double subSampleRatio = 1.0,
             int seed = 24)
         {
             m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
@@ -101,13 +101,13 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public ClassificationEnsembleModel Learn(F64Matrix observations, double[] targets, 
+        public ClassificationEnsembleModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             var ensembleModels = new IPredictorModel<ProbabilityPrediction>[m_learners.Length];
             var sampleSize = (int)Math.Round(m_subSampleRatio * indices.Length);
 
-            if(sampleSize < 1) { throw new ArgumentException("subSampleRatio two small"); }
+            if (sampleSize < 1) { throw new ArgumentException("subSampleRatio two small"); }
 
             var inSample = new int[sampleSize];
 

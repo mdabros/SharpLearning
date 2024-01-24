@@ -76,7 +76,7 @@ namespace SharpLearning.Neural.Test
         {
             var matrix = Matrix<float>.Build.Dense(3, 3, new float[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
             var actual = Vector<float>.Build.Dense(3);
-            
+
             matrix.ColumnWiseMean(actual);
 
             Trace.WriteLine(string.Join(", ", actual));
@@ -146,7 +146,7 @@ namespace SharpLearning.Neural.Test
 
             var data = matrix.Data();
             data[changeIndex] = value;
-            
+
             var expected = new float[] { 1, 2, value, 4, 5, 6, 7, 8 };
             var actual = matrix.Data();
 

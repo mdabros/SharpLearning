@@ -26,9 +26,9 @@ namespace SharpLearning.Ensemble.Models
         /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
         /// False; the meta learner only receives the output of the ensemble models as features</param>
         /// <param name="numberOfClasses">Number of classes in the classification problem</param>
-        public ClassificationStackingEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels, 
+        public ClassificationStackingEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels,
             IPredictorModel<ProbabilityPrediction> metaModel,
-            bool includeOriginalFeaturesForMetaLearner, 
+            bool includeOriginalFeaturesForMetaLearner,
             int numberOfClasses)
         {
             m_ensembleModels = ensembleModels ?? throw new ArgumentException(nameof(ensembleModels));
@@ -188,7 +188,7 @@ namespace SharpLearning.Ensemble.Models
 
         string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
         {
-            if(ensembleFeatureNameToIndex.ContainsKey(name))
+            if (ensembleFeatureNameToIndex.ContainsKey(name))
             {
                 name += "_PreviousStack";
                 return GetNewFeatureName(name, ensembleFeatureNameToIndex);

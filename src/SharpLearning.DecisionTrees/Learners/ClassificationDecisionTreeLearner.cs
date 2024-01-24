@@ -13,7 +13,7 @@ namespace SharpLearning.DecisionTrees.Learners
     /// Trains a Classification Decision tree
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
-    public sealed class ClassificationDecisionTreeLearner 
+    public sealed class ClassificationDecisionTreeLearner
         : DecisionTreeLearner
         , IIndexedLearner<double>
         , IIndexedLearner<ProbabilityPrediction>
@@ -30,16 +30,16 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
         /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
-        public ClassificationDecisionTreeLearner(int maximumTreeDepth=2000, 
-            int minimumSplitSize=1, 
-            int featuresPrSplit=0, 
-            double minimumInformationGain=0.000001, int seed=42)
-            : base(new DepthFirstTreeBuilder(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed, 
+        public ClassificationDecisionTreeLearner(int maximumTreeDepth = 2000,
+            int minimumSplitSize = 1,
+            int featuresPrSplit = 0,
+            double minimumInformationGain = 0.000001, int seed = 42)
+            : base(new DepthFirstTreeBuilder(maximumTreeDepth, featuresPrSplit, minimumInformationGain, seed,
                     new OnlyUniqueThresholdsSplitSearcher(minimumSplitSize),
-                    new GiniClassificationImpurityCalculator()))          
+                    new GiniClassificationImpurityCalculator()))
         {
         }
-                
+
         /// <summary>
         /// 
         /// </summary>
@@ -72,7 +72,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, 
+        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets,
             int[] indices)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices));
@@ -87,7 +87,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="indices"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets, 
+        public new ClassificationDecisionTreeModel Learn(F64Matrix observations, double[] targets,
             int[] indices, double[] weights)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights));
@@ -101,7 +101,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="targets"></param>
         /// <param name="indices"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, 
+        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets,
             int[] indices)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices));
@@ -116,7 +116,7 @@ namespace SharpLearning.DecisionTrees.Learners
         /// <param name="indices"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets, 
+        public new ClassificationDecisionTreeModel Learn(F64MatrixView observations, double[] targets,
             int[] indices, double[] weights)
         {
             return new ClassificationDecisionTreeModel(base.Learn(observations, targets, indices, weights));

@@ -54,13 +54,13 @@ namespace SharpLearning.Optimization
         /// <param name="skipLastIterationOfEachRound">True to skip the last, 
         /// most computationally expensive, iteration of each round. Default is false.</param>
         /// <param name="seed"></param>
-        public HyperbandOptimizer(IParameterSpec[] parameters, 
+        public HyperbandOptimizer(IParameterSpec[] parameters,
             int maximumBudget = 81, int eta = 3,
             bool skipLastIterationOfEachRound = false,
             int seed = 34)
         {
             m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-            if(maximumBudget < 1) throw new ArgumentException(nameof(maximumBudget) + " must be at larger than 0");
+            if (maximumBudget < 1) throw new ArgumentException(nameof(maximumBudget) + " must be at larger than 0");
             if (eta < 1) throw new ArgumentException(nameof(eta) + " must be at larger than 0");
             m_sampler = new RandomUniform(seed);
 
@@ -69,7 +69,7 @@ namespace SharpLearning.Optimization
             m_eta = eta;
 
             // This is called `s max` in the paper.
-            m_numberOfRounds =  (int)(Math.Log(m_maximumBudget) / Math.Log(m_eta));
+            m_numberOfRounds = (int)(Math.Log(m_maximumBudget) / Math.Log(m_eta));
             // This is called `B` in the paper.
             m_totalBudgetPerRound = (m_numberOfRounds + 1) * m_maximumBudget;
 
@@ -102,7 +102,7 @@ namespace SharpLearning.Optimization
             for (int rounds = m_numberOfRounds; rounds >= 0; rounds--)
             {
                 // Initial configurations count.
-                var initialConfigurationCount = (int)Math.Ceiling((m_totalBudgetPerRound / m_maximumBudget) 
+                var initialConfigurationCount = (int)Math.Ceiling((m_totalBudgetPerRound / m_maximumBudget)
                     * (Math.Pow(m_eta, rounds) / (rounds + 1)));
 
                 // Initial budget per parameter set.

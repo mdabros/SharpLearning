@@ -22,7 +22,7 @@ namespace SharpLearning.InputOutput.Test.Serialization
             var writer = new StringWriter();
 
             var sut = new GenericXmlDataContractSerializer();
-            sut.Serialize(m_serializationData,() => writer);
+            sut.Serialize(m_serializationData, () => writer);
 
             Assert.AreEqual(m_serializationString, writer.ToString());
         }

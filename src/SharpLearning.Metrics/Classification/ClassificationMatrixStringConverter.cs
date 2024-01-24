@@ -21,16 +21,16 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="error"></param>
         /// <returns></returns>
         public static string Convert<T>(
-            List<T> uniqueTargets, 
-            Dictionary<T, string> targetStringMapping, 
-            int[,] confusionMatrix, 
-            double[,] errorMatrix, 
+            List<T> uniqueTargets,
+            Dictionary<T, string> targetStringMapping,
+            int[,] confusionMatrix,
+            double[,] errorMatrix,
             double error)
         {
             var uniqueStringTargets = uniqueTargets.Select(t => targetStringMapping[t]).ToList();
             return Convert(uniqueStringTargets, confusionMatrix, errorMatrix, error);
         }
-        
+
         /// <summary>
         /// Creates a string representation of the classification matrix consisting of the provided confusion matrix and error matrix
         /// </summary>
@@ -40,9 +40,9 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="error"></param>
         /// <returns></returns>
         public static string Convert<T>(
-            List<T> uniqueTargets, 
-            int[,] confusionMatrix, 
-            double[,] errorMatrix, 
+            List<T> uniqueTargets,
+            int[,] confusionMatrix,
+            double[,] errorMatrix,
             double error)
         {
             var combinedMatrix = CombineMatrices(confusionMatrix, errorMatrix);

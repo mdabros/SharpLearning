@@ -15,7 +15,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentNullException))]
         public void RandomRegressionEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new RandomRegressionEnsembleSelection(null, 
+            var sut = new RandomRegressionEnsembleSelection(null,
                 new MeanRegressionEnsembleStrategy(), 5, 1, true);
         }
 
@@ -32,7 +32,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         public void RandomRegressionEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
             var sut = new RandomRegressionEnsembleSelection(
-                new MeanSquaredErrorRegressionMetric(), 
+                new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 0, 1, true);
         }
 

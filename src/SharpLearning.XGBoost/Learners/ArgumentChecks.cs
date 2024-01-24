@@ -12,7 +12,7 @@ namespace SharpLearning.XGBoost.Learners
             }
         }
 
-        internal static void ThrowOnArgumentLessThanOrHigherThan(string name, double value, 
+        internal static void ThrowOnArgumentLessThanOrHigherThan(string name, double value,
             double min, double max)
         {
             if (value < min || value > max)

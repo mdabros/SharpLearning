@@ -13,7 +13,7 @@ namespace SharpLearning.Neural.Layers
     /// This can be an advantage when the overall goal is the best possible accuracy. And probability estimates is less important.
     /// </summary>
     [Serializable]
-    public sealed class SvmLayer 
+    public sealed class SvmLayer
         : ILayer
         , IOutputLayer
         , IClassificationLayer
@@ -90,18 +90,18 @@ namespace SharpLearning.Neural.Layers
                 var maxTargetScore = OutputActivations.At(batchItem, maxTargetIndex);
                 for (int i = 0; i < OutputActivations.ColumnCount; i++)
                 {
-                    if(i == maxTargetIndex) { continue; }
+                    if (i == maxTargetIndex) { continue; }
 
                     // The score of the target should be higher than he score of any other class, by a margin
                     var diff = -maxTargetScore + OutputActivations.At(batchItem, i) + margin;
-                    if(diff > 0)
+                    if (diff > 0)
                     {
                         m_delta[batchItem, i] += 1;
                         m_delta[batchItem, maxTargetIndex] -= 1;
                     }
                 }
             }
-            
+
             return m_delta;
         }
 
@@ -126,7 +126,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random)
         {
             OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);

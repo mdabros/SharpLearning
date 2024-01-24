@@ -32,7 +32,7 @@ namespace SharpLearning.Metrics.Classification
 
             for (int row = 0; row < uniques.Count; ++row)
             {
-                errorSum -= confusionMatrix[row,row];
+                errorSum -= confusionMatrix[row, row];
             }
 
             return (double)errorSum / totalSum;

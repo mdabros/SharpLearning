@@ -27,10 +27,10 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationStackingEnsembleLearner(learners, 
+            var learner = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
-                new RandomCrossValidation<ProbabilityPrediction>(5, 23), false); 
-            
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
+
             var sut = learner.Learn(observations, targets);
 
             var rows = targets.Length;
@@ -59,10 +59,10 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationStackingEnsembleLearner(learners, 
+            var learner = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
-            
+
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.Predict(observations);
@@ -86,10 +86,10 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationStackingEnsembleLearner(learners, 
+            var learner = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
-            
+
             var sut = learner.Learn(observations, targets);
 
             var rows = targets.Length;
@@ -118,10 +118,10 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationStackingEnsembleLearner(learners, 
+            var learner = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
-            
+
             var sut = learner.Learn(observations, targets);
 
             var predictions = sut.PredictProbability(observations);
@@ -137,7 +137,7 @@ namespace SharpLearning.Ensemble.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
+            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
                 { "PreviousExperience_month", 1 } };
 
             var learners = new IIndexedLearner<ProbabilityPrediction>[]
@@ -148,16 +148,16 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationStackingEnsembleLearner(learners, 
+            var learner = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
-            
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
 
             WriteImportances(actual);
-            var expected = new Dictionary<string, double> { { "ClassificationDecisionTreeModel_1_Class_Probability_0", 100 }, { "ClassificationDecisionTreeModel_2_Class_Probability_0", 92.2443379072288 }, { "ClassificationDecisionTreeModel_0_Class_Probability_0", 76.9658783620323 }, { "ClassificationDecisionTreeModel_1_Class_Probability_1", 21.1944454897829 }, { "ClassificationDecisionTreeModel_0_Class_Probability_1", 0 }, { "ClassificationDecisionTreeModel_2_Class_Probability_1", 0 }, { "ClassificationDecisionTreeModel_3_Class_Probability_0", 0 }, { "ClassificationDecisionTreeModel_3_Class_Probability_1", 0 } }; 
+            var expected = new Dictionary<string, double> { { "ClassificationDecisionTreeModel_1_Class_Probability_0", 100 }, { "ClassificationDecisionTreeModel_2_Class_Probability_0", 92.2443379072288 }, { "ClassificationDecisionTreeModel_0_Class_Probability_0", 76.9658783620323 }, { "ClassificationDecisionTreeModel_1_Class_Probability_1", 21.1944454897829 }, { "ClassificationDecisionTreeModel_0_Class_Probability_1", 0 }, { "ClassificationDecisionTreeModel_2_Class_Probability_1", 0 }, { "ClassificationDecisionTreeModel_3_Class_Probability_0", 0 }, { "ClassificationDecisionTreeModel_3_Class_Probability_1", 0 } };
 
             Assert.AreEqual(expected.Count, actual.Count);
             var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
@@ -182,14 +182,14 @@ namespace SharpLearning.Ensemble.Test.Models
                 new ClassificationDecisionTreeLearner(9)
             };
 
-            var learner = new ClassificationStackingEnsembleLearner(learners, 
+            var learner = new ClassificationStackingEnsembleLearner(learners,
                 new ClassificationDecisionTreeLearner(9),
                 new RandomCrossValidation<ProbabilityPrediction>(5, 23), false);
-            
+
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetRawVariableImportance();
-            var expected = new double[] { 0.12545787545787546, 0, 0.16300453932032882, 0.0345479082321188, 0.15036245805476572, 0, 0, 0 }; 
+            var expected = new double[] { 0.12545787545787546, 0, 0.16300453932032882, 0.0345479082321188, 0.15036245805476572, 0, 0, 0 };
 
             Assert.AreEqual(expected.Length, actual.Length);
 

@@ -11,7 +11,7 @@ namespace SharpLearning.XGBoost.Learners
     /// <summary>
     /// Classification learner for XGBoost
     /// </summary>
-    public sealed class ClassificationXGBoostLearner 
+    public sealed class ClassificationXGBoostLearner
         : ILearner<double>
         , IIndexedLearner<double>
         , ILearner<ProbabilityPrediction>
@@ -52,8 +52,8 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="baseScore">The initial prediction score of all instances, global bias. (default is 0.5)</param>
         /// <param name="seed">Random number seed. (default is 0)</param>
         /// <param name="missing">Value in the data which needs to be present as a missing value. (default is NaN)</param>
-        public ClassificationXGBoostLearner(int maximumTreeDepth = 3, 
-            double learningRate = 0.1, 
+        public ClassificationXGBoostLearner(int maximumTreeDepth = 3,
+            double learningRate = 0.1,
             int estimators = 100,
             bool silent = true,
             ClassificationObjective objective = ClassificationObjective.Softmax,
@@ -64,16 +64,16 @@ namespace SharpLearning.XGBoost.Learners
             double dropoutRate = 0.0,
             bool oneDrop = false,
             double skipDrop = 0.0,
-            int numberOfThreads = -1, 
-            double gamma = 0, 
+            int numberOfThreads = -1,
+            double gamma = 0,
             int minChildWeight = 1,
-            int maxDeltaStep = 0, 
-            double subSample = 1, 
+            int maxDeltaStep = 0,
+            double subSample = 1,
             double colSampleByTree = 1,
-            double colSampleByLevel = 1, 
-            double l1Regularization = 0, 
+            double colSampleByLevel = 1,
+            double l1Regularization = 0,
             double l2Reguralization = 1,
-            double scalePosWeight = 1, 
+            double scalePosWeight = 1,
             double baseScore = 0.5, int seed = 0,
             double missing = double.NaN)
         {
@@ -96,7 +96,7 @@ namespace SharpLearning.XGBoost.Learners
             m_parameters[ParameterNames.Estimators] = estimators;
             m_parameters[ParameterNames.Silent] = silent;
 
-            if(objective == ClassificationObjective.Softmax)
+            if (objective == ClassificationObjective.Softmax)
             {
                 // SoftMax and SoftProp are the same objective,
                 // but softprop returns probabilities.
@@ -157,13 +157,13 @@ namespace SharpLearning.XGBoost.Learners
         {
             Checks.VerifyObservationsAndTargets(observations, targets);
             Checks.VerifyIndices(indices, observations, targets);
-                        
+
             var floatObservations = observations.ToFloatJaggedArray(indices);
             var floatTargets = targets.ToFloat(indices);
 
             // Only specify XGBoost number of classes if the objective is multi-class.
             var objective = (string)m_parameters[ParameterNames.objective];
-            if (objective == ClassificationObjective.Softmax.ToXGBoostString() || 
+            if (objective == ClassificationObjective.Softmax.ToXGBoostString() ||
                 objective == ClassificationObjective.SoftProb.ToXGBoostString())
             {
                 var numberOfClasses = floatTargets.Distinct().Count();

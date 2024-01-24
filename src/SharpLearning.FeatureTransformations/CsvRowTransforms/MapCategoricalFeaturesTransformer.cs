@@ -37,7 +37,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// <returns></returns>
         public IEnumerable<CsvRow> Transform(IEnumerable<CsvRow> rows)
         {
-            if(m_namedFeatureMapping.Count == 0)
+            if (m_namedFeatureMapping.Count == 0)
             {
                 foreach (var column in m_columnsToMap)
                 {
@@ -52,7 +52,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
                 {
                     var columnMap = m_namedFeatureMapping[column];
                     var value = row.GetValue(column);
-                    if(columnMap.ContainsKey(value))
+                    if (columnMap.ContainsKey(value))
                     {
                         row.SetValue(column, columnMap[value]);
                     }

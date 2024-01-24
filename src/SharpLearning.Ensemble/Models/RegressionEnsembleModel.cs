@@ -21,7 +21,7 @@ namespace SharpLearning.Ensemble.Models
         /// </summary>
         /// <param name="ensembleModels">Models included in the ensemble</param>
         /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-        public RegressionEnsembleModel(IPredictorModel<double>[] ensembleModels, 
+        public RegressionEnsembleModel(IPredictorModel<double>[] ensembleModels,
             IRegressionEnsembleStrategy ensembleStrategy)
         {
             m_ensembleModels = ensembleModels ?? throw new ArgumentNullException(nameof(ensembleModels));
@@ -63,7 +63,7 @@ namespace SharpLearning.Ensemble.Models
 
             return predictions;
         }
-        
+
         /// <summary>
         /// Gets the raw unsorted variable importance scores
         /// </summary>
@@ -94,7 +94,7 @@ namespace SharpLearning.Ensemble.Models
                 var modelImportances = model.GetVariableImportance(featureNameToIndex);
                 foreach (var importance in modelImportances)
                 {
-                    variableImportance[importance.Key] += importance.Value;                    
+                    variableImportance[importance.Key] += importance.Value;
                 }
             }
 

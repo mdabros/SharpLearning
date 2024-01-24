@@ -26,9 +26,9 @@ namespace SharpLearning.Containers.Test.Views
             {
                 var view = pinnedMatrix.View();
                 for (int i = 0; i < matrix.ColumnCount; i++)
-			    {
+                {
                     AssertColumnView(matrix.Column(i), view.ColumnView(i));
-			    }                
+                }
             }
         }
 
@@ -39,7 +39,7 @@ namespace SharpLearning.Containers.Test.Views
             using (var pinnedMatrix = matrix.GetPinnedPointer())
             {
                 var subView = pinnedMatrix.View().View(
-                    Interval2D.Create(Interval1D.Create(0, 2), 
+                    Interval2D.Create(Interval1D.Create(0, 2),
                     Interval1D.Create(0, 3)));
 
                 var subMatrix = matrix.Rows(new int[] { 0, 1 });

@@ -28,7 +28,7 @@ namespace SharpLearning.CrossValidation.Augmentators
         /// Must be between 0.0 and 1.0. (Default is 0.2)</param>
         /// <param name="localVariance">Variance when sampling a new value for an augmentated sample. (Default is 1.0)</param>
         /// <param name="seed">Seed for random augmentation</param>
-        public ContinuousMungeAugmentator(double probabilityParameter=0.2, double localVariance=1.0, int seed = 432)
+        public ContinuousMungeAugmentator(double probabilityParameter = 0.2, double localVariance = 1.0, int seed = 432)
         {
             if (probabilityParameter > 1.0 || probabilityParameter < 0.0)
             { throw new ArgumentException("probabilityParameter must be between 0.0 and 1.0. Was: " + probabilityParameter); }
@@ -73,14 +73,14 @@ namespace SharpLearning.CrossValidation.Augmentators
                     dataset.Row(f, candidate);
 
                     var distance = GetDistance(sample, candidate);
-                    if(distance < closestDistance)
+                    if (distance < closestDistance)
                     {
                         closestDistance = distance;
                         closestIndex = f;
                     }
                 }
 
-                if(closestIndex != -1)
+                if (closestIndex != -1)
                 {
                     dataset.Row(closestIndex, candidate);
                     indicesVisited.Add(closestIndex);
@@ -119,7 +119,7 @@ namespace SharpLearning.CrossValidation.Augmentators
 
             return randNormal;
         }
-        
+
         double GetDistance(double[] p, double[] q)
         {
             double distance = 0;

@@ -54,12 +54,12 @@ namespace SharpLearning.InputOutput.Serialization
 
             using (var baseWriter = writer())
             {
-                if(baseWriter is StreamWriter)
+                if (baseWriter is StreamWriter)
                 {
                     var baseStream = ((StreamWriter)baseWriter).BaseStream;
                     serializer.Serialize(baseStream, data);
                 }
-                else if(baseWriter is StringWriter)
+                else if (baseWriter is StringWriter)
                 {
                     using (var memoryStream = new MemoryStream())
                     {

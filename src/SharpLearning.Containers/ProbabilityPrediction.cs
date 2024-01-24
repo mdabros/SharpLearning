@@ -38,10 +38,10 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public bool Equals(ProbabilityPrediction other)
         {
-            if(!Equal(this.Prediction, other.Prediction)) { return false; }
+            if (!Equal(this.Prediction, other.Prediction)) { return false; }
             if (this.Probabilities.Count != other.Probabilities.Count) { return false; }
-            
-            var zip = this.Probabilities.Zip(other.Probabilities, (t, o) => new {This = t, Other = o});
+
+            var zip = this.Probabilities.Zip(other.Probabilities, (t, o) => new { This = t, Other = o });
             foreach (var item in zip)
             {
                 if (item.This.Key != item.Other.Key)
@@ -60,7 +60,7 @@ namespace SharpLearning.Containers
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if(obj is ProbabilityPrediction)
+            if (obj is ProbabilityPrediction)
                 return Equals((ProbabilityPrediction)obj);
             return false;
         }
@@ -101,7 +101,7 @@ namespace SharpLearning.Containers
         bool Equal(double a, double b)
         {
             var diff = Math.Abs(a * m_tolerence);
-            if(Math.Abs(a - b) <= diff)
+            if (Math.Abs(a - b) <= diff)
             {
                 return true;
             }
