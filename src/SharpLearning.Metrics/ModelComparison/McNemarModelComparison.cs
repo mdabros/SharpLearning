@@ -10,7 +10,7 @@ namespace SharpLearning.Metrics
     /// A clear improvement between two models would be if this number is, say 1 to 10.
     /// https://en.wikipedia.org/wiki/McNemar%27s_test
     /// </summary>
-    public sealed class McNemarModelComparison
+    public static class McNemarModelComparison
     {
         /// <summary>
         /// Compares two model using the McNemar test.
