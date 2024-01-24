@@ -31,8 +31,8 @@ namespace SharpLearning.Ensemble.Models
             bool includeOriginalFeaturesForMetaLearner,
             int numberOfClasses)
         {
-            m_ensembleModels = ensembleModels ?? throw new ArgumentException(nameof(ensembleModels));
-            m_metaModel = metaModel ?? throw new ArgumentException(nameof(metaModel));
+            m_ensembleModels = ensembleModels ?? throw new ArgumentNullException(nameof(ensembleModels));
+            m_metaModel = metaModel ?? throw new ArgumentNullException(nameof(metaModel));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
             m_numberOfClasses = numberOfClasses;
         }

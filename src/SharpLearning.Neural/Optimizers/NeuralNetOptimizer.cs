@@ -267,7 +267,7 @@ namespace SharpLearning.Neural.Optimizers
                         }
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new ArgumentException($"Unknown optimizer method {m_optimizerMethod}");
                 }
 
                 gradients[j] = 0.0f; // zero out gradient between each iteration

@@ -81,9 +81,9 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="interval"></param>
         public void Init(double[] targetNames, double[] targets, double[] weights, Interval1D interval)
         {
-            m_targets = targets ?? throw new ArgumentException(nameof(targets));
-            m_weights = weights ?? throw new ArgumentException(nameof(weights));
-            m_targetNames = targetNames ?? throw new ArgumentException(nameof(targetNames));
+            m_targets = targets ?? throw new ArgumentNullException(nameof(targets));
+            m_weights = weights ?? throw new ArgumentNullException(nameof(weights));
+            m_targetNames = targetNames ?? throw new ArgumentNullException(nameof(targetNames));
             m_interval = interval;
 
             SetMinMaxTargetNames();

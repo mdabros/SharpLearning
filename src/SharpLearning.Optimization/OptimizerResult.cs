@@ -15,7 +15,7 @@ namespace SharpLearning.Optimization
         /// <param name="parameterSet"></param>
         public OptimizerResult(double[] parameterSet, double error)
         {
-            ParameterSet = parameterSet ?? throw new ArgumentException(nameof(parameterSet));
+            ParameterSet = parameterSet ?? throw new ArgumentNullException(nameof(parameterSet));
             Error = error;
         }
 

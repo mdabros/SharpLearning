@@ -25,8 +25,8 @@ namespace SharpLearning.RandomForest.Models
         /// <param name="rawVariableImportance">The summed variable importance from all decision trees</param>
         public RegressionForestModel(RegressionDecisionTreeModel[] trees, double[] rawVariableImportance)
         {
-            Trees = trees ?? throw new ArgumentNullException("models");
-            m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException("rawVariableImportance");
+            Trees = trees ?? throw new ArgumentNullException(nameof(trees));
+            m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException(nameof(rawVariableImportance));
         }
 
         /// <summary>

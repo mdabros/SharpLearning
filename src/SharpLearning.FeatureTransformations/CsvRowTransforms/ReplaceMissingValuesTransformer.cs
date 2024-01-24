@@ -23,8 +23,8 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// <param name="missingValueIdentifiers"></param>
         public ReplaceMissingValuesTransformer(string replacementValue, params string[] missingValueIdentifiers)
         {
-            m_replacementValue = replacementValue ?? throw new ArgumentException(nameof(replacementValue));
-            if (missingValueIdentifiers == null) { throw new ArgumentException(nameof(missingValueIdentifiers)); }
+            m_replacementValue = replacementValue ?? throw new ArgumentNullException(nameof(replacementValue));
+            if (missingValueIdentifiers == null) { throw new ArgumentNullException(nameof(missingValueIdentifiers)); }
 
             m_missingValueIdentifiers = missingValueIdentifiers.ToDictionary(v => v, v => v);
         }

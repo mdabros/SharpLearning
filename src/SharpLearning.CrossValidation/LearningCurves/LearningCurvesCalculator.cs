@@ -43,12 +43,12 @@ namespace SharpLearning.CrossValidation.LearningCurves
         public LearningCurvesCalculator(ITrainingTestIndexSplitter<double> trainingValidationIndexSplitter,
             IIndexSampler<double> sampler, IMetric<double, TPrediction> metric, double[] samplePercentages, int numberOfShufflesPrSample = 5)
         {
-            m_trainingValidationIndexSplitter = trainingValidationIndexSplitter ?? throw new ArgumentException(nameof(trainingValidationIndexSplitter));
-            m_indexedSampler = sampler ?? throw new ArgumentException(nameof(sampler));
+            m_trainingValidationIndexSplitter = trainingValidationIndexSplitter ?? throw new ArgumentNullException(nameof(trainingValidationIndexSplitter));
+            m_indexedSampler = sampler ?? throw new ArgumentNullException(nameof(sampler));
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
-            if (samplePercentages == null) { throw new ArgumentNullException("samplePercentages"); }
+            if (samplePercentages == null) { throw new ArgumentNullException(nameof(samplePercentages)); }
             if (samplePercentages.Length < 1) { throw new ArgumentException("SamplePercentages length must be at least 1"); }
-            if (numberOfShufflesPrSample < 1) { throw new ArgumentNullException("numberOfShufflesPrSample must be at least 1"); }
+            if (numberOfShufflesPrSample < 1) { throw new ArgumentException("numberOfShufflesPrSample must be at least 1"); }
 
             m_samplePercentages = samplePercentages;
             m_numberOfShufflesPrSample = numberOfShufflesPrSample;

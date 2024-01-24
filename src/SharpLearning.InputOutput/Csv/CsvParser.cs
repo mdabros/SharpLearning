@@ -32,7 +32,7 @@ namespace SharpLearning.InputOutput.Csv
             bool quoteInclosedColumns = false,
             bool hasHeader = true)
         {
-            m_getReader = reader ?? throw new ArgumentException("reader");
+            m_getReader = reader ?? throw new ArgumentNullException(nameof(reader));
             m_separator = separator;
             m_quoteInclosedColumns = quoteInclosedColumns;
             m_hasHeader = hasHeader;

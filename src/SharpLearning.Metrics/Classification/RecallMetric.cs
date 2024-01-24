@@ -17,7 +17,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="positiveTarget"></param>
         public RecallMetric(T positiveTarget)
         {
-            if (positiveTarget == null) { throw new ArgumentNullException("positiveClassLabel"); }
+            if (positiveTarget == null) { throw new ArgumentNullException(nameof(positiveTarget)); }
             m_positiveTarget = positiveTarget;
         }
 

@@ -76,9 +76,9 @@ namespace SharpLearning.Ensemble.Learners
             ICrossValidation<double> crossValidation,
             bool includeOriginalFeaturesForMetaLearner = true)
         {
-            m_learners = learners ?? throw new ArgumentException(nameof(learners));
-            m_crossValidation = crossValidation ?? throw new ArgumentException(nameof(crossValidation));
-            m_metaLearner = metaLearner ?? throw new ArgumentException(nameof(metaLearner));
+            m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
+            m_crossValidation = crossValidation ?? throw new ArgumentNullException(nameof(crossValidation));
+            m_metaLearner = metaLearner ?? throw new ArgumentNullException(nameof(metaLearner));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
         }
 

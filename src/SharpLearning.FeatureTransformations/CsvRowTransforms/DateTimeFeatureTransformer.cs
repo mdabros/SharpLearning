@@ -41,7 +41,7 @@ namespace SharpLearning.FeatureTransformations.CsvRowTransforms
         /// <param name="startDate"></param>
         public DateTimeFeatureTransformer(string dateTimeColumn, DateTime startDate)
         {
-            if (startDate == null) { throw new ArgumentException("startDate"); }
+            if (startDate == null) { throw new ArgumentNullException("startDate"); }
             m_dateTimeColumn = dateTimeColumn;
             m_startDate = startDate;
         }

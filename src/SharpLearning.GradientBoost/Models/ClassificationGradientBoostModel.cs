@@ -59,7 +59,7 @@ namespace SharpLearning.GradientBoost.Models
             int featureCount)
         {
             Trees = trees ?? throw new ArgumentNullException(nameof(trees));
-            TargetNames = targetNames ?? throw new ArgumentException(nameof(targetNames));
+            TargetNames = targetNames ?? throw new ArgumentNullException(nameof(targetNames));
 
             LearningRate = learningRate;
             InitialLoss = initialLoss;

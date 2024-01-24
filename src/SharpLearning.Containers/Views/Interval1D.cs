@@ -31,7 +31,11 @@ namespace SharpLearning.Containers.Views
         /// <param name="toExclusive"></param>
         public Interval1D(int fromInclusive, int toExclusive)
         {
-            if (fromInclusive >= toExclusive) { throw new ArgumentException(); }
+            if (fromInclusive >= toExclusive)
+            {
+                throw new ArgumentException($"FromInclusive: {fromInclusive}" +
+                    "is larger or equal to toExclusive: {toExclusive}");
+            }
             FromInclusive = fromInclusive;
             ToExclusive = toExclusive;
             Length = toExclusive - fromInclusive;

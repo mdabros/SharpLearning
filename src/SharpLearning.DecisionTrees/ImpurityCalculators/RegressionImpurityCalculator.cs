@@ -60,8 +60,8 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators
         /// <param name="interval"></param>
         public void Init(double[] uniqueTargets, double[] targets, double[] weights, Interval1D interval)
         {
-            m_targets = targets ?? throw new ArgumentException(nameof(targets));
-            m_weights = weights ?? throw new ArgumentException(nameof(weights));
+            m_targets = targets ?? throw new ArgumentNullException(nameof(targets));
+            m_weights = weights ?? throw new ArgumentNullException(nameof(weights));
             m_interval = interval;
 
             m_weightedTotal = 0.0;

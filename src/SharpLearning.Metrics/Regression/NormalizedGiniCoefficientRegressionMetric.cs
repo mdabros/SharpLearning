@@ -30,7 +30,10 @@ namespace SharpLearning.Metrics.Regression
         static double GiniCoefficient(double[] target, double[] predicted)
         {
             if (target.Length != predicted.Length)
-            { throw new ArgumentException(); }
+            {
+                throw new ArgumentException($"Target length: {target.Length}" +
+                    $"differs from prediction length: {predicted.Length}");
+            }
 
             var all = predicted.Zip(target, (prediction, actual) => new
             {
