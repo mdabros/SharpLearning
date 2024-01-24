@@ -29,12 +29,11 @@
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <!--Disabled for now-->
-    <!--<AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>-->
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <NoWarn>CS1591</NoWarn>
 
   </PropertyGroup>
