@@ -34,7 +34,7 @@
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <NoWarn>CS1591</NoWarn>
+    <NoWarn>CS1591;CS1668</NoWarn>
 
   </PropertyGroup>
   
