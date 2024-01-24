@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace SharpLearning.CrossValidation.Test
 {
     [TestClass]
-    public class AssemblyInitializeCultureTest
+    public static class AssemblyInitializeCultureTest
     {
         [AssemblyInitialize]
         public static void AssemblyInitializeCultureTest_InvariantCulture(TestContext c)
