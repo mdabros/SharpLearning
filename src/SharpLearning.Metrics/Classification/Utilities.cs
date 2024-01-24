@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
 {
-    internal static class Utilities
+    static class Utilities
     {
         static internal List<T> UniqueTargetValues<T>(T[] targets, T[] predictions)
         {

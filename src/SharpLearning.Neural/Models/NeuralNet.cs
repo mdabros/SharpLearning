@@ -35,7 +35,7 @@ namespace SharpLearning.Neural
         /// 
         /// </summary>
         /// <param name="layers"></param>
-        private NeuralNet(List<ILayer> layers)
+        NeuralNet(List<ILayer> layers)
         {
             Layers = layers ?? throw new ArgumentNullException(nameof(layers));
         }

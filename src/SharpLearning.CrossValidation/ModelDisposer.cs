@@ -3,7 +3,7 @@ using SharpLearning.Common.Interfaces;
 
 namespace SharpLearning.CrossValidation
 {
-    internal static class ModelDisposer
+    static class ModelDisposer
     {
         internal static void DisposeIfDisposable<TPrediction>(IPredictorModel<TPrediction> model)
         {

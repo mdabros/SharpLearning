@@ -2,7 +2,7 @@
 
 namespace SharpLearning.XGBoost.Learners
 {
-    internal static class ArgumentChecks
+    static class ArgumentChecks
     {
         internal static void ThrowOnArgumentLessThan(string name, double value, double min)
         {

@@ -82,7 +82,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             Assert.AreEqual(0.032256921590414704, error, 0.0000001);
         }
 
-        private static double RegressionDecisionTreeLearner_Learn(int treeDepth)
+        static double RegressionDecisionTreeLearner_Learn(int treeDepth)
         {
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
@@ -97,7 +97,7 @@ namespace SharpLearning.DecisionTrees.Test.Learners
             return error;
         }
 
-        private double RegressionDecisionTreeLearner_Learn_Weighted(int treeDepth, double weight)
+        double RegressionDecisionTreeLearner_Learn_Weighted(int treeDepth, double weight)
         {
             var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 

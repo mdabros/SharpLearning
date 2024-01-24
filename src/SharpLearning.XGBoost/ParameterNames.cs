@@ -1,6 +1,6 @@
 ﻿namespace SharpLearning.XGBoost
 {
-    internal static class ParameterNames
+    static class ParameterNames
     {
         /// <summary>
         /// Maximum tree depth for base learners

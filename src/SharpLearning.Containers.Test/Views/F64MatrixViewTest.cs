@@ -85,12 +85,12 @@ namespace SharpLearning.Containers.Test.Views
 
         /// <remarks>A matrix which needs a byte pointer offset larger than
         /// int.MaxValue to access all records in the backing array</remarks>
-        private F64Matrix LargeMatrix()
+        F64Matrix LargeMatrix()
         {
             return new F64Matrix(int.MaxValue / sizeof(double) + 2, 1);
         }
 
-        private F64Matrix Matrix()
+        F64Matrix Matrix()
         {
             var features = new double[9] { 1, 2, 3,
                                         10, 20, 30,
@@ -99,7 +99,7 @@ namespace SharpLearning.Containers.Test.Views
             return new F64Matrix(features, 3, 3);
         }
 
-        private unsafe void AssertColumnView(double[] column, F64MatrixColumnView columnView)
+        unsafe void AssertColumnView(double[] column, F64MatrixColumnView columnView)
         {
             for (int i = 0; i < column.Length; i++)
             {
@@ -108,7 +108,7 @@ namespace SharpLearning.Containers.Test.Views
         }
 
 
-        private unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
+        unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
         {
             for (int i = 0; i < matrix.RowCount; i++)
             {
