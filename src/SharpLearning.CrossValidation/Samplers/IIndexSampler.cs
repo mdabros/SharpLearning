@@ -14,7 +14,7 @@ namespace SharpLearning.CrossValidation.Samplers
         /// <param name="sampleSize"></param>
         /// <returns></returns>
         int[] Sample(T[] data, int sampleSize);
-        
+
         /// <summary>
         /// 
         /// </summary>

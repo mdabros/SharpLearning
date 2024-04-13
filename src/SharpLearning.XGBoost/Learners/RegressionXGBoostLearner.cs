@@ -48,8 +48,8 @@ namespace SharpLearning.XGBoost.Learners
         /// <param name="seed">Random number seed. (default is 0)</param>
         /// <param name="missing">Value in the data which needs to be present as a missing value. (default is NaN)</param>
         public RegressionXGBoostLearner(
-            int maximumTreeDepth = 3, 
-            double learningRate = 0.1, 
+            int maximumTreeDepth = 3,
+            double learningRate = 0.1,
             int estimators = 100,
             bool silent = true,
             RegressionObjective objective = RegressionObjective.LinearRegression,
@@ -60,16 +60,16 @@ namespace SharpLearning.XGBoost.Learners
             double dropoutRate = 0.0,
             bool oneDrop = false,
             double skipDrop = 0.0,
-            int numberOfThreads = -1, 
-            double gamma = 0, 
+            int numberOfThreads = -1,
+            double gamma = 0,
             int minChildWeight = 1,
-            int maxDeltaStep = 0, 
-            double subSample = 1, 
+            int maxDeltaStep = 0,
+            double subSample = 1,
             double colSampleByTree = 1,
-            double colSampleByLevel = 1, 
-            double l1Regularization = 0, 
+            double colSampleByLevel = 1,
+            double l1Regularization = 0,
             double l2Reguralization = 1,
-            double scalePosWeight = 1, 
+            double scalePosWeight = 1,
             double baseScore = 0.5,
             int seed = 0,
             double missing = double.NaN)
@@ -155,7 +155,7 @@ namespace SharpLearning.XGBoost.Learners
                 {
                     booster.Update(train, iteration);
                 }
-                
+
                 return new RegressionXGBoostModel(booster);
             }
         }

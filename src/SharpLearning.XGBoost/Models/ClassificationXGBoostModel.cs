@@ -11,7 +11,7 @@ namespace SharpLearning.XGBoost.Models
     /// <summary>
     /// 
     /// </summary>
-    public sealed class ClassificationXGBoostModel 
+    public sealed class ClassificationXGBoostModel
         : IDisposable
         , IPredictorModel<double>
         , IPredictorModel<ProbabilityPrediction>
@@ -162,8 +162,8 @@ namespace SharpLearning.XGBoost.Models
         /// </summary>
         /// <param name="modelFilePath"></param>
         /// <returns></returns>
-        public static ClassificationXGBoostModel Load(string modelFilePath) 
-            => new ClassificationXGBoostModel(new Booster(modelFilePath));
+        public static ClassificationXGBoostModel Load(string modelFilePath)
+            => new(new Booster(modelFilePath));
 
         /// <summary>
         /// Saves the ClassificationXGBoostModel.
@@ -182,10 +182,10 @@ namespace SharpLearning.XGBoost.Models
             }
         }
 
-        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation) 
+        ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)
             => PredictProbability(observation);
 
-        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations) 
+        ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
             => PredictProbability(observations);
 
         static ProbabilityPrediction PredictMultiClassProbability(float[] prediction)

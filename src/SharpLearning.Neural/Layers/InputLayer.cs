@@ -37,7 +37,7 @@ namespace SharpLearning.Neural.Layers
         /// </summary>
         /// <param name="inputUnits"></param>
         public InputLayer(int inputUnits)
-            :this(1, 1, inputUnits)
+            : this(1, 1, inputUnits)
         {
         }
 
@@ -87,7 +87,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
 
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random)
         {
             // input layer does not have anything to initialize.

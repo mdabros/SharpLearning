@@ -57,17 +57,17 @@ namespace SharpLearning.Optimization
         /// <param name="sigma">Coefficient for shrink part of the algorithm (default is 0.5)</param>
         /// <param name="seed">Seed for random restarts</param>
         /// <param name="maxDegreeOfParallelism">Maximum number of concurrent operations (default is -1 (unlimited))</param>
-        public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters, 
-            int maxRestarts=8, 
-            double noImprovementThreshold = 0.001, 
-            int maxIterationsWithoutImprovement = 5, 
-            int maxIterationsPrRestart = 0, 
+        public GlobalizedBoundedNelderMeadOptimizer(IParameterSpec[] parameters,
+            int maxRestarts = 8,
+            double noImprovementThreshold = 0.001,
+            int maxIterationsWithoutImprovement = 5,
+            int maxIterationsPrRestart = 0,
             int maxFunctionEvaluations = 0,
-            double alpha = 1, 
-            double gamma = 2, 
-            double rho = -0.5, 
-            double sigma = 0.5, 
-            int seed = 324, 
+            double alpha = 1,
+            double gamma = 2,
+            double rho = -0.5,
+            double sigma = 0.5,
+            int seed = 324,
             int maxDegreeOfParallelism = -1)
         {
             if (maxIterationsWithoutImprovement <= 0) { throw new ArgumentException("maxIterationsWithoutImprovement must be at least 1"); }
@@ -277,7 +277,7 @@ namespace SharpLearning.Optimization
             return allResults.ToArray();
         }
 
-        OptimizerResult EvaluateFunction(Func<double[], OptimizerResult> functionToMinimize, 
+        OptimizerResult EvaluateFunction(Func<double[], OptimizerResult> functionToMinimize,
             double[] parameters)
         {
             m_totalFunctionEvaluations++;

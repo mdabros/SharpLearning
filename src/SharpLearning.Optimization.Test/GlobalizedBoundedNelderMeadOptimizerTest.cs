@@ -16,9 +16,9 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new MinMaxParameterSpec[]
             {
-                new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
-                new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
-                new MinMaxParameterSpec(-10.0, 10.0, Transform.Linear),
+                new(-10.0, 10.0, Transform.Linear),
+                new(-10.0, 10.0, Transform.Linear),
+                new(-10.0, 10.0, Transform.Linear),
             };
 
             var sut = CreateSut(maxDegreeOfParallelism, parameters);
@@ -42,7 +42,7 @@ namespace SharpLearning.Optimization.Test
         {
             var parameters = new MinMaxParameterSpec[]
             {
-                new MinMaxParameterSpec(0.0, 100.0, Transform.Linear)
+                new(0.0, 100.0, Transform.Linear)
             };
 
             var sut = CreateSut(maxDegreeOfParallelism, parameters);
@@ -52,21 +52,21 @@ namespace SharpLearning.Optimization.Test
 
             var expected = new OptimizerResult[]
             {
-                new OptimizerResult(new double[] { 37.71314634450421 }, 109.3438139631394),
-                new OptimizerResult(new double[] { 37.713142445047254 }, 109.34381396345546)
+                new(new double[] { 37.71314634450421 }, 109.3438139631394),
+                new(new double[] { 37.713142445047254 }, 109.34381396345546)
             };
 
             Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-            Assert.AreEqual(expected.First().ParameterSet.First(), 
+            Assert.AreEqual(expected.First().ParameterSet.First(),
                 actual.First().ParameterSet.First(), Delta);
 
             Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-            Assert.AreEqual(expected.Last().ParameterSet.First(), 
+            Assert.AreEqual(expected.Last().ParameterSet.First(),
                 actual.Last().ParameterSet.First(), Delta);
         }
 
         static GlobalizedBoundedNelderMeadOptimizer CreateSut(
-            int? maybeMaxDegreeOfParallelism, 
+            int? maybeMaxDegreeOfParallelism,
             MinMaxParameterSpec[] parameters)
         {
             const int DefaultMaxDegreeOfParallelism = -1;

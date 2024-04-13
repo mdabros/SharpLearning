@@ -54,7 +54,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(F64Matrix crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
+            if (crossValidatedModelPredictions.ColumnCount < m_numberOfModelsToSelect)
             {
                 throw new ArgumentException("Available models: " + crossValidatedModelPredictions.ColumnCount +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
@@ -79,7 +79,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
             {
                 var error = SelectNextModelToAdd(crossValidatedModelPredictions, targets, currentError);
 
-                if(error < currentError)
+                if (error < currentError)
                 {
                     currentError = error;
                     Trace.WriteLine("Models Selected: " + i + " Error: " + error);
@@ -111,7 +111,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 candidateModelIndices[candidateModelIndices.Length - 1] = index;
 
                 crossValidatedModelPredictions.Columns(candidateModelIndices, candidateModelMatrix);
-                
+
                 m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
                 var error = m_metric.Error(targets, candidatePredictions);
 
@@ -122,11 +122,11 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 }
             }
 
-            if(bestIndex != -1)
+            if (bestIndex != -1)
             {
                 m_selectedModelIndices.Add(bestIndex);
-                
-                if(!m_selectWithReplacement)
+
+                if (!m_selectWithReplacement)
                 {
                     m_remainingModelIndices.Remove(bestIndex);
                 }

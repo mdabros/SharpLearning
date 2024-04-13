@@ -14,7 +14,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var errorMatrix = new double[,] { { 1.0, 0.0 }, { 1.0, 0.0 } };
             var uniqueTargets = new List<double> { 1.0, 2.0 };
 
-            var actual = ClassificationMatrixStringConverter.Convert(uniqueTargets, 
+            var actual = ClassificationMatrixStringConverter.Convert(uniqueTargets,
                 confusionMatrix, errorMatrix, 0.0);
 
             var expected = ";1;2;1;2\r\n1;10.000;0.000;100.000;0.000\r\n2;0.000;10.000;100.000;0.000\r\nError: 0.000\r\n";
@@ -29,7 +29,7 @@ namespace SharpLearning.Metrics.Test.Classification
             var uniqueTargets = new List<double> { 1.0, 2.0 };
             var uniqueStringTargets = new List<string> { "Positive", "Negative" };
 
-            var actual = ClassificationMatrixStringConverter.Convert(uniqueStringTargets, 
+            var actual = ClassificationMatrixStringConverter.Convert(uniqueStringTargets,
                 confusionMatrix, errorMatrix, 0.0);
 
             var expected = ";Positive;Negative;Positive;Negative\r\nPositive;10.000;0.000;100.000;0.000\r\nNegative;0.000;10.000;100.000;0.000\r\nError: 0.000\r\n";

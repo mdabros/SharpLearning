@@ -16,7 +16,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentNullException))]
         public void ForwardSearchClassificationEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new ForwardSearchClassificationEnsembleSelection(null, 
+            var sut = new ForwardSearchClassificationEnsembleSelection(null,
                 new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
         }
 
@@ -33,7 +33,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         public void ForwardSearchClassificationEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
             var sut = new ForwardSearchClassificationEnsembleSelection(
-                new LogLossClassificationProbabilityMetric(), 
+                new LogLossClassificationProbabilityMetric(),
                 new MeanProbabilityClassificationEnsembleStrategy(), 0, 1, true);
         }
 

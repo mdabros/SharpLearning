@@ -26,13 +26,13 @@ namespace SharpLearning.Ensemble.Models
         /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
         /// False; the meta learner only receives the output of the ensemble models as features</param>
         /// <param name="numberOfClasses">Number of classes in the classification problem</param>
-        public ClassificationStackingEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels, 
+        public ClassificationStackingEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels,
             IPredictorModel<ProbabilityPrediction> metaModel,
-            bool includeOriginalFeaturesForMetaLearner, 
+            bool includeOriginalFeaturesForMetaLearner,
             int numberOfClasses)
         {
-            m_ensembleModels = ensembleModels ?? throw new ArgumentException(nameof(ensembleModels));
-            m_metaModel = metaModel ?? throw new ArgumentException(nameof(metaModel));
+            m_ensembleModels = ensembleModels ?? throw new ArgumentNullException(nameof(ensembleModels));
+            m_metaModel = metaModel ?? throw new ArgumentNullException(nameof(metaModel));
             m_includeOriginalFeaturesForMetaLearner = includeOriginalFeaturesForMetaLearner;
             m_numberOfClasses = numberOfClasses;
         }
@@ -186,9 +186,9 @@ namespace SharpLearning.Ensemble.Models
         ProbabilityPrediction[] IPredictor<ProbabilityPrediction>.Predict(F64Matrix observations)
             => PredictProbability(observations);
 
-        string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
+        static string GetNewFeatureName(string name, Dictionary<string, int> ensembleFeatureNameToIndex)
         {
-            if(ensembleFeatureNameToIndex.ContainsKey(name))
+            if (ensembleFeatureNameToIndex.ContainsKey(name))
             {
                 name += "_PreviousStack";
                 return GetNewFeatureName(name, ensembleFeatureNameToIndex);

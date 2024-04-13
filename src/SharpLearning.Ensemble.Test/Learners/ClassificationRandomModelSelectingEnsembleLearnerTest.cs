@@ -68,7 +68,7 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
 
             var sut = new ClassificationRandomModelSelectingEnsembleLearner(learners, 5,
-                new StratifiedCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy, 
+                new StratifiedCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy,
                 metric, 1, false);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
@@ -104,7 +104,7 @@ namespace SharpLearning.Ensemble.Test.Learners
             var ensembleStrategy = new MeanProbabilityClassificationEnsembleStrategy();
 
             var sut = new ClassificationRandomModelSelectingEnsembleLearner(learners, 5,
-                new RandomCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy, 
+                new RandomCrossValidation<ProbabilityPrediction>(5, 23), ensembleStrategy,
                 metric, 3, true);
 
             var (observations, targets) = DataSetUtilities.LoadGlassDataSet();

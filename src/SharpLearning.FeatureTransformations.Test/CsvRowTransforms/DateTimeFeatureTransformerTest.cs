@@ -38,7 +38,7 @@ namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
         public void DateTimeFeatureTransformer_Transform()
         {
             var sut = new DateTimeFeatureTransformer("Date");
-            
+
             var writer = new StringWriter();
 
             new CsvParser(() => new StringReader(m_input))

@@ -11,7 +11,7 @@ namespace SharpLearning.Containers.Matrices
     /// <remarks>Can be implicitly converted from double[][]</remarks>
     public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     {
-        double[] m_featureArray;
+        readonly double[] m_featureArray;
 
         /// <summary>
         /// Creates a zero-matrix with the specified number of rows and cols
@@ -35,7 +35,7 @@ namespace SharpLearning.Containers.Matrices
             if (values.Length != rows * cols) { throw new ArgumentException("feature array length does not match row * cols"); }
             if (rows < 1) { throw new ArgumentException("matrix must have at least 1 row"); }
             if (cols < 1) { throw new ArgumentException("matrix must have at least 1 col"); }
-            
+
             m_featureArray = values;
             RowCount = rows;
             ColumnCount = cols;

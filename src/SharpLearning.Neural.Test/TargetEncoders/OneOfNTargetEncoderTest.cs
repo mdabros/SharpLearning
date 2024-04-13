@@ -16,7 +16,7 @@ namespace SharpLearning.Neural.Test.TargetEncoders
 
             var actual = sut.Encode(targets);
             var expected = Matrix<float>.Build.Dense(7, 3, new float[] { 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1 });
-            
+
             Trace.WriteLine(expected.ToString());
             Assert.AreEqual(expected, actual);
         }

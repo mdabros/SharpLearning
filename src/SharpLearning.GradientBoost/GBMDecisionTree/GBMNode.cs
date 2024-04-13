@@ -33,12 +33,12 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// Left constant (fitted value) of the split
         /// </summary>
         public double LeftConstant;
-        
+
         /// <summary>
         /// Right constant (fitted value) of the split
         /// </summary>
         public double RightConstant;
-        
+
         /// <summary>
         /// Depth of the node in the decision tree
         /// </summary>
@@ -48,12 +48,12 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// Index of the left child node the node in the decision tree array
         /// </summary>
         public int LeftIndex = -1;
- 
+
         /// <summary>
         /// Index of the left child node the node in the decision tree array
         /// </summary>
         public int RightIndex = -1;
-        
+
         /// <summary>
         /// The number of observations in the node
         /// </summary>

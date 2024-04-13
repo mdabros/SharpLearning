@@ -25,11 +25,11 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         /// <param name="iterations">Number of iterations to random select model combinations.</param> 
         public RegressionRandomModelSelectingEnsembleLearner(
-            IIndexedLearner<double>[] learners, 
-            int numberOfModelsToSelect, 
-            int iterations=50)
-            : this(learners, numberOfModelsToSelect, 
-                new RandomCrossValidation<double>(5, 42), 
+            IIndexedLearner<double>[] learners,
+            int numberOfModelsToSelect,
+            int iterations = 50)
+            : this(learners, numberOfModelsToSelect,
+                new RandomCrossValidation<double>(5, 42),
                 new MeanRegressionEnsembleStrategy(),
                 new MeanSquaredErrorRegressionMetric())
         {
@@ -51,16 +51,16 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="selectWithReplacement">If true the same model can be selected multiple times.</param>
         /// <param name="seed"></param>
         public RegressionRandomModelSelectingEnsembleLearner(
-            IIndexedLearner<double>[] learners, 
+            IIndexedLearner<double>[] learners,
             int numberOfModelsToSelect,
-            ICrossValidation<double> crossValidation, 
-            IRegressionEnsembleStrategy ensembleStrategy, 
-            IMetric<double, double> metric, 
-            int iterations = 50, 
-            bool selectWithReplacement = true, 
+            ICrossValidation<double> crossValidation,
+            IRegressionEnsembleStrategy ensembleStrategy,
+            IMetric<double, double> metric,
+            int iterations = 50,
+            bool selectWithReplacement = true,
             int seed = 42)
-            : base(learners, crossValidation, ensembleStrategy, 
-                new RandomRegressionEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect, 
+            : base(learners, crossValidation, ensembleStrategy,
+                new RandomRegressionEnsembleSelection(metric, ensembleStrategy, numberOfModelsToSelect,
                     iterations, selectWithReplacement, seed))
         {
         }

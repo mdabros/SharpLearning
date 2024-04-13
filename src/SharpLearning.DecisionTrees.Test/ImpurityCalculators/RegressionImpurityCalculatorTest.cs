@@ -12,7 +12,7 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
         public void RegressionImpurityCalculator_ImpurityImprovement()
         {
             var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            
+
             var parentInterval = Interval1D.Create(0, values.Length);
 
             var sut = new RegressionImpurityCalculator();
@@ -101,7 +101,7 @@ namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
             Assert.AreEqual(1.75, actual, 0.000001);
         }
 
-        double Weight(double t)
+        static double Weight(double t)
         {
             if (t == 2.0)
                 return 10.0;

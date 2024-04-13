@@ -33,7 +33,7 @@ namespace SharpLearning.Metrics.Classification
         /// <param name="predictions"></param>
         /// <param name="targetStringMapping"></param>
         /// <returns></returns>
-        string ErrorString(double[] targets, ProbabilityPrediction[] predictions, 
+        string ErrorString(double[] targets, ProbabilityPrediction[] predictions,
             Dictionary<double, string> targetStringMapping);
-     }
+    }
 }

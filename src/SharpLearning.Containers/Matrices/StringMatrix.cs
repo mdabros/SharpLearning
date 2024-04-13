@@ -8,7 +8,7 @@ namespace SharpLearning.Containers.Matrices
     /// </summary>
     public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     {
-        string[] m_featureArray;
+        readonly string[] m_featureArray;
 
         /// <summary>
         /// Creates a empty string matrix with the specified number of rows and cols

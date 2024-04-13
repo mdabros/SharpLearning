@@ -33,7 +33,7 @@ namespace SharpLearning.Containers.Test
 
             CollectionAssert.AreEqual(expected, sut);
         }
-        
+
         [TestMethod]
         public void ArrayExtensions_Clear()
         {
@@ -68,7 +68,7 @@ namespace SharpLearning.Containers.Test
         [TestMethod]
         public void ArrayExtensions_AsF64()
         {
-            var sut = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" }; 
+            var sut = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
             var actual = sut.AsF64();
             var expected = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
@@ -89,7 +89,7 @@ namespace SharpLearning.Containers.Test
         public void ArrayExtensions_SortWith()
         {
             var values = new int[] { 0, 1, 2, 3, 4, 5 };
-            var keys  = new int[] { 5, 4, 3, 2, 1, 0 };
+            var keys = new int[] { 5, 4, 3, 2, 1, 0 };
             var interval = Interval1D.Create(0, keys.Length);
 
             keys.SortWith(interval, values);
@@ -136,7 +136,7 @@ namespace SharpLearning.Containers.Test
             var destination = new int[values.Length];
 
             values.CopyTo(interval, destination);
-            var expected = new int[] {0, 1, 2, 3, 4, 0 };
+            var expected = new int[] { 0, 1, 2, 3, 4, 0 };
             CollectionAssert.AreEqual(expected, destination);
         }
 
@@ -241,9 +241,10 @@ namespace SharpLearning.Containers.Test
             var w = new double[n];
             var x = new double[n];
 
-            for (int j = 0; j < n; j++) {
-                    w[j] = j + 1;
-                    x[j] = j;
+            for (int j = 0; j < n; j++)
+            {
+                w[j] = j + 1;
+                x[j] = j;
             }
 
             var actual = x.WeightedMedian(w);
@@ -258,9 +259,10 @@ namespace SharpLearning.Containers.Test
             var w = new double[n];
             var x = new double[n];
 
-            for (int j = 0; j < n; j++) {
-                w[j] = j + ((j<6) ? 1 : 0);
-	            x[j] = j + 1;
+            for (int j = 0; j < n; j++)
+            {
+                w[j] = j + ((j < 6) ? 1 : 0);
+                x[j] = j + 1;
             }
 
             var actual = x.WeightedMedian(w);
@@ -339,7 +341,7 @@ namespace SharpLearning.Containers.Test
 
             Assert.AreEqual(2.0, actual);
         }
-               
+
         [TestMethod]
         public void ArrayExtensions_Shuffle()
         {
@@ -379,7 +381,7 @@ namespace SharpLearning.Containers.Test
         [TestMethod]
         public void ArrayExtensions_StratifiedIndexSampling_Unequal_Class_Size_50_Percent_Sample()
         {
-            var values = new int[] { 1, 1, 1, 1, 1, 1, 1,  2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
+            var values = new int[] { 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 };
             var sampleSize = values.Length / 2;
             var sampleIndices = values.StratifiedIndexSampling(sampleSize, new Random(42));
 
@@ -451,7 +453,7 @@ namespace SharpLearning.Containers.Test
             values.StratifiedIndexSampling(sampleSize, indices, new Random(42));
         }
 
-        [TestMethod] 
+        [TestMethod]
         public void ArrayExtensions_List_ToF64Matrix()
         {
             var sut = new List<double[]>

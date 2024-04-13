@@ -127,7 +127,7 @@ namespace SharpLearning.XGBoost.Test.Models
             }
         }
 
-        static readonly string m_tree1 = @"booster[0]
+        const string m_tree1 = @"booster[0]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=343.922,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=74.1261,cover=61
 		3:[f8<0.13] yes=7,no=8,missing=7,gain=10.7401,cover=37
@@ -142,7 +142,7 @@ namespace SharpLearning.XGBoost.Test.Models
 			12:leaf=-0.0020202,cover=98
 		6:leaf=0.3,cover=2";
 
-        static readonly List<GBMNode> m_tree1Nodes = new List<GBMNode>
+        static readonly List<GBMNode> m_tree1Nodes = new()
         {
            /*-1*/ new GBMNode
             {
@@ -213,7 +213,7 @@ namespace SharpLearning.XGBoost.Test.Models
             },
         };
 
-        static readonly string m_tree2 = @"booster[10]
+        const string m_tree2 = @"booster[10]
 0:[f2<2.545] yes=1,no=2,missing=1,gain=46.9086,cover=214
 	1:[f1<13.785] yes=3,no=4,missing=3,gain=12.7152,cover=60
 		3:[f1<13.495] yes=7,no=8,missing=7,gain=4.75871,cover=24
@@ -228,7 +228,7 @@ namespace SharpLearning.XGBoost.Test.Models
 			11:leaf=0.0257847,cover=54
 			12:leaf=-0.00524031,cover=98";
 
-        static readonly List<GBMNode> m_tree2Nodes = new List<GBMNode>
+        static readonly List<GBMNode> m_tree2Nodes = new()
         {
            /*-1*/ new GBMNode
             {

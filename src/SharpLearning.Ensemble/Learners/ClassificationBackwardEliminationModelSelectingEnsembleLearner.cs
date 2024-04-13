@@ -25,10 +25,10 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="learners">Learners in the ensemble</param>
         /// <param name="numberOfModelsToSelect">Number of models to select</param>
         public ClassificationBackwardEliminationModelSelectingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             int numberOfModelsToSelect)
-            : this(learners, numberOfModelsToSelect, 
-                new StratifiedCrossValidation<ProbabilityPrediction>(5, 42), 
+            : this(learners, numberOfModelsToSelect,
+                new StratifiedCrossValidation<ProbabilityPrediction>(5, 42),
                 new MeanProbabilityClassificationEnsembleStrategy(),
                 new LogLossClassificationProbabilityMetric())
         {
@@ -46,12 +46,12 @@ namespace SharpLearning.Ensemble.Learners
         /// <param name="ensembleStrategy">Strategy for ensembling models</param>
         /// <param name="metric">Metric to minimize</param>
         public ClassificationBackwardEliminationModelSelectingEnsembleLearner(
-            IIndexedLearner<ProbabilityPrediction>[] learners, 
+            IIndexedLearner<ProbabilityPrediction>[] learners,
             int numberOfModelsToSelect,
-            ICrossValidation<ProbabilityPrediction> crossValidation, 
-            IClassificationEnsembleStrategy ensembleStrategy, 
+            ICrossValidation<ProbabilityPrediction> crossValidation,
+            IClassificationEnsembleStrategy ensembleStrategy,
             IMetric<double, ProbabilityPrediction> metric)
-            : base(learners, crossValidation, ensembleStrategy, 
+            : base(learners, crossValidation, ensembleStrategy,
                   new BackwardEliminationClassificationEnsembleSelection(
                       metric, ensembleStrategy, numberOfModelsToSelect))
         {

@@ -25,7 +25,7 @@ namespace SharpLearning.Ensemble.Test.Models
                 new RegressionDecisionTreeLearner(9)
             };
 
-            var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy()); 
+            var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
             var sut = learner.Learn(observations, targets);
 
             var rows = targets.Length;
@@ -70,7 +70,7 @@ namespace SharpLearning.Ensemble.Test.Models
         {
             var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
-            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 }, 
+            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
                 { "PreviousExperience_month", 1 } };
 
             var learners = new IIndexedLearner<double>[]
@@ -85,7 +85,7 @@ namespace SharpLearning.Ensemble.Test.Models
             var sut = learner.Learn(observations, targets);
 
             var actual = sut.GetVariableImportance(featureNameToIndex);
-            var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 }, 
+            var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
                 { "AptitudeTestScore", 3.46067371526717 } };
 
             Assert.AreEqual(expected.Count, actual.Count);

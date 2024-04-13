@@ -89,7 +89,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="residuals"></param>
         /// <param name="inSample"></param>
-        public void UpdateResiduals(double[] targets, double[] predictions, 
+        public void UpdateResiduals(double[] targets, double[] predictions,
             double[] residuals, bool[] inSample)
         {
             for (int i = 0; i < residuals.Length; i++)
@@ -108,7 +108,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="right"></param>
         /// <param name="target"></param>
         /// <param name="residual"></param>
-        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, 
+        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right,
             double target, double residual)
         {
             var residual2 = residual * residual;
@@ -118,7 +118,7 @@ namespace SharpLearning.GradientBoost.Loss
             left.SumOfSquares += residual2;
             left.Cost = left.SumOfSquares - (left.Sum * left.Sum / left.Samples);
             left.BestConstant = left.Sum / left.Samples;
-            
+
             // Alternative update but gives slightly different results
             //var leftSamplesInv =  1.0 / left.Samples;
             //var leftAverage = left.Sum * leftSamplesInv;
@@ -126,7 +126,7 @@ namespace SharpLearning.GradientBoost.Loss
             //left.Cost = left.SumOfSquares - (left.Sum * leftAverage);
             //left.Cost = left.SumOfSquares - (left.Sum * left.Sum * leftSamplesInv);
             //left.BestConstant = left.Sum  * leftSamplesInv;
-           
+
 
             right.Samples--;
             right.Sum -= residual;
@@ -151,7 +151,7 @@ namespace SharpLearning.GradientBoost.Loss
         /// <param name="predictions"></param>
         /// <param name="inSample"></param>
         /// <returns></returns>
-        public double UpdatedLeafValue(double currentLeafValue, double[] targets, 
+        public double UpdatedLeafValue(double currentLeafValue, double[] targets,
             double[] predictions, bool[] inSample)
         {
             // no updates needed for square loss

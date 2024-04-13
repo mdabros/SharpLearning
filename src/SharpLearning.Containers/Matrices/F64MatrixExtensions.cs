@@ -146,13 +146,13 @@ namespace SharpLearning.Containers.Matrices
             {
                 Array.Copy(v, i, features, combineIndex, 1);
                 combineIndex += 1;
-                
+
                 var matrixIndex = i * m.ColumnCount;
                 Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);
                 combineIndex += m.ColumnCount;
 
             }
-            
+
             return new F64Matrix(features, rows, cols);
         }
 

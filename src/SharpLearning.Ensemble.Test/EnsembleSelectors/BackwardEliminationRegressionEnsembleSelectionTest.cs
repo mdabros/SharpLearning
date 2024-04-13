@@ -15,7 +15,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         [ExpectedException(typeof(ArgumentNullException))]
         public void BackwardEliminationRegressionEnsembleSelection_Constructor_Metric_Null()
         {
-            var sut = new BackwardEliminationRegressionEnsembleSelection(null, 
+            var sut = new BackwardEliminationRegressionEnsembleSelection(null,
                 new MeanRegressionEnsembleStrategy(), 5);
         }
 
@@ -32,7 +32,7 @@ namespace SharpLearning.Ensemble.Test.EnsembleSelectors
         public void BackwardEliminationRegressionEnsembleSelection_Constructor_Number_Of_Models_Too_Low()
         {
             var sut = new BackwardEliminationRegressionEnsembleSelection(
-                new MeanSquaredErrorRegressionMetric(), 
+                new MeanSquaredErrorRegressionMetric(),
                 new MeanRegressionEnsembleStrategy(), 0);
         }
 

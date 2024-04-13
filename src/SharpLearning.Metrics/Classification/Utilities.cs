@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Classification
 {
-    internal static class Utilities
+    static class Utilities
     {
         static internal List<T> UniqueTargetValues<T>(T[] targets, T[] predictions)
         {
@@ -22,7 +22,7 @@ namespace SharpLearning.Metrics.Classification
             var confusionMatrix = ClassificationMatrix.ConfusionMatrix(uniques, targets, predictions);
             var errorMatrix = ClassificationMatrix.ErrorMatrix(uniques, confusionMatrix);
 
-            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix, 
+            return ClassificationMatrixStringConverter.Convert(uniques, confusionMatrix,
                 errorMatrix, error);
         }
 

@@ -32,13 +32,13 @@ namespace SharpLearning.Metrics.Classification
 
             for (int row = 0; row < uniques.Count; ++row)
             {
-                errorSum -= confusionMatrix[row,row];
+                errorSum -= confusionMatrix[row, row];
             }
 
             return (double)errorSum / totalSum;
         }
 
-        int Sum(int[,] confusionMatrix)
+        static int Sum(int[,] confusionMatrix)
         {
             var rows = confusionMatrix.GetLength(0);
             var cols = confusionMatrix.GetLength(1);
@@ -55,7 +55,7 @@ namespace SharpLearning.Metrics.Classification
             return sum;
         }
 
-        List<T> UniqueTargets(T[] targets, T[] predictions)
+        static List<T> UniqueTargets(T[] targets, T[] predictions)
         {
             var uniquePredictions = predictions.Distinct();
             var uniqueTargets = targets.Distinct();

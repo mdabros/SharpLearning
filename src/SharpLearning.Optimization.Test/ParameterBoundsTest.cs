@@ -10,7 +10,7 @@ namespace SharpLearning.Optimization.Test
         [TestMethod]
         public void ParameterBounds_NextValue()
         {
-            var sut = new MinMaxParameterSpec(min: 20, max: 200, 
+            var sut = new MinMaxParameterSpec(min: 20, max: 200,
                 transform: Transform.Linear);
 
             var sampler = new RandomUniform(seed: 32);
@@ -21,7 +21,7 @@ namespace SharpLearning.Optimization.Test
                 actual[i] = sut.SampleValue(sampler: sampler);
             }
 
-            var expected = new double[] 
+            var expected = new double[]
             {
                 99.8935983236384,
                 57.2098020451189,
@@ -46,7 +46,7 @@ namespace SharpLearning.Optimization.Test
         [ExpectedException(typeof(ArgumentException))]
         public void ParameterBounds_Throw_On_Min_Larger_Than_Max()
         {
-            new MinMaxParameterSpec(min:30, max: 10);
+            new MinMaxParameterSpec(min: 30, max: 10);
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace SharpLearning.Optimization.Test
         [ExpectedException(typeof(ArgumentNullException))]
         public void ParameterBounds_Throw_On_Transform_Is_Null()
         {
-            new MinMaxParameterSpec(min: 10, max: 30, transform: null, 
+            new MinMaxParameterSpec(min: 10, max: 30, transform: null,
                 parameterType: ParameterType.Continuous);
         }
     }

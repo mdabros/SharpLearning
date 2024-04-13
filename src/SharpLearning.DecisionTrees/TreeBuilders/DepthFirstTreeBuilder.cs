@@ -53,18 +53,18 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
         /// to the total amount of features in observations. The features will be selected at random for each split</param>
         /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
         /// <param name="impurityCalculator">Impurity calculator used to decide which split is optimal</param>
-        public DepthFirstTreeBuilder(int maximumTreeDepth, 
-            int featuresPrSplit, 
-            double minimumInformationGain, 
+        public DepthFirstTreeBuilder(int maximumTreeDepth,
+            int featuresPrSplit,
+            double minimumInformationGain,
             int seed,
-            ISplitSearcher splitSearcher, 
+            ISplitSearcher splitSearcher,
             IImpurityCalculator impurityCalculator)
         {
             if (maximumTreeDepth <= 0) { throw new ArgumentException("maximum tree depth must be larger than 0"); }
             if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
             if (featuresPrSplit < 0) { throw new ArgumentException("features pr split must be at least 0"); }
-            m_splitSearcher = splitSearcher ?? throw new ArgumentException(nameof(splitSearcher));
-            m_impurityCalculator = impurityCalculator ?? throw new ArgumentException(nameof(impurityCalculator));
+            m_splitSearcher = splitSearcher ?? throw new ArgumentNullException(nameof(splitSearcher));
+            m_impurityCalculator = impurityCalculator ?? throw new ArgumentNullException(nameof(impurityCalculator));
 
             m_maximumTreeDepth = maximumTreeDepth;
             m_featuresPrSplit = featuresPrSplit;
@@ -95,7 +95,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
             {
                 m_featuresPrSplit = numberOfFeatures;
             }
-          
+
             Array.Resize(ref m_bestSplitWorkIndices, indices.Length);
             m_bestSplitWorkIndices.Clear();
             Array.Resize(ref m_variableImportance, numberOfFeatures);
@@ -250,7 +250,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders
                 nodes.Add(leaf);
             }
 
-            return new BinaryTree(nodes, probabilities, targetNames, 
+            return new BinaryTree(nodes, probabilities, targetNames,
                 m_variableImportance.ToArray());
         }
 

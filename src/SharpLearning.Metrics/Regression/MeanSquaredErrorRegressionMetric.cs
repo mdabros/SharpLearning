@@ -19,7 +19,7 @@ namespace SharpLearning.Metrics.Regression
             {
                 throw new ArgumentException("targets and predictions length do not match");
             }
-            
+
             var meanSquareError = 0.0;
             for (int i = 0; i < targets.Length; ++i)
             {

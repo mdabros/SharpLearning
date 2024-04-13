@@ -71,10 +71,10 @@ namespace SharpLearning.Containers.Views
         /// <param name="y"></param>
         /// <returns></returns>
         public static bool operator !=(Interval2D x, Interval2D y)
-        { 
-            return !(x == y); 
+        {
+            return !(x == y);
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -82,9 +82,9 @@ namespace SharpLearning.Containers.Views
         /// <param name="y"></param>
         /// <returns></returns>
         public static bool operator ==(Interval2D x, Interval2D y)
-        { 
-            return (x.Cols == y.Cols) && 
-                   (x.Rows== y.Rows); 
+        {
+            return (x.Cols == y.Cols) &&
+                   (x.Rows == y.Rows);
         }
 
         /// <summary>

@@ -14,15 +14,15 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
         [Serializable]
         class FeatureMinMax
         {
-            public double Min {get; set;}
+            public double Min { get; set; }
             public double Max { get; set; }
         }
 
         readonly double m_min;
         readonly double m_max;
-        readonly LinearNormalizer m_normalizer = new LinearNormalizer();
+        readonly LinearNormalizer m_normalizer = new();
 
-        Dictionary<int, FeatureMinMax> m_featureMinMax;
+        readonly Dictionary<int, FeatureMinMax> m_featureMinMax;
 
         /// <summary>
         /// Normalizes features within the specified range (min, max)
@@ -80,10 +80,10 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
                 {
                     var value = matrix[j, i];
                     var minMax = m_featureMinMax[i];
-                    var newValue = m_normalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
+                    var newValue = LinearNormalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
                     output[j, i] = newValue;
                 }
-            }        
+            }
         }
 
         void CreateFeatureMinMax(F64Matrix matrix)
@@ -104,9 +104,9 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
                     else if (value > minMax.Max)
                     {
                         minMax.Max = value;
-                    }       
+                    }
                 }
-            }        
+            }
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace SharpLearning.FeatureTransformations.MatrixTransforms
             {
                 var value = vector[i];
                 var minMax = m_featureMinMax[i];
-                var newValue = m_normalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
+                var newValue = LinearNormalizer.Normalize(m_min, m_max, minMax.Min, minMax.Max, value);
                 output[i] = newValue;
             }
         }

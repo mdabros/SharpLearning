@@ -22,7 +22,7 @@ namespace SharpLearning.Containers.Arithmetic
                     string.Format("Vectors have different lengths: v1: {0}, v2: {1}",
                         v1.Length, v2.Length));
             }
-            
+
             var v3 = new double[v1.Length];
 
             for (int i = 0; i < v1.Length; i++)
@@ -53,25 +53,25 @@ namespace SharpLearning.Containers.Arithmetic
 
             if (m1Cols != m2Cols)
             {
-                throw new ArgumentException("matrix m1 cols: " + m1Cols + 
+                throw new ArgumentException("matrix m1 cols: " + m1Cols +
                     " differs from matrix m2 cols: " + m2Cols);
             }
 
             if (m1Rows != m2Rows)
             {
-                throw new ArgumentException("matrix m1 rows: " + m1Rows + 
+                throw new ArgumentException("matrix m1 rows: " + m1Rows +
                     " differs from matrix m2 rows: " + m2Rows);
             }
 
             if (m1Cols != outputCols)
             {
-                throw new ArgumentException("matrix m1 cols: " + m1Cols + 
+                throw new ArgumentException("matrix m1 cols: " + m1Cols +
                     " differs from matrix output cols: " + outputCols);
             }
 
             if (m1Rows != outputRows)
             {
-                throw new ArgumentException("matrix m1 rows: " + m1Rows + 
+                throw new ArgumentException("matrix m1 rows: " + m1Rows +
                     " differs from matrix output rows: " + outputRows);
             }
 

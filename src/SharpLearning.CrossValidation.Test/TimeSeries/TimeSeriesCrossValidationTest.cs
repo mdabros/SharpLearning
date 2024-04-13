@@ -26,7 +26,7 @@ namespace SharpLearning.CrossValidation.Test.TimeSeries
 
             Assert.AreEqual(0.098690664447830825, error, 0.00001);
         }
-        
+
         [TestMethod]
         public void TimeSeriesCrossValidation_Validate_MaxTrainingSetSize()
         {

@@ -33,11 +33,11 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// This will correspond to weighting the models. If false each model can only be selected once</param>
         /// <param name="seed"></param>
         public RandomClassificationEnsembleSelection(
-            IMetric<double, ProbabilityPrediction> metric, 
+            IMetric<double, ProbabilityPrediction> metric,
             IClassificationEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, 
-            int iterations, 
-            bool selectWithReplacement, 
+            int numberOfModelsToSelect,
+            int iterations,
+            bool selectWithReplacement,
             int seed = 42)
         {
             m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
@@ -60,7 +60,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
         /// <returns>The indices of the selected model</returns>
         public int[] Select(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets)
         {
-            if(crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
+            if (crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
             {
                 throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
                     " is smaller than number of models to select: " + m_numberOfModelsToSelect);
@@ -92,7 +92,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
                 {
                     bestError = error;
                     candidateModelIndices.CopyTo(bestModelIndices, 0);
-                    Trace.WriteLine("Models selected: " + bestModelIndices.Length+ ": " + error);
+                    Trace.WriteLine("Models selected: " + bestModelIndices.Length + ": " + error);
                 }
             }
 
@@ -103,7 +103,7 @@ namespace SharpLearning.Ensemble.EnsembleSelectors
 
         void SelectNextRandomIndices(int[] candidateModelIndices)
         {
-            if(m_selectWithReplacement)
+            if (m_selectWithReplacement)
             {
                 for (int i = 0; i < candidateModelIndices.Length; i++)
                 {

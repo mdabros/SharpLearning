@@ -21,7 +21,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree
         /// Current sum of squares of the split
         /// </summary>
         public double SumOfSquares;
-        
+
         /// <summary>
         /// Current cost of the split
         /// </summary>

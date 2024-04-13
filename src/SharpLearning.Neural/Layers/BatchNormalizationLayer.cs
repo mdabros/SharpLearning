@@ -211,7 +211,7 @@ namespace SharpLearning.Neural.Layers
             return OutputActivations;
         }
 
-        float MovingAverage(float currentValue, float value, float momentum = 0.99f)
+        static float MovingAverage(float currentValue, float value, float momentum = 0.99f)
         {
             var newValue = currentValue * momentum + value * (1.0f - momentum);
             return newValue;
@@ -239,7 +239,7 @@ namespace SharpLearning.Neural.Layers
         /// <param name="batchSize"></param>
         /// <param name="initializtion"></param>
         /// <param name="random"></param>
-        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, 
+        public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
             Initialization initializtion, Random random)
         {
             Width = inputWidth;
