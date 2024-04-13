@@ -55,7 +55,7 @@ However, several optimization methods are available for hyperparameter tuning:
 License
 -------
 
-SharpLearning is covered under the terms of the [MIT](LICENSE.md) license. You may therefore link to it and use it in both opensource and proprietary software projects.
+SharpLearning is covered under the terms of the [MIT](LICENSE) license. You may therefore link to it and use it in both opensource and proprietary software projects.
 
 Documentation
 -------------
