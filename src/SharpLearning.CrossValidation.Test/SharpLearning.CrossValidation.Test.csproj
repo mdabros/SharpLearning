@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0-release-23619-01" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.2.0-preview.24069.3" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.2.0-preview.24069.3" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="MSTest" Version="3.3.1" />
   </ItemGroup>
 
   <ItemGroup>
