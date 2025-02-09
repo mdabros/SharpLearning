@@ -140,7 +140,9 @@ public class RegressionStackingEnsembleModelTest
         }
     }
 
+#pragma warning disable IDE0051 // Remove unused private members
     static void WriteRawImportances(double[] featureImportance)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         var result = "new double[] {";
         foreach (var item in featureImportance)
@@ -151,7 +153,9 @@ public class RegressionStackingEnsembleModelTest
         Trace.WriteLine(result);
     }
 
+#pragma warning disable IDE0051 // Remove unused private members
     static void WriteImportances(Dictionary<string, double> featureImportance)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         var result = "new Dictionary<string, double> {";
         foreach (var item in featureImportance)

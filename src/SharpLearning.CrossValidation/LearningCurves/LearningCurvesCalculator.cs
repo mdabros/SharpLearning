@@ -28,7 +28,6 @@ public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<T
     readonly IMetric<double, TPrediction> m_metric;
     readonly IIndexSampler<double> m_indexedSampler;
     readonly int m_numberOfShufflesPrSample;
-    readonly Random m_random;
 
     /// <summary>
     /// Bias variance analysis calculator for constructing learning curves.
@@ -52,7 +51,6 @@ public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<T
 
         m_samplePercentages = samplePercentages;
         m_numberOfShufflesPrSample = numberOfShufflesPrSample;
-        m_random = new Random(42);
     }
 
     /// <summary>

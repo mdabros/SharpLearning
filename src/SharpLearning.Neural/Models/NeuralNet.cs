@@ -60,9 +60,9 @@ public sealed class NeuralNet
 
         Layers.Add(layer);
 
-        if (layer is IBatchNormalizable) // consider adding separate interface for batch normalization
+        if (layer is IBatchNormalizable normalizable) // consider adding separate interface for batch normalization
         {
-            if (((IBatchNormalizable)layer).BatchNormalization)
+            if (normalizable.BatchNormalization)
             {
                 Layers.Add(new BatchNormalizationLayer());
             }
