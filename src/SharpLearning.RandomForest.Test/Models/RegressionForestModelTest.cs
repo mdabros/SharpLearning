@@ -201,7 +201,9 @@ public class RegressionForestModelTest
         Assert.AreEqual(0.14547628738104926, error, m_delta);
     }
 
+#pragma warning disable IDE0051 // Remove unused private members
     static void Write(CertaintyPrediction[] predictions)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         var value = "new CertaintyPrediction[] {";
         foreach (var item in predictions)

@@ -174,7 +174,7 @@ public class ClassificationDecisionTreeLearnerTest
         return error;
     }
 
-    double ClassificationDecisionTreeLearner_Learn_Glass_Weighted(int treeDepth, double weight)
+    static double ClassificationDecisionTreeLearner_Learn_Glass_Weighted(int treeDepth, double weight)
     {
         var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
@@ -189,7 +189,7 @@ public class ClassificationDecisionTreeLearnerTest
         return error;
     }
 
-    double ClassificationDecisionTreeLearner_Learn_Aptitude_Weighted(int treeDepth, double weight)
+    static double ClassificationDecisionTreeLearner_Learn_Aptitude_Weighted(int treeDepth, double weight)
     {
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 

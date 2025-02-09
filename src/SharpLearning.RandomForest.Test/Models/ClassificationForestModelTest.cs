@@ -195,7 +195,9 @@ public class ClassificationForestModelTest
         Assert.AreEqual(0.42307692307692307, error, m_delta);
     }
 
+#pragma warning disable IDE0051 // Remove unused private members
     static void Write(ProbabilityPrediction[] predictions)
+#pragma warning restore IDE0051 // Remove unused private members
     {
         var value = "new ProbabilityPrediction[] {";
         foreach (var item in predictions)

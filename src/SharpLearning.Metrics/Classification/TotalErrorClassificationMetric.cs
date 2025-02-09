@@ -25,7 +25,7 @@ public sealed class TotalErrorClassificationMetric<T> : IClassificationMetric<T>
         return TotalError(uniques, confusionMatrix);
     }
 
-    double TotalError(List<T> uniques, int[,] confusionMatrix)
+    static double TotalError(List<T> uniques, int[,] confusionMatrix)
     {
         var totalSum = Sum(confusionMatrix);
         var errorSum = totalSum;

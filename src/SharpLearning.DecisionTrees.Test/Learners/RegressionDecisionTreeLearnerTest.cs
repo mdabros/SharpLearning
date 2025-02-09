@@ -97,7 +97,7 @@ public class RegressionDecisionTreeLearnerTest
         return error;
     }
 
-    double RegressionDecisionTreeLearner_Learn_Weighted(int treeDepth, double weight)
+    static double RegressionDecisionTreeLearner_Learn_Weighted(int treeDepth, double weight)
     {
         var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 

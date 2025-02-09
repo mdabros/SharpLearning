@@ -20,7 +20,6 @@ public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
 
     readonly double m_min;
     readonly double m_max;
-    readonly LinearNormalizer m_normalizer = new();
 
     readonly Dictionary<int, FeatureMinMax> m_featureMinMax;
 
