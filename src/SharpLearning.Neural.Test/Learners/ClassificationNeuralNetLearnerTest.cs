@@ -6,6 +6,7 @@ using SharpLearning.Metrics.Classification;
 using SharpLearning.Neural.Layers;
 using SharpLearning.Neural.Learners;
 using SharpLearning.Neural.Loss;
+using SharpLearning.Neural.Models;
 
 namespace SharpLearning.Neural.Test.Learners;
 
