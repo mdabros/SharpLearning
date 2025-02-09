@@ -57,7 +57,7 @@ public sealed class ClassificationForestModel : IPredictorModel<double>, IPredic
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Predict(observations.Row(i));
         }
@@ -116,7 +116,7 @@ public sealed class ClassificationForestModel : IPredictorModel<double>, IPredic
     {
         var rows = observations.RowCount;
         var predictions = new ProbabilityPrediction[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = PredictProbability(observations.Row(i));
         }

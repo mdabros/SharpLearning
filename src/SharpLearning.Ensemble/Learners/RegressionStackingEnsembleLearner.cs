@@ -150,7 +150,7 @@ public sealed class RegressionStackingEnsembleLearner : ILearner<double>, IIndex
 
         var cvPredictions = new F64Matrix(cvRows, cvCols);
         var modelPredictions = new double[cvRows];
-        for (int i = 0; i < m_learners.Length; i++)
+        for (var i = 0; i < m_learners.Length; i++)
         {
             Trace.WriteLine("Training model: " + (i + 1));
 
@@ -158,7 +158,7 @@ public sealed class RegressionStackingEnsembleLearner : ILearner<double>, IIndex
             m_crossValidation.CrossValidate(learner, observations, targets,
                 indices, modelPredictions);
 
-            for (int j = 0; j < modelPredictions.Length; j++)
+            for (var j = 0; j < modelPredictions.Length; j++)
             {
                 cvPredictions[j, i] = modelPredictions[j];
             }
@@ -166,9 +166,9 @@ public sealed class RegressionStackingEnsembleLearner : ILearner<double>, IIndex
 
         if (m_includeOriginalFeaturesForMetaLearner)
         {
-            for (int i = 0; i < cvRows; i++)
+            for (var i = 0; i < cvRows; i++)
             {
-                for (int j = 0; j < observations.ColumnCount; j++)
+                for (var j = 0; j < observations.ColumnCount; j++)
                 {
                     cvPredictions[i, j + m_learners.Length] = observations[indices[i], j];
                 }

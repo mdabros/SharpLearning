@@ -52,7 +52,7 @@ public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, I
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Tree.Predict(observations.Row(i));
         }
@@ -70,7 +70,7 @@ public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, I
     {
         var rows = observations.RowCount;
         var predictions = new double[indices.Length];
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             predictions[i] = Tree.Predict(observations.Row(indices[i]));
         }
@@ -97,7 +97,7 @@ public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, I
     {
         var rows = observations.RowCount;
         var predictions = new ProbabilityPrediction[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Tree.PredictProbability(observations.Row(i));
         }
@@ -115,7 +115,7 @@ public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, I
     {
         var rows = observations.RowCount;
         var predictions = new ProbabilityPrediction[indices.Length];
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             predictions[i] = Tree.PredictProbability(observations.Row(indices[i]));
         }

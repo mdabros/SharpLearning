@@ -19,11 +19,11 @@ public sealed class AccuracyLoss : ILoss
     {
         var correctCount = 0;
 
-        for (int row = 0; row < targets.RowCount; row++)
+        for (var row = 0; row < targets.RowCount; row++)
         {
             var max = 0.0;
             var maxIndex = 0;
-            for (int col = 0; col < targets.ColumnCount; col++)
+            for (var col = 0; col < targets.ColumnCount; col++)
             {
                 var predictionValue = predictions.At(row, col);
                 if (predictionValue > max)

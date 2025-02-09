@@ -17,7 +17,7 @@ public sealed class CopyTargetEncoder : ITargetEncoder
     public Matrix<float> Encode(double[] targets)
     {
         var encodedTargets = Matrix<float>.Build.Dense(targets.Length, 1);
-        for (int i = 0; i < targets.Length; i++)
+        for (var i = 0; i < targets.Length; i++)
         {
             encodedTargets[i, 0] = (float)targets[i];
         }

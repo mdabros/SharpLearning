@@ -24,7 +24,7 @@ public class RegressionXGBoostModelTest
         {
             var rows = targets.Length;
             var predictions = new double[rows];
-            for (int i = 0; i < rows; i++)
+            for (var i = 0; i < rows; i++)
             {
                 predictions[i] = sut.Predict(observations.Row(i));
             }

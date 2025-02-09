@@ -13,7 +13,7 @@ public sealed class SigmoidActivation : IActivation
     /// <param name="x"></param>
     public void Activation(float[] x)
     {
-        for (int j = 0; j < x.Length; j++)
+        for (var j = 0; j < x.Length; j++)
         {
             x[j] = Sigmoid(x[j]);
         }
@@ -26,7 +26,7 @@ public sealed class SigmoidActivation : IActivation
     /// <param name="output"></param>
     public void Derivative(float[] x, float[] output)
     {
-        for (int j = 0; j < x.Length; j++)
+        for (var j = 0; j < x.Length; j++)
         {
             output[j] = Derivative(x[j]);
         }

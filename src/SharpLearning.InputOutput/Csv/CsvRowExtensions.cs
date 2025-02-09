@@ -205,7 +205,7 @@ public static class CsvRowExtensions
             throw new ArgumentException("matrix and column name to index must have same lengths");
         }
 
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var row = matrix.Row(i)
                             .Select(value => value.ToString())
@@ -261,7 +261,7 @@ public static class CsvRowExtensions
         bool removeRepeatedColumns = true)
     {
         CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns,
-            out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep);
+            out Dictionary<string, int> newColumnNameToIndex, out var columnIndicesToKeep);
 
         var dictThisRows = thisRows.ToDictionary(p => p.GetValue(key1));
         var dictOtherRows = otherRows.ToDictionary(p => p.GetValue(key2));
@@ -309,7 +309,7 @@ public static class CsvRowExtensions
         bool removeRepeatedColumns = true)
     {
         CreateNewColumnNameToIndex(thisRows, otherRows, removeRepeatedColumns,
-            out Dictionary<string, int> newColumnNameToIndex, out int[] columnIndicesToKeep);
+            out Dictionary<string, int> newColumnNameToIndex, out var columnIndicesToKeep);
 
         foreach (var thisRow in thisRows)
         {

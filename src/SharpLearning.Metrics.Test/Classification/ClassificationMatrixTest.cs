@@ -37,9 +37,9 @@ public class ClassificationMatrixTest
     {
         Assert.AreEqual(expected.GetLength(0), actual.GetLength(0));
         Assert.AreEqual(expected.GetLength(1), actual.GetLength(1));
-        for (int r = 0; r < expected.GetLength(0); r++)
+        for (var r = 0; r < expected.GetLength(0); r++)
         {
-            for (int c = 0; c < expected.GetLength(1); c++)
+            for (var c = 0; c < expected.GetLength(1); c++)
             {
                 Assert.AreEqual(expected[r, c], actual[r, c]);
             }

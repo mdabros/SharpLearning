@@ -58,7 +58,7 @@ public sealed class ContinuousMungeAugmentator
         var candidate = new double[orgCols];
         indicesVisited.Clear();
 
-        for (int j = 0; j < orgRows; j++)
+        for (var j = 0; j < orgRows; j++)
         {
             if (indicesVisited.Contains(j)) { continue; }
             dataset.Row(j, sample);
@@ -67,7 +67,7 @@ public sealed class ContinuousMungeAugmentator
             var closestIndex = -1;
             indicesVisited.Add(j);
 
-            for (int f = 0; f < orgRows; f++)
+            for (var f = 0; f < orgRows; f++)
             {
                 if (indicesVisited.Contains(f)) { continue; }
                 dataset.Row(f, candidate);
@@ -85,7 +85,7 @@ public sealed class ContinuousMungeAugmentator
                 dataset.Row(closestIndex, candidate);
                 indicesVisited.Add(closestIndex);
 
-                for (int h = 0; h < sample.Length; h++)
+                for (var h = 0; h < sample.Length; h++)
                 {
                     var sampleValue = sample[h];
                     var candiateValue = candidate[h];
@@ -111,11 +111,11 @@ public sealed class ContinuousMungeAugmentator
 
     double SampleRandom(double mean, double std)
     {
-        double u1 = m_random.NextDouble(); //these are uniform(0,1) random doubles
-        double u2 = m_random.NextDouble();
+        var u1 = m_random.NextDouble(); //these are uniform(0,1) random doubles
+        var u2 = m_random.NextDouble();
 
-        double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); // random normal(0,1)
-        double randNormal = mean + std * randStdNormal; //random normal(mean,stdDev^2)
+        var randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); // random normal(0,1)
+        var randNormal = mean + std * randStdNormal; //random normal(mean,stdDev^2)
 
         return randNormal;
     }

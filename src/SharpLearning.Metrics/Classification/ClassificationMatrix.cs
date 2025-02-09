@@ -42,17 +42,17 @@ public static class ClassificationMatrix
     public static double[,] ErrorMatrix<T>(List<T> uniqueTargets, int[,] confusionMatrix)
     {
         var errorMatrix = new double[uniqueTargets.Count, uniqueTargets.Count];
-        for (int row = 0; row < uniqueTargets.Count; ++row)
+        for (var row = 0; row < uniqueTargets.Count; ++row)
         {
             var rowSum = 0.0;
-            for (int col = 0; col < uniqueTargets.Count; col++)
+            for (var col = 0; col < uniqueTargets.Count; col++)
             {
                 rowSum += confusionMatrix[row, col];
             }
 
-            for (int col = 0; col < uniqueTargets.Count; col++)
+            for (var col = 0; col < uniqueTargets.Count; col++)
             {
-                double ratio = rowSum > 0.0 ? (confusionMatrix[row, col]) / rowSum : 0.0;
+                var ratio = rowSum > 0.0 ? (confusionMatrix[row, col]) / rowSum : 0.0;
                 errorMatrix[row, col] = ratio;
             }
         }

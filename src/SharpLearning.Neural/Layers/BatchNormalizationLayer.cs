@@ -98,10 +98,10 @@ public sealed class BatchNormalizationLayer : ILayer
         var diff_src = m_delta;
         var diff_scaleshift = ScaleGradients;
 
-        int N = diff_src.RowCount;
-        int C = Depth;
-        int H = Height;
-        int W = Width;
+        var N = diff_src.RowCount;
+        var C = Depth;
+        var H = Height;
+        var W = Width;
 
         Parallel.For(0, C, c =>
         {
@@ -111,9 +111,9 @@ public sealed class BatchNormalizationLayer : ILayer
             var diff_gamma = 0.0f;
             var diff_beta = 0.0f;
 
-            for (int n = 0; n < N; ++n)
-                for (int h = 0; h < H; ++h)
-                    for (int w = 0; w < W; ++w)
+            for (var n = 0; n < N; ++n)
+                for (var h = 0; h < H; ++h)
+                    for (var w = 0; w < W; ++w)
                     {
                         diff_gamma += (src.GetValueFromIndex(n, c, h, w, Depth, Width, Height) - mean)
                             * diff_dst.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
@@ -124,9 +124,9 @@ public sealed class BatchNormalizationLayer : ILayer
             ScaleGradients.At(0, c, diff_gamma);
             BiasGradients[c] = diff_beta;
 
-            for (int n = 0; n < N; ++n)
-                for (int h = 0; h < H; ++h)
-                    for (int w = 0; w < W; ++w)
+            for (var n = 0; n < N; ++n)
+                for (var h = 0; h < H; ++h)
+                    for (var w = 0; w < W; ++w)
                     {
                         var diffSrcIndex = diff_src.GetDataIndex(n, c, h, w, Depth, Width, Height);
                         diff_src.Data()[diffSrcIndex] =
@@ -152,13 +152,13 @@ public sealed class BatchNormalizationLayer : ILayer
         var src = input;
         var dst = OutputActivations.Data();
 
-        int N = input.RowCount; // number of items in mini batch
-        int C = Depth;
-        int H = Height;
-        int W = Width;
+        var N = input.RowCount; // number of items in mini batch
+        var C = Depth;
+        var H = Height;
+        var W = Width;
 
-        bool is_training = BatchColumnMeans != null;
-        double eps = 1e-6;
+        var is_training = BatchColumnMeans != null;
+        var eps = 1e-6;
 
         Parallel.For(0, C, c =>
         {
@@ -167,15 +167,15 @@ public sealed class BatchNormalizationLayer : ILayer
 
             if (is_training)
             {
-                for (int n = 0; n < N; ++n)
-                    for (int h = 0; h < H; ++h)
-                        for (int w = 0; w < W; ++w)
+                for (var n = 0; n < N; ++n)
+                    for (var h = 0; h < H; ++h)
+                        for (var w = 0; w < W; ++w)
                             mean += src.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
                 mean /= W * N * H;
 
-                for (int n = 0; n < N; ++n)
-                    for (int h = 0; h < H; ++h)
-                        for (int w = 0; w < W; ++w)
+                for (var n = 0; n < N; ++n)
+                    for (var h = 0; h < H; ++h)
+                        for (var w = 0; w < W; ++w)
                         {
                             var m = src.GetValueFromIndex(n, c, h, w, Depth, Width, Height) - mean;
                             variance += m * m;
@@ -188,9 +188,9 @@ public sealed class BatchNormalizationLayer : ILayer
                 variance = MovingAverageVariance[c];
             }
 
-            for (int n = 0; n < N; ++n)
-                for (int h = 0; h < H; ++h)
-                    for (int w = 0; w < W; ++w)
+            for (var n = 0; n < N; ++n)
+                for (var h = 0; h < H; ++h)
+                    for (var w = 0; w < W; ++w)
                     {
                         var d_off = src.GetDataIndex(n, c, h, w, Depth, Width, Height);
                         var scale = Scale.At(0, c);

@@ -110,9 +110,9 @@ public sealed class GiniClassificationImpurityCalculator : ClassificationImpurit
         var probabilities = new double[m_targetNames.Length];
         var probabilityFactor = 1.0 / (m_weightedTotal + m_targetNames.Length);
 
-        for (int i = 0; i < m_targetNames.Length; i++)
+        for (var i = 0; i < m_targetNames.Length; i++)
         {
-            int targetValue = (int)m_targetNames[i];
+            var targetValue = (int)m_targetNames[i];
             var targetProbability = (m_weightedTargetCount[targetValue] + 1) * probabilityFactor;
             probabilities[i] = targetProbability;
         }

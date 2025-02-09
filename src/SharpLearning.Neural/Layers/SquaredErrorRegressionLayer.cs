@@ -66,7 +66,7 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
         var predictionsArray = OutputActivations.Data();
         var deltaData = m_delta.Data();
 
-        for (int i = 0; i < targetsArray.Length; i++)
+        for (var i = 0; i < targetsArray.Length; i++)
         {
             deltaData[i] = (predictionsArray[i] - targetsArray[i]);
         }

@@ -42,7 +42,7 @@ public class RegressionStackingEnsembleModel : IPredictorModel<double>
         }
 
         var ensemblePredictions = new double[ensembleCols];
-        for (int i = 0; i < m_ensembleModels.Length; i++)
+        for (var i = 0; i < m_ensembleModels.Length; i++)
         {
             ensemblePredictions[i] = m_ensembleModels[i].Predict(observation);
         }
@@ -64,7 +64,7 @@ public class RegressionStackingEnsembleModel : IPredictorModel<double>
     {
         var predictions = new double[observations.RowCount];
         var observation = new double[observations.ColumnCount];
-        for (int i = 0; i < observations.RowCount; i++)
+        for (var i = 0; i < observations.RowCount; i++)
         {
             observations.Row(i, observation);
             predictions[i] = Predict(observation);

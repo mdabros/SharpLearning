@@ -111,7 +111,7 @@ public sealed class ClassificationEnsembleLearner
 
         var inSample = new int[sampleSize];
 
-        for (int i = 0; i < m_learners.Length; i++)
+        for (var i = 0; i < m_learners.Length; i++)
         {
             Trace.WriteLine("Training model: " + (i + 1));
             if (m_subSampleRatio != 1.0)
@@ -173,7 +173,7 @@ public sealed class ClassificationEnsembleLearner
     /// <param name="allIndices"></param>
     void Sample(int[] inSample, int[] allIndices)
     {
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             var index = m_random.Next(0, allIndices.Length - 1);
             inSample[i] = allIndices[index];

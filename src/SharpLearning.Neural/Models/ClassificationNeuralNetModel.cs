@@ -47,7 +47,7 @@ public sealed class ClassificationNeuralNetModel
         var probability = 0.0;
         var prediction = 0.0;
 
-        for (int i = 0; i < m_targetNames.Length; i++)
+        for (var i = 0; i < m_targetNames.Length; i++)
         {
             var currentProp = (double)probabilities[0, i];
             if (currentProp > probability)
@@ -70,7 +70,7 @@ public sealed class ClassificationNeuralNetModel
         var cols = observations.ColumnCount;
         var predictions = new double[rows];
         var observation = new double[cols];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             observations.Row(i, observation);
             predictions[i] = Predict(observation);
@@ -97,7 +97,7 @@ public sealed class ClassificationNeuralNetModel
         var probability = 0.0;
         var prediction = 0.0;
 
-        for (int i = 0; i < m_targetNames.Length; i++)
+        for (var i = 0; i < m_targetNames.Length; i++)
         {
 
             probabilityDictionary.Add(m_targetNames[i], probabilities[0, i]);
@@ -122,7 +122,7 @@ public sealed class ClassificationNeuralNetModel
         var cols = observations.ColumnCount;
         var predictions = new ProbabilityPrediction[rows];
         var observation = new double[cols];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             observations.Row(i, observation);
             predictions[i] = PredictProbability(observation);

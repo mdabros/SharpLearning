@@ -18,7 +18,7 @@ public class XGBoostTreeConverterTest
 
         Assert.AreEqual(expectedNodes.Count, actualNodes.Count);
 
-        for (int i = 0; i < expectedNodes.Count; i++)
+        for (var i = 0; i < expectedNodes.Count; i++)
         {
             var expected = expectedNodes[i];
             var actual = actualNodes[i];
@@ -34,7 +34,7 @@ public class XGBoostTreeConverterTest
 
         Assert.AreEqual(expectedNodes.Count, actualNodes.Count);
 
-        for (int i = 0; i < expectedNodes.Count; i++)
+        for (var i = 0; i < expectedNodes.Count; i++)
         {
             var expected = expectedNodes[i];
             var actual = actualNodes[i];
@@ -121,7 +121,7 @@ public class XGBoostTreeConverterTest
     void ArrayAssert(double[] expected, double[] actual)
     {
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], m_delta);
         }

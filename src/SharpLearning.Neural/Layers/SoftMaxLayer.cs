@@ -116,12 +116,12 @@ public sealed class SoftMaxLayer
         var rows = x.RowCount;
         var cols = x.ColumnCount;
 
-        for (int row = 0; row < x.RowCount; row++)
+        for (var row = 0; row < x.RowCount; row++)
         {
             var rowSum = 0.0f;
             var max = double.MinValue;
 
-            for (int col = 0; col < x.ColumnCount; ++col)
+            for (var col = 0; col < x.ColumnCount; ++col)
             {
                 var index = col * rows + row;
                 var value = xData[index];
@@ -131,7 +131,7 @@ public sealed class SoftMaxLayer
                 }
             }
 
-            for (int col = 0; col < x.ColumnCount; ++col)
+            for (var col = 0; col < x.ColumnCount; ++col)
             {
                 var index = col * rows + row;
 
@@ -140,7 +140,7 @@ public sealed class SoftMaxLayer
                 xData[index] = value;
             }
 
-            for (int col = 0; col < x.ColumnCount; ++col)
+            for (var col = 0; col < x.ColumnCount; ++col)
             {
                 var index = col * rows + row;
                 xData[index] = xData[index] / rowSum;

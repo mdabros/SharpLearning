@@ -28,7 +28,7 @@ public class ContinuousMungeAugmentorTest
         var expectedData = expected.Data();
         var actualData = expected.Data();
 
-        for (int i = 0; i < expectedData.Length; i++)
+        for (var i = 0; i < expectedData.Length; i++)
         {
             Assert.AreEqual(expectedData[i], actualData[i], 0.00001);
         }

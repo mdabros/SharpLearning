@@ -132,14 +132,14 @@ public class RegressionModelSelectingEnsembleLearner : ILearner<double>, IIndexe
 
         var cvPredictions = new F64Matrix(cvRows, cvCols);
         var modelPredictions = new double[cvRows];
-        for (int i = 0; i < m_learners.Length; i++)
+        for (var i = 0; i < m_learners.Length; i++)
         {
             Trace.WriteLine("Training model: " + (i + 1));
             var learner = m_learners[i];
             m_crossValidation.CrossValidate(learner, observations, targets,
                 indices, modelPredictions);
 
-            for (int j = 0; j < modelPredictions.Length; j++)
+            for (var j = 0; j < modelPredictions.Length; j++)
             {
                 cvPredictions[j, i] = modelPredictions[j];
             }

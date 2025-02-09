@@ -116,7 +116,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
 
         m_totalFunctionEvaluations = 0;
 
-        for (int restarts = 0; restarts < m_maxRestarts; restarts++)
+        for (var restarts = 0; restarts < m_maxRestarts; restarts++)
         {
             RandomRestartPoint(initialPoint);
 
@@ -136,7 +136,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
                 var x = initialPoint.ToArray();
                 x[i] = x[i] + p;
 
-                for (int j = 0; j < dim; j++)
+                for (var j = 0; j < dim; j++)
                 {
                     if (j != i)
                     {
@@ -199,7 +199,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
                 foreach (var tup in results.Take(results.Count - 1))
                 {
                     var parameters = tup.ParameterSet;
-                    for (int i = 0; i < parameters.Length; i++)
+                    for (var i = 0; i < parameters.Length; i++)
                     {
                         x0[i] += parameters[i] / (results.Count - 1);
                     }
@@ -290,7 +290,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
     /// <param name="parameters"></param>
     void BoundCheck(double[] parameters)
     {
-        for (int i = 0; i < parameters.Length; i++)
+        for (var i = 0; i < parameters.Length; i++)
         {
             var parameter = m_parameters[i];
             parameters[i] = Math.Max(parameter.Min, Math.Min(parameters[i], parameter.Max));
@@ -305,7 +305,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
     {
         // consider to implement Gaussian selection of next point to avoid very similar point being selected
         // look at: https://github.com/ojdo/gbnm/blob/master/gbnm.m
-        for (int i = 0; i < m_parameters.Length; i++)
+        for (var i = 0; i < m_parameters.Length; i++)
         {
             var parameter = m_parameters[i];
             newPoint[i] = parameter.SampleValue(m_sampler);

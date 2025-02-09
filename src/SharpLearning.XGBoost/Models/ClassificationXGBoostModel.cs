@@ -67,7 +67,7 @@ public sealed class ClassificationXGBoostModel
         var observation = new double[cols];
 
         var predictions = new double[rows];
-        for (int row = 0; row < rows; row++)
+        for (var row = 0; row < rows; row++)
         {
             observations.Row(row, observation);
             predictions[row] = Predict(observation);
@@ -116,7 +116,7 @@ public sealed class ClassificationXGBoostModel
         var observation = new double[cols];
 
         var predictions = new ProbabilityPrediction[rows];
-        for (int row = 0; row < rows; row++)
+        for (var row = 0; row < rows; row++)
         {
             observations.Row(row, observation);
             predictions[row] = PredictProbability(observation);

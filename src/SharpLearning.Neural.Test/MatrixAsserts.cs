@@ -18,7 +18,7 @@ public static class MatrixAsserts
 
         Assert.AreEqual(m1Array.Length, m2Array.Length);
 
-        for (int i = 0; i < m1Array.Length; i++)
+        for (var i = 0; i < m1Array.Length; i++)
         {
             Assert.AreEqual(m1Array[i], m2Array[i], delta);
         }
@@ -33,7 +33,7 @@ public static class MatrixAsserts
     {
         Assert.AreEqual(expected.Length, actual.Length);
 
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], delta);
         }

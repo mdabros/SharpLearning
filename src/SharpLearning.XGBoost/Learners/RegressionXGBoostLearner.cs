@@ -151,7 +151,7 @@ public sealed class RegressionXGBoostLearner : ILearner<double>, IIndexedLearner
             var booster = new Booster(m_parameters.ToDictionary(v => v.Key, v => v.Value), train);
             var iterations = (int)m_parameters[ParameterNames.Estimators];
 
-            for (int iteration = 0; iteration < iterations; iteration++)
+            for (var iteration = 0; iteration < iterations; iteration++)
             {
                 booster.Update(train, iteration);
             }

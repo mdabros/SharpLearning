@@ -123,7 +123,7 @@ public class SmacOptimizer : IOptimizer
         var initializationResults = RunParameterSets(functionToMinimize, initialParameterSets);
         results.AddRange(initializationResults);
 
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
             var parameterSets = ProposeParameterSets(m_functionEvaluationsPerIterationCount, results);
             var iterationResults = RunParameterSets(functionToMinimize, parameterSets);
@@ -240,7 +240,7 @@ public class SmacOptimizer : IOptimizer
         }
 
         // Additional set of random parameterSets to choose from during local search.
-        for (int i = 0; i < m_randomSearchPointCount; i++)
+        for (var i = 0; i < m_randomSearchPointCount; i++)
         {
             var parameterSet = RandomSearchOptimizer
                 .SampleParameterSet(m_parameters, m_sampler);
@@ -271,7 +271,7 @@ public class SmacOptimizer : IOptimizer
         {
             continueSearch = false;
             var neighborhood = GetOneMutationNeighborhood(bestParameterSet);
-            for (int i = 0; i < neighborhood.Count; i++)
+            for (var i = 0; i < neighborhood.Count; i++)
             {
                 var neighbor = neighborhood[i];
                 var ei = ComputeExpectedImprovement(bestScore, neighbor, model);
@@ -290,7 +290,7 @@ public class SmacOptimizer : IOptimizer
     List<double[]> GetOneMutationNeighborhood(double[] parentParameterSet)
     {
         var neighbors = new List<double[]>();
-        for (int i = 0; i < m_parameters.Length; i++)
+        for (var i = 0; i < m_parameters.Length; i++)
         {
             // Add a new parameter set that differs only by one parameter from the parent.
             var parameterSpec = m_parameters[i];
@@ -300,7 +300,7 @@ public class SmacOptimizer : IOptimizer
             // Original paper also has a case for categorical parameters.
             // However, this is currently not supported.
             const int parameterSetCount = 4;
-            for (int j = 0; j < parameterSetCount; j++)
+            for (var j = 0; j < parameterSetCount; j++)
             {
                 // Copy parent and mutate one parameter.
                 var newParameterSet = parentParameterSet.ToArray();

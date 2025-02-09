@@ -49,7 +49,7 @@ public sealed class RecallMetric<T> : IClassificationMetric<T>
         var truePositives = 0;
         var falseNegatives = 0;
 
-        for (int i = 0; i < targets.Length; i++)
+        for (var i = 0; i < targets.Length; i++)
         {
             if (targets[i].Equals(m_positiveTarget) && predictions[i].Equals(m_positiveTarget))
             {

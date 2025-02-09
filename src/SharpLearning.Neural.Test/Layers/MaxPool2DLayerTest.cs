@@ -246,7 +246,7 @@ public class MaxPool2DLayerTest
         var expected = Matrix<float>.Build.Dense(batchSize, fanOut);
         sut.Forward(input).CopyTo(expected);
 
-        for (int i = 0; i < 20; i++)
+        for (var i = 0; i < 20; i++)
         {
             var actual = sut.Forward(input);
 
@@ -280,7 +280,7 @@ public class MaxPool2DLayerTest
         var expected = Matrix<float>.Build.Dense(batchSize, fanIn);
         sut.Backward(delta).CopyTo(expected);
 
-        for (int i = 0; i < 20; i++)
+        for (var i = 0; i < 20; i++)
         {
             var actual = sut.Backward(delta);
             Assert.AreEqual(expected, actual);

@@ -66,7 +66,7 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     {
         unchecked // Overflow is fine, just wrap
         {
-            int hash = 17;
+            var hash = 17;
             hash = hash * 23 + Observations.GetHashCode();
             hash = hash * 23 + Targets.GetHashCode();
 

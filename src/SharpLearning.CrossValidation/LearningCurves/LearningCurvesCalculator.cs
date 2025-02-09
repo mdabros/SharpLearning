@@ -110,17 +110,17 @@ public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<T
 
             var trainingPredictions = new TPrediction[sampleSize];
 
-            for (int j = 0; j < m_numberOfShufflesPrSample; j++)
+            for (var j = 0; j < m_numberOfShufflesPrSample; j++)
             {
                 var sampleIndices = m_indexedSampler.Sample(targets, sampleSize, trainingIndices);
                 var model = learner.Learn(observations, targets, sampleIndices);
 
-                for (int i = 0; i < trainingPredictions.Length; i++)
+                for (var i = 0; i < trainingPredictions.Length; i++)
                 {
                     trainingPredictions[i] = model.Predict(observations.Row(sampleIndices[i]));
                 }
 
-                for (int i = 0; i < validationIndices.Length; i++)
+                for (var i = 0; i < validationIndices.Length; i++)
                 {
                     validationPredictions[i] = model.Predict(observations.Row(validationIndices[i]));
                 }

@@ -80,7 +80,7 @@ public sealed class TrainingTestSetSplit : IEquatable<TrainingTestSetSplit>
     {
         unchecked // Overflow is fine, just wrap
         {
-            int hash = 17;
+            var hash = 17;
             hash = hash * 23 + TrainingSet.GetHashCode();
             hash = hash * 23 + TestSet.GetHashCode();
 

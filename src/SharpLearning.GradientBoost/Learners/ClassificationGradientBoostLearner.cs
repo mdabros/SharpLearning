@@ -159,7 +159,7 @@ public class ClassificationGradientBoostLearner
                 .ToArray();
 
             oneVsAllTargets = new double[uniqueTargets.Length][];
-            for (int i = 0; i < uniqueTargets.Length; i++)
+            for (var i = 0; i < uniqueTargets.Length; i++)
             {
                 var target = uniqueTargets[i];
                 oneVsAllTargets[i] = targets.Select(t => t == target ? 1.0 : 0.0).ToArray();
@@ -168,9 +168,9 @@ public class ClassificationGradientBoostLearner
         }
 
         var predictWork = new double[observations.RowCount];
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
-            for (int itarget = 0; itarget < trees.Length; itarget++)
+            for (var itarget = 0; itarget < trees.Length; itarget++)
             {
                 m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget],
                     residuals[itarget], inSample);
@@ -191,7 +191,7 @@ public class ClassificationGradientBoostLearner
                 }
 
                 trees[itarget][iteration].Predict(observations, predictWork);
-                for (int i = 0; i < predictWork.Length; i++)
+                for (var i = 0; i < predictWork.Length; i++)
                 {
                     predictions[itarget][i] += m_learningRate * predictWork[i];
                 }
@@ -270,7 +270,7 @@ public class ClassificationGradientBoostLearner
                 .ToArray();
 
             oneVsAllTargets = new double[uniqueTargets.Length][];
-            for (int i = 0; i < uniqueTargets.Length; i++)
+            for (var i = 0; i < uniqueTargets.Length; i++)
             {
                 var target = uniqueTargets[i];
                 oneVsAllTargets[i] = trainingTargets.Select(t => t == target ? 1.0 : 0.0).ToArray();
@@ -282,9 +282,9 @@ public class ClassificationGradientBoostLearner
         var currentBedstError = double.MaxValue;
 
         var predictWork = new double[trainingObservations.RowCount];
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
-            for (int itarget = 0; itarget < trees.Length; itarget++)
+            for (var itarget = 0; itarget < trees.Length; itarget++)
             {
                 m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget],
                     residuals[itarget], inSample);
@@ -305,7 +305,7 @@ public class ClassificationGradientBoostLearner
                 }
 
                 trees[itarget][iteration].Predict(trainingObservations, predictWork);
-                for (int i = 0; i < predictWork.Length; i++)
+                for (var i = 0; i < predictWork.Length; i++)
                 {
                     predictions[itarget][i] += m_learningRate * predictWork[i];
                 }
@@ -402,7 +402,7 @@ public class ClassificationGradientBoostLearner
                 .ToArray();
 
             oneVsAllTargets = new double[uniqueTargets.Length][];
-            for (int i = 0; i < uniqueTargets.Length; i++)
+            for (var i = 0; i < uniqueTargets.Length; i++)
             {
                 var target = uniqueTargets[i];
                 oneVsAllTargets[i] = trainingTargets.Select(t => t == target ? 1.0 : 0.0).ToArray();
@@ -413,9 +413,9 @@ public class ClassificationGradientBoostLearner
         var bestIterationCount = 0;
         var currentBedstError = double.MaxValue;
 
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
-            for (int itarget = 0; itarget < trees.Length; itarget++)
+            for (var itarget = 0; itarget < trees.Length; itarget++)
             {
                 m_loss.UpdateResiduals(oneVsAllTargets[itarget], predictions[itarget],
                     residuals[itarget], inSample);
@@ -436,7 +436,7 @@ public class ClassificationGradientBoostLearner
                 }
 
                 var predict = trees[itarget][iteration].Predict(trainingObservations);
-                for (int i = 0; i < predict.Length; i++)
+                for (var i = 0; i < predict.Length; i++)
                 {
                     predictions[itarget][i] += m_learningRate * predict[i];
                 }
@@ -516,7 +516,7 @@ public class ClassificationGradientBoostLearner
     {
         var orderedElements = new int[observations.ColumnCount][];
 
-        for (int i = 0; i < observations.ColumnCount; i++)
+        for (var i = 0; i < observations.ColumnCount; i++)
         {
             var feature = observations.Column(i);
             var indices = Enumerable.Range(0, rows).ToArray();
@@ -538,7 +538,7 @@ public class ClassificationGradientBoostLearner
         var inSample = new bool[allObservationCount];
         indices.Shuffle(m_random);
 
-        for (int i = 0; i < sampleSize; i++)
+        for (var i = 0; i < sampleSize; i++)
         {
             inSample[indices[i]] = true;
         }

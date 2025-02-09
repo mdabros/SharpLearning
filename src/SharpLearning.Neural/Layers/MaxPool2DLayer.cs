@@ -166,33 +166,33 @@ public sealed class MaxPool2DLayer : ILayer
         var inputData = input.Data();
         var outputData = output.Data();
 
-        for (int depth = 0; depth < InputDepth; ++depth)
+        for (var depth = 0; depth < InputDepth; ++depth)
         {
             var n = depth * this.Width * this.Height; // a counter for switches
             var inputDepthOffSet = depth * InputHeight * InputWidth;
             var outputDeptOffSet = depth * Height * Width;
 
-            for (int ph = 0; ph < Height; ++ph)
+            for (var ph = 0; ph < Height; ++ph)
             {
                 var poolRowOffSet = ph * Width;
 
-                int hstart = ph * m_stride - m_padHeight;
-                int hend = Math.Min(hstart + m_poolHeight, InputHeight);
+                var hstart = ph * m_stride - m_padHeight;
+                var hend = Math.Min(hstart + m_poolHeight, InputHeight);
                 hstart = Math.Max(hstart, 0);
 
-                for (int pw = 0; pw < Width; ++pw)
+                for (var pw = 0; pw < Width; ++pw)
                 {
-                    int wstart = pw * m_stride - m_padWidth;
-                    int wend = Math.Min(wstart + m_poolWidth, InputWidth);
+                    var wstart = pw * m_stride - m_padWidth;
+                    var wend = Math.Min(wstart + m_poolWidth, InputWidth);
                     wstart = Math.Max(wstart, 0);
 
                     var currentMax = float.MinValue;
                     int winx = -1, winy = -1;
 
-                    for (int h = hstart; h < hend; ++h)
+                    for (var h = hstart; h < hend; ++h)
                     {
                         var rowOffSet = h * InputWidth;
-                        for (int w = wstart; w < wend; ++w)
+                        for (var w = wstart; w < wend; ++w)
                         {
                             var inputColIndex = rowOffSet + w + inputDepthOffSet;
                             var inputIndex = inputColIndex * batchSize + batchItem;

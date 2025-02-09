@@ -30,7 +30,7 @@ public sealed class TotalErrorClassificationMetric<T> : IClassificationMetric<T>
         var totalSum = Sum(confusionMatrix);
         var errorSum = totalSum;
 
-        for (int row = 0; row < uniques.Count; ++row)
+        for (var row = 0; row < uniques.Count; ++row)
         {
             errorSum -= confusionMatrix[row, row];
         }
@@ -44,9 +44,9 @@ public sealed class TotalErrorClassificationMetric<T> : IClassificationMetric<T>
         var cols = confusionMatrix.GetLength(1);
 
         var sum = 0;
-        for (int r = 0; r < rows; r++)
+        for (var r = 0; r < rows; r++)
         {
-            for (int c = 0; c < cols; c++)
+            for (var c = 0; c < cols; c++)
             {
                 sum += confusionMatrix[r, c];
             }

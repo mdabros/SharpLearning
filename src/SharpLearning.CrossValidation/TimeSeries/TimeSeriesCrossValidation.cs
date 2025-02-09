@@ -96,7 +96,7 @@ public sealed class TimeSeriesCrossValidation<TPrediction>
 
         var model = learner.Learn(observations, targets, trainingIndices);
 
-        for (int i = 0; i < predictions.Length; i++)
+        for (var i = 0; i < predictions.Length; i++)
         {
             // Only train a new model at each retrain interval.
             if ((m_retrainInterval == 1 || i % m_retrainInterval == 0) && i != 0)

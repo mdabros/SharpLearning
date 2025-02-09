@@ -13,14 +13,14 @@ public class RandomUniformTest
         var sut = new RandomUniform(32);
 
         var actual = new double[10];
-        for (int i = 0; i < actual.Length; i++)
+        for (var i = 0; i < actual.Length; i++)
         {
             actual[i] = sut.Sample(min: 20, max: 200, parameterType: ParameterType.Continuous);
         }
 
         var expected = new double[] { 99.8935983236384, 57.2098020451189, 44.4149092419142, 89.9002946307418, 137.643828772774, 114.250629522954, 63.8914499915631, 109.294177409864, 188.567149950455, 33.2731248034505 };
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.000001);
         }
@@ -31,14 +31,14 @@ public class RandomUniformTest
         var sut = new RandomUniform(32);
 
         var actual = new double[10];
-        for (int i = 0; i < actual.Length; i++)
+        for (var i = 0; i < actual.Length; i++)
         {
             actual[i] = sut.Sample(min: 20, max: 200, parameterType: ParameterType.Discrete);
         }
 
         var expected = new double[] { 100, 57, 44, 90, 138, 114, 64, 109, 189, 33 };
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.000001);
         }

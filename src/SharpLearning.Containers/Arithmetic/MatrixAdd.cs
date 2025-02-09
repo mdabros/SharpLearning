@@ -25,9 +25,9 @@ public static class MatrixAdd
                 " differs from vector length: " + v.Length);
         }
 
-        for (int i = 0; i < cols; i++)
+        for (var i = 0; i < cols; i++)
         {
-            for (int j = 0; j < rows; j++)
+            for (var j = 0; j < rows; j++)
             {
                 output[j, i] = m[j, i] + v[j];
             }
@@ -49,7 +49,7 @@ public static class MatrixAdd
 
         var v3 = new double[v1.Length];
 
-        for (int i = 0; i < v1.Length; i++)
+        for (var i = 0; i < v1.Length; i++)
         {
             v3[i] = v1[i] + v2[i];
         }

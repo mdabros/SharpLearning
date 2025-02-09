@@ -10,7 +10,7 @@ public static class ArrayAssert
         double delta = m_defaultDelta)
     {
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], delta);
         }

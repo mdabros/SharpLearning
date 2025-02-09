@@ -30,10 +30,10 @@ public sealed class MeanRegressionEnsembleStrategy : IRegressionEnsembleStrategy
         var cols = ensemblePredictions.ColumnCount;
         var rows = ensemblePredictions.RowCount;
 
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var sum = 0.0;
-            for (int j = 0; j < cols; j++)
+            for (var j = 0; j < cols; j++)
             {
                 sum += ensemblePredictions.At(i, j);
             }

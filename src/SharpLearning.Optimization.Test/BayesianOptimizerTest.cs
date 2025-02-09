@@ -237,7 +237,7 @@ public class BayesianOptimizerTest
         var initializationResults = sut.RunParameterSets(Minimize, initialParameterSets);
         results.AddRange(initializationResults);
 
-        for (int i = 0; i < iterations; i++)
+        for (var i = 0; i < iterations; i++)
         {
             var parameterSets = sut.ProposeParameterSets(functionEvaluationsPerIterationCount, results);
             var iterationResults = sut.RunParameterSets(Minimize, parameterSets);

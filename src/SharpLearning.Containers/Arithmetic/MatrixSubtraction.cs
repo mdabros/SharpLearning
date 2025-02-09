@@ -25,7 +25,7 @@ public static class MatrixSubtraction
 
         var v3 = new double[v1.Length];
 
-        for (int i = 0; i < v1.Length; i++)
+        for (var i = 0; i < v1.Length; i++)
         {
             v3[i] = v1[i] - v2[i];
         }
@@ -76,9 +76,9 @@ public static class MatrixSubtraction
         }
 
 
-        for (int i = 0; i < m1Rows; i++)
+        for (var i = 0; i < m1Rows; i++)
         {
-            for (int j = 0; j < m1Cols; j++)
+            for (var j = 0; j < m1Cols; j++)
             {
                 output[i, j] = m1[i, j] - m2[i, j];
             }

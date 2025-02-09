@@ -113,11 +113,11 @@ public static class ConvUtils
         int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w,
         BorderMode borderMode, Matrix<float> data_col)
     {
-        int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
-        int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
+        var height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
+        var width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
         var batchSize = data_im.RowCount;
 
-        int channels_col = channels * kernel_h * kernel_w;
+        var channels_col = channels * kernel_h * kernel_w;
 
         var data_imData = data_im.Data();
         var data_colData = data_col.Data();
@@ -126,20 +126,20 @@ public static class ConvUtils
         {
             var batchRowOffSet = batchItem * width_col * height_col;
 
-            for (int c = 0; c < channels_col; ++c)
+            for (var c = 0; c < channels_col; ++c)
             {
-                int w_offset = c % kernel_w;
-                int h_offset = (c / kernel_w) % kernel_h;
-                int c_im = c / kernel_h / kernel_w;
+                var w_offset = c % kernel_w;
+                var h_offset = (c / kernel_w) % kernel_h;
+                var c_im = c / kernel_h / kernel_w;
                 var cImRowOffSet = c_im * height;
 
-                for (int h = 0; h < height_col; ++h)
+                for (var h = 0; h < height_col; ++h)
                 {
                     var rowOffSet = h * width_col;
-                    for (int w = 0; w < width_col; ++w)
+                    for (var w = 0; w < width_col; ++w)
                     {
-                        int h_pad = h * stride_h - pad_h + h_offset;
-                        int w_pad = w * stride_w - pad_w + w_offset;
+                        var h_pad = h * stride_h - pad_h + h_offset;
+                        var w_pad = w * stride_w - pad_w + w_offset;
 
                         var outColIndex = batchRowOffSet + rowOffSet + w;
                         var outputIndex = outColIndex * data_col.RowCount + c;
@@ -181,8 +181,8 @@ public static class ConvUtils
         int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w,
         BorderMode borderMode, Matrix<float> data_convolutedRowMajor)
     {
-        int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
-        int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
+        var height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
+        var width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
 
         var columnWidth = height_col * width_col;
         var filterCount = convoluted.RowCount;
@@ -195,10 +195,10 @@ public static class ConvUtils
         {
             var batchOffSet = batchItem * columnWidth;
 
-            for (int filter = 0; filter < filterCount; filter++)
+            for (var filter = 0; filter < filterCount; filter++)
             {
                 var rowOffSet = filter * columnWidth;
-                for (int column = 0; column < columnWidth; column++)
+                for (var column = 0; column < columnWidth; column++)
                 {
                     // get value from conv data
                     var convIndex = (batchOffSet + column) * filterCount + filter;
@@ -233,8 +233,8 @@ public static class ConvUtils
         int kernel_h, int kernel_w, int pad_h, int pad_w, int stride_h, int stride_w,
         BorderMode borderMode, Matrix<float> convoluted)
     {
-        int height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
-        int width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
+        var height_col = GetFilterGridLength(height, kernel_h, stride_h, pad_h, borderMode);
+        var width_col = GetFilterGridLength(width, kernel_w, stride_w, pad_w, borderMode);
 
         var columnWidth = height_col * width_col;
         var filterCount = convoluted.RowCount;
@@ -247,10 +247,10 @@ public static class ConvUtils
         {
             var batchOffSet = batchItem * columnWidth;
 
-            for (int filter = 0; filter < filterCount; filter++)
+            for (var filter = 0; filter < filterCount; filter++)
             {
                 var rowOffSet = filter * columnWidth;
-                for (int column = 0; column < columnWidth; column++)
+                for (var column = 0; column < columnWidth; column++)
                 {
                     // get value from row major data
                     var rowMajorIndex = rowOffSet + column;
@@ -284,9 +284,9 @@ public static class ConvUtils
         int patch_h, int patch_w, int pad_h, int pad_w, int stride_h, int stride_w,
         BorderMode borderMode, Matrix<float> data_im)
     {
-        int height_col = GetFilterGridLength(height, patch_h, stride_h, pad_h, borderMode);
-        int width_col = GetFilterGridLength(width, patch_w, stride_w, pad_w, borderMode);
-        int channels_col = channels * patch_h * patch_w;
+        var height_col = GetFilterGridLength(height, patch_h, stride_h, pad_h, borderMode);
+        var width_col = GetFilterGridLength(width, patch_w, stride_w, pad_w, borderMode);
+        var channels_col = channels * patch_h * patch_w;
         var batchSize = data_im.RowCount;
 
         var data_colData = data_col.Data();
@@ -296,22 +296,22 @@ public static class ConvUtils
         {
             var batchRowOffSet = batchItem * width_col * height_col;
 
-            for (int c = 0; c < channels_col; ++c)
+            for (var c = 0; c < channels_col; ++c)
             {
-                int w_offset = c % patch_w;
-                int h_offset = (c / patch_w) % patch_h;
-                int c_im = c / patch_h / patch_w;
+                var w_offset = c % patch_w;
+                var h_offset = (c / patch_w) % patch_h;
+                var c_im = c / patch_h / patch_w;
                 var c_ImRowOffSet = c_im * height;
 
-                for (int h = 0; h < height_col; ++h)
+                for (var h = 0; h < height_col; ++h)
                 {
                     var rowOffSet = h * width_col;
-                    int h_pad = h * stride_h - pad_h + h_offset;
+                    var h_pad = h * stride_h - pad_h + h_offset;
 
-                    for (int w = 0; w < width_col; ++w)
+                    for (var w = 0; w < width_col; ++w)
                     {
 
-                        int w_pad = w * stride_w - pad_w + w_offset;
+                        var w_pad = w * stride_w - pad_w + w_offset;
                         if (h_pad >= 0 && h_pad < height && w_pad >= 0 && w_pad < width)
                         {
                             var colColIndex = batchRowOffSet + rowOffSet + w;

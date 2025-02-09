@@ -27,7 +27,7 @@ public class CrossValidationUtilitiesTest
         };
 
         Assert.AreEqual(expecteds.Count, actuals.Count);
-        for (int i = 0; i < expecteds.Count; i++)
+        for (var i = 0; i < expecteds.Count; i++)
         {
             var expected = expecteds[i];
             var actual = actuals[i];
@@ -55,7 +55,7 @@ public class CrossValidationUtilitiesTest
         };
 
         Assert.AreEqual(expecteds.Count, actuals.Count);
-        for (int i = 0; i < expecteds.Count; i++)
+        for (var i = 0; i < expecteds.Count; i++)
         {
             var expected = expecteds[i];
             var actual = actuals[i];
@@ -83,7 +83,7 @@ public class CrossValidationUtilitiesTest
         };
 
         Assert.AreEqual(expecteds.Count, actuals.Count);
-        for (int i = 0; i < expecteds.Count; i++)
+        for (var i = 0; i < expecteds.Count; i++)
         {
             var expected = expecteds[i];
             var actual = actuals[i];

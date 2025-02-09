@@ -45,7 +45,7 @@ public sealed class ClassificationAdaBoostModel : IPredictorModel<double>, IPred
         var count = m_models.Length;
         m_predictions.Clear();
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var prediction = m_models[i].Predict(observation);
             var weight = m_modelWeights[i];
@@ -72,7 +72,7 @@ public sealed class ClassificationAdaBoostModel : IPredictorModel<double>, IPred
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Predict(observations.Row(i));
         }
@@ -93,7 +93,7 @@ public sealed class ClassificationAdaBoostModel : IPredictorModel<double>, IPred
         var modelsProbability = m_models.Select(m => m.PredictProbability(observation).Probabilities)
             .ToArray();
 
-        for (int i = 0; i < modelsProbability.Length; i++)
+        for (var i = 0; i < modelsProbability.Length; i++)
         {
             var model = modelsProbability[i];
             var w = m_modelWeights[i];
@@ -136,7 +136,7 @@ public sealed class ClassificationAdaBoostModel : IPredictorModel<double>, IPred
     {
         var rows = observations.RowCount;
         var predictions = new ProbabilityPrediction[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = PredictProbability(observations.Row(i));
         }

@@ -20,7 +20,7 @@ public sealed class GiniImpurityMetric : IImpurityMetric
     {
         m_dictionary.Clear();
 
-        for (int i = 0; i < values.Length; i++)
+        for (var i = 0; i < values.Length; i++)
         {
             var targetKey = (int)values[i];
 

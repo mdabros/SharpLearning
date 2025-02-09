@@ -130,7 +130,7 @@ public sealed class BinaryTree
             var probabilities = Probabilities[node.LeafProbabilityIndex];
             var targetProbabilities = new Dictionary<double, double>();
 
-            for (int i = 0; i < TargetNames.Length; i++)
+            for (var i = 0; i < TargetNames.Length; i++)
             {
                 targetProbabilities.Add(TargetNames[i], probabilities[i]);
             }

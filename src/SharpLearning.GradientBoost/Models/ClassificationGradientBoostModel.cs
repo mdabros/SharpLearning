@@ -109,7 +109,7 @@ public sealed class ClassificationGradientBoostModel
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Predict(observations.Row(i));
         }
@@ -126,7 +126,7 @@ public sealed class ClassificationGradientBoostModel
     {
         var rows = observations.RowCount;
         var predictions = new ProbabilityPrediction[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = PredictProbability(observations.Row(i));
         }
@@ -204,7 +204,7 @@ public sealed class ClassificationGradientBoostModel
         var probability = 0.0;
         var prediction = 0.0;
 
-        for (int i = 0; i < TargetNames.Length; i++)
+        for (var i = 0; i < TargetNames.Length; i++)
         {
             var currentProp = Probability(observation, i);
             if (currentProp > probability)
@@ -219,7 +219,7 @@ public sealed class ClassificationGradientBoostModel
     ProbabilityPrediction MultiClassProbabilityPredict(double[] observation)
     {
         var probabilities = new Dictionary<double, double>();
-        for (int i = 0; i < TargetNames.Length; i++)
+        for (var i = 0; i < TargetNames.Length; i++)
         {
             probabilities.Add(TargetNames[i], Probability(observation, i));
         }
@@ -258,7 +258,7 @@ public sealed class ClassificationGradientBoostModel
         var iterations = Trees[targetIndex].Length;
 
         var prediction = InitialLoss;
-        for (int i = 0; i < iterations; i++)
+        for (var i = 0; i < iterations; i++)
         {
             prediction += LearningRate * Trees[targetIndex][i].Predict(observation);
         }

@@ -69,7 +69,7 @@ public class HyperbandOptimizerTest
     static void AssertOptimizerResults(OptimizerResult[] expected, OptimizerResult[] actual)
     {
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             AssertOptimizerResult(expected[i], actual[i]);
         }
@@ -84,7 +84,7 @@ public class HyperbandOptimizerTest
 
         Assert.AreEqual(expectedParameterSet.Length, actualParameterSet.Length);
 
-        for (int i = 0; i < expectedParameterSet.Length; i++)
+        for (var i = 0; i < expectedParameterSet.Length; i++)
         {
             Assert.AreEqual(expectedParameterSet[i], actualParameterSet[i], Delta);
         }

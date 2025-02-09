@@ -72,7 +72,7 @@ public class CsvRow
     {
         unchecked // Overflow is fine, just wrap
         {
-            int hash = 17;
+            var hash = 17;
             // Suitable nullity checks etc, of course :)
             hash = hash * 23 + Values.GetHashCode();
             hash = hash * 23 + ColumnNameToIndex.GetHashCode();

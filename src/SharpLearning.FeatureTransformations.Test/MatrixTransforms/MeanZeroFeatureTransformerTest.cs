@@ -37,10 +37,10 @@ public class MeanZeroFeatureTransformerTest
 
         // use vector transform on each row
         var actual = new F64Matrix(3, 2);
-        for (int i = 0; i < actual.RowCount; i++)
+        for (var i = 0; i < actual.RowCount; i++)
         {
             var row = sut.Transform(matrix.Row(i));
-            for (int j = 0; j < actual.ColumnCount; j++)
+            for (var j = 0; j < actual.ColumnCount; j++)
             {
                 actual[i, j] = row[j];
             }

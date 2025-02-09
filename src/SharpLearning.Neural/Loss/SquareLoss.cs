@@ -24,7 +24,7 @@ public sealed class SquareLoss : ILoss
         var targetsArray = targets.Data();
         var predictionsArray = predictions.Data();
 
-        for (int i = 0; i < targetsArray.Length; i++)
+        for (var i = 0; i < targetsArray.Length; i++)
         {
             var error = (targetsArray[i] - predictionsArray[i]);
             sum += error * error;

@@ -56,7 +56,7 @@ public class CsvWriter
         var headerLine = string.Empty;
         using (var enumerator = headerValues.GetEnumerator())
         {
-            bool moveNext = enumerator.MoveNext();
+            var moveNext = enumerator.MoveNext();
             while (moveNext)
             {
                 headerLine += enumerator.Current;
@@ -77,7 +77,7 @@ public class CsvWriter
     {
         var enumerator = values.GetEnumerator();
 
-        bool moveNext = enumerator.MoveNext();
+        var moveNext = enumerator.MoveNext();
         while (moveNext)
         {
             writer.Write(enumerator.Current);

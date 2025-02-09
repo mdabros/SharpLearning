@@ -29,7 +29,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     {
         var inSampleSum = 0.0;
         var sampleCount = 0.0;
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -52,7 +52,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     {
         var splitInfo = GBMSplitInfo.NewEmpty();
 
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -92,7 +92,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     public void UpdateResiduals(double[] targets, double[] predictions,
         double[] residuals, bool[] inSample)
     {
-        for (int i = 0; i < residuals.Length; i++)
+        for (var i = 0; i < residuals.Length; i++)
         {
             if (inSample[i])
             {

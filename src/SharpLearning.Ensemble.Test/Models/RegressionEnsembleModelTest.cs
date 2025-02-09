@@ -30,7 +30,7 @@ public class RegressionEnsembleModelTest
 
         var rows = targets.Length;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = sut.Predict(observations.Row(i));
         }
@@ -119,7 +119,7 @@ public class RegressionEnsembleModelTest
 
         Assert.AreEqual(expected.Length, actual.Length);
 
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.000001);
         }

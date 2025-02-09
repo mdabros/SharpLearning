@@ -104,7 +104,7 @@ public sealed class DepthFirstTreeBuilder : ITreeBuilder
 
         m_featuresCandidatesSet = false;
 
-        for (int i = 0; i < m_allFeatureIndices.Length; i++)
+        for (var i = 0; i < m_allFeatureIndices.Length; i++)
         {
             m_allFeatureIndices[i] = i;
         }
@@ -143,7 +143,7 @@ public sealed class DepthFirstTreeBuilder : ITreeBuilder
 
             var parentInterval = parentItem.Interval;
             var parentNodeDepth = parentItem.NodeDepth;
-            Node parentNode = Node.Default();
+            var parentNode = Node.Default();
 
             if (nodes.Count != 0)
             {

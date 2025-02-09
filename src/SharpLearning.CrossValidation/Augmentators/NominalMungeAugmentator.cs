@@ -54,7 +54,7 @@ public sealed class NominalMungeAugmentator
         var candidate = new double[orgCols];
         indicesVisited.Clear();
 
-        for (int j = 0; j < orgRows; j++)
+        for (var j = 0; j < orgRows; j++)
         {
             if (indicesVisited.Contains(j)) { continue; }
             dataset.Row(j, sample);
@@ -63,7 +63,7 @@ public sealed class NominalMungeAugmentator
             var closestIndex = -1;
             indicesVisited.Add(j);
 
-            for (int f = 0; f < orgRows; f++)
+            for (var f = 0; f < orgRows; f++)
             {
                 if (indicesVisited.Contains(f)) { continue; }
                 dataset.Row(f, candidate);
@@ -81,7 +81,7 @@ public sealed class NominalMungeAugmentator
                 dataset.Row(closestIndex, candidate);
                 indicesVisited.Add(closestIndex);
 
-                for (int h = 0; h < sample.Length; h++)
+                for (var h = 0; h < sample.Length; h++)
                 {
                     var sampleValue = sample[h];
                     var candiateValue = candidate[h];
@@ -113,8 +113,8 @@ public sealed class NominalMungeAugmentator
                 $"is different from length of b: {b.Length} ");
         }
 
-        int count = 0;
-        for (int i = 0; i < a.Length; i++)
+        var count = 0;
+        for (var i = 0; i < a.Length; i++)
         {
             if (a[i] != b[i])
             {

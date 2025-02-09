@@ -76,11 +76,11 @@ public sealed class RandomClassificationEnsembleSelection : IClassificationEnsem
 
         var bestError = double.MaxValue;
 
-        for (int i = 0; i < m_iterations; i++)
+        for (var i = 0; i < m_iterations; i++)
         {
             SelectNextRandomIndices(candidateModelIndices);
 
-            for (int j = 0; j < candidateModelIndices.Length; j++)
+            for (var j = 0; j < candidateModelIndices.Length; j++)
             {
                 candidateModelMatrix[j] = crossValidatedModelPredictions[candidateModelIndices[j]];
             }
@@ -105,7 +105,7 @@ public sealed class RandomClassificationEnsembleSelection : IClassificationEnsem
     {
         if (m_selectWithReplacement)
         {
-            for (int i = 0; i < candidateModelIndices.Length; i++)
+            for (var i = 0; i < candidateModelIndices.Length; i++)
             {
                 candidateModelIndices[i] = m_random.Next(0, m_numberOfModelsToSelect);
             }

@@ -15,7 +15,7 @@ public static class F64MatrixExtensions
     public static void Clear(this F64Matrix matrix)
     {
         var data = matrix.Data();
-        for (int i = 0; i < data.Length; i++)
+        for (var i = 0; i < data.Length; i++)
         {
             data[i] = 0.0;
         }
@@ -75,7 +75,7 @@ public static class F64MatrixExtensions
         var features = new double[v1.Length + v2.Length];
 
         var featuresIndex = 0;
-        for (int i = 0; i < v1.Length; i++)
+        for (var i = 0; i < v1.Length; i++)
         {
             features[featuresIndex] = v1[i];
             featuresIndex++;
@@ -106,7 +106,7 @@ public static class F64MatrixExtensions
         var matrixArray = m.Data();
 
         var combineIndex = 0;
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var matrixIndex = i * m.ColumnCount;
             Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);
@@ -142,7 +142,7 @@ public static class F64MatrixExtensions
         var matrixArray = m.Data();
 
         var combineIndex = 0;
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             Array.Copy(v, i, features, combineIndex, 1);
             combineIndex += 1;
@@ -179,7 +179,7 @@ public static class F64MatrixExtensions
         var features = new double[matrixArray.Length + otherArray.Length];
 
         var combineIndex = 0;
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var matrixIndex = i * m1.ColumnCount;
             Array.Copy(matrixArray, matrixIndex, features, combineIndex, m1.ColumnCount);

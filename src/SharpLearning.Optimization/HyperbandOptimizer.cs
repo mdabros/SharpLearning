@@ -99,7 +99,7 @@ public sealed class HyperbandOptimizer
     {
         var allResults = new List<OptimizerResult>();
 
-        for (int rounds = m_numberOfRounds; rounds >= 0; rounds--)
+        for (var rounds = m_numberOfRounds; rounds >= 0; rounds--)
         {
             // Initial configurations count.
             var initialConfigurationCount = (int)Math.Ceiling((m_totalBudgetPerRound / m_maximumBudget)
@@ -114,7 +114,7 @@ public sealed class HyperbandOptimizer
             var results = new ConcurrentBag<OptimizerResult>();
 
             var iterations = m_skipLastIterationOfEachRound ? rounds : (rounds + 1);
-            for (int iteration = 0; iteration < iterations; iteration++)
+            for (var iteration = 0; iteration < iterations; iteration++)
             {
                 // Run each of the parameter sets with budget
                 // and keep the best (configurationCount / m_eta) configurations

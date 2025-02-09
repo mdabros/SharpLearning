@@ -35,9 +35,9 @@ public sealed class MeanProbabilityClassificationEnsembleStrategy : IClassificat
     {
         var currentObservation = new ProbabilityPrediction[ensemblePredictions.Length];
 
-        for (int i = 0; i < predictions.Length; i++)
+        for (var i = 0; i < predictions.Length; i++)
         {
-            for (int j = 0; j < currentObservation.Length; j++)
+            for (var j = 0; j < currentObservation.Length; j++)
             {
                 currentObservation[j] = ensemblePredictions[j][i];
             }

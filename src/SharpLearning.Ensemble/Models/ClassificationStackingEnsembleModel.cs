@@ -56,7 +56,7 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
     {
         var predictions = new double[observations.RowCount];
         var observation = new double[observations.ColumnCount];
-        for (int i = 0; i < observations.RowCount; i++)
+        for (var i = 0; i < observations.RowCount; i++)
         {
             observations.Row(i, observation);
             predictions[i] = Predict(observation);
@@ -80,11 +80,11 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
         }
 
         var ensemblePredictions = new double[ensembleCols];
-        for (int i = 0; i < m_ensembleModels.Length; i++)
+        for (var i = 0; i < m_ensembleModels.Length; i++)
         {
             var probabilities = m_ensembleModels[i].Predict(observation)
                 .Probabilities.Values.ToArray();
-            for (int j = 0; j < m_numberOfClasses; j++)
+            for (var j = 0; j < m_numberOfClasses; j++)
             {
                 ensemblePredictions[i * m_numberOfClasses + j] = probabilities[j];
             }
@@ -107,7 +107,7 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
     {
         var predictions = new ProbabilityPrediction[observations.RowCount];
         var observation = new double[observations.ColumnCount];
-        for (int i = 0; i < observations.RowCount; i++)
+        for (var i = 0; i < observations.RowCount; i++)
         {
             observations.Row(i, observation);
             predictions[i] = PredictProbability(observation);
@@ -152,7 +152,7 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
 
             name += "_" + duplicateModelCount[name].ToString();
 
-            for (int j = 0; j < m_numberOfClasses; j++)
+            for (var j = 0; j < m_numberOfClasses; j++)
             {
                 ensembleFeatureNameToIndex.Add(name + "_Class_Probability_" + j, index++);
             }

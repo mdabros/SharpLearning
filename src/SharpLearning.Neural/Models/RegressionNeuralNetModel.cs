@@ -54,7 +54,7 @@ public sealed class RegressionNeuralNetModel : IPredictorModel<double>
         var cols = observations.ColumnCount;
         var predictions = new double[rows];
         var observation = new double[cols];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             observations.Row(i, observation);
             predictions[i] = Predict(observation);

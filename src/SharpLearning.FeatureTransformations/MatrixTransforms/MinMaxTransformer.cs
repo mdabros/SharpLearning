@@ -66,7 +66,7 @@ public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
 
         if (m_featureMinMax.Count == 0)
         {
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
                 m_featureMinMax.Add(i, new FeatureMinMax { Min = double.MaxValue, Max = double.MinValue });
             }
@@ -74,9 +74,9 @@ public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
 
         CreateFeatureMinMax(matrix);
 
-        for (int i = 0; i < cols; i++)
+        for (var i = 0; i < cols; i++)
         {
-            for (int j = 0; j < rows; j++)
+            for (var j = 0; j < rows; j++)
             {
                 var value = matrix[j, i];
                 var minMax = m_featureMinMax[i];
@@ -91,9 +91,9 @@ public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
         var rows = matrix.RowCount;
         var cols = matrix.ColumnCount;
 
-        for (int i = 0; i < cols; i++)
+        for (var i = 0; i < cols; i++)
         {
-            for (int j = 0; j < rows; j++)
+            for (var j = 0; j < rows; j++)
             {
                 var minMax = m_featureMinMax[i];
                 var value = matrix[j, i];
@@ -137,7 +137,7 @@ public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
 
         var cols = vector.Length;
 
-        for (int i = 0; i < cols; i++)
+        for (var i = 0; i < cols; i++)
         {
             var value = vector[i];
             var minMax = m_featureMinMax[i];

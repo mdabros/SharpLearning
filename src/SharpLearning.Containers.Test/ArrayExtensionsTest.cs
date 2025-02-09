@@ -237,11 +237,11 @@ public class ArrayExtensionsTest
     [TestMethod]
     public void ArrayExtensions_WeightedMedian_1()
     {
-        int n = 10;
+        var n = 10;
         var w = new double[n];
         var x = new double[n];
 
-        for (int j = 0; j < n; j++)
+        for (var j = 0; j < n; j++)
         {
             w[j] = j + 1;
             x[j] = j;
@@ -255,11 +255,11 @@ public class ArrayExtensionsTest
     [TestMethod]
     public void ArrayExtensions_WeightedMedian_2()
     {
-        int n = 9;
+        var n = 9;
         var w = new double[n];
         var x = new double[n];
 
-        for (int j = 0; j < n; j++)
+        for (var j = 0; j < n; j++)
         {
             w[j] = j + ((j < 6) ? 1 : 0);
             x[j] = j + 1;

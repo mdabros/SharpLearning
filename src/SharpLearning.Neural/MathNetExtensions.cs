@@ -30,10 +30,10 @@ public static class MathNetExtensions
                 " differs from vector length: " + v.Count);
         }
 
-        for (int col = 0; col < cols; col++)
+        for (var col = 0; col < cols; col++)
         {
             var rowOffSet = col * rows;
-            for (int row = 0; row < rows; row++)
+            for (var row = 0; row < rows; row++)
             {
                 var mIndex = rowOffSet + row;
                 outData[mIndex] = mData[mIndex] + vData[col];
@@ -62,10 +62,10 @@ public static class MathNetExtensions
                 " differs from vector length: " + v.Count);
         }
 
-        for (int col = 0; col < cols; col++)
+        for (var col = 0; col < cols; col++)
         {
             var rowOffSet = col * rows;
-            for (int row = 0; row < rows; row++)
+            for (var row = 0; row < rows; row++)
             {
                 var mIndex = rowOffSet + row;
                 outData[mIndex] = mData[mIndex] - vData[col];
@@ -94,10 +94,10 @@ public static class MathNetExtensions
                 " differs from vector length: " + v.Count);
         }
 
-        for (int col = 0; col < cols; col++)
+        for (var col = 0; col < cols; col++)
         {
             var rowOffSet = col * rows;
-            for (int row = 0; row < rows; row++)
+            for (var row = 0; row < rows; row++)
             {
                 var mIndex = rowOffSet + row;
                 outData[mIndex] = mData[mIndex] + vData[row];
@@ -126,10 +126,10 @@ public static class MathNetExtensions
                 " differs from vector length: " + v.Count);
         }
 
-        for (int col = 0; col < cols; col++)
+        for (var col = 0; col < cols; col++)
         {
             var rowOffSet = col * rows;
-            for (int row = 0; row < rows; row++)
+            for (var row = 0; row < rows; row++)
             {
                 var mIndex = rowOffSet + row;
                 outData[mIndex] = mData[mIndex] * v[col];
@@ -163,7 +163,7 @@ public static class MathNetExtensions
         var m2Data = m2.Data();
 
         var sum = 0.0f;
-        for (int i = 0; i < m1Data.Length; i++)
+        for (var i = 0; i < m1Data.Length; i++)
         {
             sum += m1Data[i] * m2Data[i];
         }
@@ -183,10 +183,10 @@ public static class MathNetExtensions
         var mData = m.Data();
         var vData = v.Data();
 
-        for (int col = 0; col < m.ColumnCount; col++)
+        for (var col = 0; col < m.ColumnCount; col++)
         {
             var rowOffSet = col * rows;
-            for (int row = 0; row < m.RowCount; row++)
+            for (var row = 0; row < m.RowCount; row++)
             {
                 var mIndex = rowOffSet + row;
                 vData[col] += mData[mIndex];
@@ -217,10 +217,10 @@ public static class MathNetExtensions
         var cols = m.ColumnCount;
         var mData = m.Data();
 
-        for (int col = 0; col < m.ColumnCount; col++)
+        for (var col = 0; col < m.ColumnCount; col++)
         {
             var rowOffSet = col * rows;
-            for (int row = 0; row < m.RowCount; row++)
+            for (var row = 0; row < m.RowCount; row++)
             {
                 var mIndex = rowOffSet + row;
                 sums[col] += mData[mIndex];
@@ -250,10 +250,10 @@ public static class MathNetExtensions
 
         var mData = m.Data();
 
-        for (int col = 0; col < m.ColumnCount; col++)
+        for (var col = 0; col < m.ColumnCount; col++)
         {
             var rowOffSet = col * rows;
-            for (int row = 0; row < m.RowCount; row++)
+            for (var row = 0; row < m.RowCount; row++)
             {
                 var mIndex = rowOffSet + row;
                 sums[row] += mData[mIndex];
@@ -270,7 +270,7 @@ public static class MathNetExtensions
     {
         var matrix = Matrix<float>.Build.Dense(1, array.Length);
 
-        for (int i = 0; i < array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
         {
             matrix.At(0, i, (float)array[i]);
         }
@@ -286,7 +286,7 @@ public static class MathNetExtensions
     /// <param name="row"></param>
     public static void Row(this Matrix<float> m, int rowIndex, float[] row)
     {
-        for (int i = 0; i < m.ColumnCount; i++)
+        for (var i = 0; i < m.ColumnCount; i++)
         {
             row[i] = m[rowIndex, i];
         }

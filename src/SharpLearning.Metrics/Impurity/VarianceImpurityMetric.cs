@@ -18,14 +18,14 @@ public sealed class VarianceImpurityMetric : IImpurityMetric
         var sum = 0.0;
         var sumSqr = 0.0;
 
-        for (int i = 0; i < values.Length; i++)
+        for (var i = 0; i < values.Length; i++)
         {
             var x = values[i];
             ++n;
             sum += x;
             sumSqr += x * x;
         }
-        int divisor = n - 1;
+        var divisor = n - 1;
         if (divisor == 0) { return 0.0; }
 
         var variance = (sumSqr - ((sum * sum) / n)) / divisor;

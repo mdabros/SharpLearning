@@ -45,7 +45,7 @@ public sealed class RegressionAdaBoostModel : IPredictorModel<double>
     {
         var count = m_models.Length;
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             m_predictions[i] = m_models[i].Predict(observation);
         }
@@ -67,7 +67,7 @@ public sealed class RegressionAdaBoostModel : IPredictorModel<double>
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Predict(observations.Row(i));
         }

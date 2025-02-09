@@ -40,7 +40,7 @@ public sealed class ReplaceMissingValuesTransformer : ICsvRowTransformer
         foreach (var row in rows)
         {
             var values = row.Values;
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 var value = values[i];
                 if (m_missingValueIdentifiers.ContainsKey(value))

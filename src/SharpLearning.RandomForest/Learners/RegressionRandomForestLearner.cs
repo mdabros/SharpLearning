@@ -158,7 +158,7 @@ public sealed class RegressionRandomForestLearner : IIndexedLearner<double>, ILe
         {
             var modelVariableImportance = model.GetRawVariableImportance();
 
-            for (int j = 0; j < modelVariableImportance.Length; j++)
+            for (var j = 0; j < modelVariableImportance.Length; j++)
             {
                 rawVariableImportance[j] += modelVariableImportance[j];
             }
@@ -176,7 +176,7 @@ public sealed class RegressionRandomForestLearner : IIndexedLearner<double>, ILe
         var treeIndicesLength = (int)Math.Round(m_subSampleRatio * indices.Length);
         var treeIndices = new int[treeIndicesLength];
 
-        for (int j = 0; j < treeIndicesLength; j++)
+        for (var j = 0; j < treeIndicesLength; j++)
         {
             treeIndices[j] = indices[random.Next(indices.Length)];
         }

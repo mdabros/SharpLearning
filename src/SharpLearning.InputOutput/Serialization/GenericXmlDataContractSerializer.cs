@@ -135,8 +135,8 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
             foreach (Type type in typesToResolve)
             {
-                string typeNamespace = GetNamespace(type);
-                string typeName = GetName(type);
+                var typeNamespace = GetNamespace(type);
+                var typeName = GetName(type);
 
                 m_typeToNames[type] = new Tuple<string, string>(typeNamespace, typeName);
 
@@ -158,7 +158,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             {
                 return resolver1;
             }
-            List<Type> types = new List<Type>();
+            var types = new List<Type>();
             types.AddRange(resolver1.KnownTypes);
             types.AddRange(resolver2.KnownTypes);
 
@@ -188,7 +188,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
         {
             if (m_typeToNames.ContainsKey(type))
             {
-                XmlDictionary dictionary = new XmlDictionary();
+                var dictionary = new XmlDictionary();
                 typeNamespace = dictionary.Add(m_typeToNames[type].Item1);
                 typeName = dictionary.Add(m_typeToNames[type].Item2);
 
@@ -215,7 +215,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
         {
             Assembly[] assemblyReferecnes = AppDomain.CurrentDomain.GetAssemblies();
 
-            List<Type> types = new List<Type>();
+            var types = new List<Type>();
 
             foreach (Assembly assembly in assemblyReferecnes)
             {
@@ -231,7 +231,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
         {
             Type[] allTypes = assembly.GetTypes();
 
-            List<Type> types = new List<Type>();
+            var types = new List<Type>();
 
             foreach (Type type in allTypes)
             {

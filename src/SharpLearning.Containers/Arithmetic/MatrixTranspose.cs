@@ -32,9 +32,9 @@ public static class MatrixTranspose
         var cols = matrix.ColumnCount;
         var rows = matrix.RowCount;
 
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
-            for (int j = 0; j < cols; j++)
+            for (var j = 0; j < cols; j++)
             {
                 transposed.At(j, i, matrix.At(i, j));
             }

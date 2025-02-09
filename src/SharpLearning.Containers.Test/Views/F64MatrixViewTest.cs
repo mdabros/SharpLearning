@@ -25,7 +25,7 @@ public class F64MatrixViewTest
         using (var pinnedMatrix = matrix.GetPinnedPointer())
         {
             var view = pinnedMatrix.View();
-            for (int i = 0; i < matrix.ColumnCount; i++)
+            for (var i = 0; i < matrix.ColumnCount; i++)
             {
                 AssertColumnView(matrix.Column(i), view.ColumnView(i));
             }
@@ -101,7 +101,7 @@ public class F64MatrixViewTest
 
     static unsafe void AssertColumnView(double[] column, F64MatrixColumnView columnView)
     {
-        for (int i = 0; i < column.Length; i++)
+        for (var i = 0; i < column.Length; i++)
         {
             Assert.AreEqual(column[i], columnView[i]);
         }
@@ -110,9 +110,9 @@ public class F64MatrixViewTest
 
     unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
     {
-        for (int i = 0; i < matrix.RowCount; i++)
+        for (var i = 0; i < matrix.RowCount; i++)
         {
-            for (int j = 0; j < matrix.ColumnCount; j++)
+            for (var j = 0; j < matrix.ColumnCount; j++)
             {
                 Assert.AreEqual(matrix.At(i, j), view[i][j]);
             }

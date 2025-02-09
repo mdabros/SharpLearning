@@ -51,11 +51,11 @@ public sealed class NormalizedGiniCoefficientRegressionMetric : IRegressionMetri
 
         var totalActualLosses = target.Sum();
 
-        double populationDelta = 1.0 / (double)target.Length;
+        var populationDelta = 1.0 / (double)target.Length;
         double accumulatedPopulationPercentageSum = 0;
         double accumulatedLossPercentageSum = 0;
 
-        double giniSum = 0.0;
+        var giniSum = 0.0;
 
         foreach (var currentPair in all)
         {

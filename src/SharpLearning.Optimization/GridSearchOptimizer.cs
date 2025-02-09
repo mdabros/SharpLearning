@@ -58,7 +58,7 @@ public sealed class GridSearchOptimizer : IOptimizer
         var parameterIndexToResult = new ConcurrentDictionary<int, OptimizerResult>();
         if (!m_runParallel)
         {
-            for (int index = 0; index < parameterSets.Length; index++)
+            for (var index = 0; index < parameterSets.Length; index++)
             {
                 RunParameterSet(index, parameterSets,
                     functionToMinimize, parameterIndexToResult);

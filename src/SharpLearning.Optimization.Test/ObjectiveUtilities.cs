@@ -18,7 +18,7 @@ public static class ObjectiveUtilities
 
         var cost = 0.0;
 
-        for (int i = 0; i < heights.Length; i++)
+        for (var i = 0; i < heights.Length; i++)
         {
             cost += (parameters[0] * heights[i] - weights[i]) * (parameters[0] * heights[i] - weights[i]);
         }

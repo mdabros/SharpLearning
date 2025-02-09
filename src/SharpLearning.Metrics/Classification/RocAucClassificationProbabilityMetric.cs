@@ -52,9 +52,9 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
         var counts = targetProbabilities.GroupBy(l => l.target)
             .Select(l => new { Label = l.Key, Count = l.Count() });
 
-        int negativeCount = counts.Where(s => !s.Label.Equals(m_positiveTarget))
+        var negativeCount = counts.Where(s => !s.Label.Equals(m_positiveTarget))
             .Select(s => s.Count).Sum(); ;
-        int positivesCount = counts.Where(s => s.Label.Equals(m_positiveTarget))
+        var positivesCount = counts.Where(s => s.Label.Equals(m_positiveTarget))
             .Select(s => s.Count).Sum();
 
         double auc = 0;
@@ -102,8 +102,8 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
     /// <returns></returns>
     static double trapezoidArea(double X1, double X2, double Y1, double Y2)
     {
-        double b = Math.Abs(X1 - X2);
-        double height = (Y1 + Y2) / 2.0;
+        var b = Math.Abs(X1 - X2);
+        var height = (Y1 + Y2) / 2.0;
         return (b * height);
     }
 

@@ -49,7 +49,7 @@ public static class ArrayExtensions
     /// <param name="a"></param>
     public static void Map<T>(this T[] array, Func<T> a)
     {
-        for (int i = 0; i < array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
         {
             array[i] = a();
         }
@@ -64,7 +64,7 @@ public static class ArrayExtensions
     /// <param name="a"></param>
     public static void Map<T>(this T[] array, Func<T, T> a)
     {
-        for (int i = 0; i < array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
         {
             array[i] = a(array[i]);
         }
@@ -106,7 +106,7 @@ public static class ArrayExtensions
     public static T[] GetIndices<T>(this T[] v, int[] indices)
     {
         var result = new T[indices.Length];
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             result[i] = v[indices[i]];
         }
@@ -211,7 +211,7 @@ public static class ArrayExtensions
     /// <param name="destination"></param>
     public static void IndexedCopy<T>(this int[] indices, T[] source, Interval1D interval, T[] destination)
     {
-        for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+        for (var i = interval.FromInclusive; i < interval.ToExclusive; i++)
         {
             var index = indices[i];
             destination[i] = source[index];
@@ -228,7 +228,7 @@ public static class ArrayExtensions
     public static void IndexedCopy(this int[] indices, F64MatrixColumnView source,
         Interval1D interval, double[] destination)
     {
-        for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+        for (var i = interval.FromInclusive; i < interval.ToExclusive; i++)
         {
             var index = indices[i];
             destination[i] = source[index];
@@ -244,7 +244,7 @@ public static class ArrayExtensions
     /// <param name="destination"></param>
     public static void IndexedCopy<T>(this int[] indices, T[] source, T[] destination)
     {
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var index = indices[i];
             destination[i] = source[index];
@@ -260,7 +260,7 @@ public static class ArrayExtensions
     public static double Sum(this double[] array, Interval1D interval)
     {
         var sum = 0.0;
-        for (int i = interval.FromInclusive; i < interval.ToExclusive; i++)
+        for (var i = interval.FromInclusive; i < interval.ToExclusive; i++)
         {
             sum += array[i];
         }
@@ -276,7 +276,7 @@ public static class ArrayExtensions
     public static double Sum(this double[] array, int[] indices)
     {
         var sum = 0.0;
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var index = indices[i];
             sum += array[index];
@@ -293,10 +293,10 @@ public static class ArrayExtensions
     /// <returns></returns>
     public static double WeightedMedian(this double[] values, double[] weights)
     {
-        double total = weights.Sum(); // the total weight
+        var total = weights.Sum(); // the total weight
 
-        int k = 0;
-        double sum = total - weights[0]; // sum is the total weight of all `x[i] > x[k]`
+        var k = 0;
+        var sum = total - weights[0]; // sum is the total weight of all `x[i] > x[k]`
 
         while (sum > total / 2)
         {
@@ -391,7 +391,7 @@ public static class ArrayExtensions
         var cols = m.First().Length;
 
         var matrix = new F64Matrix(rows, cols);
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var row = m[i];
             if (row.Length != cols)
@@ -399,7 +399,7 @@ public static class ArrayExtensions
                 throw new ArgumentException("Conversion to F64Matrix requires all row to be equal length");
             }
 
-            for (int j = 0; j < cols; j++)
+            for (var j = 0; j < cols; j++)
             {
                 matrix[i, j] = row[j];
             }
@@ -419,7 +419,7 @@ public static class ArrayExtensions
     {
         var mean = 0.0;
         var wSum = 0.0;
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var index = indices[i];
             var w = weights[index];
@@ -441,11 +441,11 @@ public static class ArrayExtensions
     /// <param name="random"></param>
     public static void Shuffle<T>(this IList<T> list, Random random)
     {
-        int n = list.Count;
+        var n = list.Count;
         while (n > 1)
         {
             n--;
-            int k = random.Next(n + 1);
+            var k = random.Next(n + 1);
             T value = list[k];
             list[k] = list[n];
             list[n] = value;
@@ -502,7 +502,7 @@ public static class ArrayExtensions
         var sampleIndices = new int[sampleSize];
         var sampleIndex = 0;
 
-        for (int i = 0; i < data.Length; i++)
+        for (var i = 0; i < data.Length; i++)
         {
             var index = indices[i];
             var value = data[index];
@@ -584,7 +584,7 @@ public static class ArrayExtensions
         var indices = dataIndices.ToArray();
         indices.Shuffle(random);
 
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var dataIndex = indices[i];
             var value = data[dataIndex];

@@ -211,14 +211,14 @@ public class NeuralNetLearner
         var timer = new Stopwatch();
 
         // train using stochastic gradient descent
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
             timer.Restart();
 
             var accumulatedLoss = 0.0;
             learningIndices.Shuffle(m_random);
 
-            for (int i = 0; i < numberOfBatches; i++)
+            for (var i = 0; i < numberOfBatches; i++)
             {
                 var workIndices = learningIndices
                     .Skip(i * m_batchSize)
@@ -314,7 +314,7 @@ public class NeuralNetLearner
         var batchRow = 0;
         foreach (var row in indices)
         {
-            for (int col = 0; col < cols; col++)
+            for (var col = 0; col < cols; col++)
             {
                 batch[batchRow, col] = targets[row, col];
             }
@@ -328,7 +328,7 @@ public class NeuralNetLearner
         var batchRow = 0;
         foreach (var row in indices)
         {
-            for (int col = 0; col < cols; col++)
+            for (var col = 0; col < cols; col++)
             {
                 batch[batchRow, col] = (float)observations[row, col];
             }

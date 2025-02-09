@@ -50,7 +50,7 @@ public class MatrixAddTest
 
         Assert.AreEqual(expected.Length, actual.Length);
 
-        for (int i = 0; i < actual.Length; i++)
+        for (var i = 0; i < actual.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.1);
         }

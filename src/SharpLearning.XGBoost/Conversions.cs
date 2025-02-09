@@ -19,11 +19,11 @@ public static class Conversions
         var cols = matrix.ColumnCount;
 
         var jaggedArray = new float[rows][];
-        for (int row = 0; row < rows; row++)
+        for (var row = 0; row < rows; row++)
         {
             var rowArray = new float[cols];
 
-            for (int col = 0; col < cols; col++)
+            for (var col = 0; col < cols; col++)
             {
                 rowArray[col] = (float)matrix.At(row, col);
             }
@@ -45,12 +45,12 @@ public static class Conversions
         var cols = matrix.ColumnCount;
 
         var jaggedArray = new float[rows][];
-        for (int outputRow = 0; outputRow < rowIndices.Length; outputRow++)
+        for (var outputRow = 0; outputRow < rowIndices.Length; outputRow++)
         {
             var inputRow = rowIndices[outputRow];
             var rowArray = new float[cols];
 
-            for (int col = 0; col < cols; col++)
+            for (var col = 0; col < cols; col++)
             {
                 rowArray[col] = (float)matrix.At(inputRow, col);
             }

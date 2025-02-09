@@ -150,7 +150,7 @@ public sealed class CsvParser
 
     Dictionary<string, int> CreateHeaderForCsvFileWithout()
     {
-        Dictionary<string, int> columnNameToIndex = new Dictionary<string, int>();
+        var columnNameToIndex = new Dictionary<string, int>();
 
         // create header for csv file without header.
         using (var reader = m_getReader())
@@ -158,7 +158,7 @@ public sealed class CsvParser
             var line = reader.ReadLine();
             var splitLine = Split(line);
 
-            for (int i = 0; i < splitLine.Length; i++)
+            for (var i = 0; i < splitLine.Length; i++)
             {
                 columnNameToIndex.Add(i.ToString(), i);
             }
@@ -194,7 +194,7 @@ public sealed class CsvParser
             split = line.Split(m_separator);
         }
 
-        for (int i = 0; i < split.Length; i++)
+        for (var i = 0; i < split.Length; i++)
         {
             split[i] = split[i].Trim('"');
         }
@@ -216,7 +216,7 @@ public sealed class CsvParser
 
         var split = new string[indices.Length];
 
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var index = indices[i];
             split[i] = splitAll[index].Trim('"');
@@ -227,11 +227,11 @@ public sealed class CsvParser
 
     static string[] SplitText(string csvText, char separator)
     {
-        List<string> tokens = new List<string>();
+        var tokens = new List<string>();
 
-        int last = -1;
-        int current = 0;
-        bool inText = false;
+        var last = -1;
+        var current = 0;
+        var inText = false;
 
         while (current < csvText.Length)
         {

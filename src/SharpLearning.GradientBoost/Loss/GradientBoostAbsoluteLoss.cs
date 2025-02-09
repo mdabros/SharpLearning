@@ -29,7 +29,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     public double InitialLoss(double[] targets, bool[] inSample)
     {
         var values = new List<double>();
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -51,7 +51,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     {
         var splitInfo = GBMSplitInfo.NewEmpty();
 
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -98,7 +98,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     public void UpdateResiduals(double[] targets, double[] predictions,
         double[] residuals, bool[] inSample)
     {
-        for (int i = 0; i < residuals.Length; i++)
+        for (var i = 0; i < residuals.Length; i++)
         {
             if (inSample[i])
             {
@@ -143,7 +143,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     {
         var values = new List<double>();
 
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {

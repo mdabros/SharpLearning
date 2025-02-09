@@ -42,7 +42,7 @@ public static class GradientCheckTools
             var output1 = Matrix<float>.Build.Dense(batchSize, fanOut);
             var output2 = Matrix<float>.Build.Dense(batchSize, fanOut);
 
-            for (int i = 0; i < parameters.Length; i++)
+            for (var i = 0; i < parameters.Length; i++)
             {
                 output1.Clear();
                 output2.Clear();

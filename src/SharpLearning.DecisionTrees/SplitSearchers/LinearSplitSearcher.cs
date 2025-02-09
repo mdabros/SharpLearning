@@ -64,13 +64,13 @@ public sealed class LinearSplitSearcher : ISplitSearcher
         var bestImpurityLeft = 0.0;
         var bestImpurityRight = 0.0;
 
-        int prevSplit = parentInterval.FromInclusive;
+        var prevSplit = parentInterval.FromInclusive;
         var prevValue = feature[prevSplit];
         var prevTarget = targets[prevSplit];
 
         impurityCalculator.UpdateInterval(parentInterval);
 
-        for (int j = prevSplit + 1; j < parentInterval.ToExclusive; j++)
+        for (var j = prevSplit + 1; j < parentInterval.ToExclusive; j++)
         {
             var currentValue = feature[j];
             var currentTarget = targets[j];

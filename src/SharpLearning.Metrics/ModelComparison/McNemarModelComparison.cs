@@ -39,7 +39,7 @@ public static class McNemarModelComparison
         var modelCount = 2;
         var mcNemarmatrix = new int[modelCount][].Select(s => new int[modelCount]).ToArray();
 
-        for (int i = 0; i < targets.Length; i++)
+        for (var i = 0; i < targets.Length; i++)
         {
             var model1Prediction = model1Predictions[i];
             var model2Prediction = model2Predictions[i];

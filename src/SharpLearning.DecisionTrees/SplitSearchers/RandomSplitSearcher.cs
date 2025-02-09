@@ -47,7 +47,7 @@ public sealed class RandomSplitSearcher : ISplitSearcher
         var min = double.MaxValue;
         var max = double.MinValue;
 
-        for (int i = parentInterval.FromInclusive; i < parentInterval.ToExclusive; i++)
+        for (var i = parentInterval.FromInclusive; i < parentInterval.ToExclusive; i++)
         {
             var value = feature[i];
 
@@ -80,7 +80,7 @@ public sealed class RandomSplitSearcher : ISplitSearcher
 
         var currentFeature = double.MinValue;
 
-        for (int i = parentInterval.FromInclusive; i < parentInterval.ToExclusive; i++)
+        for (var i = parentInterval.FromInclusive; i < parentInterval.ToExclusive; i++)
         {
             var leftSize = (double)(i - parentInterval.FromInclusive);
             var rightSize = (double)(parentInterval.ToExclusive - i);

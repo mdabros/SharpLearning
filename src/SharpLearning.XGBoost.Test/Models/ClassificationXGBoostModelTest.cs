@@ -27,7 +27,7 @@ public class ClassificationXGBoostModelTest
         {
             var rows = targets.Length;
             var predictions = new double[rows];
-            for (int i = 0; i < rows; i++)
+            for (var i = 0; i < rows; i++)
             {
                 predictions[i] = sut.Predict(observations.Row(i));
             }
@@ -54,7 +54,7 @@ public class ClassificationXGBoostModelTest
         using (var sut = learner.Learn(observations, binaryTargets))
         {
             var predictions = new double[rows];
-            for (int i = 0; i < rows; i++)
+            for (var i = 0; i < rows; i++)
             {
                 predictions[i] = sut.Predict(observations.Row(i));
             }
@@ -94,7 +94,7 @@ public class ClassificationXGBoostModelTest
         {
             var rows = targets.Length;
             var actual = new ProbabilityPrediction[rows];
-            for (int i = 0; i < rows; i++)
+            for (var i = 0; i < rows; i++)
             {
                 actual[i] = sut.PredictProbability(observations.Row(i));
             }
@@ -124,7 +124,7 @@ public class ClassificationXGBoostModelTest
         using (var sut = learner.Learn(observations, binaryTargets))
         {
             var actual = new ProbabilityPrediction[rows];
-            for (int i = 0; i < rows; i++)
+            for (var i = 0; i < rows; i++)
             {
                 actual[i] = sut.PredictProbability(observations.Row(i));
             }

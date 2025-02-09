@@ -128,13 +128,13 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
             m_indexedTargets);
 
         var initialWeight = 1.0 / indices.Length;
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var index = indices[i];
             m_sampleWeights[index] = initialWeight;
         }
 
-        for (int i = 0; i < m_iterations; i++)
+        for (var i = 0; i < m_iterations; i++)
         {
             if (!Boost(observations, targets, indices, i))
                 break;
@@ -154,7 +154,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
             if (i == m_iterations - 1)
             {
                 // Normalize weights
-                for (int j = 0; j < indices.Length; j++)
+                for (var j = 0; j < indices.Length; j++)
                 {
                     var index = indices[j];
                     m_sampleWeights[index] = m_sampleWeights[index] / weightSum;
@@ -198,7 +198,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
 
         var predictions = model.Predict(observations, indices);
 
-        for (int i = 0; i < predictions.Length; i++)
+        for (var i = 0; i < predictions.Length; i++)
         {
             var index = indices[i];
             m_workErrors[index] = Math.Abs(m_indexedTargets[i] - predictions[i]);
@@ -206,7 +206,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
 
         var maxError = m_workErrors.Max();
 
-        for (int i = 0; i < m_workErrors.Length; i++)
+        for (var i = 0; i < m_workErrors.Length; i++)
         {
 
             var error = m_workErrors[i];
@@ -254,7 +254,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
         // Only boost if not last iteration
         if (iteration != m_iterations - 1)
         {
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
             {
                 var index = indices[i];
                 var sampleWeight = m_sampleWeights[index];
@@ -275,7 +275,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
         var rows = indices.Length;
         var predictions = new double[rows];
 
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var index = indices[i];
             predictions[i] = Predict(observations.Row(index));
@@ -293,7 +293,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
         var count = m_models.Count;
         var predictions = new double[count];
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             predictions[i] = m_models[i].Predict(observation);
         }
@@ -309,12 +309,12 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
     double[] VariableImportance(int featuresCount)
     {
         var variableImportance = new double[featuresCount];
-        for (int i = 0; i < m_models.Count; i++)
+        for (var i = 0; i < m_models.Count; i++)
         {
             var w = m_modelWeights[i];
             var modelImportances = m_models[i].GetRawVariableImportance();
 
-            for (int j = 0; j < featuresCount; j++)
+            for (var j = 0; j < featuresCount; j++)
             {
                 variableImportance[j] += w * modelImportances[j];
             }

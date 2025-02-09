@@ -54,7 +54,7 @@ public static class FloatingPointConversion
 
     static double ParseAnyNumberStyle(string value)
     {
-        if (double.TryParse(value, NumberStyle, nfi, out double result))
+        if (double.TryParse(value, NumberStyle, nfi, out var result))
         {
             return result;
         }

@@ -91,7 +91,7 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
         // initialize max and min velocities
         var maxParticleVelocities = new double[m_parameters.Length];
         var minParticleVelocities = new double[m_parameters.Length];
-        for (int i = 0; i < m_parameters.Length; i++)
+        for (var i = 0; i < m_parameters.Length; i++)
         {
             maxParticleVelocities[i] = Math.Abs(m_parameters[i].Max - m_parameters[i].Min);
             minParticleVelocities[i] = -maxParticleVelocities[i];
@@ -100,7 +100,7 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
         // initialize max and min parameter bounds
         var maxParameters = new double[m_parameters.Length];
         var minParameters = new double[m_parameters.Length];
-        for (int i = 0; i < m_parameters.Length; i++)
+        for (var i = 0; i < m_parameters.Length; i++)
         {
             maxParameters[i] = m_parameters[i].Max;
             minParameters[i] = m_parameters[i].Min;
@@ -117,13 +117,13 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
         var gBest = new OptimizerResult(new double[m_parameters.Length], double.MaxValue);
 
         // random initialize particles
-        for (int i = 0; i < m_numberOfParticles; i++)
+        for (var i = 0; i < m_numberOfParticles; i++)
         {
             particles[i] = RandomSearchOptimizer.SampleParameterSet(m_parameters, m_sampler);
         }
 
         // iterate for find best
-        for (int iterations = 0; iterations < m_maxIterations; iterations++)
+        for (var iterations = 0; iterations < m_maxIterations; iterations++)
         {
             var options = new ParallelOptions { MaxDegreeOfParallelism = m_maxDegreeOfParallelism };
             Parallel.For(0, m_numberOfParticles, options, (i) =>
@@ -145,7 +145,7 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
                 }
             });
 
-            for (int i = 0; i < m_numberOfParticles; i++)
+            for (var i = 0; i < m_numberOfParticles; i++)
             {
                 //v[] = v[] + c1 * rand() * (pbest[] - present[]) + c2 * rand() * (gbest[] - present[])
                 particleVelocities[i] = particleVelocities[i].Add(pBest[i].Subtract(particles[i]).Multiply(m_c1 * m_random.NextDouble())
@@ -161,7 +161,7 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
         }
 
         var results = new List<OptimizerResult>();
-        for (int i = 0; i < m_numberOfParticles; i++)
+        for (var i = 0; i < m_numberOfParticles; i++)
         {
             results.Add(new OptimizerResult(pBest[i], pBestScores[i]));
         }
@@ -171,7 +171,7 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
 
     static void BoundCheck(double[] newValues, double[] maxValues, double[] minValues)
     {
-        for (int i = 0; i < newValues.Length; i++)
+        for (var i = 0; i < newValues.Length; i++)
         {
             newValues[i] = Math.Max(minValues[i], Math.Min(newValues[i], maxValues[i]));
         }

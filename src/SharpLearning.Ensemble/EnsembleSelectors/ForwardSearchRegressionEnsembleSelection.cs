@@ -75,7 +75,7 @@ public sealed class ForwardSearchRegressionEnsembleSelection : IRegressionEnsemb
 
         var currentError = double.MaxValue;
 
-        for (int i = m_numberOfModelsFromStart; i < m_numberOfModelsToSelect; i++)
+        for (var i = m_numberOfModelsFromStart; i < m_numberOfModelsToSelect; i++)
         {
             var error = SelectNextModelToAdd(crossValidatedModelPredictions, targets, currentError);
 
@@ -140,7 +140,7 @@ public sealed class ForwardSearchRegressionEnsembleSelection : IRegressionEnsemb
         var ranking = new Dictionary<int, double>();
         var currentPredictions = new double[crossValidatedModelPredictions.RowCount];
 
-        for (int i = 0; i < crossValidatedModelPredictions.ColumnCount; i++)
+        for (var i = 0; i < crossValidatedModelPredictions.ColumnCount; i++)
         {
             crossValidatedModelPredictions.Column(i, currentPredictions);
             var error = m_metric.Error(targets, currentPredictions);

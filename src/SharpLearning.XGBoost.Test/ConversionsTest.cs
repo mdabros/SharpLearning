@@ -101,7 +101,7 @@ public class ConversionsTest
     static void AssertArrays(float[][] actual, float[][] expected)
     {
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             CollectionAssert.AreEqual(expected[i], actual[i]);
         }

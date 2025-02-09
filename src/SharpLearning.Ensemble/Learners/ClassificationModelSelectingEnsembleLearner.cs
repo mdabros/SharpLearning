@@ -138,7 +138,7 @@ public class ClassificationModelSelectingEnsembleLearner
 
         var ensemblePredictions = new ProbabilityPrediction[cvCols][];
 
-        for (int i = 0; i < m_learners.Length; i++)
+        for (var i = 0; i < m_learners.Length; i++)
         {
             Trace.WriteLine("Training model: " + (i + 1));
             var learner = m_learners[i];

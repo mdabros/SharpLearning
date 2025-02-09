@@ -59,7 +59,7 @@ public sealed class RegressionGradientBoostModel : IPredictorModel<double>
     public double Predict(double[] observation)
     {
         var prediction = InitialLoss;
-        for (int i = 0; i < Trees.Length; i++)
+        for (var i = 0; i < Trees.Length; i++)
         {
             prediction += LearningRate * Trees[i].Predict(observation);
         }
@@ -76,7 +76,7 @@ public sealed class RegressionGradientBoostModel : IPredictorModel<double>
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Predict(observations.Row(i));
         }

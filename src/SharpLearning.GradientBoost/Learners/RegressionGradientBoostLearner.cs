@@ -136,7 +136,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
         var residuals = new double[targets.Length];
 
         var predictWork = new double[observations.RowCount];
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
             m_loss.UpdateResiduals(targets, predictions, residuals, inSample);
 
@@ -157,7 +157,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
             }
 
             trees[iteration].Predict(observations, predictWork);
-            for (int i = 0; i < predictWork.Length; i++)
+            for (var i = 0; i < predictWork.Length; i++)
             {
                 predictions[i] += m_learningRate * predictWork[i];
             }
@@ -218,7 +218,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
 
         var predictWork = new double[trainingObservations.RowCount];
 
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
             m_loss.UpdateResiduals(trainingTargets, predictions, residuals, inSample);
 
@@ -239,7 +239,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
             }
 
             trees[iteration].Predict(trainingObservations, predictWork);
-            for (int i = 0; i < predictWork.Length; i++)
+            for (var i = 0; i < predictWork.Length; i++)
             {
                 predictions[i] += m_learningRate * predictWork[i];
             }
@@ -297,7 +297,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
     {
         var orderedElements = new int[observations.ColumnCount][];
 
-        for (int i = 0; i < observations.ColumnCount; i++)
+        for (var i = 0; i < observations.ColumnCount; i++)
         {
             var feature = observations.Column(i);
             var indices = Enumerable.Range(0, rows).ToArray();
@@ -319,7 +319,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
         var inSample = new bool[allObservationCount];
         indices.Shuffle(m_random);
 
-        for (int i = 0; i < sampleSize; i++)
+        for (var i = 0; i < sampleSize; i++)
         {
             inSample[indices[i]] = true;
         }

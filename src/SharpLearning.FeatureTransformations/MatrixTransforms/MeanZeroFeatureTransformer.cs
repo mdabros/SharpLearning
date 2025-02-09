@@ -64,7 +64,7 @@ public sealed class MeanZeroFeatureTransformer : IF64MatrixTransform, IF64Vector
 
         var cols = vector.Length;
 
-        for (int i = 0; i < cols; i++)
+        for (var i = 0; i < cols; i++)
         {
             var value = vector[i];
             var mean = m_featureMean[i];
@@ -84,28 +84,28 @@ public sealed class MeanZeroFeatureTransformer : IF64MatrixTransform, IF64Vector
 
         if (m_featureMean.Count == 0)
         {
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
                 m_featureMean.Add(i, 0.0);
             }
 
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
-                for (int j = 0; j < rows; j++)
+                for (var j = 0; j < rows; j++)
                 {
                     m_featureMean[i] += matrix[j, i];
                 }
             }
 
-            for (int i = 0; i < cols; i++)
+            for (var i = 0; i < cols; i++)
             {
                 m_featureMean[i] /= (double)rows;
             }
         }
 
-        for (int i = 0; i < cols; i++)
+        for (var i = 0; i < cols; i++)
         {
-            for (int j = 0; j < rows; j++)
+            for (var j = 0; j < rows; j++)
             {
                 var value = matrix[j, i];
                 var mean = m_featureMean[i];

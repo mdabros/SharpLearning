@@ -50,7 +50,7 @@ public sealed class RegressionDecisionTreeModel : IPredictorModel<double>
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Tree.Predict(observations.Row(i));
         }
@@ -68,7 +68,7 @@ public sealed class RegressionDecisionTreeModel : IPredictorModel<double>
     {
         var rows = observations.RowCount;
         var predictions = new double[indices.Length];
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             predictions[i] = Tree.Predict(observations.Row(indices[i]));
         }

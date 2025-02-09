@@ -73,11 +73,11 @@ public sealed class SvmLayer
         var batchSize = delta.RowCount;
 
         m_delta.Clear();
-        for (int batchItem = 0; batchItem < batchSize; batchItem++) // for each batch item
+        for (var batchItem = 0; batchItem < batchSize; batchItem++) // for each batch item
         {
             var maxTarget = 0.0;
             var maxTargetIndex = 0;
-            for (int col = 0; col < delta.ColumnCount; col++)
+            for (var col = 0; col < delta.ColumnCount; col++)
             {
                 var targetValue = delta.At(batchItem, col);
                 if (targetValue > maxTarget)
@@ -88,7 +88,7 @@ public sealed class SvmLayer
             }
 
             var maxTargetScore = OutputActivations.At(batchItem, maxTargetIndex);
-            for (int i = 0; i < OutputActivations.ColumnCount; i++)
+            for (var i = 0; i < OutputActivations.ColumnCount; i++)
             {
                 if (i == maxTargetIndex) { continue; }
 

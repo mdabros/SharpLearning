@@ -30,7 +30,7 @@ public class GradientBoostQuantileLossTest
         var expected = new double[] { -0.1, -0.1, -0.1, -0.1, -0.1, 0.9, 0.9, 0.9, 0.9 };
 
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.001);
         }
@@ -50,7 +50,7 @@ public class GradientBoostQuantileLossTest
         var expected = new double[] { -0.1, 0.0, -0.1, 0.0, -0.1, 0.0, 0.9, 0.0, 0.9 };
 
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.001);
         }

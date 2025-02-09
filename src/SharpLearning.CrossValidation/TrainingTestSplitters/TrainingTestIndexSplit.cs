@@ -65,7 +65,7 @@ public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
     {
         unchecked // Overflow is fine, just wrap
         {
-            int hash = 17;
+            var hash = 17;
             hash = hash * 23 + TrainingIndices.GetHashCode();
             hash = hash * 23 + TestIndices.GetHashCode();
 

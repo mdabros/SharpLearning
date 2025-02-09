@@ -23,7 +23,7 @@ public static class XGBoostTreeConverter
     public static GBMTree[] FromXGBoostTextTreesToGBMTrees(string[] textTrees)
     {
         var trees = new GBMTree[textTrees.Length];
-        for (int i = 0; i < textTrees.Length; i++)
+        for (var i = 0; i < textTrees.Length; i++)
         {
             trees[i] = ConvertXGBoostTextTreeToGBMTree(textTrees[i]);
         }

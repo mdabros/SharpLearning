@@ -94,7 +94,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     {
         unchecked // Overflow is fine, just wrap
         {
-            int hash = 17;
+            var hash = 17;
             hash = hash * 23 + SampleSize.GetHashCode();
             hash = hash * 23 + TrainingScore.GetHashCode();
             hash = hash * 23 + ValidationScore.GetHashCode();

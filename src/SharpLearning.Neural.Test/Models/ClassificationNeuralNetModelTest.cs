@@ -33,7 +33,7 @@ public class ClassificationNeuralNetModelTest
         var sut = ClassificationNeuralNetModel.Load(() => new StringReader(m_classificationNeuralNetModelText));
 
         var predictions = new double[numberOfObservations];
-        for (int i = 0; i < numberOfObservations; i++)
+        for (var i = 0; i < numberOfObservations; i++)
         {
             predictions[i] = sut.Predict(observations.Row(i));
         }
@@ -83,7 +83,7 @@ public class ClassificationNeuralNetModelTest
         var sut = ClassificationNeuralNetModel.Load(() => new StringReader(m_classificationNeuralNetModelText));
 
         var predictions = new ProbabilityPrediction[numberOfObservations];
-        for (int i = 0; i < numberOfObservations; i++)
+        for (var i = 0; i < numberOfObservations; i++)
         {
             predictions[i] = sut.PredictProbability(observations.Row(i));
         }

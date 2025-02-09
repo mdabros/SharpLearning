@@ -27,7 +27,7 @@ public class RegressionForestModelTest
 
         var rows = targets.Length;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = sut.Predict(observations.Row(i));
         }
@@ -64,7 +64,7 @@ public class RegressionForestModelTest
 
         var rows = targets.Length;
         var actual = new CertaintyPrediction[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             actual[i] = sut.PredictCertainty(observations.Row(i));
         }
@@ -106,7 +106,7 @@ public class RegressionForestModelTest
 
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int row = 0; row < rows; row++)
+        for (var row = 0; row < rows; row++)
         {
             var observation = observations.Row(row);
             predictions[row] = sut.Trees.Select(t => t.Predict(observation))
@@ -157,7 +157,7 @@ public class RegressionForestModelTest
 
         Assert.AreEqual(expected.Length, actual.Length);
 
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], m_delta);
         }

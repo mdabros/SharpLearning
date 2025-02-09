@@ -22,7 +22,7 @@ public sealed class RootMeanSquarePercentageRegressionMetric : IRegressionMetric
 
         var meanSquareError = 0.0;
         var validEntries = 0;
-        for (int i = 0; i < targets.Length; ++i)
+        for (var i = 0; i < targets.Length; ++i)
         {
             var targetValue = targets[i];
             var estimate = predictions[i];

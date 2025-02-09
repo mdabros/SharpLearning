@@ -49,7 +49,7 @@ public static class ClassificationMatrixStringConverter
 
         var builder = new StringBuilder();
 
-        string horizontalClassNames = string.Empty;
+        var horizontalClassNames = string.Empty;
 
         foreach (var className in uniqueTargets)
         {
@@ -61,10 +61,10 @@ public static class ClassificationMatrixStringConverter
         var rows = combinedMatrix.GetLength(0);
         var cols = combinedMatrix.GetLength(1);
 
-        for (int r = 0; r < rows; r++)
+        for (var r = 0; r < rows; r++)
         {
             var row = string.Format("{0}", uniqueTargets[r]);
-            for (int c = 0; c < cols; c++)
+            for (var c = 0; c < cols; c++)
             {
                 row += string.Format(";{0:0.000}", combinedMatrix[r, c]);
             }
@@ -81,14 +81,14 @@ public static class ClassificationMatrixStringConverter
         var rows = classErrorMatrix.GetLength(0);
         var cols = classErrorMatrix.GetLength(1);
         var combinedMatrix = new double[rows, 2 * cols];
-        for (int r = 0; r < rows; r++)
+        for (var r = 0; r < rows; r++)
         {
-            for (int c = 0; c < cols; c++)
+            for (var c = 0; c < cols; c++)
             {
                 combinedMatrix[r, c] = classCountMatrix[r, c];
             }
 
-            for (int c = 0; c < cols; c++)
+            for (var c = 0; c < cols; c++)
             {
                 combinedMatrix[r, c + cols] = classErrorMatrix[r, c] * 100.0; // convert to percentage
             }

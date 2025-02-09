@@ -101,7 +101,7 @@ public sealed class ClassificationAdaBoostLearner
 
         var uniques = new HashSet<double>();
 
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var value = targets[indices[i]];
             if (!uniques.Contains(value))
@@ -133,13 +133,13 @@ public sealed class ClassificationAdaBoostLearner
             m_indexedTargets);
 
         var initialWeight = 1.0 / indices.Length;
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var index = indices[i];
             m_sampleWeights[index] = initialWeight;
         }
 
-        for (int i = 0; i < m_iterations; i++)
+        for (var i = 0; i < m_iterations; i++)
         {
             if (!Boost(observations, targets, indices, i))
                 break;
@@ -159,7 +159,7 @@ public sealed class ClassificationAdaBoostLearner
             if (i == m_iterations - 1)
             {
                 // Normalize weights
-                for (int j = 0; j < indices.Length; j++)
+                for (var j = 0; j < indices.Length; j++)
                 {
                     var index = indices[j];
                     m_sampleWeights[index] = m_sampleWeights[index] / weightSum;
@@ -219,7 +219,7 @@ public sealed class ClassificationAdaBoostLearner
 
         var predictions = model.Predict(observations, indices);
 
-        for (int i = 0; i < predictions.Length; i++)
+        for (var i = 0; i < predictions.Length; i++)
         {
             var index = indices[i];
             if (m_indexedTargets[i] != predictions[i])
@@ -256,7 +256,7 @@ public sealed class ClassificationAdaBoostLearner
         // Only boost if not last iteration
         if (iteration != m_iterations - 1)
         {
-            for (int i = 0; i < indices.Length; i++)
+            for (var i = 0; i < indices.Length; i++)
             {
                 var index = indices[i];
                 var sampleWeight = m_sampleWeights[index];
@@ -279,7 +279,7 @@ public sealed class ClassificationAdaBoostLearner
         var rows = indices.Length;
         var predictions = new double[rows];
 
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var index = indices[i];
             predictions[i] = Predict(observations.Row(index));
@@ -298,7 +298,7 @@ public sealed class ClassificationAdaBoostLearner
         var count = m_models.Count;
         var predictions = new Dictionary<double, double>();
 
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var prediction = m_models[i].Predict(observation);
             var weight = m_modelWeights[i];
@@ -319,12 +319,12 @@ public sealed class ClassificationAdaBoostLearner
     double[] VariableImportance(int featuresCount)
     {
         var variableImportance = new double[featuresCount];
-        for (int i = 0; i < m_models.Count; i++)
+        for (var i = 0; i < m_models.Count; i++)
         {
             var w = m_modelWeights[i];
             var modelImportances = m_models[i].GetRawVariableImportance();
 
-            for (int j = 0; j < featuresCount; j++)
+            for (var j = 0; j < featuresCount; j++)
             {
                 variableImportance[j] += w * modelImportances[j];
             }

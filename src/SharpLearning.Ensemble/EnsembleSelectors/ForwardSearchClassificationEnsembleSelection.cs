@@ -79,7 +79,7 @@ public sealed class ForwardSearchClassificationEnsembleSelection : IClassificati
 
         var currentError = double.MaxValue;
 
-        for (int i = m_numberOfModelsFromStart; i < m_numberOfModelsToSelect; i++)
+        for (var i = m_numberOfModelsFromStart; i < m_numberOfModelsToSelect; i++)
         {
             var error = SelectNextModelToAdd(crossValidatedModelPredictions, targets, currentError);
 
@@ -117,7 +117,7 @@ public sealed class ForwardSearchClassificationEnsembleSelection : IClassificati
             m_selectedModelIndices.CopyTo(candidateModelIndices);
             candidateModelIndices[candidateModelIndices.Length - 1] = index;
 
-            for (int i = 0; i < candidateModelIndices.Length; i++)
+            for (var i = 0; i < candidateModelIndices.Length; i++)
             {
                 candidateModelMatrix[i] = crossValidatedModelPredictions[candidateModelIndices[i]];
             }
@@ -149,7 +149,7 @@ public sealed class ForwardSearchClassificationEnsembleSelection : IClassificati
     {
         var ranking = new Dictionary<int, double>();
 
-        for (int i = 0; i < crossValidatedModelPredictions.Length; i++)
+        for (var i = 0; i < crossValidatedModelPredictions.Length; i++)
         {
             var error = m_metric.Error(targets, crossValidatedModelPredictions[i]);
             ranking.Add(i, error);

@@ -283,12 +283,12 @@ public sealed class NeuralNetOptimizer
         m_iterationCounter = 0;
 
         // clear sums
-        for (int i = 0; i < m_gsumWeights.Count; i++)
+        for (var i = 0; i < m_gsumWeights.Count; i++)
         {
             m_gsumWeights[i].Clear();
         }
 
-        for (int i = 0; i < m_xsumWeights.Count; i++)
+        for (var i = 0; i < m_xsumWeights.Count; i++)
         {
             m_xsumWeights[i].Clear();
         }

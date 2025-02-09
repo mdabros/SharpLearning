@@ -57,7 +57,7 @@ public sealed class BackwardEliminationClassificationEnsembleSelection : IClassi
         var currentError = double.MaxValue;
         var modelsToRemove = m_remainingModelIndices.Count - 1;
 
-        for (int i = 0; i < modelsToRemove; i++)
+        for (var i = 0; i < modelsToRemove; i++)
         {
             var error = SelectNextModelToRemove(crossValidatedModelPredictions, targets, currentError);
 
@@ -89,7 +89,7 @@ public sealed class BackwardEliminationClassificationEnsembleSelection : IClassi
         foreach (var index in m_remainingModelIndices)
         {
             var candidateIndex = 0;
-            for (int i = 0; i < m_remainingModelIndices.Count; i++)
+            for (var i = 0; i < m_remainingModelIndices.Count; i++)
             {
                 var curIndex = m_remainingModelIndices[i];
                 if (curIndex != index)
@@ -98,7 +98,7 @@ public sealed class BackwardEliminationClassificationEnsembleSelection : IClassi
                 }
             }
 
-            for (int i = 0; i < candidateModelIndices.Length; i++)
+            for (var i = 0; i < candidateModelIndices.Length; i++)
             {
                 candidateModelMatrix[i] = crossValidatedModelPredictions[candidateModelIndices[i]];
             }

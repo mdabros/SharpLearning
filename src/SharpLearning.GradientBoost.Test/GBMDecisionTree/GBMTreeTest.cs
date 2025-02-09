@@ -17,7 +17,7 @@ public class GBMTreeTest
         var orderedElements = new int[observations.ColumnCount][];
         var rows = observations.RowCount;
 
-        for (int i = 0; i < observations.ColumnCount; i++)
+        for (var i = 0; i < observations.ColumnCount; i++)
         {
             var feature = observations.Column(i);
             var indices = Enumerable.Range(0, rows).ToArray();

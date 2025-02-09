@@ -56,7 +56,7 @@ public sealed class RegressionForestModel : IPredictorModel<double>
     {
         var rows = observations.RowCount;
         var predictions = new double[rows];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = Predict(observations.Row(i));
         }
@@ -73,7 +73,7 @@ public sealed class RegressionForestModel : IPredictorModel<double>
     {
         var prediction = Predict(observation);
         var variance = 0.0;
-        for (int i = 0; i < Trees.Length; i++)
+        for (var i = 0; i < Trees.Length; i++)
         {
             var temp = Trees[i].Predict(observation) - prediction;
             variance += temp * temp;
@@ -94,7 +94,7 @@ public sealed class RegressionForestModel : IPredictorModel<double>
         var rows = observations.RowCount;
         var predictions = new CertaintyPrediction[rows];
 
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             predictions[i] = PredictCertainty(observations.Row(i));
         }

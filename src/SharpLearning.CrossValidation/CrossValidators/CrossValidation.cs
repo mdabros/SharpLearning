@@ -87,13 +87,13 @@ public class CrossValidation<TPrediction> : ICrossValidation<TPrediction>
             var model = learner.Learn(observations, targets, trainingIndices);
             var predictions = new TPrediction[validationIndices.Length];
 
-            for (int l = 0; l < predictions.Length; l++)
+            for (var l = 0; l < predictions.Length; l++)
             {
                 observations.Row(validationIndices[l], observation);
                 predictions[l] = model.Predict(observation);
             }
 
-            for (int j = 0; j < validationIndices.Length; j++)
+            for (var j = 0; j < validationIndices.Length; j++)
             {
                 crossValidatedPredictions[cvPredictionIndiceMap[validationIndices[j]]] = predictions[j];
             }

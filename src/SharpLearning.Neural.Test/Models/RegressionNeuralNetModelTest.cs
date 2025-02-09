@@ -31,7 +31,7 @@ public class RegressionNeuralNetModelTest
         var sut = RegressionNeuralNetModel.Load(() => new StringReader(m_regressionNeuralNetModelText));
 
         var predictions = new double[numberOfObservations];
-        for (int i = 0; i < numberOfObservations; i++)
+        for (var i = 0; i < numberOfObservations; i++)
         {
             predictions[i] = sut.Predict(observations.Row(i));
         }

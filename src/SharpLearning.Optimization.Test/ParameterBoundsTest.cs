@@ -16,7 +16,7 @@ public class ParameterBoundsTest
         var sampler = new RandomUniform(seed: 32);
 
         var actual = new double[10];
-        for (int i = 0; i < actual.Length; i++)
+        for (var i = 0; i < actual.Length; i++)
         {
             actual[i] = sut.SampleValue(sampler: sampler);
         }
@@ -36,7 +36,7 @@ public class ParameterBoundsTest
         };
 
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.000001);
         }

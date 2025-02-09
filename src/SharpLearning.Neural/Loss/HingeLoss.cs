@@ -21,11 +21,11 @@ public sealed class HingeLoss : ILoss
         var batchSize = targets.RowCount;
         var loss = 0.0;
 
-        for (int batchItem = 0; batchItem < batchSize; batchItem++)
+        for (var batchItem = 0; batchItem < batchSize; batchItem++)
         {
             var maxTarget = 0.0;
             var maxTargetIndex = 0;
-            for (int col = 0; col < targets.ColumnCount; col++)
+            for (var col = 0; col < targets.ColumnCount; col++)
             {
                 var targetValue = targets.At(batchItem, col);
                 if (targetValue > maxTarget)
@@ -36,7 +36,7 @@ public sealed class HingeLoss : ILoss
             }
 
             var maxTargetScore = predictions.At(batchItem, maxTargetIndex);
-            for (int i = 0; i < predictions.ColumnCount; i++)
+            for (var i = 0; i < predictions.ColumnCount; i++)
             {
                 if (i == maxTargetIndex) { continue; }
 

@@ -31,7 +31,7 @@ public sealed class LogLoss : ILoss
         var targetsArray = targets.Data();
         var predictionsArray = predictions.Data();
 
-        for (int i = 0; i < targetsArray.Length; i++)
+        for (var i = 0; i < targetsArray.Length; i++)
         {
             var clip = (float)Math.Log(Math.Max(min, Math.Min(predictionsArray[i], max)));
             sum += targetsArray[i] * clip;

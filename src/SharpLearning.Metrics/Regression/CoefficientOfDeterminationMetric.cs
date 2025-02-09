@@ -25,7 +25,7 @@ public sealed class CoefficientOfDeterminationMetric : IRegressionMetric
         var SStot = targets.Sum(target => Math.Pow(target - targetMean, 2));
         var SSres = 0.0;
 
-        for (int i = 0; i < predictions.Length; i++)
+        for (var i = 0; i < predictions.Length; i++)
         {
             SSres += Math.Pow(targets[i] - predictions[i], 2);
         }

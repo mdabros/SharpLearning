@@ -30,7 +30,7 @@ public class GradientBoostBinomialLossTest
         var expected = new double[] { 0.268941421369995, 0.268941421369995, 0.5, 0.268941421369995, -0.731058578630005, -0.731058578630005, -0.5, -0.5, -0.5 };
 
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.001);
         }
@@ -50,7 +50,7 @@ public class GradientBoostBinomialLossTest
         var expected = new double[] { 0.268941421369995, 0.0, 0.5, 0.0, -0.731058578630005, 0.0, -0.5, 0.0, -0.5 };
 
         Assert.AreEqual(expected.Length, actual.Length);
-        for (int i = 0; i < expected.Length; i++)
+        for (var i = 0; i < expected.Length; i++)
         {
             Assert.AreEqual(expected[i], actual[i], 0.001);
         }

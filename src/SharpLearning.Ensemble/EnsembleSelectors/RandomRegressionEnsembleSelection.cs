@@ -75,7 +75,7 @@ public sealed class RandomRegressionEnsembleSelection : IRegressionEnsembleSelec
 
         var bestError = double.MaxValue;
 
-        for (int i = 0; i < m_iterations; i++)
+        for (var i = 0; i < m_iterations; i++)
         {
             SelectNextRandomIndices(candidateModelIndices);
 
@@ -101,7 +101,7 @@ public sealed class RandomRegressionEnsembleSelection : IRegressionEnsembleSelec
     {
         if (m_selectWithReplacement)
         {
-            for (int i = 0; i < candidateModelIndices.Length; i++)
+            for (var i = 0; i < candidateModelIndices.Length; i++)
             {
                 candidateModelIndices[i] = m_random.Next(0, m_numberOfModelsToSelect);
             }

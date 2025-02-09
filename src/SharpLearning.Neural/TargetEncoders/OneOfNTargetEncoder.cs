@@ -31,7 +31,7 @@ public sealed class OneOfNTargetEncoder : ITargetEncoder
 
         var oneOfN = Matrix<float>.Build.Dense(targets.Length, targetNameToTargetIndex.Count);
 
-        for (int i = 0; i < targets.Length; i++)
+        for (var i = 0; i < targets.Length; i++)
         {
             var target = targets[i];
             oneOfN[i, targetNameToTargetIndex[target]] = 1.0f;

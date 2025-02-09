@@ -70,7 +70,7 @@ public sealed class RandomSearchOptimizer : IOptimizer
         var parameterIndexToResult = new ConcurrentDictionary<int, OptimizerResult>();
         if (!m_runParallel)
         {
-            for (int index = 0; index < parameterSets.Length; index++)
+            for (var index = 0; index < parameterSets.Length; index++)
             {
                 RunParameterSet(index, parameterSets,
                     functionToMinimize, parameterIndexToResult);
@@ -103,7 +103,7 @@ public sealed class RandomSearchOptimizer : IOptimizer
         IParameterSpec[] parameters, IParameterSampler sampler)
     {
         var parameterSets = new double[parameterSetCount][];
-        for (int i = 0; i < parameterSetCount; i++)
+        for (var i = 0; i < parameterSetCount; i++)
         {
             parameterSets[i] = SampleParameterSet(parameters, sampler);
         }
@@ -122,7 +122,7 @@ public sealed class RandomSearchOptimizer : IOptimizer
     {
         var parameterSet = new double[parameters.Length];
 
-        for (int i = 0; i < parameters.Length; i++)
+        for (var i = 0; i < parameters.Length; i++)
         {
             var parameter = parameters[i];
             parameterSet[i] = parameter.SampleValue(sampler);

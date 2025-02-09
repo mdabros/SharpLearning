@@ -56,7 +56,7 @@ public class F64VectorViewTest
 
     static void AssertVectorView(double[] vector, F64VectorView view)
     {
-        for (int i = 0; i < vector.Length; i++)
+        for (var i = 0; i < vector.Length; i++)
         {
             Assert.AreEqual(vector[i], view[i]);
         }

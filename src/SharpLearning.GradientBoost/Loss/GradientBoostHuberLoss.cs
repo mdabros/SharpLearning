@@ -38,7 +38,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     public double InitialLoss(double[] targets, bool[] inSample)
     {
         var values = new List<double>();
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -60,7 +60,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     {
         var splitInfo = GBMSplitInfo.NewEmpty();
 
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -102,7 +102,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
         var absDiff = new double[inSample.Length];
         var difference = new double[inSample.Length];
 
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -114,7 +114,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
 
         var gamma = absDiff.ToArray().ScoreAtPercentile(m_alpha);
 
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             if (inSample[i])
             {
@@ -178,7 +178,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
         double[] predictions, bool[] inSample)
     {
         var diff = new List<double>();
-        for (int j = 0; j < inSample.Length; j++)
+        for (var j = 0; j < inSample.Length; j++)
         {
             if (inSample[j])
             {
@@ -189,7 +189,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
         var median = diff.ToArray().Median();
         var values = new double[diff.Count];
 
-        for (int j = 0; j < diff.Count; j++)
+        for (var j = 0; j < diff.Count; j++)
         {
             var medianDiff = diff[j] - median;
             var sign = Math.Sign(medianDiff);

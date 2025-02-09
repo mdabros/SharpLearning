@@ -51,7 +51,7 @@ public class GBMTree
     {
         var rows = observations.RowCount;
         var features = new double[observations.ColumnCount];
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             observations.Row(i, features);
             predictions[i] = Predict(features);
@@ -105,7 +105,7 @@ public class GBMTree
     /// </summary>
     public void TraceNodesIndexed()
     {
-        for (int i = 0; i < Nodes.Count; i++)
+        for (var i = 0; i < Nodes.Count; i++)
         {
             var node = Nodes[i];
             System.Diagnostics.Trace.WriteLine("Index: " + i + " SplitValue: " + Nodes[i].SplitValue +

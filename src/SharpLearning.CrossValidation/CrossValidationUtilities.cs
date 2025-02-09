@@ -41,7 +41,7 @@ public static class CrossValidationUtilities
         var currentIndices = indices.ToArray();
         var crossValidationIndexSets = new List<(int[] training, int[] validation)>();
 
-        for (int i = 0; i < foldCount; i++)
+        for (var i = 0; i < foldCount; i++)
         {
             var lastFold = (i == foldCount - 1);
             int[] validationIndices;

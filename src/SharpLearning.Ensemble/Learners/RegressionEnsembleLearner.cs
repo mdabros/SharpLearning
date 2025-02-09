@@ -109,7 +109,7 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
 
         var inSample = new int[sampleSize];
 
-        for (int i = 0; i < m_learners.Length; i++)
+        for (var i = 0; i < m_learners.Length; i++)
         {
             Trace.WriteLine("Training model: " + (i + 1));
 
@@ -130,7 +130,7 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
 
     void Sample(int[] inSample, int[] allIndices)
     {
-        for (int i = 0; i < inSample.Length; i++)
+        for (var i = 0; i < inSample.Length; i++)
         {
             var index = m_random.Next(0, allIndices.Length - 1);
             inSample[i] = allIndices[index];

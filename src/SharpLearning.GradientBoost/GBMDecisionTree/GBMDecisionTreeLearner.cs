@@ -180,7 +180,7 @@ public sealed class GBMDecisionTreeLearner
 
                 var workers = new List<Action>();
 
-                for (int i = 0; i < Environment.ProcessorCount; i++)
+                for (var i = 0; i < Environment.ProcessorCount; i++)
                 { workers.Add(FindSplit); }
 
                 var rangePartitioner = Partitioner.Create(workers, true);
@@ -221,7 +221,7 @@ public sealed class GBMDecisionTreeLearner
                     var rightInSample = new bool[parentInSample.Length];
                     var featureIndices = orderedElements[bestSplitResult.BestSplit.FeatureIndex];
 
-                    for (int i = 0; i < parentInSample.Length; i++)
+                    for (var i = 0; i < parentInSample.Length; i++)
                     {
                         if (i < bestSplitResult.BestSplit.SplitIndex)
                         {
@@ -269,7 +269,7 @@ public sealed class GBMDecisionTreeLearner
                         var featureIndices = orderedElements[bestSplitResult.BestSplit.FeatureIndex];
 
 
-                        for (int i = 0; i < parentInSample.Length; i++)
+                        for (var i = 0; i < parentInSample.Length; i++)
                         {
                             if (i < bestSplitResult.BestSplit.SplitIndex)
                             {
@@ -309,7 +309,7 @@ public sealed class GBMDecisionTreeLearner
         ConcurrentQueue<int> featureIndices,
         ConcurrentBag<GBMSplitResult> results)
     {
-        int featureIndex = -1;
+        var featureIndex = -1;
         while (featureIndices.TryDequeue(out featureIndex))
         {
             FindBestSplit(observations, residuals, targets, predictions, orderedElements,
@@ -402,7 +402,7 @@ public sealed class GBMDecisionTreeLearner
     static int NextAllowedIndex(int start, int[] orderedIndexes, bool[] inSample)
     {
 
-        for (int i = start; i < orderedIndexes.Length; i++)
+        for (var i = start; i < orderedIndexes.Length; i++)
         {
             if (inSample[orderedIndexes[i]])
             {

@@ -86,7 +86,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
         var row = new string[ColumnCount];
         var rowOffSet = index * ColumnCount;
 
-        for (int i = 0; i < ColumnCount; i++)
+        for (var i = 0; i < ColumnCount; i++)
         {
             row[i] = m_featureArray[rowOffSet + i];
         }
@@ -104,7 +104,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     {
         var rowOffSet = index * ColumnCount;
 
-        for (int i = 0; i < ColumnCount; i++)
+        for (var i = 0; i < ColumnCount; i++)
         {
             row[i] = m_featureArray[rowOffSet + i];
         }
@@ -119,7 +119,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     {
         var col = new string[RowCount];
 
-        for (int i = 0; i < RowCount; i++)
+        for (var i = 0; i < RowCount; i++)
         {
             col[i] = m_featureArray[ColumnCount * i + index];
         }
@@ -135,7 +135,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     /// <param name="col"></param>
     public void Column(int index, string[] col)
     {
-        for (int i = 0; i < RowCount; i++)
+        for (var i = 0; i < RowCount; i++)
         {
             col[i] = m_featureArray[ColumnCount * i + index];
         }
@@ -151,11 +151,11 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
         var rowCount = indices.Length;
         var subFeatureArray = new string[rowCount * ColumnCount];
 
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var rowOffSet = ColumnCount * indices[i];
             var subRowOffSet = ColumnCount * i;
-            for (int j = 0; j < ColumnCount; j++)
+            for (var j = 0; j < ColumnCount; j++)
             {
                 subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + j];
             }
@@ -176,11 +176,11 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
         var rowCount = indices.Length;
         var subFeatureArray = output.Data();
 
-        for (int i = 0; i < indices.Length; i++)
+        for (var i = 0; i < indices.Length; i++)
         {
             var rowOffSet = ColumnCount * indices[i];
             var subRowOffSet = ColumnCount * i;
-            for (int j = 0; j < ColumnCount; j++)
+            for (var j = 0; j < ColumnCount; j++)
             {
                 subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + j];
             }
@@ -196,11 +196,11 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     {
         var subFeatureCount = indices.Length;
         var subFeatureArray = new string[RowCount * subFeatureCount];
-        for (int i = 0; i < RowCount; i++)
+        for (var i = 0; i < RowCount; i++)
         {
             var rowOffSet = ColumnCount * i;
             var subRowOffSet = subFeatureCount * i;
-            for (int j = 0; j < indices.Length; j++)
+            for (var j = 0; j < indices.Length; j++)
             {
                 subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + indices[j]];
             }
@@ -220,11 +220,11 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     {
         var subFeatureCount = indices.Length;
         var subFeatureArray = output.Data();
-        for (int i = 0; i < RowCount; i++)
+        for (var i = 0; i < RowCount; i++)
         {
             var rowOffSet = ColumnCount * i;
             var subRowOffSet = subFeatureCount * i;
-            for (int j = 0; j < indices.Length; j++)
+            for (var j = 0; j < indices.Length; j++)
             {
                 subFeatureArray[subRowOffSet + j] = m_featureArray[rowOffSet + indices[j]];
             }
@@ -289,7 +289,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     {
         unchecked // Overflow is fine, just wrap
         {
-            int hash = 17;
+            var hash = 17;
             hash = hash * 23 + m_featureArray.GetHashCode();
             hash = hash * 23 + ColumnCount.GetHashCode();
             hash = hash * 23 + RowCount.GetHashCode();

@@ -80,7 +80,7 @@ public sealed class NeuralNet
     /// <param name="delta"></param>
     public void Backward(Matrix<float> delta)
     {
-        for (int i = Layers.Count; i-- > 0;)
+        for (var i = Layers.Count; i-- > 0;)
         {
             delta = Layers[i].Backward(delta);
         }
@@ -94,7 +94,7 @@ public sealed class NeuralNet
     public Matrix<float> Forward(Matrix<float> input)
     {
         var activation = Layers[0].Forward(input);
-        for (int i = 1; i < Layers.Count; i++)
+        for (var i = 1; i < Layers.Count; i++)
         {
             activation = Layers[i].Forward(activation);
         }
@@ -111,12 +111,12 @@ public sealed class NeuralNet
     public void Forward(Matrix<float> input, Matrix<float> output)
     {
         var row = Matrix<float>.Build.Dense(1, input.ColumnCount);
-        for (int rowIndex = 0; rowIndex < input.RowCount; rowIndex++)
+        for (var rowIndex = 0; rowIndex < input.RowCount; rowIndex++)
         {
             input.Row(rowIndex, row.Data());
             var prediction = Forward(row);
 
-            for (int col = 0; col < prediction.ColumnCount; col++)
+            for (var col = 0; col < prediction.ColumnCount; col++)
             {
                 output[rowIndex, col] = prediction[0, col];
             }
@@ -142,7 +142,7 @@ public sealed class NeuralNet
                 Layers.Last().GetType().Name);
         }
 
-        for (int i = 1; i < Layers.Count; i++)
+        for (var i = 1; i < Layers.Count; i++)
         {
             var previousLayer = Layers[i - 1];
             Layers[i].Initialize(previousLayer.Width, previousLayer.Height,

@@ -107,7 +107,7 @@ public abstract class ClassificationImpurityCalculator
         m_weightedLeft = 0.0;
         m_weightedRight = 0.0;
 
-        for (int i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
+        for (var i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
         {
             if (weightsPresent)
                 w = weights[i];
@@ -162,7 +162,7 @@ public abstract class ClassificationImpurityCalculator
         var w = 1.0;
         var w_diff = 0.0;
 
-        for (int i = m_currentPosition; i < newPosition; i++)
+        for (var i = m_currentPosition; i < newPosition; i++)
         {
             if (weightsPresent)
                 w = m_weights[i];

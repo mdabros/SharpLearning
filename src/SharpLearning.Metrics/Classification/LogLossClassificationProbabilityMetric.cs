@@ -37,7 +37,7 @@ public sealed class LogLossClassificationProbabilityMetric : IClassificationProb
     {
         var rows = targets.Length;
         var sum = 0.0;
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             var probabilities = predictions[i].Probabilities;
             var target = targets[i];

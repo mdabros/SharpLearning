@@ -29,9 +29,9 @@ public static class MatrixMultiplication
                 " differs from vector length: " + v.Length);
         }
 
-        for (int i = 0; i < rows; ++i)
+        for (var i = 0; i < rows; ++i)
         {
-            for (int j = 0; j < cols; ++j)
+            for (var j = 0; j < cols; ++j)
             {
                 output[i] += v[j] * data[i * cols + j];
             }
@@ -57,10 +57,10 @@ public static class MatrixMultiplication
         { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Length); }
 
 
-        for (int i = 0; i < rows; ++i)
+        for (var i = 0; i < rows; ++i)
         {
             var sum = 0.0;
-            for (int j = 0; j < cols; ++j)
+            for (var j = 0; j < cols; ++j)
             {
                 sum += v[j] * data[i * cols + j];
             }
@@ -78,7 +78,7 @@ public static class MatrixMultiplication
     {
         var vs = new double[v.Length];
 
-        for (int i = 0; i < v.Length; ++i)
+        for (var i = 0; i < v.Length; ++i)
         {
             vs[i] = v[i] * s;
         }
@@ -133,9 +133,9 @@ public static class MatrixMultiplication
 
         Parallel.For(0, cRows, i =>
         {
-            for (int k = 0; k < bRows; k++)
+            for (var k = 0; k < bRows; k++)
             {
-                for (int j = 0; j < cCols; j++)
+                for (var j = 0; j < cCols; j++)
                 {
                     cData[i * cCols + j] += aData[i * aCols + k] * bData[k * bCols + j];
                 }
@@ -182,9 +182,9 @@ public static class MatrixMultiplication
 
         Parallel.For(0, aRows, i =>
         {
-            for (int k = 0; k < bRows; k++)
+            for (var k = 0; k < bRows; k++)
             {
-                for (int j = 0; j < bCols; j++)
+                for (var j = 0; j < bCols; j++)
                 {
                     outputArray[i * bCols + j] += aData[i * aCols + k] * bData[k * bCols + j];
                 }

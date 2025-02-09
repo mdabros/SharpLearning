@@ -27,7 +27,7 @@ public class RegressionDecisionTreeLearnerTest
 
         var predictions = model.Predict(onlyOneUniqueObservations);
         // no valid split, so should result in the model always returning the onlyUniqueTargetValue.
-        for (int i = 0; i < predictions.Length; i++)
+        for (var i = 0; i < predictions.Length; i++)
         {
             Assert.AreEqual(onlyUniqueTargetValue, predictions[i], 0.0001);
         }

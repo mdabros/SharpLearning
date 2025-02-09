@@ -43,7 +43,7 @@ public sealed class AveragePrecisionRankingMetric<T> : IRankingMetric<T>
         var score = 0.0;
         var hits = 0.0;
 
-        for (int i = 0; i < length; i++)
+        for (var i = 0; i < length; i++)
         {
             var prediction = predictions[i];
             if (m_workTargets.Contains(prediction) &&
@@ -62,7 +62,7 @@ public sealed class AveragePrecisionRankingMetric<T> : IRankingMetric<T>
     static bool Contains(T[] predictions, int i, T prediction)
     {
         var predictionFound = false;
-        for (int j = 0; j < i; j++)
+        for (var j = 0; j < i; j++)
         {
             if (predictions[j].Equals(prediction))
             {

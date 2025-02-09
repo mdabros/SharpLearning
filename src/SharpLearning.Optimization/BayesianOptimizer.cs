@@ -137,7 +137,7 @@ public sealed class BayesianOptimizer : IOptimizer
         var initializationResults = RunParameterSets(functionToMinimize, initialParameterSets);
         results.AddRange(initializationResults);
 
-        for (int iteration = 0; iteration < m_iterations; iteration++)
+        for (var iteration = 0; iteration < m_iterations; iteration++)
         {
             var parameterSets = ProposeParameterSets(m_functionEvaluationsPerIterationCount, results);
             var iterationResults = RunParameterSets(functionToMinimize, parameterSets);
@@ -159,7 +159,7 @@ public sealed class BayesianOptimizer : IOptimizer
         var results = new ConcurrentDictionary<int, OptimizerResult>();
         if (!m_runParallel)
         {
-            for (int index = 0; index < parameterSets.Length; index++)
+            for (var index = 0; index < parameterSets.Length; index++)
             {
                 RunParameterSet(index, parameterSets,
                     functionToMinimize, results);
@@ -247,7 +247,7 @@ public sealed class BayesianOptimizer : IOptimizer
     {
         // Additional set of random parameterSets to choose from during local search.
         var results = new List<OptimizerResult>();
-        for (int i = 0; i < m_randomSearchPointCount; i++)
+        for (var i = 0; i < m_randomSearchPointCount; i++)
         {
             var parameterSet = RandomSearchOptimizer
                 .SampleParameterSet(m_parameters, m_sampler);

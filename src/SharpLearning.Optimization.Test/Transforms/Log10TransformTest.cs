@@ -15,7 +15,7 @@ public class Log10TransformTest
         var sampler = new RandomUniform(seed: 32);
 
         var actual = new double[10];
-        for (int i = 0; i < actual.Length; i++)
+        for (var i = 0; i < actual.Length; i++)
         {
             actual[i] = sut.Transform(min: 0.0001, max: 1,
                 parameterType: ParameterType.Continuous, sampler: sampler);
