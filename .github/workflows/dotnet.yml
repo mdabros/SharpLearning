@@ -73,6 +73,8 @@ jobs:
       run: dotnet pack SharpLearning.sln -c Release --output ${{ env.NuGetDirectory }}
     - name: Add local package source
       run: dotnet nuget add source ${{ env.NuGetDirectory }} --name local
+    - name: Get version of dll
+      run: (Get-Item './build/SharpLearning.AdaBoost_AnyCPU_Release_netstandard2.0/SharpLearning.AdaBoost.dll').VersionInfo.ProductVersion # unified version, so use AdaBoost dll.
     - uses: actions/upload-artifact@v4
       with:
         name: nuget
