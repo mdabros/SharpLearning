@@ -11,9 +11,9 @@ namespace SharpLearning.XGBoost.Models;
 /// </summary>
 public static class XGBoostTreeConverter
 {
-    static readonly string[] m_leafSplit = new string[] { "leaf=" };
-    static readonly string[] m_yesSplit = new string[] { "yes=" };
-    static readonly string[] m_noSplit = new string[] { "no=" };
+    static readonly string[] m_leafSplit = ["leaf="];
+    static readonly string[] m_yesSplit = ["yes="];
+    static readonly string[] m_noSplit = ["no="];
 
     /// <summary>
     /// Parse array of feature importance values from text dump of XGBoost trees.

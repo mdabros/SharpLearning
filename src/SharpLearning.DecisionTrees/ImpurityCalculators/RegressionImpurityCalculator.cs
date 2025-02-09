@@ -134,7 +134,7 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
     /// <param name="newInterval"></param>
     public void UpdateInterval(Interval1D newInterval)
     {
-        Init(new double[0], m_targets, m_weights, newInterval);
+        Init([], m_targets, m_weights, newInterval);
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
     /// </summary>
     public double[] TargetNames
     {
-        get { return new double[0]; }
+        get { return []; }
     }
 
     /// <summary>
@@ -247,6 +247,6 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
     /// <returns></returns>
     public double[] LeafProbabilities()
     {
-        return new double[0];
+        return [];
     }
 }

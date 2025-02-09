@@ -50,8 +50,8 @@ public class RandomSearchOptimizerTest
 
         var expected = new OptimizerResult[]
         {
-            new(new double[] { 28.3729278125674 },  3690.81119818742),
-            new(new double[] { 19.1529422843144 }, 14251.396910816733),
+            new([28.3729278125674],  3690.81119818742),
+            new([19.1529422843144], 14251.396910816733),
         };
 
         Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

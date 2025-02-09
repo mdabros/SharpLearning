@@ -16,7 +16,7 @@ public class RegressionImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new RegressionImpurityCalculator();
-        sut.Init(new double[0], values, new double[0], parentInterval);
+        sut.Init([], values, [], parentInterval);
         var impurity = sut.NodeImpurity();
 
         sut.UpdateIndex(50);
@@ -37,7 +37,7 @@ public class RegressionImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new RegressionImpurityCalculator();
-        sut.Init(new double[0], values, weights, parentInterval);
+        sut.Init([], values, weights, parentInterval);
         var impurity = sut.NodeImpurity();
 
         sut.UpdateIndex(50);
@@ -57,7 +57,7 @@ public class RegressionImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new RegressionImpurityCalculator();
-        sut.Init(new double[0], values, new double[0], parentInterval);
+        sut.Init([], values, [], parentInterval);
         var impurity = sut.NodeImpurity();
 
         sut.UpdateIndex(50);
@@ -75,7 +75,7 @@ public class RegressionImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new RegressionImpurityCalculator();
-        sut.Init(new double[0], values, new double[0], parentInterval);
+        sut.Init([], values, [], parentInterval);
 
         sut.UpdateIndex(50);
         var actual = sut.NodeImpurity();
@@ -91,7 +91,7 @@ public class RegressionImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new RegressionImpurityCalculator();
-        sut.Init(new double[0], values, weights, parentInterval);
+        sut.Init([], values, weights, parentInterval);
 
         var impurity = sut.NodeImpurity();
 

@@ -14,7 +14,7 @@ public class RandomLearningCurvesCalculatorTest
     {
         var sut = new RandomShuffleLearningCurvesCalculator<double>(
             new MeanSquaredErrorRegressionMetric(),
-            new double[] { 0.2, 0.8 },
+            [0.2, 0.8],
             0.8, 42, 5);
 
         var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();

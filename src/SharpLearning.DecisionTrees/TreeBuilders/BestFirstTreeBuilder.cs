@@ -25,15 +25,15 @@ public sealed class BestFirstTreeBuilder : ITreeBuilder
 
     int m_featuresPrSplit;
 
-    double[] m_workTargets = new double[0];
-    double[] m_workFeature = new double[0];
-    double[] m_workWeights = new double[0];
-    int[] m_workIndices = new int[0];
+    double[] m_workTargets = [];
+    double[] m_workFeature = [];
+    double[] m_workWeights = [];
+    int[] m_workIndices = [];
 
-    int[] m_allFeatureIndices = new int[0];
-    int[] m_featureCandidates = new int[0];
+    int[] m_allFeatureIndices = [];
+    int[] m_featureCandidates = [];
 
-    int[] m_bestSplitWorkIndices = new int[0];
+    int[] m_bestSplitWorkIndices = [];
     bool m_featuresCandidatesSet = false;
 
     // Variable importances are based on the work each variable does (information gain).
@@ -42,7 +42,7 @@ public sealed class BestFirstTreeBuilder : ITreeBuilder
     // informationGain * 0.3 to its importance score.
     // Based on this explanation:
     // http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
-    double[] m_variableImportance = new double[0];
+    double[] m_variableImportance = [];
 
     /// <summary>
     /// 

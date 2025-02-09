@@ -14,7 +14,7 @@ public class NoShuffleLearningCurvesCalculatorTest
     {
         var sut = new NoShuffleLearningCurvesCalculator<double>(
             new MeanSquaredErrorRegressionMetric(),
-            new double[] { 0.2, 0.8 },
+            [0.2, 0.8],
             0.8);
 
         var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();

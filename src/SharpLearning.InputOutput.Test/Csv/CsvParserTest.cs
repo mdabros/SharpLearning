@@ -119,9 +119,9 @@ public class CsvParserTest
 
         var expected = new List<CsvRow>
         {
-            new(columnNameToIndex, new string[] { "1", "15", "0"}),
-            new(columnNameToIndex, new string[] { "1", "12", "0"}),
-            new(columnNameToIndex, new string[] { "4", "6", "0"})
+            new(columnNameToIndex, ["1", "15", "0"]),
+            new(columnNameToIndex, ["1", "12", "0"]),
+            new(columnNameToIndex, ["4", "6", "0"])
         };
 
         return expected;
@@ -138,9 +138,9 @@ public class CsvParserTest
 
         var expected = new List<CsvRow>
         {
-            new(columnNameToIndex, new string[] { "5", "2", "1"}),
-            new(columnNameToIndex, new string[] { "1", "12", "0"}),
-            new(columnNameToIndex, new string[] { "3", "18", "0"})
+            new(columnNameToIndex, ["5", "2", "1"]),
+            new(columnNameToIndex, ["1", "12", "0"]),
+            new(columnNameToIndex, ["3", "18", "0"])
         };
 
         return expected;
@@ -156,9 +156,9 @@ public class CsvParserTest
 
         var expected = new List<CsvRow>
         {
-            new(columnNameToIndex, new string[] { "2", "1"}),
-            new(columnNameToIndex, new string[] { "12", "0"}),
-            new(columnNameToIndex, new string[] { "18", "0"})
+            new(columnNameToIndex, ["2", "1"]),
+            new(columnNameToIndex, ["12", "0"]),
+            new(columnNameToIndex, ["18", "0"])
         };
 
         return expected;
@@ -170,9 +170,9 @@ public class CsvParserTest
 
         var expected = new List<CsvRow>
         {
-            new(columnNameToIndex, new string[] { "1" }),
-            new(columnNameToIndex, new string[] { "0" }),
-            new(columnNameToIndex, new string[] { "0" })
+            new(columnNameToIndex, ["1"]),
+            new(columnNameToIndex, ["0"]),
+            new(columnNameToIndex, ["0"])
         };
 
         return expected;
@@ -184,8 +184,8 @@ public class CsvParserTest
 
         var expected = new List<CsvRow>
         {
-            new(columnNameToIndex, new string[] { "1", "2", "3"}),
-            new(columnNameToIndex, new string[] { "10", "20", "30"})
+            new(columnNameToIndex, ["1", "2", "3"]),
+            new(columnNameToIndex, ["10", "20", "30"])
         };
 
         return expected;
@@ -197,8 +197,8 @@ public class CsvParserTest
 
         var expected = new List<CsvRow>
         {
-            new(columnNameToIndex, new string[] { "1", "the following dates;1. jan, 1. april", "3"}),
-            new(columnNameToIndex, new string[] { "10", "20", "30"})
+            new(columnNameToIndex, ["1", "the following dates;1. jan, 1. april", "3"]),
+            new(columnNameToIndex, ["10", "20", "30"])
         };
 
         return expected;

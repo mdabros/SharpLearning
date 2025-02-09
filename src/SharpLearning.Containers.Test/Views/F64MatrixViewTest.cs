@@ -42,7 +42,7 @@ public class F64MatrixViewTest
                 Interval2D.Create(Interval1D.Create(0, 2),
                 Interval1D.Create(0, 3)));
 
-            var subMatrix = matrix.Rows(new int[] { 0, 1 });
+            var subMatrix = matrix.Rows([0, 1]);
             AssertMatrixView(subMatrix, subView);
         }
     }

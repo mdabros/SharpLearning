@@ -14,7 +14,7 @@ public class StratifiedLearningCurvesCalculatorTest
     {
         var sut = new StratifiedLearningCurvesCalculator<double>(
             new TotalErrorClassificationMetric<double>(),
-            new double[] { 0.2, 0.8 },
+            [0.2, 0.8],
             0.8, 5, 42);
 
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();

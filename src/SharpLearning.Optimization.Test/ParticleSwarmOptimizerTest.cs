@@ -53,8 +53,8 @@ public class ParticleSwarmOptimizerTest
 
         var expected = new OptimizerResult[]
         {
-            new(new double[] { 38.1151505704492 }, 115.978346548015),
-            new(new double[] { 37.2514904205637 }, 118.093289672808),
+            new([38.1151505704492], 115.978346548015),
+            new([37.2514904205637], 118.093289672808),
         };
 
         Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

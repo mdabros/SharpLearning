@@ -19,9 +19,9 @@ public class ConversionsTest
         var actual = matrix.ToFloatJaggedArray();
         var expected = new float[][]
         {
-            new float[] { 10, 11 },
-            new float[] { 12, 13 },
-            new float[] { 14, 15 },
+            [10, 11],
+            [12, 13],
+            [14, 15],
         };
 
         AssertArrays(actual, expected);
@@ -37,12 +37,12 @@ public class ConversionsTest
             14, 15
         };
         var matrix = new F64Matrix(data, 3, 2);
-        var actual = matrix.ToFloatJaggedArray(new int[] { 0, 1, 2 });
+        var actual = matrix.ToFloatJaggedArray([0, 1, 2]);
         var expected = new float[][]
         {
-            new float[] { 10, 11 },
-            new float[] { 12, 13 },
-            new float[] { 14, 15 },
+            [10, 11],
+            [12, 13],
+            [14, 15],
         };
 
         AssertArrays(actual, expected);
@@ -58,11 +58,11 @@ public class ConversionsTest
             14, 15
         };
         var matrix = new F64Matrix(data, 3, 2);
-        var actual = matrix.ToFloatJaggedArray(new int[] { 0, 2 });
+        var actual = matrix.ToFloatJaggedArray([0, 2]);
         var expected = new float[][]
         {
-            new float[] { 10, 11 },
-            new float[] { 14, 15 },
+            [10, 11],
+            [14, 15],
         };
 
         AssertArrays(actual, expected);
@@ -82,7 +82,7 @@ public class ConversionsTest
     public void ToFloat_indexed()
     {
         var data = new double[] { 5, 4, 2, 1 };
-        var actual = data.ToFloat(new int[] { 0, 3 });
+        var actual = data.ToFloat([0, 3]);
         var expected = new float[] { 5, 1 };
 
         CollectionAssert.AreEqual(expected, actual);

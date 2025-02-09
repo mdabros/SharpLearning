@@ -141,9 +141,9 @@ public class ClassificationGradientBoostLearner
 
         if (uniqueTargets.Length == 2) // Binary case - only need to fit to one class and use (1.0 - probability)
         {
-            trees = new GBMTree[][] { new GBMTree[m_iterations] };
-            predictions = new double[][] { targets.Select(_ => initialLoss).ToArray() };
-            residuals = new double[][] { new double[targets.Length] };
+            trees = [new GBMTree[m_iterations]];
+            predictions = [targets.Select(_ => initialLoss).ToArray()];
+            residuals = [new double[targets.Length]];
 
             oneVsAllTargets = new double[1][];
             var target = uniqueTargets[0];
@@ -252,9 +252,9 @@ public class ClassificationGradientBoostLearner
 
         if (uniqueTargets.Length == 2) // Binary case - only need to fit to one class and use (1.0 - probability)
         {
-            trees = new GBMTree[][] { new GBMTree[m_iterations] };
-            predictions = new double[][] { trainingTargets.Select(_ => initialLoss).ToArray() };
-            residuals = new double[][] { new double[trainingTargets.Length] };
+            trees = [new GBMTree[m_iterations]];
+            predictions = [trainingTargets.Select(_ => initialLoss).ToArray()];
+            residuals = [new double[trainingTargets.Length]];
 
             oneVsAllTargets = new double[1][];
             var target = uniqueTargets[0];
@@ -384,9 +384,9 @@ public class ClassificationGradientBoostLearner
 
         if (uniqueTargets.Length == 2) // Binary case - only need to fit to one class and use (1.0 - probability)
         {
-            trees = new GBMTree[][] { new GBMTree[m_iterations] };
-            predictions = new double[][] { trainingTargets.Select(_ => initialLoss).ToArray() };
-            residuals = new double[][] { new double[trainingTargets.Length] };
+            trees = [new GBMTree[m_iterations]];
+            predictions = [trainingTargets.Select(_ => initialLoss).ToArray()];
+            residuals = [new double[trainingTargets.Length]];
 
             oneVsAllTargets = new double[1][];
             var target = uniqueTargets[0];

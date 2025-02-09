@@ -22,7 +22,7 @@ public class TrainingTestIndexSplitterExtensionsTest
     [TestMethod]
     public void TrainingTestIndexSplitterExtensions_SplitSet()
     {
-        var observations = new F64Matrix(new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, 10, 1);
+        var observations = new F64Matrix([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10, 1);
         var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
 
         var splitter = new NoShuffleTrainingTestIndexSplitter<double>(0.6);

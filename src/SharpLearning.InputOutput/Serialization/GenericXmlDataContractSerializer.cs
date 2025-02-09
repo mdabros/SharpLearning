@@ -38,7 +38,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     /// This adds extra information to the xml which is needed when serializing some model types. 
     /// Currently only the SharpLearning.Neural models require this.</param>
     public GenericXmlDataContractSerializer(bool preserveObjectReferences = true)
-       : this(new Type[0], preserveObjectReferences)
+       : this([], preserveObjectReferences)
     {
     }
 
@@ -46,7 +46,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
     public GenericXmlDataContractSerializer()
-       : this(new Type[0], true)
+       : this([], true)
     {
     }
 

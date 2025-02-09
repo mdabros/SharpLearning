@@ -17,7 +17,7 @@ public class GiniClassificationImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new GiniClassificationImpurityCalculator();
-        sut.Init(unique, values, new double[0], parentInterval);
+        sut.Init(unique, values, [], parentInterval);
 
         var impurity = sut.NodeImpurity();
 
@@ -62,7 +62,7 @@ public class GiniClassificationImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new GiniClassificationImpurityCalculator();
-        sut.Init(unique, values, new double[0], parentInterval);
+        sut.Init(unique, values, [], parentInterval);
 
         var impurity = sut.NodeImpurity();
 
@@ -82,7 +82,7 @@ public class GiniClassificationImpurityCalculatorTest
         var parentInterval = Interval1D.Create(0, values.Length);
 
         var sut = new GiniClassificationImpurityCalculator();
-        sut.Init(unique, values, new double[0], parentInterval);
+        sut.Init(unique, values, [], parentInterval);
 
         sut.UpdateIndex(50);
         var actual = sut.NodeImpurity();

@@ -12,7 +12,7 @@ public class DictionaryExtensionsTest
     {
         var sut = new Dictionary<string, int> { { "F1", 0 }, { "F2", 1 } };
         var expected = new int[] { 0, 1 };
-        var actual = sut.GetValues(new string[] { "F1", "F2" });
+        var actual = sut.GetValues(["F1", "F2"]);
         Assert.AreNotEqual(expected, actual);
     }
 }

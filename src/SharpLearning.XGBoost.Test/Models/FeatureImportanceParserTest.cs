@@ -34,7 +34,7 @@ public class FeatureImportanceParserTest
         }
     }
 
-    readonly string[] m_textTrees = new string[] { m_tree1, m_tree2 };
+    readonly string[] m_textTrees = [m_tree1, m_tree2];
 
     const string m_tree1 = @"booster[0]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=343.922,cover=214

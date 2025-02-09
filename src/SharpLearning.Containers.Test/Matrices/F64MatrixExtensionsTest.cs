@@ -7,9 +7,9 @@ namespace SharpLearning.Containers.Test.Matrices;
 [TestClass]
 public class F64MatrixExtensionsTest
 {
-    readonly double[] m_inputData = new double[] { 1, 2, 3, 4, 5, 6 };
-    readonly double[] m_combineDataCol = new double[] { 1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6 };
-    readonly double[] m_combineDataRows = new double[] { 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6 };
+    readonly double[] m_inputData = [1, 2, 3, 4, 5, 6];
+    readonly double[] m_combineDataCol = [1, 2, 3, 1, 2, 3, 4, 5, 6, 4, 5, 6];
+    readonly double[] m_combineDataRows = [1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5, 6];
 
     [TestMethod]
     public void F64MatrixExtensions_Clear()
@@ -70,8 +70,8 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6 };
 
-        var expected = new F64Matrix(new double[] {1, 2, 3, 3,
-                                                   4, 5, 6, 6}, 2, 4);
+        var expected = new F64Matrix([1, 2, 3, 3,
+                                                   4, 5, 6, 6], 2, 4);
         var actual = matrix.CombineCols(vector);
 
         Assert.AreEqual(expected, actual);
@@ -83,8 +83,8 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6 };
 
-        var expected = new F64Matrix(new double[] {3, 1, 2, 3,
-                                                   6, 4, 5, 6 }, 2, 4);
+        var expected = new F64Matrix([3, 1, 2, 3,
+                                                   6, 4, 5, 6 ], 2, 4);
         var actual = vector.CombineCols(matrix);
 
         Assert.AreEqual(expected, actual);
@@ -97,7 +97,7 @@ public class F64MatrixExtensionsTest
         var v2 = new double[] { 1, 2, 3, 4 };
 
         var actual = v1.CombineCols(v2);
-        Assert.AreEqual(new F64Matrix(new double[] { 1, 1, 2, 2, 3, 3, 4, 4 }, 4, 2), actual);
+        Assert.AreEqual(new F64Matrix([1, 1, 2, 2, 3, 3, 4, 4], 4, 2), actual);
     }
 
     [TestMethod]
@@ -107,7 +107,7 @@ public class F64MatrixExtensionsTest
         var v2 = new double[] { 1, 2, 3, 4 };
 
         var actual = v1.CombineRows(v2);
-        Assert.AreEqual(new F64Matrix(new double[] { 1, 2, 3, 4, 1, 2, 3, 4 }, 2, 4), actual);
+        Assert.AreEqual(new F64Matrix([1, 2, 3, 4, 1, 2, 3, 4], 2, 4), actual);
     }
 
     [TestMethod]
@@ -116,9 +116,9 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6, 7 };
 
-        var expected = new F64Matrix(new double[] {1, 2, 3,
+        var expected = new F64Matrix([1, 2, 3,
                                                    4, 5, 6,
-                                                   3, 6, 7}, 3, 3);
+                                                   3, 6, 7], 3, 3);
         var actual = matrix.CombineRows(vector);
 
         Assert.AreEqual(expected, actual);
@@ -130,10 +130,10 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6, 7 };
 
-        var expected = new F64Matrix(new double[] {3, 6, 7,
+        var expected = new F64Matrix([3, 6, 7,
                                                    1, 2, 3,
                                                    4, 5, 6
-                                                   }, 3, 3);
+                                                   ], 3, 3);
         var actual = vector.CombineRows(matrix);
 
         Assert.AreEqual(expected, actual);

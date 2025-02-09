@@ -30,7 +30,7 @@ public class RandomSplitSearcherTest
         Array.Sort(feature, targets);
 
         var impurityCalculator = new GiniClassificationImpurityCalculator();
-        impurityCalculator.Init(targets.Distinct().ToArray(), targets, new double[0], interval);
+        impurityCalculator.Init(targets.Distinct().ToArray(), targets, [], interval);
         var impurity = impurityCalculator.NodeImpurity();
 
         var sut = new RandomSplitSearcher(1, 42);

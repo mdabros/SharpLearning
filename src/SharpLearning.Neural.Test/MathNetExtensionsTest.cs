@@ -11,7 +11,7 @@ public class MathNetExtensionsTest
     public void MathNetExtensions_AddRowWise()
     {
         var matrix = Matrix<float>.Build.Dense(2, 3);
-        var vector = Vector<float>.Build.Dense(new float[] { 1f, 2f, 3f });
+        var vector = Vector<float>.Build.Dense([1f, 2f, 3f]);
         var actual = Matrix<float>.Build.Dense(2, 3);
 
         matrix.AddRowWise(vector, actual);
@@ -19,7 +19,7 @@ public class MathNetExtensionsTest
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
         Trace.WriteLine(actual.ToString());
 
-        var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 2, 2, 3, 3 });
+        var expected = Matrix<float>.Build.Dense(2, 3, [1, 1, 2, 2, 3, 3]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 
@@ -27,7 +27,7 @@ public class MathNetExtensionsTest
     public void MathNetExtensions_SubtractRowWise()
     {
         var matrix = Matrix<float>.Build.Dense(2, 3);
-        var vector = Vector<float>.Build.Dense(new float[] { 1f, 2f, 3f });
+        var vector = Vector<float>.Build.Dense([1f, 2f, 3f]);
         var actual = Matrix<float>.Build.Dense(2, 3);
 
         matrix.SubtractRowWise(vector, actual);
@@ -35,7 +35,7 @@ public class MathNetExtensionsTest
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
         Trace.WriteLine(actual.ToString());
 
-        var expected = Matrix<float>.Build.Dense(2, 3, new float[] { -1, -1, -2, -2, -3, -3 });
+        var expected = Matrix<float>.Build.Dense(2, 3, [-1, -1, -2, -2, -3, -3]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 
@@ -43,7 +43,7 @@ public class MathNetExtensionsTest
     public void MathNetExtensions_AddColumnWise()
     {
         var matrix = Matrix<float>.Build.Dense(2, 3);
-        var vector = Vector<float>.Build.Dense(new float[] { 1f, 2f });
+        var vector = Vector<float>.Build.Dense([1f, 2f]);
         var actual = Matrix<float>.Build.Dense(2, 3);
 
         matrix.AddColumnWise(vector, actual);
@@ -51,7 +51,7 @@ public class MathNetExtensionsTest
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
         Trace.WriteLine(actual.ToString());
 
-        var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 1, 2, 1, 2 });
+        var expected = Matrix<float>.Build.Dense(2, 3, [1, 2, 1, 2, 1, 2]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 
@@ -59,7 +59,7 @@ public class MathNetExtensionsTest
     public void MathNetExtensions_Multiply()
     {
         var matrix = Matrix<float>.Build.Dense(2, 3, 1);
-        var vector = Vector<float>.Build.Dense(new float[] { 1f, 0f, 1f });
+        var vector = Vector<float>.Build.Dense([1f, 0f, 1f]);
         var actual = Matrix<float>.Build.Dense(2, 3);
 
         matrix.Multiply(vector, actual);
@@ -67,14 +67,14 @@ public class MathNetExtensionsTest
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
         Trace.WriteLine(actual.ToString());
 
-        var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 0, 0, 1, 1 });
+        var expected = Matrix<float>.Build.Dense(2, 3, [1, 1, 0, 0, 1, 1]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 
     [TestMethod]
     public void MathNetExtensions_ColumnWiseMean()
     {
-        var matrix = Matrix<float>.Build.Dense(3, 3, new float[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+        var matrix = Matrix<float>.Build.Dense(3, 3, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
         var actual = Vector<float>.Build.Dense(3);
 
         matrix.ColumnWiseMean(actual);
@@ -82,14 +82,14 @@ public class MathNetExtensionsTest
         Trace.WriteLine(string.Join(", ", actual));
         Trace.WriteLine(matrix.ToString());
 
-        var expected = Vector<float>.Build.Dense(new float[] { 2, 5, 8 });
+        var expected = Vector<float>.Build.Dense([2, 5, 8]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 
     [TestMethod]
     public void MathNetExtensions_ColumnWiseMean_2()
     {
-        var matrix = Matrix<float>.Build.Dense(4, 2, new float[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+        var matrix = Matrix<float>.Build.Dense(4, 2, [1, 2, 3, 4, 5, 6, 7, 8]);
         var actual = Vector<float>.Build.Dense(3);
 
         matrix.ColumnWiseMean(actual);
@@ -97,31 +97,31 @@ public class MathNetExtensionsTest
         Trace.WriteLine(string.Join(", ", actual));
         Trace.WriteLine(matrix.ToString());
 
-        var expected = Vector<float>.Build.Dense(new float[] { 2.5f, 6.5f, 0f });
+        var expected = Vector<float>.Build.Dense([2.5f, 6.5f, 0f]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 
     [TestMethod]
     public void MathNetExtensions_ColumnWiseMean_SumColumns()
     {
-        var matrix = Matrix<float>.Build.Dense(4, 2, new float[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+        var matrix = Matrix<float>.Build.Dense(4, 2, [1, 2, 3, 4, 5, 6, 7, 8]);
         var actual = Vector<float>.Build.Dense(2);
 
         matrix.SumColumns(actual);
 
-        var expected = Vector<float>.Build.Dense(new float[] { 10, 26 });
+        var expected = Vector<float>.Build.Dense([10, 26]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 
     [TestMethod]
     public void MathNetExtensions_ColumnWiseMean_SumRows()
     {
-        var matrix = Matrix<float>.Build.Dense(4, 2, new float[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+        var matrix = Matrix<float>.Build.Dense(4, 2, [1, 2, 3, 4, 5, 6, 7, 8]);
         var actual = Vector<float>.Build.Dense(4);
 
         matrix.SumRows(actual);
 
-        var expected = Vector<float>.Build.Dense(new float[] { 6, 8, 10, 12 });
+        var expected = Vector<float>.Build.Dense([6, 8, 10, 12]);
         Assert.AreEqual(expected.ToString(), actual.ToString());
     }
 

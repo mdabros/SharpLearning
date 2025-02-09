@@ -12,14 +12,14 @@ public class TrainingTestSetSplitTest
     [TestMethod]
     public void TrainingTestSetSplit_Equals()
     {
-        var trainingObservations1 = new F64Matrix(new double[] { 1, 2, 3, 4 }, 2, 2);
-        var trainingObservations2 = new F64Matrix(new double[] { 4, 3, 2, 1 }, 2, 2);
+        var trainingObservations1 = new F64Matrix([1, 2, 3, 4], 2, 2);
+        var trainingObservations2 = new F64Matrix([4, 3, 2, 1], 2, 2);
 
         var trainingTargets1 = new double[] { 1, 2 };
         var trainingTargets2 = new double[] { 2, 1 };
 
-        var testObservations1 = new F64Matrix(new double[] { 1, 2, 3, 4 }, 2, 2);
-        var testObservations2 = new F64Matrix(new double[] { 4, 3, 2, 1 }, 2, 2);
+        var testObservations1 = new F64Matrix([1, 2, 3, 4], 2, 2);
+        var testObservations2 = new F64Matrix([4, 3, 2, 1], 2, 2);
 
         var testTargets1 = new double[] { 1, 2 };
         var testTargets2 = new double[] { 2, 1 };
@@ -44,14 +44,14 @@ public class TrainingTestSetSplitTest
     public void TrainingTestSetSplit_TrainingSet_Null()
     {
         new TrainingTestSetSplit(null,
-            new ObservationTargetSet(new F64Matrix(new double[] { 1, 2, 3, 4 }, 2, 2), new double[] { 1, 2 }));
+            new ObservationTargetSet(new F64Matrix([1, 2, 3, 4], 2, 2), [1, 2]));
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void ObservationTargetSet_TestSet_Null()
     {
-        new TrainingTestSetSplit(new ObservationTargetSet(new F64Matrix(new double[] { 1, 2, 3, 4 }, 2, 2), new double[] { 1, 2 }),
+        new TrainingTestSetSplit(new ObservationTargetSet(new F64Matrix([1, 2, 3, 4], 2, 2), [1, 2]),
             null);
     }
 }

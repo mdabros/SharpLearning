@@ -36,10 +36,10 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
     readonly List<double> m_modelWeights = new();
     readonly List<RegressionDecisionTreeModel> m_models = new();
 
-    double[] m_workErrors = new double[0];
-    double[] m_sampleWeights = new double[0];
-    double[] m_indexedTargets = new double[0];
-    int[] m_sampleIndices = new int[0];
+    double[] m_workErrors = [];
+    double[] m_sampleWeights = [];
+    double[] m_indexedTargets = [];
+    int[] m_sampleIndices = [];
 
     readonly WeightedRandomSampler m_sampler;
 

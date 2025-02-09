@@ -30,7 +30,7 @@ public class LinearSplitSearcherTest
         Array.Sort(feature, targets);
 
         var impurityCalculator = new GiniClassificationImpurityCalculator();
-        impurityCalculator.Init(targets.Distinct().ToArray(), targets, new double[0], interval);
+        impurityCalculator.Init(targets.Distinct().ToArray(), targets, [], interval);
         var impurity = impurityCalculator.NodeImpurity();
 
         var sut = new LinearSplitSearcher(1);
@@ -83,7 +83,7 @@ public class LinearSplitSearcherTest
         Array.Sort(feature, targets);
 
         var impurityCalculator = new RegressionImpurityCalculator();
-        impurityCalculator.Init(targets.Distinct().ToArray(), targets, new double[0], interval);
+        impurityCalculator.Init(targets.Distinct().ToArray(), targets, [], interval);
         var impurity = impurityCalculator.NodeImpurity();
 
         var sut = new LinearSplitSearcher(1);
@@ -107,7 +107,7 @@ public class LinearSplitSearcherTest
         Array.Sort(feature, targets);
 
         var impurityCalculator = new GiniClassificationImpurityCalculator();
-        impurityCalculator.Init(targets.Distinct().ToArray(), targets, new double[0], interval);
+        impurityCalculator.Init(targets.Distinct().ToArray(), targets, [], interval);
         var impurity = impurityCalculator.NodeImpurity();
 
         var sut = new LinearSplitSearcher(1);

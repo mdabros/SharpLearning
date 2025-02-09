@@ -18,7 +18,7 @@ public class NominalMungeAugmentorTest
         var sut = new NominalMungeAugmentator(0.5);
         var actual = sut.Agument(data);
 
-        var expected = new F64Matrix(new double[] { 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0 },
+        var expected = new F64Matrix([0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0],
             10, 2);
 
         Assert.AreNotEqual(data, actual);

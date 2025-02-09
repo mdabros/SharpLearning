@@ -51,7 +51,7 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     /// </summary>
     public static string[] FeatureNames
     {
-        get => new[] { "Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours" };
+        get => ["Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours"];
     }
 
     /// <summary>

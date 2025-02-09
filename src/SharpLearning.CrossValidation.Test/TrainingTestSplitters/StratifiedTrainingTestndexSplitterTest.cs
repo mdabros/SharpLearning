@@ -14,8 +14,8 @@ public class StratifiedTrainingTestIndexSplitterTest
         var targets = new double[] { 1, 1, 1, 1, 1, 2, 2, 2, 2, 2 };
 
         var actual = sut.Split(targets);
-        var expected = new TrainingTestIndexSplit(new int[] { 9, 0, 4, 2, 5, 7, 3, 8 },
-            new int[] { 1, 6 });
+        var expected = new TrainingTestIndexSplit([9, 0, 4, 2, 5, 7, 3, 8],
+            [1, 6]);
 
         Assert.AreEqual(expected, actual);
     }

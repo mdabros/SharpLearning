@@ -49,7 +49,7 @@ public class ArrayExtensionsTest
     public void ArrayExtensions_GetIndices()
     {
         var sut = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        var actual = sut.GetIndices(new int[] { 0, 4, 8 });
+        var actual = sut.GetIndices([0, 4, 8]);
         var expected = new double[] { 1, 5, 9 };
 
         CollectionAssert.AreEqual(expected, actual);
@@ -463,7 +463,7 @@ public class ArrayExtensionsTest
         };
 
         var actual = sut.ToF64Matrix();
-        var expected = new F64Matrix(new double[] { 1, 2, 3, 4, 4, 3, 2, 1 }, 2, 4);
+        var expected = new F64Matrix([1, 2, 3, 4, 4, 3, 2, 1], 2, 4);
 
         Assert.AreEqual(expected, actual);
     }

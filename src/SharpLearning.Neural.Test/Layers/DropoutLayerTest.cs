@@ -40,7 +40,7 @@ public class DropoutLayerTest
 
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { 0.9177308f, 1.495695f, -0.07688076f, 0f, -2.932818f });
+        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, [0.9177308f, 1.495695f, -0.07688076f, 0f, -2.932818f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 
@@ -62,7 +62,7 @@ public class DropoutLayerTest
 
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { -1.676851f, -1.938897f, -1.108109f, 0f, -0.4058239f });
+        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, [-1.676851f, -1.938897f, -1.108109f, 0f, -0.4058239f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 

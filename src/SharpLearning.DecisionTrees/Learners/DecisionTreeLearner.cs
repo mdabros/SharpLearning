@@ -60,7 +60,7 @@ public unsafe class DecisionTreeLearner
     /// <returns></returns>
     public BinaryTree Learn(F64Matrix observations, double[] targets, int[] indices)
     {
-        return Learn(observations, targets, indices, new double[0]);
+        return Learn(observations, targets, indices, []);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public unsafe class DecisionTreeLearner
     /// <returns></returns>
     public BinaryTree Learn(F64MatrixView observations, double[] targets, int[] indices)
     {
-        return Learn(observations, targets, indices, new double[0]);
+        return Learn(observations, targets, indices, []);
     }
 
     /// <summary>

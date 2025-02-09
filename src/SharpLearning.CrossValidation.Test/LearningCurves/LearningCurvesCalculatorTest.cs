@@ -20,7 +20,7 @@ public class LearningCurvesCalculatorTest
             new RandomTrainingTestIndexSplitter<double>(0.8, 42),
             new RandomIndexSampler<double>(42),
             new MeanSquaredErrorRegressionMetric(),
-            new double[] { 0.2, 0.8 });
+            [0.2, 0.8]);
 
         var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
@@ -45,7 +45,7 @@ public class LearningCurvesCalculatorTest
             splitter,
             new RandomIndexSampler<double>(42),
             new MeanSquaredErrorRegressionMetric(),
-            new double[] { 0.2, 0.8 });
+            [0.2, 0.8]);
 
         var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
         var indexSplits = splitter.Split(targets);
@@ -70,7 +70,7 @@ public class LearningCurvesCalculatorTest
             new RandomTrainingTestIndexSplitter<double>(0.8, 42),
             new RandomIndexSampler<double>(42),
             null,
-            new double[] { 0.2, 0.8 });
+            [0.2, 0.8]);
     }
 
     [TestMethod]
@@ -92,7 +92,7 @@ public class LearningCurvesCalculatorTest
             new RandomTrainingTestIndexSplitter<double>(0.8, 42),
             new RandomIndexSampler<double>(42),
             new MeanSquaredErrorRegressionMetric(),
-            new double[] { });
+            []);
     }
 
     [TestMethod]
@@ -103,7 +103,7 @@ public class LearningCurvesCalculatorTest
             new RandomTrainingTestIndexSplitter<double>(0.8, 42),
             new RandomIndexSampler<double>(42),
             new MeanSquaredErrorRegressionMetric(),
-            new double[] { 0.0, 0.8 });
+            [0.0, 0.8]);
 
         var observations = new F64Matrix(10, 10);
         var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -120,7 +120,7 @@ public class LearningCurvesCalculatorTest
             new RandomTrainingTestIndexSplitter<double>(0.8, 42),
             new RandomIndexSampler<double>(42),
             new MeanSquaredErrorRegressionMetric(),
-            new double[] { 1.1, 0.8 });
+            [1.1, 0.8]);
 
         var observations = new F64Matrix(10, 10);
         var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };

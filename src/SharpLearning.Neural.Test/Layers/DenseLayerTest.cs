@@ -55,7 +55,7 @@ public class DenseLayerTest
 
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-        var expected = Matrix<float>.Build.Dense(batchSize, neuronCount, new float[] { 0.9898463f, 0.4394523f, 0.4259368f, -1.051275f, -0.5012454f, 0.08094172f });
+        var expected = Matrix<float>.Build.Dense(batchSize, neuronCount, [0.9898463f, 0.4394523f, 0.4259368f, -1.051275f, -0.5012454f, 0.08094172f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 
@@ -78,7 +78,7 @@ public class DenseLayerTest
 
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { 0.001748383f, -0.2615477f, -0.6422306f, -0.01443626f, 0.4605991f, -0.7384186f, -0.6931117f, 0.1083627f, -0.6230267f, -1.20742f });
+        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, [0.001748383f, -0.2615477f, -0.6422306f, -0.01443626f, 0.4605991f, -0.7384186f, -0.6931117f, 0.1083627f, -0.6230267f, -1.20742f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 

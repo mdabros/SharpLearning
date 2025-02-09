@@ -52,8 +52,8 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
 
         var expected = new OptimizerResult[]
         {
-            new(new double[] { 37.71314634450421 }, 109.3438139631394),
-            new(new double[] { 37.713142445047254 }, 109.34381396345546)
+            new([37.71314634450421], 109.3438139631394),
+            new([37.713142445047254], 109.34381396345546)
         };
 
         Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

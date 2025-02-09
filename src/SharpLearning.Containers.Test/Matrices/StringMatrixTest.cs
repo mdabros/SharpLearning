@@ -100,7 +100,7 @@ public class StringMatrixTest
     {
         var sut = CreateFeatures();
         var actual = new StringMatrix(2, 3);
-        sut.Rows(new int[] { 0, 2 }, actual);
+        sut.Rows([0, 2], actual);
         var expected = GetExpectedRowSubMatrix();
 
         Assert.IsTrue(expected.Equals(actual));
@@ -121,7 +121,7 @@ public class StringMatrixTest
     {
         var sut = CreateFeatures();
         var actual = new StringMatrix(3, 2);
-        sut.Columns(new int[] { 0, 2 }, actual);
+        sut.Columns([0, 2], actual);
         var expected = GetExpectedColSubMatrix();
 
         Assert.IsTrue(expected.Equals(actual));
@@ -129,12 +129,12 @@ public class StringMatrixTest
 
     static string[] GetExpectedColumn()
     {
-        return new string[] { "2", "20", "200" };
+        return ["2", "20", "200"];
     }
 
     static string[] GetExpectedRow()
     {
-        return new string[] { "10", "20", "30" };
+        return ["10", "20", "30"];
     }
 
     static StringMatrix GetExpectedColSubMatrix()

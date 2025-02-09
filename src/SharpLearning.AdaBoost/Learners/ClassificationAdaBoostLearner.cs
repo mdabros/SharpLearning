@@ -39,9 +39,9 @@ public sealed class ClassificationAdaBoostLearner
     readonly List<double> m_modelWeights = new();
     readonly List<ClassificationDecisionTreeModel> m_models = new();
 
-    double[] m_workErrors = new double[0];
-    double[] m_sampleWeights = new double[0];
-    double[] m_indexedTargets = new double[0];
+    double[] m_workErrors = [];
+    double[] m_sampleWeights = [];
+    double[] m_indexedTargets = [];
 
     /// <summary>
     /// Classification AdaBoost learner using the SAMME algorithm for multi-class support:

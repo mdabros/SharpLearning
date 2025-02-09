@@ -14,8 +14,8 @@ public class NoShuffleTrainingTestIndexSplitterTest
         var targets = new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var actual = sut.Split(targets);
-        var expected = new TrainingTestIndexSplit(new int[] { 0, 1, 2, 3, 4, 5, 6, 7 },
-            new int[] { 8, 9 });
+        var expected = new TrainingTestIndexSplit([0, 1, 2, 3, 4, 5, 6, 7],
+            [8, 9]);
 
         Assert.AreEqual(expected, actual);
     }

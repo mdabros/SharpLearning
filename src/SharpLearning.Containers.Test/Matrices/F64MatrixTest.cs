@@ -102,7 +102,7 @@ public class F64MatrixTest
     {
         var sut = CreateFeatures();
         var actual = new F64Matrix(2, 3);
-        sut.Rows(new int[] { 0, 2 }, actual);
+        sut.Rows([0, 2], actual);
         var expected = GetExpectedRowSubMatrix();
 
         Assert.IsTrue(expected.Equals(actual));
@@ -123,7 +123,7 @@ public class F64MatrixTest
     {
         var sut = CreateFeatures();
         var actual = new F64Matrix(3, 2);
-        sut.Columns(new int[] { 0, 2 }, actual);
+        sut.Columns([0, 2], actual);
         var expected = GetExpectedColSubMatrix();
 
         Assert.IsTrue(expected.Equals(actual));
@@ -134,7 +134,7 @@ public class F64MatrixTest
     {
         Func<F64Matrix, F64Matrix> converter = m => m;
 
-        var actual = converter(new double[][] { new double[] { 0, 1 }, new double[] { 2, 3 } });
+        var actual = converter(new double[][] { [0, 1], [2, 3] });
 
         Assert.AreEqual(0, actual.At(0, 0));
         Assert.AreEqual(1, actual.At(0, 1));
@@ -144,12 +144,12 @@ public class F64MatrixTest
 
     static double[] GetExpectedColumn()
     {
-        return new double[3] { 2, 20, 200 };
+        return [2, 20, 200];
     }
 
     static double[] GetExpectedRow()
     {
-        return new double[3] { 10, 20, 30 };
+        return [10, 20, 30];
     }
 
     static F64Matrix GetExpectedColSubMatrix()

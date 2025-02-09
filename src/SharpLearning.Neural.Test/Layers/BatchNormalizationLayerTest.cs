@@ -61,7 +61,7 @@ public class BatchNormalizationLayerTest
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
         Trace.WriteLine(actual);
 
-        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { -0.999998f, 0.999998f, -0.9999995f, 0.9999995f, -0.999998f, 0.999998f, -1, 1 });
+        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, [-0.999998f, 0.999998f, -0.9999995f, 0.9999995f, -0.999998f, 0.999998f, -1, 1]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 
@@ -110,7 +110,7 @@ public class BatchNormalizationLayerTest
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
         Trace.WriteLine(actual);
 
-        var expected = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight, new float[] { -1.0297426f, 0.9697576f, -1.00974762f, 0.9897526f, -0.9897526f, 1.00974762f, -0.9697576f, 1.0297426f, -1.0297426f, 0.9697576f, -1.00974762f, 0.9897526f, -0.9897526f, 1.00974762f, -0.9697576f, 1.0297426f });
+        var expected = Matrix<float>.Build.Dense(batchSize, k * filterGridWidth * filterGridHeight, [-1.0297426f, 0.9697576f, -1.00974762f, 0.9897526f, -0.9897526f, 1.00974762f, -0.9697576f, 1.0297426f, -1.0297426f, 0.9697576f, -1.00974762f, 0.9897526f, -0.9897526f, 1.00974762f, -0.9697576f, 1.0297426f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 
@@ -135,7 +135,7 @@ public class BatchNormalizationLayerTest
 
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, new float[] { -2.600517E-06f, 2.615418E-06f, -1.349278E-06f, 1.349278E-06f, 1.158319E-06f, -1.150868E-06f, -5.639333E-10f, -9.261829E-10f });
+        var expected = Matrix<float>.Build.Dense(batchSize, fanIn, [-2.600517E-06f, 2.615418E-06f, -1.349278E-06f, 1.349278E-06f, 1.158319E-06f, -1.150868E-06f, -5.639333E-10f, -9.261829E-10f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 

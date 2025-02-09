@@ -10,8 +10,8 @@ public class ObservationTargetSetTest
     [TestMethod]
     public void ObservationTargetSet_Equals()
     {
-        var observations1 = new F64Matrix(new double[] { 1, 2, 3, 4 }, 2, 2);
-        var observations2 = new F64Matrix(new double[] { 4, 3, 2, 1 }, 2, 2);
+        var observations1 = new F64Matrix([1, 2, 3, 4], 2, 2);
+        var observations2 = new F64Matrix([4, 3, 2, 1], 2, 2);
 
         var targets1 = new double[] { 1, 2 };
         var targets2 = new double[] { 2, 1 };
@@ -32,14 +32,14 @@ public class ObservationTargetSetTest
     [ExpectedException(typeof(ArgumentNullException))]
     public void ObservationTargetSet_Observations_Null()
     {
-        new ObservationTargetSet(null, new double[] { 1 });
+        new ObservationTargetSet(null, [1]);
     }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void ObservationTargetSet_Targets_Null()
     {
-        new ObservationTargetSet(new F64Matrix(new double[] { 1, 2, 3, 4 }, 2, 2), null);
+        new ObservationTargetSet(new F64Matrix([1, 2, 3, 4], 2, 2), null);
     }
 
 }

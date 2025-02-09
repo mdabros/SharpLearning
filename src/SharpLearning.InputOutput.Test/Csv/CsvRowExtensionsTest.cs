@@ -11,7 +11,7 @@ namespace SharpLearning.InputOutput.Test.Csv;
 [TestClass]
 public class CsvRowExtensionsTest
 {
-    static readonly string[] m_data = new string[] { "1", "2", "3", "4" };
+    static readonly string[] m_data = ["1", "2", "3", "4"];
     static readonly Dictionary<string, int> m_columnNameToIndex = new() { { "1", 0 }, { "2", 1 }, { "3", 2 }, { "4", 3 } };
     readonly F64Matrix m_expectedF64Matrix = new(m_data.Select(value => CsvRowExtensions.DefaultF64Converter(value)).ToArray(), 1, 4);
     readonly StringMatrix m_expectedStringMatrix = new(m_data, 1, 4);
@@ -22,7 +22,7 @@ public class CsvRowExtensionsTest
     public void CsvRowExtensions_GetValues()
     {
         var sut = new CsvRow(m_columnNameToIndex, m_data);
-        var actual = sut.GetValues(new string[] { "1", "3" });
+        var actual = sut.GetValues(["1", "3"]);
         var expected = new string[] { "1", "3" };
         CollectionAssert.AreEqual(expected, actual);
     }
@@ -54,7 +54,7 @@ public class CsvRowExtensionsTest
         var actual = sut.Keep("1", "2").ToList().First();
         var expected = new CsvRow(
             new Dictionary<string, int> { { "1", 0 }, { "2", 1 } },
-            new string[] { "1", "2" });
+            ["1", "2"]);
 
         Assert.AreEqual(expected, actual);
     }
@@ -67,7 +67,7 @@ public class CsvRowExtensionsTest
         var actual = sut.Remove("3").ToList().First();
         var expected = new CsvRow(
             new Dictionary<string, int> { { "1", 0 }, { "2", 1 }, { "4", 2 } },
-            new string[] { "1", "2", "4" });
+            ["1", "2", "4"]);
 
         Assert.AreEqual(expected, actual);
     }

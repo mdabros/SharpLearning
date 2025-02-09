@@ -51,7 +51,7 @@ public class SoftMaxLayerTest
 
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-        var expected = Matrix<float>.Build.Dense(batchSize, numberOfClasses, new float[] { 0.06976377f, 0.1327717f, 0.02337802f, 0.3784489f, 0.0777365f, 0.05847027f, 0.1072708f, 0.0503228f, 0.0624512f, 0.03938601f });
+        var expected = Matrix<float>.Build.Dense(batchSize, numberOfClasses, [0.06976377f, 0.1327717f, 0.02337802f, 0.3784489f, 0.0777365f, 0.05847027f, 0.1072708f, 0.0503228f, 0.0624512f, 0.03938601f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 
@@ -76,7 +76,7 @@ public class SoftMaxLayerTest
 
         Trace.WriteLine(string.Join(", ", actual.ToColumnMajorArray()));
 
-        var expected = Matrix<float>.Build.Dense(batchSize, numberOfClasses, new float[] { -0.3891016f, -0.6150756f, 0.0618184f, -0.2334358f, 1.544145f, -1.01483f, 0.6160479f, 0.3225261f, -1.007966f, -0.1111263f });
+        var expected = Matrix<float>.Build.Dense(batchSize, numberOfClasses, [-0.3891016f, -0.6150756f, 0.0618184f, -0.2334358f, 1.544145f, -1.01483f, 0.6160479f, 0.3225261f, -1.007966f, -0.1111263f]);
         MatrixAsserts.AreEqual(expected, actual);
     }
 }
