@@ -52,9 +52,9 @@ public sealed class MapCategoricalFeaturesTransformer : ICsvRowTransformer
             {
                 var columnMap = m_namedFeatureMapping[column];
                 var value = row.GetValue(column);
-                if (columnMap.ContainsKey(value))
+                if (columnMap.TryGetValue(value, out var columnValue))
                 {
-                    row.SetValue(column, columnMap[value]);
+                    row.SetValue(column, columnValue);
                 }
                 else
                 {

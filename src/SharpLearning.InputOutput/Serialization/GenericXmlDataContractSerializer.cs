@@ -162,11 +162,11 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             Type declaredType,
             DataContractResolver knownTypeResolver)
         {
-            if (m_namesToType.ContainsKey(typeNamespace))
+            if (m_namesToType.TryGetValue(typeNamespace, out var nameToType))
             {
-                if (m_namesToType[typeNamespace].ContainsKey(typeName))
+                if (nameToType.TryGetValue(typeName, out var value))
                 {
-                    return m_namesToType[typeNamespace][typeName];
+                    return value;
                 }
             }
             return knownTypeResolver.ResolveName(typeName, typeNamespace, declaredType, null);
@@ -178,11 +178,11 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             out XmlDictionaryString typeName,
             out XmlDictionaryString typeNamespace)
         {
-            if (m_typeToNames.ContainsKey(type))
+            if (m_typeToNames.TryGetValue(type, out Tuple<string, string> value))
             {
                 var dictionary = new XmlDictionary();
-                typeNamespace = dictionary.Add(m_typeToNames[type].Item1);
-                typeName = dictionary.Add(m_typeToNames[type].Item2);
+                typeNamespace = dictionary.Add(value.Item1);
+                typeName = dictionary.Add(value.Item2);
 
                 return true;
             }
