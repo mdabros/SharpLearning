@@ -11,24 +11,20 @@ public class F64MatrixViewTest
     public unsafe void F64MatrixView_Indexing()
     {
         var matrix = Matrix();
-        using (var pinnedMatrix = matrix.GetPinnedPointer())
-        {
-            var view = pinnedMatrix.View();
-            AssertMatrixView(matrix, view);
-        }
+        using var pinnedMatrix = matrix.GetPinnedPointer();
+        var view = pinnedMatrix.View();
+        AssertMatrixView(matrix, view);
     }
 
     [TestMethod]
     public unsafe void F64MatrixView_ColumnView()
     {
         var matrix = Matrix();
-        using (var pinnedMatrix = matrix.GetPinnedPointer())
+        using var pinnedMatrix = matrix.GetPinnedPointer();
+        var view = pinnedMatrix.View();
+        for (var i = 0; i < matrix.ColumnCount; i++)
         {
-            var view = pinnedMatrix.View();
-            for (var i = 0; i < matrix.ColumnCount; i++)
-            {
-                AssertColumnView(matrix.Column(i), view.ColumnView(i));
-            }
+            AssertColumnView(matrix.Column(i), view.ColumnView(i));
         }
     }
 
@@ -36,15 +32,13 @@ public class F64MatrixViewTest
     public unsafe void F64MatrixView_SubView()
     {
         var matrix = Matrix();
-        using (var pinnedMatrix = matrix.GetPinnedPointer())
-        {
-            var subView = pinnedMatrix.View().View(
-                Interval2D.Create(Interval1D.Create(0, 2),
-                Interval1D.Create(0, 3)));
+        using var pinnedMatrix = matrix.GetPinnedPointer();
+        var subView = pinnedMatrix.View().View(
+            Interval2D.Create(Interval1D.Create(0, 2),
+            Interval1D.Create(0, 3)));
 
-            var subMatrix = matrix.Rows([0, 1]);
-            AssertMatrixView(subMatrix, subView);
-        }
+        var subMatrix = matrix.Rows([0, 1]);
+        AssertMatrixView(subMatrix, subView);
     }
 
     [TestMethod]
@@ -55,14 +49,12 @@ public class F64MatrixViewTest
 
         largeMatrix[largeMatrix.RowCount - 1, 0] = testValue;
 
-        using (var pinnedMatrix = largeMatrix.GetPinnedPointer())
-        {
-            var matrixView = pinnedMatrix.View();
+        using var pinnedMatrix = largeMatrix.GetPinnedPointer();
+        var matrixView = pinnedMatrix.View();
 
-            var lastValue = *matrixView[largeMatrix.RowCount - 1];
+        var lastValue = *matrixView[largeMatrix.RowCount - 1];
 
-            Assert.AreEqual(lastValue, testValue);
-        }
+        Assert.AreEqual(lastValue, testValue);
     }
 
     [TestMethod]
@@ -73,14 +65,12 @@ public class F64MatrixViewTest
 
         largeMatrix[largeMatrix.RowCount - 1, 0] = testValue;
 
-        using (var pinnedMatrix = largeMatrix.GetPinnedPointer())
-        {
-            var columnView = pinnedMatrix.View().ColumnView(0);
+        using var pinnedMatrix = largeMatrix.GetPinnedPointer();
+        var columnView = pinnedMatrix.View().ColumnView(0);
 
-            var lastValue = columnView[largeMatrix.RowCount - 1];
+        var lastValue = columnView[largeMatrix.RowCount - 1];
 
-            Assert.AreEqual(lastValue, testValue);
-        }
+        Assert.AreEqual(lastValue, testValue);
     }
 
     /// <remarks>A matrix which needs a byte pointer offset larger than

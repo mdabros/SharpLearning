@@ -74,10 +74,8 @@ public unsafe class DecisionTreeLearner
     /// <returns></returns>
     public BinaryTree Learn(F64Matrix observations, double[] targets, int[] indices, double[] weights)
     {
-        using (var pinnedFeatures = observations.GetPinnedPointer())
-        {
-            return Learn(pinnedFeatures.View(), targets, indices, weights);
-        }
+        using var pinnedFeatures = observations.GetPinnedPointer();
+        return Learn(pinnedFeatures.View(), targets, indices, weights);
     }
 
     /// <summary>

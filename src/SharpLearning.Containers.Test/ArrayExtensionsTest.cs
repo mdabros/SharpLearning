@@ -177,13 +177,11 @@ public class ArrayExtensionsTest
         var destination = new double[values.Length];
         var interval = Interval1D.Create(0, values.Length);
 
-        using (var ptr = matrix.GetPinnedPointer())
-        {
-            var view = ptr.View().ColumnView(0);
-            indices.IndexedCopy(view, interval, destination);
-            var expected = new double[] { 10, 10, 20, 20, 20, 50 };
-            CollectionAssert.AreEqual(expected, destination);
-        }
+        using var ptr = matrix.GetPinnedPointer();
+        var view = ptr.View().ColumnView(0);
+        indices.IndexedCopy(view, interval, destination);
+        var expected = new double[] { 10, 10, 20, 20, 20, 50 };
+        CollectionAssert.AreEqual(expected, destination);
     }
 
     [TestMethod]
@@ -195,13 +193,11 @@ public class ArrayExtensionsTest
         var destination = new double[values.Length];
         var interval = Interval1D.Create(1, 5);
 
-        using (var ptr = matrix.GetPinnedPointer())
-        {
-            var view = ptr.View().ColumnView(0);
-            indices.IndexedCopy(view, interval, destination);
-            var expected = new double[] { 0, 10, 20, 20, 20, 0 };
-            CollectionAssert.AreEqual(expected, destination);
-        }
+        using var ptr = matrix.GetPinnedPointer();
+        var view = ptr.View().ColumnView(0);
+        indices.IndexedCopy(view, interval, destination);
+        var expected = new double[] { 0, 10, 20, 20, 20, 0 };
+        CollectionAssert.AreEqual(expected, destination);
     }
 
     [TestMethod]

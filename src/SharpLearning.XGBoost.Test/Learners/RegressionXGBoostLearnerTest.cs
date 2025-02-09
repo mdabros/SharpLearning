@@ -19,15 +19,13 @@ public class RegressionXGBoostLearnerTest
 
         var sut = CreateLearner();
 
-        using (var model = sut.Learn(observations, targets))
-        {
-            var predictions = model.Predict(observations);
+        using var model = sut.Learn(observations, targets);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var error = evaluator.Error(targets, predictions);
+        var evaluator = new MeanSquaredErrorRegressionMetric();
+        var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.0795934933096642, error, m_delta);
-        }
+        Assert.AreEqual(0.0795934933096642, error, m_delta);
     }
 
     [TestMethod]
@@ -42,15 +40,13 @@ public class RegressionXGBoostLearnerTest
 
         var sut = CreateLearner();
 
-        using (var model = sut.Learn(observations, targets, indices))
-        {
-            var predictions = model.Predict(observations);
+        using var model = sut.Learn(observations, targets, indices);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var error = evaluator.Error(targets, predictions);
+        var evaluator = new MeanSquaredErrorRegressionMetric();
+        var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.33589853954956522, error, m_delta);
-        }
+        Assert.AreEqual(0.33589853954956522, error, m_delta);
     }
 
     static RegressionXGBoostLearner CreateLearner()

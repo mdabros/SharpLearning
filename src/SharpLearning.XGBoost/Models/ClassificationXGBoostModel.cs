@@ -39,19 +39,17 @@ public sealed class ClassificationXGBoostModel
             observation.ToFloat()
         };
 
-        using (var data = new DMatrix(floatObservation))
-        {
-            var prediction = m_model.Predict(data);
+        using var data = new DMatrix(floatObservation);
+        var prediction = m_model.Predict(data);
 
-            var numberOfClasses = prediction.Length;
-            if (numberOfClasses >= 2)
-            {
-                return PredictMultiClass(prediction);
-            }
-            else
-            {
-                return PredictSingleClass(prediction);
-            }
+        var numberOfClasses = prediction.Length;
+        if (numberOfClasses >= 2)
+        {
+            return PredictMultiClass(prediction);
+        }
+        else
+        {
+            return PredictSingleClass(prediction);
         }
     }
 
@@ -88,19 +86,17 @@ public sealed class ClassificationXGBoostModel
             observation.ToFloat()
         };
 
-        using (var data = new DMatrix(floatObservation))
-        {
-            var prediction = m_model.Predict(data);
+        using var data = new DMatrix(floatObservation);
+        var prediction = m_model.Predict(data);
 
-            var numberOfClasses = prediction.Length;
-            if (numberOfClasses >= 2)
-            {
-                return PredictMultiClassProbability(prediction);
-            }
-            else
-            {
-                return PredictSingleClassProbability(prediction);
-            }
+        var numberOfClasses = prediction.Length;
+        if (numberOfClasses >= 2)
+        {
+            return PredictMultiClassProbability(prediction);
+        }
+        else
+        {
+            return PredictSingleClassProbability(prediction);
         }
     }
 

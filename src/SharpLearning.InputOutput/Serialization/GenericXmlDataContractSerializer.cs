@@ -60,22 +60,18 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     {
         var settings = new XmlWriterSettings { Indent = true };
 
-        using (var texWriter = writer())
+        using var texWriter = writer();
+        using var xmlWriter = XmlWriter.Create(texWriter, settings);
+        var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings()
         {
-            using (var xmlWriter = XmlWriter.Create(texWriter, settings))
-            {
-                var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings()
-                {
-                    KnownTypes = m_knownTypes,
-                    MaxItemsInObjectGraph = int.MaxValue,
-                    IgnoreExtensionDataObject = false,
-                    PreserveObjectReferences = m_preserveObjectReferences,
-                    DataContractResolver = new GenericResolver()
-                });
+            KnownTypes = m_knownTypes,
+            MaxItemsInObjectGraph = int.MaxValue,
+            IgnoreExtensionDataObject = false,
+            PreserveObjectReferences = m_preserveObjectReferences,
+            DataContractResolver = new GenericResolver()
+        });
 
-                serializer.WriteObject(xmlWriter, data);
-            }
-        }
+        serializer.WriteObject(xmlWriter, data);
     }
 
     /// <summary>
@@ -86,22 +82,18 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     /// <returns></returns>
     public T Deserialize<T>(Func<TextReader> reader)
     {
-        using (var textReader = reader())
+        using var textReader = reader();
+        using var xmlReader = XmlReader.Create(textReader);
+        var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings()
         {
-            using (var xmlReader = XmlReader.Create(textReader))
-            {
-                var serializer = new DataContractSerializer(typeof(T), new DataContractSerializerSettings()
-                {
-                    KnownTypes = m_knownTypes,
-                    MaxItemsInObjectGraph = int.MaxValue,
-                    IgnoreExtensionDataObject = false,
-                    PreserveObjectReferences = m_preserveObjectReferences,
-                    DataContractResolver = new GenericResolver()
-                });
+            KnownTypes = m_knownTypes,
+            MaxItemsInObjectGraph = int.MaxValue,
+            IgnoreExtensionDataObject = false,
+            PreserveObjectReferences = m_preserveObjectReferences,
+            DataContractResolver = new GenericResolver()
+        });
 
-                return (T)serializer.ReadObject(xmlReader);
-            }
-        }
+        return (T)serializer.ReadObject(xmlReader);
     }
 
     #region GenericResolver

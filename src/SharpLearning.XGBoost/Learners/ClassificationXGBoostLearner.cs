@@ -170,18 +170,16 @@ public sealed class ClassificationXGBoostLearner
             m_parameters[ParameterNames.NumberOfClasses] = numberOfClasses;
         }
 
-        using (var train = new DMatrix(floatObservations, floatTargets))
+        using var train = new DMatrix(floatObservations, floatTargets);
+        var booster = new Booster(m_parameters.ToDictionary(v => v.Key, v => v.Value), train);
+        var iterations = (int)m_parameters[ParameterNames.Estimators];
+
+        for (var iteration = 0; iteration < iterations; iteration++)
         {
-            var booster = new Booster(m_parameters.ToDictionary(v => v.Key, v => v.Value), train);
-            var iterations = (int)m_parameters[ParameterNames.Estimators];
-
-            for (var iteration = 0; iteration < iterations; iteration++)
-            {
-                booster.Update(train, iteration);
-            }
-
-            return new ClassificationXGBoostModel(booster);
+            booster.Update(train, iteration);
         }
+
+        return new ClassificationXGBoostModel(booster);
     }
 
     /// <summary>

@@ -146,18 +146,16 @@ public sealed class RegressionXGBoostLearner : ILearner<double>, IIndexedLearner
         var floatObservations = observations.ToFloatJaggedArray(indices);
         var floatTargets = targets.ToFloat(indices);
 
-        using (var train = new DMatrix(floatObservations, floatTargets))
+        using var train = new DMatrix(floatObservations, floatTargets);
+        var booster = new Booster(m_parameters.ToDictionary(v => v.Key, v => v.Value), train);
+        var iterations = (int)m_parameters[ParameterNames.Estimators];
+
+        for (var iteration = 0; iteration < iterations; iteration++)
         {
-            var booster = new Booster(m_parameters.ToDictionary(v => v.Key, v => v.Value), train);
-            var iterations = (int)m_parameters[ParameterNames.Estimators];
-
-            for (var iteration = 0; iteration < iterations; iteration++)
-            {
-                booster.Update(train, iteration);
-            }
-
-            return new RegressionXGBoostModel(booster);
+            booster.Update(train, iteration);
         }
+
+        return new RegressionXGBoostModel(booster);
     }
 
     /// <summary>

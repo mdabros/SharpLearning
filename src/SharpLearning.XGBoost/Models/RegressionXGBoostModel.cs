@@ -35,10 +35,8 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
             observation.ToFloat()
         };
 
-        using (var data = new DMatrix(floatObservation))
-        {
-            return (double)m_model.Predict(data).Single();
-        }
+        using var data = new DMatrix(floatObservation);
+        return (double)m_model.Predict(data).Single();
     }
 
     /// <summary>
@@ -49,10 +47,8 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
     public double[] Predict(F64Matrix observations)
     {
         var floatObservations = observations.ToFloatJaggedArray();
-        using (var data = new DMatrix(floatObservations))
-        {
-            return m_model.Predict(data).ToDouble();
-        }
+        using var data = new DMatrix(floatObservations);
+        return m_model.Predict(data).ToDouble();
     }
 
     /// <summary>

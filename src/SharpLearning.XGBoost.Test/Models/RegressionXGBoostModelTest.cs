@@ -20,20 +20,18 @@ public class RegressionXGBoostModelTest
 
         var learner = CreateLearner();
 
-        using (var sut = learner.Learn(observations, targets))
+        using var sut = learner.Learn(observations, targets);
+        var rows = targets.Length;
+        var predictions = new double[rows];
+        for (var i = 0; i < rows; i++)
         {
-            var rows = targets.Length;
-            var predictions = new double[rows];
-            for (var i = 0; i < rows; i++)
-            {
-                predictions[i] = sut.Predict(observations.Row(i));
-            }
-
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var error = evaluator.Error(targets, predictions);
-
-            Assert.AreEqual(0.0795934933096642, error, m_delta);
+            predictions[i] = sut.Predict(observations.Row(i));
         }
+
+        var evaluator = new MeanSquaredErrorRegressionMetric();
+        var error = evaluator.Error(targets, predictions);
+
+        Assert.AreEqual(0.0795934933096642, error, m_delta);
     }
 
     [TestMethod]
@@ -43,15 +41,13 @@ public class RegressionXGBoostModelTest
 
         var learner = CreateLearner();
 
-        using (var sut = learner.Learn(observations, targets))
-        {
-            var predictions = sut.Predict(observations);
+        using var sut = learner.Learn(observations, targets);
+        var predictions = sut.Predict(observations);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var error = evaluator.Error(targets, predictions);
+        var evaluator = new MeanSquaredErrorRegressionMetric();
+        var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.0795934933096642, error, m_delta);
-        }
+        Assert.AreEqual(0.0795934933096642, error, m_delta);
     }
 
     [TestMethod]
@@ -71,10 +67,8 @@ public class RegressionXGBoostModelTest
             sutPreSave.Save(modelFilePath);
         }
 
-        using (var sutAfterSave = RegressionXGBoostModel.Load(modelFilePath))
-        {
-            AssertModel(observations, targets, sutAfterSave);
-        }
+        using var sutAfterSave = RegressionXGBoostModel.Load(modelFilePath);
+        AssertModel(observations, targets, sutAfterSave);
     }
 
     [TestMethod]
@@ -89,10 +83,9 @@ public class RegressionXGBoostModelTest
 
         var learner = CreateLearner();
 
-        using (var sut = learner.Learn(observations, targets))
-        {
-            var actual = sut.GetVariableImportance(featureNameToIndex);
-            var expected = new Dictionary<string, double>
+        using var sut = learner.Learn(observations, targets);
+        var actual = sut.GetVariableImportance(featureNameToIndex);
+        var expected = new Dictionary<string, double>
             {
                 { "f2", 100 },
                 { "f7", 21.1439170859871 },
@@ -105,14 +98,13 @@ public class RegressionXGBoostModelTest
                 { "f8", 4.61553313147666 },
             };
 
-            Assert.AreEqual(expected.Count, actual.Count);
-            var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
+        Assert.AreEqual(expected.Count, actual.Count);
+        var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
 
-            foreach (var item in zip)
-            {
-                Assert.AreEqual(item.Expected.Key, item.Actual.Key);
-                Assert.AreEqual(item.Expected.Value, item.Actual.Value, m_delta);
-            }
+        foreach (var item in zip)
+        {
+            Assert.AreEqual(item.Expected.Key, item.Actual.Key);
+            Assert.AreEqual(item.Expected.Value, item.Actual.Value, m_delta);
         }
     }
 

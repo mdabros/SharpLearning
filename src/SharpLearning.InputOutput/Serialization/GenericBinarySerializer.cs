@@ -20,25 +20,21 @@ public sealed class GenericBinarySerializer : IGenericSerializer
     {
         var serializer = new BinaryFormatter();
 
-        using (var baseReader = reader())
+        using var baseReader = reader();
+        if (baseReader is StreamReader)
         {
-            if (baseReader is StreamReader)
-            {
-                var baseStream = ((StreamReader)baseReader).BaseStream;
-                return (T)serializer.Deserialize(baseStream);
-            }
-            else if (baseReader is StringReader baseStream)
-            {
-                var bytes = Convert.FromBase64String(baseStream.ReadToEnd());
-                using (var memoryStream = new MemoryStream(bytes))
-                {
-                    return (T)serializer.Deserialize(memoryStream);
-                }
-            }
-            else
-            {
-                throw new ArgumentException("Unsupported reader type: " + baseReader.GetType());
-            }
+            var baseStream = ((StreamReader)baseReader).BaseStream;
+            return (T)serializer.Deserialize(baseStream);
+        }
+        else if (baseReader is StringReader baseStream)
+        {
+            var bytes = Convert.FromBase64String(baseStream.ReadToEnd());
+            using var memoryStream = new MemoryStream(bytes);
+            return (T)serializer.Deserialize(memoryStream);
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported reader type: " + baseReader.GetType());
         }
     }
 
@@ -52,25 +48,21 @@ public sealed class GenericBinarySerializer : IGenericSerializer
     {
         var serializer = new BinaryFormatter();
 
-        using (var baseWriter = writer())
+        using var baseWriter = writer();
+        if (baseWriter is StreamWriter)
         {
-            if (baseWriter is StreamWriter)
-            {
-                var baseStream = ((StreamWriter)baseWriter).BaseStream;
-                serializer.Serialize(baseStream, data);
-            }
-            else if (baseWriter is StringWriter)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    serializer.Serialize(memoryStream, data);
-                    baseWriter.Write(Convert.ToBase64String(memoryStream.ToArray()));
-                }
-            }
-            else
-            {
-                throw new ArgumentException("Unsupported writer type: " + baseWriter.GetType());
-            }
+            var baseStream = ((StreamWriter)baseWriter).BaseStream;
+            serializer.Serialize(baseStream, data);
+        }
+        else if (baseWriter is StringWriter)
+        {
+            using var memoryStream = new MemoryStream();
+            serializer.Serialize(memoryStream, data);
+            baseWriter.Write(Convert.ToBase64String(memoryStream.ToArray()));
+        }
+        else
+        {
+            throw new ArgumentException("Unsupported writer type: " + baseWriter.GetType());
         }
     }
 }

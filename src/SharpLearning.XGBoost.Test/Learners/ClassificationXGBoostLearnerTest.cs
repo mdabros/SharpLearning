@@ -19,15 +19,13 @@ public class ClassificationXGBoostLearnerTest
 
         var sut = CreateLearner();
 
-        using (var model = sut.Learn(observations, targets))
-        {
-            var predictions = model.Predict(observations);
+        using var model = sut.Learn(observations, targets);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var error = evaluator.Error(targets, predictions);
+        var evaluator = new TotalErrorClassificationMetric<double>();
+        var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.17757009345794392, error, m_delta);
-        }
+        Assert.AreEqual(0.17757009345794392, error, m_delta);
     }
 
     [TestMethod]
@@ -42,15 +40,13 @@ public class ClassificationXGBoostLearnerTest
 
         var sut = CreateLearner();
 
-        using (var model = sut.Learn(observations, targets, indices))
-        {
-            var predictions = model.Predict(observations);
+        using var model = sut.Learn(observations, targets, indices);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var error = evaluator.Error(targets, predictions);
+        var evaluator = new TotalErrorClassificationMetric<double>();
+        var error = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.228971962616822, error, m_delta);
-        }
+        Assert.AreEqual(0.228971962616822, error, m_delta);
     }
 
     static ClassificationXGBoostLearner CreateLearner()

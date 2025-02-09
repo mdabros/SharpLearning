@@ -51,23 +51,21 @@ public sealed class CsvParser
                 " Column names cannot be selected in this made");
         }
 
-        using (var reader = m_getReader())
+        using var reader = m_getReader();
+        var headerLine = reader.ReadLine();
+        var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
+        var columnNames = columnNameToIndex.Keys.Where(name => selectColumnNames(name))
+            .ToArray();
+
+        var indices = columnNameToIndex.GetValues(columnNames);
+        var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
+            .ToDictionary(index => columnNames[index]);
+
+        string line = null;
+        while ((line = reader.ReadLine()) != null)
         {
-            var headerLine = reader.ReadLine();
-            var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
-            var columnNames = columnNameToIndex.Keys.Where(name => selectColumnNames(name))
-                .ToArray();
-
-            var indices = columnNameToIndex.GetValues(columnNames);
-            var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
-                .ToDictionary(index => columnNames[index]);
-
-            string line = null;
-            while ((line = reader.ReadLine()) != null)
-            {
-                var lineSplit = Split(line, indices);
-                yield return new CsvRow(subColumnNameToIndex, lineSplit);
-            }
+            var lineSplit = Split(line, indices);
+            yield return new CsvRow(subColumnNameToIndex, lineSplit);
         }
     }
 
@@ -84,20 +82,18 @@ public sealed class CsvParser
                 "Column names cannot be selected in this made");
         }
 
-        using (var reader = m_getReader())
-        {
-            var headerLine = reader.ReadLine();
-            var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
-            var indices = columnNameToIndex.GetValues(columnNames);
-            var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
-                .ToDictionary(index => columnNames[index]);
+        using var reader = m_getReader();
+        var headerLine = reader.ReadLine();
+        var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
+        var indices = columnNameToIndex.GetValues(columnNames);
+        var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
+            .ToDictionary(index => columnNames[index]);
 
-            string line = null;
-            while ((line = reader.ReadLine()) != null)
-            {
-                var lineSplit = Split(line, indices);
-                yield return new CsvRow(subColumnNameToIndex, lineSplit);
-            }
+        string line = null;
+        while ((line = reader.ReadLine()) != null)
+        {
+            var lineSplit = Split(line, indices);
+            yield return new CsvRow(subColumnNameToIndex, lineSplit);
         }
     }
 
@@ -119,17 +115,15 @@ public sealed class CsvParser
 
     IEnumerable<CsvRow> EnumerateRowsHeader()
     {
-        using (var reader = m_getReader())
-        {
-            var headerLine = reader.ReadLine();
-            var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
+        using var reader = m_getReader();
+        var headerLine = reader.ReadLine();
+        var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
 
-            string line = null;
-            while ((line = reader.ReadLine()) != null)
-            {
-                var lineSplit = Split(line);
-                yield return new CsvRow(columnNameToIndex, lineSplit);
-            }
+        string line = null;
+        while ((line = reader.ReadLine()) != null)
+        {
+            var lineSplit = Split(line);
+            yield return new CsvRow(columnNameToIndex, lineSplit);
         }
     }
 
@@ -137,14 +131,12 @@ public sealed class CsvParser
     {
         var columnNameToIndex = CreateHeaderForCsvFileWithout();
 
-        using (var reader = m_getReader())
+        using var reader = m_getReader();
+        string line = null;
+        while ((line = reader.ReadLine()) != null)
         {
-            string line = null;
-            while ((line = reader.ReadLine()) != null)
-            {
-                var lineSplit = Split(line);
-                yield return new CsvRow(columnNameToIndex, lineSplit);
-            }
+            var lineSplit = Split(line);
+            yield return new CsvRow(columnNameToIndex, lineSplit);
         }
     }
 

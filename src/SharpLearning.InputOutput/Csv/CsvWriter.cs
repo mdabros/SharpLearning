@@ -31,23 +31,21 @@ public class CsvWriter
     /// <param name="writeHeader">True and a header is added to the stream, false and the header is omittet</param>
     public void Write(IEnumerable<CsvRow> rows, bool writeHeader = true)
     {
-        using (var writer = m_writer())
+        using var writer = m_writer();
+        if (writeHeader)
         {
-            if (writeHeader)
-            {
-                var headerValues = rows.First().ColumnNameToIndex
-                                         .OrderBy(kvp => kvp.Value)
-                                         .Select(kvp => kvp.Key);
+            var headerValues = rows.First().ColumnNameToIndex
+                                     .OrderBy(kvp => kvp.Value)
+                                     .Select(kvp => kvp.Key);
 
-                var headerLine = CreateHeader(headerValues);
-                writer.Write(headerLine);
-            }
+            var headerLine = CreateHeader(headerValues);
+            writer.Write(headerLine);
+        }
 
-            foreach (var row in rows)
-            {
-                writer.WriteLine();
-                WriteColumns(row.Values, writer);
-            }
+        foreach (var row in rows)
+        {
+            writer.WriteLine();
+            WriteColumns(row.Values, writer);
         }
     }
 
