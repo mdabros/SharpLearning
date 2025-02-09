@@ -137,12 +137,12 @@ public class XGBoostTreeConverterTest
     [
        /*-1*/
        new GBMNode
-              {
-                  FeatureIndex = -1,
-                  SplitValue = -1,
-                  LeftConstant = 0.5,
-                  RightConstant = 0.5,
-              },
+       {
+           FeatureIndex = -1,
+           SplitValue = -1,
+           LeftConstant = 0.5,
+           RightConstant = 0.5,
+       },
 
         /*0*/
         new GBMNode
