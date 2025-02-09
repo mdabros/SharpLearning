@@ -13,8 +13,8 @@ public class XGBoostTreeConverterTest
     [TestMethod]
     public void XGBoostTreeConverter_ConvertXGBoostTextTreeToGBMTree_Tree_1()
     {
-        var actualNodes = XGBoostTreeConverter.ConvertXGBoostTextTreeToGBMTree(m_tree1).Nodes;
-        var expectedNodes = m_tree1Nodes;
+        var actualNodes = XGBoostTreeConverter.ConvertXGBoostTextTreeToGBMTree(Tree1).Nodes;
+        var expectedNodes = Tree1Nodes;
 
         Assert.AreEqual(expectedNodes.Count, actualNodes.Count);
 
@@ -29,8 +29,8 @@ public class XGBoostTreeConverterTest
     [TestMethod]
     public void XGBoostTreeConverter_ConvertXGBoostTextTreeToGBMTree_Tree_2()
     {
-        var actualNodes = XGBoostTreeConverter.ConvertXGBoostTextTreeToGBMTree(m_tree2).Nodes;
-        var expectedNodes = m_tree2Nodes;
+        var actualNodes = XGBoostTreeConverter.ConvertXGBoostTextTreeToGBMTree(Tree2).Nodes;
+        var expectedNodes = Tree2Nodes;
 
         Assert.AreEqual(expectedNodes.Count, actualNodes.Count);
 
@@ -118,7 +118,7 @@ public class XGBoostTreeConverterTest
         Assert.AreEqual(expected.SplitValue, actual.SplitValue, m_delta);
     }
 
-    const string m_tree1 = @"booster[0]
+    const string Tree1 = @"booster[0]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=343.922,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=74.1261,cover=61
 		3:[f8<0.13] yes=7,no=8,missing=7,gain=10.7401,cover=37
@@ -133,7 +133,7 @@ public class XGBoostTreeConverterTest
 			12:leaf=-0.0020202,cover=98
 		6:leaf=0.3,cover=2";
 
-    static readonly List<GBMNode> m_tree1Nodes =
+    static readonly List<GBMNode> Tree1Nodes =
     [
        /*-1*/ new GBMNode
         {
@@ -204,7 +204,7 @@ public class XGBoostTreeConverterTest
         },
     ];
 
-    const string m_tree2 = @"booster[10]
+    const string Tree2 = @"booster[10]
 0:[f2<2.545] yes=1,no=2,missing=1,gain=46.9086,cover=214
 	1:[f1<13.785] yes=3,no=4,missing=3,gain=12.7152,cover=60
 		3:[f1<13.495] yes=7,no=8,missing=7,gain=4.75871,cover=24
@@ -219,7 +219,7 @@ public class XGBoostTreeConverterTest
 			11:leaf=0.0257847,cover=54
 			12:leaf=-0.00524031,cover=98";
 
-    static readonly List<GBMNode> m_tree2Nodes =
+    static readonly List<GBMNode> Tree2Nodes =
     [
        /*-1*/ new GBMNode
         {
