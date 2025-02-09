@@ -213,7 +213,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
 
             if (maxError != 0.0)
             {
-                error = error / maxError;
+                error /= maxError;
             }
 
             switch (m_loss)
@@ -221,7 +221,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
                 case AdaBoostRegressionLoss.Linear:
                     break;
                 case AdaBoostRegressionLoss.Squared:
-                    error = error * error;
+                    error *= error;
                     break;
                 case AdaBoostRegressionLoss.Exponential:
                     error = 1.0 - Math.Exp(-error);

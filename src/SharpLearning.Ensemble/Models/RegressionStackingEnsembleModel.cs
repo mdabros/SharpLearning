@@ -38,7 +38,7 @@ public class RegressionStackingEnsembleModel : IPredictorModel<double>
         var ensembleCols = m_ensembleModels.Length;
         if (m_includeOriginalFeaturesForMetaLearner)
         {
-            ensembleCols = ensembleCols + observation.Length;
+            ensembleCols += observation.Length;
         }
 
         var ensemblePredictions = new double[ensembleCols];

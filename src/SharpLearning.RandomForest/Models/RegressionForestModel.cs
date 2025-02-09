@@ -79,7 +79,7 @@ public sealed class RegressionForestModel : IPredictorModel<double>
             variance += temp * temp;
         }
 
-        variance = variance / (double)Trees.Length;
+        variance /= (double)Trees.Length;
 
         return new CertaintyPrediction(prediction, variance);
     }

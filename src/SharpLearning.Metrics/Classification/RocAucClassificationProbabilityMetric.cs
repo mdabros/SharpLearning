@@ -68,7 +68,7 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
 
             if (probability != previousProbability)
             {
-                auc = auc + trapezoidArea(
+                auc += trapezoidArea(
                     fpCount * 1.0 / negativeCount,
                     previousFpCount * 1.0 / negativeCount,
                     tpCount * 1.0 / positivesCount,
@@ -79,12 +79,12 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
                 previousTpCount = tpCount;
             }
             if (target.Equals(m_positiveTarget))
-                tpCount = tpCount + 1;
+                tpCount++;
             else
-                fpCount = fpCount + 1;
+                fpCount++;
         }
 
-        auc = auc + trapezoidArea(
+        auc += trapezoidArea(
             1.0, previousFpCount * 1.0 / negativeCount,
             1.0, previousTpCount * 1.0 / positivesCount);
 

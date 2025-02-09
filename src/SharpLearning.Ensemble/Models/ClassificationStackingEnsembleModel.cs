@@ -76,7 +76,7 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
         var ensembleCols = ensembleFeatures;
         if (m_includeOriginalFeaturesForMetaLearner)
         {
-            ensembleCols = ensembleCols + observation.Length;
+            ensembleCols += observation.Length;
         }
 
         var ensemblePredictions = new double[ensembleCols];

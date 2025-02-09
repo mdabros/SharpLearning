@@ -93,7 +93,7 @@ public abstract class ClassificationImpurityCalculator
         }
         else
         {
-            m_targetIndexOffSet = m_targetIndexOffSet * -1;
+            m_targetIndexOffSet *= -1;
         }
 
         m_weightedTargetCount.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
@@ -228,6 +228,6 @@ public abstract class ClassificationImpurityCalculator
             }
         }
 
-        m_maxTargetNameIndex = m_maxTargetNameIndex + 1;
+        m_maxTargetNameIndex++;
     }
 }

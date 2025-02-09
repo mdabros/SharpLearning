@@ -428,7 +428,7 @@ public static class ArrayExtensions
             mean += array[index] * w;
         }
 
-        mean = mean / wSum;
+        mean /= wSum;
 
         return mean;
     }

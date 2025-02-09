@@ -145,7 +145,7 @@ public sealed class RegressionStackingEnsembleLearner : ILearner<double>, IIndex
 
         if (m_includeOriginalFeaturesForMetaLearner)
         {
-            cvCols = cvCols + observations.ColumnCount;
+            cvCols += observations.ColumnCount;
         }
 
         var cvPredictions = new F64Matrix(cvRows, cvCols);

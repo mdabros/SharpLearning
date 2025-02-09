@@ -130,8 +130,8 @@ public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<T
                 ModelDisposer.DisposeIfDisposable(model);
             }
 
-            trainError = trainError / m_numberOfShufflesPrSample;
-            validationError = validationError / m_numberOfShufflesPrSample;
+            trainError /= m_numberOfShufflesPrSample;
+            validationError /= m_numberOfShufflesPrSample;
 
             learningCurves.Add(new LearningCurvePoint(sampleSize,
                 trainError, validationError));

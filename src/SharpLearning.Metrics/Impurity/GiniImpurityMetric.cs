@@ -42,7 +42,7 @@ public sealed class GiniImpurityMetric : IImpurityMetric
             giniSum += pair.Value * pair.Value;
         }
 
-        giniSum = giniSum * totalInv;
+        giniSum *= totalInv;
 
         return 1 - giniSum;
     }
