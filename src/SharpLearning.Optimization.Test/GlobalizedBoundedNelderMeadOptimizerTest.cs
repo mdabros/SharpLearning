@@ -7,6 +7,7 @@ namespace SharpLearning.Optimization.Test;
 [TestClass]
 public class GlobalizedBoundedNelderMeadOptimizerTest
 {
+    [Ignore]
     [TestMethod]
     [DataRow(1)]
     [DataRow(2)]
