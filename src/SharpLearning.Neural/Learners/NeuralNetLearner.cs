@@ -7,6 +7,7 @@ using SharpLearning.Containers;
 using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.Neural.Loss;
+using SharpLearning.Neural.Models;
 using SharpLearning.Neural.Optimizers;
 using SharpLearning.Neural.TargetEncoders;
 
