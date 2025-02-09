@@ -19,9 +19,6 @@ public class NeuralNetLearner
 {
     readonly NeuralNet m_net;
 
-    readonly double m_learningRate;
-    readonly double m_momentum;
-
     readonly int m_iterations;
     readonly int m_batchSize;
 
@@ -30,8 +27,6 @@ public class NeuralNetLearner
     readonly NeuralNetOptimizer m_optimizer;
     readonly ITargetEncoder m_targetEncoder;
     readonly ILoss m_loss;
-
-    const double m_tol = 1e-4;
 
     /// <summary>
     /// Neural net learner. Controls the learning process using mini-batch gradient descent.
@@ -77,9 +72,7 @@ public class NeuralNetLearner
         if (beta1 <= 0) { throw new ArgumentNullException("beta1 must be larger than 0. Was: " + beta1); }
         if (beta2 <= 0) { throw new ArgumentNullException("beta2 must be larger than 0. Was: " + beta2); }
 
-        m_learningRate = learningRate;
         m_iterations = iterations;
-        m_momentum = momentum;
         m_batchSize = batchSize;
         m_random = new Random(232);
 
