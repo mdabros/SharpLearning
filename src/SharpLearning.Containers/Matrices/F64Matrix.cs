@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using SharpLearning.Containers.Views;
 using SharpLearning.Containers.Extensions;
+using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers.Matrices;
 

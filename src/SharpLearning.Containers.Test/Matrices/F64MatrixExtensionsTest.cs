@@ -70,8 +70,14 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6 };
 
-        var expected = new F64Matrix([1, 2, 3, 3,
-                                                   4, 5, 6, 6], 2, 4);
+        var expected = new F64Matrix([1,
+            2,
+            3,
+            3,
+            4,
+            5,
+            6,
+            6], 2, 4);
         var actual = matrix.CombineCols(vector);
 
         Assert.AreEqual(expected, actual);
@@ -83,8 +89,14 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6 };
 
-        var expected = new F64Matrix([3, 1, 2, 3,
-                                                   6, 4, 5, 6 ], 2, 4);
+        var expected = new F64Matrix([3,
+            1,
+            2,
+            3,
+            6,
+            4,
+            5,
+            6], 2, 4);
         var actual = vector.CombineCols(matrix);
 
         Assert.AreEqual(expected, actual);
@@ -116,9 +128,15 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6, 7 };
 
-        var expected = new F64Matrix([1, 2, 3,
-                                                   4, 5, 6,
-                                                   3, 6, 7], 3, 3);
+        var expected = new F64Matrix([1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            3,
+            6,
+            7], 3, 3);
         var actual = matrix.CombineRows(vector);
 
         Assert.AreEqual(expected, actual);
@@ -130,10 +148,15 @@ public class F64MatrixExtensionsTest
         var matrix = new F64Matrix(m_inputData, 2, 3);
         var vector = new double[] { 3, 6, 7 };
 
-        var expected = new F64Matrix([3, 6, 7,
-                                                   1, 2, 3,
-                                                   4, 5, 6
-                                                   ], 3, 3);
+        var expected = new F64Matrix([3,
+            6,
+            7,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6], 3, 3);
         var actual = vector.CombineRows(matrix);
 
         Assert.AreEqual(expected, actual);

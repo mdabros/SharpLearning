@@ -135,15 +135,17 @@ public class XGBoostTreeConverterTest
 
     static readonly List<GBMNode> Tree1Nodes =
     [
-       /*-1*/ new GBMNode
-        {
-            FeatureIndex = -1,
-            SplitValue = -1,
-            LeftConstant = 0.5,
-            RightConstant = 0.5,
-        },
+       /*-1*/
+       new GBMNode
+              {
+                  FeatureIndex = -1,
+                  SplitValue = -1,
+                  LeftConstant = 0.5,
+                  RightConstant = 0.5,
+              },
 
-       /*0*/ new GBMNode
+        /*0*/
+        new GBMNode
         {
             FeatureIndex = 2,
             SplitValue = 2.695,
@@ -153,7 +155,8 @@ public class XGBoostTreeConverterTest
             RightIndex = 3
         },
 
-       /*1*/ new GBMNode
+        /*1*/
+        new GBMNode
         {
             FeatureIndex = 6,
             SplitValue = 9.81,
@@ -163,7 +166,8 @@ public class XGBoostTreeConverterTest
             RightIndex = 5
         },
 
-       /*2*/ new GBMNode
+        /*2*/
+        new GBMNode
         {
             FeatureIndex = 5,
             SplitValue = 1.28,
@@ -173,7 +177,8 @@ public class XGBoostTreeConverterTest
             RightIndex = -1
         },
 
-        /*3*/ new GBMNode
+        /*3*/
+        new GBMNode
         {
             FeatureIndex = 8,
             SplitValue = 0.13,
@@ -183,7 +188,8 @@ public class XGBoostTreeConverterTest
             RightIndex = -1
         },
 
-        /*4*/ new GBMNode
+        /*4*/
+        new GBMNode
         {
             FeatureIndex = 4,
             SplitValue = 72.205,
@@ -193,7 +199,8 @@ public class XGBoostTreeConverterTest
             RightIndex = -1
         },
 
-        /*5*/ new GBMNode
+        /*5*/
+        new GBMNode
         {
             FeatureIndex = 0,
             SplitValue = 1.51715,
@@ -222,14 +229,15 @@ public class XGBoostTreeConverterTest
     static readonly List<GBMNode> Tree2Nodes =
     [
        /*-1*/ new GBMNode
-        {
-            FeatureIndex = -1,
-            SplitValue = -1,
-            LeftConstant = 0.5,
-            RightConstant = 0.5,
-        },
+              {
+                  FeatureIndex = -1,
+                  SplitValue = -1,
+                  LeftConstant = 0.5,
+                  RightConstant = 0.5,
+              },
 
-       /*0*/ new GBMNode
+        /*0*/
+        new GBMNode
         {
             FeatureIndex = 2,
             SplitValue = 2.545,
@@ -239,7 +247,8 @@ public class XGBoostTreeConverterTest
             RightIndex = 3
         },
 
-       /*1*/ new GBMNode
+        /*1*/
+        new GBMNode
         {
             FeatureIndex = 1,
             SplitValue = 13.785,
@@ -249,7 +258,8 @@ public class XGBoostTreeConverterTest
             RightIndex = 5
         },
 
-       /*2*/ new GBMNode
+        /*2*/
+        new GBMNode
         {
             FeatureIndex = 6,
             SplitValue = 5.83,
@@ -259,7 +269,8 @@ public class XGBoostTreeConverterTest
             RightIndex = 6
         },
 
-        /*3*/ new GBMNode
+        /*3*/
+        new GBMNode
         {
             FeatureIndex = 1,
             SplitValue = 13.495,
@@ -269,7 +280,8 @@ public class XGBoostTreeConverterTest
             RightIndex = -1
         },
 
-        /*4*/ new GBMNode
+        /*4*/
+        new GBMNode
         {
             FeatureIndex = 8,
             SplitValue = 0.135,
@@ -279,7 +291,8 @@ public class XGBoostTreeConverterTest
             RightIndex = -1
         },
 
-        /*5*/ new GBMNode
+        /*5*/
+        new GBMNode
         {
             FeatureIndex = 0,
             SplitValue = 1.51715,

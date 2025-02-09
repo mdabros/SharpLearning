@@ -11,14 +11,26 @@ public class MinMaxTransformerTest
     public void MinMaxTransformer_Transform()
     {
         var sut = new MinMaxTransformer(-1.0, 1.0);
-        var matrix = new F64Matrix([ -10, 0, 10,
-                                                   10, 0, -10,
-                                                  -10, 0, 10], 3, 3);
+        var matrix = new F64Matrix([-10,
+            0,
+            10,
+            10,
+            0,
+            -10,
+            -10,
+            0,
+            10], 3, 3);
         var actual = sut.Transform(matrix);
 
-        var expected = new F64Matrix([ -1, -1, 1,
-                                                     1, -1, -1,
-                                                    -1, -1, 1], 3, 3);
+        var expected = new F64Matrix([-1,
+            -1,
+            1,
+            1,
+            -1,
+            -1,
+            -1,
+            -1,
+            1], 3, 3);
 
         Assert.AreEqual(expected, actual);
     }
@@ -27,9 +39,15 @@ public class MinMaxTransformerTest
     public void MinMaxTransformer_Transform_Vector()
     {
         var sut = new MinMaxTransformer(-1.0, 1.0);
-        var matrix = new F64Matrix([ -10, 0, 10,
-                                                   10, 0, -10,
-                                                  -10, 0, 10], 3, 3);
+        var matrix = new F64Matrix([-10,
+            0,
+            10,
+            10,
+            0,
+            -10,
+            -10,
+            0,
+            10], 3, 3);
         // Create transformation
         sut.Transform(matrix);
 
@@ -44,9 +62,15 @@ public class MinMaxTransformerTest
             }
         }
 
-        var expected = new F64Matrix([ -1, -1, 1,
-                                                     1, -1, -1,
-                                                    -1, -1, 1], 3, 3);
+        var expected = new F64Matrix([-1,
+            -1,
+            1,
+            1,
+            -1,
+            -1,
+            -1,
+            -1,
+            1], 3, 3);
 
         Assert.AreEqual(expected, actual);
     }

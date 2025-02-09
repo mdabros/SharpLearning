@@ -17,10 +17,15 @@ public class LearningCurvePointExtensionsTest
             new(100, 3.0, 8.0), new(1000, 4.0, 4.0) };
 
         var actual = sut.ToF64Matrix();
-        var expected = new F64Matrix([ 10, 0.0, 1.0,
-            100, 3.0, 8.0,
-            1000, 4.0, 4.0 ],
-            3, 3);
+        var expected = new F64Matrix([10,
+            0.0,
+            1.0,
+            100,
+            3.0,
+            8.0,
+            1000,
+            4.0,
+            4.0], 3, 3);
 
         Assert.AreEqual(expected, actual);
     }

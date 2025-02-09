@@ -31,16 +31,22 @@ TuesDay;666;Yes;0;1;0;1;0";
     {
         var meanZeroTransformer = new MeanZeroFeatureTransformer();
         var minMaxTransformer = new MinMaxTransformer(-1.0, 1.0);
-        var matrix = new F64Matrix([ 123, 12,
-                                                  41, 120,
-                                                  124, 122 ], 3, 2);
+        var matrix = new F64Matrix([123,
+            12,
+            41,
+            120,
+            124,
+            122], 3, 2);
 
         var actual = matrix.Transform(meanZeroTransformer.Transform)
                            .Transform(minMaxTransformer.Transform);
 
-        var expected = new F64Matrix([ 0.97590361445783125, -1,
-                                                   -1, 0.96363636363636362,
-                                                    1, 1 ], 3, 2);
+        var expected = new F64Matrix([0.97590361445783125,
+            -1,
+            -1,
+            0.96363636363636362,
+            1,
+            1], 3, 2);
 
         Assert.AreEqual(expected, actual);
     }
