@@ -100,7 +100,6 @@ public class ClassificationNeuralNetLearnerTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void ClassificationNeuralNetLearner_Constructor_Throw_On_Wrong_OutputLayerType()
     {
         var net = new NeuralNet();
@@ -108,7 +107,8 @@ public class ClassificationNeuralNetLearnerTest
         net.Add(new DenseLayer(10));
         net.Add(new SquaredErrorRegressionLayer());
 
-        var sut = new ClassificationNeuralNetLearner(net, new AccuracyLoss());
+        Assert.ThrowsException<ArgumentException>(
+            () => new ClassificationNeuralNetLearner(net, new AccuracyLoss()));
     }
 
     static (F64Matrix observations, double[] targets) CreateData(

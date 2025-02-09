@@ -72,7 +72,6 @@ public class RegressionNeuralNetLearnerTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void RegressionNeuralNetLearner_Constructor_Throw_On_Wrong_OutputLayerType()
     {
         var net = new NeuralNet();
@@ -80,7 +79,8 @@ public class RegressionNeuralNetLearnerTest
         net.Add(new DenseLayer(10));
         net.Add(new SvmLayer(10));
 
-        var sut = new RegressionNeuralNetLearner(net, new AccuracyLoss());
+        Assert.ThrowsException<ArgumentException>(
+            () => new RegressionNeuralNetLearner(net, new AccuracyLoss()));
     }
 
     static (F64Matrix observations, double[] targets) CreateData(
