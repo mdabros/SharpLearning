@@ -8,7 +8,7 @@ namespace SharpLearning.Metrics.Impurity;
 /// </summary>
 public sealed class GiniImpurityMetric : IImpurityMetric
 {
-    readonly Dictionary<int, int> m_dictionary = new();
+    readonly Dictionary<int, int> m_dictionary = [];
 
     /// <summary>
     /// Calculates the Gini impurity of a sample. Main use is for decision tree classification

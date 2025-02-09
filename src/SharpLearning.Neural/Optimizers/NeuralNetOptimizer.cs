@@ -17,8 +17,8 @@ public sealed class NeuralNetOptimizer
     readonly float m_momentum;
     readonly int m_batchSize;
 
-    readonly List<double[]> m_gsumWeights = new(); // last iteration gradients (used for momentum calculations)
-    readonly List<double[]> m_xsumWeights = new(); // used in adam or adadelta
+    readonly List<double[]> m_gsumWeights = []; // last iteration gradients (used for momentum calculations)
+    readonly List<double[]> m_xsumWeights = []; // used in adam or adadelta
 
     readonly OptimizerMethod m_optimizerMethod = OptimizerMethod.Sgd;
     readonly float m_rho = 0.95f;

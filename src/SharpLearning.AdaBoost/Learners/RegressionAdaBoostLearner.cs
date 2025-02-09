@@ -32,9 +32,9 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
     readonly MeanAbsolutErrorRegressionMetric m_errorMetric = new();
     readonly AdaBoostRegressionLoss m_loss;
 
-    readonly List<double> m_modelErrors = new();
-    readonly List<double> m_modelWeights = new();
-    readonly List<RegressionDecisionTreeModel> m_models = new();
+    readonly List<double> m_modelErrors = [];
+    readonly List<double> m_modelWeights = [];
+    readonly List<RegressionDecisionTreeModel> m_models = [];
 
     double[] m_workErrors = [];
     double[] m_sampleWeights = [];

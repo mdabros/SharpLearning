@@ -35,9 +35,9 @@ public sealed class ClassificationAdaBoostLearner
 
     readonly TotalErrorClassificationMetric<double> m_errorMetric = new();
 
-    readonly List<double> m_modelErrors = new();
-    readonly List<double> m_modelWeights = new();
-    readonly List<ClassificationDecisionTreeModel> m_models = new();
+    readonly List<double> m_modelErrors = [];
+    readonly List<double> m_modelWeights = [];
+    readonly List<ClassificationDecisionTreeModel> m_models = [];
 
     double[] m_workErrors = [];
     double[] m_sampleWeights = [];

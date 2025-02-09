@@ -29,7 +29,7 @@ public sealed class OneHotTransformer : ICsvRowTransformer
     /// </summary>
     public OneHotTransformer(params string[] columnsToMap)
     {
-        m_featureMap = new Dictionary<string, HashSet<string>>();
+        m_featureMap = [];
         m_columnsToMap = columnsToMap;
     }
 
@@ -49,7 +49,7 @@ public sealed class OneHotTransformer : ICsvRowTransformer
         {
             foreach (var column in m_columnsToMap)
             {
-                m_featureMap.Add(column, new HashSet<string>());
+                m_featureMap.Add(column, []);
             }
         }
 

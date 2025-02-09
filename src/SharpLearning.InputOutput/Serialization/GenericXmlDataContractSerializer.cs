@@ -130,8 +130,8 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
         public GenericResolver(Type[] typesToResolve)
         {
-            m_typeToNames = new Dictionary<Type, Tuple<string, string>>();
-            m_namesToType = new Dictionary<string, Dictionary<string, Type>>();
+            m_typeToNames = [];
+            m_namesToType = [];
 
             foreach (Type type in typesToResolve)
             {
@@ -142,7 +142,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
                 if (m_namesToType.ContainsKey(typeNamespace) == false)
                 {
-                    m_namesToType[typeNamespace] = new Dictionary<string, Type>();
+                    m_namesToType[typeNamespace] = [];
                 }
                 m_namesToType[typeNamespace][typeName] = type;
             }

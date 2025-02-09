@@ -22,8 +22,8 @@ public sealed class MapCategoricalFeaturesTransformer : ICsvRowTransformer
     /// </summary>
     public MapCategoricalFeaturesTransformer(params string[] columnsToMap)
     {
-        m_namedFeatureMapping = new Dictionary<string, Dictionary<string, string>>();
-        m_namedCategoricalMapping = new Dictionary<string, int>();
+        m_namedFeatureMapping = [];
+        m_namedCategoricalMapping = [];
         m_columnsToMap = columnsToMap;
     }
 
@@ -41,7 +41,7 @@ public sealed class MapCategoricalFeaturesTransformer : ICsvRowTransformer
         {
             foreach (var column in m_columnsToMap)
             {
-                m_namedFeatureMapping.Add(column, new Dictionary<string, string>());
+                m_namedFeatureMapping.Add(column, []);
                 m_namedCategoricalMapping.Add(column, 0);
             }
         }

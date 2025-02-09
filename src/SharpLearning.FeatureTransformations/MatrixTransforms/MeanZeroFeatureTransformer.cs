@@ -17,7 +17,7 @@ public sealed class MeanZeroFeatureTransformer : IF64MatrixTransform, IF64Vector
     /// </summary>
     public MeanZeroFeatureTransformer()
     {
-        m_featureMean = new Dictionary<int, double>();
+        m_featureMean = [];
     }
 
     /// <summary>

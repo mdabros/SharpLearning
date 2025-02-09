@@ -19,7 +19,7 @@ public sealed class ClassificationAdaBoostModel : IPredictorModel<double>, IPred
     readonly double[] m_modelWeights;
     readonly ClassificationDecisionTreeModel[] m_models;
     readonly double[] m_rawVariableImportance;
-    readonly Dictionary<double, double> m_predictions = new();
+    readonly Dictionary<double, double> m_predictions = [];
 
     /// <summary>
     /// AdaBoost classification model. Consist of a series of tree model and corresponding weights

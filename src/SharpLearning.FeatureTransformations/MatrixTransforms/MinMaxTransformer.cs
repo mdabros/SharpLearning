@@ -31,7 +31,7 @@ public sealed class MinMaxTransformer : IF64MatrixTransform, IF64VectorTransform
     public MinMaxTransformer(double min, double max)
     {
         if (max <= min) { throw new ArgumentException("Max: " + max + "must be larger than Min: " + min); }
-        m_featureMinMax = new Dictionary<int, FeatureMinMax>();
+        m_featureMinMax = [];
 
         m_min = min;
         m_max = max;

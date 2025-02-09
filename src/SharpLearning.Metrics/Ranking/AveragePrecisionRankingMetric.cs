@@ -10,7 +10,7 @@ namespace SharpLearning.Metrics.Ranking;
 public sealed class AveragePrecisionRankingMetric<T> : IRankingMetric<T>
 {
     readonly int m_k;
-    readonly HashSet<T> m_workTargets = new();
+    readonly HashSet<T> m_workTargets = [];
 
     /// <summary>
     /// Takes the top k predictions to consider

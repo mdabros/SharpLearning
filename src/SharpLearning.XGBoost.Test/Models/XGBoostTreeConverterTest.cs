@@ -133,8 +133,8 @@ public class XGBoostTreeConverterTest
 			12:leaf=-0.0020202,cover=98
 		6:leaf=0.3,cover=2";
 
-    static readonly List<GBMNode> m_tree1Nodes = new()
-    {
+    static readonly List<GBMNode> m_tree1Nodes =
+    [
        /*-1*/ new GBMNode
         {
             FeatureIndex = -1,
@@ -202,7 +202,7 @@ public class XGBoostTreeConverterTest
             LeftIndex = -1,
             RightIndex = -1
         },
-    };
+    ];
 
     const string m_tree2 = @"booster[10]
 0:[f2<2.545] yes=1,no=2,missing=1,gain=46.9086,cover=214
@@ -219,8 +219,8 @@ public class XGBoostTreeConverterTest
 			11:leaf=0.0257847,cover=54
 			12:leaf=-0.00524031,cover=98";
 
-    static readonly List<GBMNode> m_tree2Nodes = new()
-    {
+    static readonly List<GBMNode> m_tree2Nodes =
+    [
        /*-1*/ new GBMNode
         {
             FeatureIndex = -1,
@@ -288,5 +288,5 @@ public class XGBoostTreeConverterTest
             LeftIndex = -1,
             RightIndex = -1
         },
-    };
+    ];
 }

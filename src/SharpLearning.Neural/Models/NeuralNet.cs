@@ -28,7 +28,7 @@ public sealed class NeuralNet
     public NeuralNet(Initialization initialization = Initialization.GlorotUniform)
     {
         m_initialization = initialization;
-        Layers = new List<ILayer>();
+        Layers = [];
     }
 
     /// <summary>
