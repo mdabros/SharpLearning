@@ -7,41 +7,40 @@ using SharpLearning.DecisionTrees.ImpurityCalculators;
 using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.InputOutput.Csv;
 
-namespace SharpLearning.DecisionTrees.Test.SplitSearchers
+namespace SharpLearning.DecisionTrees.Test.SplitSearchers;
+
+[TestClass]
+public class RandomSplitSearcherTest
 {
-    [TestClass]
-    public class RandomSplitSearcherTest
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void OnlyUniqueThresholdsSplitSearcher_MinimumSplitSize()
     {
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void OnlyUniqueThresholdsSplitSearcher_MinimumSplitSize()
-        {
-            new RandomSplitSearcher(-1, 42);
-        }
+        new RandomSplitSearcher(-1, 42);
+    }
 
-        [TestMethod]
-        public void RandomSplitSearcher_FindBestSplit()
-        {
-            var parser = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
-            var feature = parser.EnumerateRows("AptitudeTestScore").ToF64Vector();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            var interval = Interval1D.Create(0, feature.Length);
+    [TestMethod]
+    public void RandomSplitSearcher_FindBestSplit()
+    {
+        var parser = new CsvParser(() => new StringReader(DataSetUtilities.AptitudeData));
+        var feature = parser.EnumerateRows("AptitudeTestScore").ToF64Vector();
+        var targets = parser.EnumerateRows("Pass").ToF64Vector();
+        var interval = Interval1D.Create(0, feature.Length);
 
-            Array.Sort(feature, targets);
+        Array.Sort(feature, targets);
 
-            var impurityCalculator = new GiniClassificationImpurityCalculator();
-            impurityCalculator.Init(targets.Distinct().ToArray(), targets, new double[0], interval);
-            var impurity = impurityCalculator.NodeImpurity();
+        var impurityCalculator = new GiniClassificationImpurityCalculator();
+        impurityCalculator.Init(targets.Distinct().ToArray(), targets, [], interval);
+        var impurity = impurityCalculator.NodeImpurity();
 
-            var sut = new RandomSplitSearcher(1, 42);
+        var sut = new RandomSplitSearcher(1, 42);
 
-            var actual = sut.FindBestSplit(impurityCalculator, feature, targets,
-                interval, impurity);
+        var actual = sut.FindBestSplit(impurityCalculator, feature, targets,
+            interval, impurity);
 
-            var expected = new SplitResult(15, 3.6724258636461693, 0.037941545633853213,
-                0.39111111111111119, 0.49586776859504134);
+        var expected = new SplitResult(15, 3.6724258636461693, 0.037941545633853213,
+            0.39111111111111119, 0.49586776859504134);
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
     }
 }

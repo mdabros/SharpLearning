@@ -1,23 +1,22 @@
-﻿namespace SharpLearning.DecisionTrees.Nodes
+﻿namespace SharpLearning.DecisionTrees.Nodes;
+
+/// <summary>
+/// 
+/// </summary>
+public enum NodePositionType
 {
     /// <summary>
     /// 
     /// </summary>
-    public enum NodePositionType
-    {
-        /// <summary>
-        /// 
-        /// </summary>
-        Root,
+    Root,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Left,
+    /// <summary>
+    /// 
+    /// </summary>
+    Left,
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Right
-    }
+    /// <summary>
+    /// 
+    /// </summary>
+    Right
 }

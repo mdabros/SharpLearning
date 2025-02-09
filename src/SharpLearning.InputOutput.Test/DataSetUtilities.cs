@@ -1,8 +1,8 @@
-﻿namespace SharpLearning.InputOutput.Test
+﻿namespace SharpLearning.InputOutput.Test;
+
+public static class DataSetUtilities
 {
-    public static class DataSetUtilities
-    {
-        public const string AptitudeData =
+    public const string AptitudeData =
 @"AptitudeTestScore;PreviousExperience_month;Pass
 5;6;0
 1;15;0
@@ -31,7 +31,7 @@
 1;8;0
 5;12;0";
 
-        public const string TimeData1 =
+    public const string TimeData1 =
 @"Date;Open;High;Low;Close;Volume;Adj Close
 2014-04-29;38.01;39.68;36.80;38.00;294200;38.00
 2014-04-28;38.26;39.36;37.30;37.83;361900;37.83
@@ -54,7 +54,7 @@
 2014-04-02;38.66;38.84;38.04;38.56;398200;38.56
 2014-04-01;37.21;38.65;36.58;38.49;410900;38.49";
 
-        public const string TimeData2 =
+    public const string TimeData2 =
 @"Date;Open;High;Low;Close;Volume;Adj Close
 2014-05-05;20.89;20.99;20.55;20.89;62200;20.89
 2014-05-02;21.08;21.50;20.85;21.09;76600;21.09
@@ -81,7 +81,7 @@
 2014-04-02;23.70;23.92;23.51;23.88;74700;23.88
 2014-04-01;23.34;23.87;23.13;23.75;146100;23.75";
 
-        public const string TimeData21 =
+    public const string TimeData21 =
 @"Date;OpenOther;High;Low;CloseOther;Volume;Adj Close
 2014-05-05;20.89;20.99;20.55;20.89;62200;20.89
 2014-05-02;21.08;21.50;20.85;21.09;76600;21.09
@@ -108,5 +108,4 @@
 2014-04-02;23.70;23.92;23.51;23.88;74700;23.88
 2014-04-01;23.34;23.87;23.13;23.75;146100;23.75";
 
-    }
 }

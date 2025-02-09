@@ -6,83 +6,82 @@ using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
 using SharpLearning.Metrics.Regression;
 
-namespace SharpLearning.Ensemble.Test.Learners
+namespace SharpLearning.Ensemble.Test.Learners;
+
+[TestClass]
+public class RegressionEnsembleLearnerTest
 {
-    [TestClass]
-    public class RegressionEnsembleLearnerTest
+    [TestMethod]
+    public void RegressionEnsembleLearner_Learn()
     {
-        [TestMethod]
-        public void RegressionEnsembleLearner_Learn()
+        var learners = new IIndexedLearner<double>[]
         {
-            var learners = new IIndexedLearner<double>[]
-            {
-                new RegressionDecisionTreeLearner(2),
-                new RegressionDecisionTreeLearner(5),
-                new RegressionDecisionTreeLearner(7),
-                new RegressionDecisionTreeLearner(9)
-            };
+            new RegressionDecisionTreeLearner(2),
+            new RegressionDecisionTreeLearner(5),
+            new RegressionDecisionTreeLearner(7),
+            new RegressionDecisionTreeLearner(9)
+        };
 
-            var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
+        var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
 
-            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+        var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
-            var model = sut.Learn(observations, targets);
-            var predictions = model.Predict(observations);
+        var model = sut.Learn(observations, targets);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var actual = evaluator.Error(targets, predictions);
+        var evaluator = new MeanSquaredErrorRegressionMetric();
+        var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.021845326201904366, actual, 0.0001);
-        }
+        Assert.AreEqual(0.021845326201904366, actual, 0.0001);
+    }
 
-        [TestMethod]
-        public void RegressionEnsembleLearner_Learn_Bagging()
+    [TestMethod]
+    public void RegressionEnsembleLearner_Learn_Bagging()
+    {
+        var learners = new IIndexedLearner<double>[]
         {
-            var learners = new IIndexedLearner<double>[]
-            {
-                new RegressionDecisionTreeLearner(2),
-                new RegressionDecisionTreeLearner(5),
-                new RegressionDecisionTreeLearner(7),
-                new RegressionDecisionTreeLearner(9)
-            };
+            new RegressionDecisionTreeLearner(2),
+            new RegressionDecisionTreeLearner(5),
+            new RegressionDecisionTreeLearner(7),
+            new RegressionDecisionTreeLearner(9)
+        };
 
-            var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy(), 0.7);
+        var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy(), 0.7);
 
-            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+        var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
-            var model = sut.Learn(observations, targets);
-            var predictions = model.Predict(observations);
+        var model = sut.Learn(observations, targets);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var actual = evaluator.Error(targets, predictions);
+        var evaluator = new MeanSquaredErrorRegressionMetric();
+        var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.0318163057544871, actual, 0.0001);
-        }
+        Assert.AreEqual(0.0318163057544871, actual, 0.0001);
+    }
 
-        [TestMethod]
-        public void RegressionEnsembleLearner_Learn_Indexed()
+    [TestMethod]
+    public void RegressionEnsembleLearner_Learn_Indexed()
+    {
+        var learners = new IIndexedLearner<double>[]
         {
-            var learners = new IIndexedLearner<double>[]
-            {
-                new RegressionDecisionTreeLearner(2),
-                new RegressionDecisionTreeLearner(5),
-                new RegressionDecisionTreeLearner(7),
-                new RegressionDecisionTreeLearner(9)
-            };
+            new RegressionDecisionTreeLearner(2),
+            new RegressionDecisionTreeLearner(5),
+            new RegressionDecisionTreeLearner(7),
+            new RegressionDecisionTreeLearner(9)
+        };
 
-            var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
+        var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
 
-            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+        var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
 
-            var indices = Enumerable.Range(0, 25).ToArray();
+        var indices = Enumerable.Range(0, 25).ToArray();
 
-            var model = sut.Learn(observations, targets, indices);
-            var predictions = model.Predict(observations);
+        var model = sut.Learn(observations, targets, indices);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new MeanSquaredErrorRegressionMetric();
-            var actual = evaluator.Error(targets, predictions);
+        var evaluator = new MeanSquaredErrorRegressionMetric();
+        var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.13909386278812202, actual, 0.0001);
-        }
+        Assert.AreEqual(0.13909386278812202, actual, 0.0001);
     }
 }

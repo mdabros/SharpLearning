@@ -1,42 +1,42 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.XGBoost.Models;
 
-namespace SharpLearning.XGBoost.Test.Models
+namespace SharpLearning.XGBoost.Test.Models;
+
+[TestClass]
+public class FeatureImportanceParserTest
 {
-    [TestClass]
-    public class FeatureImportanceParserTest
+    readonly double m_delta = 0.0000001;
+
+    [TestMethod]
+    public void FeatureImportanceParser_Parse()
     {
-        readonly double m_delta = 0.0000001;
+        var actual = FeatureImportanceParser.ParseFromTreeDump(m_textTrees, 9);
 
-        [TestMethod]
-        public void FeatureImportanceParser_Parse()
+        var expected = new double[]
         {
-            var actual = FeatureImportanceParser.ParseFromTreeDump(m_textTrees, 9);
+            29.94274,
+            0,
+            624.692,
+            0,
+            12.9966,
+            43.939899999999994,
+            134.3104,
+            0,
+            19.014670000000002
+        };
 
-            var expected = new double[]
-            {
-                29.94274,
-                0,
-                624.692,
-                0,
-                12.9966,
-                43.939899999999994,
-                134.3104,
-                0,
-                19.014670000000002
-            };
+        Assert.AreEqual(expected.Length, actual.Length);
 
-            Assert.AreEqual(expected.Length, actual.Length);
+        for (var i = 0; i < expected.Length; i++)
+        {
+            Assert.AreEqual(expected[i], actual[i], m_delta);
+        }
+    }
 
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], actual[i], m_delta);
-            }
-        }    
+    readonly string[] m_textTrees = [m_tree1, m_tree2];
 
-        readonly string[] m_textTrees = new string[] { m_tree1, m_tree2 };
-
-        static readonly string m_tree1 = @"booster[0]
+    const string m_tree1 = @"booster[0]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=343.922,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=74.1261,cover=61
 		3:[f8<0.13] yes=7,no=8,missing=7,gain=10.7401,cover=37
@@ -52,7 +52,7 @@ namespace SharpLearning.XGBoost.Test.Models
 		6:leaf=0.3,cover=2";
 
 
-        static readonly string m_tree2 = @"booster[1]
+    const string m_tree2 = @"booster[1]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=280.77,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=60.1843,cover=61
 		3:[f8<0.13] yes=7,no=8,missing=7,gain=8.27457,cover=37
@@ -66,5 +66,4 @@ namespace SharpLearning.XGBoost.Test.Models
 			11:leaf=0.0475977,cover=53
 			12:leaf=-0.00182022,cover=98
 		6:leaf=0.28,cover=2";
-    }
 }

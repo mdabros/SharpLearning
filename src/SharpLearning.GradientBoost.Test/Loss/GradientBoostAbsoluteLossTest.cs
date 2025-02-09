@@ -2,79 +2,78 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.GradientBoost.Loss;
 
-namespace SharpLearning.GradientBoost.Test.Loss
+namespace SharpLearning.GradientBoost.Test.Loss;
+
+[TestClass]
+public class GradientBoostAbsoluteLossTest
 {
-    [TestClass]
-    public class GradientBoostAbsoluteLossTest
+    [TestMethod]
+    public void GBMAbsoluteLoss_InitializeLoss()
     {
-        [TestMethod]
-        public void GBMAbsoluteLoss_InitializeLoss()
-        {
-            var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var sut = new GradientBoostAbsoluteLoss();
+        var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var sut = new GradientBoostAbsoluteLoss();
 
-            var actual = sut.InitialLoss(targets, targets.Select(t => true).ToArray());
-            Assert.AreEqual(5.0, actual);
-        }
+        var actual = sut.InitialLoss(targets, targets.Select(t => true).ToArray());
+        Assert.AreEqual(5.0, actual);
+    }
 
-        [TestMethod]
-        public void GBMAbsoluteLoss_UpdateResiduals()
-        {
-            var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var predictions = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-            var actual = new double[targets.Length];
-            var sut = new GradientBoostAbsoluteLoss();
+    [TestMethod]
+    public void GBMAbsoluteLoss_UpdateResiduals()
+    {
+        var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var predictions = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
+        var actual = new double[targets.Length];
+        var sut = new GradientBoostAbsoluteLoss();
 
-            sut.UpdateResiduals(targets, predictions, actual, targets.Select(t => true).ToArray());
+        sut.UpdateResiduals(targets, predictions, actual, targets.Select(t => true).ToArray());
 
-            var expected = new double[] { -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0 };
-            CollectionAssert.AreEqual(expected, actual);
-        }
+        var expected = new double[] { -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0 };
+        CollectionAssert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void GBMAbsoluteLoss_UpdateResiduals_Indexed()
-        {
-            var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var predictions = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
-            var actual = new double[targets.Length];
-            var inSample = new bool[] { true, false, true, false, true, false, true, false, true };
-            var sut = new GradientBoostAbsoluteLoss();
+    [TestMethod]
+    public void GBMAbsoluteLoss_UpdateResiduals_Indexed()
+    {
+        var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var predictions = new double[] { 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0 };
+        var actual = new double[targets.Length];
+        var inSample = new bool[] { true, false, true, false, true, false, true, false, true };
+        var sut = new GradientBoostAbsoluteLoss();
 
-            sut.UpdateResiduals(targets, predictions, actual, inSample);
+        sut.UpdateResiduals(targets, predictions, actual, inSample);
 
-            var expected = new double[] { -1.0, 0.0, -1.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0 };
-            CollectionAssert.AreEqual(expected, actual);
-        }
+        var expected = new double[] { -1.0, 0.0, -1.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0 };
+        CollectionAssert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void GBMAbsoluteLoss_UpdatedLeafValue()
-        {
-            var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var predictions = new double[] { 2.0, 1.0, 4.0, 3.0, 4.0, 5.0, 8.0, 9.0, 1.0 };
-            var inSample = new bool[] { true, true, true, true, true, true, true, true, true };
-            var sut = new GradientBoostAbsoluteLoss();
+    [TestMethod]
+    public void GBMAbsoluteLoss_UpdatedLeafValue()
+    {
+        var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var predictions = new double[] { 2.0, 1.0, 4.0, 3.0, 4.0, 5.0, 8.0, 9.0, 1.0 };
+        var inSample = new bool[] { true, true, true, true, true, true, true, true, true };
+        var sut = new GradientBoostAbsoluteLoss();
 
-            var actual = sut.UpdatedLeafValue(0.0, targets, predictions, inSample);
-            Assert.AreEqual(1.0, actual, 0.001);
-        }
+        var actual = sut.UpdatedLeafValue(0.0, targets, predictions, inSample);
+        Assert.AreEqual(1.0, actual, 0.001);
+    }
 
-        [TestMethod]
-        public void GBMAbsoluteLoss_UpdatedLeafValue_Indexed()
-        {
-            var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var predictions = new double[] { 2.0, 1.0, 4.0, 3.0, 4.0, 5.0, 8.0, 9.0, 1.0 };
-            var inSample = new bool[] { true, false, true, false, true, false, true, false, true };
-            var sut = new GradientBoostAbsoluteLoss();
+    [TestMethod]
+    public void GBMAbsoluteLoss_UpdatedLeafValue_Indexed()
+    {
+        var targets = new double[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        var predictions = new double[] { 2.0, 1.0, 4.0, 3.0, 4.0, 5.0, 8.0, 9.0, 1.0 };
+        var inSample = new bool[] { true, false, true, false, true, false, true, false, true };
+        var sut = new GradientBoostAbsoluteLoss();
 
-            var actual = sut.UpdatedLeafValue(0.0, targets, predictions, inSample);
-            Assert.AreEqual(-1.0, actual, 0.001);
-        }
+        var actual = sut.UpdatedLeafValue(0.0, targets, predictions, inSample);
+        Assert.AreEqual(-1.0, actual, 0.001);
+    }
 
-        [TestMethod]
-        public void GBMAbsoluteLoss_UpdateLeafValues()
-        {
-            var sut = new GradientBoostAbsoluteLoss();
-            Assert.IsTrue(sut.UpdateLeafValues());
-        }
+    [TestMethod]
+    public void GBMAbsoluteLoss_UpdateLeafValues()
+    {
+        var sut = new GradientBoostAbsoluteLoss();
+        Assert.IsTrue(sut.UpdateLeafValues());
     }
 }

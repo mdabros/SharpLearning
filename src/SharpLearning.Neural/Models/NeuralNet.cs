@@ -6,226 +6,225 @@ using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Layers;
 
-namespace SharpLearning.Neural
+namespace SharpLearning.Neural.Models;
+
+/// <summary>
+/// Neural net consisting of a set of layers.
+/// </summary>
+[Serializable]
+public sealed class NeuralNet
 {
     /// <summary>
-    /// Neural net consisting of a set of layers.
+    /// The layers in the network
     /// </summary>
-    [Serializable]
-    public sealed class NeuralNet
+    public readonly List<ILayer> Layers;
+
+    readonly Initialization m_initialization;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="initialization">Initialization type for the layers with weights (default is GlorotUniform)</param>
+    public NeuralNet(Initialization initialization = Initialization.GlorotUniform)
     {
-        /// <summary>
-        /// The layers in the network
-        /// </summary>
-        public readonly List<ILayer> Layers;
+        m_initialization = initialization;
+        Layers = [];
+    }
 
-        readonly Initialization m_initialization;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="layers"></param>
+    NeuralNet(List<ILayer> layers)
+    {
+        Layers = layers ?? throw new ArgumentNullException(nameof(layers));
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="initialization">Initialization type for the layers with weights (default is GlorotUniform)</param>
-        public NeuralNet(Initialization initialization = Initialization.GlorotUniform)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="layer"></param>
+    public void Add(ILayer layer)
+    {
+        var unitsOfPreviousLayer = 0;
+        if (Layers.Count > 0)
         {
-            m_initialization = initialization;
-            Layers = new List<ILayer>();
+            unitsOfPreviousLayer = Layers[Layers.Count - 1].Width;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="layers"></param>
-        private NeuralNet(List<ILayer> layers)
+        if (layer is IOutputLayer)
         {
-            Layers = layers ?? throw new ArgumentNullException(nameof(layers));
+            var denseLayer = new DenseLayer(layer.Depth, Activation.Undefined);
+            Layers.Add(denseLayer);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="layer"></param>
-        public void Add(ILayer layer)
+        Layers.Add(layer);
+
+        if (layer is IBatchNormalizable normalizable) // consider adding separate interface for batch normalization
         {
-            var unitsOfPreviousLayer = 0;
-            if(Layers.Count > 0)
+            if (normalizable.BatchNormalization)
             {
-                unitsOfPreviousLayer = Layers[Layers.Count - 1].Width;
-            }
-
-            if(layer is IOutputLayer)
-            {
-                var denseLayer = new DenseLayer(layer.Depth, Activation.Undefined);
-                Layers.Add(denseLayer);
-            }
-
-            Layers.Add(layer);
-
-            if(layer is IBatchNormalizable) // consider adding separate interface for batch normalization
-            {
-                if(((IBatchNormalizable)layer).BatchNormalization)
-                {
-                    Layers.Add(new BatchNormalizationLayer());
-                }
-            }
-
-            if(layer.ActivationFunc != Activation.Undefined)
-            {
-                Layers.Add(new ActivationLayer(layer.ActivationFunc));
+                Layers.Add(new BatchNormalizationLayer());
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="delta"></param>
-        public void Backward(Matrix<float> delta)
+        if (layer.ActivationFunc != Activation.Undefined)
         {
-            for (int i = Layers.Count; i-- > 0;)
+            Layers.Add(new ActivationLayer(layer.ActivationFunc));
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="delta"></param>
+    public void Backward(Matrix<float> delta)
+    {
+        for (var i = Layers.Count; i-- > 0;)
+        {
+            delta = Layers[i].Backward(delta);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public Matrix<float> Forward(Matrix<float> input)
+    {
+        var activation = Layers[0].Forward(input);
+        for (var i = 1; i < Layers.Count; i++)
+        {
+            activation = Layers[i].Forward(activation);
+        }
+
+        return activation;
+    }
+
+
+    /// <summary>
+    /// Forwards each observations from input and stores the results in output.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="output"></param>
+    public void Forward(Matrix<float> input, Matrix<float> output)
+    {
+        var row = Matrix<float>.Build.Dense(1, input.ColumnCount);
+        for (var rowIndex = 0; rowIndex < input.RowCount; rowIndex++)
+        {
+            input.Row(rowIndex, row.Data());
+            var prediction = Forward(row);
+
+            for (var col = 0; col < prediction.ColumnCount; col++)
             {
-                delta = Layers[i].Backward(delta);                
+                output[rowIndex, col] = prediction[0, col];
             }
         }
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
-        public Matrix<float> Forward(Matrix<float> input)
+    /// <summary>
+    /// Initializes the layers in the neural net (Instantiates members and creates random initialization of weights). 
+    /// </summary>
+    /// <param name="batchSize"></param>
+    /// <param name="random"></param>
+    public void Initialize(int batchSize, Random random)
+    {
+        if (Layers.First() is not InputLayer)
         {
-            var activation = Layers[0].Forward(input);
-            for (int i = 1; i < Layers.Count; i++)
-            {
-                activation = Layers[i].Forward(activation);
-            }
-
-            return activation;
+            throw new ArgumentException("First layer must be InputLayer. Was: " +
+                Layers.First().GetType().Name);
         }
 
-
-        /// <summary>
-        /// Forwards each observations from input and stores the results in output.
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="output"></param>
-        public void Forward(Matrix<float> input, Matrix<float> output)
+        if (Layers.Last() is not IOutputLayer)
         {
-            var row = Matrix<float>.Build.Dense(1, input.ColumnCount);
-            for (int rowIndex = 0; rowIndex < input.RowCount; rowIndex++)
-            {
-                input.Row(rowIndex, row.Data());
-                var prediction = Forward(row);
-
-                for (int col = 0; col < prediction.ColumnCount; col++)
-                {
-                    output[rowIndex, col] = prediction[0, col];
-                }
-            }
+            throw new ArgumentException("Last layer must be an output layer type. Was: " +
+                Layers.Last().GetType().Name);
         }
 
-        /// <summary>
-        /// Initializes the layers in the neural net (Instantiates members and creates random initialization of weights). 
-        /// </summary>
-        /// <param name="batchSize"></param>
-        /// <param name="random"></param>
-        public void Initialize(int batchSize, Random random)
+        for (var i = 1; i < Layers.Count; i++)
         {
-            if (!(Layers.First() is InputLayer))
-            {
-                throw new ArgumentException("First layer must be InputLayer. Was: " + 
-                    Layers.First().GetType().Name);
-            }
+            var previousLayer = Layers[i - 1];
+            Layers[i].Initialize(previousLayer.Width, previousLayer.Height,
+                previousLayer.Depth, batchSize, m_initialization, random);
+        }
+    }
 
-            if(!(Layers.Last() is IOutputLayer))
-            {
-                throw new ArgumentException("Last layer must be an output layer type. Was: " + 
-                    Layers.Last().GetType().Name);
-            }
+    /// <summary>
+    /// Returns all parameters and gradients from the net.
+    /// </summary>
+    public List<ParametersAndGradients> GetParametersAndGradients()
+    {
+        var paramtersAndGradients = new List<ParametersAndGradients>();
+        Layers.ForEach(l => l.AddParameresAndGradients(paramtersAndGradients));
+        return paramtersAndGradients;
+    }
 
-            for (int i = 1; i < Layers.Count; i++)
-            {
-                var previousLayer = Layers[i - 1];
-                Layers[i].Initialize(previousLayer.Width, previousLayer.Height, 
-                    previousLayer.Depth, batchSize, m_initialization, random);
-            }
+    /// <summary>
+    /// Variable importance is currently not supported by Neural Net.
+    /// Returns 0.0 for all features.
+    /// </summary>
+    /// <returns></returns>
+    public double[] GetRawVariableImportance()
+    {
+        var inputlayer = Layers.First();
+        return new double[inputlayer.Width * inputlayer.Height * inputlayer.Depth];
+    }
+
+    /// <summary>
+    /// Variable importance is currently not supported by Neural Net.
+    /// Returns 0.0 for all features.
+    /// </summary>
+    /// <param name="featureNameToIndex"></param>
+    /// <returns></returns>
+    public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
+    {
+        var rawVariableImportance = GetRawVariableImportance();
+
+        return featureNameToIndex.ToDictionary(kvp => kvp.Key, kvp => rawVariableImportance[kvp.Value])
+            .OrderByDescending(kvp => kvp.Value)
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
+    /// <summary>
+    /// Copies a minimal version of the neural net to be used in a model for predictions.
+    /// </summary>
+    public NeuralNet CopyNetForPredictionModel()
+    {
+        var layers = new List<ILayer>();
+        foreach (var layer in Layers)
+        {
+            layer.CopyLayerForPredictionModel(layers);
         }
 
-        /// <summary>
-        /// Returns all parameters and gradients from the net.
-        /// </summary>
-        public List<ParametersAndGradients> GetParametersAndGradients()
+        return NeuralNet.CreateNetFromInitializedLayers(layers);
+    }
+
+    /// <summary>
+    /// Creates a neural net from already initialized layers. 
+    /// This means that layer.Initialize will not be called.
+    /// </summary>
+    /// <param name="layers"></param>
+    /// <returns></returns>
+    public static NeuralNet CreateNetFromInitializedLayers(List<ILayer> layers)
+    {
+        return new NeuralNet(layers);
+    }
+
+    /// <summary>
+    /// Outputs a string representation of the neural net.
+    /// Neural net must be initialized before the dimensions are correct.
+    /// </summary>
+    /// <returns></returns>
+    public string GetLayerDimensions()
+    {
+        var dimensions = string.Empty;
+        foreach (var layer in Layers)
         {
-            var paramtersAndGradients = new List<ParametersAndGradients>();
-            Layers.ForEach(l => l.AddParameresAndGradients(paramtersAndGradients));
-            return paramtersAndGradients;
+            dimensions += $"{layer.GetType().Name}: {layer.Width}x{layer.Height}x{layer.Depth}"
+                + Environment.NewLine;
         }
 
-        /// <summary>
-        /// Variable importance is currently not supported by Neural Net.
-        /// Returns 0.0 for all features.
-        /// </summary>
-        /// <returns></returns>
-        public double[] GetRawVariableImportance()
-        {
-            var inputlayer = Layers.First();
-            return new double[inputlayer.Width * inputlayer.Height * inputlayer.Depth];
-        }
-
-        /// <summary>
-        /// Variable importance is currently not supported by Neural Net.
-        /// Returns 0.0 for all features.
-        /// </summary>
-        /// <param name="featureNameToIndex"></param>
-        /// <returns></returns>
-        public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
-        {
-            var rawVariableImportance = GetRawVariableImportance();
-
-            return featureNameToIndex.ToDictionary(kvp => kvp.Key, kvp => rawVariableImportance[kvp.Value])
-                .OrderByDescending(kvp => kvp.Value)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-        }
-
-        /// <summary>
-        /// Copies a minimal version of the neural net to be used in a model for predictions.
-        /// </summary>
-        public NeuralNet CopyNetForPredictionModel()
-        {
-            var layers = new List<ILayer>();
-            foreach (var layer in Layers)
-            {
-                layer.CopyLayerForPredictionModel(layers);
-            }
-
-            return NeuralNet.CreateNetFromInitializedLayers(layers);
-        }
-
-        /// <summary>
-        /// Creates a neural net from already initialized layers. 
-        /// This means that layer.Initialize will not be called.
-        /// </summary>
-        /// <param name="layers"></param>
-        /// <returns></returns>
-        public static NeuralNet CreateNetFromInitializedLayers(List<ILayer> layers)
-        {
-            return new NeuralNet(layers);
-        }
-
-        /// <summary>
-        /// Outputs a string representation of the neural net.
-        /// Neural net must be initialized before the dimensions are correct.
-        /// </summary>
-        /// <returns></returns>
-        public string GetLayerDimensions()
-        {
-            var dimensions = string.Empty;
-            foreach (var layer in Layers)
-            {
-                dimensions += $"{layer.GetType().Name}: {layer.Width}x{layer.Height}x{layer.Depth}" 
-                    + Environment.NewLine;
-            }
-
-            return dimensions;
-        }
+        return dimensions;
     }
 }

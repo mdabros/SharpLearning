@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace SharpLearning.XGBoost
+namespace SharpLearning.XGBoost;
+
+/// <summary>
+/// 
+/// </summary>
+public static class NormalizeTypeExtensions
 {
     /// <summary>
-    /// 
+    /// Convert normalize type to the xgboost parameter string.
     /// </summary>
-    public static class NormalizeTypeExtensions
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static string ToXGBoostString(this NormalizeType type)
     {
-        /// <summary>
-        /// Convert normalize type to the xgboost parameter string.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static string ToXGBoostString(this NormalizeType type)
+        switch (type)
         {
-            switch (type)
-            {
-                case NormalizeType.Tree:
-                    return "tree";
-                case NormalizeType.Forest:
-                    return "forest";
-                default:
-                    throw new ArgumentException("Unknown normalize type: " + type);
-            }
+            case NormalizeType.Tree:
+                return "tree";
+            case NormalizeType.Forest:
+                return "forest";
+            default:
+                throw new ArgumentException("Unknown normalize type: " + type);
         }
     }
 }

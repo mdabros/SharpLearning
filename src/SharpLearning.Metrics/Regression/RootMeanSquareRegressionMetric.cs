@@ -1,36 +1,35 @@
 ﻿using System;
 
-namespace SharpLearning.Metrics.Regression
+namespace SharpLearning.Metrics.Regression;
+
+/// <summary>
+/// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))  
+/// </summary>
+public sealed class RootMeanSquareRegressionMetric : IRegressionMetric
 {
     /// <summary>
     /// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))  
     /// </summary>
-    public sealed class RootMeanSquareRegressionMetric : IRegressionMetric
+    /// <param name="targets"></param>
+    /// <param name="predictions"></param>
+    /// <returns></returns>
+    public double Error(double[] targets, double[] predictions)
     {
-        /// <summary>
-        /// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))  
-        /// </summary>
-        /// <param name="targets"></param>
-        /// <param name="predictions"></param>
-        /// <returns></returns>
-        public double Error(double[] targets, double[] predictions)
+        if (targets.Length != predictions.Length)
         {
-            if (targets.Length != predictions.Length)
-            {
-                throw new ArgumentException("targets and predictions length do not match");
-            }
-
-            var meanSquareError = 0.0;
-            for (int i = 0; i < targets.Length; ++i)
-            {
-                var targetValue = targets[i];
-                var estimate = predictions[i];
-                var error = targetValue - estimate;
-                meanSquareError += error * error;
-            }
-            meanSquareError *= (1.0 / targets.Length);
-
-            return Math.Sqrt(meanSquareError);
+            throw new ArgumentException("targets and predictions length do not match");
         }
+
+        var meanSquareError = 0.0;
+        for (var i = 0; i < targets.Length; ++i)
+        {
+            var targetValue = targets[i];
+            var estimate = predictions[i];
+            var error = targetValue - estimate;
+            meanSquareError += error * error;
+        }
+        meanSquareError *= (1.0 / targets.Length);
+
+        return Math.Sqrt(meanSquareError);
     }
 }

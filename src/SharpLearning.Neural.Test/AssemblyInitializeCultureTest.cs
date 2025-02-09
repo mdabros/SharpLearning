@@ -2,19 +2,18 @@
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SharpLearning.Neural.Test
+namespace SharpLearning.Neural.Test;
+
+[TestClass]
+public static class AssemblyInitializeCultureTest
 {
-    [TestClass]
-    public class AssemblyInitializeCultureTest
+    [AssemblyInitialize]
+    public static void AssemblyInitializeCultureTest_InvariantCulture(TestContext c)
     {
-        [AssemblyInitialize]
-        public static void AssemblyInitializeCultureTest_InvariantCulture(TestContext c)
-        {
-            CultureInfo culture = CultureInfo.InvariantCulture;
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
-            Thread.CurrentThread.CurrentCulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
-        }
+        CultureInfo culture = CultureInfo.InvariantCulture;
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
     }
 }

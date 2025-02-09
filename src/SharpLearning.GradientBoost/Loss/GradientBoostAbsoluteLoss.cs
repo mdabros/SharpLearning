@@ -2,165 +2,164 @@
 using SharpLearning.Containers.Extensions;
 using SharpLearning.GradientBoost.GBMDecisionTree;
 
-namespace SharpLearning.GradientBoost.Loss
+namespace SharpLearning.GradientBoost.Loss;
+
+/// <summary>
+/// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations. 
+/// This makes LAD robust against outliers.
+/// http://en.wikipedia.org/wiki/Least_absolute_deviations
+/// </summary>
+public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
 {
     /// <summary>
     /// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations. 
-    /// This makes LAD robust against outliers.
+    /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression. 
     /// http://en.wikipedia.org/wiki/Least_absolute_deviations
     /// </summary>
-    public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
+    public GradientBoostAbsoluteLoss()
     {
-        /// <summary>
-        /// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations. 
-        /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression. 
-        /// http://en.wikipedia.org/wiki/Least_absolute_deviations
-        /// </summary>
-        public GradientBoostAbsoluteLoss()
+    }
+
+    /// <summary>
+    /// Initial loss is the median
+    /// </summary>
+    /// <param name="targets"></param>
+    /// <param name="inSample"></param>
+    /// <returns></returns>
+    public double InitialLoss(double[] targets, bool[] inSample)
+    {
+        var values = new List<double>();
+        for (var i = 0; i < inSample.Length; i++)
         {
-        }
-
-        /// <summary>
-        /// Initial loss is the median
-        /// </summary>
-        /// <param name="targets"></param>
-        /// <param name="inSample"></param>
-        /// <returns></returns>
-        public double InitialLoss(double[] targets, bool[] inSample)
-        {
-            var values = new List<double>();
-            for (int i = 0; i < inSample.Length; i++)
+            if (inSample[i])
             {
-                if (inSample[i])
-                {
-                    values.Add(targets[i]);
-                }
-            }
-
-            return values.ToArray().Median();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="targets"></param>
-        /// <param name="residuals"></param>
-        /// <param name="inSample"></param>
-        /// <returns></returns>
-        public GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample)
-        {
-            var splitInfo = GBMSplitInfo.NewEmpty();
-
-            for (int i = 0; i < inSample.Length; i++)
-            {
-                if (inSample[i])
-                {
-                    var residual = residuals[i];
-                    var residual2 = residual * residual;
-
-                    splitInfo.Samples++;
-                    splitInfo.Sum += residual;
-                    splitInfo.SumOfSquares += residual2;
-                }
-            }
-
-            splitInfo.Cost = splitInfo.SumOfSquares - (splitInfo.Sum * splitInfo.Sum / splitInfo.Samples);
-
-            return splitInfo;
-        }
-
-        /// <summary>
-        /// Negative gradient is either 1 or -1 depending on the sign of target minus prediction
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="prediction"></param>
-        /// <returns></returns>
-        public double NegativeGradient(double target, double prediction)
-        {
-            var value = target - prediction;
-            if (value > 0.0)
-            {
-                return 1.0;
-            }
-            else
-            {
-                return -1.0;
+                values.Add(targets[i]);
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="targets"></param>
-        /// <param name="predictions"></param>
-        /// <param name="residuals"></param>
-        /// <param name="inSample"></param>
-        public void UpdateResiduals(double[] targets, double[] predictions, 
-            double[] residuals, bool[] inSample)
+        return values.ToArray().Median();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="targets"></param>
+    /// <param name="residuals"></param>
+    /// <param name="inSample"></param>
+    /// <returns></returns>
+    public GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample)
+    {
+        var splitInfo = GBMSplitInfo.NewEmpty();
+
+        for (var i = 0; i < inSample.Length; i++)
         {
-            for (int i = 0; i < residuals.Length; i++)
+            if (inSample[i])
             {
-                if(inSample[i])
-                {
-                    residuals[i] = NegativeGradient(targets[i], predictions[i]);
-                }
+                var residual = residuals[i];
+                var residual2 = residual * residual;
+
+                splitInfo.Samples++;
+                splitInfo.Sum += residual;
+                splitInfo.SumOfSquares += residual2;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <param name="target"></param>
-        /// <param name="residual"></param>
-        public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right, 
-            double target, double residual)
+        splitInfo.Cost = splitInfo.SumOfSquares - (splitInfo.Sum * splitInfo.Sum / splitInfo.Samples);
+
+        return splitInfo;
+    }
+
+    /// <summary>
+    /// Negative gradient is either 1 or -1 depending on the sign of target minus prediction
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="prediction"></param>
+    /// <returns></returns>
+    public double NegativeGradient(double target, double prediction)
+    {
+        var value = target - prediction;
+        if (value > 0.0)
         {
-            var residual2 = residual * residual;
-
-            left.Samples++;
-            left.Sum += residual;
-            left.SumOfSquares += residual2;
-            left.Cost = left.SumOfSquares - (left.Sum * left.Sum / left.Samples);
-
-            right.Samples--;
-            right.Sum -= residual;
-            right.SumOfSquares -= residual2;
-            right.Cost = right.SumOfSquares - (right.Sum * right.Sum / right.Samples);
+            return 1.0;
         }
-
-        /// <summary>
-        /// Leaf values are updated using the median of the difference between target and prediction
-        /// </summary>
-        /// <param name="currentLeafValue"></param>
-        /// <param name="targets"></param>
-        /// <param name="predictions"></param>
-        /// <param name="inSample"></param>
-        /// <returns></returns>
-        public double UpdatedLeafValue(double currentLeafValue, double[] targets, 
-            double[] predictions, bool[] inSample)
+        else
         {
-            var values = new List<double>();
+            return -1.0;
+        }
+    }
 
-            for (int i = 0; i < inSample.Length; i++)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="targets"></param>
+    /// <param name="predictions"></param>
+    /// <param name="residuals"></param>
+    /// <param name="inSample"></param>
+    public void UpdateResiduals(double[] targets, double[] predictions,
+        double[] residuals, bool[] inSample)
+    {
+        for (var i = 0; i < residuals.Length; i++)
+        {
+            if (inSample[i])
             {
-                if (inSample[i])
-                {
-                    values.Add(targets[i] - predictions[i]);
-                }
+                residuals[i] = NegativeGradient(targets[i], predictions[i]);
             }
-
-            return values.ToArray().Median();
         }
+    }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool UpdateLeafValues()
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="right"></param>
+    /// <param name="target"></param>
+    /// <param name="residual"></param>
+    public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right,
+        double target, double residual)
+    {
+        var residual2 = residual * residual;
+
+        left.Samples++;
+        left.Sum += residual;
+        left.SumOfSquares += residual2;
+        left.Cost = left.SumOfSquares - (left.Sum * left.Sum / left.Samples);
+
+        right.Samples--;
+        right.Sum -= residual;
+        right.SumOfSquares -= residual2;
+        right.Cost = right.SumOfSquares - (right.Sum * right.Sum / right.Samples);
+    }
+
+    /// <summary>
+    /// Leaf values are updated using the median of the difference between target and prediction
+    /// </summary>
+    /// <param name="currentLeafValue"></param>
+    /// <param name="targets"></param>
+    /// <param name="predictions"></param>
+    /// <param name="inSample"></param>
+    /// <returns></returns>
+    public double UpdatedLeafValue(double currentLeafValue, double[] targets,
+        double[] predictions, bool[] inSample)
+    {
+        var values = new List<double>();
+
+        for (var i = 0; i < inSample.Length; i++)
         {
-            return true;
+            if (inSample[i])
+            {
+                values.Add(targets[i] - predictions[i]);
+            }
         }
+
+        return values.ToArray().Median();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public bool UpdateLeafValues()
+    {
+        return true;
     }
 }

@@ -1,18 +1,17 @@
-﻿namespace SharpLearning.XGBoost
+﻿namespace SharpLearning.XGBoost;
+
+/// <summary>
+/// Sampler type for DART
+/// </summary>
+public enum SamplerType
 {
     /// <summary>
-    /// Sampler type for DART
+    /// Dropped trees are selected uniformly.
     /// </summary>
-    public enum SamplerType
-    {
-        /// <summary>
-        /// Dropped trees are selected uniformly.
-        /// </summary>
-        Uniform,
+    Uniform,
 
-        /// <summary>
-        /// Dropped trees are selected in proportion to weight.
-        /// </summary>
-        Weighted
-    }
+    /// <summary>
+    /// Dropped trees are selected in proportion to weight.
+    /// </summary>
+    Weighted
 }

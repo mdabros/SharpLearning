@@ -1,9 +1,8 @@
-﻿namespace SharpLearning.Neural.Layers
+﻿namespace SharpLearning.Neural.Layers;
+
+/// <summary>
+/// Marker interface for output layers.
+/// </summary>
+public interface IOutputLayer
 {
-    /// <summary>
-    /// Marker interface for output layers.
-    /// </summary>
-    public interface IOutputLayer
-    {
-    }
 }

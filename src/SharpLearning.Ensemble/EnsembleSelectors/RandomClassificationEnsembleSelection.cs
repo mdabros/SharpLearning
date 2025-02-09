@@ -7,114 +7,113 @@ using SharpLearning.Containers.Extensions;
 using SharpLearning.Containers.Views;
 using SharpLearning.Ensemble.Strategies;
 
-namespace SharpLearning.Ensemble.EnsembleSelectors
+namespace SharpLearning.Ensemble.EnsembleSelectors;
+
+/// <summary>
+/// Iterative random selection of ensemble models.
+/// </summary>
+public sealed class RandomClassificationEnsembleSelection : IClassificationEnsembleSelection
 {
+    readonly IMetric<double, ProbabilityPrediction> m_metric;
+    readonly IClassificationEnsembleStrategy m_ensembleStrategy;
+    readonly int m_numberOfModelsToSelect;
+    readonly int m_iterations;
+    readonly bool m_selectWithReplacement;
+    readonly Random m_random;
+    int[] m_allIndices;
+
     /// <summary>
     /// Iterative random selection of ensemble models.
     /// </summary>
-    public sealed class RandomClassificationEnsembleSelection : IClassificationEnsembleSelection
+    /// <param name="metric">Metric to minimize</param>
+    /// <param name="ensembleStrategy">Strategy for ensembling models</param>
+    /// <param name="numberOfModelsToSelect">Number of models to select</param>
+    /// <param name="iterations">Number of iterations to try random selection</param>
+    /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
+    /// This will correspond to weighting the models. If false each model can only be selected once</param>
+    /// <param name="seed"></param>
+    public RandomClassificationEnsembleSelection(
+        IMetric<double, ProbabilityPrediction> metric,
+        IClassificationEnsembleStrategy ensembleStrategy,
+        int numberOfModelsToSelect,
+        int iterations,
+        bool selectWithReplacement,
+        int seed = 42)
     {
-        readonly IMetric<double, ProbabilityPrediction> m_metric;
-        readonly IClassificationEnsembleStrategy m_ensembleStrategy;
-        readonly int m_numberOfModelsToSelect;
-        readonly int m_iterations;
-        readonly bool m_selectWithReplacement;
-        readonly Random m_random;
-        int[] m_allIndices;
+        m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
+        m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
+        if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
+        if (iterations < 1) { throw new ArgumentException("Number of iterations"); }
 
-        /// <summary>
-        /// Iterative random selection of ensemble models.
-        /// </summary>
-        /// <param name="metric">Metric to minimize</param>
-        /// <param name="ensembleStrategy">Strategy for ensembling models</param>
-        /// <param name="numberOfModelsToSelect">Number of models to select</param>
-        /// <param name="iterations">Number of iterations to try random selection</param>
-        /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
-        /// This will correspond to weighting the models. If false each model can only be selected once</param>
-        /// <param name="seed"></param>
-        public RandomClassificationEnsembleSelection(
-            IMetric<double, ProbabilityPrediction> metric, 
-            IClassificationEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect, 
-            int iterations, 
-            bool selectWithReplacement, 
-            int seed = 42)
+        m_numberOfModelsToSelect = numberOfModelsToSelect;
+        m_selectWithReplacement = selectWithReplacement;
+        m_iterations = iterations;
+        m_random = new Random(seed);
+    }
+
+    /// <summary>
+    /// Greedy forward selection of ensemble models.
+    /// </summary>
+    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
+    /// Each row in the matrix corresponds to predictions from a separate model</param>
+    /// <param name="targets">Corresponding targets</param>
+    /// <returns>The indices of the selected model</returns>
+    public int[] Select(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets)
+    {
+        if (crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
         {
-            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
-            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
-            if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
-            if (iterations < 1) { throw new ArgumentException("Number of iterations"); }
-
-            m_numberOfModelsToSelect = numberOfModelsToSelect;
-            m_selectWithReplacement = selectWithReplacement;
-            m_iterations = iterations;
-            m_random = new Random(seed);
+            throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
+                " is smaller than number of models to select: " + m_numberOfModelsToSelect);
         }
 
-        /// <summary>
-        /// Greedy forward selection of ensemble models.
-        /// </summary>
-        /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
-        /// Each row in the matrix corresponds to predictions from a separate model</param>
-        /// <param name="targets">Corresponding targets</param>
-        /// <returns>The indices of the selected model</returns>
-        public int[] Select(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets)
+        m_allIndices = Enumerable.Range(0, crossValidatedModelPredictions.Length).ToArray();
+
+        var rows = crossValidatedModelPredictions.First().Length;
+        var candidateModelMatrix = new ProbabilityPrediction[m_numberOfModelsToSelect][];
+        var candidatePredictions = new ProbabilityPrediction[rows];
+        var candidateModelIndices = new int[m_numberOfModelsToSelect];
+        var bestModelIndices = new int[m_numberOfModelsToSelect];
+
+        var bestError = double.MaxValue;
+
+        for (var i = 0; i < m_iterations; i++)
         {
-            if(crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
+            SelectNextRandomIndices(candidateModelIndices);
+
+            for (var j = 0; j < candidateModelIndices.Length; j++)
             {
-                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
-                    " is smaller than number of models to select: " + m_numberOfModelsToSelect);
+                candidateModelMatrix[j] = crossValidatedModelPredictions[candidateModelIndices[j]];
             }
 
-            m_allIndices = Enumerable.Range(0, crossValidatedModelPredictions.Length).ToArray();
+            m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
+            var error = m_metric.Error(targets, candidatePredictions);
 
-            var rows = crossValidatedModelPredictions.First().Length;
-            var candidateModelMatrix = new ProbabilityPrediction[m_numberOfModelsToSelect][];
-            var candidatePredictions = new ProbabilityPrediction[rows];
-            var candidateModelIndices = new int[m_numberOfModelsToSelect];
-            var bestModelIndices = new int[m_numberOfModelsToSelect];
-
-            var bestError = double.MaxValue;
-
-            for (int i = 0; i < m_iterations; i++)
+            if (error < bestError)
             {
-                SelectNextRandomIndices(candidateModelIndices);
-
-                for (int j = 0; j < candidateModelIndices.Length; j++)
-                {
-                    candidateModelMatrix[j] = crossValidatedModelPredictions[candidateModelIndices[j]];
-                }
-
-                m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
-                var error = m_metric.Error(targets, candidatePredictions);
-
-                if (error < bestError)
-                {
-                    bestError = error;
-                    candidateModelIndices.CopyTo(bestModelIndices, 0);
-                    Trace.WriteLine("Models selected: " + bestModelIndices.Length+ ": " + error);
-                }
+                bestError = error;
+                candidateModelIndices.CopyTo(bestModelIndices, 0);
+                Trace.WriteLine("Models selected: " + bestModelIndices.Length + ": " + error);
             }
-
-            Trace.WriteLine("Selected model indices: " + string.Join(", ", bestModelIndices.ToArray()));
-
-            return bestModelIndices;
         }
 
-        void SelectNextRandomIndices(int[] candidateModelIndices)
+        Trace.WriteLine("Selected model indices: " + string.Join(", ", bestModelIndices.ToArray()));
+
+        return bestModelIndices;
+    }
+
+    void SelectNextRandomIndices(int[] candidateModelIndices)
+    {
+        if (m_selectWithReplacement)
         {
-            if(m_selectWithReplacement)
+            for (var i = 0; i < candidateModelIndices.Length; i++)
             {
-                for (int i = 0; i < candidateModelIndices.Length; i++)
-                {
-                    candidateModelIndices[i] = m_random.Next(0, m_numberOfModelsToSelect);
-                }
+                candidateModelIndices[i] = m_random.Next(0, m_numberOfModelsToSelect);
             }
-            else
-            {
-                m_allIndices.Shuffle(m_random);
-                m_allIndices.CopyTo(Interval1D.Create(0, m_numberOfModelsToSelect), candidateModelIndices);
-            }
+        }
+        else
+        {
+            m_allIndices.Shuffle(m_random);
+            m_allIndices.CopyTo(Interval1D.Create(0, m_numberOfModelsToSelect), candidateModelIndices);
         }
     }
 }

@@ -3,109 +3,108 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Containers.Views;
 using SharpLearning.DecisionTrees.ImpurityCalculators;
 
-namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators
+namespace SharpLearning.DecisionTrees.Test.ImpurityCalculators;
+
+[TestClass]
+public class RegressionImpurityCalculatorTest
 {
-    [TestClass]
-    public class RegressionImpurityCalculatorTest
+    [TestMethod]
+    public void RegressionImpurityCalculator_ImpurityImprovement()
     {
-        [TestMethod]
-        public void RegressionImpurityCalculator_ImpurityImprovement()
-        {
-            var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            
-            var parentInterval = Interval1D.Create(0, values.Length);
+        var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
 
-            var sut = new RegressionImpurityCalculator();
-            sut.Init(new double[0], values, new double[0], parentInterval);
-            var impurity = sut.NodeImpurity();
+        var parentInterval = Interval1D.Create(0, values.Length);
 
-            sut.UpdateIndex(50);
-            var improvement1 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(75.0, improvement1, 0.000001);
+        var sut = new RegressionImpurityCalculator();
+        sut.Init([], values, [], parentInterval);
+        var impurity = sut.NodeImpurity();
 
-            sut.UpdateIndex(96);
-            var improvement2 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(69.473379629629648, improvement2, 0.000001);
-        }
+        sut.UpdateIndex(50);
+        var improvement1 = sut.ImpurityImprovement(impurity);
+        Assert.AreEqual(75.0, improvement1, 0.000001);
 
-        [TestMethod]
-        public void RegressionImpurityCalculator_ImpurityImprovement_Weighted()
-        {
-            var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
+        sut.UpdateIndex(96);
+        var improvement2 = sut.ImpurityImprovement(impurity);
+        Assert.AreEqual(69.473379629629648, improvement2, 0.000001);
+    }
 
-            var weights = values.Select(t => Weight(t)).ToArray();
-            var parentInterval = Interval1D.Create(0, values.Length);
+    [TestMethod]
+    public void RegressionImpurityCalculator_ImpurityImprovement_Weighted()
+    {
+        var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
 
-            var sut = new RegressionImpurityCalculator();
-            sut.Init(new double[0], values, weights, parentInterval);
-            var impurity = sut.NodeImpurity();
+        var weights = values.Select(t => Weight(t)).ToArray();
+        var parentInterval = Interval1D.Create(0, values.Length);
 
-            sut.UpdateIndex(50);
-            var improvement1 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(167.04545454545456, improvement1, 0.000001);
+        var sut = new RegressionImpurityCalculator();
+        sut.Init([], values, weights, parentInterval);
+        var impurity = sut.NodeImpurity();
 
-            sut.UpdateIndex(96);
-            var improvement2 = sut.ImpurityImprovement(impurity);
-            Assert.AreEqual(162.78860028860029, improvement2, 0.000001);
-        }
+        sut.UpdateIndex(50);
+        var improvement1 = sut.ImpurityImprovement(impurity);
+        Assert.AreEqual(167.04545454545456, improvement1, 0.000001);
 
-        [TestMethod]
-        public void RegressionImpurityCalculator_ChildImpurities()
-        {
-            var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
+        sut.UpdateIndex(96);
+        var improvement2 = sut.ImpurityImprovement(impurity);
+        Assert.AreEqual(162.78860028860029, improvement2, 0.000001);
+    }
 
-            var parentInterval = Interval1D.Create(0, values.Length);
+    [TestMethod]
+    public void RegressionImpurityCalculator_ChildImpurities()
+    {
+        var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
 
-            var sut = new RegressionImpurityCalculator();
-            sut.Init(new double[0], values, new double[0], parentInterval);
-            var impurity = sut.NodeImpurity();
+        var parentInterval = Interval1D.Create(0, values.Length);
 
-            sut.UpdateIndex(50);
-            var actual = sut.ChildImpurities();
-            var expected = new ChildImpurities(0.0, -2.25);
+        var sut = new RegressionImpurityCalculator();
+        sut.Init([], values, [], parentInterval);
+        var impurity = sut.NodeImpurity();
 
-            Assert.AreEqual(expected, actual);
-        }
+        sut.UpdateIndex(50);
+        var actual = sut.ChildImpurities();
+        var expected = new ChildImpurities(0.0, -2.25);
 
-        [TestMethod]
-        public void RegressionImpurityCalculator_NodeImpurity()
-        {
-            var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
+        Assert.AreEqual(expected, actual);
+    }
 
-            var parentInterval = Interval1D.Create(0, values.Length);
+    [TestMethod]
+    public void RegressionImpurityCalculator_NodeImpurity()
+    {
+        var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
 
-            var sut = new RegressionImpurityCalculator();
-            sut.Init(new double[0], values, new double[0], parentInterval);
+        var parentInterval = Interval1D.Create(0, values.Length);
 
-            sut.UpdateIndex(50);
-            var actual = sut.NodeImpurity();
+        var sut = new RegressionImpurityCalculator();
+        sut.Init([], values, [], parentInterval);
 
-            Assert.AreEqual(0.66666666666666674, actual, 0.000001);
-        }
+        sut.UpdateIndex(50);
+        var actual = sut.NodeImpurity();
 
-        [TestMethod]
-        public void RegressionImpurityCalculator_LeafValue_Weighted()
-        {
-            var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-            var weights = values.Select(t => Weight(t)).ToArray();
-            var parentInterval = Interval1D.Create(0, values.Length);
+        Assert.AreEqual(0.66666666666666674, actual, 0.000001);
+    }
 
-            var sut = new RegressionImpurityCalculator();
-            sut.Init(new double[0], values, weights, parentInterval);
+    [TestMethod]
+    public void RegressionImpurityCalculator_LeafValue_Weighted()
+    {
+        var values = new double[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
+        var weights = values.Select(t => Weight(t)).ToArray();
+        var parentInterval = Interval1D.Create(0, values.Length);
 
-            var impurity = sut.NodeImpurity();
+        var sut = new RegressionImpurityCalculator();
+        sut.Init([], values, weights, parentInterval);
 
-            sut.UpdateIndex(50);
-            var actual = sut.LeafValue();
+        var impurity = sut.NodeImpurity();
 
-            Assert.AreEqual(1.75, actual, 0.000001);
-        }
+        sut.UpdateIndex(50);
+        var actual = sut.LeafValue();
 
-        double Weight(double t)
-        {
-            if (t == 2.0)
-                return 10.0;
-            return 1.0;
-        }
+        Assert.AreEqual(1.75, actual, 0.000001);
+    }
+
+    static double Weight(double t)
+    {
+        if (t == 2.0)
+            return 10.0;
+        return 1.0;
     }
 }

@@ -3,15 +3,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.FeatureTransformations.CsvRowTransforms;
 using SharpLearning.InputOutput.Csv;
 
-namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
+namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms;
+
+/// <summary>
+/// Summary description for DateTimeFeatureTransformerTest
+/// </summary>
+[TestClass]
+public class DateTimeFeatureTransformerTest
 {
-    /// <summary>
-    /// Summary description for DateTimeFeatureTransformerTest
-    /// </summary>
-    [TestClass]
-    public class DateTimeFeatureTransformerTest
-    {
-        readonly string m_expected =
+    readonly string m_expected =
 @"Date;Year;Month;WeekOfYear;DayOfMonth;DayOfWeek;HourOfDay;TotalDays;TotalHours
 2015-01-17;2015;1;3;17;6;0;16452;394848
 2015-02-21;2015;2;8;21;6;0;16487;395688
@@ -22,7 +22,7 @@ namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 2015-02-14;2015;2;7;14;6;0;16480;395520
 2015-01-16;2015;1;3;16;5;0;16451;394824";
 
-        readonly string m_input =
+    readonly string m_input =
 @"Date
 2015-01-17
 2015-02-21
@@ -34,21 +34,20 @@ namespace SharpLearning.FeatureTransformations.Test.CsvRowTransforms
 2015-01-16
 ";
 
-        [TestMethod]
-        public void DateTimeFeatureTransformer_Transform()
-        {
-            var sut = new DateTimeFeatureTransformer("Date");
-            
-            var writer = new StringWriter();
+    [TestMethod]
+    public void DateTimeFeatureTransformer_Transform()
+    {
+        var sut = new DateTimeFeatureTransformer("Date");
 
-            new CsvParser(() => new StringReader(m_input))
-            .EnumerateRows()
-            .Transform(r => sut.Transform(r))
-            .Write(() => writer);
+        var writer = new StringWriter();
 
-            var actual = writer.ToString();
+        new CsvParser(() => new StringReader(m_input))
+        .EnumerateRows()
+        .Transform(r => sut.Transform(r))
+        .Write(() => writer);
 
-            Assert.AreEqual(m_expected, actual);
-        }
+        var actual = writer.ToString();
+
+        Assert.AreEqual(m_expected, actual);
     }
 }

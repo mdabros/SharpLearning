@@ -1,18 +1,17 @@
-﻿namespace SharpLearning.Optimization
+﻿namespace SharpLearning.Optimization;
+
+/// <summary>
+/// Type of the parameter
+/// </summary>
+public enum ParameterType
 {
     /// <summary>
-    /// Type of the parameter
+    /// Discrete parameter, represented by integer values.
     /// </summary>
-    public enum ParameterType
-    {
-        /// <summary>
-        /// Discrete parameter, represented by integer values.
-        /// </summary>
-        Discrete,
+    Discrete,
 
-        /// <summary>
-        /// Continuous parameter, represented by floating point numbers.
-        /// </summary>
-        Continuous,
-    }
+    /// <summary>
+    /// Continuous parameter, represented by floating point numbers.
+    /// </summary>
+    Continuous,
 }

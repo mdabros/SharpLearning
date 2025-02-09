@@ -1,15 +1,14 @@
-﻿namespace SharpLearning.Metrics.Impurity
+﻿namespace SharpLearning.Metrics.Impurity;
+
+/// <summary>
+/// Interface for impurity metrics
+/// </summary>
+public interface IImpurityMetric
 {
     /// <summary>
-    /// Interface for impurity metrics
+    /// Calculates the entropy of a sample
     /// </summary>
-    public interface IImpurityMetric
-    {
-        /// <summary>
-        /// Calculates the entropy of a sample
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        double Impurity(double[] values);
-    }
+    /// <param name="values"></param>
+    /// <returns></returns>
+    double Impurity(double[] values);
 }
