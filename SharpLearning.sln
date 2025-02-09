@@ -71,6 +71,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{D83436F7-2
 		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
+		version.json = version.json
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2204FA16-973A-48CF-A9FD-94FA72424BA4}"

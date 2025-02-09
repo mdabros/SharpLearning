@@ -2,20 +2,18 @@
 
 name: dotnet
 
+permissions: read-all
+
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  # workflow_dispatch:
-  #   inputs:
-  #     version:
-  #       description: 'Release version to tag and create'
-  #       required: false
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace }}/nuget
 
 jobs:
   build:
@@ -28,6 +26,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Important for Nerdbank.GitVersioning to calculate versions
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -37,8 +37,45 @@ jobs:
     - name: Build
       run: dotnet build -c ${{ matrix.configuration }} --no-restore 
     - name: Test
-      run: dotnet test -c ${{ matrix.configuration }} --no-build --verbosity normal
-    # - name: Upload coverage reports to Codecov
-    #   uses: codecov/codecov-action@v3
-    #   with:
-    #     flags: ${{ matrix.os }},${{ matrix.configuration }}
+      run: dotnet test -c ${{ matrix.configuration }} --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: ${{ matrix.os }},${{ matrix.configuration }}
+      
+  format:
+    strategy:
+      matrix:
+        os: [windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Format verify no changes
+      run: dotnet format --verify-no-changes
+
+  pack:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Important for Nerdbank.GitVersioning to calculate versions
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Pack solution
+      run: dotnet pack SharpLearning.sln -c Release --output ${{ env.NuGetDirectory }}
+    - name: Add local package source
+      run: dotnet nuget add source ${{ env.NuGetDirectory }} --name local
+    - uses: actions/upload-artifact@v4
+      with:
+        name: nuget
+        if-no-files-found: error
+        retention-days: 7
+        path: ${{ env.NuGetDirectory }}/*nupkg
