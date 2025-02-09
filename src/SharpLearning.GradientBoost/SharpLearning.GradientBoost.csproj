@@ -14,4 +14,11 @@
     <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.139">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

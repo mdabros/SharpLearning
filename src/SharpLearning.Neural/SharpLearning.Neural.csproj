@@ -12,14 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MathNet.Numerics" Version="4.8.1" />
-    <PackageReference Include="MathNet.Numerics.MKL.Win" Version="2.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SharpLearning.Common.Interfaces\SharpLearning.Common.Interfaces.csproj" />
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
     <ProjectReference Include="..\SharpLearning.InputOutput\SharpLearning.InputOutput.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.139">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MathNet.Numerics" Version="4.8.1" />
+    <PackageReference Include="MathNet.Numerics.MKL.Win" Version="2.3.0" />
+  </ItemGroup>
+  
 </Project>
