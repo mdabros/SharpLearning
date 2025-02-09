@@ -51,7 +51,7 @@ public sealed class ClassificationNeuralNetLearner
         double beta1 = 0.9,
         double beta2 = 0.999)
     {
-        if (!(net.Layers.Last() is IClassificationLayer))
+        if (net.Layers.Last() is not IClassificationLayer)
         {
             throw new ArgumentException("Last layer must be a classification layer type. Was: "
                 + net.Layers.Last().GetType().Name);

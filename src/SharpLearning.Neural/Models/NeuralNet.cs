@@ -130,13 +130,13 @@ public sealed class NeuralNet
     /// <param name="random"></param>
     public void Initialize(int batchSize, Random random)
     {
-        if (!(Layers.First() is InputLayer))
+        if (Layers.First() is not InputLayer)
         {
             throw new ArgumentException("First layer must be InputLayer. Was: " +
                 Layers.First().GetType().Name);
         }
 
-        if (!(Layers.Last() is IOutputLayer))
+        if (Layers.Last() is not IOutputLayer)
         {
             throw new ArgumentException("Last layer must be an output layer type. Was: " +
                 Layers.Last().GetType().Name);

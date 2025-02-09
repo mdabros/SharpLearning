@@ -47,7 +47,7 @@ public sealed class RegressionNeuralNetLearner : IIndexedLearner<double>, ILearn
         double beta1 = 0.9,
         double beta2 = 0.999)
     {
-        if (!(net.Layers.Last() is IRegressionLayer))
+        if (net.Layers.Last() is not IRegressionLayer)
         {
             throw new ArgumentException("Last layer must be a regression layer type. Was: " + net.Layers.Last().GetType().Name);
         }
