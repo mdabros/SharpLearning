@@ -203,14 +203,14 @@ public sealed class BayesianOptimizer : IOptimizer
         // Filter away NaNs, and ensure result order is preserved, when fitting the model.
         var validParameterSets = previousResults
             .Where(v => !double.IsNaN(v.Error))
-            .OrderBy(v => v.Error); // TODO: This might still fail to provide same order if two different parameter sets yield the same error.
+            .OrderBy(v => v.Error).ToList(); // TODO: This might still fail to provide same order if two different parameter sets yield the same error.
 
         var model = FitModel(validParameterSets);
 
         return GenerateCandidateParameterSets(parameterSetCount, validParameterSets.ToList(), model);
     }
 
-    RegressionForestModel FitModel(IEnumerable<OptimizerResult> validParameterSets)
+    RegressionForestModel FitModel(IReadOnlyList<OptimizerResult> validParameterSets)
     {
         var observations = validParameterSets
             .Select(v => v.ParameterSet).ToList()
