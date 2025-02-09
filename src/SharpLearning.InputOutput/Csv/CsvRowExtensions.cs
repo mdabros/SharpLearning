@@ -79,11 +79,12 @@ public static class CsvRowExtensions
     /// <returns></returns>
     public static IEnumerable<CsvRow> Remove(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
     {
-        var columnsToKeep = dataRows.First().ColumnNameToIndex.Keys.Except(columnNames).ToArray();
+        var dataRowsList = dataRows.ToList();
+        var columnsToKeep = dataRowsList.First().ColumnNameToIndex.Keys.Except(columnNames).ToArray();
         var index = 0;
         var reducedColumnNameToIndex = columnsToKeep.ToDictionary(n => n, n => index++);
 
-        foreach (var row in dataRows)
+        foreach (var row in dataRowsList)
         {
             yield return new CsvRow(reducedColumnNameToIndex, row.GetValues(columnsToKeep));
         }
@@ -108,14 +109,15 @@ public static class CsvRowExtensions
     public static double[] ToF64Vector(this IEnumerable<CsvRow> dataRows,
         Converter<string, double> converter)
     {
-        var first = dataRows.First();
+        var dataRowsList = dataRows.ToList();
+        var first = dataRowsList.First();
 
         if (first.ColumnNameToIndex.Count != 1)
         {
             throw new ArgumentException("Vector can only be genereded from a single column");
         }
 
-        return dataRows.SelectMany(values => values.Values.AsF64(converter)).ToArray();
+        return dataRowsList.SelectMany(values => values.Values.AsF64(converter)).ToArray();
     }
 
     /// <summary>
@@ -125,14 +127,15 @@ public static class CsvRowExtensions
     /// <returns></returns>
     public static string[] ToStringVector(this IEnumerable<CsvRow> dataRows)
     {
-        var first = dataRows.First();
+        var dataRowsList = dataRows.ToList();
+        var first = dataRowsList.First();
 
         if (first.ColumnNameToIndex.Count != 1)
         {
             throw new ArgumentException("Vector can only be generated from a single column");
         }
 
-        return dataRows.SelectMany(values => values.Values).ToArray();
+        return dataRowsList.SelectMany(values => values.Values).ToArray();
     }
 
     /// <summary>
@@ -154,11 +157,12 @@ public static class CsvRowExtensions
     public static F64Matrix ToF64Matrix(this IEnumerable<CsvRow> dataRows,
         Converter<string, double> converter)
     {
-        var first = dataRows.First();
+        var dataRowsList = dataRows.ToList();
+        var first = dataRowsList.First();
         var cols = first.ColumnNameToIndex.Count;
         var rows = 0;
 
-        var features = dataRows.SelectMany(values =>
+        var features = dataRowsList.SelectMany(values =>
         {
             rows++;
             return values.Values.AsF64(converter);
@@ -174,11 +178,12 @@ public static class CsvRowExtensions
     /// <returns></returns>
     public static StringMatrix ToStringMatrix(this IEnumerable<CsvRow> dataRows)
     {
-        var first = dataRows.First();
+        var dataRowsList = dataRows.ToList();
+        var first = dataRowsList.First();
         var cols = first.ColumnNameToIndex.Count;
         var rows = 0;
 
-        var features = dataRows.SelectMany(values =>
+        var features = dataRowsList.SelectMany(values =>
         {
             rows++;
             return values.Values;
