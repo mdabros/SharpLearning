@@ -1,9 +1,8 @@
-﻿namespace SharpLearning.Neural.Layers
+﻿namespace SharpLearning.Neural.Layers;
+
+/// <summary>
+/// Maker interface for regression layers.
+/// </summary>
+public interface IRegressionLayer
 {
-    /// <summary>
-    /// Maker interface for regression layers.
-    /// </summary>
-    public interface IRegressionLayer
-    {
-    }
 }

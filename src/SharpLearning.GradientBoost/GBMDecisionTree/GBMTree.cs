@@ -4,186 +4,185 @@ using System.Diagnostics;
 using System.Linq;
 using SharpLearning.Containers.Matrices;
 
-namespace SharpLearning.GradientBoost.GBMDecisionTree
+namespace SharpLearning.GradientBoost.GBMDecisionTree;
+
+/// <summary>
+/// Binary decision tree based on GBMNodes.
+/// </summary>
+[Serializable]
+public class GBMTree
 {
     /// <summary>
-    /// Binary decision tree based on GBMNodes.
+    /// 
     /// </summary>
-    [Serializable]
-    public class GBMTree
+    public readonly List<GBMNode> Nodes;
+
+    /// <summary>
+    /// Creates a GBMTree from the provided nodes
+    /// </summary>
+    /// <param name="nodes"></param>
+    public GBMTree(List<GBMNode> nodes)
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public readonly List<GBMNode> Nodes;
+        Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
+    }
 
-        /// <summary>
-        /// Creates a GBMTree from the provided nodes
-        /// </summary>
-        /// <param name="nodes"></param>
-        public GBMTree(List<GBMNode> nodes)
+    /// <summary>
+    /// Predicts a series of observations
+    /// </summary>
+    /// <param name="observations"></param>
+    /// <returns></returns>
+    public double[] Predict(F64Matrix observations)
+    {
+        var rows = observations.RowCount;
+        var predictions = new double[rows];
+
+        Predict(observations, predictions);
+
+        return predictions;
+    }
+
+    /// <summary>
+    /// Predicts a series of observations.
+    /// can reuse predictions array if several predictions are made.
+    /// </summary>
+    /// <param name="observations"></param>
+    /// <param name="predictions"></param>
+    public void Predict(F64Matrix observations, double[] predictions)
+    {
+        var rows = observations.RowCount;
+        var features = new double[observations.ColumnCount];
+        for (int i = 0; i < rows; i++)
         {
-            Nodes = nodes ?? throw new ArgumentNullException(nameof(nodes));
+            observations.Row(i, features);
+            predictions[i] = Predict(features);
+        }
+    }
+
+    /// <summary>
+    /// Predicts a single observation
+    /// </summary>
+    /// <param name="observation"></param>
+    /// <returns></returns>
+    public double Predict(double[] observation)
+    {
+        if (Nodes.Count == 1) //only root
+        {
+            return Nodes[0].LeftConstant; // left right are equal
         }
 
-        /// <summary>
-        /// Predicts a series of observations
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <returns></returns>
-        public double[] Predict(F64Matrix observations)
+        var leaf = Predict(Nodes[1], 1, observation);
+
+        if (observation[leaf.FeatureIndex] < leaf.SplitValue)
         {
-            var rows = observations.RowCount;
-            var predictions = new double[rows];
-
-            Predict(observations, predictions);
-
-            return predictions;
+            return leaf.LeftConstant;
         }
-
-        /// <summary>
-        /// Predicts a series of observations.
-        /// can reuse predictions array if several predictions are made.
-        /// </summary>
-        /// <param name="observations"></param>
-        /// <param name="predictions"></param>
-        public void Predict(F64Matrix observations, double[] predictions)
+        else
         {
-            var rows = observations.RowCount;
-            var features = new double[observations.ColumnCount];
-            for (int i = 0; i < rows; i++)
-            {
-                observations.Row(i, features);
-                predictions[i] = Predict(features);
-            }
+            return leaf.RightConstant;
         }
+    }
 
-        /// <summary>
-        /// Predicts a single observation
-        /// </summary>
-        /// <param name="observation"></param>
-        /// <returns></returns>
-        public double Predict(double[] observation)
+    /// <summary>
+    /// Variable importances are based on the work each variable does (error reduction).
+    /// the scores at each split are scaled by the amount of data the node splits
+    /// if a node splits on 30% of the total data it will add
+    /// errorReduction * 0.3 to its importance score.
+    /// Based on this explanation:
+    /// http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
+    /// </summary>
+    /// <param name="rawVariableImportances"></param>
+    public void AddRawVariableImportances(double[] rawVariableImportances)
+    {
+        if (Nodes.Count == 1) { return; } // no splits no importance
+
+        var rootError = Nodes[0].LeftError;
+        var totalSampleCount = Nodes[0].SampleCount;
+        AddRecursive(rawVariableImportances, Nodes[1], rootError, totalSampleCount);
+    }
+
+    /// <summary>
+    /// Traces the nodes in indexed order
+    /// </summary>
+    public void TraceNodesIndexed()
+    {
+        for (int i = 0; i < Nodes.Count; i++)
         {
-            if (Nodes.Count == 1) //only root
-            {
-                return Nodes[0].LeftConstant; // left right are equal
-            }
-
-            var leaf = Predict(Nodes[1], 1, observation);
-
-            if (observation[leaf.FeatureIndex] < leaf.SplitValue)
-            {
-                return leaf.LeftConstant;
-            }
-            else
-            {
-                return leaf.RightConstant;
-            }
+            var node = Nodes[i];
+            System.Diagnostics.Trace.WriteLine("Index: " + i + " SplitValue: " + Nodes[i].SplitValue +
+                " left: " + node.LeftConstant + " right: " + node.RightConstant);
         }
+    }
 
-        /// <summary>
-        /// Variable importances are based on the work each variable does (error reduction).
-        /// the scores at each split are scaled by the amount of data the node splits
-        /// if a node splits on 30% of the total data it will add
-        /// errorReduction * 0.3 to its importance score.
-        /// Based on this explanation:
-        /// http://www.salford-systems.com/videos/tutorials/how-to/variable-importance-in-cart
-        /// </summary>
-        /// <param name="rawVariableImportances"></param>
-        public void AddRawVariableImportances(double[] rawVariableImportances)
+    /// <summary>
+    /// Traces the nodes sorted by depth
+    /// </summary>
+    public void TraceNodesDepth()
+    {
+        var depths = Nodes.Select(n => n.Depth)
+            .OrderBy(d => d).Distinct();
+
+        foreach (var depth in depths)
         {
-            if (Nodes.Count == 1) { return; } // no splits no importance
+            var index = 0;
+            var nodes = Nodes.Select(n => new { Node = n, Index = index++ }).Where(n => n.Node.Depth == depth);
+            var text = string.Empty;
 
-            var rootError = Nodes[0].LeftError;
-            var totalSampleCount = Nodes[0].SampleCount;
-            AddRecursive(rawVariableImportances, Nodes[1], rootError, totalSampleCount);
-        }
-
-        /// <summary>
-        /// Traces the nodes in indexed order
-        /// </summary>
-        public void TraceNodesIndexed()
-        {
-            for (int i = 0; i < Nodes.Count; i++)
+            foreach (var node in nodes)
             {
-                var node = Nodes[i];
-                System.Diagnostics.Trace.WriteLine("Index: " + i + " SplitValue: " + Nodes[i].SplitValue +
-                    " left: " + node.LeftConstant + " right: " + node.RightConstant);
-            }
-        }
+                text += "(";
+                text += string.Format("{0:0.000} I:{1} ",
+                    node.Node.SplitValue, node.Node.FeatureIndex);
 
-        /// <summary>
-        /// Traces the nodes sorted by depth
-        /// </summary>
-        public void TraceNodesDepth()
-        {
-            var depths = Nodes.Select(n => n.Depth)
-                .OrderBy(d => d).Distinct();
-
-            foreach (var depth in depths)
-            {
-                var index = 0;
-                var nodes = Nodes.Select(n => new { Node = n, Index = index++ }).Where(n => n.Node.Depth == depth);
-                var text = string.Empty;
-
-                foreach (var node in nodes)
+                if (node.Node.LeftIndex == -1)
                 {
-                    text += "(";
-                    text += string.Format("{0:0.000} I:{1} ",
-                        node.Node.SplitValue, node.Node.FeatureIndex);
-
-                    if (node.Node.LeftIndex == -1)
-                    {
-                        text += string.Format("L: {0:0.000} ", node.Node.LeftConstant);
-                    }
-
-                    if (node.Node.RightIndex == -1)
-                    {
-                        text += string.Format("R: {0:0.000} ", node.Node.RightConstant);
-                    }
-
-                    text += ")";
+                    text += string.Format("L: {0:0.000} ", node.Node.LeftConstant);
                 }
-                Trace.WriteLine(text);
+
+                if (node.Node.RightIndex == -1)
+                {
+                    text += string.Format("R: {0:0.000} ", node.Node.RightConstant);
+                }
+
+                text += ")";
             }
+            Trace.WriteLine(text);
+        }
+    }
+
+    GBMNode Predict(GBMNode parent, int nodeIndex, double[] observation)
+    {
+        if (nodeIndex == -1)
+        {
+            return parent;
         }
 
-        GBMNode Predict(GBMNode parent, int nodeIndex, double[] observation)
+        var node = Nodes[nodeIndex];
+
+        if (observation[node.FeatureIndex] < node.SplitValue)
         {
-            if (nodeIndex == -1)
-            {
-                return parent;
-            }
+            return Predict(node, node.LeftIndex, observation); // left
+        }
+        else
+        {
+            return Predict(node, node.RightIndex, observation); // right
+        }
+    }
 
-            var node = Nodes[nodeIndex];
+    void AddRecursive(double[] rawFeatureImportances, GBMNode node, double previousError, int totalSampleCount)
+    {
+        var error = node.LeftError + node.RightError;
+        var reduction = previousError - error;
+        rawFeatureImportances[node.FeatureIndex] += reduction * reduction *
+            (double)node.SampleCount / (double)totalSampleCount;
 
-            if (observation[node.FeatureIndex] < node.SplitValue)
-            {
-                return Predict(node, node.LeftIndex, observation); // left
-            }
-            else
-            {
-                return Predict(node, node.RightIndex, observation); // right
-            }
+        if (node.LeftIndex != -1)
+        {
+            AddRecursive(rawFeatureImportances, Nodes[node.LeftIndex], error, totalSampleCount);
         }
 
-        void AddRecursive(double[] rawFeatureImportances, GBMNode node, double previousError, int totalSampleCount)
+        if (node.RightIndex != -1)
         {
-            var error = node.LeftError + node.RightError;
-            var reduction = previousError - error;
-            rawFeatureImportances[node.FeatureIndex] += reduction * reduction *
-                (double)node.SampleCount / (double)totalSampleCount;
-
-            if (node.LeftIndex != -1)
-            {
-                AddRecursive(rawFeatureImportances, Nodes[node.LeftIndex], error, totalSampleCount);
-            }
-
-            if (node.RightIndex != -1)
-            {
-                AddRecursive(rawFeatureImportances, Nodes[node.RightIndex], error, totalSampleCount);
-            }
+            AddRecursive(rawFeatureImportances, Nodes[node.RightIndex], error, totalSampleCount);
         }
     }
 }

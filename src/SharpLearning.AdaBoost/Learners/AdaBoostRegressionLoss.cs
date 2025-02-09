@@ -1,23 +1,22 @@
-﻿namespace SharpLearning.AdaBoost.Learners
+﻿namespace SharpLearning.AdaBoost.Learners;
+
+/// <summary>
+/// Loss type for adaboost regressor
+/// </summary>
+public enum AdaBoostRegressionLoss
 {
     /// <summary>
-    /// Loss type for adaboost regressor
+    /// Linear loss
     /// </summary>
-    public enum AdaBoostRegressionLoss
-    {
-        /// <summary>
-        /// Linear loss
-        /// </summary>
-        Linear,
+    Linear,
 
-        /// <summary>
-        /// Squared loss
-        /// </summary>
-        Squared,
+    /// <summary>
+    /// Squared loss
+    /// </summary>
+    Squared,
 
-        /// <summary>
-        /// Exponential loss
-        /// </summary>
-        Exponential
-    }
+    /// <summary>
+    /// Exponential loss
+    /// </summary>
+    Exponential
 }

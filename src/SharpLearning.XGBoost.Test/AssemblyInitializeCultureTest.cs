@@ -2,19 +2,18 @@
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SharpLearning.XGBoost.Test
+namespace SharpLearning.XGBoost.Test;
+
+[TestClass]
+public static class AssemblyInitializeCultureTest
 {
-    [TestClass]
-    public static class AssemblyInitializeCultureTest
+    [AssemblyInitialize]
+    public static void AssemblyInitializeCultureTest_InvariantCulture(TestContext c)
     {
-        [AssemblyInitialize]
-        public static void AssemblyInitializeCultureTest_InvariantCulture(TestContext c)
-        {
-            CultureInfo culture = CultureInfo.InvariantCulture;
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
-            Thread.CurrentThread.CurrentCulture = culture;
-            Thread.CurrentThread.CurrentUICulture = culture;
-        }
+        CultureInfo culture = CultureInfo.InvariantCulture;
+        CultureInfo.DefaultThreadCurrentCulture = culture;
+        CultureInfo.DefaultThreadCurrentUICulture = culture;
+        Thread.CurrentThread.CurrentCulture = culture;
+        Thread.CurrentThread.CurrentUICulture = culture;
     }
 }

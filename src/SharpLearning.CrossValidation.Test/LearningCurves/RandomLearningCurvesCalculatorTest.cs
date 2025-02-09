@@ -4,31 +4,30 @@ using SharpLearning.CrossValidation.LearningCurves;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.Metrics.Regression;
 
-namespace SharpLearning.CrossValidation.Test.LearningCurves
+namespace SharpLearning.CrossValidation.Test.LearningCurves;
+
+[TestClass]
+public class RandomLearningCurvesCalculatorTest
 {
-    [TestClass]
-    public class RandomLearningCurvesCalculatorTest
+    [TestMethod]
+    public void RandomLearningCurvesCalculator_Calculate()
     {
-        [TestMethod]
-        public void RandomLearningCurvesCalculator_Calculate()
+        var sut = new RandomShuffleLearningCurvesCalculator<double>(
+            new MeanSquaredErrorRegressionMetric(),
+            new double[] { 0.2, 0.8 },
+            0.8, 42, 5);
+
+        var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
+
+        var actual = sut.Calculate(new RegressionDecisionTreeLearner(),
+            observations, targets);
+
+        var expected = new List<LearningCurvePoint>()
         {
-            var sut = new RandomShuffleLearningCurvesCalculator<double>(
-                new MeanSquaredErrorRegressionMetric(),
-                new double[] { 0.2, 0.8 },
-                0.8, 42, 5);
+            new(32, 0, 0.141565953928265),
+            new(128, 0.0, 0.068970597423950036)
+        };
 
-            var (observations, targets) = DataSetUtilities.LoadDecisionTreeDataSet();
-
-            var actual = sut.Calculate(new RegressionDecisionTreeLearner(),
-                observations, targets);
-
-            var expected = new List<LearningCurvePoint>()
-            {
-                new(32, 0, 0.141565953928265),
-                new(128, 0.0, 0.068970597423950036)
-            };
-
-            CollectionAssert.AreEqual(expected, actual);
-        }
+        CollectionAssert.AreEqual(expected, actual);
     }
 }

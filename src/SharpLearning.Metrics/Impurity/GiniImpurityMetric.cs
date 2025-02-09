@@ -1,50 +1,49 @@
 ﻿using System.Collections.Generic;
 
-namespace SharpLearning.Metrics.Impurity
+namespace SharpLearning.Metrics.Impurity;
+
+/// <summary>
+/// Calculates the Gini impurity of a sample. Main use is for decision tree classification
+/// http://en.wikipedia.org/wiki/Decision_tree_learning
+/// </summary>
+public sealed class GiniImpurityMetric : IImpurityMetric
 {
+    readonly Dictionary<int, int> m_dictionary = new();
+
     /// <summary>
     /// Calculates the Gini impurity of a sample. Main use is for decision tree classification
     /// http://en.wikipedia.org/wiki/Decision_tree_learning
     /// </summary>
-    public sealed class GiniImpurityMetric : IImpurityMetric
+    /// <param name="values"></param>
+    /// <returns></returns>
+    public double Impurity(double[] values)
     {
-        readonly Dictionary<int, int> m_dictionary = new();
+        m_dictionary.Clear();
 
-        /// <summary>
-        /// Calculates the Gini impurity of a sample. Main use is for decision tree classification
-        /// http://en.wikipedia.org/wiki/Decision_tree_learning
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        public double Impurity(double[] values)
+        for (int i = 0; i < values.Length; i++)
         {
-            m_dictionary.Clear();
+            var targetKey = (int)values[i];
 
-            for (int i = 0; i < values.Length; i++)
+            if (!m_dictionary.ContainsKey(targetKey))
             {
-                var targetKey = (int)values[i];
-
-                if (!m_dictionary.ContainsKey(targetKey))
-                {
-                    m_dictionary.Add(targetKey, 1);
-                }
-                else
-                {
-                    m_dictionary[targetKey]++;
-                }
+                m_dictionary.Add(targetKey, 1);
             }
-
-            var totalInv = 1.0 / (values.Length * values.Length);
-            var giniSum = 0.0;
-
-            foreach (var pair in m_dictionary)
+            else
             {
-                giniSum += pair.Value * pair.Value;
+                m_dictionary[targetKey]++;
             }
-
-            giniSum = giniSum * totalInv;
-
-            return 1 - giniSum;
         }
+
+        var totalInv = 1.0 / (values.Length * values.Length);
+        var giniSum = 0.0;
+
+        foreach (var pair in m_dictionary)
+        {
+            giniSum += pair.Value * pair.Value;
+        }
+
+        giniSum = giniSum * totalInv;
+
+        return 1 - giniSum;
     }
 }

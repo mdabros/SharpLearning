@@ -2,88 +2,87 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
-namespace SharpLearning.Optimization.Test
+namespace SharpLearning.Optimization.Test;
+
+[TestClass]
+public class ParticleSwarmOptimizerTest
 {
-    [TestClass]
-    public class ParticleSwarmOptimizerTest
+    [TestMethod]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(-1)]
+    [DataRow(null)]
+    public void ParticleSwarmOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
     {
-        [TestMethod]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(-1)]
-        [DataRow(null)]
-        public void ParticleSwarmOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
+        var parameters = new MinMaxParameterSpec[]
         {
-            var parameters = new MinMaxParameterSpec[]
-            {
-                new(-10.0, 10.0, Transform.Linear),
-                new(-10.0, 10.0, Transform.Linear),
-                new(-10.0, 10.0, Transform.Linear),
-            };
+            new(-10.0, 10.0, Transform.Linear),
+            new(-10.0, 10.0, Transform.Linear),
+            new(-10.0, 10.0, Transform.Linear),
+        };
 
-            var sut = CreateSut(maxDegreeOfParallelism, parameters);
+        var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
-            var actual = sut.OptimizeBest(Minimize);
+        var actual = sut.OptimizeBest(Minimize);
 
-            Assert.AreEqual(-0.64324321766401094, actual.Error, Delta);
-            Assert.AreEqual(3, actual.ParameterSet.Length);
+        Assert.AreEqual(-0.64324321766401094, actual.Error, Delta);
+        Assert.AreEqual(3, actual.ParameterSet.Length);
 
-            Assert.AreEqual(-4.92494268653156, actual.ParameterSet[0], Delta);
-            Assert.AreEqual(10, actual.ParameterSet[1], Delta);
-            Assert.AreEqual(-0.27508308116943514, actual.ParameterSet[2], Delta);
-        }
+        Assert.AreEqual(-4.92494268653156, actual.ParameterSet[0], Delta);
+        Assert.AreEqual(10, actual.ParameterSet[1], Delta);
+        Assert.AreEqual(-0.27508308116943514, actual.ParameterSet[2], Delta);
+    }
 
-        [TestMethod]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(-1)]
-        [DataRow(null)]
-        public void ParticleSwarmOptimizer_Optimize(int? maxDegreeOfParallelism)
+    [TestMethod]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(-1)]
+    [DataRow(null)]
+    public void ParticleSwarmOptimizer_Optimize(int? maxDegreeOfParallelism)
+    {
+        var parameters = new MinMaxParameterSpec[]
         {
-            var parameters = new MinMaxParameterSpec[]
-            {
-                new(0.0, 100.0, Transform.Linear)
-            };
+            new(0.0, 100.0, Transform.Linear)
+        };
 
-            var sut = CreateSut(maxDegreeOfParallelism, parameters);
+        var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
-            var results = sut.Optimize(MinimizeWeightFromHeight);
+        var results = sut.Optimize(MinimizeWeightFromHeight);
 
-            var actual = new OptimizerResult[] { results.First(), results.Last() };
+        var actual = new OptimizerResult[] { results.First(), results.Last() };
 
-            var expected = new OptimizerResult[]
-            {
-                new(new double[] { 38.1151505704492 }, 115.978346548015),
-                new(new double[] { 37.2514904205637 }, 118.093289672808),
-            };
-
-            Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-            Assert.AreEqual(expected.First().ParameterSet.First(),
-                actual.First().ParameterSet.First(), Delta);
-
-            Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-            Assert.AreEqual(expected.Last().ParameterSet.First(),
-                actual.Last().ParameterSet.First(), Delta);
-        }
-
-        static ParticleSwarmOptimizer CreateSut(
-            int? maybeMaxDegreeOfParallelism,
-            MinMaxParameterSpec[] parameters)
+        var expected = new OptimizerResult[]
         {
-            const int DefaultMaxDegreeOfParallelism = -1;
+            new(new double[] { 38.1151505704492 }, 115.978346548015),
+            new(new double[] { 37.2514904205637 }, 118.093289672808),
+        };
 
-            var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
-                maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+        Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
+        Assert.AreEqual(expected.First().ParameterSet.First(),
+            actual.First().ParameterSet.First(), Delta);
 
-            var sut = new ParticleSwarmOptimizer(parameters,
-            maxIterations: 100,
-            numberOfParticles: 10,
-            c1: 2,
-            c2: 2,
-            seed: 42,
-            maxDegreeOfParallelism: maxDegreeOfParallelism);
+        Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
+        Assert.AreEqual(expected.Last().ParameterSet.First(),
+            actual.Last().ParameterSet.First(), Delta);
+    }
 
-            return sut;
-        }
+    static ParticleSwarmOptimizer CreateSut(
+        int? maybeMaxDegreeOfParallelism,
+        MinMaxParameterSpec[] parameters)
+    {
+        const int DefaultMaxDegreeOfParallelism = -1;
+
+        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
+            maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+
+        var sut = new ParticleSwarmOptimizer(parameters,
+        maxIterations: 100,
+        numberOfParticles: 10,
+        c1: 2,
+        c2: 2,
+        seed: 42,
+        maxDegreeOfParallelism: maxDegreeOfParallelism);
+
+        return sut;
     }
 }

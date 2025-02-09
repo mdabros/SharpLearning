@@ -1,28 +1,27 @@
 ﻿using System;
 
-namespace SharpLearning.XGBoost
+namespace SharpLearning.XGBoost;
+
+/// <summary>
+/// 
+/// </summary>
+public static class SamplerTypeExtensions
 {
     /// <summary>
-    /// 
+    /// Convert sampler type to the xgboost parameter string.
     /// </summary>
-    public static class SamplerTypeExtensions
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static string ToXGBoostString(this SamplerType type)
     {
-        /// <summary>
-        /// Convert sampler type to the xgboost parameter string.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static string ToXGBoostString(this SamplerType type)
+        switch (type)
         {
-            switch (type)
-            {
-                case SamplerType.Uniform:
-                    return "uniform";
-                case SamplerType.Weighted:
-                    return "weighted";
-                default:
-                    throw new ArgumentException("Unknown sampler type: " + type); ;
-            }
+            case SamplerType.Uniform:
+                return "uniform";
+            case SamplerType.Weighted:
+                return "weighted";
+            default:
+                throw new ArgumentException("Unknown sampler type: " + type); ;
         }
     }
 }

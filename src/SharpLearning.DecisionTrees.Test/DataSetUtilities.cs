@@ -2,36 +2,36 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
 
-namespace SharpLearning.DecisionTrees.Test
+namespace SharpLearning.DecisionTrees.Test;
+
+public static class DataSetUtilities
 {
-    public static class DataSetUtilities
+    public static (F64Matrix observations, double[] targets) LoadAptitudeDataSet()
     {
-        public static (F64Matrix observations, double[] targets) LoadAptitudeDataSet()
-        {
-            var parser = new CsvParser(() => new StringReader(AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            return (observations, targets);
-        }
+        var parser = new CsvParser(() => new StringReader(AptitudeData));
+        var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+        var targets = parser.EnumerateRows("Pass").ToF64Vector();
+        return (observations, targets);
+    }
 
-        public static (F64Matrix observations, double[] targets) LoadGlassDataSet()
-        {
-            var parser = new CsvParser(() => new StringReader(GlassData));
-            var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
-            var targets = parser.EnumerateRows("Target").ToF64Vector();
-            return (observations, targets);
-        }
+    public static (F64Matrix observations, double[] targets) LoadGlassDataSet()
+    {
+        var parser = new CsvParser(() => new StringReader(GlassData));
+        var observations = parser.EnumerateRows(v => v != "Target").ToF64Matrix();
+        var targets = parser.EnumerateRows("Target").ToF64Vector();
+        return (observations, targets);
+    }
 
-        public static (F64Matrix observations, double[] targets) LoadDecisionTreeDataSet()
-        {
-            var parser = new CsvParser(() => new StringReader(DecisionTreeData));
-            var observations = parser.EnumerateRows(v => v != "T").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            return (observations, targets);
-        }
+    public static (F64Matrix observations, double[] targets) LoadDecisionTreeDataSet()
+    {
+        var parser = new CsvParser(() => new StringReader(DecisionTreeData));
+        var observations = parser.EnumerateRows(v => v != "T").ToF64Matrix();
+        var targets = parser.EnumerateRows("T").ToF64Vector();
+        return (observations, targets);
+    }
 
-        public const string AptitudeData =
- @"AptitudeTestScore;PreviousExperience_month;Pass
+    public const string AptitudeData =
+@"AptitudeTestScore;PreviousExperience_month;Pass
 5;6;0
 1;15;0
 1;12;0
@@ -59,7 +59,7 @@ namespace SharpLearning.DecisionTrees.Test
 1;8;0
 5;12;0";
 
-        public const string DecisionTreeData =
+    public const string DecisionTreeData =
 @"F1;F2;T
 1;0.409175;1.88318
 1;0.182603;0.063908
@@ -262,7 +262,7 @@ namespace SharpLearning.DecisionTrees.Test
 1;0.018883;-0.300577
 1;0.071476;0.006014";
 
-        public const string GlassData =
+    public const string GlassData =
 @"F1;F2;F3;F4;F5;F6;F7;F8;F10;Target
 1.52101;13.64;4.49;1.1;71.78;0.06;8.75;0;0;1
 1.51761;13.89;3.6;1.36;72.73;0.48;7.83;0;0;1
@@ -479,5 +479,4 @@ namespace SharpLearning.DecisionTrees.Test
 1.51651;14.38;0;1.94;73.61;0;8.48;1.57;0;7
 1.51711;14.23;0;2.08;73.36;0;8.62;1.67;0;7";
 
-    }
 }

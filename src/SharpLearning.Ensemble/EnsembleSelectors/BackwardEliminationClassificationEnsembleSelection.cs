@@ -6,116 +6,115 @@ using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers;
 using SharpLearning.Ensemble.Strategies;
 
-namespace SharpLearning.Ensemble.EnsembleSelectors
+namespace SharpLearning.Ensemble.EnsembleSelectors;
+
+/// <summary>
+/// Greedy backwards elimination of ensemble models.
+/// </summary>
+public sealed class BackwardEliminationClassificationEnsembleSelection : IClassificationEnsembleSelection
 {
+    readonly IMetric<double, ProbabilityPrediction> m_metric;
+    readonly IClassificationEnsembleStrategy m_ensembleStrategy;
+    readonly int m_numberOfModelsToSelect;
+    List<int> m_remainingModelIndices;
+    List<int> m_bestModelIndices;
+
     /// <summary>
     /// Greedy backwards elimination of ensemble models.
     /// </summary>
-    public sealed class BackwardEliminationClassificationEnsembleSelection : IClassificationEnsembleSelection
+    /// <param name="metric">Metric to minimize</param>
+    /// <param name="ensembleStrategy">Strategy for ensembling models</param>
+    /// <param name="numberOfModelsToSelect">Number of models to select</param>
+    public BackwardEliminationClassificationEnsembleSelection(
+        IMetric<double, ProbabilityPrediction> metric,
+        IClassificationEnsembleStrategy ensembleStrategy,
+        int numberOfModelsToSelect)
     {
-        readonly IMetric<double, ProbabilityPrediction> m_metric;
-        readonly IClassificationEnsembleStrategy m_ensembleStrategy;
-        readonly int m_numberOfModelsToSelect;
-        List<int> m_remainingModelIndices;
-        List<int> m_bestModelIndices;
+        m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
+        m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
+        if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
 
-        /// <summary>
-        /// Greedy backwards elimination of ensemble models.
-        /// </summary>
-        /// <param name="metric">Metric to minimize</param>
-        /// <param name="ensembleStrategy">Strategy for ensembling models</param>
-        /// <param name="numberOfModelsToSelect">Number of models to select</param>
-        public BackwardEliminationClassificationEnsembleSelection(
-            IMetric<double, ProbabilityPrediction> metric,
-            IClassificationEnsembleStrategy ensembleStrategy,
-            int numberOfModelsToSelect)
+        m_numberOfModelsToSelect = numberOfModelsToSelect;
+    }
+
+    /// <summary>
+    /// Greedy backwards elimination of ensemble models.
+    /// </summary>
+    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
+    /// Each row in the matrix corresponds to predictions from a separate model</param>
+    /// <param name="targets">Corresponding targets</param>
+    /// <returns>The indices of the selected model</returns>
+    public int[] Select(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets)
+    {
+        if (crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
         {
-            m_metric = metric ?? throw new ArgumentNullException(nameof(metric));
-            m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
-            if (numberOfModelsToSelect < 1) { throw new ArgumentException("numberOfModelsToSelect must be at least 1"); }
-
-            m_numberOfModelsToSelect = numberOfModelsToSelect;
+            throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
+                " is smaller than number of models to select: " + m_numberOfModelsToSelect);
         }
 
-        /// <summary>
-        /// Greedy backwards elimination of ensemble models.
-        /// </summary>
-        /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
-        /// Each row in the matrix corresponds to predictions from a separate model</param>
-        /// <param name="targets">Corresponding targets</param>
-        /// <returns>The indices of the selected model</returns>
-        public int[] Select(ProbabilityPrediction[][] crossValidatedModelPredictions, double[] targets)
+        m_remainingModelIndices = Enumerable.Range(0, crossValidatedModelPredictions.Length).ToList();
+
+        var currentError = double.MaxValue;
+        var modelsToRemove = m_remainingModelIndices.Count - 1;
+
+        for (int i = 0; i < modelsToRemove; i++)
         {
-            if (crossValidatedModelPredictions.Length < m_numberOfModelsToSelect)
+            var error = SelectNextModelToRemove(crossValidatedModelPredictions, targets, currentError);
+
+            if (error < currentError && m_remainingModelIndices.Count <= m_numberOfModelsToSelect)
             {
-                throw new ArgumentException("Available models: " + crossValidatedModelPredictions.Length +
-                    " is smaller than number of models to select: " + m_numberOfModelsToSelect);
+                currentError = error;
+                m_bestModelIndices = m_remainingModelIndices.ToList();
+                Trace.WriteLine("Models selected: " + m_bestModelIndices.Count + ": " + error);
             }
-
-            m_remainingModelIndices = Enumerable.Range(0, crossValidatedModelPredictions.Length).ToList();
-
-            var currentError = double.MaxValue;
-            var modelsToRemove = m_remainingModelIndices.Count - 1;
-
-            for (int i = 0; i < modelsToRemove; i++)
-            {
-                var error = SelectNextModelToRemove(crossValidatedModelPredictions, targets, currentError);
-
-                if (error < currentError && m_remainingModelIndices.Count <= m_numberOfModelsToSelect)
-                {
-                    currentError = error;
-                    m_bestModelIndices = m_remainingModelIndices.ToList();
-                    Trace.WriteLine("Models selected: " + m_bestModelIndices.Count + ": " + error);
-                }
-            }
-
-            Trace.WriteLine("Selected model indices: " + string.Join(", ", m_bestModelIndices.ToArray()));
-
-            return m_bestModelIndices.ToArray();
         }
 
-        double SelectNextModelToRemove(ProbabilityPrediction[][] crossValidatedModelPredictions,
-            double[] targets,
-            double currentBestError)
+        Trace.WriteLine("Selected model indices: " + string.Join(", ", m_bestModelIndices.ToArray()));
+
+        return m_bestModelIndices.ToArray();
+    }
+
+    double SelectNextModelToRemove(ProbabilityPrediction[][] crossValidatedModelPredictions,
+        double[] targets,
+        double currentBestError)
+    {
+        var rows = crossValidatedModelPredictions.First().Length;
+        var candidateModelMatrix = new ProbabilityPrediction[m_remainingModelIndices.Count - 1][];
+        var candidatePredictions = new ProbabilityPrediction[rows];
+        var candidateModelIndices = new int[m_remainingModelIndices.Count - 1];
+
+        var bestError = currentBestError;
+        var bestIndex = -1;
+
+        foreach (var index in m_remainingModelIndices)
         {
-            var rows = crossValidatedModelPredictions.First().Length;
-            var candidateModelMatrix = new ProbabilityPrediction[m_remainingModelIndices.Count - 1][];
-            var candidatePredictions = new ProbabilityPrediction[rows];
-            var candidateModelIndices = new int[m_remainingModelIndices.Count - 1];
-
-            var bestError = currentBestError;
-            var bestIndex = -1;
-
-            foreach (var index in m_remainingModelIndices)
+            var candidateIndex = 0;
+            for (int i = 0; i < m_remainingModelIndices.Count; i++)
             {
-                var candidateIndex = 0;
-                for (int i = 0; i < m_remainingModelIndices.Count; i++)
+                var curIndex = m_remainingModelIndices[i];
+                if (curIndex != index)
                 {
-                    var curIndex = m_remainingModelIndices[i];
-                    if (curIndex != index)
-                    {
-                        candidateModelIndices[candidateIndex++] = m_remainingModelIndices[i];
-                    }
-                }
-
-                for (int i = 0; i < candidateModelIndices.Length; i++)
-                {
-                    candidateModelMatrix[i] = crossValidatedModelPredictions[candidateModelIndices[i]];
-                }
-
-                m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
-                var error = m_metric.Error(targets, candidatePredictions);
-
-                if (error < bestError)
-                {
-                    bestError = error;
-                    bestIndex = index;
+                    candidateModelIndices[candidateIndex++] = m_remainingModelIndices[i];
                 }
             }
 
-            m_remainingModelIndices.Remove(bestIndex);
+            for (int i = 0; i < candidateModelIndices.Length; i++)
+            {
+                candidateModelMatrix[i] = crossValidatedModelPredictions[candidateModelIndices[i]];
+            }
 
-            return bestError;
+            m_ensembleStrategy.Combine(candidateModelMatrix, candidatePredictions);
+            var error = m_metric.Error(targets, candidatePredictions);
+
+            if (error < bestError)
+            {
+                bestError = error;
+                bestIndex = index;
+            }
         }
+
+        m_remainingModelIndices.Remove(bestIndex);
+
+        return bestError;
     }
 }

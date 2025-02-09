@@ -7,122 +7,121 @@ using SharpLearning.Ensemble.Learners;
 using SharpLearning.Ensemble.Strategies;
 using SharpLearning.Metrics.Regression;
 
-namespace SharpLearning.Ensemble.Test.Models
+namespace SharpLearning.Ensemble.Test.Models;
+
+[TestClass]
+public class RegressionEnsembleModelTest
 {
-    [TestClass]
-    public class RegressionEnsembleModelTest
+    [TestMethod]
+    public void RegressionEnsembleModel_Predict_single()
     {
-        [TestMethod]
-        public void RegressionEnsembleModel_Predict_single()
+        var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
+        var learners = new IIndexedLearner<double>[]
         {
-            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+            new RegressionDecisionTreeLearner(2),
+            new RegressionDecisionTreeLearner(5),
+            new RegressionDecisionTreeLearner(7),
+            new RegressionDecisionTreeLearner(9)
+        };
 
-            var learners = new IIndexedLearner<double>[]
-            {
-                new RegressionDecisionTreeLearner(2),
-                new RegressionDecisionTreeLearner(5),
-                new RegressionDecisionTreeLearner(7),
-                new RegressionDecisionTreeLearner(9)
-            };
+        var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
+        var sut = learner.Learn(observations, targets);
 
-            var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
-            var sut = learner.Learn(observations, targets);
-
-            var rows = targets.Length;
-            var predictions = new double[rows];
-            for (int i = 0; i < rows; i++)
-            {
-                predictions[i] = sut.Predict(observations.Row(i));
-            }
-
-            var metric = new MeanSquaredErrorRegressionMetric();
-            var actual = metric.Error(targets, predictions);
-
-            Assert.AreEqual(0.033195970695970689, actual, 0.0000001);
+        var rows = targets.Length;
+        var predictions = new double[rows];
+        for (int i = 0; i < rows; i++)
+        {
+            predictions[i] = sut.Predict(observations.Row(i));
         }
 
-        [TestMethod]
-        public void RegressionEnsembleModel_Predict_Multiple()
+        var metric = new MeanSquaredErrorRegressionMetric();
+        var actual = metric.Error(targets, predictions);
+
+        Assert.AreEqual(0.033195970695970689, actual, 0.0000001);
+    }
+
+    [TestMethod]
+    public void RegressionEnsembleModel_Predict_Multiple()
+    {
+        var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
+        var learners = new IIndexedLearner<double>[]
         {
-            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+            new RegressionDecisionTreeLearner(2),
+            new RegressionDecisionTreeLearner(5),
+            new RegressionDecisionTreeLearner(7),
+            new RegressionDecisionTreeLearner(9)
+        };
 
-            var learners = new IIndexedLearner<double>[]
-            {
-                new RegressionDecisionTreeLearner(2),
-                new RegressionDecisionTreeLearner(5),
-                new RegressionDecisionTreeLearner(7),
-                new RegressionDecisionTreeLearner(9)
-            };
+        var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
+        var sut = learner.Learn(observations, targets);
 
-            var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
-            var sut = learner.Learn(observations, targets);
+        var predictions = sut.Predict(observations);
 
-            var predictions = sut.Predict(observations);
+        var metric = new MeanSquaredErrorRegressionMetric();
+        var actual = metric.Error(targets, predictions);
 
-            var metric = new MeanSquaredErrorRegressionMetric();
-            var actual = metric.Error(targets, predictions);
+        Assert.AreEqual(0.033195970695970689, actual, 0.0000001);
+    }
 
-            Assert.AreEqual(0.033195970695970689, actual, 0.0000001);
+    [TestMethod]
+    public void RegressionEnsembleModel_GetVariableImportance()
+    {
+        var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
+        var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
+            { "PreviousExperience_month", 1 } };
+
+        var learners = new IIndexedLearner<double>[]
+        {
+            new RegressionDecisionTreeLearner(2),
+            new RegressionDecisionTreeLearner(5),
+            new RegressionDecisionTreeLearner(7),
+            new RegressionDecisionTreeLearner(9)
+        };
+
+        var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
+        var sut = learner.Learn(observations, targets);
+
+        var actual = sut.GetVariableImportance(featureNameToIndex);
+        var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
+            { "AptitudeTestScore", 3.46067371526717 } };
+
+        Assert.AreEqual(expected.Count, actual.Count);
+        var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
+
+        foreach (var item in zip)
+        {
+            Assert.AreEqual(item.Expected.Key, item.Actual.Key);
+            Assert.AreEqual(item.Expected.Value, item.Actual.Value, 0.000001);
         }
+    }
 
-        [TestMethod]
-        public void RegressionEnsembleModel_GetVariableImportance()
+    [TestMethod]
+    public void RegressionEnsembleModel_GetRawVariableImportance()
+    {
+        var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+
+        var learners = new IIndexedLearner<double>[]
         {
-            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
+            new RegressionDecisionTreeLearner(2),
+            new RegressionDecisionTreeLearner(5),
+            new RegressionDecisionTreeLearner(7),
+            new RegressionDecisionTreeLearner(9)
+        };
 
-            var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
-                { "PreviousExperience_month", 1 } };
+        var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
+        var sut = learner.Learn(observations, targets);
 
-            var learners = new IIndexedLearner<double>[]
-            {
-                new RegressionDecisionTreeLearner(2),
-                new RegressionDecisionTreeLearner(5),
-                new RegressionDecisionTreeLearner(7),
-                new RegressionDecisionTreeLearner(9)
-            };
+        var actual = sut.GetRawVariableImportance();
+        var expected = new double[] { 100.0, 3.46067371526717 };
 
-            var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
-            var sut = learner.Learn(observations, targets);
+        Assert.AreEqual(expected.Length, actual.Length);
 
-            var actual = sut.GetVariableImportance(featureNameToIndex);
-            var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
-                { "AptitudeTestScore", 3.46067371526717 } };
-
-            Assert.AreEqual(expected.Count, actual.Count);
-            var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
-
-            foreach (var item in zip)
-            {
-                Assert.AreEqual(item.Expected.Key, item.Actual.Key);
-                Assert.AreEqual(item.Expected.Value, item.Actual.Value, 0.000001);
-            }
-        }
-
-        [TestMethod]
-        public void RegressionEnsembleModel_GetRawVariableImportance()
+        for (int i = 0; i < expected.Length; i++)
         {
-            var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
-
-            var learners = new IIndexedLearner<double>[]
-            {
-                new RegressionDecisionTreeLearner(2),
-                new RegressionDecisionTreeLearner(5),
-                new RegressionDecisionTreeLearner(7),
-                new RegressionDecisionTreeLearner(9)
-            };
-
-            var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
-            var sut = learner.Learn(observations, targets);
-
-            var actual = sut.GetRawVariableImportance();
-            var expected = new double[] { 100.0, 3.46067371526717 };
-
-            Assert.AreEqual(expected.Length, actual.Length);
-
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], actual[i], 0.000001);
-            }
+            Assert.AreEqual(expected[i], actual[i], 0.000001);
         }
     }
 }

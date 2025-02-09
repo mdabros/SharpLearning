@@ -3,71 +3,70 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
-namespace SharpLearning.Optimization.Test
+namespace SharpLearning.Optimization.Test;
+
+[TestClass]
+public class GridSearchOptimizerTest
 {
-    [TestClass]
-    public class GridSearchOptimizerTest
+    [TestMethod]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(-1)]
+    [DataRow(null)]
+    public void GridSearchOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
     {
-        [TestMethod]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(-1)]
-        [DataRow(null)]
-        public void GridSearchOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
+        var parameters = new GridParameterSpec[]
         {
-            var parameters = new GridParameterSpec[]
-            {
-                new(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
-            };
+            new(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
+        };
 
-            var sut = maxDegreeOfParallelism.HasValue ?
-                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) :
-                new GridSearchOptimizer(parameters);
+        var sut = maxDegreeOfParallelism.HasValue ?
+            new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) :
+            new GridSearchOptimizer(parameters);
 
-            var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
+        var actual = sut.OptimizeBest(MinimizeWeightFromHeight);
 
-            Assert.AreEqual(111.20889999999987, actual.Error, Delta);
-            CollectionAssert.AreEqual(new double[] { 37.5 }, actual.ParameterSet);
-        }
+        Assert.AreEqual(111.20889999999987, actual.Error, Delta);
+        CollectionAssert.AreEqual(new double[] { 37.5 }, actual.ParameterSet);
+    }
 
-        [TestMethod]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(-1)]
-        [DataRow(null)]
-        public void GridSearchOptimizer_Optimize(int? maxDegreeOfParallelism)
+    [TestMethod]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(-1)]
+    [DataRow(null)]
+    public void GridSearchOptimizer_Optimize(int? maxDegreeOfParallelism)
+    {
+        var parameters = new GridParameterSpec[]
         {
-            var parameters = new GridParameterSpec[]
-            {
-                new(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
-            };
+            new(10.0, 20.0, 30.0, 35.0, 37.5, 40.0, 50.0, 60.0)
+        };
 
-            var sut = maxDegreeOfParallelism.HasValue ?
-                new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) :
-                new GridSearchOptimizer(parameters);
+        var sut = maxDegreeOfParallelism.HasValue ?
+            new GridSearchOptimizer(parameters, true, maxDegreeOfParallelism.Value) :
+            new GridSearchOptimizer(parameters);
 
-            var actual = sut.Optimize(MinimizeWeightFromHeight);
+        var actual = sut.Optimize(MinimizeWeightFromHeight);
 
-            var expected = new OptimizerResult[]
-            {
-              new(new double[] { 10 }, 31638.9579),
-              new(new double[] { 60 }, 20500.6279)
-            };
-
-            Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-            Assert.AreEqual(expected.First().ParameterSet.First(),
-                actual.First().ParameterSet.First(), Delta);
-
-            Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-            Assert.AreEqual(expected.Last().ParameterSet.First(),
-                actual.Last().ParameterSet.First(), Delta);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void GridSearchOptimizer_ArgumentCheck_ParameterRanges()
+        var expected = new OptimizerResult[]
         {
-            var sut = new GridSearchOptimizer(null, false);
-        }
+          new(new double[] { 10 }, 31638.9579),
+          new(new double[] { 60 }, 20500.6279)
+        };
+
+        Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
+        Assert.AreEqual(expected.First().ParameterSet.First(),
+            actual.First().ParameterSet.First(), Delta);
+
+        Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
+        Assert.AreEqual(expected.Last().ParameterSet.First(),
+            actual.Last().ParameterSet.First(), Delta);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void GridSearchOptimizer_ArgumentCheck_ParameterRanges()
+    {
+        var sut = new GridSearchOptimizer(null, false);
     }
 }

@@ -1,19 +1,18 @@
-﻿namespace SharpLearning.Neural.Activations
+﻿namespace SharpLearning.Neural.Activations;
+
+/// <summary>
+/// Activation type for neural net. 
+/// </summary>
+public enum Activation
 {
     /// <summary>
-    /// Activation type for neural net. 
+    /// No activation.
     /// </summary>
-    public enum Activation
-    {
-        /// <summary>
-        /// No activation.
-        /// </summary>
-        Undefined,
+    Undefined,
 
-        /// <summary>
-        /// Relu activation.
-        /// </summary>
-        Relu,
-        Sigmoid
-    }
+    /// <summary>
+    /// Relu activation.
+    /// </summary>
+    Relu,
+    Sigmoid
 }

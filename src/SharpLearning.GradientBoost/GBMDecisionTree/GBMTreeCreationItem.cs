@@ -1,29 +1,28 @@
 ﻿
-namespace SharpLearning.GradientBoost.GBMDecisionTree
+namespace SharpLearning.GradientBoost.GBMDecisionTree;
+
+/// <summary>
+/// Tree creation item for learning GradientBoost regression tree
+/// </summary>
+public class GBMTreeCreationItem
 {
     /// <summary>
-    /// Tree creation item for learning GradientBoost regression tree
+    /// Information about current split
     /// </summary>
-    public class GBMTreeCreationItem
-    {
-        /// <summary>
-        /// Information about current split
-        /// </summary>
-        public GBMSplitInfo Values;
+    public GBMSplitInfo Values;
 
-        /// <summary>
-        /// Current observations in the sample
-        /// </summary>
-        public bool[] InSample;
+    /// <summary>
+    /// Current observations in the sample
+    /// </summary>
+    public bool[] InSample;
 
-        /// <summary>
-        /// Current depth
-        /// </summary>
-        public int Depth;
+    /// <summary>
+    /// Current depth
+    /// </summary>
+    public int Depth;
 
-        /// <summary>
-        /// Parent node of the split
-        /// </summary>
-        public GBMNode Parent;
-    }
+    /// <summary>
+    /// Parent node of the split
+    /// </summary>
+    public GBMNode Parent;
 }

@@ -2,28 +2,28 @@
 using SharpLearning.Containers.Matrices;
 using SharpLearning.InputOutput.Csv;
 
-namespace SharpLearning.CrossValidation.Test
+namespace SharpLearning.CrossValidation.Test;
+
+public static class DataSetUtilities
 {
-    public static class DataSetUtilities
+    public static (F64Matrix observations, double[] targets) LoadAptitudeDataSet()
     {
-        public static (F64Matrix observations, double[] targets) LoadAptitudeDataSet()
-        {
-            var parser = new CsvParser(() => new StringReader(AptitudeData));
-            var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
-            var targets = parser.EnumerateRows("Pass").ToF64Vector();
-            return (observations, targets);
-        }
+        var parser = new CsvParser(() => new StringReader(AptitudeData));
+        var observations = parser.EnumerateRows(v => v != "Pass").ToF64Matrix();
+        var targets = parser.EnumerateRows("Pass").ToF64Vector();
+        return (observations, targets);
+    }
 
-        public static (F64Matrix observations, double[] targets) LoadDecisionTreeDataSet()
-        {
-            var parser = new CsvParser(() => new StringReader(DecisionTreeData));
-            var observations = parser.EnumerateRows(v => v != "T").ToF64Matrix();
-            var targets = parser.EnumerateRows("T").ToF64Vector();
-            return (observations, targets);
-        }
+    public static (F64Matrix observations, double[] targets) LoadDecisionTreeDataSet()
+    {
+        var parser = new CsvParser(() => new StringReader(DecisionTreeData));
+        var observations = parser.EnumerateRows(v => v != "T").ToF64Matrix();
+        var targets = parser.EnumerateRows("T").ToF64Vector();
+        return (observations, targets);
+    }
 
-        public const string AptitudeData =
- @"AptitudeTestScore;PreviousExperience_month;Pass
+    public const string AptitudeData =
+@"AptitudeTestScore;PreviousExperience_month;Pass
 5;6;0
 1;15;0
 1;12;0
@@ -51,7 +51,7 @@ namespace SharpLearning.CrossValidation.Test
 1;8;0
 5;12;0";
 
-        public const string DecisionTreeData =
+    public const string DecisionTreeData =
 @"F1;F2;T
 1;0.409175;1.88318
 1;0.182603;0.063908
@@ -254,5 +254,4 @@ namespace SharpLearning.CrossValidation.Test
 1;0.018883;-0.300577
 1;0.071476;0.006014";
 
-    }
 }

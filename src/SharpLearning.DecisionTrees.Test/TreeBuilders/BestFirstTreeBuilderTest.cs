@@ -7,83 +7,82 @@ using SharpLearning.DecisionTrees.SplitSearchers;
 using SharpLearning.DecisionTrees.TreeBuilders;
 using SharpLearning.Metrics.Classification;
 
-namespace SharpLearning.DecisionTrees.Test.TreeBuilders
+namespace SharpLearning.DecisionTrees.Test.TreeBuilders;
+
+[TestClass]
+public class BestFirstTreeBuilderTest
 {
-    [TestClass]
-    public class BestFirstTreeBuilderTest
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void BestFirstTreeBuilder_InvalidMaximumTreeSize()
     {
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void BestFirstTreeBuilder_InvalidMaximumTreeSize()
-        {
-            new BestFirstTreeBuilder(0, 2, 1, 0.1, 42,
-                new LinearSplitSearcher(1),
-                new GiniClassificationImpurityCalculator());
-        }
+        new BestFirstTreeBuilder(0, 2, 1, 0.1, 42,
+            new LinearSplitSearcher(1),
+            new GiniClassificationImpurityCalculator());
+    }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void BestFirstTreeBuilder_InvalidMaximumLeafCount()
-        {
-            new BestFirstTreeBuilder(1, 1, 1, 0.1, 42,
-                new LinearSplitSearcher(1),
-                new GiniClassificationImpurityCalculator());
-        }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void BestFirstTreeBuilder_InvalidMaximumLeafCount()
+    {
+        new BestFirstTreeBuilder(1, 1, 1, 0.1, 42,
+            new LinearSplitSearcher(1),
+            new GiniClassificationImpurityCalculator());
+    }
 
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void BestFirstTreeBuilder_InvalidFeaturesPrSplit()
-        {
-            new BestFirstTreeBuilder(1, 2, -1, 0.1, 42,
-                new LinearSplitSearcher(1),
-                new GiniClassificationImpurityCalculator());
-        }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void BestFirstTreeBuilder_InvalidFeaturesPrSplit()
+    {
+        new BestFirstTreeBuilder(1, 2, -1, 0.1, 42,
+            new LinearSplitSearcher(1),
+            new GiniClassificationImpurityCalculator());
+    }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void BestFirstTreeBuilder_InvalidMinimumInformationGain()
-        {
-            new BestFirstTreeBuilder(1, 2, 1, 0, 42,
-                new LinearSplitSearcher(1),
-                new GiniClassificationImpurityCalculator());
-        }
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void BestFirstTreeBuilder_InvalidMinimumInformationGain()
+    {
+        new BestFirstTreeBuilder(1, 2, 1, 0, 42,
+            new LinearSplitSearcher(1),
+            new GiniClassificationImpurityCalculator());
+    }
 
-        [TestMethod]
-        public void BestFirstTreeBuilder_Build_Full_Tree()
-        {
-            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
+    [TestMethod]
+    public void BestFirstTreeBuilder_Build_Full_Tree()
+    {
+        var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
-            var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 2000, observations.ColumnCount, 0.000001, 42,
-                new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));
+        var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 2000, observations.ColumnCount, 0.000001, 42,
+            new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));
 
-            var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));
+        var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));
 
-            var predictions = model.Predict(observations);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(targets, predictions);
+        var evaluator = new TotalErrorClassificationMetric<double>();
+        var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.0, actual, 0.00001);
-        }
+        Assert.AreEqual(0.0, actual, 0.00001);
+    }
 
 
-        [TestMethod]
-        public void BestFirstTreeBuilder_Build_Leaf_Nodes_4()
-        {
-            var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
+    [TestMethod]
+    public void BestFirstTreeBuilder_Build_Leaf_Nodes_4()
+    {
+        var (observations, targets) = DataSetUtilities.LoadGlassDataSet();
 
-            var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 4, observations.ColumnCount, 0.000001, 42,
-                new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));
+        var sut = new DecisionTreeLearner(new BestFirstTreeBuilder(2000, 4, observations.ColumnCount, 0.000001, 42,
+            new OnlyUniqueThresholdsSplitSearcher(1), new GiniClassificationImpurityCalculator()));
 
-            var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));
+        var model = new ClassificationDecisionTreeModel(sut.Learn(observations, targets));
 
-            var predictions = model.Predict(observations);
+        var predictions = model.Predict(observations);
 
-            var evaluator = new TotalErrorClassificationMetric<double>();
-            var actual = evaluator.Error(targets, predictions);
+        var evaluator = new TotalErrorClassificationMetric<double>();
+        var actual = evaluator.Error(targets, predictions);
 
-            Assert.AreEqual(0.37383177570093457, actual, 0.00001);
-        }
+        Assert.AreEqual(0.37383177570093457, actual, 0.00001);
     }
 }
