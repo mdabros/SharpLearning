@@ -9,7 +9,7 @@ using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.DecisionTrees.Models;
 using SharpLearning.Metrics.Classification;
 
-namespace SharpLearning.DecisionTrees.Test.suts;
+namespace SharpLearning.DecisionTrees.Test.Models;
 
 [TestClass]
 public class ClassificationDecisionTreeModelTest

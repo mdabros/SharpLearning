@@ -6,7 +6,7 @@ using SharpLearning.Neural.Activations;
 using SharpLearning.Neural.Initializations;
 using SharpLearning.Neural.Layers;
 
-namespace SharpLearning.Neural;
+namespace SharpLearning.Neural.Models;
 
 /// <summary>
 /// Neural net consisting of a set of layers.

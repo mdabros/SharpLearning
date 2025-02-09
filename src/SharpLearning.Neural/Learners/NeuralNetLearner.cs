@@ -10,7 +10,7 @@ using SharpLearning.Neural.Loss;
 using SharpLearning.Neural.Optimizers;
 using SharpLearning.Neural.TargetEncoders;
 
-namespace SharpLearning.Neural;
+namespace SharpLearning.Neural.Learners;
 
 /// <summary>
 /// Neural net learner. Controls the learning process using mini-batch gradient descent.
