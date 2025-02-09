@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SharpLearning.Neural.Activations;
 
 namespace SharpLearning.Neural.Test.Activations;

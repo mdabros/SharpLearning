@@ -70,7 +70,6 @@ public sealed class MaxPool2DLayer : ILayer
     /// </summary>
     public Matrix<float> OutputActivations;
 
-    Matrix<float> m_inputActivations;
     Matrix<float> m_delta;
 
     /// <summary>
@@ -149,8 +148,6 @@ public sealed class MaxPool2DLayer : ILayer
     /// <returns></returns>
     public Matrix<float> Forward(Matrix<float> input)
     {
-        m_inputActivations = input;
-
         // enumerate each batch item one at a time
         Parallel.For(0, input.RowCount, i =>
         {
