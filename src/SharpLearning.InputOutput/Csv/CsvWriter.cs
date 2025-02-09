@@ -32,9 +32,10 @@ public class CsvWriter
     public void Write(IEnumerable<CsvRow> rows, bool writeHeader = true)
     {
         using var writer = m_writer();
+        var rowsList = rows.ToList();
         if (writeHeader)
         {
-            var headerValues = rows.First().ColumnNameToIndex
+            var headerValues = rowsList.First().ColumnNameToIndex
                                      .OrderBy(kvp => kvp.Value)
                                      .Select(kvp => kvp.Key);
 
@@ -42,7 +43,7 @@ public class CsvWriter
             writer.Write(headerLine);
         }
 
-        foreach (var row in rows)
+        foreach (var row in rowsList)
         {
             writer.WriteLine();
             WriteColumns(row.Values, writer);

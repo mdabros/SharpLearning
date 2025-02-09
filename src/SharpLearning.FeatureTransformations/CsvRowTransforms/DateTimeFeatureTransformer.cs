@@ -64,7 +64,8 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     /// <returns></returns>
     public IEnumerable<CsvRow> Transform(IEnumerable<CsvRow> rows)
     {
-        var newColumnNameToIndex = rows.First().ColumnNameToIndex.ToDictionary(v => v.Key, v => v.Value);
+        var rowsList = rows.ToList();
+        var newColumnNameToIndex = rowsList.First().ColumnNameToIndex.ToDictionary(v => v.Key, v => v.Value);
         var index = newColumnNameToIndex.Count;
 
         foreach (var name in FeatureNames)
@@ -73,7 +74,7 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
             newColumnNameToIndex.Add(newName, index++);
         }
 
-        foreach (var row in rows)
+        foreach (var row in rowsList)
         {
             var dateTime = DateTime.Parse(row.GetValue(m_dateTimeColumn));
 
