@@ -167,7 +167,8 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
         BorderMode borderMode = BorderMode.Valid, Activation activation = Activation.Relu)
         : this(filterWidth, filterHeight, filterCount, stride,
               ConvUtils.PaddingFromBorderMode(filterWidth, borderMode),
-              ConvUtils.PaddingFromBorderMode(filterHeight, borderMode))
+              ConvUtils.PaddingFromBorderMode(filterHeight, borderMode),
+              activation)
     {
         BorderMode = borderMode;
     }
