@@ -118,15 +118,6 @@ public class XGBoostTreeConverterTest
         Assert.AreEqual(expected.SplitValue, actual.SplitValue, m_delta);
     }
 
-    void ArrayAssert(double[] expected, double[] actual)
-    {
-        Assert.AreEqual(expected.Length, actual.Length);
-        for (var i = 0; i < expected.Length; i++)
-        {
-            Assert.AreEqual(expected[i], actual[i], m_delta);
-        }
-    }
-
     const string m_tree1 = @"booster[0]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=343.922,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=74.1261,cover=61
