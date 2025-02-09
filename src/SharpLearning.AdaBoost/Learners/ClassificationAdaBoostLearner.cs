@@ -104,10 +104,7 @@ public sealed class ClassificationAdaBoostLearner
         for (var i = 0; i < indices.Length; i++)
         {
             var value = targets[indices[i]];
-            if (!uniques.Contains(value))
-            {
-                uniques.Add(value);
-            }
+            uniques.Add(value);
         }
 
         m_uniqueTargetValues = uniques.Count;
