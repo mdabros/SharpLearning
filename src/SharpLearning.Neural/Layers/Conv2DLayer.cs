@@ -315,9 +315,9 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
         var filterCubeSize = InputDepth * FilterWidth * FilterHeight;
         var filterGridSize = filterGridWidth * filterGridHeight;
 
-        copy.Width = this.Width;
-        copy.Height = this.Height;
-        copy.Depth = this.Depth;
+        copy.Width = Width;
+        copy.Height = Height;
+        copy.Depth = Depth;
 
         var fanOut = Width * Height * Depth;
 

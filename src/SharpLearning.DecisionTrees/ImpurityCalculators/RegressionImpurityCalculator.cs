@@ -102,7 +102,7 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
         m_meanTotal = m_sumTotal / m_weightedTotal;
 
         m_currentPosition = m_interval.FromInclusive;
-        this.Reset();
+        Reset();
     }
 
     /// <summary>

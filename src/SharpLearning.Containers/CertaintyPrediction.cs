@@ -36,8 +36,8 @@ public struct CertaintyPrediction
     /// <returns></returns>
     public bool Equals(CertaintyPrediction other)
     {
-        if (!Equal(this.Prediction, other.Prediction)) { return false; }
-        if (!Equal(this.Variance, other.Variance)) { return false; }
+        if (!Equal(Prediction, other.Prediction)) { return false; }
+        if (!Equal(Variance, other.Variance)) { return false; }
 
         return true;
     }

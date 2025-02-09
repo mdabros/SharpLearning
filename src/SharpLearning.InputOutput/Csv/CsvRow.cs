@@ -40,10 +40,10 @@ public class CsvRow
     /// <returns></returns>
     public bool Equals(CsvRow other)
     {
-        if (!this.Values.SequenceEqual(other.Values))
+        if (!Values.SequenceEqual(other.Values))
             return false;
 
-        if (!this.ColumnNameToIndex.SequenceEqual(other.ColumnNameToIndex))
+        if (!ColumnNameToIndex.SequenceEqual(other.ColumnNameToIndex))
             return false;
 
         return true;

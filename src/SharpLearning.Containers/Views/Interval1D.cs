@@ -81,9 +81,9 @@ public struct Interval1D : IEquatable<Interval1D>
     /// <returns></returns>
     public bool Equals(Interval1D other)
     {
-        return (this.FromInclusive == other.FromInclusive) &&
-               (this.ToExclusive == other.ToExclusive) &&
-               (this.Length == other.Length);
+        return (FromInclusive == other.FromInclusive) &&
+               (ToExclusive == other.ToExclusive) &&
+               (Length == other.Length);
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public struct Interval1D : IEquatable<Interval1D>
     public override bool Equals(object other)
     {
         if (other is Interval1D)
-            return this.Equals((Interval1D)other);
+            return Equals((Interval1D)other);
         else
             return false;
     }
@@ -105,6 +105,6 @@ public struct Interval1D : IEquatable<Interval1D>
     /// <returns></returns>
     public override int GetHashCode()
     {
-        return this.FromInclusive.GetHashCode() ^ this.ToExclusive.GetHashCode() ^ this.Length.GetHashCode();
+        return FromInclusive.GetHashCode() ^ ToExclusive.GetHashCode() ^ Length.GetHashCode();
     }
 }

@@ -47,8 +47,8 @@ public struct Interval2D : IEquatable<Interval2D>
     /// <returns></returns>
     public bool Equals(Interval2D other)
     {
-        return (this.Cols.Equals(other.Cols)) &&
-               (this.Rows.Equals(other.Rows));
+        return (Cols.Equals(other.Cols)) &&
+               (Rows.Equals(other.Rows));
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public struct Interval2D : IEquatable<Interval2D>
     public override bool Equals(object other)
     {
         if (other is Interval2D)
-            return this.Equals((Interval2D)other);
+            return Equals((Interval2D)other);
         else
             return false;
     }
@@ -93,6 +93,6 @@ public struct Interval2D : IEquatable<Interval2D>
     /// <returns></returns>
     public override int GetHashCode()
     {
-        return this.Cols.GetHashCode() ^ this.Rows.GetHashCode();
+        return Cols.GetHashCode() ^ Rows.GetHashCode();
     }
 }

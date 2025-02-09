@@ -119,7 +119,7 @@ public abstract class ClassificationImpurityCalculator
         }
 
         m_currentPosition = m_interval.FromInclusive;
-        this.Reset();
+        Reset();
     }
 
     /// <summary>

@@ -142,9 +142,9 @@ public class ActivationLayer : ILayer
         var batchSize = 1; // prediction time only uses 1 item at a time.
         var copy = new ActivationLayer(ActivationFunc);
 
-        copy.Width = this.Width;
-        copy.Height = this.Height;
-        copy.Depth = this.Depth;
+        copy.Width = Width;
+        copy.Height = Height;
+        copy.Depth = Depth;
 
         var fanOut = Width * Height * Depth;
 

@@ -38,10 +38,10 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     /// <returns></returns>
     public bool Equals(ProbabilityPrediction other)
     {
-        if (!Equal(this.Prediction, other.Prediction)) { return false; }
-        if (this.Probabilities.Count != other.Probabilities.Count) { return false; }
+        if (!Equal(Prediction, other.Prediction)) { return false; }
+        if (Probabilities.Count != other.Probabilities.Count) { return false; }
 
-        var zip = this.Probabilities.Zip(other.Probabilities, (t, o) => new { This = t, Other = o });
+        var zip = Probabilities.Zip(other.Probabilities, (t, o) => new { This = t, Other = o });
         foreach (var item in zip)
         {
             if (item.This.Key != item.Other.Key)

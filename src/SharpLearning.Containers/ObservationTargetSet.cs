@@ -50,7 +50,7 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is ObservationTargetSet other && this.Equals(other))
+        if (obj is ObservationTargetSet other && Equals(other))
         {
             return true;
         }

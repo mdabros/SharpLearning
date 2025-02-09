@@ -265,9 +265,9 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// <returns></returns>
     public bool Equals(F64Matrix other)
     {
-        if (this.RowCount != other.RowCount) { return false; }
-        if (this.ColumnCount != other.ColumnCount) { return false; }
-        if (!this.Data().SequenceEqual(other.Data())) { return false; }
+        if (RowCount != other.RowCount) { return false; }
+        if (ColumnCount != other.ColumnCount) { return false; }
+        if (!Data().SequenceEqual(other.Data())) { return false; }
 
         return true;
     }
@@ -279,7 +279,7 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is F64Matrix other && this.Equals(other))
+        if (obj is F64Matrix other && Equals(other))
         {
             return true;
         }

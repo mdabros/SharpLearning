@@ -259,9 +259,9 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     /// <returns></returns>
     public bool Equals(StringMatrix other)
     {
-        if (this.RowCount != other.RowCount) { return false; }
-        if (this.ColumnCount != other.ColumnCount) { return false; }
-        if (!this.Data().SequenceEqual(other.Data())) { return false; }
+        if (RowCount != other.RowCount) { return false; }
+        if (ColumnCount != other.ColumnCount) { return false; }
+        if (!Data().SequenceEqual(other.Data())) { return false; }
 
         return true;
     }
@@ -273,7 +273,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is StringMatrix other && this.Equals(other))
+        if (obj is StringMatrix other && Equals(other))
         {
             return true;
         }

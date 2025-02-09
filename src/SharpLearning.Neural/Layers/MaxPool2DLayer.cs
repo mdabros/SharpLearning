@@ -168,7 +168,7 @@ public sealed class MaxPool2DLayer : ILayer
 
         for (var depth = 0; depth < InputDepth; ++depth)
         {
-            var n = depth * this.Width * this.Height; // a counter for switches
+            var n = depth * Width * Height; // a counter for switches
             var inputDepthOffSet = depth * InputHeight * InputWidth;
             var outputDeptOffSet = depth * Height * Width;
 
@@ -209,8 +209,8 @@ public sealed class MaxPool2DLayer : ILayer
                         }
                     }
 
-                    this.Switchx[batchItem][n] = winx;
-                    this.Switchy[batchItem][n] = winy;
+                    Switchx[batchItem][n] = winx;
+                    Switchy[batchItem][n] = winy;
                     n++;
 
                     var outputColIndex = poolRowOffSet + pw + outputDeptOffSet;
@@ -230,19 +230,19 @@ public sealed class MaxPool2DLayer : ILayer
         var switchx = Switchx[batchItem];
         var switchy = Switchy[batchItem];
 
-        for (var depth = 0; depth < this.Depth; depth++)
+        for (var depth = 0; depth < Depth; depth++)
         {
-            var n = depth * this.Width * this.Height;
+            var n = depth * Width * Height;
             var inputDepthOffSet = depth * InputHeight * InputWidth;
             var outputDeptOffSet = depth * Height * Width;
 
-            var x = -this.m_padWidth;
+            var x = -m_padWidth;
             // var y = -this.m_padHeight;
-            for (var ax = 0; ax < this.Width; x += this.m_stride, ax++)
+            for (var ax = 0; ax < Width; x += m_stride, ax++)
             {
-                var y = -this.m_padHeight;
+                var y = -m_padHeight;
                 var axOffSet = ax + outputDeptOffSet;
-                for (var ay = 0; ay < this.Height; y += this.m_stride, ay++)
+                for (var ay = 0; ay < Height; y += m_stride, ay++)
                 {
                     var inputGradientColIndex = ay * Width + axOffSet;
                     var inputGradientIndex = inputGradientColIndex * batchSize + batchItem;
@@ -284,20 +284,20 @@ public sealed class MaxPool2DLayer : ILayer
         InputDepth = inputDepth;
 
         // computed
-        this.Depth = this.InputDepth;
+        Depth = InputDepth;
 
-        this.Width = ConvUtils.GetFilterGridLength(InputWidth, m_poolWidth,
+        Width = ConvUtils.GetFilterGridLength(InputWidth, m_poolWidth,
             m_stride, m_padWidth, BorderMode);
 
-        this.Height = ConvUtils.GetFilterGridLength(InputHeight, m_poolHeight,
+        Height = ConvUtils.GetFilterGridLength(InputHeight, m_poolHeight,
             m_stride, m_padHeight, BorderMode);
 
         // store switches for x,y coordinates for where the max comes from, for each output neuron
-        this.Switchx = Enumerable.Range(0, batchSize)
-            .Select(v => new int[this.Width * this.Height * this.Depth]).ToArray();
+        Switchx = Enumerable.Range(0, batchSize)
+            .Select(v => new int[Width * Height * Depth]).ToArray();
 
-        this.Switchy = Enumerable.Range(0, batchSize)
-            .Select(v => new int[this.Width * this.Height * this.Depth]).ToArray();
+        Switchy = Enumerable.Range(0, batchSize)
+            .Select(v => new int[Width * Height * Depth]).ToArray();
 
         var fanIn = InputWidth * InputDepth * InputHeight;
         var fanOut = Depth * Width * Height;
@@ -322,14 +322,14 @@ public sealed class MaxPool2DLayer : ILayer
         copy.InputWidth = InputWidth;
         copy.InputHeight = InputHeight;
 
-        copy.Depth = this.Depth;
-        copy.Width = this.Width;
-        copy.Height = this.Height;
+        copy.Depth = Depth;
+        copy.Width = Width;
+        copy.Height = Height;
 
         copy.Switchx = Enumerable.Range(0, batchSize)
-            .Select(v => new int[this.Width * this.Height * this.Depth]).ToArray();
+            .Select(v => new int[Width * Height * Depth]).ToArray();
         copy.Switchy = Enumerable.Range(0, batchSize)
-            .Select(v => new int[this.Width * this.Height * this.Depth]).ToArray();
+            .Select(v => new int[Width * Height * Depth]).ToArray();
 
         var fanOut = Width * Height * Depth;
         copy.OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOut);
