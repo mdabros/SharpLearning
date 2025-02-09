@@ -47,10 +47,12 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
 
         var targetProbabilities = targets.Zip(positiveTargetProbabilities,
             (l, s) => new { target = l, Probability = s });
-        targetProbabilities = targetProbabilities.OrderByDescending(l => l.Probability);
+        targetProbabilities = targetProbabilities.OrderByDescending(l => l.Probability)
+            .ToArray();
 
         var counts = targetProbabilities.GroupBy(l => l.target)
-            .Select(l => new { Label = l.Key, Count = l.Count() });
+            .Select(l => new { Label = l.Key, Count = l.Count() })
+            .ToArray();
 
         var negativeCount = counts.Where(s => !s.Label.Equals(m_positiveTarget))
             .Select(s => s.Count).Sum(); ;

@@ -176,13 +176,15 @@ public class SmacOptimizer : IOptimizer
             return randomParameterSets;
         }
 
-        var validParameterSets = previousResults.Where(v => !double.IsNaN(v.Error));
+        var validParameterSets = previousResults
+            .Where(v => !double.IsNaN(v.Error))
+            .ToArray();
         var model = FitModel(validParameterSets);
 
         return GenerateCandidateParameterSets(parameterSetCount, validParameterSets.ToList(), model);
     }
 
-    RegressionForestModel FitModel(IEnumerable<OptimizerResult> validParameterSets)
+    RegressionForestModel FitModel(IReadOnlyList<OptimizerResult> validParameterSets)
     {
         var observations = validParameterSets
             .Select(v => v.ParameterSet).ToList()
