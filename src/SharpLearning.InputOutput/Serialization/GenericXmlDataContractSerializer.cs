@@ -126,7 +126,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
                 m_typeToNames[type] = new Tuple<string, string>(typeNamespace, typeName);
 
-                if (m_namesToType.ContainsKey(typeNamespace) == false)
+                if (!m_namesToType.ContainsKey(typeNamespace))
                 {
                     m_namesToType[typeNamespace] = [];
                 }
