@@ -23,7 +23,9 @@
     <PublishRelease>true</PublishRelease>
     <PackRelease>true</PackRelease>
 
+    <!-- https://github.com/dotnet/roslyn/issues/41640 🤦 -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
 
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
