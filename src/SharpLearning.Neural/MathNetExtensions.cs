@@ -192,7 +192,7 @@ public static class MathNetExtensions
                 vData[col] += mData[mIndex];
             }
 
-            vData[col] = vData[col] / (float)m.RowCount;
+            vData[col] /= (float)m.RowCount;
         }
     }
 

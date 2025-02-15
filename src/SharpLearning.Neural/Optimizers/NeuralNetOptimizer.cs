@@ -235,7 +235,7 @@ public sealed class NeuralNetOptimizer
                     break;
                 case OptimizerMethod.Adagrad:
                     {
-                        gsumi[j] = gsumi[j] + gij * gij;
+                        gsumi[j] += gij * gij;
                         var dx = -m_learningRate * gij / Math.Sqrt(gsumi[j] + m_eps);
                         parameters[j] += (float)dx;
                     }

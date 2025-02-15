@@ -167,7 +167,7 @@ public sealed class ClassificationAdaBoostLearner
                 for (var j = 0; j < indices.Length; j++)
                 {
                     var index = indices[j];
-                    m_sampleWeights[index] = m_sampleWeights[index] / weightSum;
+                    m_sampleWeights[index] /= weightSum;
                 }
             }
         }

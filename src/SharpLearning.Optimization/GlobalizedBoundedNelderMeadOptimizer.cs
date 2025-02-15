@@ -134,13 +134,13 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
                 var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
 
                 var x = initialPoint.ToArray();
-                x[i] = x[i] + p;
+                x[i] += p;
 
                 for (var j = 0; j < dim; j++)
                 {
                     if (j != i)
                     {
-                        x[j] = x[j] + q;
+                        x[j] += q;
                     }
                 }
 

@@ -143,7 +143,7 @@ public sealed class SoftMaxLayer
             for (var col = 0; col < x.ColumnCount; ++col)
             {
                 var index = col * rows + row;
-                xData[index] = xData[index] / rowSum;
+                xData[index] /= rowSum;
             }
         }
     }
