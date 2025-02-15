@@ -3,6 +3,4 @@
 /// <summary>
 /// Maker interface for regression layers.
 /// </summary>
-public interface IRegressionLayer
-{
-}
+public interface IRegressionLayer;

@@ -4,6 +4,4 @@
 /// Interface for predictor models. Supports prediction and variable importance.
 /// </summary>
 /// <typeparam name="TPrediction"></typeparam>
-public interface IPredictorModel<TPrediction> : IPredictor<TPrediction>, IModelVariableImportance
-{
-}
+public interface IPredictorModel<TPrediction> : IPredictor<TPrediction>, IModelVariableImportance;
