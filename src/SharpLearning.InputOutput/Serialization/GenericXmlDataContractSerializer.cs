@@ -221,17 +221,17 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
             foreach (Type type in allTypes)
             {
-                if (type.IsEnum == false &&
-                   type.IsInterface == false &&
-                   type.IsGenericTypeDefinition == false)
+                if (!type.IsEnum &&
+                   !type.IsInterface &&
+                   !type.IsGenericTypeDefinition)
                 {
-                    if (publicOnly == true && type.IsPublic == false)
+                    if (publicOnly && !type.IsPublic)
                     {
-                        if (type.IsNested == false)
+                        if (!type.IsNested)
                         {
                             continue;
                         }
-                        if (type.IsNestedPrivate == true)
+                        if (type.IsNestedPrivate)
                         {
                             continue;
                         }
