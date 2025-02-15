@@ -9,6 +9,11 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version to tag and create'
+        required: false
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -81,3 +86,46 @@ jobs:
         if-no-files-found: error
         retention-days: 7
         path: ${{ env.NuGetDirectory }}/*nupkg
+
+  create-release-push:
+    needs: [ build, pack ]
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    if: ${{ github.event.inputs.version != ''  && github.actor == 'mdabros'}}
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download nuget packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget
+        path: ${{ env.NuGetDirectory }}
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.event.inputs.version }}
+        release_name: ${{ github.event.inputs.version }}
+        draft: true
+    - name: Create tag (for release)
+      run: |
+        git tag v${{ github.event.inputs.version }}
+        git push origin v${{ github.event.inputs.version }}
+    - name: Upload XGBoostSharp package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.NuGetDirectory }}/XGBoostSharp.${{ github.event.inputs.version }}.nupkg
+        asset_name: XGBoostSharp.${{ github.event.inputs.version }}.nupkg
+        asset_content_type: application/zip
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Push XGBoostSharp package
+      run: dotnet nuget push ${{ env.NuGetDirectory }}/XGBoostSharp.${{ github.event.inputs.version }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
