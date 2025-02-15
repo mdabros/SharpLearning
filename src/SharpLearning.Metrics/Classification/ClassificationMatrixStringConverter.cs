@@ -27,7 +27,7 @@ public static class ClassificationMatrixStringConverter
         double[,] errorMatrix,
         double error)
     {
-        var uniqueStringTargets = uniqueTargets.Select(t => targetStringMapping[t]).ToList();
+        var uniqueStringTargets = uniqueTargets.ConvertAll(t => targetStringMapping[t]);
         return Convert(uniqueStringTargets, confusionMatrix, errorMatrix, error);
     }
 
