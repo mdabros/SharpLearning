@@ -25,7 +25,7 @@ public static class CsvRowExtensions
     /// <returns></returns>
     public static string GetValue(this CsvRow row, string columnName)
     {
-        return row.Values[(row.ColumnNameToIndex[columnName])];
+        return row.Values[row.ColumnNameToIndex[columnName]];
     }
 
     /// <summary>

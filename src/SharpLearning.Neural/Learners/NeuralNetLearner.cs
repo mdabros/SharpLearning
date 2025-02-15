@@ -251,7 +251,7 @@ public class NeuralNetLearner
                 timer.Stop();
 
                 Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Validation: {2:0.00000} - Time (ms): {3}",
-                    (iteration + 1), currentLoss, validationLoss, timer.ElapsedMilliseconds));
+                    iteration + 1, currentLoss, validationLoss, timer.ElapsedMilliseconds));
 
                 if (validationLoss < bestLoss)
                 {
@@ -264,7 +264,7 @@ public class NeuralNetLearner
                 timer.Stop();
 
                 Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Time (ms): {2}",
-                    (iteration + 1), currentLoss, timer.ElapsedMilliseconds));
+                    iteration + 1, currentLoss, timer.ElapsedMilliseconds));
             }
 
             if (double.IsNaN(currentLoss))

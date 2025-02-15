@@ -55,7 +55,7 @@ public sealed class WeightedRandomSampler
 
         while (samples > 0)
         {
-            var x = totalWeight * (1.0 - Math.Pow(m_random.NextDouble(), (1.0 / samples)));
+            var x = totalWeight * (1.0 - Math.Pow(m_random.NextDouble(), 1.0 / samples));
             totalWeight -= x;
             while (x > weight)
             {

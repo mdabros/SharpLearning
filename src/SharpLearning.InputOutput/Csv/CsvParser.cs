@@ -230,7 +230,7 @@ public sealed class CsvParser
             {
                 if (!inText)
                 {
-                    tokens.Add(csvText.Substring(last + 1, (current - last)).Trim(' ', separator));
+                    tokens.Add(csvText.Substring(last + 1, current - last).Trim(' ', separator));
                     last = current;
                 }
             }

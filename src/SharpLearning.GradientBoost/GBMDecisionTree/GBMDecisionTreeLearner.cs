@@ -407,7 +407,7 @@ public sealed class GBMDecisionTreeLearner
                 return i;
             }
         }
-        return (orderedIndexes.Length + 1);
+        return orderedIndexes.Length + 1;
     }
 
     static void SetParentLeafIndex(int nodeIndex, GBMTreeCreationItem parentItem)

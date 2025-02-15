@@ -109,7 +109,7 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
     {
         var b = Math.Abs(x1 - x2);
         var height = (y1 + y2) / 2.0;
-        return (b * height);
+        return b * height;
     }
 
     /// <summary>
