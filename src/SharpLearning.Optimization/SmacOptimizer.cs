@@ -283,7 +283,7 @@ public class SmacOptimizer : IOptimizer
     (double[] parameterSet, double expectedImprovement) LocalSearch(double[][] parentParameterSets,
         RegressionForestModel model, double bestScore, double epsilon)
     {
-        var bestParameterSet = parentParameterSets.First();
+        var bestParameterSet = parentParameterSets[0];
         var bestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestParameterSet, model);
 
         // Continue search until no improvement is found.

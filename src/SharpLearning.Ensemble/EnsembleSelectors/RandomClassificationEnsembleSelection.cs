@@ -68,7 +68,7 @@ public sealed class RandomClassificationEnsembleSelection : IClassificationEnsem
 
         m_allIndices = Enumerable.Range(0, crossValidatedModelPredictions.Length).ToArray();
 
-        var rows = crossValidatedModelPredictions.First().Length;
+        var rows = crossValidatedModelPredictions[0].Length;
         var candidateModelMatrix = new ProbabilityPrediction[m_numberOfModelsToSelect][];
         var candidatePredictions = new ProbabilityPrediction[rows];
         var candidateModelIndices = new int[m_numberOfModelsToSelect];

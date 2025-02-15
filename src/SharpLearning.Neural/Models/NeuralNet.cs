@@ -130,10 +130,10 @@ public sealed class NeuralNet
     /// <param name="random"></param>
     public void Initialize(int batchSize, Random random)
     {
-        if (Layers.First() is not InputLayer)
+        if (Layers[0] is not InputLayer)
         {
             throw new ArgumentException("First layer must be InputLayer. Was: " +
-                Layers.First().GetType().Name);
+                Layers[0].GetType().Name);
         }
 
         if (Layers.Last() is not IOutputLayer)
@@ -167,7 +167,7 @@ public sealed class NeuralNet
     /// <returns></returns>
     public double[] GetRawVariableImportance()
     {
-        var inputlayer = Layers.First();
+        var inputlayer = Layers[0];
         return new double[inputlayer.Width * inputlayer.Height * inputlayer.Depth];
     }
 

@@ -158,7 +158,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
             while (true)
             {
                 results = results.OrderBy(r => r.Error).ToList();
-                var best = results.First();
+                var best = results[0];
 
                 // break after m_maxIterationsPrRestart
                 if (iterations >= m_maxIterationsPrRestart && m_maxIterationsPrRestart != 0)
@@ -213,7 +213,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
                 BoundCheck(xr);
                 var refelctionScore = EvaluateFunction(functionToMinimize, xr);
 
-                var first = results.First().Error;
+                var first = results[0].Error;
                 if (first <= refelctionScore.Error && refelctionScore.Error < results[results.Count - 2].Error)
                 {
                     results.RemoveAt(results.Count - 1);

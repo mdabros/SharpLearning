@@ -80,7 +80,7 @@ public static class CsvRowExtensions
     public static IEnumerable<CsvRow> Remove(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
     {
         var dataRowsList = dataRows.ToList();
-        var columnsToKeep = dataRowsList.First().ColumnNameToIndex.Keys.Except(columnNames).ToArray();
+        var columnsToKeep = dataRowsList[0].ColumnNameToIndex.Keys.Except(columnNames).ToArray();
         var index = 0;
         var reducedColumnNameToIndex = columnsToKeep.ToDictionary(n => n, n => index++);
 
@@ -110,7 +110,7 @@ public static class CsvRowExtensions
         Converter<string, double> converter)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
 
         if (first.ColumnNameToIndex.Count != 1)
         {
@@ -128,7 +128,7 @@ public static class CsvRowExtensions
     public static string[] ToStringVector(this IEnumerable<CsvRow> dataRows)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
 
         if (first.ColumnNameToIndex.Count != 1)
         {
@@ -158,7 +158,7 @@ public static class CsvRowExtensions
         Converter<string, double> converter)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
         var cols = first.ColumnNameToIndex.Count;
         var rows = 0;
 
@@ -179,7 +179,7 @@ public static class CsvRowExtensions
     public static StringMatrix ToStringMatrix(this IEnumerable<CsvRow> dataRows)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
         var cols = first.ColumnNameToIndex.Count;
         var rows = 0;
 

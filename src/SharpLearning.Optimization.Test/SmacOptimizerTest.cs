@@ -65,11 +65,11 @@ public class SmacOptimizerTest
             new([41.8333740634068],  806.274612132759),
         };
 
-        Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-        Assert.AreEqual(expected.First().ParameterSet.First(), actual.First().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected[0].Error, actual[0].Error, Delta);
+        Assert.AreEqual(expected[0].ParameterSet[0], actual[0].ParameterSet[0], Delta);
 
         Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-        Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected.Last().ParameterSet[0], actual.Last().ParameterSet[0], Delta);
     }
 
     [TestMethod]

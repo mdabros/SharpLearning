@@ -104,7 +104,7 @@ public sealed class ForwardSearchClassificationEnsembleSelection : IClassificati
         double[] targets,
         double currentBestError)
     {
-        var rows = crossValidatedModelPredictions.First().Length;
+        var rows = crossValidatedModelPredictions[0].Length;
         var candidateModelMatrix = new ProbabilityPrediction[m_selectedModelIndices.Count + 1][];
         var candidatePredictions = new ProbabilityPrediction[rows];
         var candidateModelIndices = new int[m_selectedModelIndices.Count + 1];

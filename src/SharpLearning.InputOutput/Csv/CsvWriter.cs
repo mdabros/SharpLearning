@@ -35,7 +35,7 @@ public class CsvWriter
         var rowsList = rows.ToList();
         if (writeHeader)
         {
-            var headerValues = rowsList.First().ColumnNameToIndex
+            var headerValues = rowsList[0].ColumnNameToIndex
                                      .OrderBy(kvp => kvp.Value)
                                      .Select(kvp => kvp.Key);
 

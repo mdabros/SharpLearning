@@ -107,6 +107,6 @@ public class ClassificationGradientBoostLearnerTest
         var actual = evaluator.Error(split.TestSet.Targets, predictions);
 
         Assert.AreEqual(0.16279069767441862, actual, 0.000001);
-        Assert.AreEqual(90, model.Trees.First().ToArray().Length);
+        Assert.AreEqual(90, model.Trees[0].ToArray().Length);
     }
 }

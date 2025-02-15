@@ -73,8 +73,7 @@ public class RegressionEnsembleModel : IPredictorModel<double>
         // return normalized variable importance. 
         // Individual models can have very different scaling of importances 
         var index = 0;
-        var dummyFeatureNameToIndex = m_ensembleModels
-            .First().GetRawVariableImportance()
+        var dummyFeatureNameToIndex = m_ensembleModels[0].GetRawVariableImportance()
             .ToDictionary(k => index.ToString(), k => index++);
 
         return GetVariableImportance(dummyFeatureNameToIndex).Values.ToArray();

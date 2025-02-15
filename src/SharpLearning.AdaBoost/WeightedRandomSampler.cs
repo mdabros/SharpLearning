@@ -47,7 +47,7 @@ public sealed class WeightedRandomSampler
         var totalWeight = weights.Sum(indices);
         var i = 0;
 
-        var index = indices.First();
+        var index = indices[0];
         var weight = weights[index];
 
         var samples = outIndices.Length;

@@ -392,7 +392,7 @@ public static class ArrayExtensions
     public static F64Matrix ToF64Matrix(this List<double[]> m)
     {
         var rows = m.Count;
-        var cols = m.First().Length;
+        var cols = m[0].Length;
 
         var matrix = new F64Matrix(rows, cols);
         for (var i = 0; i < rows; i++)
