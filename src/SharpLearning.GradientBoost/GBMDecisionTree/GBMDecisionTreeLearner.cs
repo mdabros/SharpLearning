@@ -45,7 +45,7 @@ public sealed class GBMDecisionTreeLearner
         if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
         if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
         if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
-        m_loss = loss ?? throw new ArgumentNullException("loss");
+        m_loss = loss ?? throw new ArgumentNullException(nameof(loss));
 
         m_maximumTreeDepth = maximumTreeDepth;
         m_minimumSplitSize = minimumSplitSize;

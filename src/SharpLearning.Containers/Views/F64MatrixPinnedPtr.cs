@@ -26,7 +26,7 @@ public unsafe struct F64MatrixPinnedPtr : IDisposable
     /// <param name="matrix"></param>
     public F64MatrixPinnedPtr(F64Matrix matrix)
     {
-        if (matrix == null) { throw new ArgumentNullException("matrix"); }
+        if (matrix == null) { throw new ArgumentNullException(nameof(matrix)); }
 
         var data = matrix.Data();
         m_handle = GCHandle.Alloc(data, GCHandleType.Pinned);

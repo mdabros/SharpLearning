@@ -26,8 +26,8 @@ public sealed class TrainingTestSetSplit : IEquatable<TrainingTestSetSplit>
     /// <param name="testSet"></param>
     public TrainingTestSetSplit(ObservationTargetSet trainingSet, ObservationTargetSet testSet)
     {
-        TrainingSet = trainingSet ?? throw new ArgumentNullException("trainingSet");
-        TestSet = testSet ?? throw new ArgumentNullException("testSet");
+        TrainingSet = trainingSet ?? throw new ArgumentNullException(nameof(trainingSet));
+        TestSet = testSet ?? throw new ArgumentNullException(nameof(testSet));
     }
 
     /// <summary>

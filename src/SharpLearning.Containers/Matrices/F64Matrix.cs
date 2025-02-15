@@ -31,7 +31,7 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// <param name="cols"></param>
     public F64Matrix(double[] values, int rows, int cols)
     {
-        if (values == null) { throw new ArgumentNullException("values"); }
+        if (values == null) { throw new ArgumentNullException(nameof(values)); }
         if (values.Length != rows * cols) { throw new ArgumentException("feature array length does not match row * cols"); }
         if (rows < 1) { throw new ArgumentException("matrix must have at least 1 row"); }
         if (cols < 1) { throw new ArgumentException("matrix must have at least 1 col"); }

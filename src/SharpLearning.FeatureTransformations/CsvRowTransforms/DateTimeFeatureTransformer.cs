@@ -41,7 +41,7 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     /// <param name="startDate"></param>
     public DateTimeFeatureTransformer(string dateTimeColumn, DateTime startDate)
     {
-        if (startDate == null) { throw new ArgumentNullException("startDate"); }
+        if (startDate == null) { throw new ArgumentNullException(nameof(startDate)); }
         m_dateTimeColumn = dateTimeColumn;
         m_startDate = startDate;
     }
