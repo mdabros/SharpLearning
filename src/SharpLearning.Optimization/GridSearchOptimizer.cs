@@ -88,7 +88,7 @@ public sealed class GridSearchOptimizer : IOptimizer
 
     static IEnumerable<IEnumerable<T>> CartesianProductEnumerable<T>(IEnumerable<IEnumerable<T>> sequences)
     {
-        IEnumerable<IEnumerable<T>> emptyProduct = new[] { Enumerable.Empty<T>() };
+        IEnumerable<IEnumerable<T>> emptyProduct = [Enumerable.Empty<T>()];
         return sequences.Aggregate(
             emptyProduct,
             (accumulator, sequence) =>
