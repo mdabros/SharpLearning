@@ -33,6 +33,11 @@
     <NoWarn>CS1591;CS1668</NoWarn>
 
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.12.11" PrivateAssets="All"/>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.12.11" PrivateAssets="All"/>
+  </ItemGroup>
   
   <Import Project="$(MSBuildThisFileDirectory)\OutputBuildProps.props" />
 
