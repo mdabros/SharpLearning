@@ -18,21 +18,11 @@ public sealed class LogLossClassificationProbabilityMetric : IClassificationProb
 {
     readonly double m_epsilon;
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="epsilon"></param>
     public LogLossClassificationProbabilityMetric(double epsilon = 1e-15)
     {
         m_epsilon = epsilon;
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="targets"></param>
-    /// <param name="predictions"></param>
-    /// <returns></returns>
     public double Error(double[] targets, ProbabilityPrediction[] predictions)
     {
         var rows = targets.Length;

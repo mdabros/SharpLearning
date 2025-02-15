@@ -8,11 +8,5 @@ namespace SharpLearning.Common.Interfaces;
 /// <typeparam name="TPrediction"></typeparam>
 public interface ILearner<TPrediction>
 {
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="observations"></param>
-    /// <param name="targets"></param>
-    /// <returns></returns>
     IPredictorModel<TPrediction> Learn(F64Matrix observations, double[] targets);
 }

@@ -5,9 +5,6 @@ using System.Linq;
 
 namespace SharpLearning.InputOutput.Csv;
 
-/// <summary>
-///
-/// </summary>
 public class CsvWriter
 {
     readonly Func<TextWriter> m_writer;

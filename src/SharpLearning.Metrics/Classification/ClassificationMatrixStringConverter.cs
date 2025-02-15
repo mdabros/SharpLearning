@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SharpLearning.Metrics.Classification;
 
-/// <summary>
-///
-/// </summary>
 public static class ClassificationMatrixStringConverter
 {
     /// <summary>

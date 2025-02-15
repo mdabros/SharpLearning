@@ -2,9 +2,6 @@
 
 namespace SharpLearning.Metrics.Regression;
 
-/// <summary>
-///
-/// </summary>
 public sealed class RootMeanSquarePercentageRegressionMetric : IRegressionMetric
 {
     /// <summary>
