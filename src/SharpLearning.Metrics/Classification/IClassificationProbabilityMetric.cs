@@ -10,7 +10,7 @@ namespace SharpLearning.Metrics.Classification;
 public interface IClassificationProbabilityMetric : IMetric<double, ProbabilityPrediction>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>

@@ -5,7 +5,7 @@ using SharpLearning.InputOutput.Csv;
 namespace SharpLearning.FeatureTransformations.CsvRowTransforms;
 
 /// <summary>
-/// Maps categorical features to forth running integer values. 
+/// Maps categorical features to forth running integer values.
 /// This is usefull for transforming features containing strings into numerical categories.
 /// For example: [monday, tuesday] -> [0, 1]
 /// This is needed when the features are used with machine learning algorithms
@@ -18,7 +18,7 @@ public sealed class MapCategoricalFeaturesTransformer : ICsvRowTransformer
     readonly string[] m_columnsToMap;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public MapCategoricalFeaturesTransformer(params string[] columnsToMap)
     {
@@ -28,7 +28,7 @@ public sealed class MapCategoricalFeaturesTransformer : ICsvRowTransformer
     }
 
     /// <summary>
-    /// Maps categorical features to forth running integer values. 
+    /// Maps categorical features to forth running integer values.
     /// This is usefull for transforming features containing strings into numerical categories.
     /// For example: [monday, tuesday] -> [0, 1]
     /// This is needed when the features are used with machine learning algorithms

@@ -4,23 +4,23 @@ using System.Runtime.InteropServices;
 namespace SharpLearning.Containers.Views;
 
 /// <summary>
-/// 
+///
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct Interval1D : IEquatable<Interval1D>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FromInclusive;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int ToExclusive;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int Length;
 
@@ -52,7 +52,7 @@ public struct Interval1D : IEquatable<Interval1D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -63,7 +63,7 @@ public struct Interval1D : IEquatable<Interval1D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -75,7 +75,7 @@ public struct Interval1D : IEquatable<Interval1D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -87,7 +87,7 @@ public struct Interval1D : IEquatable<Interval1D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -104,7 +104,7 @@ public struct Interval1D : IEquatable<Interval1D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

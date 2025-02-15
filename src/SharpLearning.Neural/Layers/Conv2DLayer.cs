@@ -7,7 +7,7 @@ using SharpLearning.Neural.Initializations;
 namespace SharpLearning.Neural.Layers;
 
 /// <summary>
-/// 2D Convolutional layer using GEMM implementation 
+/// 2D Convolutional layer using GEMM implementation
 /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
 /// and: https://arxiv.org/pdf/1410.0759.pdf
 /// </summary>
@@ -15,22 +15,22 @@ namespace SharpLearning.Neural.Layers;
 public sealed class Conv2DLayer : ILayer, IBatchNormalizable
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
@@ -44,17 +44,17 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     readonly int m_stride = 1;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FilterWidth;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FilterHeight;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FilterCount;
 
@@ -79,7 +79,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     public Vector<float> BiasGradients;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Matrix<float> OutputActivations;
 
@@ -87,17 +87,17 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     Matrix<float> m_delta;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int InputHeight;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int InputWidth;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int InputDepth;
 
@@ -118,7 +118,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     public BorderMode BorderMode;
 
     /// <summary>
-    /// 2D Convolutional layer using GEMM implementation 
+    /// 2D Convolutional layer using GEMM implementation
     /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
     /// and: https://arxiv.org/pdf/1410.0759.pdf
     /// </summary>
@@ -151,7 +151,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     }
 
     /// <summary>
-    /// 2D Convolutional layer using GEMM implementation 
+    /// 2D Convolutional layer using GEMM implementation
     /// based on: https://petewarden.com/2015/04/20/why-gemm-is-at-the-heart-of-deep-learning/
     /// and: https://arxiv.org/pdf/1410.0759.pdf
     /// </summary>
@@ -159,7 +159,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     /// <param name="filterHeight">The height of the filters</param>
     /// <param name="filterCount">The number of filters</param>
     /// <param name="stride">Controls the distance between each neighboring filter (default is 1)</param>
-    /// <param name="borderMode">Border mode of the convolutional operation. 
+    /// <param name="borderMode">Border mode of the convolutional operation.
     /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid)</param>
     /// <param name="activation">Type of activation function used (default is Relu)</param>
     public Conv2DLayer(int filterWidth, int filterHeight, int filterCount, int stride = 1,
@@ -173,7 +173,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     /// <returns></returns>
@@ -201,7 +201,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
@@ -227,7 +227,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -276,7 +276,7 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parametersAndGradients"></param>
     public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)

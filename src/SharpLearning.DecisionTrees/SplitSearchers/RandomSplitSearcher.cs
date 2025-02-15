@@ -33,7 +33,7 @@ public sealed class RandomSplitSearcher : ISplitSearcher
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="impurityCalculator"></param>
     /// <param name="feature"></param>
@@ -108,7 +108,7 @@ public sealed class RandomSplitSearcher : ISplitSearcher
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="min"></param>
     /// <param name="max"></param>

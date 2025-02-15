@@ -9,7 +9,7 @@ namespace SharpLearning.DecisionTrees.TreeBuilders;
 public interface ITreeBuilder
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <param name="targets"></param>

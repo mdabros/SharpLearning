@@ -5,15 +5,15 @@ using SharpLearning.GradientBoost.GBMDecisionTree;
 namespace SharpLearning.GradientBoost.Loss;
 
 /// <summary>
-/// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations. 
+/// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations.
 /// This makes LAD robust against outliers.
 /// http://en.wikipedia.org/wiki/Least_absolute_deviations
 /// </summary>
 public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
 {
     /// <summary>
-    /// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations. 
-    /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression. 
+    /// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations.
+    /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression.
     /// http://en.wikipedia.org/wiki/Least_absolute_deviations
     /// </summary>
     public GradientBoostAbsoluteLoss()
@@ -41,7 +41,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="residuals"></param>
@@ -89,7 +89,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>
@@ -108,7 +108,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
@@ -155,7 +155,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public bool UpdateLeafValues()

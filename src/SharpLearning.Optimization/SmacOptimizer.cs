@@ -44,11 +44,11 @@ public class SmacOptimizer : IOptimizer
     /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
     /// <param name="iterations">The number of iterations to perform.
     /// Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
-    /// <param name="randomStartingPointCount">Number of randomly parameter sets used 
+    /// <param name="randomStartingPointCount">Number of randomly parameter sets used
     /// for initialization (default is 20)</param>
-    /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration. 
+    /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration.
     /// The parameter sets are included in order of most promising outcome (default is 1)</param>
-    /// <param name="localSearchPointCount">The number of top contenders 
+    /// <param name="localSearchPointCount">The number of top contenders
     /// to use in the greedy local search (default is (10)</param>
     /// <param name="randomSearchPointCount">The number of random parameter sets
     /// used when maximizing the expected improvement acquisition function (default is 1000)</param>
@@ -176,7 +176,7 @@ public class SmacOptimizer : IOptimizer
     /// Propose a new list of parameter sets.
     /// </summary>
     /// <param name="parameterSetCount">The number of parameter sets to propose</param>
-    /// <param name="previousResults">Results from previous runs.  
+    /// <param name="previousResults">Results from previous runs.
     /// These are used in the model for proposing new parameter sets.
     /// If no results are provided, random parameter sets will be returned.</param>
     /// <returns></returns>

@@ -9,17 +9,17 @@ namespace SharpLearning.Containers;
 public struct CertaintyPrediction
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Prediction;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Variance;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="prediction"></param>
     /// <param name="variance"></param>
@@ -30,7 +30,7 @@ public struct CertaintyPrediction
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -43,7 +43,7 @@ public struct CertaintyPrediction
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -53,7 +53,7 @@ public struct CertaintyPrediction
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -64,7 +64,7 @@ public struct CertaintyPrediction
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -75,7 +75,7 @@ public struct CertaintyPrediction
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

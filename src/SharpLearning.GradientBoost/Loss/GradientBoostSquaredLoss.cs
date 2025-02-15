@@ -19,7 +19,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// Initial loss is the mean of the targets 
+    /// Initial loss is the mean of the targets
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="inSample"></param>
@@ -41,7 +41,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="residuals"></param>
@@ -82,7 +82,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>
@@ -101,7 +101,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>

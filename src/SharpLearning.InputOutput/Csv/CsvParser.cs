@@ -6,7 +6,7 @@ using System.Linq;
 namespace SharpLearning.InputOutput.Csv;
 
 /// <summary>
-/// CsvParser 
+/// CsvParser
 /// </summary>
 public sealed class CsvParser
 {
@@ -98,7 +98,7 @@ public sealed class CsvParser
     }
 
     /// <summary>
-    /// Enumerates the row of all columns in the csv file 
+    /// Enumerates the row of all columns in the csv file
     /// </summary>
     /// <returns></returns>
     public IEnumerable<CsvRow> EnumerateRows()

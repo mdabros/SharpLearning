@@ -21,7 +21,7 @@ public static class MatrixTranspose
     }
 
     /// <summary>
-    /// Transposes matrix. 
+    /// Transposes matrix.
     /// Output is saved in the provided matrix transposed.
     /// </summary>
     /// <param name="matrix"></param>

@@ -4,18 +4,18 @@ using System.Runtime.InteropServices;
 namespace SharpLearning.Containers.Views;
 
 /// <summary>
-/// 
+///
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct Interval2D : IEquatable<Interval2D>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly Interval1D Rows;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly Interval1D Cols;
 
@@ -41,7 +41,7 @@ public struct Interval2D : IEquatable<Interval2D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -52,7 +52,7 @@ public struct Interval2D : IEquatable<Interval2D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -69,7 +69,7 @@ public struct Interval2D : IEquatable<Interval2D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -80,7 +80,7 @@ public struct Interval2D : IEquatable<Interval2D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -92,7 +92,7 @@ public struct Interval2D : IEquatable<Interval2D>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

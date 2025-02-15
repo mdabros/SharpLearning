@@ -12,7 +12,7 @@ using SharpLearning.GradientBoost.Loss;
 namespace SharpLearning.GradientBoost.GBMDecisionTree;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class GBMDecisionTreeLearner
 {

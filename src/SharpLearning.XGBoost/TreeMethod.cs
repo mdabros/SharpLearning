@@ -9,7 +9,7 @@ public enum TreeMethod
     /// Auto: Use heuristic to choose faster one.
     /// - For small to medium dataset, exact greedy will be used.
     /// - For very large-dataset, approximate algorithm will be chosen.
-    /// - Because old behavior is always use exact greedy in single machine, 
+    /// - Because old behavior is always use exact greedy in single machine,
     /// </summary>
     Auto,
 

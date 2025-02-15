@@ -30,7 +30,7 @@ public sealed class RegressionExtremelyRandomizedTreesLearner : IIndexedLearner<
     readonly bool m_runParallel;
 
     /// <summary>
-    /// The extremely randomized trees learner is an ensemble learner consisting of a series of randomized decision trees. 
+    /// The extremely randomized trees learner is an ensemble learner consisting of a series of randomized decision trees.
     /// It takes the randomization a step futher than random forest and also select the splits randomly
     /// </summary>
     /// <param name="trees">Number of trees to use in the ensemble</param>
@@ -38,8 +38,8 @@ public sealed class RegressionExtremelyRandomizedTreesLearner : IIndexedLearner<
     /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
     /// <param name="featuresPrSplit">Number of features used at each split in each tree</param>
     /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-    /// <param name="subSampleRatio">The ratio of observations sampled with replacement for each tree. 
-    /// Default is 1.0 sampling the same count as the number of observations in the input. 
+    /// <param name="subSampleRatio">The ratio of observations sampled with replacement for each tree.
+    /// Default is 1.0 sampling the same count as the number of observations in the input.
     /// If below 1.0 the algorithm changes to random patches</param>
     /// <param name="seed">Seed for the random number generator</param>
     /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>

@@ -16,13 +16,13 @@ namespace SharpLearning.DecisionTrees.Models;
 public sealed class RegressionDecisionTreeModel : IPredictorModel<double>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly BinaryTree Tree;
     readonly double[] m_variableImportance;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="tree"></param>
     public RegressionDecisionTreeModel(BinaryTree tree)
@@ -42,7 +42,7 @@ public sealed class RegressionDecisionTreeModel : IPredictorModel<double>
     }
 
     /// <summary>
-    /// Predicts a set of observations 
+    /// Predicts a set of observations
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>

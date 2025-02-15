@@ -22,7 +22,7 @@ public sealed class NormalizedGiniCoefficientRegressionMetric : IRegressionMetri
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="target"></param>
     /// <param name="predicted"></param>

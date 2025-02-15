@@ -18,7 +18,7 @@ public delegate double AcquisitionFunction(double currentScore, double mean, dou
 public static class AcquisitionFunctions
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="currentScore">Current best score.</param>
     /// <param name="mean">Predicted score.</param>
@@ -41,7 +41,7 @@ public static class AcquisitionFunctions
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="currentScore">Current best score.</param>
     /// <param name="mean">Predicted score.</param>

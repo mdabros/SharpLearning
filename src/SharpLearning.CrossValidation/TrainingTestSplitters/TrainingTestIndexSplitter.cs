@@ -15,7 +15,7 @@ public class TrainingTestIndexSplitter<T> : ITrainingTestIndexSplitter<T>
     readonly double m_trainingPercentage;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="shuffler">the type of shuffler provided</param>
     /// <param name="trainingPercentage">What percentage of the indices should go to the training set</param>

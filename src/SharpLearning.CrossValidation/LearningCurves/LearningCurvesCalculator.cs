@@ -11,7 +11,7 @@ namespace SharpLearning.CrossValidation.LearningCurves;
 /// <summary>
 /// Bias variance analysis calculator for constructing learning curves.
 /// Learning curves can be used to determine if a model has high bias or high variance.
-/// 
+///
 /// Solutions for model with high bias:
 ///  - Add more features.
 ///  - Use a more sophisticated model
@@ -36,7 +36,7 @@ public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<T
     /// <param name="trainingValidationIndexSplitter"></param>
     /// <param name="sampler">Type of shuffler to use when splitting data</param>
     /// <param name="metric">The error metric used</param>
-    /// <param name="samplePercentages">A list of sample percentages determining the 
+    /// <param name="samplePercentages">A list of sample percentages determining the
     /// training data used in each point of the learning curve</param>
     /// <param name="numberOfShufflesPrSample">How many times should the data be shuffled pr. calculated point</param>
     public LearningCurvesCalculator(ITrainingTestIndexSplitter<double> trainingValidationIndexSplitter,
@@ -55,7 +55,7 @@ public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<T
 
     /// <summary>
     /// Returns a list of BiasVarianceLearningCurvePoints for constructing learning curves.
-    /// The points contain sample size, training score and validation score. 
+    /// The points contain sample size, training score and validation score.
     /// </summary>
     /// <param name="learnerFactory"></param>
     /// <param name="observations"></param>
@@ -73,7 +73,7 @@ public class LearningCurvesCalculator<TPrediction> : ILearningCurvesCalculator<T
 
     /// <summary>
     /// Returns a list of BiasVarianceLearningCurvePoints for constructing learning curves.
-    /// The points contain sample size, training score and validation score. 
+    /// The points contain sample size, training score and validation score.
     /// </summary>
     /// <param name="learner"></param>
     /// <param name="observations"></param>

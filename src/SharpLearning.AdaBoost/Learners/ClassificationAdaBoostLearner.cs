@@ -49,8 +49,8 @@ public sealed class ClassificationAdaBoostLearner
     /// </summary>
     /// <param name="iterations">Number of iterations (models) to boost</param>
     /// <param name="learningRate">How much each boost iteration should add (between 1.0 and 0.0)</param>
-    /// <param name="maximumTreeDepth">The maximum depth of the tree models. 
-    /// for 2 class problem 1 is usually enough. For more classes or larger problems between 3 to 8 is recommended. 
+    /// <param name="maximumTreeDepth">The maximum depth of the tree models.
+    /// for 2 class problem 1 is usually enough. For more classes or larger problems between 3 to 8 is recommended.
     /// 0 will set the depth equal to the number of classes in the problem</param>
     /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
     /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>

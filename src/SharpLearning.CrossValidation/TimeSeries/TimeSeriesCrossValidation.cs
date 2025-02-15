@@ -7,8 +7,8 @@ namespace SharpLearning.CrossValidation.TimeSeries;
 
 /// <summary>
 /// Time series cross-validation. Based on rolling validation using the original order of the data.
-/// Using the specified initial size of the training set, a model is trained. 
-/// The model predicts the first observation following the training data. 
+/// Using the specified initial size of the training set, a model is trained.
+/// The model predicts the first observation following the training data.
 /// Following, this data point is included in the training and a new model is trained,
 /// which predict the next observation. This continous until all observations following the initial training size,
 /// has been validated.
@@ -24,9 +24,9 @@ public sealed class TimeSeriesCrossValidation<TPrediction>
     /// Time series cross-validation. Based on rolling validation.
     /// </summary>
     /// <param name="initialTrainingSize">The initial size of the training set.</param>
-    /// <param name="maxTrainingSetSize">The maximum size of the training set. Default is 0, which indicate no maximum size, 
-    /// resulting in an expanding training interval. If a max is chosen, and the max size is reached, 
-    /// this will result in a sliding training interval, moving forward in time, 
+    /// <param name="maxTrainingSetSize">The maximum size of the training set. Default is 0, which indicate no maximum size,
+    /// resulting in an expanding training interval. If a max is chosen, and the max size is reached,
+    /// this will result in a sliding training interval, moving forward in time,
     /// always using the data closest to the test period as training data. </param>
     /// <param name="retrainInterval">How often should the model be retrained. Default is 1, which will retrain the model at all time steps.
     /// Setting the interval to 5 will retrain the model at every fifth time step and use the current model for all time steps in between.</param>
@@ -63,8 +63,8 @@ public sealed class TimeSeriesCrossValidation<TPrediction>
 
     /// <summary>
     /// Time series cross-validation. Based on rolling validation using the original order of the data.
-    /// Using the specified initial size of the training set, a model is trained. 
-    /// The model predicts the first observation following the training data. 
+    /// Using the specified initial size of the training set, a model is trained.
+    /// The model predicts the first observation following the training data.
     /// Following, this data point is included in the training and a new model is trained,
     /// which predict the next observation. This continuous until all observations following the initial training size,
     /// has been validated.

@@ -12,7 +12,7 @@ using SharpLearning.GradientBoost.Models;
 namespace SharpLearning.GradientBoost.Learners;
 
 /// <summary>
-/// Classification gradient boost learner based on 
+/// Classification gradient boost learner based on
 /// http://statweb.stanford.edu/~jhf/ftp/trebst.pdf
 /// A series of regression trees are fitted stage wise on the residuals of the previous stage.
 /// The resulting models are ensembled together using addition. Implementation based on:
@@ -32,7 +32,7 @@ public class ClassificationGradientBoostLearner
     readonly IGradientBoostLoss m_loss;
 
     /// <summary>
-    ///  Base classification gradient boost learner. 
+    ///  Base classification gradient boost learner.
     ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
     /// </summary>
     /// <param name="iterations">The number of iterations or stages</param>
@@ -40,8 +40,8 @@ public class ClassificationGradientBoostLearner
     /// <param name="maximumTreeDepth">The maximum depth of the tree models</param>
     /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
     /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-    /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
-    /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
+    /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0.
+    /// If below 1.0 the algorithm changes to stochastic gradient boosting.
     /// This reduces variance in the ensemble and can help outer overfitting</param>
     /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
     /// <param name="loss">loss function used</param>
@@ -74,7 +74,7 @@ public class ClassificationGradientBoostLearner
     }
 
     /// <summary>
-    ///  Base classification gradient boost learner. 
+    ///  Base classification gradient boost learner.
     ///  A series of regression trees are fitted stage wise on the residuals of the previous stage
     /// </summary>
     /// <param name="iterations">The number of iterations or stages</param>
@@ -82,8 +82,8 @@ public class ClassificationGradientBoostLearner
     /// <param name="maximumTreeDepth">The maximum depth of the tree models</param>
     /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
     /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-    /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0. 
-    /// If below 1.0 the algorithm changes to stochastic gradient boosting. 
+    /// <param name="subSampleRatio">ratio of observations sampled at each iteration. Default is 1.0.
+    /// If below 1.0 the algorithm changes to stochastic gradient boosting.
     /// This reduces variance in the ensemble and can help counter overfitting</param>
     /// <param name="featuresPrSplit">Number of features used at each split in the tree. 0 means all will be used</param>
     public ClassificationGradientBoostLearner(

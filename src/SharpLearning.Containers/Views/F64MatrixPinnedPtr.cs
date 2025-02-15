@@ -6,12 +6,12 @@ namespace SharpLearning.Containers.Views;
 
 /// <summary>
 /// Pinned pointer to F64Matrix. Proper disposal required. Preferably use this in a Using statement
-/// 
+///
 /// Using(var pinned = matrix.GetPinnedPointer())
 /// {
 ///     var view = pinned.View();
 /// }
-/// 
+///
 /// </summary>
 public unsafe struct F64MatrixPinnedPtr : IDisposable
 {
@@ -45,7 +45,7 @@ public unsafe struct F64MatrixPinnedPtr : IDisposable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public void Dispose()
     {

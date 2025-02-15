@@ -13,7 +13,7 @@ namespace SharpLearning.GradientBoost.GBMDecisionTree;
 public class GBMTree
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly List<GBMNode> Nodes;
 

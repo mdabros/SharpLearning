@@ -8,23 +8,23 @@ using SharpLearning.Metrics.Classification;
 namespace SharpLearning.Ensemble.Learners;
 
 /// <summary>
-/// Classification model selecting EnsembleLearner. 
+/// Classification model selecting EnsembleLearner.
 /// Trains several models and selects the best subset of models for the ensemble using iterative random selection.
-/// The selection of the best set of models is based on cross validation. 
+/// The selection of the best set of models is based on cross validation.
 /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
 /// </summary>
 public sealed class ClassificationRandomModelSelectingEnsembleLearner : ClassificationModelSelectingEnsembleLearner
 {
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using iterative random selection.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// Default is 5-fold StratifiedCrossValidation and minimization of mean square error and mean is used to combine the models.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="numberOfModelsToSelect">Number of models to select</param>
-    /// <param name="iterations">Number of iterations to random select model combinations.</param> 
+    /// <param name="iterations">Number of iterations to random select model combinations.</param>
     public ClassificationRandomModelSelectingEnsembleLearner(
         IIndexedLearner<ProbabilityPrediction>[] learners,
         int numberOfModelsToSelect,
@@ -37,9 +37,9 @@ public sealed class ClassificationRandomModelSelectingEnsembleLearner : Classifi
     }
 
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using iterative random selection.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
@@ -47,7 +47,7 @@ public sealed class ClassificationRandomModelSelectingEnsembleLearner : Classifi
     /// <param name="crossValidation">Cross validation method</param>
     /// <param name="ensembleStrategy">Strategy for ensembling models</param>
     /// <param name="metric">Metric to minimize</param>
-    /// <param name="iterations">Number of iterations to random select model combinations.</param> 
+    /// <param name="iterations">Number of iterations to random select model combinations.</param>
     /// <param name="selectWithReplacement">If true the same model can be selected multiple times.</param>
     /// <param name="seed"></param>
     public ClassificationRandomModelSelectingEnsembleLearner(

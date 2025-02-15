@@ -55,7 +55,7 @@ public static class F64MatrixExtensions
     }
 
     /// <summary>
-    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1 
+    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1
     /// </summary>
     /// <param name="v1"></param>
     /// <param name="v2"></param>
@@ -85,7 +85,7 @@ public static class F64MatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix 
+    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>
@@ -120,7 +120,7 @@ public static class F64MatrixExtensions
     }
 
     /// <summary>
-    /// Combines vector and matrix column-wise. Matrix is added to the left of the vector 
+    /// Combines vector and matrix column-wise. Matrix is added to the left of the vector
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>
@@ -190,7 +190,7 @@ public static class F64MatrixExtensions
     }
 
     /// <summary>
-    /// Combines vector1 and vector2 row wise. Vector2 is added to the bottom of vector1 
+    /// Combines vector1 and vector2 row wise. Vector2 is added to the bottom of vector1
     /// </summary>
     /// <param name="v1"></param>
     /// <param name="v2"></param>
@@ -214,7 +214,7 @@ public static class F64MatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix and vector row wise. Vector is added to the bottom of the matrix 
+    /// Combines matrix and vector row wise. Vector is added to the bottom of the matrix
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>

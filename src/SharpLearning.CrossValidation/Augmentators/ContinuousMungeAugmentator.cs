@@ -8,7 +8,7 @@ namespace SharpLearning.CrossValidation.Augmentators;
 /// Augmentates continuous data according to the MUNGE method:
 /// https://www.cs.cornell.edu/~caruana/compression.kdd06.pdf
 /// The method seeks to keep the original distribution of data. This is done by traversing each observation in the dataset
-/// finding its nearest neighbour (euclidean distance) and modifiyng each feature in the observation according to a probability. 
+/// finding its nearest neighbour (euclidean distance) and modifiyng each feature in the observation according to a probability.
 /// The features are modified using the value from the nearest neighbour as the mean when sampling a new value from a uniform distribution.
 /// </summary>
 public sealed class ContinuousMungeAugmentator
@@ -21,10 +21,10 @@ public sealed class ContinuousMungeAugmentator
     /// Augmentates continuous data according to the MUNGE method:
     /// https://www.cs.cornell.edu/~caruana/compression.kdd06.pdf
     /// The method seeks to keep the original distribution of data. This is done by traversing each observation in the dataset
-    /// finding its nearest neighbour (euclidean distance) and modifiyng each feature in the observation according to a probability. 
+    /// finding its nearest neighbour (euclidean distance) and modifiyng each feature in the observation according to a probability.
     /// The features are modified using the value from the nearest neighbour as the mean when sampling a new value from a uniform distribution.
     /// </summary>
-    /// <param name="probabilityParameter">The probability that a feature will be altered with its nearest neighbour. 
+    /// <param name="probabilityParameter">The probability that a feature will be altered with its nearest neighbour.
     /// Must be between 0.0 and 1.0. (Default is 0.2)</param>
     /// <param name="localVariance">Variance when sampling a new value for an augmentated sample. (Default is 1.0)</param>
     /// <param name="seed">Seed for random augmentation</param>

@@ -11,7 +11,7 @@ namespace SharpLearning.Ensemble.Strategies;
 public sealed class MeanRegressionEnsembleStrategy : IRegressionEnsembleStrategy
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="ensemblePredictions"></param>
     /// <returns></returns>
@@ -21,7 +21,7 @@ public sealed class MeanRegressionEnsembleStrategy : IRegressionEnsembleStrategy
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="ensemblePredictions"></param>
     /// <param name="predictions"></param>

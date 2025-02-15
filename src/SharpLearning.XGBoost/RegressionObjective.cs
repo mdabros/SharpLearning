@@ -17,14 +17,14 @@ public enum RegressionObjective
 
     /// <summary>
     /// GPU version of linear regression evaluated on the GPU,
-    /// note that like the GPU histogram algorithm, 
+    /// note that like the GPU histogram algorithm,
     /// they can only be used when the entire training session uses the same dataset.
     /// </summary>
     GPULinear,
 
     /// <summary>
     /// GPU version of logistic regression evaluated on the GPU,
-    /// note that like the GPU histogram algorithm, 
+    /// note that like the GPU histogram algorithm,
     /// they can only be used when the entire training session uses the same dataset.
     /// </summary>
     GPULogistic,
@@ -36,8 +36,8 @@ public enum RegressionObjective
     CountPoisson,
 
     /// <summary>
-    /// Cox regression for right censored survival time data (negative values are considered right censored). 
-    /// Note that predictions are returned on the hazard ratio scale (i.e., as HR = exp(marginal_prediction) 
+    /// Cox regression for right censored survival time data (negative values are considered right censored).
+    /// Note that predictions are returned on the hazard ratio scale (i.e., as HR = exp(marginal_prediction)
     /// in the proportional hazard function h(t) = h0(t) * HR).
     /// </summary>
     SurvivalCox,
@@ -49,14 +49,14 @@ public enum RegressionObjective
 
     /// <summary>
     /// gamma regression with log-link.Output is a mean of gamma distribution.
-    /// It might be useful, e.g., for modeling insurance claims severity, 
+    /// It might be useful, e.g., for modeling insurance claims severity,
     /// or for any outcome that might be gamma-distributed
     /// </summary>
     GammaRegression,
 
     /// <summary>
-    /// Tweedie regression with log-link.It might be useful, e.g., 
-    /// for modeling total loss in insurance, 
+    /// Tweedie regression with log-link.It might be useful, e.g.,
+    /// for modeling total loss in insurance,
     /// or for any outcome that might be Tweedie-distributed.
     /// </summary>
     TweedieRegression,

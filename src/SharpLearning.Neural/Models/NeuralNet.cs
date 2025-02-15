@@ -22,7 +22,7 @@ public sealed class NeuralNet
     readonly Initialization m_initialization;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="initialization">Initialization type for the layers with weights (default is GlorotUniform)</param>
     public NeuralNet(Initialization initialization = Initialization.GlorotUniform)
@@ -32,7 +32,7 @@ public sealed class NeuralNet
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="layers"></param>
     NeuralNet(List<ILayer> layers)
@@ -41,7 +41,7 @@ public sealed class NeuralNet
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="layer"></param>
     public void Add(ILayer layer)
@@ -75,7 +75,7 @@ public sealed class NeuralNet
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     public void Backward(Matrix<float> delta)
@@ -87,7 +87,7 @@ public sealed class NeuralNet
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
@@ -123,7 +123,7 @@ public sealed class NeuralNet
     }
 
     /// <summary>
-    /// Initializes the layers in the neural net (Instantiates members and creates random initialization of weights). 
+    /// Initializes the layers in the neural net (Instantiates members and creates random initialization of weights).
     /// </summary>
     /// <param name="batchSize"></param>
     /// <param name="random"></param>
@@ -200,7 +200,7 @@ public sealed class NeuralNet
     }
 
     /// <summary>
-    /// Creates a neural net from already initialized layers. 
+    /// Creates a neural net from already initialized layers.
     /// This means that layer.Initialize will not be called.
     /// </summary>
     /// <param name="layers"></param>

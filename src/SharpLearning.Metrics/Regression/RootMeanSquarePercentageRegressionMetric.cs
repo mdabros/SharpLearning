@@ -3,12 +3,12 @@
 namespace SharpLearning.Metrics.Regression;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class RootMeanSquarePercentageRegressionMetric : IRegressionMetric
 {
     /// <summary>
-    /// Calculates the root mean square percentage error between the targets and predictions e = Sqrt(sum((t - p / t)^2)/length(t))  
+    /// Calculates the root mean square percentage error between the targets and predictions e = Sqrt(sum((t - p / t)^2)/length(t))
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>

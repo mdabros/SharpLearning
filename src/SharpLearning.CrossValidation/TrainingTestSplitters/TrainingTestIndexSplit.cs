@@ -9,17 +9,17 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters;
 public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int[] TrainingIndices;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int[] TestIndices;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="trainingIndices"></param>
     /// <param name="testIndices"></param>
@@ -30,7 +30,7 @@ public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -43,7 +43,7 @@ public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -58,7 +58,7 @@ public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

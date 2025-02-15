@@ -20,7 +20,7 @@ public interface ICrossValidation<TPrediction>
         F64Matrix observations, double[] targets);
 
     /// <summary>
-    /// Cross validated predictions. 
+    /// Cross validated predictions.
     /// Only crossValidates within the provided indices.
     /// The predictions are returned in the predictions array.
     /// </summary>

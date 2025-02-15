@@ -4,7 +4,7 @@ using System.Linq;
 namespace SharpLearning.CrossValidation.Samplers;
 
 /// <summary>
-/// No shuffle index sampler. 
+/// No shuffle index sampler.
 /// Simply takes the amount of samples specified by sample size from the start of the data
 /// </summary>
 /// <typeparam name="T"></typeparam>

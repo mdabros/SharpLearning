@@ -3,7 +3,7 @@
 namespace SharpLearning.Optimization;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public interface IOptimizer
 {
@@ -15,7 +15,7 @@ public interface IOptimizer
     OptimizerResult OptimizeBest(Func<double[], OptimizerResult> functionToMinimize);
 
     /// <summary>
-    /// Returns all results ordered from best to worst (minimized). 
+    /// Returns all results ordered from best to worst (minimized).
     /// </summary>
     /// <param name="functionToMinimize"></param>
     /// <returns></returns>

@@ -33,7 +33,7 @@ public class NeuralNetLearner
     /// Neural net learner. Controls the learning process using mini-batch gradient descent.
     /// </summary>
     /// <param name="net">The neural net to learn</param>
-    /// <param name="targetEncoder">Controls how the training targets should be decoded. 
+    /// <param name="targetEncoder">Controls how the training targets should be decoded.
     /// This is different depending on if the net should be used for regression or classification.</param>
     /// <param name="loss">The loss measured and shown between each iteration</param>
     /// <param name="learningRate">Controls the step size when updating the weights. (Default is 0.001)</param>

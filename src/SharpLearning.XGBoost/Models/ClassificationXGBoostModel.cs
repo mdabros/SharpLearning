@@ -9,7 +9,7 @@ using XGBoost.lib;
 namespace SharpLearning.XGBoost.Models;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class ClassificationXGBoostModel
     : IDisposable
@@ -19,7 +19,7 @@ public sealed class ClassificationXGBoostModel
     readonly Booster m_model;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="model"></param>
     public ClassificationXGBoostModel(Booster model)
@@ -28,7 +28,7 @@ public sealed class ClassificationXGBoostModel
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observation"></param>
     /// <returns></returns>
@@ -54,7 +54,7 @@ public sealed class ClassificationXGBoostModel
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>
@@ -75,7 +75,7 @@ public sealed class ClassificationXGBoostModel
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observation"></param>
     /// <returns></returns>
@@ -101,7 +101,7 @@ public sealed class ClassificationXGBoostModel
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>
@@ -168,7 +168,7 @@ public sealed class ClassificationXGBoostModel
     public void Save(string modelFilePath) => m_model.Save(modelFilePath);
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public void Dispose()
     {

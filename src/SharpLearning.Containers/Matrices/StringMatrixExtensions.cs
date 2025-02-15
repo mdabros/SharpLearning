@@ -9,7 +9,7 @@ namespace SharpLearning.Containers.Matrices;
 public static class StringMatrixExtensions
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static readonly Converter<string, double> DefaultConverter = FloatingPointConversion.ToF64;
 
@@ -59,7 +59,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1 
+    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1
     /// </summary>
     /// <param name="v1"></param>
     /// <param name="v2"></param>
@@ -89,7 +89,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix 
+    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>
@@ -124,7 +124,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines vector and and matrix  column-wise. Vector is added to the front of the matrix 
+    /// Combines vector and and matrix  column-wise. Vector is added to the front of the matrix
     /// </summary>
     /// <param name="v"></param>
     /// <param name="m"></param>
@@ -157,7 +157,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1 
+    /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1
     /// </summary>
     /// <param name="m1"></param>
     /// <param name="m2"></param>
@@ -194,7 +194,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix1 and matrix2 row-wise. Matrix2 is added to the end of matrix1 
+    /// Combines matrix1 and matrix2 row-wise. Matrix2 is added to the end of matrix1
     /// </summary>
     /// <param name="m1"></param>
     /// <param name="m2"></param>

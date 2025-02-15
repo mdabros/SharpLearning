@@ -6,7 +6,7 @@
 public sealed class GiniClassificationImpurityCalculator : ClassificationImpurityCalculator, IImpurityCalculator
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public GiniClassificationImpurityCalculator()
     {

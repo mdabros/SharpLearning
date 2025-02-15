@@ -40,7 +40,7 @@ public static class MatrixMultiplication
     }
 
     /// <summary>
-    /// Multiply vector v with matrix a. 
+    /// Multiply vector v with matrix a.
     /// Copies output to provided array.
     /// </summary>
     /// <param name="a"></param>

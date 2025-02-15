@@ -28,7 +28,7 @@ public sealed class ClassificationDecisionTreeLearner
     /// <param name="minimumSplitSize">The minimum size </param>
     /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
     /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-    /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
+    /// <param name="seed">Seed for feature selection if number of features pr split is not equal
     /// to the total amount of features in observations. The features will be selected at random for each split</param>
     public ClassificationDecisionTreeLearner(int maximumTreeDepth = 2000,
         int minimumSplitSize = 1,
@@ -41,7 +41,7 @@ public sealed class ClassificationDecisionTreeLearner
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <param name="targets"></param>
@@ -52,7 +52,7 @@ public sealed class ClassificationDecisionTreeLearner
     }
 
     /// <summary>
-    /// Learns a classification tree from the provided observations and targets. 
+    /// Learns a classification tree from the provided observations and targets.
     /// Weights can be provided in order to weight each sample individually
     /// </summary>
     /// <param name="observations"></param>

@@ -43,7 +43,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="residuals"></param>
@@ -76,7 +76,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="target"></param>
     /// <param name="prediction"></param>
@@ -87,7 +87,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>
@@ -106,7 +106,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>

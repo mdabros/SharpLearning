@@ -7,12 +7,12 @@ using SharpLearning.Containers.Views;
 namespace SharpLearning.Containers.Extensions;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public static class ArrayExtensions
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static readonly Converter<string, double> DefaultF64Converter = FloatingPointConversion.ToF64;
 
@@ -176,7 +176,7 @@ public static class ArrayExtensions
     }
 
     /// <summary>
-    /// Sorts the keys and values based on the keys within the provided interval 
+    /// Sorts the keys and values based on the keys within the provided interval
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValues"></typeparam>
@@ -332,7 +332,7 @@ public static class ArrayExtensions
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="values"></param>
     /// <param name="percentile"></param>
@@ -458,7 +458,7 @@ public static class ArrayExtensions
     /// <summary>
     /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
     /// http://en.wikipedia.org/wiki/Stratified_sampling
-    /// Returns a set of indices corresponding to the samples chosen. 
+    /// Returns a set of indices corresponding to the samples chosen.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="data"></param>
@@ -533,7 +533,7 @@ public static class ArrayExtensions
     /// <summary>
     /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
     /// http://en.wikipedia.org/wiki/Stratified_sampling
-    /// Returns a set of indices corresponding to the samples chosen. 
+    /// Returns a set of indices corresponding to the samples chosen.
     /// Only samples within the indices provided in dataIndices
     /// </summary>
     /// <typeparam name="T"></typeparam>

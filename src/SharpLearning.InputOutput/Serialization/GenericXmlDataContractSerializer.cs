@@ -19,10 +19,10 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     /// <summary>
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
-    /// <param name="knownTypes">If the serializer fails with an unknown type exception. 
+    /// <param name="knownTypes">If the serializer fails with an unknown type exception.
     /// The necesarry types can be provided in the cosntructer.</param>
-    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true). 
-    /// This adds extra information to the xml which is needed when serializing some model types. 
+    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true).
+    /// This adds extra information to the xml which is needed when serializing some model types.
     /// Currently only the SharpLearning.Neural models require this.</param>
     public GenericXmlDataContractSerializer(Type[] knownTypes, bool preserveObjectReferences = true)
     {
@@ -33,8 +33,8 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     /// <summary>
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
-    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true). 
-    /// This adds extra information to the xml which is needed when serializing some model types. 
+    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true).
+    /// This adds extra information to the xml which is needed when serializing some model types.
     /// Currently only the SharpLearning.Neural models require this.</param>
     public GenericXmlDataContractSerializer(bool preserveObjectReferences = true)
        : this([], preserveObjectReferences)

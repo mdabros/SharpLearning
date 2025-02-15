@@ -16,27 +16,27 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     Matrix<float> m_delta;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int NumberOfTargets;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
@@ -56,7 +56,7 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     /// <returns></returns>
@@ -75,7 +75,7 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
@@ -86,7 +86,7 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -102,7 +102,7 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="layers"></param>
     public void CopyLayerForPredictionModel(List<ILayer> layers)

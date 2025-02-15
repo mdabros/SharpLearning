@@ -14,7 +14,7 @@ using SharpLearning.Metrics.Regression;
 namespace SharpLearning.AdaBoost.Learners;
 
 /// <summary>
-/// Regression AdaBoost learner using the R2 algorithm 
+/// Regression AdaBoost learner using the R2 algorithm
 /// using weighted sampling to target the observations with largest error and
 /// weighted median to ensemble the models.
 /// </summary>
@@ -44,13 +44,13 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
     readonly WeightedRandomSampler m_sampler;
 
     /// <summary>
-    /// Regression AdaBoost learner using the R2 algorithm 
+    /// Regression AdaBoost learner using the R2 algorithm
     /// using weighted sampling to target the observations with largest error and
     /// weighted median to ensemble the models.
     /// </summary>
     /// <param name="iterations">Number of iterations (models) to boost</param>
     /// <param name="learningRate">How much each boost iteration should add (between 1.0 and 0.0)</param>
-    /// <param name="maximumTreeDepth">The maximum depth of the tree models. 
+    /// <param name="maximumTreeDepth">The maximum depth of the tree models.
     /// 0 will set the depth to default 3</param>
     /// <param name="loss">Type of loss used when boosting weights. Linear is default</param>
     /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>

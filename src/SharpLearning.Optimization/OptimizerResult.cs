@@ -9,7 +9,7 @@ namespace SharpLearning.Optimization;
 public sealed class OptimizerResult
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="error"></param>
     /// <param name="parameterSet"></param>

@@ -10,12 +10,12 @@ namespace SharpLearning.Containers;
 public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly F64Matrix Observations;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double[] Targets;
 
@@ -31,7 +31,7 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -44,7 +44,7 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -59,7 +59,7 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

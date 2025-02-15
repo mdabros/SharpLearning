@@ -10,33 +10,33 @@ using SharpLearning.InputOutput.Serialization;
 namespace SharpLearning.GradientBoost.Models;
 
 /// <summary>
-/// 
+///
 /// </summary>
 [Serializable]
 public sealed class RegressionGradientBoostModel : IPredictorModel<double>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly GBMTree[] Trees;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double LearningRate;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double InitialLoss;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FeatureCount;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="trees"></param>
     /// <param name="learningRate"></param>

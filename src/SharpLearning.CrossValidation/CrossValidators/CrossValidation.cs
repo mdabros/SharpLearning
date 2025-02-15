@@ -18,7 +18,7 @@ public class CrossValidation<TPrediction> : ICrossValidation<TPrediction>
     /// <summary>
     /// Cross validation for evaluating how learning algorithms perform on unseen observations
     /// </summary>
-    /// <param name="sampler">Sampling strategy for the provided indices 
+    /// <param name="sampler">Sampling strategy for the provided indices
     /// before they are divided into the provided folds</param>
     /// <param name="crossValidationFolds">Number of folds that should be used for cross validation</param>
     public CrossValidation(IIndexSampler<double> sampler, int crossValidationFolds)
@@ -48,7 +48,7 @@ public class CrossValidation<TPrediction> : ICrossValidation<TPrediction>
     }
 
     /// <summary>
-    /// Cross validated predictions. 
+    /// Cross validated predictions.
     /// Only crossValidates within the provided indices.
     /// The predictions are returned in the predictions array.
     /// </summary>

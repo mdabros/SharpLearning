@@ -11,7 +11,7 @@ using SharpLearning.InputOutput.Serialization;
 namespace SharpLearning.GradientBoost.Models;
 
 /// <summary>
-/// 
+///
 /// </summary>
 [Serializable]
 public sealed class ClassificationGradientBoostModel
@@ -19,32 +19,32 @@ public sealed class ClassificationGradientBoostModel
     , IPredictorModel<ProbabilityPrediction>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly GBMTree[][] Trees;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double LearningRate;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double InitialLoss;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double[] TargetNames;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FeatureCount;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="trees"></param>
     /// <param name="targetNames"></param>

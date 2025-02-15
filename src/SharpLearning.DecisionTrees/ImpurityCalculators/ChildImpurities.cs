@@ -8,17 +8,17 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators;
 public struct ChildImpurities : IEquatable<ChildImpurities>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Left;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Right;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
@@ -29,7 +29,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -42,7 +42,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -52,7 +52,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -63,7 +63,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -74,7 +74,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

@@ -20,7 +20,7 @@ public class CsvRow
     public readonly Dictionary<string, int> ColumnNameToIndex;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="columnNameToIndex"></param>
     /// <param name="data"></param>
@@ -34,7 +34,7 @@ public class CsvRow
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -54,7 +54,7 @@ public class CsvRow
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -69,7 +69,7 @@ public class CsvRow
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

@@ -3,7 +3,7 @@
 namespace SharpLearning.DecisionTrees.SplitSearchers;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public struct SplitResult : IEquatable<SplitResult>
 {
@@ -23,17 +23,17 @@ public struct SplitResult : IEquatable<SplitResult>
     public readonly double ImpurityImprovement;
 
     /// <summary>
-    /// Impurity of the left side of the split 
+    /// Impurity of the left side of the split
     /// </summary>
     public readonly double ImpurityLeft;
 
     /// <summary>
-    /// Impurity of the right side of the split 
+    /// Impurity of the right side of the split
     /// </summary>
     public readonly double ImpurityRight;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="splitIndex">Split index within the feature used for split</param>
     /// <param name="threshold">Threshold used for splitting</param>
@@ -60,7 +60,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -76,7 +76,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -86,7 +86,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -97,7 +97,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -108,7 +108,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

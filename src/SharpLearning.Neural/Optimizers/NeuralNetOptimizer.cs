@@ -7,7 +7,7 @@ namespace SharpLearning.Neural.Optimizers;
 
 /// <summary>
 /// Neural net optimizer for controlling the weight updates in neural net learning.
-/// uses mini-batch stochastic gradient descent. 
+/// uses mini-batch stochastic gradient descent.
 /// Several different optimization methods is available through the constructor.
 /// </summary>
 public sealed class NeuralNetOptimizer
@@ -41,7 +41,7 @@ public sealed class NeuralNetOptimizer
 
     /// <summary>
     /// Neural net optimizer for controlling the weight updates in neural net learning.
-    /// uses mini-batch stochastic gradient descent. 
+    /// uses mini-batch stochastic gradient descent.
     /// Several different optimization methods is available through the constructor.
     /// </summary>
     /// <param name="learningRate">Controls the step size when updating the weights. (Default is 0.01)</param>

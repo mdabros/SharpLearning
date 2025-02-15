@@ -34,7 +34,7 @@ public unsafe struct F64VectorView
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Length { get; private set; }
 

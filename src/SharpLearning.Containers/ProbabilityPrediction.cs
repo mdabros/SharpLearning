@@ -11,17 +11,17 @@ namespace SharpLearning.Containers;
 public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Prediction;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly Dictionary<double, double> Probabilities;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="prediction"></param>
     /// <param name="probabilities">Dictionary containing the class name to class probability</param>
@@ -32,7 +32,7 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -59,7 +59,7 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -69,7 +69,7 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -80,7 +80,7 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -91,7 +91,7 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

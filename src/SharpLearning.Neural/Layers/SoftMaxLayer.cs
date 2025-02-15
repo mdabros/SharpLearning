@@ -8,8 +8,8 @@ namespace SharpLearning.Neural.Layers;
 
 /// <summary>
 /// SoftMax Layer.
-/// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes. 
-/// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class, 
+/// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes.
+/// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class,
 /// the Softmax classifier gives a slightly more intuitive output (normalized class probabilities.
 /// However, the softmax might sacrifice accuracy in order to achieve better probabilities.
 /// </summary>
@@ -23,33 +23,33 @@ public sealed class SoftMaxLayer
     Matrix<float> m_delta;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int NumberOfClasses;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
     /// <summary>
-    /// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes. 
-    /// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class, 
+    /// The Softmax classifier is the generalization of the binary logistic regression classifier to multiple classes.
+    /// Unlike the SVM which treats the outputs as (uncalibrated and possibly difficult to interpret) scores for each class,
     /// the Softmax classifier gives a slightly more intuitive output (normalized class probabilities.
     /// However, the softmax might sacrifice accuracy in order to achieve better propabilities.
     /// </summary>
@@ -66,7 +66,7 @@ public sealed class SoftMaxLayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     public Matrix<float> Backward(Matrix<float> delta)
@@ -78,7 +78,7 @@ public sealed class SoftMaxLayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
@@ -91,7 +91,7 @@ public sealed class SoftMaxLayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -148,7 +148,7 @@ public sealed class SoftMaxLayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parametersAndGradients"></param>
     public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)

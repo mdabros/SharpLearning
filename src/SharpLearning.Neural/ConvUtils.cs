@@ -10,7 +10,7 @@ namespace SharpLearning.Neural;
 public static class ConvUtils
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="filterSize"></param>
     /// <param name="borderMode"></param>
@@ -55,7 +55,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="m"></param>
     /// <param name="n"></param>
@@ -75,7 +75,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="m"></param>
     /// <param name="n"></param>
@@ -95,7 +95,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data_im"></param>
     /// <param name="channels"></param>
@@ -162,7 +162,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="convoluted"></param>
     /// <param name="channels"></param>
@@ -214,7 +214,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data_convolutedRowMajor"></param>
     /// <param name="channels"></param>
@@ -266,7 +266,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data_col"></param>
     /// <param name="channels"></param>

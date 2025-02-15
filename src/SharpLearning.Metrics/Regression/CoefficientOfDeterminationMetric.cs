@@ -4,7 +4,7 @@ using System.Linq;
 namespace SharpLearning.Metrics.Regression;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class CoefficientOfDeterminationMetric : IRegressionMetric
 {

@@ -8,7 +8,7 @@ namespace SharpLearning.Neural.Layers;
 
 /// <summary>
 /// SvmLayer.
-/// Because the SVM is a margin classifier, it is happy once the margins are satisfied 
+/// Because the SVM is a margin classifier, it is happy once the margins are satisfied
 /// and it does not micromanage the exact scores beyond this constraint.
 /// This can be an advantage when the overall goal is the best possible accuracy. And probability estimates is less important.
 /// </summary>
@@ -22,32 +22,32 @@ public sealed class SvmLayer
     Matrix<float> m_delta;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int NumberOfClasses;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
     /// <summary>
-    /// Because the SVM is a margin classifier, it is happy once the margins are satisfied 
+    /// Because the SVM is a margin classifier, it is happy once the margins are satisfied
     /// and it does not micromanage the exact scores beyond this constraint.
     /// This can be an advantage when the overall goal is the best possible accuracy. And probability estimates is less important.
     /// </summary>
@@ -64,7 +64,7 @@ public sealed class SvmLayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     public Matrix<float> Backward(Matrix<float> delta)
@@ -106,7 +106,7 @@ public sealed class SvmLayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
@@ -117,7 +117,7 @@ public sealed class SvmLayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>

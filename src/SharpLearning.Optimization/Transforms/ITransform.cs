@@ -3,7 +3,7 @@
 namespace SharpLearning.Optimization.Transforms;
 
 /// <summary>
-/// Interface for transforms. 
+/// Interface for transforms.
 /// </summary>
 public interface ITransform
 {

@@ -13,7 +13,7 @@ public sealed class RandomIndexSampler<T> : IIndexSampler<T>
     readonly Random m_random;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="seed"></param>
     public RandomIndexSampler(int seed)
@@ -22,7 +22,7 @@ public sealed class RandomIndexSampler<T> : IIndexSampler<T>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public RandomIndexSampler()
         : this(42)
@@ -50,7 +50,7 @@ public sealed class RandomIndexSampler<T> : IIndexSampler<T>
     }
 
     /// <summary>
-    /// Random index sampler. Takes at random a sample of size sample size. 
+    /// Random index sampler. Takes at random a sample of size sample size.
     /// Only samples within the indices provided in dataIndices
     /// </summary>
     /// <param name="data"></param>

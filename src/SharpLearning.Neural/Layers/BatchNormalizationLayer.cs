@@ -16,22 +16,22 @@ namespace SharpLearning.Neural.Layers;
 public sealed class BatchNormalizationLayer : ILayer
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
@@ -86,7 +86,7 @@ public sealed class BatchNormalizationLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     /// <returns></returns>
@@ -151,7 +151,7 @@ public sealed class BatchNormalizationLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
@@ -257,7 +257,7 @@ public sealed class BatchNormalizationLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -291,7 +291,7 @@ public sealed class BatchNormalizationLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="layers"></param>
     public void CopyLayerForPredictionModel(List<ILayer> layers)

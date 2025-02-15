@@ -3,7 +3,7 @@
 namespace SharpLearning.XGBoost;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public static class SamplerTypeExtensions
 {

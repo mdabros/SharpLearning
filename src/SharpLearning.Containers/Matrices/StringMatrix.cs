@@ -21,7 +21,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     }
 
     /// <summary>
-    /// Creates a matrix from the provided values with the specified rows and cols 
+    /// Creates a matrix from the provided values with the specified rows and cols
     /// </summary>
     /// <param name="values"></param>
     /// <param name="rows"></param>
@@ -95,7 +95,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     }
 
     /// <summary>
-    /// gets the specified row. 
+    /// gets the specified row.
     /// The values are copied to the provided row array.
     /// </summary>
     /// <param name="index"></param>
@@ -165,7 +165,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     }
 
     /// <summary>
-    /// Gets the specified rows as a matrix. 
+    /// Gets the specified rows as a matrix.
     /// Output is copied to the provided matrix
     /// </summary>
     /// <param name="indices"></param>
@@ -253,7 +253,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     public int RowCount { get; private set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -267,7 +267,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -282,7 +282,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

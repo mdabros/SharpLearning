@@ -13,7 +13,7 @@ namespace SharpLearning.InputOutput.Csv;
 public static class CsvRowExtensions
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static readonly Converter<string, double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
 
@@ -192,7 +192,7 @@ public static class CsvRowExtensions
     }
 
     /// <summary>
-    /// Enumerates a Matrix to CsvRows. 
+    /// Enumerates a Matrix to CsvRows.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="matrix"></param>
@@ -250,7 +250,7 @@ public static class CsvRowExtensions
     }
 
     /// <summary>
-    /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on. 
+    /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on.
     /// </summary>
     /// <param name="thisRows"></param>
     /// <param name="otherRows"></param>
@@ -303,7 +303,7 @@ public static class CsvRowExtensions
     }
 
     /// <summary>
-    /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on. 
+    /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on.
     /// </summary>
     /// <param name="thisRows"></param>
     /// <param name="otherRows"></param>

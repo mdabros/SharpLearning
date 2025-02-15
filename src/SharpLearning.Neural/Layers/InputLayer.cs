@@ -7,33 +7,33 @@ using SharpLearning.Neural.Initializations;
 namespace SharpLearning.Neural.Layers;
 
 /// <summary>
-/// 
+///
 /// </summary>
 [Serializable]
 public sealed class InputLayer : ILayer
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputUnits"></param>
     public InputLayer(int inputUnits)
@@ -42,7 +42,7 @@ public sealed class InputLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="width"></param>
     /// <param name="height"></param>
@@ -60,7 +60,7 @@ public sealed class InputLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     public Matrix<float> Backward(Matrix<float> delta)
@@ -69,7 +69,7 @@ public sealed class InputLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     public Matrix<float> Forward(Matrix<float> input)
@@ -78,7 +78,7 @@ public sealed class InputLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -93,7 +93,7 @@ public sealed class InputLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parametersAndGradients"></param>
     public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)

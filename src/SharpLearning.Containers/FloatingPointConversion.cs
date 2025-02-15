@@ -4,17 +4,17 @@ using System.Globalization;
 namespace SharpLearning.Containers;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public static class FloatingPointConversion
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public const string DefaultFormat = "R";
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static readonly NumberFormatInfo Nfi = new();
 
@@ -25,7 +25,7 @@ public static class FloatingPointConversion
 
     /// <summary>
     /// Default format for outputting double values to string.
-    /// </summary> 
+    /// </summary>
     public static string ToString(double value)
     {
         return value.ToString(DefaultFormat, Nfi);

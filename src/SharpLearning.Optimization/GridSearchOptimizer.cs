@@ -16,7 +16,7 @@ public sealed class GridSearchOptimizer : IOptimizer
     readonly ParallelOptions m_parallelOptions;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
     /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
@@ -45,7 +45,7 @@ public sealed class GridSearchOptimizer : IOptimizer
 
     /// <summary>
     /// Simple grid search that tries all combinations of the provided parameters.
-    /// Returns all results, chronologically ordered. 
+    /// Returns all results, chronologically ordered.
     /// Note that the order of results might be affected if running parallel.
     /// </summary>
     /// <param name="functionToMinimize"></param>

@@ -17,7 +17,7 @@ public unsafe class DecisionTreeLearner
     readonly ITreeBuilder m_treeBuilder;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="treeBuilder"></param>
     public DecisionTreeLearner(ITreeBuilder treeBuilder)

@@ -4,10 +4,10 @@ using SharpLearning.Containers.Extensions;
 namespace SharpLearning.CrossValidation.Samplers;
 
 /// <summary>
-/// Stratified index sampler. Samples. 
+/// Stratified index sampler. Samples.
 /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
 /// http://en.wikipedia.org/wiki/Stratified_sampling
-/// Returns a set of indices corresponding to the samples chosen. 
+/// Returns a set of indices corresponding to the samples chosen.
 /// </summary>
 /// <typeparam name="T">Returns a set of indices corresponding to the samples chosen. </typeparam>
 public sealed class StratifiedIndexSampler<T> : IIndexSampler<T>
@@ -15,10 +15,10 @@ public sealed class StratifiedIndexSampler<T> : IIndexSampler<T>
     readonly Random m_random;
 
     /// <summary>
-    /// Stratified index sampler. Samples. 
+    /// Stratified index sampler. Samples.
     /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
     /// http://en.wikipedia.org/wiki/Stratified_sampling
-    /// Returns a set of indices corresponding to the samples chosen. 
+    /// Returns a set of indices corresponding to the samples chosen.
     /// </summary>
     /// <param name="seed"></param>
     public StratifiedIndexSampler(int seed)
@@ -28,7 +28,7 @@ public sealed class StratifiedIndexSampler<T> : IIndexSampler<T>
 
     /// <summary>
     /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
-    /// Returns a set of indices corresponding to the samples chosen. 
+    /// Returns a set of indices corresponding to the samples chosen.
     /// </summary>
     /// <param name="data"></param>
     /// <param name="sampleSize"></param>
@@ -41,7 +41,7 @@ public sealed class StratifiedIndexSampler<T> : IIndexSampler<T>
     /// <summary>
     /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
     /// http://en.wikipedia.org/wiki/Stratified_sampling
-    /// Returns a set of indices corresponding to the samples chosen. 
+    /// Returns a set of indices corresponding to the samples chosen.
     /// Only samples within the indices provided in dataIndices
     /// </summary>
     /// <param name="data"></param>

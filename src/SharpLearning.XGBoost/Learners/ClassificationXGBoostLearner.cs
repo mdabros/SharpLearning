@@ -20,7 +20,7 @@ public sealed class ClassificationXGBoostLearner
     readonly IDictionary<string, object> m_parameters = new Dictionary<string, object>();
 
     /// <summary>
-    /// Classification learner for XGBoost. For classification problems, 
+    /// Classification learner for XGBoost. For classification problems,
     /// XGBoost requires that target values are sequential and start at 0.
     /// </summary>
     /// <param name="maximumTreeDepth">Maximum tree depth for base learners. (default is 3)</param>
@@ -28,7 +28,7 @@ public sealed class ClassificationXGBoostLearner
     /// <param name="estimators">Number of estimators to fit. (default is 100)</param>
     /// <param name="silent">Whether to print messages while running boosting. (default is false)</param>
     /// <param name="objective">Specify the learning task and the corresponding learning objective. (default is softmax)</param>
-    /// <param name="boosterType"> which booster to use, can be gbtree, gblinear or dart. 
+    /// <param name="boosterType"> which booster to use, can be gbtree, gblinear or dart.
     /// gbtree and dart use tree based model while gblinear uses linear function (default is gbtree)</param>
     /// <param name="treeMethod">The tree construction algorithm used in XGBoost. See reference paper: https://arxiv.org/abs/1603.02754. (default is auto)</param>
     /// <param name="samplerType">Type of sampling algorithm for DART. (default is uniform)</param>

@@ -8,7 +8,7 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters;
 public interface ITrainingTestIndexSplitter<T>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <returns></returns>

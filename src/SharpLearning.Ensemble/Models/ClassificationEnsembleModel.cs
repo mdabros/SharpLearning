@@ -30,7 +30,7 @@ public class ClassificationEnsembleModel : IPredictorModel<double>, IPredictorMo
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observation"></param>
     /// <returns></returns>
@@ -40,7 +40,7 @@ public class ClassificationEnsembleModel : IPredictorModel<double>, IPredictorMo
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>

@@ -5,7 +5,7 @@ using SharpLearning.Containers;
 namespace SharpLearning.DecisionTrees.Nodes;
 
 /// <summary>
-/// Binary tree 
+/// Binary tree
 /// </summary>
 [Serializable]
 public sealed class BinaryTree
@@ -31,7 +31,7 @@ public sealed class BinaryTree
     public readonly double[] VariableImportance;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="nodes"></param>
     /// <param name="probabilities"></param>

@@ -35,24 +35,24 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
     double[] m_weights;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public double WeightedLeft => m_weightedLeft;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public double WeightedRight => m_weightedRight;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public RegressionImpurityCalculator()
     {
     }
 
     /// <summary>
-    /// Initialize the calculator with targets, weights and work interval 
+    /// Initialize the calculator with targets, weights and work interval
     /// </summary>
     /// <param name="uniqueTargets"></param>
     /// <param name="targets"></param>

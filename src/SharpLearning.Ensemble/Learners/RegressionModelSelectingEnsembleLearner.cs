@@ -24,7 +24,7 @@ public class RegressionModelSelectingEnsembleLearner : ILearner<double>, IIndexe
     readonly IRegressionEnsembleSelection m_ensembleSelection;
 
     /// <summary>
-    /// Regression model selecting EnsembleLearner. 
+    /// Regression model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble.
     /// The selection of the best set of models is based on cross validation.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
@@ -43,7 +43,7 @@ public class RegressionModelSelectingEnsembleLearner : ILearner<double>, IIndexe
     }
 
     /// <summary>
-    /// Regression model selecting EnsembleLearner. 
+    /// Regression model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble.
     /// The selection of the best set of models is based on cross validation.
     /// Trains several models and selects the best subset of models for the ensemble.

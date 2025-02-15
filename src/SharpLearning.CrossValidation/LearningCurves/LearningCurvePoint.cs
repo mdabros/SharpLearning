@@ -8,17 +8,17 @@ namespace SharpLearning.CrossValidation.LearningCurves;
 public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int SampleSize;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double TrainingScore;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double ValidationScore;
 
@@ -36,7 +36,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -50,7 +50,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -61,7 +61,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -74,7 +74,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
@@ -91,7 +91,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()
