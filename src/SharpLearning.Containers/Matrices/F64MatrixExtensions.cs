@@ -122,8 +122,8 @@ public static class F64MatrixExtensions
     /// <summary>
     /// Combines vector and matrix column-wise. Matrix is added to the left of the vector
     /// </summary>
-    /// <param name="m"></param>
     /// <param name="v"></param>
+    /// <param name="m"></param>
     /// <returns></returns>
     public static F64Matrix CombineCols(this double[] v, F64Matrix m)
     {
@@ -241,8 +241,8 @@ public static class F64MatrixExtensions
     /// <summary>
     /// Combines vecor and matrix row wise. Matrix is added to the bottom of the vector
     /// </summary>
-    /// <param name="m"></param>
     /// <param name="v"></param>
+    /// <param name="m"></param>
     /// <returns></returns>
     public static F64Matrix CombineRows(this double[] v, F64Matrix m)
     {

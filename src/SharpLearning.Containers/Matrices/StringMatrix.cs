@@ -67,8 +67,8 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     /// <summary>
     /// Access the matrix like a 2D array
     /// </summary>
-    /// <param name="col"></param>
     /// <param name="row"></param>
+    /// <param name="col"></param>
     /// <returns></returns>
     public string this[int row, int col]
     {
@@ -273,12 +273,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is StringMatrix other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is StringMatrix other && Equals(other);
     }
 
     /// <summary>
