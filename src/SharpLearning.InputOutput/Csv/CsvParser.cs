@@ -103,14 +103,7 @@ public sealed class CsvParser
     /// <returns></returns>
     public IEnumerable<CsvRow> EnumerateRows()
     {
-        if (m_hasHeader)
-        {
-            return EnumerateRowsHeader();
-        }
-        else
-        {
-            return EnumerateRowsNoHeader();
-        }
+        return m_hasHeader ? EnumerateRowsHeader() : EnumerateRowsNoHeader();
     }
 
     IEnumerable<CsvRow> EnumerateRowsHeader()

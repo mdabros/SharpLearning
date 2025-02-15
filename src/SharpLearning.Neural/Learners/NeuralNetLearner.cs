@@ -274,14 +274,7 @@ public class NeuralNetLearner
             }
         }
 
-        if (earlyStopping)
-        {
-            return bestNeuralNet;
-        }
-        else
-        {
-            return m_net.CopyNetForPredictionModel();
-        }
+        return earlyStopping ? bestNeuralNet : m_net.CopyNetForPredictionModel();
     }
 
     static void SetupLinerAlgebraProvider()

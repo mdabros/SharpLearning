@@ -78,14 +78,7 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     public double NegativeGradient(double target, double prediction)
     {
         var value = target - prediction;
-        if (value > 0.0)
-        {
-            return 1.0;
-        }
-        else
-        {
-            return -1.0;
-        }
+        return value > 0.0 ? 1.0 : -1.0;
     }
 
     /// <summary>

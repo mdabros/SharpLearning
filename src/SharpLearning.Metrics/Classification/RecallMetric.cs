@@ -31,12 +31,9 @@ public sealed class RecallMetric<T> : IClassificationMetric<T>
     {
         var uniques = Utilities.UniqueTargetValues(targets, predictions);
 
-        if (uniques.Count > 2)
-        {
-            throw new ArgumentException("RecallMetric only supports binary classification problems");
-        }
-
-        return 1.0 - Recall(targets, predictions);
+        return uniques.Count > 2
+            ? throw new ArgumentException("RecallMetric only supports binary classification problems")
+            : 1.0 - Recall(targets, predictions);
     }
 
     double Recall(T[] targets, T[] predictions)
@@ -61,12 +58,7 @@ public sealed class RecallMetric<T> : IClassificationMetric<T>
             }
         }
 
-        if (truePositives + falseNegatives == 0)
-        {
-            return 0.0;
-        }
-
-        return (double)truePositives / ((double)truePositives + (double)falseNegatives);
+        return truePositives + falseNegatives == 0 ? 0.0 : (double)truePositives / ((double)truePositives + (double)falseNegatives);
     }
 
     /// <summary>

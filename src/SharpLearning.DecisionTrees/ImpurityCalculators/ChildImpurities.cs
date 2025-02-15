@@ -36,9 +36,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     public bool Equals(ChildImpurities other)
     {
         if (!Equal(Left, other.Left)) { return false; }
-        if (!Equal(Right, other.Right)) { return false; }
-
-        return true;
+        return Equal(Right, other.Right);
     }
 
     /// <summary>
@@ -87,11 +85,6 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     static bool Equal(double a, double b)
     {
         var diff = Math.Abs(a * Tolerence);
-        if (Math.Abs(a - b) <= diff)
-        {
-            return true;
-        }
-
-        return false;
+        return Math.Abs(a - b) <= diff;
     }
 }

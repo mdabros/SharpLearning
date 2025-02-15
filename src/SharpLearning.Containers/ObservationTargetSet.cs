@@ -38,9 +38,7 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     public bool Equals(ObservationTargetSet other)
     {
         if (!Observations.Equals(other.Observations)) { return false; }
-        if (!Targets.SequenceEqual(other.Targets)) { return false; }
-
-        return true;
+        return Targets.SequenceEqual(other.Targets);
     }
 
     /// <summary>
@@ -50,12 +48,7 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is ObservationTargetSet other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is ObservationTargetSet other && Equals(other);
     }
 
     /// <summary>

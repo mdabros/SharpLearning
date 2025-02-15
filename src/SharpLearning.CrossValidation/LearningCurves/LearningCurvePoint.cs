@@ -44,9 +44,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     {
         if (SampleSize != other.SampleSize) { return false; }
         if (TrainingScore != other.TrainingScore) { return false; }
-        if (ValidationScore != other.ValidationScore) { return false; }
-
-        return true;
+        return ValidationScore == other.ValidationScore;
     }
 
     /// <summary>
@@ -80,14 +78,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is LearningCurvePoint)
-        {
-            return Equals((LearningCurvePoint)obj);
-        }
-        else
-        {
-            return false;
-        }
+        return obj is LearningCurvePoint ? Equals((LearningCurvePoint)obj) : false;
     }
 
     /// <summary>

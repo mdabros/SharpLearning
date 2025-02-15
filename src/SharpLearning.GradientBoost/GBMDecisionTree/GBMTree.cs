@@ -72,14 +72,7 @@ public class GBMTree
 
         var leaf = Predict(Nodes[1], 1, observation);
 
-        if (observation[leaf.FeatureIndex] < leaf.SplitValue)
-        {
-            return leaf.LeftConstant;
-        }
-        else
-        {
-            return leaf.RightConstant;
-        }
+        return observation[leaf.FeatureIndex] < leaf.SplitValue ? leaf.LeftConstant : leaf.RightConstant;
     }
 
     /// <summary>

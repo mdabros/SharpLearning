@@ -70,9 +70,7 @@ public struct SplitResult : IEquatable<SplitResult>
         if (!Equal(Threshold, other.Threshold)) { return false; }
         if (!Equal(ImpurityImprovement, other.ImpurityImprovement)) { return false; }
         if (!Equal(ImpurityLeft, other.ImpurityLeft)) { return false; }
-        if (!Equal(ImpurityRight, other.ImpurityRight)) { return false; }
-
-        return true;
+        return Equal(ImpurityRight, other.ImpurityRight);
     }
 
     /// <summary>
@@ -125,11 +123,6 @@ public struct SplitResult : IEquatable<SplitResult>
     static bool Equal(double a, double b)
     {
         var diff = Math.Abs(a * Tolerence);
-        if (Math.Abs(a - b) <= diff)
-        {
-            return true;
-        }
-
-        return false;
+        return Math.Abs(a - b) <= diff;
     }
 }

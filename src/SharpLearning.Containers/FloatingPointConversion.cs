@@ -54,13 +54,8 @@ public static class FloatingPointConversion
 
     static double ParseAnyNumberStyle(string value)
     {
-        if (double.TryParse(value, NumberStyle, Nfi, out var result))
-        {
-            return result;
-        }
-        else
-        {
-            throw new ArgumentException($"Unable to parse \"{value}\" to double");
-        }
+        return double.TryParse(value, NumberStyle, Nfi, out var result)
+            ? result
+            : throw new ArgumentException($"Unable to parse \"{value}\" to double");
     }
 }

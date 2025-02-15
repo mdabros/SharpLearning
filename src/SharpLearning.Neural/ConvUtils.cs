@@ -46,12 +46,9 @@ public static class ConvUtils
     {
         // BorderMode.Same pads with half the filter size on both sides (one less on
         // the second side for an even filter size)
-        if (borderMode == BorderMode.Same && filterSize % 2 == 0)
-        {
-            return (int)Math.Floor((inputLength + (padding + padding - 1) - filterSize) / (double)stride + 1);
-        }
-
-        return (int)Math.Floor((inputLength + padding * 2 - filterSize) / (double)stride + 1);
+        return borderMode == BorderMode.Same && filterSize % 2 == 0
+            ? (int)Math.Floor((inputLength + (padding + padding - 1) - filterSize) / (double)stride + 1)
+            : (int)Math.Floor((inputLength + padding * 2 - filterSize) / (double)stride + 1);
     }
 
     /// <summary>

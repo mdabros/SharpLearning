@@ -83,14 +83,7 @@ public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
     /// <returns></returns>
     public double NegativeGradient(double target, double prediction)
     {
-        if (target > prediction)
-        {
-            return m_alpha;
-        }
-        else
-        {
-            return -(1.0 - m_alpha);
-        }
+        return target > prediction ? m_alpha : -(1.0 - m_alpha);
     }
 
     /// <summary>

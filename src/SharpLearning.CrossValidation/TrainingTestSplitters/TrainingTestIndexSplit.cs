@@ -37,9 +37,7 @@ public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
     public bool Equals(TrainingTestIndexSplit other)
     {
         if (!TrainingIndices.SequenceEqual(other.TrainingIndices)) { return false; }
-        if (!TestIndices.SequenceEqual(other.TestIndices)) { return false; }
-
-        return true;
+        return TestIndices.SequenceEqual(other.TestIndices);
     }
 
     /// <summary>
@@ -49,12 +47,7 @@ public sealed class TrainingTestIndexSplit : IEquatable<TrainingTestIndexSplit>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is TrainingTestIndexSplit other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is TrainingTestIndexSplit other && Equals(other);
     }
 
     /// <summary>

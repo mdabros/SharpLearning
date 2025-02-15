@@ -45,12 +45,7 @@ public class CsvRow
             return false;
         }
 
-        if (!ColumnNameToIndex.SequenceEqual(other.ColumnNameToIndex))
-        {
-            return false;
-        }
-
-        return true;
+        return ColumnNameToIndex.SequenceEqual(other.ColumnNameToIndex);
     }
 
     /// <summary>
@@ -60,12 +55,7 @@ public class CsvRow
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is CsvRow other)
-        {
-            return Equals(other);
-        }
-
-        return false;
+        return obj is CsvRow other ? Equals(other) : false;
     }
 
     /// <summary>

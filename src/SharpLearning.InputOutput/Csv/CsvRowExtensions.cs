@@ -111,12 +111,9 @@ public static class CsvRowExtensions
         var dataRowsList = dataRows.ToList();
         var first = dataRowsList[0];
 
-        if (first.ColumnNameToIndex.Count != 1)
-        {
-            throw new ArgumentException("Vector can only be genereded from a single column");
-        }
-
-        return dataRowsList.SelectMany(values => values.Values.AsF64(converter)).ToArray();
+        return first.ColumnNameToIndex.Count != 1
+            ? throw new ArgumentException("Vector can only be genereded from a single column")
+            : dataRowsList.SelectMany(values => values.Values.AsF64(converter)).ToArray();
     }
 
     /// <summary>
@@ -129,12 +126,9 @@ public static class CsvRowExtensions
         var dataRowsList = dataRows.ToList();
         var first = dataRowsList[0];
 
-        if (first.ColumnNameToIndex.Count != 1)
-        {
-            throw new ArgumentException("Vector can only be generated from a single column");
-        }
-
-        return dataRowsList.SelectMany(values => values.Values).ToArray();
+        return first.ColumnNameToIndex.Count != 1
+            ? throw new ArgumentException("Vector can only be generated from a single column")
+            : dataRowsList.SelectMany(values => values.Values).ToArray();
     }
 
     /// <summary>

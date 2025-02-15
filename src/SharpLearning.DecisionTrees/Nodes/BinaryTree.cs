@@ -79,14 +79,9 @@ public sealed class BinaryTree
             return node.Value;
         }
 
-        if (observation[node.FeatureIndex] <= node.Value)
-        {
-            return Predict(Nodes[node.LeftIndex], observation);
-        }
-        else
-        {
-            return Predict(Nodes[node.RightIndex], observation);
-        }
+        return observation[node.FeatureIndex] <= node.Value
+            ? Predict(Nodes[node.LeftIndex], observation)
+            : Predict(Nodes[node.RightIndex], observation);
 
         throw new InvalidOperationException("The tree is degenerated.");
     }
@@ -104,14 +99,9 @@ public sealed class BinaryTree
             return node;
         }
 
-        if (observation[node.FeatureIndex] <= node.Value)
-        {
-            return PredictNode(Nodes[node.LeftIndex], observation);
-        }
-        else
-        {
-            return PredictNode(Nodes[node.RightIndex], observation);
-        }
+        return observation[node.FeatureIndex] <= node.Value
+            ? PredictNode(Nodes[node.LeftIndex], observation)
+            : PredictNode(Nodes[node.RightIndex], observation);
 
         throw new InvalidOperationException("The tree is degenerated.");
     }
@@ -137,14 +127,9 @@ public sealed class BinaryTree
             return new ProbabilityPrediction(node.Value, targetProbabilities);
         }
 
-        if (observation[node.FeatureIndex] <= node.Value)
-        {
-            return PredictProbability(Nodes[node.LeftIndex], observation);
-        }
-        else
-        {
-            return PredictProbability(Nodes[node.RightIndex], observation);
-        }
+        return observation[node.FeatureIndex] <= node.Value
+            ? PredictProbability(Nodes[node.LeftIndex], observation)
+            : PredictProbability(Nodes[node.RightIndex], observation);
 
         throw new InvalidOperationException("The tree is degenerated.");
     }

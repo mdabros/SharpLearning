@@ -103,11 +103,6 @@ public class RegressionImpurityCalculatorTest
 
     static double Weight(double t)
     {
-        if (t == 2.0)
-        {
-            return 10.0;
-        }
-
-        return 1.0;
+        return t == 2.0 ? 10.0 : 1.0;
     }
 }

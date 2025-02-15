@@ -261,9 +261,7 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     {
         if (RowCount != other.RowCount) { return false; }
         if (ColumnCount != other.ColumnCount) { return false; }
-        if (!Data().SequenceEqual(other.Data())) { return false; }
-
-        return true;
+        return Data().SequenceEqual(other.Data());
     }
 
     /// <summary>

@@ -135,14 +135,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
 
     static double BinomialBestConstant(double sum, double binomialSum)
     {
-        if (binomialSum != 0.0)
-        {
-            return sum / binomialSum;
-        }
-        else
-        {
-            return 0.0;
-        }
+        return binomialSum != 0.0 ? sum / binomialSum : 0.0;
     }
 
     /// <summary>

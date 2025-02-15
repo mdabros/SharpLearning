@@ -521,13 +521,10 @@ public static class ArrayExtensions
             }
         }
 
-        if (requiredSamples.Sum(s => s.Value) != sampleSize)
-        {
-            throw new ArgumentException("Actual sample size: " + actualSampleSize +
-                " is different than specified sample size: " + sampleSize);
-        }
-
-        return sampleIndices;
+        return requiredSamples.Sum(s => s.Value) != sampleSize
+            ? throw new ArgumentException("Actual sample size: " + actualSampleSize +
+                " is different than specified sample size: " + sampleSize)
+            : sampleIndices;
     }
 
     /// <summary>
@@ -603,12 +600,9 @@ public static class ArrayExtensions
             }
         }
 
-        if (requiredSamples.Sum(s => s.Value) != sampleSize)
-        {
-            throw new ArgumentException("Actual sample size: " + actualSampleSize +
-                " is different than specified sample size: " + sampleSize);
-        }
-
-        return sampleIndices;
+        return requiredSamples.Sum(s => s.Value) != sampleSize
+            ? throw new ArgumentException("Actual sample size: " + actualSampleSize +
+                " is different than specified sample size: " + sampleSize)
+            : sampleIndices;
     }
 }

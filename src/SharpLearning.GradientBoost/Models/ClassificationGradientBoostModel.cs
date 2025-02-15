@@ -73,14 +73,7 @@ public sealed class ClassificationGradientBoostModel
     /// <returns></returns>
     public double Predict(double[] observation)
     {
-        if (TargetNames.Length == 2)
-        {
-            return BinaryPredict(observation);
-        }
-        else
-        {
-            return MultiClassPredict(observation);
-        }
+        return TargetNames.Length == 2 ? BinaryPredict(observation) : MultiClassPredict(observation);
     }
 
     /// <summary>
@@ -90,14 +83,7 @@ public sealed class ClassificationGradientBoostModel
     /// <returns></returns>
     public ProbabilityPrediction PredictProbability(double[] observation)
     {
-        if (TargetNames.Length == 2)
-        {
-            return BinaryProbabilityPredict(observation);
-        }
-        else
-        {
-            return MultiClassProbabilityPredict(observation);
-        }
+        return TargetNames.Length == 2 ? BinaryProbabilityPredict(observation) : MultiClassProbabilityPredict(observation);
     }
 
     /// <summary>

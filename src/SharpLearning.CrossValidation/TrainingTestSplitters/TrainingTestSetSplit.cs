@@ -52,9 +52,7 @@ public sealed class TrainingTestSetSplit : IEquatable<TrainingTestSetSplit>
     public bool Equals(TrainingTestSetSplit other)
     {
         if (!TrainingSet.Equals(other.TrainingSet)) { return false; }
-        if (!TestSet.Equals(other.TestSet)) { return false; }
-
-        return true;
+        return TestSet.Equals(other.TestSet);
     }
 
     /// <summary>
@@ -64,12 +62,7 @@ public sealed class TrainingTestSetSplit : IEquatable<TrainingTestSetSplit>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is TrainingTestSetSplit other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is TrainingTestSetSplit other && Equals(other);
     }
 
     /// <summary>

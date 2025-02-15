@@ -124,7 +124,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines vector and and matrix  column-wise. Vector is added to the front of the matrix
+    /// Combines vector and matrix  column-wise. Vector is added to the front of the matrix
     /// </summary>
     /// <param name="v"></param>
     /// <param name="m"></param>
