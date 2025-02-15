@@ -47,26 +47,23 @@ public sealed class CsvParser
     {
         if (!m_hasHeader)
         {
-            throw new ArgumentException("CsvParser configured to use no header." +
-                " Column names cannot be selected in this made");
+            throw new ArgumentException("CsvParser configured to use no header."
+                + " Column names cannot be selected in this mode");
         }
 
-        using var reader = m_getReader();
-        var headerLine = reader.ReadLine();
-        var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
-        var columnNames = columnNameToIndex.Keys.Where(name => selectColumnNames(name))
-            .ToArray();
+        var (columnNameToIndex, reader) = ReadHeader();
+        var columnNames = columnNameToIndex.Keys.Where(selectColumnNames).ToArray();
+
+        if (columnNames.Length == 0)
+        {
+            throw new InvalidOperationException("Column names has length 0.");
+        }
 
         var indices = columnNameToIndex.GetValues(columnNames);
         var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
             .ToDictionary(index => columnNames[index]);
 
-        string line = null;
-        while ((line = reader.ReadLine()) != null)
-        {
-            var lineSplit = Split(line, indices);
-            yield return new CsvRow(subColumnNameToIndex, lineSplit);
-        }
+        return EnumerateRows(reader, subColumnNameToIndex, indices);
     }
 
     /// <summary>
@@ -78,23 +75,16 @@ public sealed class CsvParser
     {
         if (!m_hasHeader)
         {
-            throw new ArgumentException("CsvParser configured to use no header." +
-                "Column names cannot be selected in this made");
+            throw new ArgumentException("CsvParser configured to use no header."
+                + " Column names cannot be selected in this mode");
         }
 
-        using var reader = m_getReader();
-        var headerLine = reader.ReadLine();
-        var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
+        var (columnNameToIndex, reader) = ReadHeader();
         var indices = columnNameToIndex.GetValues(columnNames);
         var subColumnNameToIndex = Enumerable.Range(0, indices.Length)
             .ToDictionary(index => columnNames[index]);
 
-        string line = null;
-        while ((line = reader.ReadLine()) != null)
-        {
-            var lineSplit = Split(line, indices);
-            yield return new CsvRow(subColumnNameToIndex, lineSplit);
-        }
+        return EnumerateRows(reader, subColumnNameToIndex, indices);
     }
 
     /// <summary>
@@ -108,27 +98,36 @@ public sealed class CsvParser
 
     IEnumerable<CsvRow> EnumerateRowsHeader()
     {
-        using var reader = m_getReader();
-        var headerLine = reader.ReadLine();
-        var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
-
-        string line = null;
-        while ((line = reader.ReadLine()) != null)
-        {
-            var lineSplit = Split(line);
-            yield return new CsvRow(columnNameToIndex, lineSplit);
-        }
+        var (columnNameToIndex, reader) = ReadHeader();
+        return EnumerateRows(reader, columnNameToIndex);
     }
 
     IEnumerable<CsvRow> EnumerateRowsNoHeader()
     {
         var columnNameToIndex = CreateHeaderForCsvFileWithout();
-
         using var reader = m_getReader();
-        string line = null;
+        return EnumerateRows(reader, columnNameToIndex);
+    }
+
+    (Dictionary<string, int> columnNameToIndex, TextReader reader) ReadHeader()
+    {
+        var reader = m_getReader();
+        var headerLine = reader.ReadLine() ?? throw new InvalidOperationException(
+            "The CSV file is empty or the reader returned null.");
+        var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
+        return (columnNameToIndex, reader);
+    }
+
+    IEnumerable<CsvRow> EnumerateRows(TextReader reader,
+        Dictionary<string, int> columnNameToIndex, int[] indices = null)
+    {
+        string line;
         while ((line = reader.ReadLine()) != null)
         {
-            var lineSplit = Split(line);
+            var lineSplit = indices == null
+                ? Split(line)
+                : Split(line, indices);
+
             yield return new CsvRow(columnNameToIndex, lineSplit);
         }
     }
@@ -140,7 +139,8 @@ public sealed class CsvParser
         // create header for csv file without header.
         using (var reader = m_getReader())
         {
-            var line = reader.ReadLine();
+            var line = reader.ReadLine() ?? throw new InvalidOperationException(
+                "The CSV file is empty or the reader returned null.");
             var splitLine = Split(line);
 
             for (var i = 0; i < splitLine.Length; i++)
@@ -156,28 +156,19 @@ public sealed class CsvParser
     {
         var dictionary = new Dictionary<string, int>();
         var lineSplit = Split(line);
-        var index = 0;
-        foreach (var item in lineSplit)
+        for (var index = 0; index < lineSplit.Length; index++)
         {
-            var trimmedItem = item.Trim();
+            var trimmedItem = lineSplit[index].Trim();
             dictionary.Add(trimmedItem, index);
-            index++;
         }
         return dictionary;
     }
 
     string[] Split(string line)
     {
-        string[] split = null;
-
-        if (m_quoteInclosedColumns)
-        {
-            split = SplitText(line, m_separator);
-        }
-        else
-        {
-            split = line.Split(m_separator);
-        }
+        var split = m_quoteInclosedColumns
+            ? SplitText(line, m_separator)
+            : line.Split(m_separator);
 
         for (var i = 0; i < split.Length; i++)
         {
@@ -188,17 +179,9 @@ public sealed class CsvParser
 
     string[] Split(string line, int[] indices)
     {
-        string[] splitAll = null;
-
-        if (m_quoteInclosedColumns)
-        {
-            splitAll = SplitText(line, m_separator);
-        }
-        else
-        {
-            splitAll = line.Split(m_separator);
-        }
-
+        var splitAll = m_quoteInclosedColumns
+            ? SplitText(line, m_separator)
+            : line.Split(m_separator);
         var split = new string[indices.Length];
 
         for (var i = 0; i < indices.Length; i++)
@@ -213,12 +196,10 @@ public sealed class CsvParser
     static string[] SplitText(string csvText, char separator)
     {
         var tokens = new List<string>();
-
         var last = -1;
-        var current = 0;
         var inText = false;
 
-        while (current < csvText.Length)
+        for (var current = 0; current < csvText.Length; current++)
         {
             var token = csvText[current];
 
@@ -226,16 +207,11 @@ public sealed class CsvParser
             {
                 inText = !inText;
             }
-            else if (token == separator)
+            else if (token == separator && !inText)
             {
-                if (!inText)
-                {
-                    tokens.Add(csvText.Substring(last + 1, current - last).Trim(' ', separator));
-                    last = current;
-                }
+                tokens.Add(csvText.Substring(last + 1, current - last).Trim(' ', separator));
+                last = current;
             }
-
-            current++;
         }
 
         if (last != csvText.Length - 1)
