@@ -70,8 +70,8 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// <summary>
     /// Access the matrix like a 2D array
     /// </summary>
-    /// <param name="col"></param>
     /// <param name="row"></param>
+    /// <param name="col"></param>
     /// <returns></returns>
     public double this[int row, int col]
     {
@@ -241,13 +241,13 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// Gets the number of columns
     /// </summary>
     /// <value></value>
-    public int ColumnCount { get; private set; }
+    public int ColumnCount { get; }
 
     /// <summary>
     /// Gets the number of rows
     /// </summary>
     /// <value></value>
-    public int RowCount { get; private set; }
+    public int RowCount { get; }
 
     /// <summary>
     /// Gets a pinned pointer to the F64Matrix

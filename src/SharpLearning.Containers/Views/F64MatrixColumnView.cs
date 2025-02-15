@@ -39,7 +39,7 @@ public unsafe struct F64MatrixColumnView
     /// <summary>
     /// Gets the number of rows
     /// </summary>
-    public int Rows { get; private set; }
+    public int Rows { get; }
 
     /// <summary>
     /// Gets the interval of the column view

@@ -36,7 +36,7 @@ public unsafe struct F64VectorView
     /// <summary>
     ///
     /// </summary>
-    public int Length { get; private set; }
+    public int Length { get; }
 
     /// <summary>
     /// Gets the interval of the F64View
