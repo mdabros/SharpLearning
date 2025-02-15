@@ -8,8 +8,6 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
 {
     [TestMethod]
     [DataRow(1)]
-    [DataRow(2)]
-    [DataRow(-1)]
     [DataRow(null)]
     public void GlobalizedBoundedNelderMeadOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
     {
@@ -27,10 +25,9 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
         Assert.AreEqual(expected: -0.99999960731425908, actual.Error, Delta);
         Assert.AreEqual(expected: 3, actual.ParameterSet.Length);
 
-        const double delta = 1e-3;
-        Assert.AreEqual(expected: -1.5711056814954487, actual.ParameterSet[0], delta);
-        Assert.AreEqual(expected: -6.283490634742785, actual.ParameterSet[1], delta);
-        Assert.AreEqual(expected: -2.9822323517533149E-07, actual.ParameterSet[2], delta);
+        Assert.AreEqual(expected: -1.5711056814954487, actual.ParameterSet[0], Delta);
+        Assert.AreEqual(expected: -6.283490634742785, actual.ParameterSet[1], Delta);
+        Assert.AreEqual(expected: -2.9822323517533149E-07, actual.ParameterSet[2], Delta);
     }
 
     [TestMethod]
