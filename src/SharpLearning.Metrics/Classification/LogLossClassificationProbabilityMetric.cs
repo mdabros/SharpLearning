@@ -41,8 +41,7 @@ public sealed class LogLossClassificationProbabilityMetric : IClassificationProb
         {
             var probabilities = predictions[i].Probabilities;
             var target = targets[i];
-            var probabilitySum = probabilities.Select(p => p.Value)
-                .Sum();
+            var probabilitySum = probabilities.Sum(p => p.Value);
 
             foreach (var probability in probabilities)
             {

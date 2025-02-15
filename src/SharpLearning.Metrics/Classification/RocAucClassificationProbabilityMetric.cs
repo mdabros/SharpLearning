@@ -55,9 +55,9 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
             .ToArray();
 
         var negativeCount = counts.Where(s => !s.Label.Equals(m_positiveTarget))
-            .Select(s => s.Count).Sum();
+            .Sum(s => s.Count);
         var positivesCount = counts.Where(s => s.Label.Equals(m_positiveTarget))
-            .Select(s => s.Count).Sum();
+            .Sum(s => s.Count);
 
         double auc = 0;
         double previousProbability = int.MinValue;

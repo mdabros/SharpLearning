@@ -109,8 +109,7 @@ public class RegressionForestModelTest
         for (var row = 0; row < rows; row++)
         {
             var observation = observations.Row(row);
-            predictions[row] = sut.Trees.Select(t => t.Predict(observation))
-                .Average();
+            predictions[row] = sut.Trees.Average(t => t.Predict(observation));
         }
 
         var evaluator = new MeanSquaredErrorRegressionMetric();

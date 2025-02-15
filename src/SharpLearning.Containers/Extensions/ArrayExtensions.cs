@@ -493,7 +493,7 @@ public static class ArrayExtensions
         var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
 
         // might be slightly different than the specified depending on data distribution
-        var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
+        var actualSampleSize = requiredSamples.Sum(s => s.Value);
 
         // if actual sample size is different from specified add/subtract duff from largest class
         if (actualSampleSize != sampleSize)
@@ -522,7 +522,7 @@ public static class ArrayExtensions
             }
         }
 
-        if (requiredSamples.Select(s => s.Value).Sum() != sampleSize)
+        if (requiredSamples.Sum(s => s.Value) != sampleSize)
         {
             throw new ArgumentException("Actual sample size: " + actualSampleSize +
                 " is different than specified sample size: " + sampleSize);
@@ -571,7 +571,7 @@ public static class ArrayExtensions
 
         var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
         // might be slightly different than the specified depending on data distribution
-        var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
+        var actualSampleSize = requiredSamples.Sum(s => s.Value);
 
         // if actual sample size is different from specified add/subtract difference from largest class
         if (actualSampleSize != sampleSize)
@@ -604,7 +604,7 @@ public static class ArrayExtensions
             }
         }
 
-        if (requiredSamples.Select(s => s.Value).Sum() != sampleSize)
+        if (requiredSamples.Sum(s => s.Value) != sampleSize)
         {
             throw new ArgumentException("Actual sample size: " + actualSampleSize +
                 " is different than specified sample size: " + sampleSize);

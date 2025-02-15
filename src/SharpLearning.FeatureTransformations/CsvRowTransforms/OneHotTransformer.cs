@@ -58,7 +58,7 @@ public sealed class OneHotTransformer : ICsvRowTransformer
 
         // add encoded features
         var newColumnNameToIndex = NewColumnNameToIndex(rows);
-        var additionalFeatures = m_featureMap.Select(v => v.Value.Count).Sum();
+        var additionalFeatures = m_featureMap.Sum(v => v.Value.Count);
 
         foreach (var row in rows)
         {
