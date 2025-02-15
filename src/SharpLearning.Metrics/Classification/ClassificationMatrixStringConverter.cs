@@ -71,7 +71,7 @@ public static class ClassificationMatrixStringConverter
             builder.AppendLine(row);
         }
 
-        builder.AppendLine(string.Format("Error: {0:0.000}", 100.0 * error));
+        builder.AppendFormat("Error: {0:0.000}", 100.0 * error).AppendLine();
 
         return builder.ToString();
     }
