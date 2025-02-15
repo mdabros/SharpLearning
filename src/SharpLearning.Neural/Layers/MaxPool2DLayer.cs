@@ -133,10 +133,7 @@ public sealed class MaxPool2DLayer : ILayer
     public Matrix<float> Backward(Matrix<float> delta)
     {
         // enumerate each batch item one at a time
-        Parallel.For(0, delta.RowCount, i =>
-        {
-            BackwardSingleItem(delta, m_delta, i);
-        });
+        Parallel.For(0, delta.RowCount, i => BackwardSingleItem(delta, m_delta, i));
 
         return m_delta;
     }
@@ -149,10 +146,7 @@ public sealed class MaxPool2DLayer : ILayer
     public Matrix<float> Forward(Matrix<float> input)
     {
         // enumerate each batch item one at a time
-        Parallel.For(0, input.RowCount, i =>
-        {
-            ForwardSingleItem(input, OutputActivations, i);
-        });
+        Parallel.For(0, input.RowCount, i => ForwardSingleItem(input, OutputActivations, i));
 
         return OutputActivations;
     }
