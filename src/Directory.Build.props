@@ -25,14 +25,13 @@
 
     <!-- https://github.com/dotnet/roslyn/issues/41640 🤦 -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;RCS1138;CS1668</NoWarn>
 
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <NoWarn>CS1591;CS1668</NoWarn>
 
   </PropertyGroup>
 
