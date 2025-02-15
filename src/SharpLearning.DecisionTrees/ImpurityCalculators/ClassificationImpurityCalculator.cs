@@ -33,9 +33,9 @@ public abstract class ClassificationImpurityCalculator
     /// </summary>
     protected double m_weightedRight = 0.0;
 
-    internal TargetCounts m_weightedTargetCount = new();
-    internal TargetCounts m_weightedTargetCountLeft = new();
-    internal TargetCounts m_weightedTargetCountRight = new();
+    internal TargetCounts WeightedTargetCount = new();
+    internal TargetCounts WeightedTargetCountLeft = new();
+    internal TargetCounts WeightedTargetCountRight = new();
 
     /// <summary>
     /// 
@@ -96,9 +96,9 @@ public abstract class ClassificationImpurityCalculator
             m_targetIndexOffSet *= -1;
         }
 
-        m_weightedTargetCount.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
-        m_weightedTargetCountLeft.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
-        m_weightedTargetCountRight.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
+        WeightedTargetCount.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
+        WeightedTargetCountLeft.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
+        WeightedTargetCountRight.Reset(m_maxTargetNameIndex, m_targetIndexOffSet);
 
         var w = 1.0;
         var weightsPresent = m_weights.Length != 0;
@@ -113,7 +113,7 @@ public abstract class ClassificationImpurityCalculator
                 w = weights[i];
 
             var targetIndex = (int)targets[i];
-            m_weightedTargetCount[targetIndex] += w;
+            WeightedTargetCount[targetIndex] += w;
 
             m_weightedTotal += w;
         }
@@ -132,8 +132,8 @@ public abstract class ClassificationImpurityCalculator
         m_weightedLeft = 0.0;
         m_weightedRight = m_weightedTotal;
 
-        m_weightedTargetCountLeft.Clear();
-        m_weightedTargetCountRight.SetCounts(m_weightedTargetCount);
+        WeightedTargetCountLeft.Clear();
+        WeightedTargetCountRight.SetCounts(WeightedTargetCount);
     }
 
     /// <summary>
@@ -168,8 +168,8 @@ public abstract class ClassificationImpurityCalculator
                 w = m_weights[i];
 
             var targetIndex = (int)m_targets[i];
-            m_weightedTargetCountLeft[targetIndex] += w;
-            m_weightedTargetCountRight[targetIndex] -= w;
+            WeightedTargetCountLeft[targetIndex] += w;
+            WeightedTargetCountRight[targetIndex] -= w;
 
             w_diff += w;
         }

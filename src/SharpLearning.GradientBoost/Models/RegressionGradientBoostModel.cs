@@ -91,10 +91,10 @@ public sealed class RegressionGradientBoostModel : IPredictorModel<double>
     /// <returns></returns>
     public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
     {
-        var m_rawVariableImportance = GetRawVariableImportance();
-        var max = m_rawVariableImportance.Max();
+        var rawVariableImportance = GetRawVariableImportance();
+        var max = rawVariableImportance.Max();
 
-        var scaledVariableImportance = m_rawVariableImportance
+        var scaledVariableImportance = rawVariableImportance
             .Select(v => (v / max) * 100.0)
             .ToArray();
 

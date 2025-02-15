@@ -29,8 +29,8 @@ public sealed class GiniClassificationImpurityCalculator : ClassificationImpurit
         foreach (var targetValue in m_targetNames)
         {
             var targetIndex = (int)targetValue;
-            var leftCount = m_weightedTargetCountLeft[targetIndex];
-            var rightCount = m_weightedTargetCountRight[targetIndex];
+            var leftCount = WeightedTargetCountLeft[targetIndex];
+            var rightCount = WeightedTargetCountRight[targetIndex];
 
             giniLeft += leftCount * leftCount;
             giniRight += rightCount * rightCount;
@@ -52,7 +52,7 @@ public sealed class GiniClassificationImpurityCalculator : ClassificationImpurit
 
         foreach (var targetValue in m_targetNames)
         {
-            var value = m_weightedTargetCount[(int)targetValue];
+            var value = WeightedTargetCount[(int)targetValue];
             gini += value * value;
         }
 
@@ -86,7 +86,7 @@ public sealed class GiniClassificationImpurityCalculator : ClassificationImpurit
 
         foreach (var targetValue in m_targetNames)
         {
-            var value = m_weightedTargetCount[(int)targetValue];
+            var value = WeightedTargetCount[(int)targetValue];
             if (value > maxWeight)
             {
                 maxWeight = value;
@@ -110,7 +110,7 @@ public sealed class GiniClassificationImpurityCalculator : ClassificationImpurit
         for (var i = 0; i < m_targetNames.Length; i++)
         {
             var targetValue = (int)m_targetNames[i];
-            var targetProbability = (m_weightedTargetCount[targetValue] + 1) * probabilityFactor;
+            var targetProbability = (WeightedTargetCount[targetValue] + 1) * probabilityFactor;
             probabilities[i] = targetProbability;
         }
 

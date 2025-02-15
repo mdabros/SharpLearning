@@ -98,6 +98,7 @@ public sealed class BatchNormalizationLayer : ILayer
         var diff_src = m_delta;
         var diff_scaleshift = m_scaleGradients;
 
+#pragma warning disable IDE1006 // Naming Styles
         var N = diff_src.RowCount;
         var C = Depth;
         var H = Height;
@@ -136,7 +137,7 @@ public sealed class BatchNormalizationLayer : ILayer
                         diff_src.Data()[diffSrcIndex] *= gamma * variance;
                     }
         });
-
+#pragma warning restore IDE1006 // Naming Styles
         return m_delta;
     }
 
@@ -151,7 +152,7 @@ public sealed class BatchNormalizationLayer : ILayer
 
         var src = input;
         var dst = OutputActivations.Data();
-
+#pragma warning disable IDE1006 // Naming Styles
         var N = input.RowCount; // number of items in mini batch
         var C = Depth;
         var H = Height;
@@ -197,7 +198,7 @@ public sealed class BatchNormalizationLayer : ILayer
                         var bias = Bias[c];
                         dst[d_off] = scale * (src.Data()[d_off] - mean) * variance + bias;
                     }
-
+#pragma warning restore IDE1006 // Naming Styles
             if (is_training)
             {
                 MovingAverageMeans[c] = MovingAverage(MovingAverageMeans[c], mean);
