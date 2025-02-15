@@ -117,7 +117,7 @@ public static class StringMatrixExtensions
             combineIndex += m.ColumnCount;
 
             Array.Copy(v, otherIndex, features, combineIndex, 1);
-            combineIndex += 1;
+            combineIndex++;
         }
 
         return new StringMatrix(features, rows, cols);
@@ -146,7 +146,7 @@ public static class StringMatrixExtensions
         for (var i = 0; i < rows; i++)
         {
             Array.Copy(v, i, features, combineIndex, 1);
-            combineIndex += 1;
+            combineIndex++;
 
             var matrixIndex = i * m.ColumnCount;
             Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);

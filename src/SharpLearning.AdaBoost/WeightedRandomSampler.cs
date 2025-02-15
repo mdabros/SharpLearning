@@ -60,13 +60,13 @@ public sealed class WeightedRandomSampler
             while (x > weight)
             {
                 x -= weight;
-                i += 1;
+                i++;
                 index = indices[i];
                 weight = weights[index];
             }
             weight -= x;
             outIndices[current++] = index;
-            samples -= 1;
+            samples--;
         }
     }
 }

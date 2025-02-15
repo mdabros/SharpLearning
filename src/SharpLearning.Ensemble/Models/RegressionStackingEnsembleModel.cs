@@ -100,7 +100,7 @@ public class RegressionStackingEnsembleModel : IPredictorModel<double>
             }
             else
             {
-                duplicateModelCount[name] += 1;
+                duplicateModelCount[name]++;
             }
 
             ensembleFeatureNameToIndex.Add(name + "_" + duplicateModelCount[name].ToString(), index++);

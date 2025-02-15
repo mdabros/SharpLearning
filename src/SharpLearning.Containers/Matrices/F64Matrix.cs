@@ -279,12 +279,7 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is F64Matrix other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is F64Matrix other && Equals(other);
     }
 
     /// <summary>

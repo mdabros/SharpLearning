@@ -51,7 +51,7 @@ public sealed class AveragePrecisionRankingMetric<T> : IRankingMetric<T>
             if (m_workTargets.Contains(prediction) &&
                 !Contains(predictions, i, prediction))
             {
-                hits += 1.0;
+                hits++;
                 score += hits / (i + 1.0);
             }
         }

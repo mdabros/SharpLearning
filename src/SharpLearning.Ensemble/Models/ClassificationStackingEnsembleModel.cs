@@ -147,7 +147,7 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
             }
             else
             {
-                duplicateModelCount[name] += 1;
+                duplicateModelCount[name]++;
             }
 
             name += "_" + duplicateModelCount[name].ToString();

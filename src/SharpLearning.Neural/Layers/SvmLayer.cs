@@ -96,8 +96,8 @@ public sealed class SvmLayer
                 var diff = -maxTargetScore + m_outputActivations.At(batchItem, i) + margin;
                 if (diff > 0)
                 {
-                    m_delta[batchItem, i] += 1;
-                    m_delta[batchItem, maxTargetIndex] -= 1;
+                    m_delta[batchItem, i]++;
+                    m_delta[batchItem, maxTargetIndex]--;
                 }
             }
         }
