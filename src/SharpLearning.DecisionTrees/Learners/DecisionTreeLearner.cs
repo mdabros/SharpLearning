@@ -111,7 +111,7 @@ public unsafe class DecisionTreeLearner
         {
             if (weights.Length != targets.Length || weights.Length != observations.RowCount)
             {
-                throw new ArgumentException($"Weights length differ from observation row count and target length. " +
+                throw new ArgumentException("Weights length differ from observation row count and target length. " +
                     $"Weights: {weights.Length}, observation: {observations.RowCount}, targets: {targets.Length}");
             }
         }

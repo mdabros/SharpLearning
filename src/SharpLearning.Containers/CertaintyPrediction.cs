@@ -88,11 +88,6 @@ public struct CertaintyPrediction
     static bool Equal(double a, double b)
     {
         var diff = Math.Abs(a * Tolerence);
-        if (Math.Abs(a - b) <= diff)
-        {
-            return true;
-        }
-
-        return false;
+        return Math.Abs(a - b) <= diff;
     }
 }

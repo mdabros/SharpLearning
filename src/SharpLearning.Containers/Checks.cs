@@ -83,7 +83,7 @@ public static class Checks
     {
         if (observationRowCount != targetLength)
         {
-            throw new ArgumentException($"Observations and targets mismatch." +
+            throw new ArgumentException("Observations and targets mismatch." +
                 $"Observations row count: {observationRowCount}, targets row count: {targetLength}");
         }
     }
@@ -121,14 +121,14 @@ public static class Checks
         var min = indices.Min();
         if (min < 0)
         {
-            throw new ArgumentException($"Indices contains negative " +
+            throw new ArgumentException("Indices contains negative " +
                 $"values: {string.Join(",", indices.Where(v => v < 0))}");
         }
 
         var max = indices.Max();
         if (max >= observationRowCount || max >= targetLength)
         {
-            throw new ArgumentException($"Indices contains elements exceeding the row count of observations and targets. " +
+            throw new ArgumentException("Indices contains elements exceeding the row count of observations and targets. " +
                 $"Indices Max: {max}, observations row count: {observationRowCount}, target length: {targetLength}");
         }
     }
