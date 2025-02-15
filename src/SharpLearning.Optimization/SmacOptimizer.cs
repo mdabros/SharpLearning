@@ -183,7 +183,7 @@ public class SmacOptimizer : IOptimizer
     public double[][] ProposeParameterSets(int parameterSetCount,
         IReadOnlyList<OptimizerResult> previousResults = null)
     {
-        var previousParameterSetCount = previousResults == null ? 0 : previousResults.Count;
+        var previousParameterSetCount = (previousResults?.Count) ?? 0;
         if (previousParameterSetCount < m_randomStartingPointsCount)
         {
             var randomParameterSetCount = Math.Min(parameterSetCount,
