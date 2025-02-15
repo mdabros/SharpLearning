@@ -258,11 +258,6 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
         return new F64MatrixPinnedPtr(this);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
     public bool Equals(F64Matrix other)
     {
         if (RowCount != other.RowCount) { return false; }
@@ -270,20 +265,11 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
         return Data().SequenceEqual(other.Data());
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
     public override bool Equals(object obj)
     {
         return obj is F64Matrix other && Equals(other);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <returns></returns>
     public override int GetHashCode()
     {
         unchecked // Overflow is fine, just wrap

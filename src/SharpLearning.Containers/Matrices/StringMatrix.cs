@@ -252,11 +252,6 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
     /// <value></value>
     public int RowCount { get; }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
     public bool Equals(StringMatrix other)
     {
         if (RowCount != other.RowCount) { return false; }
@@ -264,20 +259,11 @@ public sealed class StringMatrix : IMatrix<string>, IEquatable<StringMatrix>
         return Data().SequenceEqual(other.Data());
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
     public override bool Equals(object obj)
     {
         return obj is StringMatrix other && Equals(other);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <returns></returns>
     public override int GetHashCode()
     {
         unchecked // Overflow is fine, just wrap

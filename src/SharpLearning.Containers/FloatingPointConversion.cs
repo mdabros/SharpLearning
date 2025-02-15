@@ -3,19 +3,10 @@ using System.Globalization;
 
 namespace SharpLearning.Containers;
 
-/// <summary>
-///
-/// </summary>
 public static class FloatingPointConversion
 {
-    /// <summary>
-    ///
-    /// </summary>
     public const string DefaultFormat = "R";
 
-    /// <summary>
-    ///
-    /// </summary>
     public static readonly NumberFormatInfo Nfi = new();
 
     /// <summary>

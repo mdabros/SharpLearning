@@ -6,14 +6,8 @@ using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers.Extensions;
 
-/// <summary>
-///
-/// </summary>
 public static class ArrayExtensions
 {
-    /// <summary>
-    ///
-    /// </summary>
     public static readonly Converter<string, double> DefaultF64Converter = FloatingPointConversion.ToF64;
 
     /// <summary>
@@ -331,12 +325,6 @@ public static class ArrayExtensions
         return array[array.Length / 2];
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="values"></param>
-    /// <param name="percentile"></param>
-    /// <returns></returns>
     public static double ScoreAtPercentile(this double[] values, double percentile)
     {
         if (percentile == 1.0)

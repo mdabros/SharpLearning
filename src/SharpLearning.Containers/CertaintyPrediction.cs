@@ -8,19 +8,10 @@ namespace SharpLearning.Containers;
 [Serializable]
 public struct CertaintyPrediction
 {
-    /// <summary>
-    ///
-    /// </summary>
     public readonly double Prediction;
 
-    /// <summary>
-    ///
-    /// </summary>
     public readonly double Variance;
 
-    /// <summary>
-    ///
-    /// </summary>
     /// <param name="prediction"></param>
     /// <param name="variance"></param>
     public CertaintyPrediction(double prediction, double variance)
@@ -29,9 +20,6 @@ public struct CertaintyPrediction
         Prediction = prediction;
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
     public bool Equals(CertaintyPrediction other)
@@ -40,9 +28,6 @@ public struct CertaintyPrediction
         return Equal(Variance, other.Variance);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
     public override bool Equals(object obj)
@@ -50,9 +35,6 @@ public struct CertaintyPrediction
         return obj is CertaintyPrediction prediction && Equals(prediction);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
     /// <returns></returns>
@@ -61,9 +43,6 @@ public struct CertaintyPrediction
         return p1.Equals(p2);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
     /// <returns></returns>
@@ -72,9 +51,6 @@ public struct CertaintyPrediction
         return !p1.Equals(p2);
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     /// <returns></returns>
     public override int GetHashCode()
     {

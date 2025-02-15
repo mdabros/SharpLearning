@@ -3,9 +3,6 @@ using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Arithmetic;
 
-/// <summary>
-///
-/// </summary>
 public static class MatrixSubtraction
 {
     /// <summary>

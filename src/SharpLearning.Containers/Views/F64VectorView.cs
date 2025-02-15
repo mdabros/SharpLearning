@@ -33,9 +33,6 @@ public unsafe struct F64VectorView
         set { m_ptr[index] = value; }
     }
 
-    /// <summary>
-    ///
-    /// </summary>
     public int Length { get; }
 
     /// <summary>

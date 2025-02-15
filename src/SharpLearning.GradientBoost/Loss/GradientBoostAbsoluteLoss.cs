@@ -40,13 +40,6 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
         return values.ToArray().Median();
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="targets"></param>
-    /// <param name="residuals"></param>
-    /// <param name="inSample"></param>
-    /// <returns></returns>
     public GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample)
     {
         var splitInfo = GBMSplitInfo.NewEmpty();
@@ -81,13 +74,6 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
         return value > 0.0 ? 1.0 : -1.0;
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="targets"></param>
-    /// <param name="predictions"></param>
-    /// <param name="residuals"></param>
-    /// <param name="inSample"></param>
     public void UpdateResiduals(double[] targets, double[] predictions,
         double[] residuals, bool[] inSample)
     {
@@ -100,13 +86,6 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
         }
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <param name="target"></param>
-    /// <param name="residual"></param>
     public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right,
         double target, double residual)
     {
@@ -147,10 +126,6 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
         return values.ToArray().Median();
     }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <returns></returns>
     public bool UpdateLeafValues()
     {
         return true;
