@@ -396,7 +396,6 @@ public class ArrayExtensionsTest
         values.StratifiedIndexSampling(sampleSize, new Random(42));
     }
 
-
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void ArrayExtensions_StratifiedIndexSampling_SampleSize_Too_Small()

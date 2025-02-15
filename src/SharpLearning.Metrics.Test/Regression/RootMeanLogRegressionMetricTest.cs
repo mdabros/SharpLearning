@@ -27,5 +27,4 @@ public class RootMeanLogRegressionMetricTest
         var actual = sut.Error(targets, predictions);
         Assert.AreEqual(0.0, actual);
     }
-
 }

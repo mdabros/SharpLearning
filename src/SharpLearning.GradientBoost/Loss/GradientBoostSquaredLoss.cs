@@ -16,7 +16,6 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     /// </summary>
     public GradientBoostSquaredLoss()
     {
-
     }
 
     /// <summary>
@@ -126,7 +125,6 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
         //left.Cost = left.SumOfSquares - (left.Sum * leftAverage);
         //left.Cost = left.SumOfSquares - (left.Sum * left.Sum * leftSamplesInv);
         //left.BestConstant = left.Sum  * leftSamplesInv;
-
 
         right.Samples--;
         right.Sum -= residual;

@@ -109,7 +109,6 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
             FloatingPointConversion.ToString(hours),
             FloatingPointConversion.ToString(totalDays),
             FloatingPointConversion.ToString(totalhours),
-
         };
         return timeValues;
     }

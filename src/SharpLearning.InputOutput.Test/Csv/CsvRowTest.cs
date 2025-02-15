@@ -57,5 +57,4 @@ public class CsvRowTest
         Assert.AreEqual(equal, row);
         Assert.AreNotEqual(notEqual, row);
     }
-
 }

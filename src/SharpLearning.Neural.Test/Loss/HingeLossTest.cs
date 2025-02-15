@@ -29,5 +29,4 @@ public class HingeLossTest
         var actual = sut.Loss(targets, predictions);
         Assert.AreEqual(0.200000018, actual, 0.001);
     }
-
 }

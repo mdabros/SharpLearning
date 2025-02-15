@@ -27,7 +27,6 @@ public class F64MatrixTest
         Assert.AreEqual(300, sut[2, 2]);
     }
 
-
     [TestMethod]
     public void F64Matrix_At_Set()
     {
@@ -49,7 +48,6 @@ public class F64MatrixTest
         var value = sut.At(1, 1);
         Assert.AreEqual(item, value);
     }
-
 
     [TestMethod]
     public void F64Matrix_Row()

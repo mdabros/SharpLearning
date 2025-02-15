@@ -97,7 +97,6 @@ public class F64MatrixViewTest
         }
     }
 
-
     unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
     {
         for (var i = 0; i < matrix.RowCount; i++)

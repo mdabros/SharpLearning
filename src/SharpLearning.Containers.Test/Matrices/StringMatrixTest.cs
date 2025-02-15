@@ -26,7 +26,6 @@ public class StringMatrixTest
         Assert.AreEqual("300", sut[2, 2]);
     }
 
-
     [TestMethod]
     public void StringMatrix_At_Set()
     {

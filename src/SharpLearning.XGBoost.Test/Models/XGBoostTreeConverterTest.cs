@@ -42,7 +42,6 @@ public class XGBoostTreeConverterTest
         }
     }
 
-
     [TestMethod]
     public void XGBoostTreeConverter_IsLeaf()
     {

@@ -83,7 +83,6 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 
-
     /// <summary>
     /// Loads a RegressionXGBoostModel.
     /// </summary>

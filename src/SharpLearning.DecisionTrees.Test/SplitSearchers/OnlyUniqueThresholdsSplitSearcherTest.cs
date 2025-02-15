@@ -71,7 +71,6 @@ public class OnlyUniqueThresholdsSplitSearcherTest
         Assert.AreEqual(expected, actual);
     }
 
-
     [TestMethod]
     public void OnlyUniqueThresholdsSplitSearcher_FindBestSplit_DecisionTreeData()
     {
@@ -130,5 +129,4 @@ public class OnlyUniqueThresholdsSplitSearcherTest
 
         return 1.0;
     }
-
 }

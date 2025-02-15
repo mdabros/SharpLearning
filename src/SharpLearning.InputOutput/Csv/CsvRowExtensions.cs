@@ -41,7 +41,6 @@ public static class CsvRowExtensions
         row.Values[index] = value;
     }
 
-
     /// <summary>
     /// Gets the CsvRow values based on the supplied column names
     /// </summary>

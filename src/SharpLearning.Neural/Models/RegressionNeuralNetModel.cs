@@ -9,7 +9,6 @@ using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.Neural.Models;
 
-
 /// <summary>
 /// Regression neural net model.
 /// </summary>

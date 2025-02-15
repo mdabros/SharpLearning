@@ -6,7 +6,6 @@ namespace SharpLearning.Neural.Test.Activations;
 [TestClass]
 public class SigmoidActivationTest
 {
-
     [TestMethod]
     public void SigmoidActivation_Activiation()
     {

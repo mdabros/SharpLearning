@@ -37,7 +37,6 @@ public class BatchNormalizationLayerTest
         Assert.IsNull(actual.BatchColumnMeans);
         Assert.IsNull(actual.BatchcolumnVars);
 
-
         Assert.AreEqual(sut.OutputActivations.RowCount, actual.OutputActivations.RowCount);
         Assert.AreEqual(sut.OutputActivations.ColumnCount, actual.OutputActivations.ColumnCount);
     }
