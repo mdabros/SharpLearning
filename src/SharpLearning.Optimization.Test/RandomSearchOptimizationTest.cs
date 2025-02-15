@@ -58,9 +58,9 @@ public class RandomSearchOptimizerTest
         Assert.AreEqual(expected[0].ParameterSet[0],
             actual[0].ParameterSet[0], Delta);
 
-        Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-        Assert.AreEqual(expected.Last().ParameterSet[0],
-            actual.Last().ParameterSet[0], Delta);
+        Assert.AreEqual(expected[^1].Error, actual[^1].Error, Delta);
+        Assert.AreEqual(expected[^1].ParameterSet[0],
+            actual[^1].ParameterSet[0], Delta);
     }
 
     [TestMethod]

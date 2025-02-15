@@ -49,7 +49,7 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
         var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
         var results = sut.Optimize(MinimizeWeightFromHeight);
-        var actual = new OptimizerResult[] { results[0], results.Last() };
+        var actual = new OptimizerResult[] { results[0], results[^1] };
 
         var expected = new OptimizerResult[]
         {
@@ -61,9 +61,9 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
         Assert.AreEqual(expected[0].ParameterSet[0],
             actual[0].ParameterSet[0], Delta);
 
-        Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-        Assert.AreEqual(expected.Last().ParameterSet[0],
-            actual.Last().ParameterSet[0], Delta);
+        Assert.AreEqual(expected[^1].Error, actual[^1].Error, Delta);
+        Assert.AreEqual(expected[^1].ParameterSet[0],
+            actual[^1].ParameterSet[0], Delta);
     }
 
     static GlobalizedBoundedNelderMeadOptimizer CreateSut(
