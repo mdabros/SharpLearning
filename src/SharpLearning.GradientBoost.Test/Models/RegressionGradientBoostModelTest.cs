@@ -61,7 +61,7 @@ public class RegressionGradientBoostModelTest
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
         var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
-            { "PreviousExperience_month", 1 } };
+            { "PreviousExperience_month", 1 }, };
 
         var learner = new RegressionGradientBoostLearner(100, 0.1, 3, 1, 1e-6, 1.0, 0,
             new GradientBoostSquaredLoss(), false);
@@ -70,7 +70,7 @@ public class RegressionGradientBoostModelTest
 
         var actual = sut.GetVariableImportance(featureNameToIndex);
         var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
-            { "AptitudeTestScore", 72.1682473281495 } };
+            { "AptitudeTestScore", 72.1682473281495 }, };
 
         Assert.AreEqual(expected.Count, actual.Count);
         var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });

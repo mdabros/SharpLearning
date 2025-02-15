@@ -51,7 +51,7 @@ public class GridSearchOptimizerTest
         var expected = new OptimizerResult[]
         {
           new([10], 31638.9579),
-          new([60], 20500.6279)
+          new([60], 20500.6279),
         };
 
         Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

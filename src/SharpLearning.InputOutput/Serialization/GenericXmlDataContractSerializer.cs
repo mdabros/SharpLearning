@@ -16,6 +16,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     readonly Type[] m_knownTypes;
     readonly bool m_preserveObjectReferences;
 
+
     /// <summary>
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
@@ -67,7 +68,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             MaxItemsInObjectGraph = int.MaxValue,
             IgnoreExtensionDataObject = false,
             PreserveObjectReferences = m_preserveObjectReferences,
-            DataContractResolver = new GenericResolver()
+            DataContractResolver = new GenericResolver(),
         });
 
         serializer.WriteObject(xmlWriter, data);
@@ -89,7 +90,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             MaxItemsInObjectGraph = int.MaxValue,
             IgnoreExtensionDataObject = false,
             PreserveObjectReferences = m_preserveObjectReferences,
-            DataContractResolver = new GenericResolver()
+            DataContractResolver = new GenericResolver(),
         });
 
         return (T)serializer.ReadObject(xmlReader);
@@ -210,6 +211,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
             return types.ToArray();
         }
+
 
         static Type[] GetTypes(Assembly assembly, bool publicOnly = true)
         {

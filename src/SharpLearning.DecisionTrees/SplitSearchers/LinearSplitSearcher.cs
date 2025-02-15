@@ -57,6 +57,7 @@ public sealed class LinearSplitSearcher : ISplitSearcher
     public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets,
         Interval1D parentInterval, double parentImpurity)
     {
+
         var bestSplitIndex = -1;
         var bestThreshold = 0.0;
         var bestImpurityImprovement = 0.0;

@@ -148,6 +148,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
 
                 trees[iteration] = m_learner.Learn(observations, targets, residuals,
                     predictions, orderedElements, currentInSample);
+
             }
             else
             {
@@ -229,6 +230,7 @@ public class RegressionGradientBoostLearner : IIndexedLearner<double>, ILearner<
 
                 trees[iteration] = m_learner.Learn(trainingObservations, trainingTargets, residuals,
                     predictions, orderedElements, currentInSample);
+
             }
             else
             {

@@ -183,6 +183,7 @@ public class MathNetExtensionsTest
         Assert.AreEqual(value, vector[changeIndex]);
     }
 
+
     [TestMethod]
     public void MathNetExtensions_Matri_Row()
     {

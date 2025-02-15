@@ -17,7 +17,7 @@ public class RandomIndexSamplerTest
         var sampleIndices = sut.Sample(values, sampleSize);
 
         var actual = values.GetIndices(sampleIndices);
-        var expected = new int[] { 1, 2, 1, 2, 1, 3, 1, 2, 2, 1, 2, };
+        var expected = new int[] { 1, 2, 1, 2, 1, 3, 1, 2, 2, 1, 2 };
 
         CollectionAssert.AreEqual(expected, actual);
     }

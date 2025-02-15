@@ -63,6 +63,7 @@ public class ForwardSearchClassificationEnsembleSelectionTest
             new LogLossClassificationProbabilityMetric(),
             new MeanProbabilityClassificationEnsembleStrategy(), 5, 1, true);
 
+
         var observations = new ProbabilityPrediction[3][];
         observations.Select(t => new ProbabilityPrediction[10]).ToArray();
         var targets = new double[10];

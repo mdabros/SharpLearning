@@ -20,7 +20,7 @@ public class ClassificationEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var sut = new ClassificationEnsembleLearner(learners,
@@ -45,7 +45,7 @@ public class ClassificationEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var sut = new ClassificationEnsembleLearner(learners,
@@ -70,7 +70,7 @@ public class ClassificationEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var sut = new ClassificationEnsembleLearner(learners,

@@ -19,7 +19,7 @@ public class RegressionStackingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var sut = new RegressionStackingEnsembleLearner(learners,
@@ -45,7 +45,7 @@ public class RegressionStackingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var sut = new RegressionStackingEnsembleLearner(learners,
@@ -73,7 +73,7 @@ public class RegressionStackingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var sut = new RegressionStackingEnsembleLearner(learners,
@@ -99,7 +99,7 @@ public class RegressionStackingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var sut = new RegressionStackingEnsembleLearner(learners,

@@ -120,6 +120,7 @@ public class ClassificationBinomialGradientBoostLearnerTest
         Assert.AreEqual(0.0514018691588785, actual);
     }
 
+
     [TestMethod]
     public void ClassificationBinomialGradientBoostLearner_MultiClass_Learn_Indexed()
     {

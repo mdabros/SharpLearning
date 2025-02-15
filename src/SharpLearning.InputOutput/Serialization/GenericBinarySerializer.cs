@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SharpLearning.InputOutput.Serialization;
 
+
 /// <summary>
 /// Generic xml serializer using BinaryFormatter
 /// </summary>

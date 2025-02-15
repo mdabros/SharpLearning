@@ -127,6 +127,7 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
         return new RegressionEnsembleModel(ensembleModels, m_ensembleStrategy());
     }
 
+
     void Sample(int[] inSample, int[] allIndices)
     {
         for (var i = 0; i < inSample.Length; i++)

@@ -24,6 +24,7 @@ public class TrainingTestSetSplitTest
         var testTargets1 = new double[] { 1, 2 };
         var testTargets2 = new double[] { 2, 1 };
 
+
         var sut = new TrainingTestSetSplit(trainingObservations1, trainingTargets1, testObservations1, testTargets1);
         var equal = new TrainingTestSetSplit(trainingObservations1, trainingTargets1, testObservations1, testTargets1);
         var notEqual1 = new TrainingTestSetSplit(trainingObservations2, trainingTargets1, testObservations1, testTargets1);

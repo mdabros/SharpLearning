@@ -18,5 +18,5 @@ public enum AdaBoostRegressionLoss
     /// <summary>
     /// Exponential loss
     /// </summary>
-    Exponential
+    Exponential,
 }

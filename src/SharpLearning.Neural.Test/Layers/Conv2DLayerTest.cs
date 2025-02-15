@@ -13,6 +13,7 @@ namespace SharpLearning.Neural.Test.Layers;
 [TestClass]
 public class Conv2DLayerTest
 {
+
     [TestMethod]
     public void Conv2DLayer_CopyLayerForPredictionModel()
     {

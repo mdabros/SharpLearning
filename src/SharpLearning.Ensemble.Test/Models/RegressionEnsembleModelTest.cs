@@ -22,7 +22,7 @@ public class RegressionEnsembleModelTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
@@ -51,7 +51,7 @@ public class RegressionEnsembleModelTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
@@ -71,14 +71,14 @@ public class RegressionEnsembleModelTest
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
         var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
-            { "PreviousExperience_month", 1 } };
+            { "PreviousExperience_month", 1 }, };
 
         var learners = new IIndexedLearner<double>[]
         {
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
@@ -86,7 +86,7 @@ public class RegressionEnsembleModelTest
 
         var actual = sut.GetVariableImportance(featureNameToIndex);
         var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
-            { "AptitudeTestScore", 3.46067371526717 } };
+            { "AptitudeTestScore", 3.46067371526717 }, };
 
         Assert.AreEqual(expected.Count, actual.Count);
         var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
@@ -108,7 +108,7 @@ public class RegressionEnsembleModelTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());

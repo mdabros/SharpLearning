@@ -52,6 +52,7 @@ public class GenericXmlDataContractSerializerTest
     [TestMethod]
     public void GenericXmlDataContractSerializer_Deserialize_Dont_PreserveObjectReferences()
     {
+
         var sut = new GenericXmlDataContractSerializer(preserveObjectReferences: false);
 
         var reader = new StringReader(m_serializationString_DontPreserveObjectReferences);

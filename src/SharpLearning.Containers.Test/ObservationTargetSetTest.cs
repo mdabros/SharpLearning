@@ -41,4 +41,5 @@ public class ObservationTargetSetTest
     {
         new ObservationTargetSet(new F64Matrix([1, 2, 3, 4], 2, 2), null);
     }
+
 }

@@ -38,13 +38,13 @@ public sealed class NormalizedGiniCoefficientRegressionMetric : IRegressionMetri
         var all = predicted.Zip(target, (prediction, actual) => new
         {
             actualValue = actual,
-            predictedValue = prediction
+            predictedValue = prediction,
         })
            .Zip(Enumerable.Range(1, target.Length), (ap, i) => new
            {
                ap.actualValue,
                ap.predictedValue,
-               originalIndex = i
+               originalIndex = i,
            })
            .OrderByDescending(ap => ap.predictedValue) // important to sort descending by prediction
            .ThenBy(ap => ap.originalIndex); // secondary sorts to ensure unambiguous orders

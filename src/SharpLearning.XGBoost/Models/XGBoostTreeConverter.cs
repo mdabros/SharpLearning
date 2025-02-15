@@ -88,7 +88,7 @@ public static class XGBoostTreeConverter
                     LeftConstant = -1,
                     LeftIndex = -1,
                     RightConstant = -1,
-                    RightIndex = -1
+                    RightIndex = -1,
                 };
 
                 var left = orderedLines[yesIndex];

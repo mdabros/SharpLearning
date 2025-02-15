@@ -43,6 +43,7 @@ public sealed class OnlyUniqueThresholdsSplitSearcher : ISplitSearcher
         m_minimumLeafWeight = minimumLeafWeight;
     }
 
+
     /// <summary>
     /// Searches for the best split using a brute force approach on all unique threshold values. 
     /// The implementation assumes that the features and targets have been sorted
@@ -57,6 +58,7 @@ public sealed class OnlyUniqueThresholdsSplitSearcher : ISplitSearcher
     public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets,
         Interval1D parentInterval, double parentImpurity)
     {
+
         var bestSplitIndex = -1;
         var bestThreshold = 0.0;
         var bestImpurityImprovement = 0.0;

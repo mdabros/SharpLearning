@@ -9,6 +9,7 @@ using SharpLearning.InputOutput.Serialization;
 
 namespace SharpLearning.Neural.Models;
 
+
 /// <summary>
 /// Classification neural net model.
 /// </summary>
@@ -98,6 +99,7 @@ public sealed class ClassificationNeuralNetModel
 
         for (var i = 0; i < m_targetNames.Length; i++)
         {
+
             probabilityDictionary.Add(m_targetNames[i], probabilities[0, i]);
             if (probabilities[0, i] > probability)
             {

@@ -18,5 +18,5 @@ public enum Transform
     /// <summary>
     /// ExponentialAverage scale. For ranges close to one, like min: 0.9 and max: 0.999.
     /// </summary>
-    ExponentialAverage
+    ExponentialAverage,
 }

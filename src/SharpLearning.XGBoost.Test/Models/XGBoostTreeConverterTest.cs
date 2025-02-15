@@ -42,6 +42,7 @@ public class XGBoostTreeConverterTest
         }
     }
 
+
     [TestMethod]
     public void XGBoostTreeConverter_IsLeaf()
     {
@@ -151,7 +152,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = -1,
             RightConstant = -1,
             LeftIndex = 2,
-            RightIndex = 3
+            RightIndex = 3,
         },
 
         /*1*/
@@ -162,7 +163,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = -1,
             RightConstant = -1,
             LeftIndex = 4,
-            RightIndex = 5
+            RightIndex = 5,
         },
 
         /*2*/
@@ -173,7 +174,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = -1,
             RightConstant = 0.3,
             LeftIndex = 6,
-            RightIndex = -1
+            RightIndex = -1,
         },
 
         /*3*/
@@ -184,7 +185,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = 0.404167,
             RightConstant = 0.1,
             LeftIndex = -1,
-            RightIndex = -1
+            RightIndex = -1,
         },
 
         /*4*/
@@ -195,7 +196,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = 0.0444444,
             RightConstant = 0.205882,
             LeftIndex = -1,
-            RightIndex = -1
+            RightIndex = -1,
         },
 
         /*5*/
@@ -206,7 +207,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = 0.0527778,
             RightConstant = -0.0020202,
             LeftIndex = -1,
-            RightIndex = -1
+            RightIndex = -1,
         },
     ];
 
@@ -243,7 +244,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = -1,
             RightConstant = -1,
             LeftIndex = 2,
-            RightIndex = 3
+            RightIndex = 3,
         },
 
         /*1*/
@@ -254,7 +255,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = -1,
             RightConstant = -1,
             LeftIndex = 4,
-            RightIndex = 5
+            RightIndex = 5,
         },
 
         /*2*/
@@ -265,7 +266,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = 0.140797,
             RightConstant = -1,
             LeftIndex = -1,
-            RightIndex = 6
+            RightIndex = 6,
         },
 
         /*3*/
@@ -276,7 +277,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = 0.0747358,
             RightConstant = -0.0296133,
             LeftIndex = -1,
-            RightIndex = -1
+            RightIndex = -1,
         },
 
         /*4*/
@@ -287,7 +288,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = 0.154654,
             RightConstant = -0.0200209,
             LeftIndex = -1,
-            RightIndex = -1
+            RightIndex = -1,
         },
 
         /*5*/
@@ -298,7 +299,7 @@ public class XGBoostTreeConverterTest
             LeftConstant = 0.0257847,
             RightConstant = -0.00524031,
             LeftIndex = -1,
-            RightIndex = -1
+            RightIndex = -1,
         },
     ];
 }

@@ -36,5 +36,5 @@ public enum TreeMethod
     /// <summary>
     /// GPU implementation of hist algorithm.
     /// </summary>
-    GPUHist
+    GPUHist,
 }

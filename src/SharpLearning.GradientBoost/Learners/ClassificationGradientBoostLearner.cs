@@ -148,6 +148,7 @@ public class ClassificationGradientBoostLearner
             oneVsAllTargets = new double[1][];
             var target = uniqueTargets[0];
             oneVsAllTargets[0] = targets.Select(t => t == target ? 1.0 : 0.0).ToArray();
+
         }
         else // multi-class case - use oneVsAll strategy and fit probability for each class
         {
@@ -258,6 +259,7 @@ public class ClassificationGradientBoostLearner
             oneVsAllTargets = new double[1][];
             var target = uniqueTargets[0];
             oneVsAllTargets[0] = trainingTargets.Select(t => t == target ? 1.0 : 0.0).ToArray();
+
         }
         else // multi-class case - use oneVsAll strategy and fit probability for each class
         {
@@ -389,6 +391,7 @@ public class ClassificationGradientBoostLearner
             oneVsAllTargets = new double[1][];
             var target = uniqueTargets[0];
             oneVsAllTargets[0] = trainingTargets.Select(t => t == target ? 1.0 : 0.0).ToArray();
+
         }
         else // multi-class case - use oneVsAll strategy and fit probability for each class
         {

@@ -23,7 +23,7 @@ public class FeatureImportanceParserTest
             43.939899999999994,
             134.3104,
             0,
-            19.014670000000002
+            19.014670000000002,
         };
 
         Assert.AreEqual(expected.Length, actual.Length);
@@ -50,6 +50,7 @@ public class FeatureImportanceParserTest
 			11:leaf=0.0527778,cover=53
 			12:leaf=-0.0020202,cover=98
 		6:leaf=0.3,cover=2";
+
 
     const string Tree2 = @"booster[1]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=280.77,cover=214

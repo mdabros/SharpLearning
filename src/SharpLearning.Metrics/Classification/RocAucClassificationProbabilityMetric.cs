@@ -97,6 +97,7 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
         return 1.0 - auc;
     }
 
+
     /// <summary>
     /// Calculate the trapezoidal area bound by the quad (X1,X2,Y1,Y2) 
     /// </summary>

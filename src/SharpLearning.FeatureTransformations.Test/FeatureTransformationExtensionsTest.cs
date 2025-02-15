@@ -51,6 +51,7 @@ TuesDay;666;Yes;0;1;0;1;0";
         Assert.AreEqual(expected, actual);
     }
 
+
     [TestMethod]
     public void FeatureTransformationExtensions_RowTransform()
     {

@@ -203,6 +203,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
         var model = m_modelLearner.Learn(observations, targets,
             m_sampleIndices); // weighted sampling is used instead of weights in training
 
+
         var predictions = model.Predict(observations, indices);
 
         for (var i = 0; i < predictions.Length; i++)
@@ -215,6 +216,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
 
         for (var i = 0; i < m_workErrors.Length; i++)
         {
+
             var error = m_workErrors[i];
 
             if (maxError != 0.0)

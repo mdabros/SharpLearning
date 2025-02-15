@@ -31,7 +31,7 @@ public class ClassificationModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var metric = new LogLossClassificationProbabilityMetric();
@@ -69,7 +69,7 @@ public class ClassificationModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var metric = new LogLossClassificationProbabilityMetric();
@@ -107,7 +107,7 @@ public class ClassificationModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var metric = new LogLossClassificationProbabilityMetric();
@@ -145,7 +145,7 @@ public class ClassificationModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var metric = new LogLossClassificationProbabilityMetric();

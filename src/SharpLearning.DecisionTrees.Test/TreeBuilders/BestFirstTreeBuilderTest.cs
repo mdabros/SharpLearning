@@ -30,6 +30,7 @@ public class BestFirstTreeBuilderTest
             new GiniClassificationImpurityCalculator());
     }
 
+
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void BestFirstTreeBuilder_InvalidFeaturesPrSplit()
@@ -65,6 +66,7 @@ public class BestFirstTreeBuilderTest
 
         Assert.AreEqual(0.0, actual, 0.00001);
     }
+
 
     [TestMethod]
     public void BestFirstTreeBuilder_Build_Leaf_Nodes_4()

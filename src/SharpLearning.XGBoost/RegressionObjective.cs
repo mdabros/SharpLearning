@@ -59,5 +59,5 @@ public enum RegressionObjective
     /// for modeling total loss in insurance, 
     /// or for any outcome that might be Tweedie-distributed.
     /// </summary>
-    TweedieRegression
+    TweedieRegression,
 }

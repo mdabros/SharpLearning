@@ -91,6 +91,7 @@ public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
         {
             return -(1.0 - m_alpha);
         }
+
     }
 
     /// <summary>

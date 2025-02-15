@@ -102,6 +102,7 @@ public sealed class NeuralNet
         return activation;
     }
 
+
     /// <summary>
     /// Forwards each observations from input and stores the results in output.
     /// </summary>

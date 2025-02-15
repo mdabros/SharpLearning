@@ -45,6 +45,7 @@ public sealed class ClassificationStackingEnsembleLearner
     {
     }
 
+
     /// <summary>
     /// Stacking Classification Ensemble Learner. 
     /// Combines several models into a single ensemble model using a top or meta level model to combine the models.

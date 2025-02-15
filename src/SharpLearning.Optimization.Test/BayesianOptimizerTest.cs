@@ -75,7 +75,7 @@ public class BayesianOptimizerTest
         var expected = new OptimizerResult[]
         {
             new([90.513222660177036], 114559.43191955783),
-            new([41.752538896050559], 779.196560786838)
+            new([41.752538896050559], 779.196560786838),
         };
 
         Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);

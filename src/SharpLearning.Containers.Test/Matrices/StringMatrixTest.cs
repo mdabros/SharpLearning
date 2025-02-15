@@ -26,6 +26,7 @@ public class StringMatrixTest
         Assert.AreEqual("300", sut[2, 2]);
     }
 
+
     [TestMethod]
     public void StringMatrix_At_Set()
     {
@@ -140,7 +141,7 @@ public class StringMatrixTest
     {
         var features = new string[] { "1", "3",
                                       "10", "30",
-                                      "100", "300"};
+                                      "100", "300",};
 
         return new StringMatrix(features, 3, 2);
     }
@@ -148,7 +149,7 @@ public class StringMatrixTest
     static StringMatrix GetExpectedRowSubMatrix()
     {
         var features = new string[] { "1", "2", "3",
-                                      "100", "200", "300"};
+                                      "100", "200", "300",};
 
         return new StringMatrix(features, 2, 3);
     }
@@ -157,7 +158,7 @@ public class StringMatrixTest
     {
         var features = new string[] { "1", "2", "3",
                                       "10", "20", "30",
-                                      "100", "200", "300"};
+                                      "100", "200", "300",};
 
         return new StringMatrix(features, 3, 3);
     }

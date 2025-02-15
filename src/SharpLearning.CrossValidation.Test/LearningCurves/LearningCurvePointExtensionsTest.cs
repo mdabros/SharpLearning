@@ -14,7 +14,7 @@ public class LearningCurvePointExtensionsTest
     public void BiasVarianceLearningCurvePointExtensions_ToF64Matrix()
     {
         var sut = new List<LearningCurvePoint> { new(10, 0.0, 1.0),
-            new(100, 3.0, 8.0), new(1000, 4.0, 4.0) };
+            new(100, 3.0, 8.0), new(1000, 4.0, 4.0), };
 
         var actual = sut.ToF64Matrix();
         var expected = new F64Matrix([10,
@@ -34,7 +34,7 @@ public class LearningCurvePointExtensionsTest
     public void BiasVarianceLearningCurvePointExtensions_Write()
     {
         var sut = new List<LearningCurvePoint> { new(10, 0.0, 1.0),
-            new(100, 3.0, 8.0), new(1000, 4.0, 4.0) };
+            new(100, 3.0, 8.0), new(1000, 4.0, 4.0), };
 
         var writer = new StringWriter();
         sut.Write(() => writer);

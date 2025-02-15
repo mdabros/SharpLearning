@@ -27,6 +27,7 @@ public class F64MatrixTest
         Assert.AreEqual(300, sut[2, 2]);
     }
 
+
     [TestMethod]
     public void F64Matrix_At_Set()
     {
@@ -48,6 +49,7 @@ public class F64MatrixTest
         var value = sut.At(1, 1);
         Assert.AreEqual(item, value);
     }
+
 
     [TestMethod]
     public void F64Matrix_Row()
@@ -154,7 +156,7 @@ public class F64MatrixTest
     {
         var features = new double[6] { 1, 3,
                                     10, 30,
-                                    100, 300};
+                                    100, 300,};
 
         return new F64Matrix(features, 3, 2);
     }
@@ -162,7 +164,7 @@ public class F64MatrixTest
     static F64Matrix GetExpectedRowSubMatrix()
     {
         var features = new double[6] { 1, 2, 3,
-                                    100, 200, 300};
+                                    100, 200, 300,};
 
         return new F64Matrix(features, 2, 3);
     }
@@ -171,7 +173,7 @@ public class F64MatrixTest
     {
         var features = new double[9] { 1, 2, 3,
                                     10, 20, 30,
-                                    100, 200, 300};
+                                    100, 200, 300,};
 
         return new F64Matrix(features, 3, 3);
     }

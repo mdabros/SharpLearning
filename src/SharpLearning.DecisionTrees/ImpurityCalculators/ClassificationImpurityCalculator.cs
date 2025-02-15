@@ -147,6 +147,7 @@ public abstract class ClassificationImpurityCalculator
         Init(m_targetNames, m_targets, m_weights, newInterval);
     }
 
+
     /// <summary>
     /// Updates impurity calculator with new split index
     /// </summary>

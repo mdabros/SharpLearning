@@ -70,6 +70,7 @@ public static class ArrayExtensions
         }
     }
 
+
     /// <summary>
     /// Converts Nan to 0.0, NegativeInfinity to double.MinValue and PositiveInfinity to double.MaxValue
     /// </summary>

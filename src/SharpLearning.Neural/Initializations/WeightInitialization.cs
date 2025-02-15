@@ -27,6 +27,7 @@ public static class WeightInitialization
             var fanOut = layer.Depth * receptiveFieldSize;
 
             return new FanInFanOut(fanIn, fanOut);
+
         }
         else if (layer is DenseLayer)
         {
@@ -40,6 +41,7 @@ public static class WeightInitialization
             var fanOut = (int)Math.Sqrt(layer.Width * layer.Height * layer.Depth);
 
             return new FanInFanOut(fanIn, fanOut);
+
         }
     }
 

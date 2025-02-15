@@ -111,7 +111,7 @@ public class RecallMetricTest
         var targetStringMapping = new Dictionary<double, string>
         {
             { 0, "Negative" },
-            { 1, "Positive" }
+            { 1, "Positive" },
         };
 
         var sut = new RecallMetric<double>(1);
@@ -120,4 +120,5 @@ public class RecallMetricTest
 
         Assert.AreEqual(expected, actual);
     }
+
 }

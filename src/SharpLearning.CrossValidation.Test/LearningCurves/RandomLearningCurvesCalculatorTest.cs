@@ -25,7 +25,7 @@ public class RandomLearningCurvesCalculatorTest
         var expected = new List<LearningCurvePoint>()
         {
             new(32, 0, 0.141565953928265),
-            new(128, 0.0, 0.068970597423950036)
+            new(128, 0.0, 0.068970597423950036),
         };
 
         CollectionAssert.AreEqual(expected, actual);

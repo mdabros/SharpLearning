@@ -156,6 +156,7 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
                 //present[] = persent[] + v[]
                 particles[i] = particles[i].Add(particleVelocities[i]);
                 BoundCheck(particles[i], maxParameters, minParameters);
+
             }
         }
 

@@ -19,7 +19,7 @@ public class RegressionEnsembleLearnerTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());
@@ -43,7 +43,7 @@ public class RegressionEnsembleLearnerTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy(), 0.7);
@@ -67,7 +67,7 @@ public class RegressionEnsembleLearnerTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var sut = new RegressionEnsembleLearner(learners, new MeanRegressionEnsembleStrategy());

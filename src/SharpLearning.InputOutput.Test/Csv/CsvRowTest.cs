@@ -24,15 +24,15 @@ public class CsvRowTest
     public void CsvRow_Equal()
     {
         var row = new CsvRow(
-            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 }, },
+            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 } },
             ["a", "b", "c"]);
 
         var equal = new CsvRow(
-            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 }, },
+            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 } },
             ["a", "b", "c"]);
 
         var notEqual = new CsvRow(
-            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 }, },
+            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 } },
             ["123", "b", "c"]);
 
         Assert.AreEqual(equal, row);
@@ -43,18 +43,19 @@ public class CsvRowTest
     public void CsvRow_Equal_Params()
     {
         var row = new CsvRow(
-            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 }, },
+            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 } },
             "a", "b", "c");
 
         var equal = new CsvRow(
-            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 }, },
+            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 } },
             "a", "b", "c");
 
         var notEqual = new CsvRow(
-            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 }, },
+            new Dictionary<string, int> { { "F1", 0 }, { "F2", 0 }, { "F3", 0 } },
             "123", "b", "c");
 
         Assert.AreEqual(equal, row);
         Assert.AreNotEqual(notEqual, row);
     }
+
 }
