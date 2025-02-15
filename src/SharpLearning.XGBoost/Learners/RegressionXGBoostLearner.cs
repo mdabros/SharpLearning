@@ -92,7 +92,7 @@ public sealed class RegressionXGBoostLearner : ILearner<double>, IIndexedLearner
         m_parameters[ParameterNames.LearningRate] = (float)learningRate;
         m_parameters[ParameterNames.Estimators] = estimators;
         m_parameters[ParameterNames.Silent] = silent;
-        m_parameters[ParameterNames.objective] = objective.ToXGBoostString();
+        m_parameters[ParameterNames.Objective] = objective.ToXGBoostString();
 
         m_parameters[ParameterNames.Threads] = numberOfThreads;
         m_parameters[ParameterNames.Gamma] = (float)gamma;

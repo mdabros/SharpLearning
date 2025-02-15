@@ -11,9 +11,9 @@ namespace SharpLearning.XGBoost.Models;
 /// </summary>
 public static class XGBoostTreeConverter
 {
-    static readonly string[] m_leafSplit = ["leaf="];
-    static readonly string[] m_yesSplit = ["yes="];
-    static readonly string[] m_noSplit = ["no="];
+    static readonly string[] LeafSplit = ["leaf="];
+    static readonly string[] YesSplit = ["yes="];
+    static readonly string[] NoSplit = ["no="];
 
     /// <summary>
     /// Parse array of feature importance values from text dump of XGBoost trees.
@@ -139,7 +139,7 @@ public static class XGBoostTreeConverter
     /// <returns></returns>
     public static double ParseLeafValue(string line)
     {
-        var valueLine = line.Split(m_leafSplit, StringSplitOptions.RemoveEmptyEntries)[1];
+        var valueLine = line.Split(LeafSplit, StringSplitOptions.RemoveEmptyEntries)[1];
         var valueString = valueLine.Split(',')[0];
         var value = FloatingPointConversion.ToF64(valueString);
         return value;
@@ -184,7 +184,7 @@ public static class XGBoostTreeConverter
     /// <returns></returns>
     public static int ParseYesIndex(string line)
     {
-        return SplitYesNoIndex(line, m_yesSplit);
+        return SplitYesNoIndex(line, YesSplit);
     }
 
     /// <summary>
@@ -194,7 +194,7 @@ public static class XGBoostTreeConverter
     /// <returns></returns>
     public static int ParseNoIndex(string line)
     {
-        return SplitYesNoIndex(line, m_noSplit);
+        return SplitYesNoIndex(line, NoSplit);
     }
 
     /// <summary>

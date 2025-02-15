@@ -107,7 +107,7 @@ public sealed class ClassificationXGBoostLearner
             objective = ClassificationObjective.SoftProb;
         }
 
-        m_parameters[ParameterNames.objective] = objective.ToXGBoostString();
+        m_parameters[ParameterNames.Objective] = objective.ToXGBoostString();
 
         m_parameters[ParameterNames.Threads] = numberOfThreads;
         m_parameters[ParameterNames.Gamma] = (float)gamma;
@@ -162,7 +162,7 @@ public sealed class ClassificationXGBoostLearner
         var floatTargets = targets.ToFloat(indices);
 
         // Only specify XGBoost number of classes if the objective is multi-class.
-        var objective = (string)m_parameters[ParameterNames.objective];
+        var objective = (string)m_parameters[ParameterNames.Objective];
         if (objective == ClassificationObjective.Softmax.ToXGBoostString() ||
             objective == ClassificationObjective.SoftProb.ToXGBoostString())
         {

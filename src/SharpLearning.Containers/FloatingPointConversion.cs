@@ -16,7 +16,7 @@ public static class FloatingPointConversion
     /// <summary>
     /// 
     /// </summary>
-    public static readonly NumberFormatInfo nfi = new();
+    public static readonly NumberFormatInfo Nfi = new();
 
     /// <summary>
     /// Default NumberStyle is Any.
@@ -28,7 +28,7 @@ public static class FloatingPointConversion
     /// </summary> 
     public static string ToString(double value)
     {
-        return value.ToString(DefaultFormat, nfi);
+        return value.ToString(DefaultFormat, Nfi);
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public static class FloatingPointConversion
 
     static double ParseAnyNumberStyle(string value)
     {
-        if (double.TryParse(value, NumberStyle, nfi, out var result))
+        if (double.TryParse(value, NumberStyle, Nfi, out var result))
         {
             return result;
         }

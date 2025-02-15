@@ -26,7 +26,7 @@ static class ParameterNames
     /// Specify the learning task and the corresponding learning objective or
     /// a custom objective function to be used(see note below)
     /// </summary>
-    public const string objective = "objective";
+    public const string Objective = "objective";
 
     /// <summary>
     /// Number of parallel threads used to run xgboost

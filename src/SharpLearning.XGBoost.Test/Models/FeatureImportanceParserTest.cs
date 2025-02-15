@@ -34,9 +34,9 @@ public class FeatureImportanceParserTest
         }
     }
 
-    readonly string[] m_textTrees = [m_tree1, m_tree2];
+    readonly string[] m_textTrees = [Tree1, Tree2];
 
-    const string m_tree1 = @"booster[0]
+    const string Tree1 = @"booster[0]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=343.922,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=74.1261,cover=61
 		3:[f8<0.13] yes=7,no=8,missing=7,gain=10.7401,cover=37
@@ -52,7 +52,7 @@ public class FeatureImportanceParserTest
 		6:leaf=0.3,cover=2";
 
 
-    const string m_tree2 = @"booster[1]
+    const string Tree2 = @"booster[1]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=280.77,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=60.1843,cover=61
 		3:[f8<0.13] yes=7,no=8,missing=7,gain=8.27457,cover=37

@@ -19,7 +19,7 @@ public sealed class SoftMaxLayer
     , IOutputLayer
     , IClassificationLayer
 {
-    Matrix<float> OutputActivations;
+    Matrix<float> m_outputActivations;
     Matrix<float> m_delta;
 
     /// <summary>
@@ -71,7 +71,7 @@ public sealed class SoftMaxLayer
     /// <param name="delta"></param>
     public Matrix<float> Backward(Matrix<float> delta)
     {
-        delta.Subtract(OutputActivations, m_delta);
+        delta.Subtract(m_outputActivations, m_delta);
         m_delta.Multiply(-1f, m_delta);
 
         return m_delta;
@@ -84,10 +84,10 @@ public sealed class SoftMaxLayer
     /// <returns></returns>
     public Matrix<float> Forward(Matrix<float> input)
     {
-        input.CopyTo(OutputActivations);
-        SoftMax(OutputActivations);
+        input.CopyTo(m_outputActivations);
+        SoftMax(m_outputActivations);
 
-        return OutputActivations;
+        return m_outputActivations;
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public sealed class SoftMaxLayer
 
     public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize, Initialization initializtion, Random random)
     {
-        OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
+        m_outputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
         m_delta = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
     }
 
@@ -165,7 +165,7 @@ public sealed class SoftMaxLayer
     {
         var batchSize = 1;
         var copy = new SoftMaxLayer(NumberOfClasses);
-        copy.OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
+        copy.m_outputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfClasses);
 
         layers.Add(copy);
     }

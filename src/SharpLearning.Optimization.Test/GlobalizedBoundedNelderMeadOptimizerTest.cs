@@ -70,10 +70,10 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
         int? maybeMaxDegreeOfParallelism,
         MinMaxParameterSpec[] parameters)
     {
-        const int DefaultMaxDegreeOfParallelism = -1;
+        const int defaultMaxDegreeOfParallelism = -1;
 
         var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
-            maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+            maybeMaxDegreeOfParallelism.Value : defaultMaxDegreeOfParallelism;
 
         var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters,
             maxRestarts: 50,

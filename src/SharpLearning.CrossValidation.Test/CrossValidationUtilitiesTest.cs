@@ -94,11 +94,11 @@ public class CrossValidationUtilitiesTest
 
     static void TraceIndexSets(IReadOnlyList<(int[] trainingIndices, int[] validationIndices)> indexSets)
     {
-        const string Separator = ", ";
+        const string separator = ", ";
         foreach (var set in indexSets)
         {
-            Trace.WriteLine("(new int[] { " + string.Join(Separator, set.trainingIndices) + " }, " +
-                "new int[] { " + string.Join(Separator, set.validationIndices) + " }),");
+            Trace.WriteLine("(new int[] { " + string.Join(separator, set.trainingIndices) + " }, " +
+                "new int[] { " + string.Join(separator, set.validationIndices) + " }),");
         }
     }
 }

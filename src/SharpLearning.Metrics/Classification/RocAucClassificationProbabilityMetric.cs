@@ -70,7 +70,7 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
 
             if (probability != previousProbability)
             {
-                auc += trapezoidArea(
+                auc += TrapezoidArea(
                     fpCount * 1.0 / negativeCount,
                     previousFpCount * 1.0 / negativeCount,
                     tpCount * 1.0 / positivesCount,
@@ -86,7 +86,7 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
                 fpCount++;
         }
 
-        auc += trapezoidArea(
+        auc += TrapezoidArea(
             1.0, previousFpCount * 1.0 / negativeCount,
             1.0, previousTpCount * 1.0 / positivesCount);
 
@@ -97,15 +97,15 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
     /// <summary>
     /// Calculate the trapezoidal area bound by the quad (X1,X2,Y1,Y2) 
     /// </summary>
-    /// <param name="X1"></param>
-    /// <param name="X2"></param>
-    /// <param name="Y1"></param>
-    /// <param name="Y2"></param>
+    /// <param name="x1"></param>
+    /// <param name="x2"></param>
+    /// <param name="y1"></param>
+    /// <param name="y2"></param>
     /// <returns></returns>
-    static double trapezoidArea(double X1, double X2, double Y1, double Y2)
+    static double TrapezoidArea(double x1, double x2, double y1, double y2)
     {
-        var b = Math.Abs(X1 - X2);
-        var height = (Y1 + Y2) / 2.0;
+        var b = Math.Abs(x1 - x2);
+        var height = (y1 + y2) / 2.0;
         return (b * height);
     }
 
