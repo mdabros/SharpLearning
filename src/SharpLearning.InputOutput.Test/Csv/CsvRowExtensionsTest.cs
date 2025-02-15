@@ -114,7 +114,8 @@ public class CsvRowExtensionsTest
         var actual = sut.EnumerateRows("one")
                         .ToStringVector();
 
-        CollectionAssert.AreEqual(new string[] { "1" }, actual);
+        var expected = new string[] { "1" };
+        CollectionAssert.AreEqual(expected, actual);
     }
 
     [TestMethod]
