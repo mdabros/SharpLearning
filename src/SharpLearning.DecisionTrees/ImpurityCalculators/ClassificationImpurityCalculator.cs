@@ -65,12 +65,12 @@ public abstract class ClassificationImpurityCalculator
     /// <summary>
     /// 
     /// </summary>
-    public double WeightedLeft { get { return m_weightedLeft; } }
+    public double WeightedLeft => m_weightedLeft;
 
     /// <summary>
     /// 
     /// </summary>
-    public double WeightedRight { get { return m_weightedRight; } }
+    public double WeightedRight => m_weightedRight;
 
     /// <summary>
     /// Initialize the calculator with targets, weights and work interval

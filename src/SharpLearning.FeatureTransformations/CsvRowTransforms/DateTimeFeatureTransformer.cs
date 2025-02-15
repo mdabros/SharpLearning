@@ -49,10 +49,7 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     /// <summary>
     /// 
     /// </summary>
-    public static string[] FeatureNames
-    {
-        get => ["Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours"];
-    }
+    public static string[] FeatureNames => ["Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours"];
 
     /// <summary>
     /// Transform a data string into numerical features that can be presented to a machine learning algorithm.

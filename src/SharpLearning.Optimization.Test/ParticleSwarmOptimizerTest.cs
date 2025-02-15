@@ -72,8 +72,7 @@ public class ParticleSwarmOptimizerTest
     {
         const int defaultMaxDegreeOfParallelism = -1;
 
-        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
-            maybeMaxDegreeOfParallelism.Value : defaultMaxDegreeOfParallelism;
+        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism ?? defaultMaxDegreeOfParallelism;
 
         var sut = new ParticleSwarmOptimizer(parameters,
         maxIterations: 100,

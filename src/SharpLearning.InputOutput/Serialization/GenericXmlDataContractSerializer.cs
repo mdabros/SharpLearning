@@ -108,13 +108,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
         readonly Dictionary<Type, Tuple<string, string>> m_typeToNames;
         readonly Dictionary<string, Dictionary<string, Type>> m_namesToType;
 
-        public Type[] KnownTypes
-        {
-            get
-            {
-                return m_typeToNames.Keys.ToArray();
-            }
-        }
+        public Type[] KnownTypes => m_typeToNames.Keys.ToArray();
 
         public GenericResolver()
             : this(ReflectTypes())

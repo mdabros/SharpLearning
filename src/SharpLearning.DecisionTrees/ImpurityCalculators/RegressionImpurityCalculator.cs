@@ -37,12 +37,12 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
     /// <summary>
     /// 
     /// </summary>
-    public double WeightedLeft { get { return m_weightedLeft; } }
+    public double WeightedLeft => m_weightedLeft;
 
     /// <summary>
     /// 
     /// </summary>
-    public double WeightedRight { get { return m_weightedRight; } }
+    public double WeightedRight => m_weightedRight;
 
     /// <summary>
     /// 
@@ -236,10 +236,7 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
     /// <summary>
     /// Unique target names are not available for regression
     /// </summary>
-    public double[] TargetNames
-    {
-        get { return []; }
-    }
+    public double[] TargetNames => [];
 
     /// <summary>
     /// Probabilities are not available for regression

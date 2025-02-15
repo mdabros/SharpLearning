@@ -15,10 +15,7 @@ public sealed class GiniClassificationImpurityCalculator : ClassificationImpurit
     /// <summary>
     /// Gets the unique target names
     /// </summary>
-    public double[] TargetNames
-    {
-        get { return m_targetNames; }
-    }
+    public double[] TargetNames => m_targetNames;
 
     /// <summary>
     /// Calculates child impurities with current split index

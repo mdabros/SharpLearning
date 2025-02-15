@@ -193,8 +193,7 @@ public class BayesianOptimizerTest
     {
         const int defaultMaxDegreeOfParallelism = -1;
 
-        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
-            maybeMaxDegreeOfParallelism.Value : defaultMaxDegreeOfParallelism;
+        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism ?? defaultMaxDegreeOfParallelism;
 
         var runParallel = maybeMaxDegreeOfParallelism.HasValue;
 

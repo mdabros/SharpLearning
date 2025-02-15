@@ -23,7 +23,7 @@ class TargetCounts
         m_counts = new double[Length];
     }
 
-    public double[] Counts { get => m_counts; }
+    public double[] Counts => m_counts;
     public int OffSet { get; private set; }
     public int Length { get; private set; }
 

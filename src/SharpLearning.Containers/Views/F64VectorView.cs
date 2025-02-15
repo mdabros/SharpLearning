@@ -42,7 +42,7 @@ public unsafe struct F64VectorView
     /// <summary>
     /// Gets the interval of the F64View
     /// </summary>
-    public Interval1D Interval { get { return Interval1D.Create(0, Length); } }
+    public Interval1D Interval => Interval1D.Create(0, Length);
 
     /// <summary>
     /// Gets a sub-view over the specified interval
