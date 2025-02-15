@@ -49,9 +49,7 @@ public struct CertaintyPrediction
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is CertaintyPrediction)
-            return Equals((CertaintyPrediction)obj);
-        return false;
+        return obj is CertaintyPrediction prediction && Equals(prediction);
     }
 
     /// <summary>

@@ -48,9 +48,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is ChildImpurities)
-            return Equals((ChildImpurities)obj);
-        return false;
+        return obj is ChildImpurities impurities && Equals(impurities);
     }
 
     /// <summary>

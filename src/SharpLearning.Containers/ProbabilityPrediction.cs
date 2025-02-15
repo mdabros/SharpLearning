@@ -60,9 +60,7 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is ProbabilityPrediction)
-            return Equals((ProbabilityPrediction)obj);
-        return false;
+        return obj is ProbabilityPrediction prediction && Equals(prediction);
     }
 
     /// <summary>
