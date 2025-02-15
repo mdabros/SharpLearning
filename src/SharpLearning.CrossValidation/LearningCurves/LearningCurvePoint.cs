@@ -78,7 +78,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        return obj is LearningCurvePoint ? Equals((LearningCurvePoint)obj) : false;
+        return obj is LearningCurvePoint learningCurvePoint && Equals(learningCurvePoint);
     }
 
     /// <summary>

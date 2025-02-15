@@ -80,7 +80,7 @@ public struct SplitResult : IEquatable<SplitResult>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        return obj is SplitResult && Equals((SplitResult)obj);
+        return obj is SplitResult splitResult && Equals(splitResult);
     }
 
     /// <summary>

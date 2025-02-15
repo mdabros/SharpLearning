@@ -98,14 +98,8 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
     public void Save(string modelFilePath) =>
         m_model.Save(modelFilePath);
 
-    /// <summary>
-    ///
-    /// </summary>
     public void Dispose()
     {
-        if (m_model != null)
-        {
-            m_model.Dispose();
-        }
+        m_model?.Dispose();
     }
 }

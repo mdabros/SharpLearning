@@ -31,8 +31,8 @@ public sealed class RandomShuffleLearningCurvesCalculator<TPrediction> :
     /// <param name="metric">The error metric used</param>
     /// <param name="samplePercentages">A list of sample percentages determining the
     /// training data used in each point of the learning curve</param>
-    /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
     /// <param name="trainingPercentage">Total percentage of data used for training</param>
+    /// <param name="numberOfShufflesPrSample">Number of shuffles done at each sampling point</param>
     public RandomShuffleLearningCurvesCalculator(IMetric<double, TPrediction> metric, double[] samplePercentages,
         double trainingPercentage, int numberOfShufflesPrSample = 5)
         : base(new RandomTrainingTestIndexSplitter<double>(trainingPercentage),

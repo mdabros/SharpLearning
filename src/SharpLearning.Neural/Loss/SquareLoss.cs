@@ -3,7 +3,7 @@
 namespace SharpLearning.Neural.Loss;
 
 /// <summary>
-/// Square loss for for neuralnet learner.
+/// Square loss for neuralnet learner.
 /// The square loss function is the standard method of fitting regression models.
 /// The square loss is however sensitive to outliers since it weighs larger errors more heavily than small ones.
 /// </summary>
