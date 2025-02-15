@@ -21,7 +21,7 @@ public static class SamplerTypeExtensions
             case SamplerType.Weighted:
                 return "weighted";
             default:
-                throw new ArgumentException("Unknown sampler type: " + type); ;
+                throw new ArgumentException("Unknown sampler type: " + type);
         }
     }
 }

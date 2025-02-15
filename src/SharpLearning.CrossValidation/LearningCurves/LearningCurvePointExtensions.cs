@@ -20,7 +20,7 @@ public static class LearningCurvePointExtensions
     public static F64Matrix ToF64Matrix(this List<LearningCurvePoint> points)
     {
         if (points.Count == 0)
-        { throw new ArgumentException("There must be at least one element in the list to convert to a matrix"); };
+        { throw new ArgumentException("There must be at least one element in the list to convert to a matrix"); }
 
         var matrix = new F64Matrix(points.Count, 3);
         for (var i = 0; i < points.Count; i++)

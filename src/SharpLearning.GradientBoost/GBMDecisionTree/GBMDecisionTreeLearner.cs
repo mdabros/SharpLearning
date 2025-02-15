@@ -298,7 +298,7 @@ public sealed class GBMDecisionTreeLearner
     {
         while (splitResults.TryTake(out GBMSplitResult result))
         {
-            ;
+
         }
     }
 
