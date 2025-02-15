@@ -18,5 +18,5 @@ public enum NodePositionType
     /// <summary>
     ///
     /// </summary>
-    Right
+    Right,
 }

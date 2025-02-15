@@ -63,5 +63,5 @@ public enum OptimizerMethod
     /// RMSprop and Adadelta have both been developed independently around the same time stemming from the need to resolve Adagrad's radically diminishing learning rates.
     /// Recommended learning rate: 0.001.
     /// </summary>
-    RMSProp
+    RMSProp,
 }

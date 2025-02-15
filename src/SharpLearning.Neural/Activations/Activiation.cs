@@ -14,5 +14,5 @@ public enum Activation
     /// Relu activation.
     /// </summary>
     Relu,
-    Sigmoid
+    Sigmoid,
 }

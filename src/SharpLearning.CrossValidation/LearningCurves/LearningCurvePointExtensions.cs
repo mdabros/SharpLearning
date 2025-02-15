@@ -47,7 +47,7 @@ public static class LearningCurvePointExtensions
         {
             { "SampleCount", 0 },
             { "TrainingError", 1 },
-            { "ValidationError", 2 }
+            { "ValidationError", 2 },
         };
 
         points.ToF64Matrix()

@@ -162,7 +162,7 @@ public sealed class ClassificationNeuralNetModel
         var types = new Type[]
         {
             typeof(DenseVectorStorage<float>),
-            typeof(DenseColumnMajorMatrixStorage<float>)
+            typeof(DenseColumnMajorMatrixStorage<float>),
         };
 
         return new GenericXmlDataContractSerializer(types)
@@ -178,7 +178,7 @@ public sealed class ClassificationNeuralNetModel
         var types = new Type[]
         {
             typeof(DenseVectorStorage<float>),
-            typeof(DenseColumnMajorMatrixStorage<float>)
+            typeof(DenseColumnMajorMatrixStorage<float>),
         };
 
         new GenericXmlDataContractSerializer(types)

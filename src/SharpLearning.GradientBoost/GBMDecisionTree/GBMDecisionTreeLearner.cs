@@ -107,7 +107,7 @@ public sealed class GBMDecisionTreeLearner
             RightError = rootValues.Cost,
             LeftConstant = bestConstant,
             RightConstant = bestConstant,
-            SampleCount = rootValues.Samples
+            SampleCount = rootValues.Samples,
         };
 
         var nodes = new List<GBMNode> { root };
@@ -147,7 +147,7 @@ public sealed class GBMDecisionTreeLearner
                 SplitValue = -1,
                 Cost = double.MaxValue,
                 LeftConstant = -1,
-                RightConstant = -1
+                RightConstant = -1,
             };
 
             if (allFeatureIndices.Length != featuresPrSplit.Length)
@@ -190,7 +190,7 @@ public sealed class GBMDecisionTreeLearner
             {
                 BestSplit = initBestSplit,
                 Left = GBMSplitInfo.NewEmpty(),
-                Right = GBMSplitInfo.NewEmpty()
+                Right = GBMSplitInfo.NewEmpty(),
             };
 
             if (!splitResults.IsEmpty)
@@ -247,7 +247,7 @@ public sealed class GBMDecisionTreeLearner
                         Values = bestSplitResult.Left.Copy(NodePositionType.Left),
                         InSample = leftInSample,
                         Depth = depth,
-                        Parent = node
+                        Parent = node,
                     });
 
                     queue.Enqueue(new GBMTreeCreationItem
@@ -255,7 +255,7 @@ public sealed class GBMDecisionTreeLearner
                         Values = bestSplitResult.Right.Copy(NodePositionType.Right),
                         InSample = rightInSample,
                         Depth = depth,
-                        Parent = node
+                        Parent = node,
                     });
                 }
                 else
@@ -335,7 +335,7 @@ public sealed class GBMDecisionTreeLearner
             Cost = double.MaxValue,
             LeftConstant = -1,
             RightConstant = -1,
-            SampleCount = parentItem.Values.Samples
+            SampleCount = parentItem.Values.Samples,
         };
 
         var bestLeft = GBMSplitInfo.NewEmpty();

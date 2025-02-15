@@ -55,7 +55,7 @@ public struct GBMSplitInfo
             SumOfSquares = 0,
             Cost = 0,
             BestConstant = 0,
-            BinomialSum = 0
+            BinomialSum = 0,
         };
     }
 
@@ -83,7 +83,7 @@ public struct GBMSplitInfo
             Cost = Cost,
             BestConstant = BestConstant,
             Position = position,
-            BinomialSum = BinomialSum
+            BinomialSum = BinomialSum,
         };
     }
 }
