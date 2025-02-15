@@ -60,8 +60,16 @@ public sealed class HyperbandOptimizer
         int seed = 34)
     {
         m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-        if (maximumBudget < 1) throw new ArgumentException(nameof(maximumBudget) + " must be at larger than 0");
-        if (eta < 1) throw new ArgumentException(nameof(eta) + " must be at larger than 0");
+        if (maximumBudget < 1)
+        {
+            throw new ArgumentException(nameof(maximumBudget) + " must be at larger than 0");
+        }
+
+        if (eta < 1)
+        {
+            throw new ArgumentException(nameof(eta) + " must be at larger than 0");
+        }
+
         m_sampler = new RandomUniform(seed);
 
         // This is called R in the paper.

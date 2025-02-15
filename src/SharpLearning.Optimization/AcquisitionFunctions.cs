@@ -28,7 +28,10 @@ public static class AcquisitionFunctions
     public static double ExpectedImprovement(double currentScore, double mean, double variance, double xi = 0.0)
     {
         // in case of zero variance return 0.0.
-        if (variance == 0.0) return 0.0;
+        if (variance == 0.0)
+        {
+            return 0.0;
+        }
 
         var std = Math.Sqrt(variance);
         var z = (currentScore - mean - xi) / std;
@@ -48,7 +51,10 @@ public static class AcquisitionFunctions
     public static double ProbabilityOfImprovement(double currentScore, double mean, double variance, double xi = 0.0)
     {
         // in case of zero variance return 0.0.
-        if (variance == 0.0) return 0.0;
+        if (variance == 0.0)
+        {
+            return 0.0;
+        }
 
         var std = Math.Sqrt((double)variance);
         var z = (currentScore - mean - xi) / std;
@@ -75,7 +81,10 @@ public static class AcquisitionFunctions
         // Save the sign of x
         var sign = 1;
         if (x < 0)
+        {
             sign = -1;
+        }
+
         x = Math.Abs(x) / Math.Sqrt(2.0);
 
         // A&S formula 7.1.26

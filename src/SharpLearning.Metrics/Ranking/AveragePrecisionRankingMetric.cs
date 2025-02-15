@@ -32,7 +32,9 @@ public sealed class AveragePrecisionRankingMetric<T> : IRankingMetric<T>
     {
         var length = m_k;
         if (predictions.Length < length)
+        {
             length = predictions.Length;
+        }
 
         m_workTargets.Clear();
         foreach (var target in targets)

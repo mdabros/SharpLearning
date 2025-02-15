@@ -113,20 +113,27 @@ public sealed class BatchNormalizationLayer : ILayer
             var diff_beta = 0.0f;
 
             for (var n = 0; n < N; ++n)
+            {
                 for (var h = 0; h < H; ++h)
+                {
                     for (var w = 0; w < W; ++w)
                     {
                         diff_gamma += (src.GetValueFromIndex(n, c, h, w, Depth, Width, Height) - mean)
                             * diff_dst.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
                         diff_beta += diff_dst.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
                     }
+                }
+            }
+
             diff_gamma *= variance;
 
             m_scaleGradients.At(0, c, diff_gamma);
             m_biasGradients[c] = diff_beta;
 
             for (var n = 0; n < N; ++n)
+            {
                 for (var h = 0; h < H; ++h)
+                {
                     for (var w = 0; w < W; ++w)
                     {
                         var diffSrcIndex = diff_src.GetDataIndex(n, c, h, w, Depth, Width, Height);
@@ -136,6 +143,8 @@ public sealed class BatchNormalizationLayer : ILayer
                             * diff_gamma * variance / (W * H * N);
                         diff_src.Data()[diffSrcIndex] *= gamma * variance;
                     }
+                }
+            }
         });
 #pragma warning restore IDE1006 // Naming Styles
         return m_delta;
@@ -169,18 +178,30 @@ public sealed class BatchNormalizationLayer : ILayer
             if (is_training)
             {
                 for (var n = 0; n < N; ++n)
+                {
                     for (var h = 0; h < H; ++h)
+                    {
                         for (var w = 0; w < W; ++w)
+                        {
                             mean += src.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
+                        }
+                    }
+                }
+
                 mean /= W * N * H;
 
                 for (var n = 0; n < N; ++n)
+                {
                     for (var h = 0; h < H; ++h)
+                    {
                         for (var w = 0; w < W; ++w)
                         {
                             var m = src.GetValueFromIndex(n, c, h, w, Depth, Width, Height) - mean;
                             variance += m * m;
                         }
+                    }
+                }
+
                 variance = 1f / (float)Math.Sqrt(variance / (W * H * N) + eps);
             }
             else
@@ -190,7 +211,9 @@ public sealed class BatchNormalizationLayer : ILayer
             }
 
             for (var n = 0; n < N; ++n)
+            {
                 for (var h = 0; h < H; ++h)
+                {
                     for (var w = 0; w < W; ++w)
                     {
                         var d_off = src.GetDataIndex(n, c, h, w, Depth, Width, Height);
@@ -198,6 +221,8 @@ public sealed class BatchNormalizationLayer : ILayer
                         var bias = Bias[c];
                         dst[d_off] = scale * (src.Data()[d_off] - mean) * variance + bias;
                     }
+                }
+            }
 #pragma warning restore IDE1006 // Naming Styles
             if (is_training)
             {

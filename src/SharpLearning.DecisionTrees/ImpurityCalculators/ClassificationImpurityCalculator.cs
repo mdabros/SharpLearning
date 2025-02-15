@@ -110,7 +110,9 @@ public abstract class ClassificationImpurityCalculator
         for (var i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
         {
             if (weightsPresent)
+            {
                 w = weights[i];
+            }
 
             var targetIndex = (int)targets[i];
             WeightedTargetCount[targetIndex] += w;
@@ -165,7 +167,9 @@ public abstract class ClassificationImpurityCalculator
         for (var i = m_currentPosition; i < newPosition; i++)
         {
             if (weightsPresent)
+            {
                 w = m_weights[i];
+            }
 
             var targetIndex = (int)m_targets[i];
             WeightedTargetCountLeft[targetIndex] += w;

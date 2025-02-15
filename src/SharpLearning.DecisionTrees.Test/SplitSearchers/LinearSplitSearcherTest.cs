@@ -124,7 +124,10 @@ public class LinearSplitSearcherTest
     static double Weight(double v, double weight)
     {
         if (v == 1.0)
+        {
             return weight;
+        }
+
         return 1.0;
     }
 

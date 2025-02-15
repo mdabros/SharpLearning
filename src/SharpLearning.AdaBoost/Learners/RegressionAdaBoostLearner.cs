@@ -137,19 +137,27 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
         for (var i = 0; i < m_iterations; i++)
         {
             if (!Boost(observations, targets, indices, i))
+            {
                 break;
+            }
 
             var ensembleError = ErrorEstimate(observations, indices);
 
             if (ensembleError == 0.0)
+            {
                 break;
+            }
 
             if (m_modelErrors[i] == 0.0)
+            {
                 break;
+            }
 
             var weightSum = m_sampleWeights.Sum(indices);
             if (weightSum <= 0.0)
+            {
                 break;
+            }
 
             if (i == m_iterations - 1)
             {

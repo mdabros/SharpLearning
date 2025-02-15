@@ -115,7 +115,10 @@ public class RegressionDecisionTreeLearnerTest
     static double Weight(double v, double weight)
     {
         if (v < 3.0)
+        {
             return weight;
+        }
+
         return 1.0;
     }
 }

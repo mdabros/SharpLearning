@@ -273,7 +273,10 @@ public static class CsvRowExtensions
 
         foreach (var key in dictThisRows.Keys)
         {
-            if (!dictOtherRows.ContainsKey(key)) continue;
+            if (!dictOtherRows.ContainsKey(key))
+            {
+                continue;
+            }
 
             var thisValues = dictThisRows[key].Values;
             var otherValues = dictOtherRows[key].Values;

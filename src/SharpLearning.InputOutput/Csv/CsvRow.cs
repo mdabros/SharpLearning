@@ -41,10 +41,14 @@ public class CsvRow
     public bool Equals(CsvRow other)
     {
         if (!Values.SequenceEqual(other.Values))
+        {
             return false;
+        }
 
         if (!ColumnNameToIndex.SequenceEqual(other.ColumnNameToIndex))
+        {
             return false;
+        }
 
         return true;
     }

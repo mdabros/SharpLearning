@@ -45,9 +45,14 @@ public struct ProbabilityPrediction : IEquatable<ProbabilityPrediction>
         foreach (var item in zip)
         {
             if (item.This.Key != item.Other.Key)
+            {
                 return false;
+            }
+
             if (!Equal(item.This.Value, item.Other.Value))
+            {
                 return false;
+            }
         }
 
         return true;

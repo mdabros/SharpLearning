@@ -296,7 +296,10 @@ public sealed class GBMDecisionTreeLearner
 
     static void EmpytySplitResults(ConcurrentBag<GBMSplitResult> splitResults)
     {
-        while (splitResults.TryTake(out GBMSplitResult result)) ;
+        while (splitResults.TryTake(out GBMSplitResult result))
+        {
+            ;
+        }
     }
 
     void SplitWorker(F64Matrix observations,

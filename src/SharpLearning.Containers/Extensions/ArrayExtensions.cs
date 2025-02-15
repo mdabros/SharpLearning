@@ -341,10 +341,14 @@ public static class ArrayExtensions
     public static double ScoreAtPercentile(this double[] values, double percentile)
     {
         if (percentile == 1.0)
+        {
             return values.Max();
+        }
 
         if (percentile == 0.0)
+        {
             return values.Min();
+        }
 
         var array = new double[values.Length];
         Array.Copy(values, array, values.Length);

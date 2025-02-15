@@ -94,9 +94,13 @@ public struct Interval1D : IEquatable<Interval1D>
     public override bool Equals(object other)
     {
         if (other is Interval1D)
+        {
             return Equals((Interval1D)other);
+        }
         else
+        {
             return false;
+        }
     }
 
     /// <summary>

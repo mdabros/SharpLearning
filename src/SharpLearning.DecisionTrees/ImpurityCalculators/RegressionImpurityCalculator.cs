@@ -89,7 +89,9 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
         for (var i = m_interval.FromInclusive; i < m_interval.ToExclusive; i++)
         {
             if (weightsPresent)
+            {
                 w = weights[i];
+            }
 
             var targetValue = targets[i];
             var wTarget = w * targetValue;
@@ -156,7 +158,9 @@ public sealed class RegressionImpurityCalculator : IImpurityCalculator
         for (var i = m_currentPosition; i < newPosition; i++)
         {
             if (weightsPresent)
+            {
                 w = m_weights[i];
+            }
 
             var targetValue = m_targets[i];
             var wTarget = w * targetValue;

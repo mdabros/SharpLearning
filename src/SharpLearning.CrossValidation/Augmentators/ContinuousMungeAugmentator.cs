@@ -126,7 +126,9 @@ public sealed class ContinuousMungeAugmentator
         double diff = 0;
 
         if (p.Length != q.Length)
+        {
             throw new ArgumentException("Input vectors must be of the same dimension.");
+        }
 
         for (int x = 0, len = p.Length; x < len; x++)
         {

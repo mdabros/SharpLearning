@@ -81,9 +81,13 @@ public sealed class RocAucClassificationProbabilityMetric : IClassificationProba
                 previousTpCount = tpCount;
             }
             if (target.Equals(m_positiveTarget))
+            {
                 tpCount++;
+            }
             else
+            {
                 fpCount++;
+            }
         }
 
         auc += TrapezoidArea(
