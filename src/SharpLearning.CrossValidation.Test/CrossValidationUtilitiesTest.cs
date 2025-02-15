@@ -20,10 +20,10 @@ public class CrossValidationUtilitiesTest
 
         var expecteds = new List<(int[] trainingIndices, int[] validationIndices)>
         {
-            (new int[] { 0, 1, 3, 4, 5, 7, 9, 10, 11 }, new int[] { 6, 8, 2 }),
-            (new int[] { 0, 2, 3, 4, 6, 7, 8, 9, 10 }, new int[] { 1, 11, 5 }),
-            (new int[] { 0, 1, 2, 4, 5, 6, 8, 9, 11 }, new int[] { 7, 3, 10 }),
-            (new int[] { 1, 2, 3, 5, 6, 7, 8, 10, 11 }, new int[] { 0, 4, 9 }),
+            ([0, 1, 3, 4, 5, 7, 9, 10, 11], [6, 8, 2]),
+            ([0, 2, 3, 4, 6, 7, 8, 9, 10 ], [1, 11, 5]),
+            ([0, 1, 2, 4, 5, 6, 8, 9, 11 ], [7, 3, 10]),
+            ([1, 2, 3, 5, 6, 7, 8, 10, 11], [0, 4, 9]),
         };
 
         Assert.AreEqual(expecteds.Count, actuals.Count);
