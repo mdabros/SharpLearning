@@ -14,7 +14,7 @@ public sealed class GridParameterSpec : IParameterSpec
     readonly int m_minIndex;
     readonly int m_maxIndex;
 
-    const ParameterType m_parameterType = ParameterType.Discrete;
+    const ParameterType ParameterTypeDiscrete = ParameterType.Discrete;
 
     /// <summary>
     /// GridParameterSpec, usable when a fixed set of parameters,
@@ -46,7 +46,7 @@ public sealed class GridParameterSpec : IParameterSpec
     public double SampleValue(IParameterSampler sampler)
     {
         // sample random parameter index.
-        var index = (int)sampler.Sample(m_minIndex, m_maxIndex, m_parameterType);
+        var index = (int)sampler.Sample(m_minIndex, m_maxIndex, ParameterTypeDiscrete);
         // return the values of the index.
         return m_parameters[index];
     }
