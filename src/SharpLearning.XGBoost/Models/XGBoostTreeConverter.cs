@@ -69,12 +69,7 @@ public static class XGBoostTreeConverter
         var nodeIndex = 1;
         foreach (var line in orderedLines.Values)
         {
-            if (IsLeaf(line))
-            {
-                // Leafs are not added as nodes, leaf values are included in the split nodes.
-                continue;
-            }
-            else
+            if (!IsLeaf(line))
             {
                 var featureIndex = ParseFeatureIndex(line);
                 var splitValue = ParseSplitValue(line);

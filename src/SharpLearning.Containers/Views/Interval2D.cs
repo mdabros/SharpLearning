@@ -58,9 +58,9 @@ public struct Interval2D : IEquatable<Interval2D>
     /// <returns></returns>
     public override bool Equals(object other)
     {
-        if (other is Interval2D)
+        if (other is Interval2D interval2D)
         {
-            return Equals((Interval2D)other);
+            return Equals(interval2D);
         }
         else
         {
