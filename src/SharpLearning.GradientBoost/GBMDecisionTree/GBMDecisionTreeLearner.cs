@@ -195,7 +195,7 @@ public sealed class GBMDecisionTreeLearner
                 Right = GBMSplitInfo.NewEmpty()
             };
 
-            if (splitResults.Count != 0)
+            if (!splitResults.IsEmpty)
             {
                 // alternative to for finding bestsplit. gives slightly different results. probably due to order.
                 //GBMSplitResult result;
