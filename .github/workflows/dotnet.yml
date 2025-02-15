@@ -2,20 +2,23 @@
 
 name: dotnet
 
+permissions: read-all
+
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  # workflow_dispatch:
-  #   inputs:
-  #     version:
-  #       description: 'Release version to tag and create'
-  #       required: false
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version to tag and create'
+        required: false
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
   DOTNET_NOLOGO: true
+  NuGetDirectory: ${{ github.workspace }}/nuget
 
 jobs:
   build:
@@ -28,6 +31,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Important for Nerdbank.GitVersioning to calculate versions
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -37,8 +42,93 @@ jobs:
     - name: Build
       run: dotnet build -c ${{ matrix.configuration }} --no-restore 
     - name: Test
-      run: dotnet test -c ${{ matrix.configuration }} --no-build --verbosity normal
-    # - name: Upload coverage reports to Codecov
-    #   uses: codecov/codecov-action@v3
-    #   with:
-    #     flags: ${{ matrix.os }},${{ matrix.configuration }}
+      run: dotnet test -c ${{ matrix.configuration }} --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        flags: ${{ matrix.os }},${{ matrix.configuration }}
+      
+  format:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Format verify no changes
+      run: dotnet format --verify-no-changes
+
+  pack:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # Important for Nerdbank.GitVersioning to calculate versions
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Pack solution
+      run: dotnet pack SharpLearning.sln -c Release --output ${{ env.NuGetDirectory }}
+    - name: Add local package source
+      run: dotnet nuget add source ${{ env.NuGetDirectory }} --name local
+    - name: Get version of dll
+      run: (Get-Item './build/SharpLearning.AdaBoost_AnyCPU_Release_netstandard2.0/SharpLearning.AdaBoost.dll').VersionInfo.ProductVersion # unified version, so use AdaBoost dll.
+    - uses: actions/upload-artifact@v4
+      with:
+        name: nuget
+        if-no-files-found: error
+        retention-days: 7
+        path: ${{ env.NuGetDirectory }}/*nupkg
+
+  create-release-push:
+    needs: [ build, pack ]
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    if: ${{ github.event.inputs.version != ''  && github.actor == 'mdabros'}}
+  
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download nuget packages
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget
+        path: ${{ env.NuGetDirectory }}
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.event.inputs.version }}
+        release_name: ${{ github.event.inputs.version }}
+        draft: true
+    - name: Create tag (for release)
+      run: |
+        git tag v${{ github.event.inputs.version }}
+        git push origin v${{ github.event.inputs.version }}
+    - name: Upload NuGet packages
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.NuGetDirectory }}/*.nupkg
+        asset_name: ${{ env.NuGetDirectory }}/*.nupkg
+        asset_content_type: application/zip
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        global-json-file: global.json
+    - name: Push NuGet packages
+      run: |
+        for package in ${{ env.NuGetDirectory }}/*.nupkg; do
+          dotnet nuget push "$package" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        done

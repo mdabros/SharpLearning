@@ -1,9 +1,5 @@
 <Project>
   <PropertyGroup>  
-    <AssemblyVersion>0.31.0</AssemblyVersion>
-    <FileVersion>0.31.10</FileVersion>
-    <InformationalVersion>$(FileVersion)</InformationalVersion>
-    <PackageVersion>$(InformationalVersion)</PackageVersion>
     <!--https://github.com/dotnet/sourcelink/blob/main/docs/README.md#includesourcerevisionininformationalversion-->
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 
