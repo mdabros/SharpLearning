@@ -55,7 +55,7 @@ public class CsvRow
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        return obj is CsvRow other ? Equals(other) : false;
+        return obj is CsvRow other && Equals(other);
     }
 
     /// <summary>
