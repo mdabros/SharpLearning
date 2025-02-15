@@ -47,7 +47,6 @@ public static class StringMatrixExtensions
         matrix.Data().Map(func);
     }
 
-
     /// <summary>
     /// Iterates over all elements in the matrix and applies the function to the elements.
     /// The values are updated directly in the Matrix.
@@ -120,7 +119,6 @@ public static class StringMatrixExtensions
             Array.Copy(v, otherIndex, features, combineIndex, 1);
             combineIndex += 1;
         }
-
 
         return new StringMatrix(features, rows, cols);
     }

@@ -92,7 +92,6 @@ public sealed class GiniClassificationImpurityCalculator : ClassificationImpurit
                 maxWeight = value;
                 bestTarget = targetValue;
             }
-
         }
 
         return bestTarget;

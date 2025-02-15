@@ -51,7 +51,6 @@ public class FeatureImportanceParserTest
 			12:leaf=-0.0020202,cover=98
 		6:leaf=0.3,cover=2";
 
-
     const string Tree2 = @"booster[1]
 0:[f2<2.695] yes=1,no=2,missing=1,gain=280.77,cover=214
 	1:[f6<9.81] yes=3,no=4,missing=3,gain=60.1843,cover=61

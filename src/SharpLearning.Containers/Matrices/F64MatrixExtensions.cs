@@ -32,7 +32,6 @@ public static class F64MatrixExtensions
         matrix.Data().Map(func);
     }
 
-
     /// <summary>
     /// Iterates over all elements in the matrix and applies the function to the elements.
     /// The values are updated directly in the Matrix.
@@ -54,7 +53,6 @@ public static class F64MatrixExtensions
         var stringFeatures = Array.ConvertAll(matrix.Data(), FloatingPointConversion.ToString);
         return new StringMatrix(stringFeatures, matrix.RowCount, matrix.ColumnCount);
     }
-
 
     /// <summary>
     /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1 
@@ -118,7 +116,6 @@ public static class F64MatrixExtensions
             combineIndex += 1;
         }
 
-
         return new F64Matrix(features, rows, cols);
     }
 
@@ -150,12 +147,10 @@ public static class F64MatrixExtensions
             var matrixIndex = i * m.ColumnCount;
             Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);
             combineIndex += m.ColumnCount;
-
         }
 
         return new F64Matrix(features, rows, cols);
     }
-
 
     /// <summary>
     /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1
@@ -191,7 +186,6 @@ public static class F64MatrixExtensions
             combineIndex += m2.ColumnCount;
         }
 
-
         return new F64Matrix(features, rows, columns);
     }
 
@@ -218,7 +212,6 @@ public static class F64MatrixExtensions
 
         return new F64Matrix(features, rows, cols);
     }
-
 
     /// <summary>
     /// Combines matrix and vector row wise. Vector is added to the bottom of the matrix 
@@ -269,7 +262,6 @@ public static class F64MatrixExtensions
 
         return new F64Matrix(features, rows, cols);
     }
-
 
     /// <summary>
     /// Combines matrix1 and matrix2 row wise. Matrix2 is added to the bottom of matrix1

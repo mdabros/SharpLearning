@@ -123,7 +123,6 @@ public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, I
         return predictions;
     }
 
-
     /// <summary>
     /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name
     /// </summary>

@@ -148,7 +148,6 @@ public sealed class GBMDecisionTreeLearner
                 Cost = double.MaxValue,
                 LeftConstant = -1,
                 RightConstant = -1
-
             };
 
             if (allFeatureIndices.Length != featuresPrSplit.Length)
@@ -163,7 +162,6 @@ public sealed class GBMDecisionTreeLearner
                 {
                     FindBestSplit(observations, residuals, targets, predictions, orderedElements,
                         parentItem, parentInSample, i, splitResults);
-
                 }
             }
             else // multi-threaded search for best split
@@ -267,7 +265,6 @@ public sealed class GBMDecisionTreeLearner
                         var leftInSample = new bool[parentInSample.Length];
                         var rightInSample = new bool[parentInSample.Length];
                         var featureIndices = orderedElements[bestSplitResult.BestSplit.FeatureIndex];
-
 
                         for (var i = 0; i < parentInSample.Length; i++)
                         {
@@ -404,7 +401,6 @@ public sealed class GBMDecisionTreeLearner
 
     static int NextAllowedIndex(int start, int[] orderedIndexes, bool[] inSample)
     {
-
         for (var i = start; i < orderedIndexes.Length; i++)
         {
             if (inSample[orderedIndexes[i]])

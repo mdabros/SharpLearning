@@ -27,7 +27,6 @@ public class RegressionBackwardEliminationModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
             new RegressionDecisionTreeLearner(33)
-
         };
 
         var sut = new RegressionBackwardEliminationModelSelectingEnsembleLearner(learners, 5);
@@ -60,7 +59,6 @@ public class RegressionBackwardEliminationModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
             new RegressionDecisionTreeLearner(33)
-
         };
 
         var sut = new RegressionBackwardEliminationModelSelectingEnsembleLearner(learners, 5);

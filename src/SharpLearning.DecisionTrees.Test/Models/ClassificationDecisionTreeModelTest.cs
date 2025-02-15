@@ -71,7 +71,6 @@ public class ClassificationDecisionTreeModelTest
         Assert.AreEqual(0.1, error, 0.0000001);
     }
 
-
     [TestMethod]
     public void ClassificationDecisionTreeModel_PredictProbability_Single()
     {

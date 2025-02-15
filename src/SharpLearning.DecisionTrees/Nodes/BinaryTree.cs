@@ -30,7 +30,6 @@ public sealed class BinaryTree
     /// </summary>
     public readonly double[] VariableImportance;
 
-
     /// <summary>
     /// 
     /// </summary>

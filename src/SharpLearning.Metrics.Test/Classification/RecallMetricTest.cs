@@ -120,5 +120,4 @@ public class RecallMetricTest
 
         Assert.AreEqual(expected, actual);
     }
-
 }

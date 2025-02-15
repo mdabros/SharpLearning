@@ -16,7 +16,6 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     readonly Type[] m_knownTypes;
     readonly bool m_preserveObjectReferences;
 
-
     /// <summary>
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
@@ -211,7 +210,6 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
             return types.ToArray();
         }
-
 
         static Type[] GetTypes(Assembly assembly, bool publicOnly = true)
         {

@@ -35,7 +35,6 @@ public sealed class RegressionRandomModelSelectingEnsembleLearner : RegressionMo
     {
     }
 
-
     /// <summary>
     /// Regression model selecting EnsembleLearner. 
     /// Trains several models and selects the best subset of models for the ensemble using iterative random selection.

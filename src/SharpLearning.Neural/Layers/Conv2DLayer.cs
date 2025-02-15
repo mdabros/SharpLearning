@@ -139,7 +139,6 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
         if (padHeight < 0) { throw new ArgumentException("padHeight is less than 0: " + padHeight); }
         if (stride < 1) { throw new ArgumentException("stride is less than 0: " + stride); }
 
-
         FilterWidth = filterWidth;
         FilterHeight = filterHeight;
         FilterCount = filterCount;
@@ -172,7 +171,6 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     {
         BorderMode = borderMode;
     }
-
 
     /// <summary>
     /// 
@@ -237,7 +235,6 @@ public sealed class Conv2DLayer : ILayer, IBatchNormalizable
     /// <param name="batchSize"></param>
     /// <param name="initializtion"></param>
     /// <param name="random"></param>
-
     public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
         Initialization initializtion, Random random)
     {

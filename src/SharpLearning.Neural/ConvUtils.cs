@@ -310,7 +310,6 @@ public static class ConvUtils
 
                     for (var w = 0; w < width_col; ++w)
                     {
-
                         var w_pad = w * stride_w - pad_w + w_offset;
                         if (h_pad >= 0 && h_pad < height && w_pad >= 0 && w_pad < width)
                         {

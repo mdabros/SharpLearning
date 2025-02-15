@@ -32,6 +32,5 @@ public static class NodeExtensions
             default:
                 throw new InvalidOperationException("Unsupported position type");
         }
-
     }
 }

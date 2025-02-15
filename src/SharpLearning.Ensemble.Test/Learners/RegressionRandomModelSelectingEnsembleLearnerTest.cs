@@ -29,7 +29,6 @@ public class RegressionRandomModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
             new RegressionDecisionTreeLearner(33)
-
         };
 
         var sut = new RegressionRandomModelSelectingEnsembleLearner(learners, 5);
@@ -62,7 +61,6 @@ public class RegressionRandomModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
             new RegressionDecisionTreeLearner(33)
-
         };
 
         var metric = new MeanSquaredErrorRegressionMetric();
@@ -99,7 +97,6 @@ public class RegressionRandomModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
             new RegressionDecisionTreeLearner(33)
-
         };
 
         var metric = new MeanSquaredErrorRegressionMetric();

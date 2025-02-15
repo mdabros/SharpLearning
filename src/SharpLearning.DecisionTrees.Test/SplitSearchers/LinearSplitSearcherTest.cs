@@ -71,7 +71,6 @@ public class LinearSplitSearcherTest
         Assert.AreEqual(expected, actual);
     }
 
-
     [TestMethod]
     public void LinearSplitSearcher_FindBestSplit_DecisionTreeData()
     {
@@ -130,5 +129,4 @@ public class LinearSplitSearcherTest
 
         return 1.0;
     }
-
 }
