@@ -83,11 +83,11 @@ public struct CertaintyPrediction
         return Prediction.GetHashCode() ^ Variance.GetHashCode();
     }
 
-    const double m_tolerence = 0.00001;
+    const double Tolerence = 0.00001;
 
     static bool Equal(double a, double b)
     {
-        var diff = Math.Abs(a * m_tolerence);
+        var diff = Math.Abs(a * Tolerence);
         if (Math.Abs(a - b) <= diff)
         {
             return true;

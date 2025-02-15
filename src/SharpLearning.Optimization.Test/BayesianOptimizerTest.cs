@@ -149,42 +149,37 @@ public class BayesianOptimizerTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void BayesianOptimizer_ArgumentCheck_ParameterRanges()
     {
-        var sut = new BayesianOptimizer(null, 20);
+        Assert.ThrowsException<ArgumentNullException>(() => new BayesianOptimizer(null, 20));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_Iterations()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 0));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_RandomStartingPointCount()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            10, 0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 10, 0));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_FunctionEvaluationsPerIterationCount()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            10, 20, 0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 10, 20, 0));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_RandomSearchPointCount()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            10, 20, 30, 0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 10, 20, 30, 0));
     }
 
     static BayesianOptimizer CreateSut(
