@@ -114,18 +114,21 @@ jobs:
       run: |
         git tag v${{ github.event.inputs.version }}
         git push origin v${{ github.event.inputs.version }}
-    - name: Upload XGBoostSharp package
+    - name: Upload NuGet packages
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.ACTION_GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.NuGetDirectory }}/XGBoostSharp.${{ github.event.inputs.version }}.nupkg
-        asset_name: XGBoostSharp.${{ github.event.inputs.version }}.nupkg
+        asset_path: ${{ env.NuGetDirectory }}/*.nupkg
+        asset_name: ${{ env.NuGetDirectory }}/*.nupkg
         asset_content_type: application/zip
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         global-json-file: global.json
-    - name: Push XGBoostSharp package
-      run: dotnet nuget push ${{ env.NuGetDirectory }}/XGBoostSharp.${{ github.event.inputs.version }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+    - name: Push NuGet packages
+      run: |
+        for package in ${{ env.NuGetDirectory }}/*.nupkg; do
+          dotnet nuget push "$package" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        done
