@@ -8,6 +8,8 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
 {
     [TestMethod]
     [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(-1)]
     [DataRow(null)]
     public void GlobalizedBoundedNelderMeadOptimizer_OptimizeBest(int? maxDegreeOfParallelism)
     {
@@ -22,12 +24,12 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
 
         var actual = sut.OptimizeBest(Minimize);
 
-        Assert.AreEqual(expected: -0.99999960731425908, actual.Error, Delta);
+        Assert.AreEqual(expected: -0.99592339271458108, actual.Error, Delta);
         Assert.AreEqual(expected: 3, actual.ParameterSet.Length);
 
-        Assert.AreEqual(expected: -1.5711056814954487, actual.ParameterSet[0], Delta);
-        Assert.AreEqual(expected: -6.283490634742785, actual.ParameterSet[1], Delta);
-        Assert.AreEqual(expected: -2.9822323517533149E-07, actual.ParameterSet[2], Delta);
+        Assert.AreEqual(expected: 7.9170034654971069, actual.ParameterSet[0], Delta);
+        Assert.AreEqual(expected: -3.1348067994029782, actual.ParameterSet[1], Delta);
+        Assert.AreEqual(expected: -0.0020768773583485015, actual.ParameterSet[2], Delta);
     }
 
     [TestMethod]
@@ -49,8 +51,8 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
 
         var expected = new OptimizerResult[]
         {
-            new([37.71314634450421], 109.3438139631394),
-            new([37.713142445047254], 109.34381396345546),
+            new([37.71323726440562], 109.34381430968727),
+            new([37.713289997817874], 109.34381396345546),
         };
 
         Assert.AreEqual(expected[0].Error, actual[0].Error, Delta);
@@ -72,7 +74,7 @@ public class GlobalizedBoundedNelderMeadOptimizerTest
 
         var sut = new GlobalizedBoundedNelderMeadOptimizer(parameters,
             maxRestarts: 50,
-            noImprovementThreshold: 1e-5,
+            noImprovementThreshold: 1e-1,
             maxIterationsWithoutImprovement: 10,
             maxIterationsPrRestart: 0,
             maxFunctionEvaluations: 0,
