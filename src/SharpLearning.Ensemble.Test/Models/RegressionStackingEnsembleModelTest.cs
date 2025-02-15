@@ -160,7 +160,7 @@ public class RegressionStackingEnsembleModelTest
         var result = "new Dictionary<string, double> {";
         foreach (var item in featureImportance)
         {
-            result += "{" + "\"" + item.Key + "\"" + ", " + item.Value + "}, ";
+            result += "{\"" + item.Key + "\", " + item.Value + "}, ";
         }
 
         Trace.WriteLine(result);
