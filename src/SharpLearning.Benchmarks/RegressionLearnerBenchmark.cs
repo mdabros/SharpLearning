@@ -3,15 +3,17 @@ using System.Linq;
 using BenchmarkDotNet.Attributes;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.DecisionTrees.Learners;
 
 namespace SharpLearning.Benchmarks;
 
 [MemoryDiagnoser]
-public class RegressionDecisionTreeLearnerBenchmark
+public abstract class RegressionLearnerBenchmark(
+    Func<ILearner<double>> createLearner)
 {
-    const int Rows = 10000;
-    const int Cols = 50;
+    readonly Func<ILearner<double>> m_createLearner = createLearner ?? throw new ArgumentNullException(nameof(createLearner));
+
+    const int Rows = 1000;
+    const int Cols = 10;
     F64Matrix m_features;
     double[] m_targets;
 
@@ -26,7 +28,7 @@ public class RegressionDecisionTreeLearnerBenchmark
         m_features = new F64Matrix(features, Rows, Cols);
 
         // Use default parameters.
-        m_learner = new RegressionDecisionTreeLearner();
+        m_learner = m_createLearner();
     }
 
     [Benchmark]

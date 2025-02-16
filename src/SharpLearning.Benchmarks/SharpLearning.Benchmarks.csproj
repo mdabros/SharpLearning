@@ -9,8 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SharpLearning.AdaBoost\SharpLearning.AdaBoost.csproj" />
     <ProjectReference Include="..\SharpLearning.Containers\SharpLearning.Containers.csproj" />
     <ProjectReference Include="..\SharpLearning.DecisionTrees\SharpLearning.DecisionTrees.csproj" />
+    <ProjectReference Include="..\SharpLearning.GradientBoost\SharpLearning.GradientBoost.csproj" />
+    <ProjectReference Include="..\SharpLearning.RandomForest\SharpLearning.RandomForest.csproj" />
   </ItemGroup>
 
   <ItemGroup>
