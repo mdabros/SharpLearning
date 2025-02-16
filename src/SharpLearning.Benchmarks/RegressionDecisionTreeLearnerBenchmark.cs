@@ -8,10 +8,10 @@ using SharpLearning.DecisionTrees.Learners;
 namespace SharpLearning.Benchmarks;
 
 [MemoryDiagnoser]
-public class DecisionTreeLearnerBenchmarks
+public class RegressionDecisionTreeLearnerBenchmark
 {
-    const int Rows = 1000;
-    const int Cols = 10;
+    const int Rows = 10000;
+    const int Cols = 50;
     F64Matrix m_features;
     double[] m_targets;
 
@@ -30,7 +30,7 @@ public class DecisionTreeLearnerBenchmarks
     }
 
     [Benchmark]
-    public void RegressionDecisionTreeLearner_Learn()
+    public void Learn()
     {
         m_learner.Learn(m_features, m_targets);
     }

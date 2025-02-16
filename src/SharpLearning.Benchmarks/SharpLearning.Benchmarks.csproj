@@ -1,10 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>$(LibraryTargetFramework)</TargetFrameworks>
+    <TargetFrameworks>$(ExecutableTargetFramework)</TargetFrameworks>
 	  <IsPackable>false</IsPackable>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
