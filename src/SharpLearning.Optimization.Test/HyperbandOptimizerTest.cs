@@ -48,7 +48,7 @@ public class HyperbandOptimizerTest
         };
 
         var random = new Random(343);
-        OptimizerResult minimize(double[] p, double r)
+        OptimizerResult Minimize(double[] p, double r)
         {
             var error = random.NextDouble();
             return new OptimizerResult(p, error);
@@ -61,7 +61,7 @@ public class HyperbandOptimizerTest
             skipLastIterationOfEachRound: false,
             seed: 34);
 
-        var actual = sut.Optimize(minimize);
+        var actual = sut.Optimize(Minimize);
 
         AssertOptimizerResults(Expected, actual);
     }

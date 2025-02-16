@@ -1,7 +1,7 @@
 ﻿namespace SharpLearning.Neural.Initializations;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public struct FanInFanOut
 {
@@ -11,12 +11,12 @@ public struct FanInFanOut
     public readonly int FanIn;
 
     /// <summary>
-    /// THe fan-out of the layer 
+    /// THe fan-out of the layer
     /// </summary>
     public readonly int FanOut;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="fanIn"></param>
     /// <param name="fanOut"></param>

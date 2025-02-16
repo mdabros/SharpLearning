@@ -69,12 +69,7 @@ public sealed class F1ScoreMetric<T> : IClassificationMetric<T>
             }
         }
 
-        if (truePositives + falsePositves == 0)
-        {
-            return 0.0;
-        }
-
-        return (double)truePositives / ((double)truePositives + (double)falsePositves);
+        return truePositives + falsePositves == 0 ? 0.0 : (double)truePositives / ((double)truePositives + (double)falsePositves);
     }
 
     double Recall(T[] targets, T[] predictions)
@@ -97,12 +92,7 @@ public sealed class F1ScoreMetric<T> : IClassificationMetric<T>
             }
         }
 
-        if (truePositives + falseNegatives == 0)
-        {
-            return 0.0;
-        }
-
-        return (double)truePositives / ((double)truePositives + (double)falseNegatives);
+        return truePositives + falseNegatives == 0 ? 0.0 : (double)truePositives / ((double)truePositives + (double)falseNegatives);
     }
 
     /// <summary>

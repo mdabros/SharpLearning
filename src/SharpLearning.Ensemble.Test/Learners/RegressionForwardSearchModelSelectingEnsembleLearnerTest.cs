@@ -28,8 +28,7 @@ public class RegressionForwardSearchModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(14),
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
-            new RegressionDecisionTreeLearner(33)
-
+            new RegressionDecisionTreeLearner(33),
         };
 
         var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5);
@@ -61,8 +60,7 @@ public class RegressionForwardSearchModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(14),
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
-            new RegressionDecisionTreeLearner(33)
-
+            new RegressionDecisionTreeLearner(33),
         };
 
         var metric = new MeanSquaredErrorRegressionMetric();
@@ -97,8 +95,7 @@ public class RegressionForwardSearchModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(14),
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
-            new RegressionDecisionTreeLearner(33)
-
+            new RegressionDecisionTreeLearner(33),
         };
 
         var metric = new MeanSquaredErrorRegressionMetric();
@@ -133,7 +130,7 @@ public class RegressionForwardSearchModelSelectingEnsembleLearnerTest
             new RegressionDecisionTreeLearner(14),
             new RegressionDecisionTreeLearner(17),
             new RegressionDecisionTreeLearner(19),
-            new RegressionDecisionTreeLearner(33)
+            new RegressionDecisionTreeLearner(33),
         };
 
         var sut = new RegressionForwardSearchModelSelectingEnsembleLearner(learners, 5);

@@ -23,7 +23,7 @@ public class ClassificationEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationEnsembleLearner(learners,
@@ -54,7 +54,7 @@ public class ClassificationEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationEnsembleLearner(learners,
@@ -80,7 +80,7 @@ public class ClassificationEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationEnsembleLearner(learners,
@@ -111,7 +111,7 @@ public class ClassificationEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationEnsembleLearner(learners,
@@ -133,14 +133,14 @@ public class ClassificationEnsembleModelTest
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
         var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
-            { "PreviousExperience_month", 1 } };
+            { "PreviousExperience_month", 1 }, };
 
         var learners = new IIndexedLearner<ProbabilityPrediction>[]
         {
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationEnsembleLearner(learners,
@@ -150,7 +150,7 @@ public class ClassificationEnsembleModelTest
 
         var actual = sut.GetVariableImportance(featureNameToIndex);
         var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
-            { "AptitudeTestScore", 15.6771501925546 } };
+            { "AptitudeTestScore", 15.6771501925546 }, };
 
         Assert.AreEqual(expected.Count, actual.Count);
         var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });
@@ -172,7 +172,7 @@ public class ClassificationEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationEnsembleLearner(learners,

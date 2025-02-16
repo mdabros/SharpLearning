@@ -19,11 +19,11 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
     readonly int m_numberOfClasses;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="ensembleModels">Models included in the ensemble</param>
     /// <param name="metaModel">Meta or top level model to combine the ensemble models</param>
-    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features.
     /// False; the meta learner only receives the output of the ensemble models as features</param>
     /// <param name="numberOfClasses">Number of classes in the classification problem</param>
     public ClassificationStackingEnsembleModel(IPredictorModel<ProbabilityPrediction>[] ensembleModels,
@@ -147,7 +147,7 @@ public class ClassificationStackingEnsembleModel : IPredictorModel<double>, IPre
             }
             else
             {
-                duplicateModelCount[name] += 1;
+                duplicateModelCount[name]++;
             }
 
             name += "_" + duplicateModelCount[name].ToString();

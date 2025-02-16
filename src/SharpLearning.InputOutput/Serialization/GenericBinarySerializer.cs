@@ -4,7 +4,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SharpLearning.InputOutput.Serialization;
 
-
 /// <summary>
 /// Generic xml serializer using BinaryFormatter
 /// </summary>
@@ -21,9 +20,9 @@ public sealed class GenericBinarySerializer : IGenericSerializer
         var serializer = new BinaryFormatter();
 
         using var baseReader = reader();
-        if (baseReader is StreamReader)
+        if (baseReader is StreamReader streamReader)
         {
-            var baseStream = ((StreamReader)baseReader).BaseStream;
+            var baseStream = streamReader.BaseStream;
             return (T)serializer.Deserialize(baseStream);
         }
         else if (baseReader is StringReader baseStream)
@@ -49,9 +48,9 @@ public sealed class GenericBinarySerializer : IGenericSerializer
         var serializer = new BinaryFormatter();
 
         using var baseWriter = writer();
-        if (baseWriter is StreamWriter)
+        if (baseWriter is StreamWriter streamWriter)
         {
-            var baseStream = ((StreamWriter)baseWriter).BaseStream;
+            var baseStream = streamWriter.BaseStream;
             serializer.Serialize(baseStream, data);
         }
         else if (baseWriter is StringWriter)

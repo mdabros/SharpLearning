@@ -40,13 +40,13 @@ public unsafe struct F64MatrixView
     /// Gets the number of columns
     /// </summary>
     /// <value></value>
-    public int ColumnCount { get; private set; }
+    public int ColumnCount { get; }
 
     /// <summary>
     /// Gets the number of rows
     /// </summary>
     /// <value></value>
-    public int RowCount { get; private set; }
+    public int RowCount { get; }
 
     /// <summary>
     /// Gets the item at the specified position

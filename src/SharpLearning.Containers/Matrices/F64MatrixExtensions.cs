@@ -32,7 +32,6 @@ public static class F64MatrixExtensions
         matrix.Data().Map(func);
     }
 
-
     /// <summary>
     /// Iterates over all elements in the matrix and applies the function to the elements.
     /// The values are updated directly in the Matrix.
@@ -55,9 +54,8 @@ public static class F64MatrixExtensions
         return new StringMatrix(stringFeatures, matrix.RowCount, matrix.ColumnCount);
     }
 
-
     /// <summary>
-    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1 
+    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1
     /// </summary>
     /// <param name="v1"></param>
     /// <param name="v2"></param>
@@ -87,7 +85,7 @@ public static class F64MatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix 
+    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>
@@ -115,18 +113,17 @@ public static class F64MatrixExtensions
             combineIndex += m.ColumnCount;
 
             Array.Copy(v, otherIndex, features, combineIndex, 1);
-            combineIndex += 1;
+            combineIndex++;
         }
-
 
         return new F64Matrix(features, rows, cols);
     }
 
     /// <summary>
-    /// Combines vector and matrix column-wise. Matrix is added to the left of the vector 
+    /// Combines vector and matrix column-wise. Matrix is added to the left of the vector
     /// </summary>
-    /// <param name="m"></param>
     /// <param name="v"></param>
+    /// <param name="m"></param>
     /// <returns></returns>
     public static F64Matrix CombineCols(this double[] v, F64Matrix m)
     {
@@ -145,17 +142,15 @@ public static class F64MatrixExtensions
         for (var i = 0; i < rows; i++)
         {
             Array.Copy(v, i, features, combineIndex, 1);
-            combineIndex += 1;
+            combineIndex++;
 
             var matrixIndex = i * m.ColumnCount;
             Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);
             combineIndex += m.ColumnCount;
-
         }
 
         return new F64Matrix(features, rows, cols);
     }
-
 
     /// <summary>
     /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1
@@ -191,12 +186,11 @@ public static class F64MatrixExtensions
             combineIndex += m2.ColumnCount;
         }
 
-
         return new F64Matrix(features, rows, columns);
     }
 
     /// <summary>
-    /// Combines vector1 and vector2 row wise. Vector2 is added to the bottom of vector1 
+    /// Combines vector1 and vector2 row wise. Vector2 is added to the bottom of vector1
     /// </summary>
     /// <param name="v1"></param>
     /// <param name="v2"></param>
@@ -219,9 +213,8 @@ public static class F64MatrixExtensions
         return new F64Matrix(features, rows, cols);
     }
 
-
     /// <summary>
-    /// Combines matrix and vector row wise. Vector is added to the bottom of the matrix 
+    /// Combines matrix and vector row wise. Vector is added to the bottom of the matrix
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>
@@ -248,8 +241,8 @@ public static class F64MatrixExtensions
     /// <summary>
     /// Combines vecor and matrix row wise. Matrix is added to the bottom of the vector
     /// </summary>
-    /// <param name="m"></param>
     /// <param name="v"></param>
+    /// <param name="m"></param>
     /// <returns></returns>
     public static F64Matrix CombineRows(this double[] v, F64Matrix m)
     {
@@ -269,7 +262,6 @@ public static class F64MatrixExtensions
 
         return new F64Matrix(features, rows, cols);
     }
-
 
     /// <summary>
     /// Combines matrix1 and matrix2 row wise. Matrix2 is added to the bottom of matrix1

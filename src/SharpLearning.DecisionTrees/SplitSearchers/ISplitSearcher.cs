@@ -9,7 +9,7 @@ namespace SharpLearning.DecisionTrees.SplitSearchers;
 public interface ISplitSearcher
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="impurityCalculator"></param>
     /// <param name="feature"></param>

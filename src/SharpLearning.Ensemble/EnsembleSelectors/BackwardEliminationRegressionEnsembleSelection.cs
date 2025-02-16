@@ -40,7 +40,7 @@ public sealed class BackwardEliminationRegressionEnsembleSelection : IRegression
     /// <summary>
     /// Greedy backward elimination of ensemble models.
     /// </summary>
-    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
+    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models.
     /// Each column in the matrix corresponds to predictions from a separate model</param>
     /// <param name="targets">Corresponding targets</param>
     /// <returns>The indices of the selected model</returns>

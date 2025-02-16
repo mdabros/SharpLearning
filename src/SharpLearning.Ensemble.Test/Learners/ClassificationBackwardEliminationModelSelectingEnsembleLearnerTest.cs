@@ -29,7 +29,7 @@ public class ClassificationBackwardEliminationModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, 5);
@@ -61,7 +61,7 @@ public class ClassificationBackwardEliminationModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var sut = new ClassificationBackwardEliminationModelSelectingEnsembleLearner(learners, 5);
@@ -95,7 +95,7 @@ public class ClassificationBackwardEliminationModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var metric = new LogLossClassificationProbabilityMetric();

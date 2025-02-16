@@ -3,6 +3,4 @@
 /// <summary>
 /// Maker interface for classification layers.
 /// </summary>
-public interface IClassificationLayer
-{
-}
+public interface IClassificationLayer;

@@ -40,9 +40,6 @@ public sealed class ReluActivation : IActivation
 
     static float Derivative(float input)
     {
-        if (input > 0.0)
-            return 1.0f;
-        else
-            return 0.0f;
+        return input > 0.0 ? 1.0f : 0.0f;
     }
 }

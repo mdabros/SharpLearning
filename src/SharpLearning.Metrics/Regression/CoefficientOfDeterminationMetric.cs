@@ -3,9 +3,6 @@ using System.Linq;
 
 namespace SharpLearning.Metrics.Regression;
 
-/// <summary>
-/// 
-/// </summary>
 public sealed class CoefficientOfDeterminationMetric : IRegressionMetric
 {
     /// <summary>
@@ -22,14 +19,14 @@ public sealed class CoefficientOfDeterminationMetric : IRegressionMetric
         }
 
         var targetMean = targets.Sum() / targets.Length;
-        var SStot = targets.Sum(target => Math.Pow(target - targetMean, 2));
-        var SSres = 0.0;
+        var sStot = targets.Sum(target => Math.Pow(target - targetMean, 2));
+        var sSres = 0.0;
 
         for (var i = 0; i < predictions.Length; i++)
         {
-            SSres += Math.Pow(targets[i] - predictions[i], 2);
+            sSres += Math.Pow(targets[i] - predictions[i], 2);
         }
 
-        return SStot != 0.0 ? 1 - SSres / SStot : 0;
+        return sStot != 0.0 ? 1 - sSres / sStot : 0;
     }
 }

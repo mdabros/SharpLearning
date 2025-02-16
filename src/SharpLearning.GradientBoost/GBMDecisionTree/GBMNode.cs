@@ -2,7 +2,6 @@
 
 namespace SharpLearning.GradientBoost.GBMDecisionTree;
 
-
 /// <summary>
 /// Decision tree node for Gradient boost decision tree
 /// </summary>

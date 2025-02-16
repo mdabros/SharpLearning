@@ -5,7 +5,7 @@ using System.Text;
 namespace SharpLearning.Metrics;
 
 /// <summary>
-/// McNemar test for comparing two models. 
+/// McNemar test for comparing two models.
 /// The important part of the comparison is the number of times model1 is right where model2 is wrong and vice-versa.
 /// A clear improvement between two models would be if this number is, say 1 to 10.
 /// https://en.wikipedia.org/wiki/McNemar%27s_test

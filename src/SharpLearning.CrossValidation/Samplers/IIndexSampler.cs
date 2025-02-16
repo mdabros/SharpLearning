@@ -8,7 +8,7 @@ namespace SharpLearning.CrossValidation.Samplers;
 public interface IIndexSampler<T>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data"></param>
     /// <param name="sampleSize"></param>
@@ -16,7 +16,7 @@ public interface IIndexSampler<T>
     int[] Sample(T[] data, int sampleSize);
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data"></param>
     /// <param name="sampleSize"></param>

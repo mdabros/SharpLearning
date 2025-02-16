@@ -6,7 +6,7 @@ using System.Linq;
 namespace SharpLearning.InputOutput.Csv;
 
 /// <summary>
-/// CsvParser 
+/// CsvParser
 /// </summary>
 public sealed class CsvParser
 {
@@ -51,7 +51,9 @@ public sealed class CsvParser
                 " Column names cannot be selected in this made");
         }
 
+#pragma warning disable RCS1227 // Validate arguments correctly
         using var reader = m_getReader();
+#pragma warning restore RCS1227 // Validate arguments correctly
         var headerLine = reader.ReadLine();
         var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
         var columnNames = columnNameToIndex.Keys.Where(name => selectColumnNames(name))
@@ -82,7 +84,10 @@ public sealed class CsvParser
                 "Column names cannot be selected in this made");
         }
 
+#pragma warning disable RCS1227 // Validate arguments correctly
         using var reader = m_getReader();
+#pragma warning restore RCS1227 // Validate arguments correctly
+
         var headerLine = reader.ReadLine();
         var columnNameToIndex = TrimSplitLineTrimColumnsToDictionary(headerLine);
         var indices = columnNameToIndex.GetValues(columnNames);
@@ -98,7 +103,7 @@ public sealed class CsvParser
     }
 
     /// <summary>
-    /// Enumerates the row of all columns in the csv file 
+    /// Enumerates the row of all columns in the csv file
     /// </summary>
     /// <returns></returns>
     public IEnumerable<CsvRow> EnumerateRows()
@@ -237,7 +242,7 @@ public sealed class CsvParser
             {
                 if (!inText)
                 {
-                    tokens.Add(csvText.Substring(last + 1, (current - last)).Trim(' ', separator));
+                    tokens.Add(csvText.Substring(last + 1, current - last).Trim(' ', separator));
                     last = current;
                 }
             }

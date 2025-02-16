@@ -3,6 +3,4 @@
 /// <summary>
 /// Marker interface for output layers.
 /// </summary>
-public interface IOutputLayer
-{
-}
+public interface IOutputLayer;

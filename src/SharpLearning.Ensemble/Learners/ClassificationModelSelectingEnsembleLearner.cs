@@ -28,7 +28,7 @@ public class ClassificationModelSelectingEnsembleLearner
     readonly IClassificationEnsembleSelection m_ensembleSelection;
 
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble.
     /// The selection of the best set of models is based on cross validation.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
@@ -47,7 +47,7 @@ public class ClassificationModelSelectingEnsembleLearner
     }
 
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble.
     /// The selection of the best set of models is based on cross validation.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf

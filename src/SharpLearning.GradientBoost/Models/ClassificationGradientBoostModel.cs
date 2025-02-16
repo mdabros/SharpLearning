@@ -11,7 +11,7 @@ using SharpLearning.InputOutput.Serialization;
 namespace SharpLearning.GradientBoost.Models;
 
 /// <summary>
-/// 
+///
 /// </summary>
 [Serializable]
 public sealed class ClassificationGradientBoostModel
@@ -19,32 +19,32 @@ public sealed class ClassificationGradientBoostModel
     , IPredictorModel<ProbabilityPrediction>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly GBMTree[][] Trees;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double LearningRate;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double InitialLoss;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double[] TargetNames;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FeatureCount;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="trees"></param>
     /// <param name="targetNames"></param>
@@ -73,14 +73,7 @@ public sealed class ClassificationGradientBoostModel
     /// <returns></returns>
     public double Predict(double[] observation)
     {
-        if (TargetNames.Length == 2)
-        {
-            return BinaryPredict(observation);
-        }
-        else
-        {
-            return MultiClassPredict(observation);
-        }
+        return TargetNames.Length == 2 ? BinaryPredict(observation) : MultiClassPredict(observation);
     }
 
     /// <summary>
@@ -90,14 +83,7 @@ public sealed class ClassificationGradientBoostModel
     /// <returns></returns>
     public ProbabilityPrediction PredictProbability(double[] observation)
     {
-        if (TargetNames.Length == 2)
-        {
-            return BinaryProbabilityPredict(observation);
-        }
-        else
-        {
-            return MultiClassProbabilityPredict(observation);
-        }
+        return TargetNames.Length == 2 ? BinaryProbabilityPredict(observation) : MultiClassProbabilityPredict(observation);
     }
 
     /// <summary>

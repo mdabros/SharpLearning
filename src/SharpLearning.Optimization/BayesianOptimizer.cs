@@ -14,7 +14,7 @@ namespace SharpLearning.Optimization;
 /// <summary>
 /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
 /// This model is used to sample new promising parameter candidates which are evaluated and added to the existing parameter sets.
-/// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
+/// This process iterates several times. The method is computational expensive so is most relevant for expensive problems,
 /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
 /// But in that case it can usually reduce the number of iterations required to reach a good solution compared to less sophisticated methods.
 /// Implementation loosely based on:
@@ -43,7 +43,7 @@ public sealed class BayesianOptimizer : IOptimizer
     /// <summary>
     /// Bayesian optimization (BO) for global black box optimization problems. BO learns a model based on the initial parameter sets and scores.
     /// This model is used to sample new promising parameter candidates which are evaluated and added to the existing parameter sets.
-    /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems, 
+    /// This process iterates several times. The method is computational expensive so is most relevant for expensive problems,
     /// where each evaluation of the function to minimize takes a long time, like hyper parameter tuning a machine learning method.
     /// But in that case it can usually reduce the number of iterations required to reach a good solution compared to less sophisticated methods.
     /// Implementation loosely based on:
@@ -54,9 +54,9 @@ public sealed class BayesianOptimizer : IOptimizer
     /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
     /// <param name="iterations">The number of iterations to perform.
     /// Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
-    /// <param name="randomStartingPointCount">Number of randomly parameter sets used 
+    /// <param name="randomStartingPointCount">Number of randomly parameter sets used
     /// for initialization (default is 20)</param>
-    /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration. 
+    /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration.
     /// The parameter sets are included in order of most promising outcome (default is 1)</param>
     /// <param name="randomSearchPointCount">The number of random parameter sets
     /// used when maximizing the expected improvement acquisition function (default is 1000)</param>
@@ -76,14 +76,29 @@ public sealed class BayesianOptimizer : IOptimizer
     {
         m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
 
-        if (iterations < 1) throw new ArgumentException(nameof(iterations) +
+        if (iterations < 1)
+        {
+            throw new ArgumentException(nameof(iterations) +
              "must be at least 1. Was: " + iterations);
-        if (randomStartingPointCount < 1) throw new ArgumentException(nameof(randomStartingPointCount) +
+        }
+
+        if (randomStartingPointCount < 1)
+        {
+            throw new ArgumentException(nameof(randomStartingPointCount) +
             "must be at least 1. Was: " + randomStartingPointCount);
-        if (functionEvaluationsPerIterationCount < 1) throw new ArgumentException(nameof(functionEvaluationsPerIterationCount) +
+        }
+
+        if (functionEvaluationsPerIterationCount < 1)
+        {
+            throw new ArgumentException(nameof(functionEvaluationsPerIterationCount) +
             "must be at least 1. Was: " + functionEvaluationsPerIterationCount);
-        if (randomSearchPointCount < 1) throw new ArgumentException(nameof(randomSearchPointCount) +
+        }
+
+        if (randomSearchPointCount < 1)
+        {
+            throw new ArgumentException(nameof(randomSearchPointCount) +
             "must be at least 1. Was: " + randomSearchPointCount);
+        }
 
         m_random = new Random(seed);
         // Use member to seed the random uniform sampler.
@@ -181,14 +196,14 @@ public sealed class BayesianOptimizer : IOptimizer
     /// Propose a new list of parameter sets.
     /// </summary>
     /// <param name="parameterSetCount">The number of parameter sets to propose</param>
-    /// <param name="previousResults">Results from previous runs.  
+    /// <param name="previousResults">Results from previous runs.
     /// These are used in the model for proposing new parameter sets.
     /// If no results are provided, random parameter sets will be returned.</param>
     /// <returns></returns>
     public double[][] ProposeParameterSets(int parameterSetCount,
         IReadOnlyList<OptimizerResult> previousResults = null)
     {
-        var previousParameterSetCount = previousResults == null ? 0 : previousResults.Count;
+        var previousParameterSetCount = (previousResults?.Count) ?? 0;
         if (previousParameterSetCount < m_randomStartingPointsCount)
         {
             var randomParameterSetCount = Math.Min(parameterSetCount,

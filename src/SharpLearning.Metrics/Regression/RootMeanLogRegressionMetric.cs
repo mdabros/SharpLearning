@@ -3,12 +3,12 @@
 namespace SharpLearning.Metrics.Regression;
 
 /// <summary>
-/// Calculates the root mean logarithmic error between the targets and predictions e = Sum(Log(t +1) - log(p +1)))/length(t) 
+/// Calculates the root mean logarithmic error between the targets and predictions e = Sum(Log(t +1) - log(p +1)))/length(t)
 /// </summary>
 public sealed class RootMeanLogRegressionMetric : IRegressionMetric
 {
     /// <summary>
-    /// Calculates the root mean logarithmic error between the targets and predictions e = Sum(Log(t +1) - log(p +1)))/length(t) 
+    /// Calculates the root mean logarithmic error between the targets and predictions e = Sum(Log(t +1) - log(p +1)))/length(t)
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>

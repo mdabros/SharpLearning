@@ -13,7 +13,7 @@ public class ConversionsTest
         {
             10, 11,
             12, 13,
-            14, 15
+            14, 15,
         };
         var matrix = new F64Matrix(data, 3, 2);
         var actual = matrix.ToFloatJaggedArray();
@@ -34,7 +34,7 @@ public class ConversionsTest
         {
             10, 11,
             12, 13,
-            14, 15
+            14, 15,
         };
         var matrix = new F64Matrix(data, 3, 2);
         var actual = matrix.ToFloatJaggedArray([0, 1, 2]);
@@ -55,7 +55,7 @@ public class ConversionsTest
         {
             10, 11,
             12, 13,
-            14, 15
+            14, 15,
         };
         var matrix = new F64Matrix(data, 3, 2);
         var actual = matrix.ToFloatJaggedArray([0, 2]);

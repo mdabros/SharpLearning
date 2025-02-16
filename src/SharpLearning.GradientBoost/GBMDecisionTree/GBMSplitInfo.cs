@@ -55,7 +55,7 @@ public struct GBMSplitInfo
             SumOfSquares = 0,
             Cost = 0,
             BestConstant = 0,
-            BinomialSum = 0
+            BinomialSum = 0,
         };
     }
 
@@ -71,9 +71,9 @@ public struct GBMSplitInfo
     /// <summary>
     /// Creates a copy of the split info
     /// </summary>
-    /// <param name="Position"></param>
+    /// <param name="position"></param>
     /// <returns></returns>
-    public GBMSplitInfo Copy(NodePositionType Position)
+    public GBMSplitInfo Copy(NodePositionType position)
     {
         return new GBMSplitInfo
         {
@@ -82,8 +82,8 @@ public struct GBMSplitInfo
             SumOfSquares = SumOfSquares,
             Cost = Cost,
             BestConstant = BestConstant,
-            Position = Position,
-            BinomialSum = BinomialSum
+            Position = position,
+            BinomialSum = BinomialSum,
         };
     }
 }

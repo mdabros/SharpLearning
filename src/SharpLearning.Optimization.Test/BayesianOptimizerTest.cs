@@ -70,19 +70,19 @@ public class BayesianOptimizerTest
         var sut = CreateSut(maxDegreeOfParallelism, parameters);
 
         var results = sut.Optimize(MinimizeWeightFromHeight);
-        var actual = new OptimizerResult[] { results.First(), results.Last() };
+        var actual = new OptimizerResult[] { results[0], results[^1] };
 
         var expected = new OptimizerResult[]
         {
             new([90.513222660177036], 114559.43191955783),
-            new([41.752538896050559], 779.196560786838)
+            new([41.752538896050559], 779.196560786838),
         };
 
-        Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-        Assert.AreEqual(expected.First().ParameterSet.First(), actual.First().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected[0].Error, actual[0].Error, Delta);
+        Assert.AreEqual(expected[0].ParameterSet[0], actual[0].ParameterSet[0], Delta);
 
-        Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-        Assert.AreEqual(expected.Last().ParameterSet.First(), actual.Last().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected[^1].Error, actual[^1].Error, Delta);
+        Assert.AreEqual(expected[^1].ParameterSet[0], actual[^1].ParameterSet[0], Delta);
     }
 
     [TestMethod]
@@ -149,52 +149,46 @@ public class BayesianOptimizerTest
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void BayesianOptimizer_ArgumentCheck_ParameterRanges()
     {
-        var sut = new BayesianOptimizer(null, 20);
+        Assert.ThrowsException<ArgumentNullException>(() => new BayesianOptimizer(null, 20));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_Iterations()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 0));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_RandomStartingPointCount()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            10, 0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 10, 0));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_FunctionEvaluationsPerIterationCount()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            10, 20, 0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 10, 20, 0));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
     public void BayesianOptimizer_ArgumentCheck_RandomSearchPointCount()
     {
-        var sut = new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) },
-            10, 20, 30, 0);
+        Assert.ThrowsException<ArgumentException>(() =>
+            new BayesianOptimizer(new[] { new GridParameterSpec(0, 1, 2) }, 10, 20, 30, 0));
     }
 
     static BayesianOptimizer CreateSut(
         int? maybeMaxDegreeOfParallelism,
         MinMaxParameterSpec[] parameters)
     {
-        const int DefaultMaxDegreeOfParallelism = -1;
+        const int defaultMaxDegreeOfParallelism = -1;
 
-        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
-            maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism ?? defaultMaxDegreeOfParallelism;
 
         var runParallel = maybeMaxDegreeOfParallelism.HasValue;
 

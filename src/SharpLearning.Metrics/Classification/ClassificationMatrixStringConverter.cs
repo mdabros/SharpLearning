@@ -1,12 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SharpLearning.Metrics.Classification;
 
-/// <summary>
-/// 
-/// </summary>
 public static class ClassificationMatrixStringConverter
 {
     /// <summary>
@@ -27,7 +23,7 @@ public static class ClassificationMatrixStringConverter
         double[,] errorMatrix,
         double error)
     {
-        var uniqueStringTargets = uniqueTargets.Select(t => targetStringMapping[t]).ToList();
+        var uniqueStringTargets = uniqueTargets.ConvertAll(t => targetStringMapping[t]);
         return Convert(uniqueStringTargets, confusionMatrix, errorMatrix, error);
     }
 
@@ -71,7 +67,7 @@ public static class ClassificationMatrixStringConverter
             builder.AppendLine(row);
         }
 
-        builder.AppendLine(string.Format("Error: {0:0.000}", 100.0 * error));
+        builder.AppendFormat("Error: {0:0.000}", 100.0 * error).AppendLine();
 
         return builder.ToString();
     }

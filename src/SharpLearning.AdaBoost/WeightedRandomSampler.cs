@@ -47,7 +47,7 @@ public sealed class WeightedRandomSampler
         var totalWeight = weights.Sum(indices);
         var i = 0;
 
-        var index = indices.First();
+        var index = indices[0];
         var weight = weights[index];
 
         var samples = outIndices.Length;
@@ -55,18 +55,18 @@ public sealed class WeightedRandomSampler
 
         while (samples > 0)
         {
-            var x = totalWeight * (1.0 - Math.Pow(m_random.NextDouble(), (1.0 / samples)));
+            var x = totalWeight * (1.0 - Math.Pow(m_random.NextDouble(), 1.0 / samples));
             totalWeight -= x;
             while (x > weight)
             {
                 x -= weight;
-                i += 1;
+                i++;
                 index = indices[i];
                 weight = weights[index];
             }
             weight -= x;
             outIndices[current++] = index;
-            samples -= 1;
+            samples--;
         }
     }
 }

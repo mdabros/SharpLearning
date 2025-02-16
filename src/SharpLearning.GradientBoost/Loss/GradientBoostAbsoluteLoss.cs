@@ -5,15 +5,15 @@ using SharpLearning.GradientBoost.GBMDecisionTree;
 namespace SharpLearning.GradientBoost.Loss;
 
 /// <summary>
-/// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations. 
+/// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations.
 /// This makes LAD robust against outliers.
 /// http://en.wikipedia.org/wiki/Least_absolute_deviations
 /// </summary>
 public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
 {
     /// <summary>
-    /// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations. 
-    /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression. 
+    /// Least absolute deviation (LAD) loss function. LAD gives equal emphasis to all observations.
+    /// This makes LAD robust against outliers. LAD regression is also sometimes known as robust regression.
     /// http://en.wikipedia.org/wiki/Least_absolute_deviations
     /// </summary>
     public GradientBoostAbsoluteLoss()
@@ -40,13 +40,6 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
         return values.ToArray().Median();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="targets"></param>
-    /// <param name="residuals"></param>
-    /// <param name="inSample"></param>
-    /// <returns></returns>
     public GBMSplitInfo InitSplit(double[] targets, double[] residuals, bool[] inSample)
     {
         var splitInfo = GBMSplitInfo.NewEmpty();
@@ -78,23 +71,9 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
     public double NegativeGradient(double target, double prediction)
     {
         var value = target - prediction;
-        if (value > 0.0)
-        {
-            return 1.0;
-        }
-        else
-        {
-            return -1.0;
-        }
+        return value > 0.0 ? 1.0 : -1.0;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="targets"></param>
-    /// <param name="predictions"></param>
-    /// <param name="residuals"></param>
-    /// <param name="inSample"></param>
     public void UpdateResiduals(double[] targets, double[] predictions,
         double[] residuals, bool[] inSample)
     {
@@ -107,13 +86,6 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
         }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="left"></param>
-    /// <param name="right"></param>
-    /// <param name="target"></param>
-    /// <param name="residual"></param>
     public void UpdateSplitConstants(ref GBMSplitInfo left, ref GBMSplitInfo right,
         double target, double residual)
     {
@@ -154,10 +126,6 @@ public sealed class GradientBoostAbsoluteLoss : IGradientBoostLoss
         return values.ToArray().Median();
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
     public bool UpdateLeafValues()
     {
         return true;

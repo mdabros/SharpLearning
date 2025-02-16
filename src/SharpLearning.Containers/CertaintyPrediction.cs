@@ -8,19 +8,10 @@ namespace SharpLearning.Containers;
 [Serializable]
 public struct CertaintyPrediction
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public readonly double Prediction;
 
-    /// <summary>
-    /// 
-    /// </summary>
     public readonly double Variance;
 
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="prediction"></param>
     /// <param name="variance"></param>
     public CertaintyPrediction(double prediction, double variance)
@@ -29,34 +20,21 @@ public struct CertaintyPrediction
         Prediction = prediction;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
     public bool Equals(CertaintyPrediction other)
     {
         if (!Equal(Prediction, other.Prediction)) { return false; }
-        if (!Equal(Variance, other.Variance)) { return false; }
-
-        return true;
+        return Equal(Variance, other.Variance);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is CertaintyPrediction)
-            return Equals((CertaintyPrediction)obj);
-        return false;
+        return obj is CertaintyPrediction prediction && Equals(prediction);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
     /// <returns></returns>
@@ -65,9 +43,6 @@ public struct CertaintyPrediction
         return p1.Equals(p2);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
     /// <returns></returns>
@@ -76,25 +51,17 @@ public struct CertaintyPrediction
         return !p1.Equals(p2);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     /// <returns></returns>
     public override int GetHashCode()
     {
         return Prediction.GetHashCode() ^ Variance.GetHashCode();
     }
 
-    const double m_tolerence = 0.00001;
+    const double Tolerence = 0.00001;
 
     static bool Equal(double a, double b)
     {
-        var diff = Math.Abs(a * m_tolerence);
-        if (Math.Abs(a - b) <= diff)
-        {
-            return true;
-        }
-
-        return false;
+        var diff = Math.Abs(a * Tolerence);
+        return Math.Abs(a - b) <= diff;
     }
 }

@@ -22,7 +22,7 @@ public sealed class RandomSearchOptimizer : IOptimizer
     /// Random search optimizer initializes random parameters between min and max of the provided parameters.
     /// Roughly based on: http://www.jmlr.org/papers/volume13/bergstra12a/bergstra12a.pdf
     /// </summary>
-    /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>        
+    /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
     /// <param name="iterations">The number of iterations to perform</param>
     /// <param name="seed"></param>
     /// <param name="runParallel">Use multi threading to speed up execution (default is true)</param>
@@ -55,7 +55,7 @@ public sealed class RandomSearchOptimizer : IOptimizer
 
     /// <summary>
     /// Random search optimizer initializes random parameters between min and max of the provided bounds.
-    /// Returns all results, chronologically ordered. 
+    /// Returns all results, chronologically ordered.
     /// Note that the order of results might be affected if running parallel.
     /// </summary>
     /// <param name="functionToMinimize"></param>

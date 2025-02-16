@@ -3,14 +3,14 @@
 namespace SharpLearning.Optimization.ParameterSamplers;
 
 /// <summary>
-/// Sample values random uniformly between min and max.    
+/// Sample values random uniformly between min and max.
 /// </summary>
 public class RandomUniform : IParameterSampler
 {
     readonly Random m_random;
 
     /// <summary>
-    /// Sample values random uniformly between min and max. 
+    /// Sample values random uniformly between min and max.
     /// </summary>
     /// <param name="seed"></param>
     public RandomUniform(int seed = 343)

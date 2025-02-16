@@ -12,7 +12,7 @@ public enum BorderMode
     Same,
 
     /// <summary>
-    /// Adds no padding. Only applies the kernel within the borders of the image. 
+    /// Adds no padding. Only applies the kernel within the borders of the image.
     /// </summary>
     Valid,
 

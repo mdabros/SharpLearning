@@ -3,20 +3,11 @@ using System.Globalization;
 
 namespace SharpLearning.Containers;
 
-/// <summary>
-/// 
-/// </summary>
 public static class FloatingPointConversion
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public const string DefaultFormat = "R";
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public static readonly NumberFormatInfo nfi = new();
+    public static readonly NumberFormatInfo Nfi = new();
 
     /// <summary>
     /// Default NumberStyle is Any.
@@ -25,10 +16,10 @@ public static class FloatingPointConversion
 
     /// <summary>
     /// Default format for outputting double values to string.
-    /// </summary> 
+    /// </summary>
     public static string ToString(double value)
     {
-        return value.ToString(DefaultFormat, nfi);
+        return value.ToString(DefaultFormat, Nfi);
     }
 
     /// <summary>
@@ -54,13 +45,8 @@ public static class FloatingPointConversion
 
     static double ParseAnyNumberStyle(string value)
     {
-        if (double.TryParse(value, NumberStyle, nfi, out var result))
-        {
-            return result;
-        }
-        else
-        {
-            throw new ArgumentException($"Unable to parse \"{value}\" to double");
-        }
+        return double.TryParse(value, NumberStyle, Nfi, out var result)
+            ? result
+            : throw new ArgumentException($"Unable to parse \"{value}\" to double");
     }
 }

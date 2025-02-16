@@ -6,7 +6,7 @@ using SharpLearning.InputOutput.Csv;
 namespace SharpLearning.FeatureTransformations.CsvRowTransforms;
 
 /// <summary>
-/// Replaces missing values identified with the missing values identifiers. 
+/// Replaces missing values identified with the missing values identifiers.
 /// The missing values are replaced by the provided replacement value
 /// </summary>
 [Serializable]
@@ -16,7 +16,7 @@ public sealed class ReplaceMissingValuesTransformer : ICsvRowTransformer
     readonly string m_replacementValue;
 
     /// <summary>
-    /// Replaces missing values identified with the missing values identifiers. 
+    /// Replaces missing values identified with the missing values identifiers.
     /// The missing values are replaced by the provided replacement value
     /// </summary>
     /// <param name="replacementValue"></param>
@@ -30,7 +30,7 @@ public sealed class ReplaceMissingValuesTransformer : ICsvRowTransformer
     }
 
     /// <summary>
-    /// Replaces missing values identified with the missing values identifiers. 
+    /// Replaces missing values identified with the missing values identifiers.
     /// The missing values are replaced by the provided replacement value
     /// </summary>
     /// <param name="rows"></param>

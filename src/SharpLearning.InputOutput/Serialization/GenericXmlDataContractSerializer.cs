@@ -16,14 +16,13 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     readonly Type[] m_knownTypes;
     readonly bool m_preserveObjectReferences;
 
-
     /// <summary>
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
-    /// <param name="knownTypes">If the serializer fails with an unknown type exception. 
+    /// <param name="knownTypes">If the serializer fails with an unknown type exception.
     /// The necesarry types can be provided in the cosntructer.</param>
-    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true). 
-    /// This adds extra information to the xml which is needed when serializing some model types. 
+    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true).
+    /// This adds extra information to the xml which is needed when serializing some model types.
     /// Currently only the SharpLearning.Neural models require this.</param>
     public GenericXmlDataContractSerializer(Type[] knownTypes, bool preserveObjectReferences = true)
     {
@@ -34,8 +33,8 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
     /// <summary>
     /// Generic xml serializer using DataContractSerializer
     /// </summary>
-    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true). 
-    /// This adds extra information to the xml which is needed when serializing some model types. 
+    /// <param name="preserveObjectReferences">This parameter controls if object references should be preserved in the serialization (default is true).
+    /// This adds extra information to the xml which is needed when serializing some model types.
     /// Currently only the SharpLearning.Neural models require this.</param>
     public GenericXmlDataContractSerializer(bool preserveObjectReferences = true)
        : this([], preserveObjectReferences)
@@ -68,7 +67,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             MaxItemsInObjectGraph = int.MaxValue,
             IgnoreExtensionDataObject = false,
             PreserveObjectReferences = m_preserveObjectReferences,
-            DataContractResolver = new GenericResolver()
+            DataContractResolver = new GenericResolver(),
         });
 
         serializer.WriteObject(xmlWriter, data);
@@ -90,7 +89,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             MaxItemsInObjectGraph = int.MaxValue,
             IgnoreExtensionDataObject = false,
             PreserveObjectReferences = m_preserveObjectReferences,
-            DataContractResolver = new GenericResolver()
+            DataContractResolver = new GenericResolver(),
         });
 
         return (T)serializer.ReadObject(xmlReader);
@@ -108,13 +107,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
         readonly Dictionary<Type, Tuple<string, string>> m_typeToNames;
         readonly Dictionary<string, Dictionary<string, Type>> m_namesToType;
 
-        public Type[] KnownTypes
-        {
-            get
-            {
-                return m_typeToNames.Keys.ToArray();
-            }
-        }
+        public Type[] KnownTypes => m_typeToNames.Keys.ToArray();
 
         public GenericResolver()
             : this(ReflectTypes())
@@ -132,7 +125,7 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
                 m_typeToNames[type] = new Tuple<string, string>(typeNamespace, typeName);
 
-                if (m_namesToType.ContainsKey(typeNamespace) == false)
+                if (!m_namesToType.ContainsKey(typeNamespace))
                 {
                     m_namesToType[typeNamespace] = [];
                 }
@@ -218,7 +211,6 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
             return types.ToArray();
         }
 
-
         static Type[] GetTypes(Assembly assembly, bool publicOnly = true)
         {
             Type[] allTypes = assembly.GetTypes();
@@ -227,17 +219,17 @@ public sealed class GenericXmlDataContractSerializer : IGenericSerializer
 
             foreach (Type type in allTypes)
             {
-                if (type.IsEnum == false &&
-                   type.IsInterface == false &&
-                   type.IsGenericTypeDefinition == false)
+                if (!type.IsEnum &&
+                   !type.IsInterface &&
+                   !type.IsGenericTypeDefinition)
                 {
-                    if (publicOnly == true && type.IsPublic == false)
+                    if (publicOnly && !type.IsPublic)
                     {
-                        if (type.IsNested == false)
+                        if (!type.IsNested)
                         {
                             continue;
                         }
-                        if (type.IsNestedPrivate == true)
+                        if (type.IsNestedPrivate)
                         {
                             continue;
                         }

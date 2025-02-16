@@ -10,7 +10,7 @@ namespace SharpLearning.CrossValidation;
 public static class CrossValidationUtilities
 {
     /// <summary>
-    /// Returns a list of (trainingIndices, validationIndices) 
+    /// Returns a list of (trainingIndices, validationIndices)
     /// for use with k-fold cross-validation.
     /// </summary>
     /// <param name="sampler"></param>
@@ -25,7 +25,7 @@ public static class CrossValidationUtilities
     }
 
     /// <summary>
-    /// Returns a list of (trainingIndices, validationIndices) 
+    /// Returns a list of (trainingIndices, validationIndices)
     /// for use with k-fold cross-validation.
     /// </summary>
     /// <param name="sampler"></param>

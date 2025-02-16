@@ -17,14 +17,14 @@ public enum ClassificationObjective
 
     /// <summary>
     /// GPU version of binary logistic regression evaluated on the GPU,
-    /// note that like the GPU histogram algorithm, 
+    /// note that like the GPU histogram algorithm,
     /// they can only be used when the entire training session uses the same dataset.
     /// </summary>
     GPUBinaryLogistic,
 
     /// <summary>
     /// GPU version of binary logistic regression raw evaluated on the GPU,
-    /// note that like the GPU histogram algorithm, 
+    /// note that like the GPU histogram algorithm,
     /// they can only be used when the entire training session uses the same dataset.
     /// </summary>
     GPUBinaryLogisticRaw,
@@ -35,7 +35,7 @@ public enum ClassificationObjective
     Softmax,
 
     /// <summary>
-    /// same as softmax, but output a vector of ndata * nclass, which can be further reshaped to ndata, 
+    /// same as softmax, but output a vector of ndata * nclass, which can be further reshaped to ndata,
     /// nclass matrix.The result contains predicted probability of each data point belonging to each class.
     /// </summary>
     SoftProb,

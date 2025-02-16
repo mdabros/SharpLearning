@@ -43,13 +43,13 @@ public sealed class DepthFirstTreeBuilder : ITreeBuilder
     double[] m_variableImportance = [];
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
-    /// <param name="featuresPrSplit">The number of features to be selected between at each split. 
+    /// <param name="featuresPrSplit">The number of features to be selected between at each split.
     /// 0 means use all available features</param>
     /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-    /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
+    /// <param name="seed">Seed for feature selection if number of features pr split is not equal
     /// to the total amount of features in observations. The features will be selected at random for each split</param>
     /// <param name="splitSearcher">The type of searcher used for finding the best features splits when learning the tree</param>
     /// <param name="impurityCalculator">Impurity calculator used to decide which split is optimal</param>
@@ -74,7 +74,7 @@ public sealed class DepthFirstTreeBuilder : ITreeBuilder
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <param name="targets"></param>

@@ -111,7 +111,7 @@ public class F1ScoreMetricTest
         var targetStringMapping = new Dictionary<double, string>
         {
             { 0, "Negative" },
-            { 1, "Positive" }
+            { 1, "Positive" },
         };
 
         var sut = new F1ScoreMetric<double>(1);

@@ -8,11 +8,6 @@ namespace SharpLearning.Optimization;
 [Serializable]
 public sealed class OptimizerResult
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="error"></param>
-    /// <param name="parameterSet"></param>
     public OptimizerResult(double[] parameterSet, double error)
     {
         ParameterSet = parameterSet ?? throw new ArgumentNullException(nameof(parameterSet));

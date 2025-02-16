@@ -21,12 +21,6 @@ public sealed class NormalizedGiniCoefficientRegressionMetric : IRegressionMetri
         return 1.0 - GiniCoefficient(target, predicted) / GiniCoefficient(target, target);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="target"></param>
-    /// <param name="predicted"></param>
-    /// <returns></returns>
     static double GiniCoefficient(double[] target, double[] predicted)
     {
         if (target.Length != predicted.Length)
@@ -38,13 +32,13 @@ public sealed class NormalizedGiniCoefficientRegressionMetric : IRegressionMetri
         var all = predicted.Zip(target, (prediction, actual) => new
         {
             actualValue = actual,
-            predictedValue = prediction
+            predictedValue = prediction,
         })
            .Zip(Enumerable.Range(1, target.Length), (ap, i) => new
            {
                ap.actualValue,
                ap.predictedValue,
-               originalIndex = i
+               originalIndex = i,
            })
            .OrderByDescending(ap => ap.predictedValue) // important to sort descending by prediction
            .ThenBy(ap => ap.originalIndex); // secondary sorts to ensure unambiguous orders

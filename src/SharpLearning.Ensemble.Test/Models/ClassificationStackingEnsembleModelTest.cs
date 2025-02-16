@@ -24,7 +24,7 @@ public class ClassificationStackingEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationStackingEnsembleLearner(learners,
@@ -56,7 +56,7 @@ public class ClassificationStackingEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationStackingEnsembleLearner(learners,
@@ -83,7 +83,7 @@ public class ClassificationStackingEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationStackingEnsembleLearner(learners,
@@ -115,7 +115,7 @@ public class ClassificationStackingEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationStackingEnsembleLearner(learners,
@@ -138,14 +138,14 @@ public class ClassificationStackingEnsembleModelTest
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
         var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
-            { "PreviousExperience_month", 1 } };
+            { "PreviousExperience_month", 1 }, };
 
         var learners = new IIndexedLearner<ProbabilityPrediction>[]
         {
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationStackingEnsembleLearner(learners,
@@ -179,7 +179,7 @@ public class ClassificationStackingEnsembleModelTest
             new ClassificationDecisionTreeLearner(2),
             new ClassificationDecisionTreeLearner(5),
             new ClassificationDecisionTreeLearner(7),
-            new ClassificationDecisionTreeLearner(9)
+            new ClassificationDecisionTreeLearner(9),
         };
 
         var learner = new ClassificationStackingEnsembleLearner(learners,
@@ -204,7 +204,7 @@ public class ClassificationStackingEnsembleModelTest
         var result = "new Dictionary<string, double> {";
         foreach (var item in featureImportance)
         {
-            result += "{" + "\"" + item.Key + "\"" + ", " + item.Value + "}, ";
+            result += "{\"" + item.Key + "\", " + item.Value + "}, ";
         }
 
         Trace.WriteLine(result);

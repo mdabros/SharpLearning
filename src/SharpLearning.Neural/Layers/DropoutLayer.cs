@@ -26,22 +26,22 @@ public sealed class DropoutLayer : ILayer
     Matrix<float> m_delta;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
@@ -59,7 +59,7 @@ public sealed class DropoutLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     public Matrix<float> Backward(Matrix<float> delta)
@@ -71,7 +71,7 @@ public sealed class DropoutLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     public Matrix<float> Forward(Matrix<float> input)
@@ -83,7 +83,7 @@ public sealed class DropoutLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -119,7 +119,7 @@ public sealed class DropoutLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parametersAndGradients"></param>
     public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)

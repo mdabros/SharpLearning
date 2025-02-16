@@ -6,14 +6,14 @@
 public enum OptimizerMethod
 {
     /// <summary>
-    /// Stochastic gradient descent. 
+    /// Stochastic gradient descent.
     /// Recommended learning rate: 0.01.
     /// </summary>
     Sgd,
 
     /// <summary>
-    /// Adam (Adaptive Moment Estimation) is another method that computes adaptive learning rates for each parameter. 
-    /// In addition to storing an exponentially decaying average of past squared gradients vtvt like Adadelta, 
+    /// Adam (Adaptive Moment Estimation) is another method that computes adaptive learning rates for each parameter.
+    /// In addition to storing an exponentially decaying average of past squared gradients vtvt like Adadelta,
     /// Adam also keeps an exponentially decaying average of past gradients, similar to momentum.
     /// Essentially Adam is RMSProp with momentum.
     /// https://arxiv.org/pdf/1412.6980.pdf.
@@ -36,7 +36,7 @@ public enum OptimizerMethod
     Nadam,
 
     /// <summary>
-    /// Adagrad adapts the learning rate to each parameter, performing larger updates for infrequent and smaller updates for frequent parameters. 
+    /// Adagrad adapts the learning rate to each parameter, performing larger updates for infrequent and smaller updates for frequent parameters.
     /// For this reason, it is well-suited for dealing with sparse data:
     /// https://en.wikipedia.org/wiki/Stochastic_gradient_descent#AdaGrad.
     /// Recommended learning rate: 0.01.
@@ -44,8 +44,8 @@ public enum OptimizerMethod
     Adagrad,
 
     /// <summary>
-    /// Adadelta is an extension of Adagrad that seeks to reduce its aggressive, 
-    /// monotonically decreasing learning rate. 
+    /// Adadelta is an extension of Adagrad that seeks to reduce its aggressive,
+    /// monotonically decreasing learning rate.
     /// Instead of accumulating all past squared gradients, Adadelta restricts the window of accumulated past gradients to some fixed size w.
     /// https://arxiv.org/pdf/1212.5701v1.pdf.
     /// Recommended learning rate: 1.0.
@@ -63,5 +63,5 @@ public enum OptimizerMethod
     /// RMSprop and Adadelta have both been developed independently around the same time stemming from the need to resolve Adagrad's radically diminishing learning rates.
     /// Recommended learning rate: 0.001.
     /// </summary>
-    RMSProp
+    RMSProp,
 }

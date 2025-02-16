@@ -32,7 +32,7 @@ public class ParameterBoundsTest
             63.8914499915631,
             109.294177409864,
             188.567149950455,
-            33.2731248034505
+            33.2731248034505,
         };
 
         Assert.AreEqual(expected.Length, actual.Length);

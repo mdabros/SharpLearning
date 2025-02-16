@@ -25,8 +25,8 @@ public sealed class ClassificationForestModel : IPredictorModel<double>, IPredic
     /// <param name="rawVariableImportance">The summed variable importance from all decision trees</param>
     public ClassificationForestModel(ClassificationDecisionTreeModel[] models, double[] rawVariableImportance)
     {
-        Trees = models ?? throw new ArgumentNullException("models");
-        m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException("rawVariableImportance");
+        Trees = models ?? throw new ArgumentNullException(nameof(models));
+        m_rawVariableImportance = rawVariableImportance ?? throw new ArgumentNullException(nameof(rawVariableImportance));
     }
 
     /// <summary>

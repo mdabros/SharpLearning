@@ -8,7 +8,7 @@ namespace SharpLearning.GradientBoost.Loss;
 public interface IGradientBoostLoss
 {
     /// <summary>
-    /// Calculate the initial, constant, loss based on the targets and the samples used 
+    /// Calculate the initial, constant, loss based on the targets and the samples used
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="inSample"></param>

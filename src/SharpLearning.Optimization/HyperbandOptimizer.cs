@@ -19,10 +19,10 @@ public delegate OptimizerResult HyperbandObjectiveFunction(double[] parameterSet
 /// https://arxiv.org/pdf/1603.06560.pdf
 /// Implementation based on:
 /// https://github.com/zygmuntz/hyperband
-/// 
-/// Hyperband controls a budget of compute for each set of hyperparameters, 
-/// Initially it will run each parameter set with very little compute budget to get a taste of how they perform. 
-/// Then it takes the best performers and runs them on a larger budget. 
+///
+/// Hyperband controls a budget of compute for each set of hyperparameters,
+/// Initially it will run each parameter set with very little compute budget to get a taste of how they perform.
+/// Then it takes the best performers and runs them on a larger budget.
 /// </summary>
 public sealed class HyperbandOptimizer
 {
@@ -39,19 +39,19 @@ public sealed class HyperbandOptimizer
 
     /// <summary>
     /// Hyperband optimizer based on: https://arxiv.org/pdf/1603.06560.pdf
-    /// 
-    /// Hyperband controls a budget of compute for each set of hyperparameters, 
-    /// Initially it will run each parameter set with very little compute budget to get a taste of how they perform. 
-    /// Then it takes the best performers and runs them on a larger budget. 
+    ///
+    /// Hyperband controls a budget of compute for each set of hyperparameters,
+    /// Initially it will run each parameter set with very little compute budget to get a taste of how they perform.
+    /// Then it takes the best performers and runs them on a larger budget.
     /// </summary>
     /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
     /// <param name="maximumBudget">This provides the maximum budget.
-    /// One unit of compute could be 5 epochs over a dataset for instance. Consequently, 
-    /// a unit of compute should be chosen to be the minimum amount of computation where different 
+    /// One unit of compute could be 5 epochs over a dataset for instance. Consequently,
+    /// a unit of compute should be chosen to be the minimum amount of computation where different
     /// hyperparameter configurations start to separate (or where it is clear that some settings diverge)></param>
     /// <param name="eta">Controls the proportion of configurations discarded in each round.
     /// Together with maximumUnitsOfCompute, it dictates how many rounds are considered</param>
-    /// <param name="skipLastIterationOfEachRound">True to skip the last, 
+    /// <param name="skipLastIterationOfEachRound">True to skip the last,
     /// most computationally expensive, iteration of each round. Default is false.</param>
     /// <param name="seed"></param>
     public HyperbandOptimizer(IParameterSpec[] parameters,
@@ -60,8 +60,16 @@ public sealed class HyperbandOptimizer
         int seed = 34)
     {
         m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
-        if (maximumBudget < 1) throw new ArgumentException(nameof(maximumBudget) + " must be at larger than 0");
-        if (eta < 1) throw new ArgumentException(nameof(eta) + " must be at larger than 0");
+        if (maximumBudget < 1)
+        {
+            throw new ArgumentException(nameof(maximumBudget) + " must be at larger than 0");
+        }
+
+        if (eta < 1)
+        {
+            throw new ArgumentException(nameof(eta) + " must be at larger than 0");
+        }
+
         m_sampler = new RandomUniform(seed);
 
         // This is called R in the paper.

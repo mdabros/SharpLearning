@@ -12,31 +12,31 @@ namespace SharpLearning.Neural.Layers;
 [Serializable]
 public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegressionLayer
 {
-    Matrix<float> OutputActivations;
+    Matrix<float> m_outputActivations;
     Matrix<float> m_delta;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int NumberOfTargets;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
@@ -56,14 +56,14 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     /// <returns></returns>
     public Matrix<float> Backward(Matrix<float> delta)
     {
         var targetsArray = delta.Data();
-        var predictionsArray = OutputActivations.Data();
+        var predictionsArray = m_outputActivations.Data();
         var deltaData = m_delta.Data();
 
         for (var i = 0; i < targetsArray.Length; i++)
@@ -75,18 +75,18 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
     public Matrix<float> Forward(Matrix<float> input)
     {
-        input.CopyTo(OutputActivations); // do nothing, output raw scores
-        return OutputActivations;
+        input.CopyTo(m_outputActivations); // do nothing, output raw scores
+        return m_outputActivations;
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -94,23 +94,22 @@ public sealed class SquaredErrorRegressionLayer : ILayer, IOutputLayer, IRegress
     /// <param name="batchSize"></param>
     /// <param name="initializtion"></param>
     /// <param name="random"></param>
-
     public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
         Initialization initializtion, Random random)
     {
-        OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
+        m_outputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
         m_delta = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="layers"></param>
     public void CopyLayerForPredictionModel(List<ILayer> layers)
     {
         var batchSize = 1;
         var copy = new SquaredErrorRegressionLayer(NumberOfTargets);
-        copy.OutputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
+        copy.m_outputActivations = Matrix<float>.Build.Dense(batchSize, NumberOfTargets);
 
         layers.Add(copy);
     }

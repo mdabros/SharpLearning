@@ -207,8 +207,6 @@ public class ClassificationDecisionTreeLearnerTest
 
     public static double Weight(double v, double targetToWeigh, double weight)
     {
-        if (v == targetToWeigh)
-            return weight;
-        return 1.0;
+        return v == targetToWeigh ? weight : 1.0;
     }
 }

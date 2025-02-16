@@ -26,7 +26,7 @@ static class ParameterNames
     /// Specify the learning task and the corresponding learning objective or
     /// a custom objective function to be used(see note below)
     /// </summary>
-    public const string objective = "objective";
+    public const string Objective = "objective";
 
     /// <summary>
     /// Number of parallel threads used to run xgboost
@@ -110,9 +110,9 @@ static class ParameterNames
     /// 'auto': Use heuristic to choose faster one.
     /// - For small to medium dataset, exact greedy will be used.
     /// - For very large-dataset, approximate algorithm will be chosen.
-    /// - Because old behavior is always use exact greedy in single machine, 
+    /// - Because old behavior is always use exact greedy in single machine,
     /// user will get a message when approximate algorithm is chosen to notify this choice.
-    /// 
+    ///
     /// 'exact': Exact greedy algorithm.
     /// 'approx': Approximate greedy algorithm using sketching and histogram.
     /// 'hist': Fast histogram optimized approximate greedy algorithm. It uses some performance improvements such as bins caching.
@@ -150,9 +150,9 @@ static class ParameterNames
     public const string RateDrop = "rate_drop";
 
     /// <summary>
-    /// One drop for DART. 
-    /// When this flag is enabled, 
-    /// at least one tree is always dropped during the dropout 
+    /// One drop for DART.
+    /// When this flag is enabled,
+    /// at least one tree is always dropped during the dropout
     /// (allows Binomial-plus-one or epsilon-dropout from the original DART paper.
     /// </summary>
     public const string OneDrop = "one_drop";

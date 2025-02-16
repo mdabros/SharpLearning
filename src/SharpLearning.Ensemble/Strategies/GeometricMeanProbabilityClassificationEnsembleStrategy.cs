@@ -61,7 +61,6 @@ public sealed class GeometricMeanProbabilityClassificationEnsembleStrategy : ICl
             else
             {
                 geoMean *= values[i];
-
             }
         }
 

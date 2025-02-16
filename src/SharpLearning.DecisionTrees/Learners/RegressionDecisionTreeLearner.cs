@@ -16,13 +16,13 @@ public sealed class RegressionDecisionTreeLearner : DecisionTreeLearner,
     IIndexedLearner<double>, ILearner<double>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="maximumTreeDepth">The maximal tree depth before a leaf is generated</param>
     /// <param name="minimumSplitSize">The minimum size </param>
     /// <param name="featuresPrSplit">The number of features to be selected between at each split</param>
     /// <param name="minimumInformationGain">The minimum improvement in information gain before a split is made</param>
-    /// <param name="seed">Seed for feature selection if number of features pr split is not equal 
+    /// <param name="seed">Seed for feature selection if number of features pr split is not equal
     /// to the total amount of features in observations. The features will be selected at random for each split</param>
     public RegressionDecisionTreeLearner(int maximumTreeDepth = 2000,
         int minimumSplitSize = 1,

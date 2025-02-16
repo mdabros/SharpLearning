@@ -3,9 +3,6 @@ using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Containers.Arithmetic;
 
-/// <summary>
-/// 
-/// </summary>
 public static class MatrixSubtraction
 {
     /// <summary>
@@ -74,7 +71,6 @@ public static class MatrixSubtraction
             throw new ArgumentException("matrix m1 rows: " + m1Rows +
                 " differs from matrix output rows: " + outputRows);
         }
-
 
         for (var i = 0; i < m1Rows; i++)
         {

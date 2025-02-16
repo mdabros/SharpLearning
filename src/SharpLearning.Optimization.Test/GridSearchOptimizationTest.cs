@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
@@ -51,16 +50,16 @@ public class GridSearchOptimizerTest
         var expected = new OptimizerResult[]
         {
           new([10], 31638.9579),
-          new([60], 20500.6279)
+          new([60], 20500.6279),
         };
 
-        Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-        Assert.AreEqual(expected.First().ParameterSet.First(),
-            actual.First().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected[0].Error, actual[0].Error, Delta);
+        Assert.AreEqual(expected[0].ParameterSet[0],
+            actual[0].ParameterSet[0], Delta);
 
-        Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-        Assert.AreEqual(expected.Last().ParameterSet.First(),
-            actual.Last().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected[^1].Error, actual[^1].Error, Delta);
+        Assert.AreEqual(expected[^1].ParameterSet[0],
+            actual[^1].ParameterSet[0], Delta);
     }
 
     [TestMethod]

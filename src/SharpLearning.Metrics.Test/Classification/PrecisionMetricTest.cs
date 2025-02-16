@@ -111,7 +111,7 @@ public class PrecisionMetricTest
         var targetStringMapping = new Dictionary<double, string>
         {
             { 0, "Negative" },
-            { 1, "Positive" }
+            { 1, "Positive" },
         };
 
         var sut = new PrecisionMetric<double>(1);

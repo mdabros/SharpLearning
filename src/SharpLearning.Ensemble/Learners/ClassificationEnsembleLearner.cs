@@ -29,7 +29,7 @@ public sealed class ClassificationEnsembleLearner
     /// Default combination method is mean of the probabilities of the models.
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
-    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
+    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data.
     /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
     /// <param name="seed">Seed for the bagging when used</param>
     public ClassificationEnsembleLearner(
@@ -46,7 +46,7 @@ public sealed class ClassificationEnsembleLearner
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
+    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data.
     /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
     /// <param name="seed">Seed for the bagging when used</param>
     public ClassificationEnsembleLearner(
@@ -64,7 +64,7 @@ public sealed class ClassificationEnsembleLearner
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
+    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data.
     /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
     /// <param name="seed">Seed for the bagging when used</param>
     public ClassificationEnsembleLearner(

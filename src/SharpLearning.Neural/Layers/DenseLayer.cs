@@ -13,22 +13,22 @@ namespace SharpLearning.Neural.Layers;
 public sealed class DenseLayer : ILayer, IBatchNormalizable
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
@@ -110,7 +110,7 @@ public sealed class DenseLayer : ILayer, IBatchNormalizable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -118,7 +118,6 @@ public sealed class DenseLayer : ILayer, IBatchNormalizable
     /// <param name="batchSize"></param>
     /// <param name="initializtion"></param>
     /// <param name="random"></param>
-
     public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
         Initialization initializtion, Random random)
     {
@@ -137,7 +136,7 @@ public sealed class DenseLayer : ILayer, IBatchNormalizable
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parametersAndGradients"></param>
     public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)

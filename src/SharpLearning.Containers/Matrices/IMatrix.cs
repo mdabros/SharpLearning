@@ -38,7 +38,7 @@ public interface IMatrix<T>
     T[] Column(int index);
 
     /// <summary>
-    /// Gets row at index 
+    /// Gets row at index
     /// </summary>
     /// <param name="index"></param>
     /// <param name="row"></param>
@@ -59,7 +59,7 @@ public interface IMatrix<T>
     IMatrix<T> Rows(params int[] indices);
 
     /// <summary>
-    /// Gets the specified rows as a matrix. 
+    /// Gets the specified rows as a matrix.
     /// Output is copied to the provided matrix
     /// </summary>
     /// <param name="indices"></param>
@@ -75,7 +75,7 @@ public interface IMatrix<T>
     IMatrix<T> Columns(params int[] indices);
 
     /// <summary>
-    /// Gets the specified cols as a matrix. 
+    /// Gets the specified cols as a matrix.
     /// Output is copied to the provided matrix
     /// </summary>
     /// <param name="indices"></param>

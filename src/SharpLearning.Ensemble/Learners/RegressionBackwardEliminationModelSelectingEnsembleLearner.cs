@@ -7,7 +7,7 @@ using SharpLearning.Metrics.Regression;
 namespace SharpLearning.Ensemble.Learners;
 
 /// <summary>
-/// Regression model selecting EnsembleLearner. 
+/// Regression model selecting EnsembleLearner.
 /// Trains several models and selects the best subset of models for the ensemble using backwards elimination.
 /// The selection of the best set of models is based on cross validation.
 /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
@@ -15,9 +15,9 @@ namespace SharpLearning.Ensemble.Learners;
 public sealed class RegressionBackwardEliminationModelSelectingEnsembleLearner : RegressionModelSelectingEnsembleLearner
 {
     /// <summary>
-    /// Regression model selecting EnsembleLearner. 
+    /// Regression model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using backwards elimination.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// Default is 5-fold RandomCrossValidation and minimization of mean square error and mean is used to combine the models.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
@@ -34,9 +34,9 @@ public sealed class RegressionBackwardEliminationModelSelectingEnsembleLearner :
     }
 
     /// <summary>
-    /// Regression model selecting EnsembleLearner. 
+    /// Regression model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using backwards elimination.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>

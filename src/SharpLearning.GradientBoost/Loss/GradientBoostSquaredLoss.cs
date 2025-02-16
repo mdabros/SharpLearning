@@ -16,11 +16,10 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     /// </summary>
     public GradientBoostSquaredLoss()
     {
-
     }
 
     /// <summary>
-    /// Initial loss is the mean of the targets 
+    /// Initial loss is the mean of the targets
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="inSample"></param>
@@ -42,7 +41,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="residuals"></param>
@@ -83,7 +82,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>
@@ -102,7 +101,7 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
@@ -126,7 +125,6 @@ public sealed class GradientBoostSquaredLoss : IGradientBoostLoss
         //left.Cost = left.SumOfSquares - (left.Sum * leftAverage);
         //left.Cost = left.SumOfSquares - (left.Sum * left.Sum * leftSamplesInv);
         //left.BestConstant = left.Sum  * leftSamplesInv;
-
 
         right.Samples--;
         right.Sum -= residual;

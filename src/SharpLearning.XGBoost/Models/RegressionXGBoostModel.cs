@@ -8,14 +8,14 @@ using XGBoost.lib;
 namespace SharpLearning.XGBoost.Models;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double>
 {
     readonly Booster m_model;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="model"></param>
     public RegressionXGBoostModel(Booster model)
@@ -24,7 +24,7 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observation"></param>
     /// <returns></returns>
@@ -40,7 +40,7 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>
@@ -83,7 +83,6 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 
-
     /// <summary>
     /// Loads a RegressionXGBoostModel.
     /// </summary>
@@ -99,14 +98,8 @@ public sealed class RegressionXGBoostModel : IDisposable, IPredictorModel<double
     public void Save(string modelFilePath) =>
         m_model.Save(modelFilePath);
 
-    /// <summary>
-    /// 
-    /// </summary>
     public void Dispose()
     {
-        if (m_model != null)
-        {
-            m_model.Dispose();
-        }
+        m_model?.Dispose();
     }
 }

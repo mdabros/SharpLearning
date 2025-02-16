@@ -15,37 +15,37 @@ namespace SharpLearning.Neural.Layers;
 public sealed class MaxPool2DLayer : ILayer
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int InputHeight;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int InputWidth;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int InputDepth;
 
@@ -66,7 +66,7 @@ public sealed class MaxPool2DLayer : ILayer
     public int[][] Switchy;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Matrix<float> OutputActivations;
 
@@ -78,9 +78,9 @@ public sealed class MaxPool2DLayer : ILayer
     public BorderMode BorderMode;
 
     /// <summary>
-    /// Max pool layer. 
-    /// The max pool layers function is to progressively reduce the spatial size of the representation 
-    /// to reduce the amount of parameters and computation in the network. 
+    /// Max pool layer.
+    /// The max pool layers function is to progressively reduce the spatial size of the representation
+    /// to reduce the amount of parameters and computation in the network.
     /// The reduction is only done on the width and height. Depth dimension is preserved.
     /// </summary>
     /// <param name="poolWidth">The width of the pool area (default is 2)</param>
@@ -106,15 +106,15 @@ public sealed class MaxPool2DLayer : ILayer
     }
 
     /// <summary>
-    /// Max pool layer. 
-    /// The max pool layers function is to progressively reduce the spatial size of the representation 
-    /// to reduce the amount of parameters and computation in the network. 
+    /// Max pool layer.
+    /// The max pool layers function is to progressively reduce the spatial size of the representation
+    /// to reduce the amount of parameters and computation in the network.
     /// The reduction is only done on the width and height. Depth dimension is preserved.
     /// </summary>
     /// <param name="poolWidth">The width of the pool area (default is 2)</param>
     /// <param name="poolHeight">The height of the pool area (default is 2)</param>
     /// <param name="stride">Controls the distance between each neighboring pool areas (default is 2)</param>
-    /// <param name="borderMode">Border mode of the max pool operation. 
+    /// <param name="borderMode">Border mode of the max pool operation.
     /// This will set the width and height padding automatically based on the selected border mode: Valid, Same or Full (default is Valid).</param>
     public MaxPool2DLayer(int poolWidth, int poolHeight, int stride = 2,
         BorderMode borderMode = BorderMode.Valid)
@@ -126,33 +126,27 @@ public sealed class MaxPool2DLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     /// <returns></returns>
     public Matrix<float> Backward(Matrix<float> delta)
     {
         // enumerate each batch item one at a time
-        Parallel.For(0, delta.RowCount, i =>
-        {
-            BackwardSingleItem(delta, m_delta, i);
-        });
+        Parallel.For(0, delta.RowCount, i => BackwardSingleItem(delta, m_delta, i));
 
         return m_delta;
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
     public Matrix<float> Forward(Matrix<float> input)
     {
         // enumerate each batch item one at a time
-        Parallel.For(0, input.RowCount, i =>
-        {
-            ForwardSingleItem(input, OutputActivations, i);
-        });
+        Parallel.For(0, input.RowCount, i => ForwardSingleItem(input, OutputActivations, i));
 
         return OutputActivations;
     }
@@ -255,7 +249,7 @@ public sealed class MaxPool2DLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parametersAndGradients"></param>
     public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
@@ -264,7 +258,7 @@ public sealed class MaxPool2DLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -272,7 +266,6 @@ public sealed class MaxPool2DLayer : ILayer
     /// <param name="batchSize"></param>
     /// <param name="initializtion"></param>
     /// <param name="random"></param>
-
     public void Initialize(int inputWidth, int inputHeight, int inputDepth, int batchSize,
         Initialization initializtion, Random random)
     {

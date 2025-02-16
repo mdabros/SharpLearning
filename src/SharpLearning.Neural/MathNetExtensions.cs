@@ -172,7 +172,7 @@ public static class MathNetExtensions
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>
@@ -192,12 +192,12 @@ public static class MathNetExtensions
                 vData[col] += mData[mIndex];
             }
 
-            vData[col] = vData[col] / (float)m.RowCount;
+            vData[col] /= (float)m.RowCount;
         }
     }
 
     /// <summary>
-    /// Sums the columns of m into the vector sums. 
+    /// Sums the columns of m into the vector sums.
     /// </summary>
     /// <param name="m"></param>
     /// <param name="sums"></param>
@@ -207,7 +207,7 @@ public static class MathNetExtensions
     }
 
     /// <summary>
-    /// Sums the columns of m into the vector sums. 
+    /// Sums the columns of m into the vector sums.
     /// </summary>
     /// <param name="m"></param>
     /// <param name="sums"></param>
@@ -229,7 +229,7 @@ public static class MathNetExtensions
     }
 
     /// <summary>
-    /// Sums the rows of m into the vector sums. 
+    /// Sums the rows of m into the vector sums.
     /// </summary>
     /// <param name="m"></param>
     /// <param name="sums"></param>
@@ -239,7 +239,7 @@ public static class MathNetExtensions
     }
 
     /// <summary>
-    /// Sums the rows of m into the vector sums. 
+    /// Sums the rows of m into the vector sums.
     /// </summary>
     /// <param name="m"></param>
     /// <param name="sums"></param>
@@ -293,7 +293,7 @@ public static class MathNetExtensions
     }
 
     /// <summary>
-    /// Gets the underlying data array from the matrix. 
+    /// Gets the underlying data array from the matrix.
     /// Data is stored as Column-Major.
     /// </summary>
     /// <param name="m"></param>
@@ -304,7 +304,7 @@ public static class MathNetExtensions
     }
 
     /// <summary>
-    /// Gets the underlying data array from the vector. 
+    /// Gets the underlying data array from the vector.
     /// </summary>
     /// <param name="m"></param>
     /// <returns></returns>

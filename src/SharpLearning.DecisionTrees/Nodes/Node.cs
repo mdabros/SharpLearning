@@ -39,7 +39,7 @@ public struct Node
     public readonly int LeafProbabilityIndex;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="featureIndex"></param>
     /// <param name="value"></param>

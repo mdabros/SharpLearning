@@ -14,7 +14,7 @@ using SharpLearning.Metrics.Regression;
 namespace SharpLearning.AdaBoost.Learners;
 
 /// <summary>
-/// Regression AdaBoost learner using the R2 algorithm 
+/// Regression AdaBoost learner using the R2 algorithm
 /// using weighted sampling to target the observations with largest error and
 /// weighted median to ensemble the models.
 /// </summary>
@@ -44,13 +44,13 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
     readonly WeightedRandomSampler m_sampler;
 
     /// <summary>
-    /// Regression AdaBoost learner using the R2 algorithm 
+    /// Regression AdaBoost learner using the R2 algorithm
     /// using weighted sampling to target the observations with largest error and
     /// weighted median to ensemble the models.
     /// </summary>
     /// <param name="iterations">Number of iterations (models) to boost</param>
     /// <param name="learningRate">How much each boost iteration should add (between 1.0 and 0.0)</param>
-    /// <param name="maximumTreeDepth">The maximum depth of the tree models. 
+    /// <param name="maximumTreeDepth">The maximum depth of the tree models.
     /// 0 will set the depth to default 3</param>
     /// <param name="loss">Type of loss used when boosting weights. Linear is default</param>
     /// <param name="minimumSplitSize">minimum node split size in the trees 1 is default</param>
@@ -137,19 +137,27 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
         for (var i = 0; i < m_iterations; i++)
         {
             if (!Boost(observations, targets, indices, i))
+            {
                 break;
+            }
 
             var ensembleError = ErrorEstimate(observations, indices);
 
             if (ensembleError == 0.0)
+            {
                 break;
+            }
 
             if (m_modelErrors[i] == 0.0)
+            {
                 break;
+            }
 
             var weightSum = m_sampleWeights.Sum(indices);
             if (weightSum <= 0.0)
+            {
                 break;
+            }
 
             if (i == m_iterations - 1)
             {
@@ -157,7 +165,7 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
                 for (var j = 0; j < indices.Length; j++)
                 {
                     var index = indices[j];
-                    m_sampleWeights[index] = m_sampleWeights[index] / weightSum;
+                    m_sampleWeights[index] /= weightSum;
                 }
             }
         }
@@ -195,7 +203,6 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
         var model = m_modelLearner.Learn(observations, targets,
             m_sampleIndices); // weighted sampling is used instead of weights in training
 
-
         var predictions = model.Predict(observations, indices);
 
         for (var i = 0; i < predictions.Length; i++)
@@ -208,7 +215,6 @@ public sealed class RegressionAdaBoostLearner : IIndexedLearner<double>, ILearne
 
         for (var i = 0; i < m_workErrors.Length; i++)
         {
-
             var error = m_workErrors[i];
 
             if (maxError != 0.0)

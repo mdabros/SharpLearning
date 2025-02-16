@@ -10,12 +10,12 @@ namespace SharpLearning.CrossValidation.TrainingTestSplitters;
 public sealed class TrainingTestSetSplit : IEquatable<TrainingTestSetSplit>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly ObservationTargetSet TrainingSet;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly ObservationTargetSet TestSet;
 
@@ -26,8 +26,8 @@ public sealed class TrainingTestSetSplit : IEquatable<TrainingTestSetSplit>
     /// <param name="testSet"></param>
     public TrainingTestSetSplit(ObservationTargetSet trainingSet, ObservationTargetSet testSet)
     {
-        TrainingSet = trainingSet ?? throw new ArgumentNullException("trainingSet");
-        TestSet = testSet ?? throw new ArgumentNullException("testSet");
+        TrainingSet = trainingSet ?? throw new ArgumentNullException(nameof(trainingSet));
+        TestSet = testSet ?? throw new ArgumentNullException(nameof(testSet));
     }
 
     /// <summary>
@@ -45,35 +45,28 @@ public sealed class TrainingTestSetSplit : IEquatable<TrainingTestSetSplit>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
     public bool Equals(TrainingTestSetSplit other)
     {
         if (!TrainingSet.Equals(other.TrainingSet)) { return false; }
-        if (!TestSet.Equals(other.TestSet)) { return false; }
-
-        return true;
+        return TestSet.Equals(other.TestSet);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is TrainingTestSetSplit other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is TrainingTestSetSplit other && Equals(other);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

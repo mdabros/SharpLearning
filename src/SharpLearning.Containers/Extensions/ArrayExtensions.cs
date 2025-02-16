@@ -6,14 +6,8 @@ using SharpLearning.Containers.Views;
 
 namespace SharpLearning.Containers.Extensions;
 
-/// <summary>
-/// 
-/// </summary>
 public static class ArrayExtensions
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public static readonly Converter<string, double> DefaultF64Converter = FloatingPointConversion.ToF64;
 
     /// <summary>
@@ -69,7 +63,6 @@ public static class ArrayExtensions
             array[i] = a(array[i]);
         }
     }
-
 
     /// <summary>
     /// Converts Nan to 0.0, NegativeInfinity to double.MinValue and PositiveInfinity to double.MaxValue
@@ -177,7 +170,7 @@ public static class ArrayExtensions
     }
 
     /// <summary>
-    /// Sorts the keys and values based on the keys within the provided interval 
+    /// Sorts the keys and values based on the keys within the provided interval
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValues"></typeparam>
@@ -332,19 +325,17 @@ public static class ArrayExtensions
         return array[array.Length / 2];
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="values"></param>
-    /// <param name="percentile"></param>
-    /// <returns></returns>
     public static double ScoreAtPercentile(this double[] values, double percentile)
     {
         if (percentile == 1.0)
+        {
             return values.Max();
+        }
 
         if (percentile == 0.0)
+        {
             return values.Min();
+        }
 
         var array = new double[values.Length];
         Array.Copy(values, array, values.Length);
@@ -388,7 +379,7 @@ public static class ArrayExtensions
     public static F64Matrix ToF64Matrix(this List<double[]> m)
     {
         var rows = m.Count;
-        var cols = m.First().Length;
+        var cols = m[0].Length;
 
         var matrix = new F64Matrix(rows, cols);
         for (var i = 0; i < rows; i++)
@@ -455,7 +446,7 @@ public static class ArrayExtensions
     /// <summary>
     /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
     /// http://en.wikipedia.org/wiki/Stratified_sampling
-    /// Returns a set of indices corresponding to the samples chosen. 
+    /// Returns a set of indices corresponding to the samples chosen.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="data"></param>
@@ -489,7 +480,7 @@ public static class ArrayExtensions
         var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
 
         // might be slightly different than the specified depending on data distribution
-        var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
+        var actualSampleSize = requiredSamples.Sum(s => s.Value);
 
         // if actual sample size is different from specified add/subtract duff from largest class
         if (actualSampleSize != sampleSize)
@@ -518,19 +509,16 @@ public static class ArrayExtensions
             }
         }
 
-        if (requiredSamples.Select(s => s.Value).Sum() != sampleSize)
-        {
-            throw new ArgumentException("Actual sample size: " + actualSampleSize +
-                " is different than specified sample size: " + sampleSize);
-        }
-
-        return sampleIndices;
+        return requiredSamples.Sum(s => s.Value) != sampleSize
+            ? throw new ArgumentException("Actual sample size: " + actualSampleSize +
+                " is different than specified sample size: " + sampleSize)
+            : sampleIndices;
     }
 
     /// <summary>
     /// Takes a stratified sample of size sampleSize with distributions equal to the input data.
     /// http://en.wikipedia.org/wiki/Stratified_sampling
-    /// Returns a set of indices corresponding to the samples chosen. 
+    /// Returns a set of indices corresponding to the samples chosen.
     /// Only samples within the indices provided in dataIndices
     /// </summary>
     /// <typeparam name="T"></typeparam>
@@ -567,7 +555,7 @@ public static class ArrayExtensions
 
         var currentSampleCount = requiredSamples.ToDictionary(k => k.Key, k => 0);
         // might be slightly different than the specified depending on data distribution
-        var actualSampleSize = requiredSamples.Select(s => s.Value).Sum();
+        var actualSampleSize = requiredSamples.Sum(s => s.Value);
 
         // if actual sample size is different from specified add/subtract difference from largest class
         if (actualSampleSize != sampleSize)
@@ -600,12 +588,9 @@ public static class ArrayExtensions
             }
         }
 
-        if (requiredSamples.Select(s => s.Value).Sum() != sampleSize)
-        {
-            throw new ArgumentException("Actual sample size: " + actualSampleSize +
-                " is different than specified sample size: " + sampleSize);
-        }
-
-        return sampleIndices;
+        return requiredSamples.Sum(s => s.Value) != sampleSize
+            ? throw new ArgumentException("Actual sample size: " + actualSampleSize +
+                " is different than specified sample size: " + sampleSize)
+            : sampleIndices;
     }
 }

@@ -57,7 +57,6 @@ public class RocAucClassificationProbabilityMetricTest
                               new ProbabilityPrediction(1.0, new Dictionary<double, double> { { 0.0, random.NextDouble() }, { 1.0, random.NextDouble() } }))
         .ToArray();
 
-
         var sut = new RocAucClassificationProbabilityMetric(1);
         var actual = sut.Error(targets, probabilities);
 
@@ -154,7 +153,7 @@ public class RocAucClassificationProbabilityMetricTest
         var targetStringMapping = new Dictionary<double, string>
         {
             { 0, "Negative" },
-            { 1, "Positive" }
+            { 1, "Positive" },
         };
 
         var actual = sut.ErrorString(targets, probabilities, targetStringMapping);

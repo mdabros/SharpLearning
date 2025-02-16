@@ -40,7 +40,7 @@ public sealed class BackwardEliminationClassificationEnsembleSelection : IClassi
     /// <summary>
     /// Greedy backwards elimination of ensemble models.
     /// </summary>
-    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
+    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models.
     /// Each row in the matrix corresponds to predictions from a separate model</param>
     /// <param name="targets">Corresponding targets</param>
     /// <returns>The indices of the selected model</returns>
@@ -78,7 +78,7 @@ public sealed class BackwardEliminationClassificationEnsembleSelection : IClassi
         double[] targets,
         double currentBestError)
     {
-        var rows = crossValidatedModelPredictions.First().Length;
+        var rows = crossValidatedModelPredictions[0].Length;
         var candidateModelMatrix = new ProbabilityPrediction[m_remainingModelIndices.Count - 1][];
         var candidatePredictions = new ProbabilityPrediction[rows];
         var candidateModelIndices = new int[m_remainingModelIndices.Count - 1];

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static SharpLearning.Optimization.Test.ObjectiveUtilities;
 
 namespace SharpLearning.Optimization.Test;
@@ -49,7 +48,7 @@ public class ParticleSwarmOptimizerTest
 
         var results = sut.Optimize(MinimizeWeightFromHeight);
 
-        var actual = new OptimizerResult[] { results.First(), results.Last() };
+        var actual = new OptimizerResult[] { results[0], results[^1] };
 
         var expected = new OptimizerResult[]
         {
@@ -57,23 +56,22 @@ public class ParticleSwarmOptimizerTest
             new([37.2514904205637], 118.093289672808),
         };
 
-        Assert.AreEqual(expected.First().Error, actual.First().Error, Delta);
-        Assert.AreEqual(expected.First().ParameterSet.First(),
-            actual.First().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected[0].Error, actual[0].Error, Delta);
+        Assert.AreEqual(expected[0].ParameterSet[0],
+            actual[0].ParameterSet[0], Delta);
 
-        Assert.AreEqual(expected.Last().Error, actual.Last().Error, Delta);
-        Assert.AreEqual(expected.Last().ParameterSet.First(),
-            actual.Last().ParameterSet.First(), Delta);
+        Assert.AreEqual(expected[^1].Error, actual[^1].Error, Delta);
+        Assert.AreEqual(expected[^1].ParameterSet[0],
+            actual[^1].ParameterSet[0], Delta);
     }
 
     static ParticleSwarmOptimizer CreateSut(
         int? maybeMaxDegreeOfParallelism,
         MinMaxParameterSpec[] parameters)
     {
-        const int DefaultMaxDegreeOfParallelism = -1;
+        const int defaultMaxDegreeOfParallelism = -1;
 
-        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism.HasValue ?
-            maybeMaxDegreeOfParallelism.Value : DefaultMaxDegreeOfParallelism;
+        var maxDegreeOfParallelism = maybeMaxDegreeOfParallelism ?? defaultMaxDegreeOfParallelism;
 
         var sut = new ParticleSwarmOptimizer(parameters,
         maxIterations: 100,

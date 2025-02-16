@@ -5,7 +5,7 @@ namespace SharpLearning.Neural.Loss;
 
 /// <summary>
 /// Log loss for neuralnet learner.
-/// This error metric is used when one needs to predict that something is true or false with a probability (likelihood) 
+/// This error metric is used when one needs to predict that something is true or false with a probability (likelihood)
 /// ranging from definitely true (1) to equally true (0.5) to definitely false(0).
 /// The use of log on the error provides extreme punishments for being both confident and wrong.
 /// https://www.kaggle.com/wiki/LogarithmicLoss
@@ -14,7 +14,7 @@ public sealed class LogLoss : ILoss
 {
     /// <summary>
     /// returns log los
-    /// This error metric is used when one needs to predict that something is true or false with a probability (likelihood) 
+    /// This error metric is used when one needs to predict that something is true or false with a probability (likelihood)
     /// ranging from definitely true (1) to equally true (0.5) to definitely false(0).
     /// The use of log on the error provides extreme punishments for being both confident and wrong.
     /// </summary>

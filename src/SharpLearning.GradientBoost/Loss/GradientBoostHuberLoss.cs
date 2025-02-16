@@ -7,9 +7,9 @@ using SharpLearning.GradientBoost.GBMDecisionTree;
 namespace SharpLearning.GradientBoost.Loss;
 
 /// <summary>
-/// Huber loss is a combination of Squared loss and least absolute deviation (LAD). 
-/// For small residuals (below quantile defined by alpha) squared loss is used. 
-/// For large residuals (above quantile defined by alpha) LAD loss is used. 
+/// Huber loss is a combination of Squared loss and least absolute deviation (LAD).
+/// For small residuals (below quantile defined by alpha) squared loss is used.
+/// For large residuals (above quantile defined by alpha) LAD loss is used.
 /// This makes Huber loss robust against outliers while still having much of the sensitivity of squared loss.
 /// http://en.wikipedia.org/wiki/Huber_loss
 /// </summary>
@@ -18,9 +18,9 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     double m_gamma;
     readonly double m_alpha;
 
-    /// Huber loss is a combination of Squared loss and least absolute deviation (LAD). 
-    /// For small residuals (below quantile defined by alpha) squared loss is used. 
-    /// For large residuals (above quantile defined by alpha) LAD loss is used. 
+    /// Huber loss is a combination of Squared loss and least absolute deviation (LAD).
+    /// For small residuals (below quantile defined by alpha) squared loss is used.
+    /// For large residuals (above quantile defined by alpha) LAD loss is used.
     /// This makes Huber loss robust against outliers while still having much of the sensitivity of squared loss.
     /// http://en.wikipedia.org/wiki/Huber_loss
     public GradientBoostHuberLoss(double alpha = 0.9)
@@ -50,7 +50,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="residuals"></param>
@@ -90,7 +90,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>
@@ -135,7 +135,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
@@ -158,7 +158,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public bool UpdateLeafValues()
@@ -167,7 +167,7 @@ public sealed class GradientBoostHuberLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="currentLeafValue"></param>
     /// <param name="targets"></param>

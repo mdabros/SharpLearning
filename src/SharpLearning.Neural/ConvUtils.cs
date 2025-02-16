@@ -10,7 +10,7 @@ namespace SharpLearning.Neural;
 public static class ConvUtils
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="filterSize"></param>
     /// <param name="borderMode"></param>
@@ -46,16 +46,13 @@ public static class ConvUtils
     {
         // BorderMode.Same pads with half the filter size on both sides (one less on
         // the second side for an even filter size)
-        if (borderMode == BorderMode.Same && filterSize % 2 == 0)
-        {
-            return (int)Math.Floor((inputLength + (padding + padding - 1) - filterSize) / (double)stride + 1);
-        }
-
-        return (int)Math.Floor((inputLength + padding * 2 - filterSize) / (double)stride + 1);
+        return borderMode == BorderMode.Same && filterSize % 2 == 0
+            ? (int)Math.Floor((inputLength + (padding + padding - 1) - filterSize) / (double)stride + 1)
+            : (int)Math.Floor((inputLength + padding * 2 - filterSize) / (double)stride + 1);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="m"></param>
     /// <param name="n"></param>
@@ -75,7 +72,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="m"></param>
     /// <param name="n"></param>
@@ -95,7 +92,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data_im"></param>
     /// <param name="channels"></param>
@@ -162,7 +159,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="convoluted"></param>
     /// <param name="channels"></param>
@@ -214,7 +211,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data_convolutedRowMajor"></param>
     /// <param name="channels"></param>
@@ -266,7 +263,7 @@ public static class ConvUtils
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="data_col"></param>
     /// <param name="channels"></param>
@@ -310,7 +307,6 @@ public static class ConvUtils
 
                     for (var w = 0; w < width_col; ++w)
                     {
-
                         var w_pad = w * stride_w - pad_w + w_offset;
                         if (h_pad >= 0 && h_pad < height && w_pad >= 0 && w_pad < width)
                         {

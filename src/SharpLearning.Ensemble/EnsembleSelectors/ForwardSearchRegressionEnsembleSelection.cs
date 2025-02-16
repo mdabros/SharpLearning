@@ -27,7 +27,7 @@ public sealed class ForwardSearchRegressionEnsembleSelection : IRegressionEnsemb
     /// <param name="metric">Metric to minimize</param>
     /// <param name="ensembleStrategy">Strategy for ensembling models</param>
     /// <param name="numberOfModelsToSelect">Number of models to select</param>
-    /// <param name="numberOfModelsFromStart">Number of models from start of the search. 
+    /// <param name="numberOfModelsFromStart">Number of models from start of the search.
     /// The top n models will be selected based in their solo performance</param>
     /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
     /// This will correspond to weighting the models. If false each model can only be selected once</param>
@@ -48,7 +48,7 @@ public sealed class ForwardSearchRegressionEnsembleSelection : IRegressionEnsemb
     /// <summary>
     /// Greedy forward selection of ensemble models.
     /// </summary>
-    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models. 
+    /// <param name="crossValidatedModelPredictions">cross validated predictions from multiple models.
     /// Each column in the matrix corresponds to predictions from a separate model</param>
     /// <param name="targets">Corresponding targets</param>
     /// <returns>The indices of the selected model</returns>

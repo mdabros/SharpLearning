@@ -44,11 +44,11 @@ public class SmacOptimizer : IOptimizer
     /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
     /// <param name="iterations">The number of iterations to perform.
     /// Iteration * functionEvaluationsPerIteration = totalFunctionEvaluations</param>
-    /// <param name="randomStartingPointCount">Number of randomly parameter sets used 
+    /// <param name="randomStartingPointCount">Number of randomly parameter sets used
     /// for initialization (default is 20)</param>
-    /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration. 
+    /// <param name="functionEvaluationsPerIterationCount">The number of function evaluations per iteration.
     /// The parameter sets are included in order of most promising outcome (default is 1)</param>
-    /// <param name="localSearchPointCount">The number of top contenders 
+    /// <param name="localSearchPointCount">The number of top contenders
     /// to use in the greedy local search (default is (10)</param>
     /// <param name="randomSearchPointCount">The number of random parameter sets
     /// used when maximizing the expected improvement acquisition function (default is 1000)</param>
@@ -65,16 +65,35 @@ public class SmacOptimizer : IOptimizer
     {
         m_parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
 
-        if (iterations < 1) throw new ArgumentException(nameof(iterations) +
+        if (iterations < 1)
+        {
+            throw new ArgumentException(nameof(iterations) +
             "must be at least 1. Was: " + iterations);
-        if (randomStartingPointCount < 1) throw new ArgumentException(nameof(randomStartingPointCount) +
+        }
+
+        if (randomStartingPointCount < 1)
+        {
+            throw new ArgumentException(nameof(randomStartingPointCount) +
             "must be at least 1. Was: " + randomStartingPointCount);
-        if (functionEvaluationsPerIterationCount < 1) throw new ArgumentException(nameof(functionEvaluationsPerIterationCount) +
+        }
+
+        if (functionEvaluationsPerIterationCount < 1)
+        {
+            throw new ArgumentException(nameof(functionEvaluationsPerIterationCount) +
             "must be at least 1. Was: " + functionEvaluationsPerIterationCount);
-        if (localSearchPointCount < 1) throw new ArgumentException(nameof(localSearchPointCount) +
+        }
+
+        if (localSearchPointCount < 1)
+        {
+            throw new ArgumentException(nameof(localSearchPointCount) +
             "must be at least 1. Was: " + localSearchPointCount);
-        if (randomSearchPointCount < 1) throw new ArgumentException(nameof(randomSearchPointCount) +
+        }
+
+        if (randomSearchPointCount < 1)
+        {
+            throw new ArgumentException(nameof(randomSearchPointCount) +
             "must be at least 1. Was: " + randomSearchPointCount);
+        }
 
         m_random = new Random(seed);
         // Use member to seed the random uniform sampler.
@@ -157,14 +176,14 @@ public class SmacOptimizer : IOptimizer
     /// Propose a new list of parameter sets.
     /// </summary>
     /// <param name="parameterSetCount">The number of parameter sets to propose</param>
-    /// <param name="previousResults">Results from previous runs.  
+    /// <param name="previousResults">Results from previous runs.
     /// These are used in the model for proposing new parameter sets.
     /// If no results are provided, random parameter sets will be returned.</param>
     /// <returns></returns>
     public double[][] ProposeParameterSets(int parameterSetCount,
         IReadOnlyList<OptimizerResult> previousResults = null)
     {
-        var previousParameterSetCount = previousResults == null ? 0 : previousResults.Count;
+        var previousParameterSetCount = (previousResults?.Count) ?? 0;
         if (previousParameterSetCount < m_randomStartingPointsCount)
         {
             var randomParameterSetCount = Math.Min(parameterSetCount,
@@ -264,7 +283,7 @@ public class SmacOptimizer : IOptimizer
     (double[] parameterSet, double expectedImprovement) LocalSearch(double[][] parentParameterSets,
         RegressionForestModel model, double bestScore, double epsilon)
     {
-        var bestParameterSet = parentParameterSets.First();
+        var bestParameterSet = parentParameterSets[0];
         var bestExpectedImprovement = ComputeExpectedImprovement(bestScore, bestParameterSet, model);
 
         // Continue search until no improvement is found.

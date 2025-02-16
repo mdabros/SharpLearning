@@ -37,10 +37,10 @@ public class MaxPool2DLayerTest
         Assert.AreEqual(sut.InputDepth, actual.InputDepth);
 
         Assert.AreEqual(sut.Switchx.Length, actual.Switchx.Length);
-        Assert.AreEqual(sut.Switchx.First().Length, actual.Switchx.First().Length);
+        Assert.AreEqual(sut.Switchx[0].Length, actual.Switchx[0].Length);
 
         Assert.AreEqual(sut.Switchy.Length, actual.Switchy.Length);
-        Assert.AreEqual(sut.Switchy.First().Length, actual.Switchy.First().Length);
+        Assert.AreEqual(sut.Switchy[0].Length, actual.Switchy[0].Length);
 
         Assert.AreEqual(sut.OutputActivations.RowCount, actual.OutputActivations.RowCount);
         Assert.AreEqual(sut.OutputActivations.ColumnCount, actual.OutputActivations.ColumnCount);

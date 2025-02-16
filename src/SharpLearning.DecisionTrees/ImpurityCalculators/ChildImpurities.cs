@@ -8,17 +8,17 @@ namespace SharpLearning.DecisionTrees.ImpurityCalculators;
 public struct ChildImpurities : IEquatable<ChildImpurities>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Left;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Right;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
@@ -29,32 +29,28 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
     public bool Equals(ChildImpurities other)
     {
         if (!Equal(Left, other.Left)) { return false; }
-        if (!Equal(Right, other.Right)) { return false; }
-
-        return true;
+        return Equal(Right, other.Right);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is ChildImpurities)
-            return Equals((ChildImpurities)obj);
-        return false;
+        return obj is ChildImpurities impurities && Equals(impurities);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -65,7 +61,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -76,7 +72,7 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()
@@ -84,16 +80,11 @@ public struct ChildImpurities : IEquatable<ChildImpurities>
         return Left.GetHashCode() ^ Right.GetHashCode();
     }
 
-    const double m_tolerence = 0.00001;
+    const double Tolerence = 0.00001;
 
     static bool Equal(double a, double b)
     {
-        var diff = Math.Abs(a * m_tolerence);
-        if (Math.Abs(a - b) <= diff)
-        {
-            return true;
-        }
-
-        return false;
+        var diff = Math.Abs(a * Tolerence);
+        return Math.Abs(a - b) <= diff;
     }
 }

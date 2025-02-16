@@ -6,7 +6,7 @@ namespace SharpLearning.Neural.Test;
 public static class MatrixAsserts
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="expected"></param>
     /// <param name="actual"></param>

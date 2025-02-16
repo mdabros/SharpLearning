@@ -1,22 +1,22 @@
 ﻿namespace SharpLearning.Neural;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public class ParametersAndGradients
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly float[] Parameters;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly float[] Gradients;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parameters"></param>
     /// <param name="gradients"></param>

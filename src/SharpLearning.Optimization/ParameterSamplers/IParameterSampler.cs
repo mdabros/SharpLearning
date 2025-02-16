@@ -1,7 +1,7 @@
 ﻿namespace SharpLearning.Optimization.ParameterSamplers;
 
 /// <summary>
-/// Defines the interface for a parameter samplers. 
+/// Defines the interface for a parameter samplers.
 /// </summary>
 public interface IParameterSampler
 {

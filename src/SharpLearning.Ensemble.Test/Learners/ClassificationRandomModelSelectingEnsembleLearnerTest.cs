@@ -29,7 +29,7 @@ public class ClassificationClassificationRandomModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var sut = new ClassificationRandomModelSelectingEnsembleLearner(learners, 5);
@@ -61,7 +61,7 @@ public class ClassificationClassificationRandomModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var metric = new LogLossClassificationProbabilityMetric();
@@ -97,7 +97,7 @@ public class ClassificationClassificationRandomModelSelectingEnsembleLearnerTest
             new ClassificationDecisionTreeLearner(14),
             new ClassificationDecisionTreeLearner(17),
             new ClassificationDecisionTreeLearner(19),
-            new ClassificationDecisionTreeLearner(33)
+            new ClassificationDecisionTreeLearner(33),
         };
 
         var metric = new LogLossClassificationProbabilityMetric();

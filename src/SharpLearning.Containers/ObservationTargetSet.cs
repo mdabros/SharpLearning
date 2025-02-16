@@ -9,14 +9,8 @@ namespace SharpLearning.Containers;
 /// </summary>
 public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public readonly F64Matrix Observations;
 
-    /// <summary>
-    /// 
-    /// </summary>
     public readonly double[] Targets;
 
     /// <summary>
@@ -30,38 +24,17 @@ public sealed class ObservationTargetSet : IEquatable<ObservationTargetSet>
         Targets = targets ?? throw new ArgumentNullException(nameof(targets));
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
     public bool Equals(ObservationTargetSet other)
     {
         if (!Observations.Equals(other.Observations)) { return false; }
-        if (!Targets.SequenceEqual(other.Targets)) { return false; }
-
-        return true;
+        return Targets.SequenceEqual(other.Targets);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is ObservationTargetSet other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is ObservationTargetSet other && Equals(other);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
     public override int GetHashCode()
     {
         unchecked // Overflow is fine, just wrap

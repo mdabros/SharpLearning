@@ -12,7 +12,7 @@ using SharpLearning.GradientBoost.Loss;
 namespace SharpLearning.GradientBoost.GBMDecisionTree;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class GBMDecisionTreeLearner
 {
@@ -45,7 +45,7 @@ public sealed class GBMDecisionTreeLearner
         if (minimumInformationGain <= 0) { throw new ArgumentException("minimum information gain must be larger than 0"); }
         if (minimumSplitSize <= 0) { throw new ArgumentException("minimum split size must be larger than 0"); }
         if (featuresPrSplit < 0) { throw new ArgumentException("featuresPrSplit must be at least 0"); }
-        m_loss = loss ?? throw new ArgumentNullException("loss");
+        m_loss = loss ?? throw new ArgumentNullException(nameof(loss));
 
         m_maximumTreeDepth = maximumTreeDepth;
         m_minimumSplitSize = minimumSplitSize;
@@ -107,7 +107,7 @@ public sealed class GBMDecisionTreeLearner
             RightError = rootValues.Cost,
             LeftConstant = bestConstant,
             RightConstant = bestConstant,
-            SampleCount = rootValues.Samples
+            SampleCount = rootValues.Samples,
         };
 
         var nodes = new List<GBMNode> { root };
@@ -147,8 +147,7 @@ public sealed class GBMDecisionTreeLearner
                 SplitValue = -1,
                 Cost = double.MaxValue,
                 LeftConstant = -1,
-                RightConstant = -1
-
+                RightConstant = -1,
             };
 
             if (allFeatureIndices.Length != featuresPrSplit.Length)
@@ -163,7 +162,6 @@ public sealed class GBMDecisionTreeLearner
                 {
                     FindBestSplit(observations, residuals, targets, predictions, orderedElements,
                         parentItem, parentInSample, i, splitResults);
-
                 }
             }
             else // multi-threaded search for best split
@@ -192,10 +190,10 @@ public sealed class GBMDecisionTreeLearner
             {
                 BestSplit = initBestSplit,
                 Left = GBMSplitInfo.NewEmpty(),
-                Right = GBMSplitInfo.NewEmpty()
+                Right = GBMSplitInfo.NewEmpty(),
             };
 
-            if (splitResults.Count != 0)
+            if (!splitResults.IsEmpty)
             {
                 // alternative to for finding bestsplit. gives slightly different results. probably due to order.
                 //GBMSplitResult result;
@@ -249,7 +247,7 @@ public sealed class GBMDecisionTreeLearner
                         Values = bestSplitResult.Left.Copy(NodePositionType.Left),
                         InSample = leftInSample,
                         Depth = depth,
-                        Parent = node
+                        Parent = node,
                     });
 
                     queue.Enqueue(new GBMTreeCreationItem
@@ -257,7 +255,7 @@ public sealed class GBMDecisionTreeLearner
                         Values = bestSplitResult.Right.Copy(NodePositionType.Right),
                         InSample = rightInSample,
                         Depth = depth,
-                        Parent = node
+                        Parent = node,
                     });
                 }
                 else
@@ -267,7 +265,6 @@ public sealed class GBMDecisionTreeLearner
                         var leftInSample = new bool[parentInSample.Length];
                         var rightInSample = new bool[parentInSample.Length];
                         var featureIndices = orderedElements[bestSplitResult.BestSplit.FeatureIndex];
-
 
                         for (var i = 0; i < parentInSample.Length; i++)
                         {
@@ -296,7 +293,9 @@ public sealed class GBMDecisionTreeLearner
 
     static void EmpytySplitResults(ConcurrentBag<GBMSplitResult> splitResults)
     {
-        while (splitResults.TryTake(out GBMSplitResult result)) ;
+        while (splitResults.TryTake(out GBMSplitResult result))
+        {
+        }
     }
 
     void SplitWorker(F64Matrix observations,
@@ -336,7 +335,7 @@ public sealed class GBMDecisionTreeLearner
             Cost = double.MaxValue,
             LeftConstant = -1,
             RightConstant = -1,
-            SampleCount = parentItem.Values.Samples
+            SampleCount = parentItem.Values.Samples,
         };
 
         var bestLeft = GBMSplitInfo.NewEmpty();
@@ -401,7 +400,6 @@ public sealed class GBMDecisionTreeLearner
 
     static int NextAllowedIndex(int start, int[] orderedIndexes, bool[] inSample)
     {
-
         for (var i = start; i < orderedIndexes.Length; i++)
         {
             if (inSample[orderedIndexes[i]])
@@ -409,7 +407,7 @@ public sealed class GBMDecisionTreeLearner
                 return i;
             }
         }
-        return (orderedIndexes.Length + 1);
+        return orderedIndexes.Length + 1;
     }
 
     static void SetParentLeafIndex(int nodeIndex, GBMTreeCreationItem parentItem)

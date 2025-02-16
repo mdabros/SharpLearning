@@ -29,7 +29,7 @@ public class RegressionEnsembleModel : IPredictorModel<double>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observation"></param>
     /// <returns></returns>
@@ -47,7 +47,7 @@ public class RegressionEnsembleModel : IPredictorModel<double>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>
@@ -73,15 +73,14 @@ public class RegressionEnsembleModel : IPredictorModel<double>
         // return normalized variable importance. 
         // Individual models can have very different scaling of importances 
         var index = 0;
-        var dummyFeatureNameToIndex = m_ensembleModels
-            .First().GetRawVariableImportance()
+        var dummyFeatureNameToIndex = m_ensembleModels[0].GetRawVariableImportance()
             .ToDictionary(k => index.ToString(), k => index++);
 
         return GetVariableImportance(dummyFeatureNameToIndex).Values.ToArray();
     }
 
     /// <summary>
-    /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name 
+    /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name
     /// </summary>
     /// <param name="featureNameToIndex"></param>
     /// <returns></returns>

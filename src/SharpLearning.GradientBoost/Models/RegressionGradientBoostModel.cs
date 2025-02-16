@@ -10,33 +10,33 @@ using SharpLearning.InputOutput.Serialization;
 namespace SharpLearning.GradientBoost.Models;
 
 /// <summary>
-/// 
+///
 /// </summary>
 [Serializable]
 public sealed class RegressionGradientBoostModel : IPredictorModel<double>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly GBMTree[] Trees;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double LearningRate;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double InitialLoss;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int FeatureCount;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="trees"></param>
     /// <param name="learningRate"></param>
@@ -91,10 +91,10 @@ public sealed class RegressionGradientBoostModel : IPredictorModel<double>
     /// <returns></returns>
     public Dictionary<string, double> GetVariableImportance(Dictionary<string, int> featureNameToIndex)
     {
-        var m_rawVariableImportance = GetRawVariableImportance();
-        var max = m_rawVariableImportance.Max();
+        var rawVariableImportance = GetRawVariableImportance();
+        var max = rawVariableImportance.Max();
 
-        var scaledVariableImportance = m_rawVariableImportance
+        var scaledVariableImportance = rawVariableImportance
             .Select(v => (v / max) * 100.0)
             .ToArray();
 

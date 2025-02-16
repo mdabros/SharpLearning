@@ -33,16 +33,12 @@ public unsafe struct F64VectorView
         set { m_ptr[index] = value; }
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public int Length { get; private set; }
-
+    public int Length { get; }
 
     /// <summary>
     /// Gets the interval of the F64View
     /// </summary>
-    public Interval1D Interval { get { return Interval1D.Create(0, Length); } }
+    public Interval1D Interval => Interval1D.Create(0, Length);
 
     /// <summary>
     /// Gets a sub-view over the specified interval

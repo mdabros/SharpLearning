@@ -5,12 +5,12 @@ namespace SharpLearning.Containers.Views;
 
 /// <summary>
 /// Pinned pointer to F64Vector. Proper disposal required. Preferably use this in a Using statement
-/// 
+///
 /// Using(var pinned = vector.GetPinnedPointer())
 /// {
 ///     var view = pinned.View();
 /// }
-/// 
+///
 /// </summary>
 public unsafe struct F64VectorPinnedPtr : IDisposable
 {
@@ -18,10 +18,6 @@ public unsafe struct F64VectorPinnedPtr : IDisposable
     readonly GCHandle m_handle;
     double* m_ptr;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="v"></param>
     public F64VectorPinnedPtr(double[] v)
     {
         m_length = v.Length;
@@ -38,9 +34,6 @@ public unsafe struct F64VectorPinnedPtr : IDisposable
         return new F64VectorView(m_ptr, m_length);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
     public void Dispose()
     {
         if (m_ptr != null)

@@ -23,16 +23,22 @@
     <PublishRelease>true</PublishRelease>
     <PackRelease>true</PackRelease>
 
+    <!-- https://github.com/dotnet/roslyn/issues/41640 🤦 -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591;RCS1138;CS1668</NoWarn>
 
     <AnalysisLevel>latest</AnalysisLevel>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <NoWarn>CS1591;CS1668</NoWarn>
 
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.12.11" PrivateAssets="All"/>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.12.11" PrivateAssets="All"/>
+  </ItemGroup>
   
   <Import Project="$(MSBuildThisFileDirectory)\OutputBuildProps.props" />
 

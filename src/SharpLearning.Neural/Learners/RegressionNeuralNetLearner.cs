@@ -11,14 +11,14 @@ using SharpLearning.Neural.TargetEncoders;
 namespace SharpLearning.Neural.Learners;
 
 /// <summary>
-/// RegressionNeuralNet learner using mini-batch gradient descent. 
+/// RegressionNeuralNet learner using mini-batch gradient descent.
 /// </summary>
 public sealed class RegressionNeuralNetLearner : IIndexedLearner<double>, ILearner<double>
 {
     readonly NeuralNetLearner m_learner;
 
     /// <summary>
-    /// RegressionNeuralNet learner using mini-batch gradient descent. 
+    /// RegressionNeuralNet learner using mini-batch gradient descent.
     /// Several optimization methods is available through the constructor.
     /// </summary>
     /// <param name="net">The neural net to learn</param>

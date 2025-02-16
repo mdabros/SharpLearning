@@ -8,17 +8,17 @@ namespace SharpLearning.CrossValidation.LearningCurves;
 public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int SampleSize;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double TrainingScore;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double ValidationScore;
 
@@ -36,7 +36,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -44,13 +44,11 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     {
         if (SampleSize != other.SampleSize) { return false; }
         if (TrainingScore != other.TrainingScore) { return false; }
-        if (ValidationScore != other.ValidationScore) { return false; }
-
-        return true;
+        return ValidationScore == other.ValidationScore;
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -61,7 +59,7 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -74,20 +72,17 @@ public struct LearningCurvePoint : IEquatable<LearningCurvePoint>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is LearningCurvePoint)
-            return Equals((LearningCurvePoint)obj);
-        else
-            return false;
+        return obj is LearningCurvePoint learningCurvePoint && Equals(learningCurvePoint);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()

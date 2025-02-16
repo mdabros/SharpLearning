@@ -8,17 +8,17 @@ using SharpLearning.Metrics.Classification;
 namespace SharpLearning.Ensemble.Learners;
 
 /// <summary>
-/// Classification model selecting EnsembleLearner. 
+/// Classification model selecting EnsembleLearner.
 /// Trains several models and selects the best subset of models for the ensemble using greedy forward selection.
-/// The selection of the best set of models is based on cross validation. 
+/// The selection of the best set of models is based on cross validation.
 /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
 /// </summary>
 public sealed class ClassificationForwardSearchModelSelectingEnsembleLearner : ClassificationModelSelectingEnsembleLearner
 {
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using greedy forward selection.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// Default is 5-fold StratifiedCrossValidation and minimization of multi-class log loss and mean of probabilities is used to combine the models.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
@@ -35,9 +35,9 @@ public sealed class ClassificationForwardSearchModelSelectingEnsembleLearner : C
     }
 
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using greedy forward selection.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
@@ -45,7 +45,7 @@ public sealed class ClassificationForwardSearchModelSelectingEnsembleLearner : C
     /// <param name="crossValidation">Cross validation method</param>
     /// <param name="ensembleStrategy">Strategy for ensembling models</param>
     /// <param name="metric">Metric to minimize</param>
-    /// <param name="numberOfModelsFromStart">Number of models from start of the search. 
+    /// <param name="numberOfModelsFromStart">Number of models from start of the search.
     /// The top n models will be selected based in their solo performance</param>
     /// <param name="selectWithReplacement">If true the same model can be selected multiple times.
     /// This will correspond to weighting the models. If false each model can only be selected once. Default is true</param>

@@ -3,7 +3,7 @@
 namespace SharpLearning.DecisionTrees.SplitSearchers;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public struct SplitResult : IEquatable<SplitResult>
 {
@@ -23,17 +23,17 @@ public struct SplitResult : IEquatable<SplitResult>
     public readonly double ImpurityImprovement;
 
     /// <summary>
-    /// Impurity of the left side of the split 
+    /// Impurity of the left side of the split
     /// </summary>
     public readonly double ImpurityLeft;
 
     /// <summary>
-    /// Impurity of the right side of the split 
+    /// Impurity of the right side of the split
     /// </summary>
     public readonly double ImpurityRight;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="splitIndex">Split index within the feature used for split</param>
     /// <param name="threshold">Threshold used for splitting</param>
@@ -60,7 +60,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -70,25 +70,21 @@ public struct SplitResult : IEquatable<SplitResult>
         if (!Equal(Threshold, other.Threshold)) { return false; }
         if (!Equal(ImpurityImprovement, other.ImpurityImprovement)) { return false; }
         if (!Equal(ImpurityLeft, other.ImpurityLeft)) { return false; }
-        if (!Equal(ImpurityRight, other.ImpurityRight)) { return false; }
-
-        return true;
+        return Equal(ImpurityRight, other.ImpurityRight);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is SplitResult)
-            return Equals((SplitResult)obj);
-        return false;
+        return obj is SplitResult splitResult && Equals(splitResult);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -99,7 +95,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="p1"></param>
     /// <param name="p2"></param>
@@ -110,7 +106,7 @@ public struct SplitResult : IEquatable<SplitResult>
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public override int GetHashCode()
@@ -122,16 +118,11 @@ public struct SplitResult : IEquatable<SplitResult>
             ImpurityRight.GetHashCode();
     }
 
-    const double m_tolerence = 0.00001;
+    const double Tolerence = 0.00001;
 
     static bool Equal(double a, double b)
     {
-        var diff = Math.Abs(a * m_tolerence);
-        if (Math.Abs(a - b) <= diff)
-        {
-            return true;
-        }
-
-        return false;
+        var diff = Math.Abs(a * Tolerence);
+        return Math.Abs(a - b) <= diff;
     }
 }

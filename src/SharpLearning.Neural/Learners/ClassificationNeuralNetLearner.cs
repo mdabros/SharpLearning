@@ -12,7 +12,7 @@ using SharpLearning.Neural.TargetEncoders;
 namespace SharpLearning.Neural.Learners;
 
 /// <summary>
-/// ClassificationNeuralNet learner using mini-batch gradient descent. 
+/// ClassificationNeuralNet learner using mini-batch gradient descent.
 /// Several optimization methods is available through the constructor.
 /// </summary>
 public sealed class ClassificationNeuralNetLearner
@@ -24,7 +24,7 @@ public sealed class ClassificationNeuralNetLearner
     readonly NeuralNetLearner m_learner;
 
     /// <summary>
-    /// ClassificationNeuralNet learner using mini-batch gradient descent. 
+    /// ClassificationNeuralNet learner using mini-batch gradient descent.
     /// Several optimization methods is available through the constructor.
     /// </summary>
     /// <param name="net">The neural net to learn</param>

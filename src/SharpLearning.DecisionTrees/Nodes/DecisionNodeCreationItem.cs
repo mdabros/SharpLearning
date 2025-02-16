@@ -8,32 +8,32 @@ namespace SharpLearning.DecisionTrees.Nodes;
 public struct DecisionNodeCreationItem
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int ParentIndex;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly NodePositionType NodeType;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly Interval1D Interval;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly double Impurity;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly int NodeDepth;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="parentIndex"></param>
     /// <param name="nodeType"></param>

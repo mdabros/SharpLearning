@@ -33,7 +33,7 @@ public class NeuralNetLearner
     /// Neural net learner. Controls the learning process using mini-batch gradient descent.
     /// </summary>
     /// <param name="net">The neural net to learn</param>
-    /// <param name="targetEncoder">Controls how the training targets should be decoded. 
+    /// <param name="targetEncoder">Controls how the training targets should be decoded.
     /// This is different depending on if the net should be used for regression or classification.</param>
     /// <param name="loss">The loss measured and shown between each iteration</param>
     /// <param name="learningRate">Controls the step size when updating the weights. (Default is 0.001)</param>
@@ -251,7 +251,7 @@ public class NeuralNetLearner
                 timer.Stop();
 
                 Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Validation: {2:0.00000} - Time (ms): {3}",
-                    (iteration + 1), currentLoss, validationLoss, timer.ElapsedMilliseconds));
+                    iteration + 1, currentLoss, validationLoss, timer.ElapsedMilliseconds));
 
                 if (validationLoss < bestLoss)
                 {
@@ -264,7 +264,7 @@ public class NeuralNetLearner
                 timer.Stop();
 
                 Trace.WriteLine(string.Format("Iteration: {0:000} - Loss {1:0.00000} - Time (ms): {2}",
-                    (iteration + 1), currentLoss, timer.ElapsedMilliseconds));
+                    iteration + 1, currentLoss, timer.ElapsedMilliseconds));
             }
 
             if (double.IsNaN(currentLoss))
@@ -274,14 +274,7 @@ public class NeuralNetLearner
             }
         }
 
-        if (earlyStopping)
-        {
-            return bestNeuralNet;
-        }
-        else
-        {
-            return m_net.CopyNetForPredictionModel();
-        }
+        return earlyStopping ? bestNeuralNet : m_net.CopyNetForPredictionModel();
     }
 
     static void SetupLinerAlgebraProvider()

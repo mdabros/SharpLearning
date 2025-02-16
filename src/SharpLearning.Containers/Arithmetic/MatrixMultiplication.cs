@@ -40,7 +40,7 @@ public static class MatrixMultiplication
     }
 
     /// <summary>
-    /// Multiply vector v with matrix a. 
+    /// Multiply vector v with matrix a.
     /// Copies output to provided array.
     /// </summary>
     /// <param name="a"></param>
@@ -55,7 +55,6 @@ public static class MatrixMultiplication
 
         if (cols != v.Length)
         { throw new ArgumentException("matrix cols: " + cols + " differs from vector length: " + v.Length); }
-
 
         for (var i = 0; i < rows; ++i)
         {
@@ -95,7 +94,6 @@ public static class MatrixMultiplication
     {
         return MultiplyScalarF64(v, s);
     }
-
 
     /// <summary>
     /// Multiply vector v with matrix a
@@ -167,7 +165,6 @@ public static class MatrixMultiplication
         if (aCols != bRows)
         { throw new ArgumentException("matrix a cols: " + aCols + " differs from matrix b rows: " + bRows); }
 
-
         if (output.RowCount != aRows)
         {
             throw new ArgumentException("output matrix rows: " + output.RowCount
@@ -191,7 +188,6 @@ public static class MatrixMultiplication
             }
         });
     }
-
 
     /// <summary>
     /// Multiply matrix a with matrix b

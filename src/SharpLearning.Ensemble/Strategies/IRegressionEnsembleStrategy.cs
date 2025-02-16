@@ -8,14 +8,14 @@ namespace SharpLearning.Ensemble.Strategies;
 public interface IRegressionEnsembleStrategy
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="ensemblePredictions"></param>
     /// <returns></returns>
     double Combine(double[] ensemblePredictions);
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="ensemblePredictions"></param>
     /// <param name="predictions"></param>

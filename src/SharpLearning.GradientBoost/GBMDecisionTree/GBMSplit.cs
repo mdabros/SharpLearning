@@ -76,7 +76,7 @@ public struct GBMSplit
             LeftConstant = LeftConstant,
             RightConstant = RightConstant,
             Depth = Depth,
-            SampleCount = SampleCount
+            SampleCount = SampleCount,
         };
     }
 }

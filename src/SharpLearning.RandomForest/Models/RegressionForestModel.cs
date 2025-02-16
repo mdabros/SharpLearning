@@ -41,8 +41,7 @@ public sealed class RegressionForestModel : IPredictorModel<double>
     /// <returns></returns>
     public double Predict(double[] observation)
     {
-        var prediction = Trees.Select(m => m.Predict(observation))
-            .Average();
+        var prediction = Trees.Average(m => m.Predict(observation));
 
         return prediction;
     }

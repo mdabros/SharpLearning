@@ -26,7 +26,7 @@ public class RegressionStackingEnsembleModelTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionStackingEnsembleLearner(learners,
@@ -58,7 +58,7 @@ public class RegressionStackingEnsembleModelTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionStackingEnsembleLearner(learners,
@@ -81,14 +81,14 @@ public class RegressionStackingEnsembleModelTest
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
         var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
-            { "PreviousExperience_month", 1 } };
+            { "PreviousExperience_month", 1 }, };
 
         var learners = new IIndexedLearner<double>[]
         {
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionStackingEnsembleLearner(learners,
@@ -120,7 +120,7 @@ public class RegressionStackingEnsembleModelTest
             new RegressionDecisionTreeLearner(2),
             new RegressionDecisionTreeLearner(5),
             new RegressionDecisionTreeLearner(7),
-            new RegressionDecisionTreeLearner(9)
+            new RegressionDecisionTreeLearner(9),
         };
 
         var learner = new RegressionStackingEnsembleLearner(learners,
@@ -160,7 +160,7 @@ public class RegressionStackingEnsembleModelTest
         var result = "new Dictionary<string, double> {";
         foreach (var item in featureImportance)
         {
-            result += "{" + "\"" + item.Key + "\"" + ", " + item.Value + "}, ";
+            result += "{\"" + item.Key + "\", " + item.Value + "}, ";
         }
 
         Trace.WriteLine(result);

@@ -74,9 +74,9 @@ public interface IImpurityCalculator
     double[] TargetNames { get; }
 
     /// <summary>
-    /// Calculates the probabilities based in the current work interval. 
+    /// Calculates the probabilities based in the current work interval.
     /// Note that LeafProbabilities are only valid for classification impurity calculators.
-    /// Regression impurity calculators will return and empty result. The orders of the probabilities 
+    /// Regression impurity calculators will return and empty result. The orders of the probabilities
     /// is the same as TargetNames.
     /// </summary>
     /// <returns></returns>

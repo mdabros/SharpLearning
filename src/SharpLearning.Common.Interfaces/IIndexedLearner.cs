@@ -3,7 +3,7 @@
 namespace SharpLearning.Common.Interfaces;
 
 /// <summary>
-/// Interface for indexed learner. 
+/// Interface for indexed learner.
 /// Only the observations from the provided indices in the index array will be used for training
 /// </summary>
 /// <typeparam name="TPrediction">The prediction type of the resulting model.</typeparam>

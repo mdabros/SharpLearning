@@ -19,5 +19,5 @@ public enum BoosterType
     /// DART: Dropouts meet Multiple Additive Regression Trees.
     /// http://xgboost.readthedocs.io/en/latest/tutorials/dart.html
     /// </summary>
-    DART
+    DART,
 }

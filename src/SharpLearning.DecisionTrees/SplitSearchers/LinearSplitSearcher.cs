@@ -5,8 +5,8 @@ using SharpLearning.DecisionTrees.ImpurityCalculators;
 namespace SharpLearning.DecisionTrees.SplitSearchers;
 
 /// <summary>
-/// Searches for the best split using a brute force approach. The searcher only considers splits 
-/// when both the threshold value and the target value has changed.  
+/// Searches for the best split using a brute force approach. The searcher only considers splits
+/// when both the threshold value and the target value has changed.
 /// The implementation assumes that the features and targets have been sorted
 /// together using the features as sort criteria
 /// </summary>
@@ -16,8 +16,8 @@ public sealed class LinearSplitSearcher : ISplitSearcher
     readonly double m_minimumLeafWeight;
 
     /// <summary>
-    /// Searches for the best split using a brute force approach. The searcher only considers splits 
-    /// when both the threshold value and the target value has changed.  
+    /// Searches for the best split using a brute force approach. The searcher only considers splits
+    /// when both the threshold value and the target value has changed.
     /// The implementation assumes that the features and targets have been sorted
     /// together using the features as sort criteria
     /// </summary>
@@ -28,8 +28,8 @@ public sealed class LinearSplitSearcher : ISplitSearcher
     }
 
     /// <summary>
-    /// Searches for the best split using a brute force approach. The searcher only considers splits 
-    /// when both the threshold value and the target value has changed.  
+    /// Searches for the best split using a brute force approach. The searcher only considers splits
+    /// when both the threshold value and the target value has changed.
     /// The implementation assumes that the features and targets have been sorted
     /// together using the features as sort criteria
     /// </summary>
@@ -43,7 +43,7 @@ public sealed class LinearSplitSearcher : ISplitSearcher
     }
 
     /// <summary>
-    /// Searches for the best split using a brute force approach. The searcher only considers splits 
+    /// Searches for the best split using a brute force approach. The searcher only considers splits
     /// when both the threshold value and the target value has changed.
     /// The implementation assumes that the features and targets have been sorted
     /// together using the features as sort criteria
@@ -57,7 +57,6 @@ public sealed class LinearSplitSearcher : ISplitSearcher
     public SplitResult FindBestSplit(IImpurityCalculator impurityCalculator, double[] feature, double[] targets,
         Interval1D parentInterval, double parentImpurity)
     {
-
         var bestSplitIndex = -1;
         var bestThreshold = 0.0;
         var bestImpurityImprovement = 0.0;

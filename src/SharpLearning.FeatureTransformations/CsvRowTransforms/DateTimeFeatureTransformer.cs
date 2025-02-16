@@ -41,18 +41,11 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     /// <param name="startDate"></param>
     public DateTimeFeatureTransformer(string dateTimeColumn, DateTime startDate)
     {
-        if (startDate == null) { throw new ArgumentNullException("startDate"); }
         m_dateTimeColumn = dateTimeColumn;
         m_startDate = startDate;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public static string[] FeatureNames
-    {
-        get => ["Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours"];
-    }
+    public static string[] FeatureNames => ["Year", "Month", "WeekOfYear", "DayOfMonth", "DayOfWeek", "HourOfDay", "TotalDays", "TotalHours"];
 
     /// <summary>
     /// Transform a data string into numerical features that can be presented to a machine learning algorithm.
@@ -65,7 +58,7 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
     public IEnumerable<CsvRow> Transform(IEnumerable<CsvRow> rows)
     {
         var rowsList = rows.ToList();
-        var newColumnNameToIndex = rowsList.First().ColumnNameToIndex.ToDictionary(v => v.Key, v => v.Value);
+        var newColumnNameToIndex = rowsList[0].ColumnNameToIndex.ToDictionary(v => v.Key, v => v.Value);
         var index = newColumnNameToIndex.Count;
 
         foreach (var name in FeatureNames)
@@ -112,7 +105,6 @@ public sealed class DateTimeFeatureTransformer : ICsvRowTransformer
             FloatingPointConversion.ToString(hours),
             FloatingPointConversion.ToString(totalDays),
             FloatingPointConversion.ToString(totalhours),
-
         };
         return timeValues;
     }

@@ -25,7 +25,7 @@ public class StratifiedLearningCurvesCalculatorTest
         var expected = new List<LearningCurvePoint>()
         {
             new(4, 0, 0.39999999999999997),
-            new(16, 0.0625, 0.33333333333333331)
+            new(16, 0.0625, 0.33333333333333331),
         };
 
         CollectionAssert.AreEqual(expected, actual);

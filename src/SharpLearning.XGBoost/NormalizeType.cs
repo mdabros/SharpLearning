@@ -17,5 +17,5 @@ public enum NormalizeType
     /// Weight of new trees are 1 / (1 + learning_rate).
     /// Dropped trees are scaled by a factor of 1 / (1 + learning_rate)
     /// </summary>
-    Forest
+    Forest,
 }

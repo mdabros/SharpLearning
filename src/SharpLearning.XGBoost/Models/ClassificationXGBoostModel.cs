@@ -9,7 +9,7 @@ using XGBoost.lib;
 namespace SharpLearning.XGBoost.Models;
 
 /// <summary>
-/// 
+///
 /// </summary>
 public sealed class ClassificationXGBoostModel
     : IDisposable
@@ -19,7 +19,7 @@ public sealed class ClassificationXGBoostModel
     readonly Booster m_model;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="model"></param>
     public ClassificationXGBoostModel(Booster model)
@@ -28,7 +28,7 @@ public sealed class ClassificationXGBoostModel
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observation"></param>
     /// <returns></returns>
@@ -43,18 +43,11 @@ public sealed class ClassificationXGBoostModel
         var prediction = m_model.Predict(data);
 
         var numberOfClasses = prediction.Length;
-        if (numberOfClasses >= 2)
-        {
-            return PredictMultiClass(prediction);
-        }
-        else
-        {
-            return PredictSingleClass(prediction);
-        }
+        return numberOfClasses >= 2 ? PredictMultiClass(prediction) : PredictSingleClass(prediction);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>
@@ -75,7 +68,7 @@ public sealed class ClassificationXGBoostModel
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observation"></param>
     /// <returns></returns>
@@ -90,18 +83,11 @@ public sealed class ClassificationXGBoostModel
         var prediction = m_model.Predict(data);
 
         var numberOfClasses = prediction.Length;
-        if (numberOfClasses >= 2)
-        {
-            return PredictMultiClassProbability(prediction);
-        }
-        else
-        {
-            return PredictSingleClassProbability(prediction);
-        }
+        return numberOfClasses >= 2 ? PredictMultiClassProbability(prediction) : PredictSingleClassProbability(prediction);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>
@@ -167,15 +153,9 @@ public sealed class ClassificationXGBoostModel
     /// <param name="modelFilePath"></param>
     public void Save(string modelFilePath) => m_model.Save(modelFilePath);
 
-    /// <summary>
-    /// 
-    /// </summary>
     public void Dispose()
     {
-        if (m_model != null)
-        {
-            m_model.Dispose();
-        }
+        m_model?.Dispose();
     }
 
     ProbabilityPrediction IPredictor<ProbabilityPrediction>.Predict(double[] observation)

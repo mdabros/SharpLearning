@@ -25,7 +25,7 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
     /// Default combination method is the mean of all model outputs.
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
-    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
+    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data.
     /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
     /// <param name="seed">Seed for the bagging when used</param>
     public RegressionEnsembleLearner(
@@ -42,7 +42,7 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="ensembleStrategy">Strategy on how to combine the models. Default is mean of all models in the ensemble</param>
-    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
+    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data.
     /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
     /// <param name="seed">Seed for the bagging when used</param>
     public RegressionEnsembleLearner(
@@ -60,7 +60,7 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="ensembleStrategy">Strategy on how to combine the models</param>
-    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data. 
+    /// <param name="subSampleRatio">Default is 1.0. All models are trained on all data.
     /// If different from 1.0 models are trained using bagging with the chosen sub sample ratio</param>
     /// <param name="seed">Seed for the bagging when used</param>
     public RegressionEnsembleLearner(
@@ -69,9 +69,9 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
         double subSampleRatio = 1.0,
         int seed = 24)
     {
-        m_learners = learners ?? throw new ArgumentNullException("learners");
+        m_learners = learners ?? throw new ArgumentNullException(nameof(learners));
         if (learners.Length < 1) { throw new ArgumentException("there must be at least 1 learner"); }
-        m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException("ensembleStrategy");
+        m_ensembleStrategy = ensembleStrategy ?? throw new ArgumentNullException(nameof(ensembleStrategy));
 
         m_random = new Random(seed);
         m_subSampleRatio = subSampleRatio;
@@ -126,7 +126,6 @@ public sealed class RegressionEnsembleLearner : ILearner<double>, IIndexedLearne
 
         return new RegressionEnsembleModel(ensembleModels, m_ensembleStrategy());
     }
-
 
     void Sample(int[] inSample, int[] allIndices)
     {

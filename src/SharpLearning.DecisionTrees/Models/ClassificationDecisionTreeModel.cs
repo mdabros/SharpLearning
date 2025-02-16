@@ -17,14 +17,14 @@ namespace SharpLearning.DecisionTrees.Models;
 public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, IPredictorModel<ProbabilityPrediction>
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public readonly BinaryTree Tree;
 
     readonly double[] m_variableImportance;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="tree"></param>
     public ClassificationDecisionTreeModel(BinaryTree tree)
@@ -44,7 +44,7 @@ public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, I
     }
 
     /// <summary>
-    /// Predicts a set of observations 
+    /// Predicts a set of observations
     /// </summary>
     /// <param name="observations"></param>
     /// <returns></returns>
@@ -122,7 +122,6 @@ public sealed class ClassificationDecisionTreeModel : IPredictorModel<double>, I
 
         return predictions;
     }
-
 
     /// <summary>
     /// Returns the rescaled (0-100) and sorted variable importance scores with corresponding name

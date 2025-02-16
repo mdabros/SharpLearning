@@ -15,11 +15,11 @@ public class RegressionStackingEnsembleModel : IPredictorModel<double>
     readonly bool m_includeOriginalFeaturesForMetaLearner;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="ensembleModels">Models included in the ensemble</param>
     /// <param name="metaModel">Meta or top level model to combine the ensemble models</param>
-    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features.
     /// False; the meta learner only receives the output of the ensemble models as features</param>
     public RegressionStackingEnsembleModel(IPredictorModel<double>[] ensembleModels, IPredictorModel<double> metaModel, bool includeOriginalFeaturesForMetaLearner)
     {
@@ -100,7 +100,7 @@ public class RegressionStackingEnsembleModel : IPredictorModel<double>
             }
             else
             {
-                duplicateModelCount[name] += 1;
+                duplicateModelCount[name]++;
             }
 
             ensembleFeatureNameToIndex.Add(name + "_" + duplicateModelCount[name].ToString(), index++);

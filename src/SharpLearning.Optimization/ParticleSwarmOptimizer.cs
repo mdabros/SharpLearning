@@ -9,8 +9,8 @@ namespace SharpLearning.Optimization;
 
 /// <summary>
 /// Particle Swarm optimizer (PSO). PSO is initialized with a group of random particles
-/// and then searches for optima by updating generations. In every iteration, each particle is updated by following two "best" values. 
-/// The first one is the best solution found by the specific particle so far. 
+/// and then searches for optima by updating generations. In every iteration, each particle is updated by following two "best" values.
+/// The first one is the best solution found by the specific particle so far.
 /// The other "best" value is the global best value obtained by any particle in the population so far.
 /// http://www.swarmintelligence.org/tutorials.php
 /// https://en.wikipedia.org/wiki/Particle_swarm_optimization
@@ -29,8 +29,8 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
 
     /// <summary>
     /// Particle Swarm optimizer (PSO). PSO is initialized with a group of random particles
-    /// and then searches for optima by updating generations. In every iteration, each particle is updated by following two "best" values. 
-    /// The first one is the best solution found by the specific particle so far. 
+    /// and then searches for optima by updating generations. In every iteration, each particle is updated by following two "best" values.
+    /// The first one is the best solution found by the specific particle so far.
     /// The other "best" value is the global best value obtained by any particle in the population so far.
     /// </summary>
     /// <param name="parameters">A list of parameter specs, one for each optimization parameter</param>
@@ -156,7 +156,6 @@ public sealed class ParticleSwarmOptimizer : IOptimizer
                 //present[] = persent[] + v[]
                 particles[i] = particles[i].Add(particleVelocities[i]);
                 BoundCheck(particles[i], maxParameters, minParameters);
-
             }
         }
 

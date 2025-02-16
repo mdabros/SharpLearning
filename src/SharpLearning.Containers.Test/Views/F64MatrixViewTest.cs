@@ -84,7 +84,7 @@ public class F64MatrixViewTest
     {
         var features = new double[9] { 1, 2, 3,
                                     10, 20, 30,
-                                    100, 200, 300};
+                                    100, 200, 300,};
 
         return new F64Matrix(features, 3, 3);
     }
@@ -96,7 +96,6 @@ public class F64MatrixViewTest
             Assert.AreEqual(column[i], columnView[i]);
         }
     }
-
 
     unsafe void AssertMatrixView(IMatrix<double> matrix, F64MatrixView view)
     {

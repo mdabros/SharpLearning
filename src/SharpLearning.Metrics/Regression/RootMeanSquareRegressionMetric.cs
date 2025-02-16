@@ -3,12 +3,12 @@
 namespace SharpLearning.Metrics.Regression;
 
 /// <summary>
-/// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))  
+/// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))
 /// </summary>
 public sealed class RootMeanSquareRegressionMetric : IRegressionMetric
 {
     /// <summary>
-    /// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))  
+    /// Calculates the root mean square error between the targets and predictions e = Sqrt(sum((t - p)^2)/length(t))
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>

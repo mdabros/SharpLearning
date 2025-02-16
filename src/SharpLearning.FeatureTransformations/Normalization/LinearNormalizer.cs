@@ -19,17 +19,15 @@ public sealed class LinearNormalizer
     {
         if (value == oldMin)
         {
-            value = newMin;
+            return newMin;
         }
         else if (value == oldMax)
         {
-            value = newMax;
+            return newMax;
         }
         else
         {
-            value = newMin + (newMax - newMin) * (value - oldMin) / (oldMax - oldMin);
+            return newMin + (newMax - newMin) * (value - oldMin) / (oldMax - oldMin);
         }
-
-        return value;
     }
 }

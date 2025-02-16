@@ -8,17 +8,17 @@ using SharpLearning.Metrics.Classification;
 namespace SharpLearning.Ensemble.Learners;
 
 /// <summary>
-/// Classification model selecting EnsembleLearner. 
+/// Classification model selecting EnsembleLearner.
 /// Trains several models and selects the best subset of models for the ensemble using greedy backward elimination.
-/// The selection of the best set of models is based on cross validation. 
+/// The selection of the best set of models is based on cross validation.
 /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
 /// </summary>
 public sealed class ClassificationBackwardEliminationModelSelectingEnsembleLearner : ClassificationModelSelectingEnsembleLearner
 {
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using greedy backward elimination.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// Default is 5-fold StratifiedCrossValidation and minimization of multi-class log loss and mean of probabilities is used to combine the models.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
@@ -35,9 +35,9 @@ public sealed class ClassificationBackwardEliminationModelSelectingEnsembleLearn
     }
 
     /// <summary>
-    /// Classification model selecting EnsembleLearner. 
+    /// Classification model selecting EnsembleLearner.
     /// Trains several models and selects the best subset of models for the ensemble using greedy backward elimination.
-    /// The selection of the best set of models is based on cross validation. 
+    /// The selection of the best set of models is based on cross validation.
     /// http://www.cs.cornell.edu/~alexn/papers/shotgun.icml04.revised.rev2.pdf
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>

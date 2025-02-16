@@ -8,9 +8,6 @@ namespace SharpLearning.Containers.Matrices;
 /// </summary>
 public static class StringMatrixExtensions
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public static readonly Converter<string, double> DefaultConverter = FloatingPointConversion.ToF64;
 
     /// <summary>
@@ -47,7 +44,6 @@ public static class StringMatrixExtensions
         matrix.Data().Map(func);
     }
 
-
     /// <summary>
     /// Iterates over all elements in the matrix and applies the function to the elements.
     /// The values are updated directly in the Matrix.
@@ -60,7 +56,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1 
+    /// Combines vector1 and vector2 column-wise. Vector2 is added to the end of vector1
     /// </summary>
     /// <param name="v1"></param>
     /// <param name="v2"></param>
@@ -90,7 +86,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix 
+    /// Combines matrix and vector column-wise. Vector is added to the end of the matrix
     /// </summary>
     /// <param name="m"></param>
     /// <param name="v"></param>
@@ -118,15 +114,14 @@ public static class StringMatrixExtensions
             combineIndex += m.ColumnCount;
 
             Array.Copy(v, otherIndex, features, combineIndex, 1);
-            combineIndex += 1;
+            combineIndex++;
         }
-
 
         return new StringMatrix(features, rows, cols);
     }
 
     /// <summary>
-    /// Combines vector and and matrix  column-wise. Vector is added to the front of the matrix 
+    /// Combines vector and matrix  column-wise. Vector is added to the front of the matrix
     /// </summary>
     /// <param name="v"></param>
     /// <param name="m"></param>
@@ -148,7 +143,7 @@ public static class StringMatrixExtensions
         for (var i = 0; i < rows; i++)
         {
             Array.Copy(v, i, features, combineIndex, 1);
-            combineIndex += 1;
+            combineIndex++;
 
             var matrixIndex = i * m.ColumnCount;
             Array.Copy(matrixArray, matrixIndex, features, combineIndex, m.ColumnCount);
@@ -159,7 +154,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1 
+    /// Combines matrix1 and matrix2 column-wise. Matrix2 is added to the end of matrix1
     /// </summary>
     /// <param name="m1"></param>
     /// <param name="m2"></param>
@@ -196,7 +191,7 @@ public static class StringMatrixExtensions
     }
 
     /// <summary>
-    /// Combines matrix1 and matrix2 row-wise. Matrix2 is added to the end of matrix1 
+    /// Combines matrix1 and matrix2 row-wise. Matrix2 is added to the end of matrix1
     /// </summary>
     /// <param name="m1"></param>
     /// <param name="m2"></param>

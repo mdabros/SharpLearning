@@ -13,5 +13,5 @@ public enum SamplerType
     /// <summary>
     /// Dropped trees are selected in proportion to weight.
     /// </summary>
-    Weighted
+    Weighted,
 }

@@ -6,8 +6,8 @@ using SharpLearning.GradientBoost.GBMDecisionTree;
 namespace SharpLearning.GradientBoost.Loss;
 
 /// <summary>
-/// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable 
-/// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median 
+/// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable
+/// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median
 /// or other quantiles of the response variable. Using the median results in Least absolute deviation or LAD loss.
 /// </summary>
 public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
@@ -15,8 +15,8 @@ public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
     readonly double m_alpha;
 
     /// <summary>
-    /// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable 
-    /// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median 
+    /// Quantile loss. Whereas the method of least squares results in estimates that approximate the conditional mean of the response variable
+    /// given certain values of the predictor variables, quantile regression aims at estimating either the conditional median
     /// or other quantiles of the response variable. Using the median results in Least absolute deviation or LAD loss.
     /// </summary>
     /// <param name="alpha"></param>
@@ -47,7 +47,7 @@ public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="residuals"></param>
@@ -83,19 +83,11 @@ public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
     /// <returns></returns>
     public double NegativeGradient(double target, double prediction)
     {
-        if (target > prediction)
-        {
-            return m_alpha;
-        }
-        else
-        {
-            return -(1.0 - m_alpha);
-        }
-
+        return target > prediction ? m_alpha : -(1.0 - m_alpha);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>
@@ -114,7 +106,7 @@ public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
@@ -137,7 +129,7 @@ public sealed class GradientBoostQuantileLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <returns></returns>
     public bool UpdateLeafValues()

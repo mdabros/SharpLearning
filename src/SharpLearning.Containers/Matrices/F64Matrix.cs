@@ -24,14 +24,14 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     }
 
     /// <summary>
-    /// Creates a matrix from the provided values with the specified rows and cols 
+    /// Creates a matrix from the provided values with the specified rows and cols
     /// </summary>
     /// <param name="values"></param>
     /// <param name="rows"></param>
     /// <param name="cols"></param>
     public F64Matrix(double[] values, int rows, int cols)
     {
-        if (values == null) { throw new ArgumentNullException("values"); }
+        if (values == null) { throw new ArgumentNullException(nameof(values)); }
         if (values.Length != rows * cols) { throw new ArgumentException("feature array length does not match row * cols"); }
         if (rows < 1) { throw new ArgumentException("matrix must have at least 1 row"); }
         if (cols < 1) { throw new ArgumentException("matrix must have at least 1 col"); }
@@ -70,8 +70,8 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// <summary>
     /// Access the matrix like a 2D array
     /// </summary>
-    /// <param name="col"></param>
     /// <param name="row"></param>
+    /// <param name="col"></param>
     /// <returns></returns>
     public double this[int row, int col]
     {
@@ -92,7 +92,7 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     }
 
     /// <summary>
-    /// gets the specified row. 
+    /// gets the specified row.
     /// The values are copied to the provided row array.
     /// </summary>
     /// <param name="index"></param>
@@ -162,7 +162,7 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     }
 
     /// <summary>
-    /// Gets the specified rows as a matrix. 
+    /// Gets the specified rows as a matrix.
     /// Output is copied to the provided matrix
     /// </summary>
     /// <param name="indices"></param>
@@ -207,7 +207,7 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     }
 
     /// <summary>
-    /// Gets the specified rows as a matrix. 
+    /// Gets the specified rows as a matrix.
     /// Output is copied to the provided matrix
     /// </summary>
     /// <param name="indices"></param>
@@ -241,13 +241,13 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
     /// Gets the number of columns
     /// </summary>
     /// <value></value>
-    public int ColumnCount { get; private set; }
+    public int ColumnCount { get; }
 
     /// <summary>
     /// Gets the number of rows
     /// </summary>
     /// <value></value>
-    public int RowCount { get; private set; }
+    public int RowCount { get; }
 
     /// <summary>
     /// Gets a pinned pointer to the F64Matrix
@@ -258,39 +258,18 @@ public sealed unsafe class F64Matrix : IMatrix<double>, IEquatable<F64Matrix>
         return new F64MatrixPinnedPtr(this);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
     public bool Equals(F64Matrix other)
     {
         if (RowCount != other.RowCount) { return false; }
         if (ColumnCount != other.ColumnCount) { return false; }
-        if (!Data().SequenceEqual(other.Data())) { return false; }
-
-        return true;
+        return Data().SequenceEqual(other.Data());
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
     public override bool Equals(object obj)
     {
-        if (obj is F64Matrix other && Equals(other))
-        {
-            return true;
-        }
-
-        return false;
+        return obj is F64Matrix other && Equals(other);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
     public override int GetHashCode()
     {
         unchecked // Overflow is fine, just wrap

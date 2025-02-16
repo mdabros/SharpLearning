@@ -3,7 +3,7 @@
 namespace SharpLearning.Optimization.Transforms;
 
 /// <summary>
-/// Interface for transforms. 
+/// Interface for transforms.
 /// </summary>
 public interface ITransform
 {
@@ -12,8 +12,8 @@ public interface ITransform
     /// </summary>
     /// <param name="min"></param>
     /// <param name="max"></param>
-    /// <param name="sampler"></param>
     /// <param name="parameterType">Selects the type of parameter. Should the parameter be sampled as discrete values, or as continous values.</param>
+    /// <param name="sampler"></param>
     /// <returns></returns>
     double Transform(double min, double max, ParameterType parameterType, IParameterSampler sampler);
 }

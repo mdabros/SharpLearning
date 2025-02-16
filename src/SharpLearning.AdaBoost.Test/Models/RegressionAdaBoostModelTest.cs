@@ -56,14 +56,14 @@ public class RegressionAdaBoostModelTest
         var (observations, targets) = DataSetUtilities.LoadAptitudeDataSet();
 
         var featureNameToIndex = new Dictionary<string, int> { { "AptitudeTestScore", 0 },
-            { "PreviousExperience_month", 1 } };
+            { "PreviousExperience_month", 1 }, };
 
         var learner = new RegressionAdaBoostLearner(10);
         var sut = learner.Learn(observations, targets);
 
         var actual = sut.GetVariableImportance(featureNameToIndex);
         var expected = new Dictionary<string, double> { { "PreviousExperience_month", 100.0 },
-            { "AptitudeTestScore", 33.8004886838701 } };
+            { "AptitudeTestScore", 33.8004886838701 }, };
 
         Assert.AreEqual(expected.Count, actual.Count);
         var zip = expected.Zip(actual, (e, a) => new { Expected = e, Actual = a });

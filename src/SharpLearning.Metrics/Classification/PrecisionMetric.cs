@@ -31,12 +31,9 @@ public sealed class PrecisionMetric<T> : IClassificationMetric<T>
     {
         var uniques = Utilities.UniqueTargetValues(targets, predictions);
 
-        if (uniques.Count > 2)
-        {
-            throw new ArgumentException("PrecisionMetric only supports binary classification problems");
-        }
-
-        return 1.0 - Precision(targets, predictions);
+        return uniques.Count > 2
+            ? throw new ArgumentException("PrecisionMetric only supports binary classification problems")
+            : 1.0 - Precision(targets, predictions);
     }
 
     double Precision(T[] targets, T[] predictions)
@@ -61,12 +58,7 @@ public sealed class PrecisionMetric<T> : IClassificationMetric<T>
             }
         }
 
-        if (truePositives + falsePositves == 0)
-        {
-            return 0.0;
-        }
-
-        return (double)truePositives / ((double)truePositives + (double)falsePositves);
+        return truePositives + falsePositves == 0 ? 0.0 : (double)truePositives / ((double)truePositives + (double)falsePositves);
     }
 
     /// <summary>

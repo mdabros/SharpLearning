@@ -3,12 +3,12 @@
 namespace SharpLearning.Metrics.Regression;
 
 /// <summary>
-/// Calculates the mean absolute error between the targets and predictions e = Sum(abs(t - p))/length(t) 
+/// Calculates the mean absolute error between the targets and predictions e = Sum(abs(t - p))/length(t)
 /// </summary>
 public sealed class MeanAbsolutErrorRegressionMetric : IRegressionMetric
 {
     /// <summary>
-    /// Calculates the mean absolute error between the targets and predictions e = Sum(abs(t - p))/length(t) 
+    /// Calculates the mean absolute error between the targets and predictions e = Sum(abs(t - p))/length(t)
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>

@@ -9,8 +9,8 @@ using SharpLearning.Optimization.ParameterSamplers;
 namespace SharpLearning.Optimization;
 
 /// <summary>
-/// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization 
-/// avoids some of the shortcomings the standard implementation. 
+/// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization
+/// avoids some of the shortcomings the standard implementation.
 /// Specifically it is better suited for multi-modal optimization problems through its restart property.
 /// It also respect the bounds given by the provided parameter space.
 /// Roughly based on:
@@ -36,8 +36,8 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
     readonly int m_maxDegreeOfParallelism = -1;
 
     /// <summary>
-    /// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization 
-    /// avoids some of the shortcomings the standard implementation. 
+    /// Globalized bounded Nelder-Mead method. This version of Nelder-Mead optimization
+    /// avoids some of the shortcomings the standard implementation.
     /// Specifically it is better suited for multi-modal optimization problems through its restart property.
     /// It also respect the bounds given by the provided parameter space.
     /// Roughly based on:
@@ -102,7 +102,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
 
     /// <summary>
     /// Optimization using Globalized bounded Nelder-Mead method.
-    /// Returns all results, chronologically ordered. 
+    /// Returns all results, chronologically ordered.
     /// Note that the order of results might be affected if running parallel.
     /// </summary>
     /// <param name="functionToMinimize"></param>
@@ -134,13 +134,13 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
                 var q = a * (Math.Sqrt(dim + 1) - 1) / (dim * Math.Sqrt(2));
 
                 var x = initialPoint.ToArray();
-                x[i] = x[i] + p;
+                x[i] += p;
 
                 for (var j = 0; j < dim; j++)
                 {
                     if (j != i)
                     {
-                        x[j] = x[j] + q;
+                        x[j] += q;
                     }
                 }
 
@@ -158,7 +158,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
             while (true)
             {
                 results = results.OrderBy(r => r.Error).ToList();
-                var best = results.First();
+                var best = results[0];
 
                 // break after m_maxIterationsPrRestart
                 if (iterations >= m_maxIterationsPrRestart && m_maxIterationsPrRestart != 0)
@@ -213,7 +213,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
                 BoundCheck(xr);
                 var refelctionScore = EvaluateFunction(functionToMinimize, xr);
 
-                var first = results.First().Error;
+                var first = results[0].Error;
                 if (first <= refelctionScore.Error && refelctionScore.Error < results[results.Count - 2].Error)
                 {
                     results.RemoveAt(results.Count - 1);
@@ -298,7 +298,7 @@ public sealed class GlobalizedBoundedNelderMeadOptimizer : IOptimizer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="newPoint"></param>
     void RandomRestartPoint(double[] newPoint)

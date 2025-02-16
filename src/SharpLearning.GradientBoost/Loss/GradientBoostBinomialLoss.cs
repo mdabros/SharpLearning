@@ -43,7 +43,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="residuals"></param>
@@ -76,7 +76,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="target"></param>
     /// <param name="prediction"></param>
@@ -87,7 +87,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="targets"></param>
     /// <param name="predictions"></param>
@@ -106,7 +106,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="left"></param>
     /// <param name="right"></param>
@@ -135,14 +135,7 @@ public sealed class GradientBoostBinomialLoss : IGradientBoostLoss
 
     static double BinomialBestConstant(double sum, double binomialSum)
     {
-        if (binomialSum != 0.0)
-        {
-            return sum / binomialSum;
-        }
-        else
-        {
-            return 0.0;
-        }
+        return binomialSum != 0.0 ? sum / binomialSum : 0.0;
     }
 
     /// <summary>

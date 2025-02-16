@@ -19,11 +19,6 @@ public class CsvRow
     /// </summary>
     public readonly Dictionary<string, int> ColumnNameToIndex;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="columnNameToIndex"></param>
-    /// <param name="data"></param>
     public CsvRow(Dictionary<string, int> columnNameToIndex, params string[] data)
     {
         if (data == null) { throw new ArgumentException("row"); }
@@ -33,41 +28,21 @@ public class CsvRow
         ColumnNameToIndex = columnNameToIndex;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="other"></param>
-    /// <returns></returns>
     public bool Equals(CsvRow other)
     {
         if (!Values.SequenceEqual(other.Values))
-            return false;
-
-        if (!ColumnNameToIndex.SequenceEqual(other.ColumnNameToIndex))
-            return false;
-
-        return true;
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    public override bool Equals(object obj)
-    {
-        if (obj is CsvRow other)
         {
-            return Equals(other);
+            return false;
         }
 
-        return false;
+        return ColumnNameToIndex.SequenceEqual(other.ColumnNameToIndex);
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <returns></returns>
+    public override bool Equals(object obj)
+    {
+        return obj is CsvRow other && Equals(other);
+    }
+
     public override int GetHashCode()
     {
         unchecked // Overflow is fine, just wrap

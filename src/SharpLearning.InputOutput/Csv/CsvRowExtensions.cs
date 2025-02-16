@@ -12,9 +12,6 @@ namespace SharpLearning.InputOutput.Csv;
 /// </summary>
 public static class CsvRowExtensions
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public static readonly Converter<string, double> DefaultF64Converter = ArrayExtensions.DefaultF64Converter;
 
     /// <summary>
@@ -25,7 +22,7 @@ public static class CsvRowExtensions
     /// <returns></returns>
     public static string GetValue(this CsvRow row, string columnName)
     {
-        return row.Values[(row.ColumnNameToIndex[columnName])];
+        return row.Values[row.ColumnNameToIndex[columnName]];
     }
 
     /// <summary>
@@ -40,7 +37,6 @@ public static class CsvRowExtensions
         var index = row.ColumnNameToIndex[columnName];
         row.Values[index] = value;
     }
-
 
     /// <summary>
     /// Gets the CsvRow values based on the supplied column names
@@ -80,7 +76,7 @@ public static class CsvRowExtensions
     public static IEnumerable<CsvRow> Remove(this IEnumerable<CsvRow> dataRows, params string[] columnNames)
     {
         var dataRowsList = dataRows.ToList();
-        var columnsToKeep = dataRowsList.First().ColumnNameToIndex.Keys.Except(columnNames).ToArray();
+        var columnsToKeep = dataRowsList[0].ColumnNameToIndex.Keys.Except(columnNames).ToArray();
         var index = 0;
         var reducedColumnNameToIndex = columnsToKeep.ToDictionary(n => n, n => index++);
 
@@ -110,14 +106,11 @@ public static class CsvRowExtensions
         Converter<string, double> converter)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
 
-        if (first.ColumnNameToIndex.Count != 1)
-        {
-            throw new ArgumentException("Vector can only be genereded from a single column");
-        }
-
-        return dataRowsList.SelectMany(values => values.Values.AsF64(converter)).ToArray();
+        return first.ColumnNameToIndex.Count != 1
+            ? throw new ArgumentException("Vector can only be genereded from a single column")
+            : dataRowsList.SelectMany(values => values.Values.AsF64(converter)).ToArray();
     }
 
     /// <summary>
@@ -128,14 +121,11 @@ public static class CsvRowExtensions
     public static string[] ToStringVector(this IEnumerable<CsvRow> dataRows)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
 
-        if (first.ColumnNameToIndex.Count != 1)
-        {
-            throw new ArgumentException("Vector can only be generated from a single column");
-        }
-
-        return dataRowsList.SelectMany(values => values.Values).ToArray();
+        return first.ColumnNameToIndex.Count != 1
+            ? throw new ArgumentException("Vector can only be generated from a single column")
+            : dataRowsList.SelectMany(values => values.Values).ToArray();
     }
 
     /// <summary>
@@ -158,7 +148,7 @@ public static class CsvRowExtensions
         Converter<string, double> converter)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
         var cols = first.ColumnNameToIndex.Count;
         var rows = 0;
 
@@ -179,7 +169,7 @@ public static class CsvRowExtensions
     public static StringMatrix ToStringMatrix(this IEnumerable<CsvRow> dataRows)
     {
         var dataRowsList = dataRows.ToList();
-        var first = dataRowsList.First();
+        var first = dataRowsList[0];
         var cols = first.ColumnNameToIndex.Count;
         var rows = 0;
 
@@ -193,7 +183,7 @@ public static class CsvRowExtensions
     }
 
     /// <summary>
-    /// Enumerates a Matrix to CsvRows. 
+    /// Enumerates a Matrix to CsvRows.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="matrix"></param>
@@ -251,7 +241,7 @@ public static class CsvRowExtensions
     }
 
     /// <summary>
-    /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on. 
+    /// Combines two IEnumerables based on column header names. Matching rows are combined and parsed on.
     /// </summary>
     /// <param name="thisRows"></param>
     /// <param name="otherRows"></param>
@@ -273,7 +263,10 @@ public static class CsvRowExtensions
 
         foreach (var key in dictThisRows.Keys)
         {
-            if (!dictOtherRows.ContainsKey(key)) continue;
+            if (!dictOtherRows.ContainsKey(key))
+            {
+                continue;
+            }
 
             var thisValues = dictThisRows[key].Values;
             var otherValues = dictOtherRows[key].Values;
@@ -301,7 +294,7 @@ public static class CsvRowExtensions
     }
 
     /// <summary>
-    /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on. 
+    /// Combines two IEnumerables based on a row matcher function. Matching rows are combined and parsed on.
     /// </summary>
     /// <param name="thisRows"></param>
     /// <param name="otherRows"></param>

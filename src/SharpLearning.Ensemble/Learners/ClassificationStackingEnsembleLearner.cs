@@ -26,14 +26,14 @@ public sealed class ClassificationStackingEnsembleLearner
     readonly bool m_includeOriginalFeaturesForMetaLearner;
 
     /// <summary>
-    /// Stacking Classification Ensemble Learner. 
+    /// Stacking Classification Ensemble Learner.
     /// Combines several models into a single ensemble model using a top or meta level model to combine the models.
     /// The bottom level models generates output for the top level model using cross validation.
     /// Default is 5-fold StratifiedCrossValidation.
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
-    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features.
     /// False; the meta learner only receives the output of the ensemble models as features. Default is true</param>
     public ClassificationStackingEnsembleLearner(
         IIndexedLearner<ProbabilityPrediction>[] learners,
@@ -45,16 +45,15 @@ public sealed class ClassificationStackingEnsembleLearner
     {
     }
 
-
     /// <summary>
-    /// Stacking Classification Ensemble Learner. 
+    /// Stacking Classification Ensemble Learner.
     /// Combines several models into a single ensemble model using a top or meta level model to combine the models.
     /// The bottom level models generates output for the top level model using cross validation.
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
     /// <param name="crossValidation">Cross validation method</param>
-    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features.
     /// False; the meta learner only receives the output of the ensemble models as features. Default is true</param>
     public ClassificationStackingEnsembleLearner(
         IIndexedLearner<ProbabilityPrediction>[] learners,
@@ -67,14 +66,14 @@ public sealed class ClassificationStackingEnsembleLearner
     }
 
     /// <summary>
-    /// Stacking Classification Ensemble Learner. 
+    /// Stacking Classification Ensemble Learner.
     /// Combines several models into a single ensemble model using a top or meta level model to combine the models.
     /// Combines several models into a single ensemble model using a top or meta level model to combine the models.
     /// </summary>
     /// <param name="learners">Learners in the ensemble</param>
     /// <param name="metaLearner">Meta learner or top level model for combining the ensemble models</param>
     /// <param name="crossValidation">Cross validation method</param>
-    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features. 
+    /// <param name="includeOriginalFeaturesForMetaLearner">True; the meta learner also receives the original features.
     /// False; the meta learner only receives the output of the ensemble models as features</param>
     public ClassificationStackingEnsembleLearner(
         IIndexedLearner<ProbabilityPrediction>[] learners,

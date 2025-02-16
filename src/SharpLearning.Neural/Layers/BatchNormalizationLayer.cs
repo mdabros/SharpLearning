@@ -16,22 +16,22 @@ namespace SharpLearning.Neural.Layers;
 public sealed class BatchNormalizationLayer : ILayer
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Width { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Height { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public int Depth { get; set; }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public Activation ActivationFunc { get; set; }
 
@@ -73,8 +73,8 @@ public sealed class BatchNormalizationLayer : ILayer
     /// </summary>
     public Vector<float> Bias;
 
-    Matrix<float> ScaleGradients;
-    Vector<float> BiasGradients;
+    Matrix<float> m_scaleGradients;
+    Vector<float> m_biasGradients;
 
     /// <summary>
     /// BatchNormalizationLayer. Batch normalization can be added to accelerate the learning process of a neural net.
@@ -86,7 +86,7 @@ public sealed class BatchNormalizationLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="delta"></param>
     /// <returns></returns>
@@ -96,8 +96,9 @@ public sealed class BatchNormalizationLayer : ILayer
         var diff_dst = delta;
         var scaleshift = Scale;
         var diff_src = m_delta;
-        var diff_scaleshift = ScaleGradients;
+        var diff_scaleshift = m_scaleGradients;
 
+#pragma warning disable IDE1006 // Naming Styles
         var N = diff_src.RowCount;
         var C = Depth;
         var H = Height;
@@ -112,20 +113,27 @@ public sealed class BatchNormalizationLayer : ILayer
             var diff_beta = 0.0f;
 
             for (var n = 0; n < N; ++n)
+            {
                 for (var h = 0; h < H; ++h)
+                {
                     for (var w = 0; w < W; ++w)
                     {
                         diff_gamma += (src.GetValueFromIndex(n, c, h, w, Depth, Width, Height) - mean)
                             * diff_dst.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
                         diff_beta += diff_dst.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
                     }
+                }
+            }
+
             diff_gamma *= variance;
 
-            ScaleGradients.At(0, c, diff_gamma);
-            BiasGradients[c] = diff_beta;
+            m_scaleGradients.At(0, c, diff_gamma);
+            m_biasGradients[c] = diff_beta;
 
             for (var n = 0; n < N; ++n)
+            {
                 for (var h = 0; h < H; ++h)
+                {
                     for (var w = 0; w < W; ++w)
                     {
                         var diffSrcIndex = diff_src.GetDataIndex(n, c, h, w, Depth, Width, Height);
@@ -135,13 +143,15 @@ public sealed class BatchNormalizationLayer : ILayer
                             * diff_gamma * variance / (W * H * N);
                         diff_src.Data()[diffSrcIndex] *= gamma * variance;
                     }
+                }
+            }
         });
-
+#pragma warning restore IDE1006 // Naming Styles
         return m_delta;
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
@@ -151,7 +161,7 @@ public sealed class BatchNormalizationLayer : ILayer
 
         var src = input;
         var dst = OutputActivations.Data();
-
+#pragma warning disable IDE1006 // Naming Styles
         var N = input.RowCount; // number of items in mini batch
         var C = Depth;
         var H = Height;
@@ -168,18 +178,30 @@ public sealed class BatchNormalizationLayer : ILayer
             if (is_training)
             {
                 for (var n = 0; n < N; ++n)
+                {
                     for (var h = 0; h < H; ++h)
+                    {
                         for (var w = 0; w < W; ++w)
+                        {
                             mean += src.GetValueFromIndex(n, c, h, w, Depth, Width, Height);
+                        }
+                    }
+                }
+
                 mean /= W * N * H;
 
                 for (var n = 0; n < N; ++n)
+                {
                     for (var h = 0; h < H; ++h)
+                    {
                         for (var w = 0; w < W; ++w)
                         {
                             var m = src.GetValueFromIndex(n, c, h, w, Depth, Width, Height) - mean;
                             variance += m * m;
                         }
+                    }
+                }
+
                 variance = 1f / (float)Math.Sqrt(variance / (W * H * N) + eps);
             }
             else
@@ -189,7 +211,9 @@ public sealed class BatchNormalizationLayer : ILayer
             }
 
             for (var n = 0; n < N; ++n)
+            {
                 for (var h = 0; h < H; ++h)
+                {
                     for (var w = 0; w < W; ++w)
                     {
                         var d_off = src.GetDataIndex(n, c, h, w, Depth, Width, Height);
@@ -197,7 +221,9 @@ public sealed class BatchNormalizationLayer : ILayer
                         var bias = Bias[c];
                         dst[d_off] = scale * (src.Data()[d_off] - mean) * variance + bias;
                     }
-
+                }
+            }
+#pragma warning restore IDE1006 // Naming Styles
             if (is_training)
             {
                 MovingAverageMeans[c] = MovingAverage(MovingAverageMeans[c], mean);
@@ -223,15 +249,15 @@ public sealed class BatchNormalizationLayer : ILayer
     /// <param name="parametersAndGradients"></param>
     public void AddParameresAndGradients(List<ParametersAndGradients> parametersAndGradients)
     {
-        var scale = new ParametersAndGradients(Scale.Data(), ScaleGradients.Data());
-        var bias = new ParametersAndGradients(Bias.Data(), BiasGradients.Data());
+        var scale = new ParametersAndGradients(Scale.Data(), m_scaleGradients.Data());
+        var bias = new ParametersAndGradients(Bias.Data(), m_biasGradients.Data());
 
         parametersAndGradients.Add(scale);
         parametersAndGradients.Add(bias);
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="inputWidth"></param>
     /// <param name="inputHeight"></param>
@@ -256,8 +282,8 @@ public sealed class BatchNormalizationLayer : ILayer
         MovingAverageMeans = new float[inputDepth];
         MovingAverageVariance = Enumerable.Range(0, inputDepth).Select(v => 1.0f).ToArray();
 
-        ScaleGradients = Matrix<float>.Build.Dense(1, fanOutAndIn, 1);
-        BiasGradients = Vector<float>.Build.Dense(fanOutAndIn);
+        m_scaleGradients = Matrix<float>.Build.Dense(1, fanOutAndIn, 1);
+        m_biasGradients = Vector<float>.Build.Dense(fanOutAndIn);
 
         OutputActivations = Matrix<float>.Build.Dense(batchSize, fanOutAndIn);
 
@@ -265,7 +291,7 @@ public sealed class BatchNormalizationLayer : ILayer
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="layers"></param>
     public void CopyLayerForPredictionModel(List<ILayer> layers)
