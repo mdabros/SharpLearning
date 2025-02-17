@@ -2,6 +2,7 @@
 using SharpLearning.AdaBoost.Learners;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
+using SharpLearning.GradientBoost.Learners;
 using SharpLearning.RandomForest.Learners;
 
 namespace SharpLearning.Benchmarks;
@@ -23,6 +24,7 @@ public static partial class Benchmarks
         readonly ClassificationAdaBoostLearner m_classificationAdaBoostLearner = new();
         readonly ClassificationRandomForestLearner m_classificationRandomForestLearner = new();
         readonly ClassificationExtremelyRandomizedTreesLearner m_classificationExtremelyRandomizedTreesLearner = new();
+        readonly ClassificationBinomialGradientBoostLearner m_classificationBinomialGradientBoostLearner = new();
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -56,6 +58,12 @@ public static partial class Benchmarks
         public void ClassificationExtremelyRandomizedTreesLearner_Learn()
         {
             m_classificationExtremelyRandomizedTreesLearner.Learn(m_features, m_targets);
+        }
+
+        [Benchmark]
+        public void ClassificationBinomialGradientBoostLearner_Learn()
+        {
+            m_classificationBinomialGradientBoostLearner.Learn(m_features, m_targets);
         }
     }
 }
