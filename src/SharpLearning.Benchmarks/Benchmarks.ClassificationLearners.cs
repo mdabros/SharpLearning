@@ -19,7 +19,7 @@ public static partial class Benchmarks
         F64Matrix m_features;
         double[] m_targets;
 
-        // Define learners here.
+        // Define learners here. Use default parameters for benchmarks.
         readonly ClassificationDecisionTreeLearner m_classificationDecisionTreeLearner = new();
         readonly ClassificationAdaBoostLearner m_classificationAdaBoostLearner = new();
         readonly ClassificationRandomForestLearner m_classificationRandomForestLearner = new();

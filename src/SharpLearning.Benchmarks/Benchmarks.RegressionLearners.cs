@@ -17,7 +17,7 @@ public static partial class Benchmarks
         F64Matrix m_features;
         double[] m_targets;
 
-        // Define learners here.
+        // Define learners here. Use default parameters for benchmarks.
         readonly RegressionDecisionTreeLearner m_regressionDecisionTreeLearner = new();
         readonly RegressionAdaBoostLearner m_regressionAdaBoostLearner = new();
         readonly RegressionRandomForestLearner m_regressionRandomForestLearner = new();
@@ -28,7 +28,7 @@ public static partial class Benchmarks
         public void GlobalSetup()
         {
             var seed = 42;
-            m_targets = DataGenerator.GenerateDoubles(Rows, 1, seed);
+            m_targets = DataGenerator.GenerateDoubles(Rows, cols: 1, seed);
             var features = DataGenerator.GenerateDoubles(Rows, Cols, seed);
             m_features = new F64Matrix(features, Rows, Cols);
         }
