@@ -16,8 +16,8 @@ log($"{Environment.Version} args: {args.Length}");
 var config = (Debugger.IsAttached ? new DebugInProcessConfig() : DefaultConfig.Instance)
     .WithSummaryStyle(SummaryStyle.Default.WithMaxParameterColumnWidth(200));
 
-BenchmarkRunner.Run(typeof(RegressionDecisionTreeLearnerBenchmark), config, args);
-BenchmarkRunner.Run(typeof(RegressionAdaboostLearnerBenchmark), config, args);
-BenchmarkRunner.Run(typeof(RegressionRandomForestLearnerBenchmark), config, args);
-BenchmarkRunner.Run(typeof(RegressionExtremelyRandomizedLearnerBenchmark), config, args);
-BenchmarkRunner.Run(typeof(RegressionSquareLossGradientBoostLearnerBenchmark), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.Regression.DecisionTreeLearner), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.Regression.AdaboostLearner), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.Regression.RandomForestLearner), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.Regression.ExtremelyRandomizedTreeLearner), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.Regression.SquareLossGradientBoostLearner), config, args);
