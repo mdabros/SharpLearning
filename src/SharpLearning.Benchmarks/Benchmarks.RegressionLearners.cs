@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using SharpLearning.AdaBoost.Learners;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
@@ -30,8 +28,8 @@ public static partial class Benchmarks
         public void GlobalSetup()
         {
             var seed = 42;
-            m_targets = GenerateData(Rows, 1, seed);
-            var features = GenerateData(Rows, Cols, seed);
+            m_targets = DataGenerator.GenerateDoubles(Rows, 1, seed);
+            var features = DataGenerator.GenerateDoubles(Rows, Cols, seed);
             m_features = new F64Matrix(features, Rows, Cols);
         }
 
@@ -63,13 +61,6 @@ public static partial class Benchmarks
         public void RegressionSquareLossGradientBoostLearner_Learn()
         {
             m_regressionSquareLossGradientBoostLearner.Learn(m_features, m_targets);
-        }
-
-        public static double[] GenerateData(int rows, int cols, int seed)
-        {
-            var random = new Random(seed);
-            return Enumerable.Range(0, rows * cols)
-                .Select(i => random.NextDouble()).ToArray();
         }
     }
 }

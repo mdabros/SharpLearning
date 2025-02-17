@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using SharpLearning.AdaBoost.Learners;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
@@ -15,6 +13,8 @@ public static partial class Benchmarks
     {
         const int Rows = 1000;
         const int Cols = 10;
+        const int MinTargetValue = 0;
+        const int MaxTargetValue = 10;
         F64Matrix m_features;
         double[] m_targets;
 
@@ -28,8 +28,9 @@ public static partial class Benchmarks
         public void GlobalSetup()
         {
             var seed = 42;
-            m_targets = GenerateIntegers(Rows, 1, min: 0, max: 10, seed);
-            var features = GenerateDoubles(Rows, Cols, seed);
+            m_targets = DataGenerator.GenerateIntegers(Rows, cols: 1,
+                MinTargetValue, MaxTargetValue, seed);
+            var features = DataGenerator.GenerateDoubles(Rows, Cols, seed);
             m_features = new F64Matrix(features, Rows, Cols);
         }
 
@@ -55,20 +56,6 @@ public static partial class Benchmarks
         public void ClassificationExtremelyRandomizedTreesLearner_Learn()
         {
             m_classificationExtremelyRandomizedTreesLearner.Learn(m_features, m_targets);
-        }
-
-        public static double[] GenerateDoubles(int rows, int cols, int seed)
-        {
-            var random = new Random(seed);
-            return Enumerable.Range(0, rows * cols)
-                .Select(i => random.NextDouble()).ToArray();
-        }
-
-        public static double[] GenerateIntegers(int rows, int cols, int min, int max, int seed)
-        {
-            var random = new Random(seed);
-            return Enumerable.Range(0, rows * cols)
-                .Select(i => random.Next(min, max)).Select(i => (double)i).ToArray();
         }
     }
 }

@@ -17,4 +17,4 @@ var config = (Debugger.IsAttached ? new DebugInProcessConfig() : DefaultConfig.I
     .WithSummaryStyle(SummaryStyle.Default.WithMaxParameterColumnWidth(200));
 
 BenchmarkRunner.Run(typeof(Benchmarks.ClassificationLearners), config, args);
-BenchmarkRunner.Run(typeof(Benchmarks.RegressionLearners), config, args);
+//BenchmarkRunner.Run(typeof(Benchmarks.RegressionLearners), config, args);
