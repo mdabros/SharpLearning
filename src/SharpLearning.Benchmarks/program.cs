@@ -16,5 +16,6 @@ log($"{Environment.Version} args: {args.Length}");
 var config = (Debugger.IsAttached ? new DebugInProcessConfig() : DefaultConfig.Instance)
     .WithSummaryStyle(SummaryStyle.Default.WithMaxParameterColumnWidth(200));
 
-BenchmarkRunner.Run(typeof(Benchmarks.ClassificationLearners), config, args);
-BenchmarkRunner.Run(typeof(Benchmarks.RegressionLearners), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.ClassificationModels), config, args);
+//BenchmarkRunner.Run(typeof(Benchmarks.ClassificationLearners), config, args);
+//BenchmarkRunner.Run(typeof(Benchmarks.RegressionLearners), config, args);
