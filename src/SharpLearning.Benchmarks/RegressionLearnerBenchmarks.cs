@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using SharpLearning.AdaBoost.Learners;
-using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.GradientBoost.Learners;
@@ -19,23 +17,12 @@ public class RegressionLearnerBenchmarks
     F64Matrix m_features;
     double[] m_targets;
 
-    [Params(
-        typeof(RegressionDecisionTreeLearner),
-        typeof(RegressionAdaBoostLearner),
-        typeof(RegressionRandomForestLearner),
-        typeof(RegressionExtremelyRandomizedTreesLearner),
-        typeof(RegressionSquareLossGradientBoostLearner)
-    )]
-    public Type LearnerType;
-
-    static readonly Dictionary<Type, Func<ILearner<double>>> LearnerFactory = new()
-    {
-        { typeof(RegressionDecisionTreeLearner), () => new RegressionDecisionTreeLearner() },
-        { typeof(RegressionAdaBoostLearner), () => new RegressionAdaBoostLearner() },
-        { typeof(RegressionRandomForestLearner), () => new RegressionRandomForestLearner() },
-        { typeof(RegressionExtremelyRandomizedTreesLearner), () => new RegressionExtremelyRandomizedTreesLearner() },
-        { typeof(RegressionSquareLossGradientBoostLearner), () => new RegressionSquareLossGradientBoostLearner() },
-    };
+    // Define learners here.
+    readonly RegressionDecisionTreeLearner m_regressionDecisionTreeLearner = new();
+    readonly RegressionAdaBoostLearner m_regressionAdaBoostLearner = new();
+    readonly RegressionRandomForestLearner m_regressionRandomForestLearner = new();
+    readonly RegressionExtremelyRandomizedTreesLearner m_regressionExtremelyRandomizedTreesLearner = new();
+    readonly RegressionSquareLossGradientBoostLearner m_regressionSquareLossGradientBoostLearner = new();
 
     [GlobalSetup]
     public void GlobalSetup()
@@ -47,13 +34,36 @@ public class RegressionLearnerBenchmarks
     }
 
     [Benchmark]
-    public void Learn()
+    public void RegressionDecisionTreeLearner_Learn()
     {
-        var learner = LearnerFactory[LearnerType]();
-        learner.Learn(m_features, m_targets);
+        m_regressionDecisionTreeLearner.Learn(m_features, m_targets);
     }
 
-    static double[] GenerateData(int rows, int cols, int seed)
+    [Benchmark]
+    public void RegressionAdaBoostLearner_Learn()
+    {
+        m_regressionAdaBoostLearner.Learn(m_features, m_targets);
+    }
+
+    [Benchmark]
+    public void RegressionRandomForestLearner_Learn()
+    {
+        m_regressionRandomForestLearner.Learn(m_features, m_targets);
+    }
+
+    [Benchmark]
+    public void RegressionExtremelyRandomizedTreesLearner_Learn()
+    {
+        m_regressionExtremelyRandomizedTreesLearner.Learn(m_features, m_targets);
+    }
+
+    [Benchmark]
+    public void RegressionSquareLossGradientBoostLearner_Learn()
+    {
+        m_regressionSquareLossGradientBoostLearner.Learn(m_features, m_targets);
+    }
+
+    public static double[] GenerateData(int rows, int cols, int seed)
     {
         var random = new Random(seed);
         return Enumerable.Range(0, rows * cols)
