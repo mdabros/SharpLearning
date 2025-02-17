@@ -12,8 +12,8 @@ public static partial class Benchmarks
     [MemoryDiagnoser]
     public class RegressionLearners
     {
-        const int Rows = 10000;
-        const int Cols = 50;
+        const int Rows = 1000;
+        const int Cols = 10;
         F64Matrix m_features;
         double[] m_targets;
 
