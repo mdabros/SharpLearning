@@ -12,6 +12,7 @@ public static partial class Benchmarks
     [MemoryDiagnoser]
     public class RegressionLearners
     {
+        // Data size for benchmarks.
         const int Rows = 1000;
         const int Cols = 10;
         F64Matrix m_features;
