@@ -23,6 +23,9 @@ public static partial class Benchmarks
         readonly RegressionAdaBoostLearner m_regressionAdaBoostLearner = new();
         readonly RegressionRandomForestLearner m_regressionRandomForestLearner = new();
         readonly RegressionExtremelyRandomizedTreesLearner m_regressionExtremelyRandomizedTreesLearner = new();
+        readonly RegressionAbsoluteLossGradientBoostLearner m_regressionAbsoluteLossGradientBoostLearner = new();
+        readonly RegressionHuberLossGradientBoostLearner m_regressionHuberLossGradientBoostLearner = new();
+        readonly RegressionQuantileLossGradientBoostLearner m_regressionQuantileLossGradientBoostLearner = new();
         readonly RegressionSquareLossGradientBoostLearner m_regressionSquareLossGradientBoostLearner = new();
 
         [GlobalSetup]
@@ -56,6 +59,24 @@ public static partial class Benchmarks
         public void RegressionExtremelyRandomizedTreesLearner_Learn()
         {
             m_regressionExtremelyRandomizedTreesLearner.Learn(m_features, m_targets);
+        }
+
+        [Benchmark]
+        public void RegressionAbsoluteLossGradientBoostLearner_Learn()
+        {
+            m_regressionAbsoluteLossGradientBoostLearner.Learn(m_features, m_targets);
+        }
+
+        [Benchmark]
+        public void RegressionHuberLossGradientBoostLearner_Learn()
+        {
+            m_regressionHuberLossGradientBoostLearner.Learn(m_features, m_targets);
+        }
+
+        [Benchmark]
+        public void RegressionQuantileLossGradientBoostLearner_Learn()
+        {
+            m_regressionQuantileLossGradientBoostLearner.Learn(m_features, m_targets);
         }
 
         [Benchmark]
