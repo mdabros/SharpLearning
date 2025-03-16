@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
-using SharpLearning.AdaBoost.Learners;
 using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
-using SharpLearning.DecisionTrees.Learners;
-using SharpLearning.GradientBoost.Learners;
-using SharpLearning.RandomForest.Learners;
 
 namespace SharpLearning.Benchmarks;
 
