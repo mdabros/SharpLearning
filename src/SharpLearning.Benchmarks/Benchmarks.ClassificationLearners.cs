@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BenchmarkDotNet.Attributes;
 using SharpLearning.AdaBoost.Learners;
 using SharpLearning.Common.Interfaces;
@@ -50,9 +51,7 @@ public static partial class Benchmarks
             learner.Learn(m_features, m_targets);
         }
 
-        public IEnumerable<string> GetLearners()
-        {
-            return m_learners.Keys;
-        }
+        public IReadOnlyList<string> GetLearners() =>
+            m_learners.Keys.ToArray();
     }
 }
