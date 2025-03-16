@@ -22,10 +22,11 @@ public static partial class Benchmarks
         public void GlobalSetup()
         {
             (m_features, m_targets) = DataGenerator.GenerateRegressionData();
-            foreach (var (_, learner) in m_learners)
+            foreach (var (learnerName, learner) in m_learners)
             {
                 var model = learner.Learn(m_features, m_targets);
-                m_models[model.GetType().Name] = model;
+                var modelName = DefaultLearners.LearnerNameToModelNameClassification[learnerName];
+                m_models[modelName] = model;
             }
         }
 
@@ -37,14 +38,7 @@ public static partial class Benchmarks
             model.Predict(m_features);
         }
 
-        public IReadOnlyList<string> GetModels()
-        {
-            // Hack to ensure m_models is populated before call to GetModels.
-            if (m_models.Count == 0)
-            {
-                GlobalSetup();
-            }
-            return m_models.Keys.ToArray();
-        }
+        public IReadOnlyList<string> GetModels() =>
+            m_models.Keys.ToArray();
     }
 }
