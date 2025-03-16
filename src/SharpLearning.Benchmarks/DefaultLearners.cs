@@ -10,14 +10,14 @@ namespace SharpLearning.Benchmarks;
 public static class DefaultLearners
 {
     // Define classification learners here. Use default parameters for benchmarks.
-    public static readonly IReadOnlyDictionary<string, ILearner<double>> NameToClassificationLearner = 
+    public static readonly IReadOnlyDictionary<string, ILearner<double>> NameToClassificationLearner =
         new Dictionary<string, ILearner<double>>()
     {
         { nameof(ClassificationDecisionTreeLearner), new ClassificationDecisionTreeLearner() },
         { nameof(ClassificationAdaBoostLearner), new ClassificationAdaBoostLearner() },
         { nameof(ClassificationRandomForestLearner), new ClassificationRandomForestLearner() },
         { nameof(ClassificationExtremelyRandomizedTreesLearner), new ClassificationExtremelyRandomizedTreesLearner() },
-        { nameof(ClassificationBinomialGradientBoostLearner), new ClassificationBinomialGradientBoostLearner() }
+        { nameof(ClassificationBinomialGradientBoostLearner), new ClassificationBinomialGradientBoostLearner() },
     };
 
     // Define regression learners here. Use default parameters for benchmarks.
@@ -31,6 +31,6 @@ public static class DefaultLearners
         { nameof(RegressionAbsoluteLossGradientBoostLearner), new RegressionAbsoluteLossGradientBoostLearner() },
         { nameof(RegressionHuberLossGradientBoostLearner), new RegressionHuberLossGradientBoostLearner() },
         { nameof(RegressionQuantileLossGradientBoostLearner), new RegressionQuantileLossGradientBoostLearner() },
-        { nameof(RegressionSquareLossGradientBoostLearner), new RegressionSquareLossGradientBoostLearner() }
+        { nameof(RegressionSquareLossGradientBoostLearner), new RegressionSquareLossGradientBoostLearner() },
     };
 }
