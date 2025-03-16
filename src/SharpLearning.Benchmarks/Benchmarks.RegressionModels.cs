@@ -22,9 +22,10 @@ public static partial class Benchmarks
         public void GlobalSetup()
         {
             (m_features, m_targets) = DataGenerator.GenerateRegressionData();
-            foreach (var (name, learner) in m_learners)
+            foreach (var (_, learner) in m_learners)
             {
-                m_models[name] = learner.Learn(m_features, m_targets);
+                var model = learner.Learn(m_features, m_targets);
+                m_models[model.GetType().Name] = model;
             }
         }
 

@@ -13,7 +13,7 @@ public static partial class Benchmarks
     {
         readonly IReadOnlyDictionary<string, ILearner<double>> m_learners =
             DefaultLearners.NameToClassificationLearner;
-        readonly Dictionary<string, IPredictorModel<double>> m_models = [];
+        readonly Dictionary<string, IPredictorModel<double>> m_models = new();
 
         F64Matrix m_features;
         double[] m_targets;
@@ -22,21 +22,22 @@ public static partial class Benchmarks
         public void GlobalSetup()
         {
             (m_features, m_targets) = DataGenerator.GenerateClassificationData();
-            foreach (var (name, learner) in m_learners)
+            foreach (var (_, learner) in m_learners)
             {
-                m_models[name] = learner.Learn(m_features, m_targets);
+                var model = learner.Learn(m_features, m_targets);
+                m_models[model.GetType().Name] = model;
             }
         }
 
         [Benchmark]
-        [ArgumentsSource(nameof(GetLearners))]
-        public void Predict(string learnerName)
+        [ArgumentsSource(nameof(GetModels))]
+        public void Predict(string modelName)
         {
-            var model = m_models[learnerName];
+            var model = m_models[modelName];
             model.Predict(m_features);
         }
 
-        public IReadOnlyList<string> GetLearners() =>
-            m_learners.Keys.ToArray();
+        public IReadOnlyList<string> GetModels() =>
+            m_models.Keys.ToArray();
     }
 }
