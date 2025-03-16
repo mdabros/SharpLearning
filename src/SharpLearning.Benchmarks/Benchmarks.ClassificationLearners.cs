@@ -14,22 +14,13 @@ public static partial class Benchmarks
         readonly IReadOnlyDictionary<string, ILearner<double>> m_learners =
             DefaultLearners.NameToClassificationLearner;
 
-        // Data size for benchmarks.
-        const int Rows = 1000;
-        const int Cols = 10;
-        const int MinTargetValue = 0;
-        const int MaxTargetValue = 10;
         F64Matrix m_features;
         double[] m_targets;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
-            var seed = 42;
-            m_targets = DataGenerator.GenerateIntegers(Rows, cols: 1,
-                MinTargetValue, MaxTargetValue, seed);
-            var features = DataGenerator.GenerateDoubles(Rows, Cols, seed);
-            m_features = new F64Matrix(features, Rows, Cols);
+            (m_features, m_targets) = DataGenerator.GenerateClassificationData();
         }
 
         [Benchmark]
