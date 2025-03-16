@@ -15,24 +15,14 @@ public static partial class Benchmarks
     [MemoryDiagnoser]
     public class RegressionLearners
     {
+        readonly IReadOnlyDictionary<string, ILearner<double>> m_learners =
+            DefaultLearners.NameToRegressionLearner;
+
         // Data size for benchmarks.
         const int Rows = 1000;
         const int Cols = 10;
         F64Matrix m_features;
         double[] m_targets;
-
-        // Define learners here. Use default parameters for benchmarks.
-        readonly Dictionary<string, ILearner<double>> m_learners = new()
-        {
-            { nameof(RegressionDecisionTreeLearner), new RegressionDecisionTreeLearner() },
-            { nameof(RegressionAdaBoostLearner), new RegressionAdaBoostLearner() },
-            { nameof(RegressionRandomForestLearner), new RegressionRandomForestLearner() },
-            { nameof(RegressionExtremelyRandomizedTreesLearner), new RegressionExtremelyRandomizedTreesLearner() },
-            { nameof(RegressionAbsoluteLossGradientBoostLearner), new RegressionAbsoluteLossGradientBoostLearner() },
-            { nameof(RegressionHuberLossGradientBoostLearner), new RegressionHuberLossGradientBoostLearner() },
-            { nameof(RegressionQuantileLossGradientBoostLearner), new RegressionQuantileLossGradientBoostLearner() },
-            { nameof(RegressionSquareLossGradientBoostLearner), new RegressionSquareLossGradientBoostLearner() }
-        };
 
         [GlobalSetup]
         public void GlobalSetup()

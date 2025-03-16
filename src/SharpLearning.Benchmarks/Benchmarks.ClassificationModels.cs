@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using SharpLearning.AdaBoost.Learners;
 using SharpLearning.Common.Interfaces;
@@ -13,7 +16,7 @@ namespace SharpLearning.Benchmarks;
 public static partial class Benchmarks
 {
     [MemoryDiagnoser]
-    public class ClassificationLearners
+    public class ClassificationLearnersPredict
     {
         readonly IReadOnlyDictionary<string, ILearner<double>> m_learners =
             DefaultLearners.NameToClassificationLearner;
@@ -21,27 +24,31 @@ public static partial class Benchmarks
         // Data size for benchmarks.
         const int Rows = 1000;
         const int Cols = 10;
-        const int MinTargetValue = 0;
-        const int MaxTargetValue = 10;
         F64Matrix m_features;
         double[] m_targets;
+        Dictionary<string, IPredictorModel<double>> m_models;
 
         [GlobalSetup]
         public void GlobalSetup()
         {
             var seed = 42;
-            m_targets = DataGenerator.GenerateIntegers(Rows, cols: 1,
-                MinTargetValue, MaxTargetValue, seed);
+            m_targets = DataGenerator.GenerateIntegers(Rows, cols: 1, 0, 2, seed);
             var features = DataGenerator.GenerateDoubles(Rows, Cols, seed);
             m_features = new F64Matrix(features, Rows, Cols);
+
+            m_models = new Dictionary<string, IPredictorModel<double>>();
+            foreach (var learner in m_learners)
+            {
+                m_models[learner.Key] = learner.Value.Learn(m_features, m_targets);
+            }
         }
 
         [Benchmark]
         [ArgumentsSource(nameof(GetLearners))]
-        public void Learn(string learnerName)
+        public void Predict(string learnerName)
         {
-            var learner = m_learners[learnerName];
-            learner.Learn(m_features, m_targets);
+            var model = m_models[learnerName];
+            model.Predict(m_features);
         }
 
         public IReadOnlyList<string> GetLearners() =>
