@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using SharpLearning.Containers.Matrices;
 
 namespace SharpLearning.Benchmarks;
@@ -15,29 +14,37 @@ public static class DataGenerator
 
     public static (F64Matrix Features, double[] Targets) GenerateRegressionData()
     {
-        var targets = GenerateDoubles(Rows, cols: 1, Seed);
-        var features = GenerateDoubles(Rows, Cols, Seed);
+        var random = new Random(Seed);
+        var targets = GenerateDoubles(Rows, 1, random);
+        var features = GenerateDoubles(Rows, Cols, random);
         return (new F64Matrix(features, Rows, Cols), targets);
     }
 
     public static (F64Matrix Features, double[] Targets) GenerateClassificationData()
     {
-        var targets = GenerateIntegers(Rows, cols: 1, MinTargetValue, MaxTargetValue, Seed);
-        var features = GenerateDoubles(Rows, Cols, Seed);
+        var random = new Random(Seed);
+        var targets = GenerateIntegers(Rows, 1, MinTargetValue, MaxTargetValue, random);
+        var features = GenerateDoubles(Rows, Cols, random);
         return (new F64Matrix(features, Rows, Cols), targets);
     }
 
-    static double[] GenerateDoubles(int rows, int cols, int seed)
+    static double[] GenerateDoubles(int rows, int cols, Random random)
     {
-        var random = new Random(seed);
-        return Enumerable.Range(0, rows * cols)
-            .Select(i => random.NextDouble()).ToArray();
+        var data = new double[rows * cols];
+        for (var i = 0; i < data.Length; i++)
+        {
+            data[i] = random.NextDouble();
+        }
+        return data;
     }
 
-    static double[] GenerateIntegers(int rows, int cols, int min, int max, int seed)
+    static double[] GenerateIntegers(int rows, int cols, int min, int max, Random random)
     {
-        var random = new Random(seed);
-        return Enumerable.Range(0, rows * cols)
-            .Select(i => random.Next(min, max)).Select(i => (double)i).ToArray();
+        var data = new double[rows * cols];
+        for (var i = 0; i < data.Length; i++)
+        {
+            data[i] = random.Next(min, max);
+        }
+        return data;
     }
 }
