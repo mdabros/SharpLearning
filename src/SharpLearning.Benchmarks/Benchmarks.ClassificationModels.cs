@@ -36,10 +36,10 @@ public static partial class Benchmarks
             var features = DataGenerator.GenerateDoubles(Rows, Cols, seed);
             m_features = new F64Matrix(features, Rows, Cols);
 
-            m_models = new Dictionary<string, IPredictorModel<double>>();
-            foreach (var learner in m_learners)
+            m_models = [];
+            foreach (var (name, learner) in m_learners)
             {
-                m_models[learner.Key] = learner.Value.Learn(m_features, m_targets);
+                m_models[name] = learner.Learn(m_features, m_targets);
             }
         }
 
