@@ -1,5 +1,7 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Collections.Generic;
+using BenchmarkDotNet.Attributes;
 using SharpLearning.AdaBoost.Learners;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.GradientBoost.Learners;
@@ -21,11 +23,14 @@ public static partial class Benchmarks
         double[] m_targets;
 
         // Define learners here. Use default parameters for benchmarks.
-        readonly ClassificationDecisionTreeLearner m_classificationDecisionTreeLearner = new();
-        readonly ClassificationAdaBoostLearner m_classificationAdaBoostLearner = new();
-        readonly ClassificationRandomForestLearner m_classificationRandomForestLearner = new();
-        readonly ClassificationExtremelyRandomizedTreesLearner m_classificationExtremelyRandomizedTreesLearner = new();
-        readonly ClassificationBinomialGradientBoostLearner m_classificationBinomialGradientBoostLearner = new();
+        readonly Dictionary<string, ILearner<double>> m_learners = new()
+        {
+            { nameof(ClassificationDecisionTreeLearner), new ClassificationDecisionTreeLearner() },
+            { nameof(ClassificationAdaBoostLearner), new ClassificationAdaBoostLearner() },
+            { nameof(ClassificationRandomForestLearner), new ClassificationRandomForestLearner() },
+            { nameof(ClassificationExtremelyRandomizedTreesLearner), new ClassificationExtremelyRandomizedTreesLearner() },
+            { nameof(ClassificationBinomialGradientBoostLearner), new ClassificationBinomialGradientBoostLearner() },
+        };
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -38,33 +43,16 @@ public static partial class Benchmarks
         }
 
         [Benchmark]
-        public void ClassificationDecisionTreeLearner_Learn()
+        [ArgumentsSource(nameof(GetLearners))]
+        public void Learn(string learnerName)
         {
-            m_classificationDecisionTreeLearner.Learn(m_features, m_targets);
+            var learner = m_learners[learnerName];
+            learner.Learn(m_features, m_targets);
         }
 
-        [Benchmark]
-        public void ClassificationAdaBoostLearner_Learn()
+        public IEnumerable<string> GetLearners()
         {
-            m_classificationAdaBoostLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void ClassificationRandomForestLearner_Learn()
-        {
-            m_classificationRandomForestLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void ClassificationExtremelyRandomizedTreesLearner_Learn()
-        {
-            m_classificationExtremelyRandomizedTreesLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void ClassificationBinomialGradientBoostLearner_Learn()
-        {
-            m_classificationBinomialGradientBoostLearner.Learn(m_features, m_targets);
+            return m_learners.Keys;
         }
     }
 }
