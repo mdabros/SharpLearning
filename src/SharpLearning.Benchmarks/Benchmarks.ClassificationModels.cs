@@ -40,6 +40,7 @@ public static partial class Benchmarks
         public IReadOnlyList<string> GetModels()
         {
             // Hack to ensure m_models is populated before call to GetModels.
+            // This means `GlobalSetup` will be called twice.
             if (m_models.Count == 0)
             {
                 GlobalSetup();
