@@ -13,13 +13,13 @@ public static partial class Benchmarks
     {
         readonly IReadOnlyDictionary<string, ILearner<double>> m_learners =
             DefaultLearners.NameToRegressionLearner;
+        readonly Dictionary<string, IPredictorModel<double>> m_models = [];
 
         // Data size for benchmarks.
         const int Rows = 1000;
         const int Cols = 10;
         F64Matrix m_features;
         double[] m_targets;
-        Dictionary<string, IPredictorModel<double>> m_models;
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -29,7 +29,6 @@ public static partial class Benchmarks
             var features = DataGenerator.GenerateDoubles(Rows, Cols, seed);
             m_features = new F64Matrix(features, Rows, Cols);
 
-            m_models = new Dictionary<string, IPredictorModel<double>>();
             foreach (var (name, learner) in m_learners)
             {
                 m_models[name] = learner.Learn(m_features, m_targets);
