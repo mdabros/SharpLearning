@@ -37,7 +37,14 @@ public static partial class Benchmarks
             model.Predict(m_features);
         }
 
-        public IReadOnlyList<string> GetModels() =>
-            m_models.Keys.ToArray();
+        public IReadOnlyList<string> GetModels()
+        {
+            // Hack to ensure m_models is populated before call to GetModels.
+            if (m_models.Count == 0)
+            {
+                GlobalSetup();
+            }
+            return m_models.Keys.ToArray();
+        }
     }
 }

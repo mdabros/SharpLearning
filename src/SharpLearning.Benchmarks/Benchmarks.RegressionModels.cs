@@ -30,14 +30,21 @@ public static partial class Benchmarks
         }
 
         [Benchmark]
-        [ArgumentsSource(nameof(GetLearners))]
-        public void Predict(string learnerName)
+        [ArgumentsSource(nameof(GetModels))]
+        public void Predict(string modelName)
         {
-            var model = m_models[learnerName];
+            var model = m_models[modelName];
             model.Predict(m_features);
         }
 
-        public IReadOnlyList<string> GetLearners() =>
-            m_learners.Keys.ToArray();
+        public IReadOnlyList<string> GetModels()
+        {
+            // Hack to ensure m_models is populated before call to GetModels.
+            if (m_models.Count == 0)
+            {
+                GlobalSetup();
+            }
+            return m_models.Keys.ToArray();
+        }
     }
 }
