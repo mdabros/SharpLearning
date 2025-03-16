@@ -1,5 +1,7 @@
-﻿using BenchmarkDotNet.Attributes;
+﻿using System.Collections.Generic;
+using BenchmarkDotNet.Attributes;
 using SharpLearning.AdaBoost.Learners;
+using SharpLearning.Common.Interfaces;
 using SharpLearning.Containers.Matrices;
 using SharpLearning.DecisionTrees.Learners;
 using SharpLearning.GradientBoost.Learners;
@@ -19,14 +21,17 @@ public static partial class Benchmarks
         double[] m_targets;
 
         // Define learners here. Use default parameters for benchmarks.
-        readonly RegressionDecisionTreeLearner m_regressionDecisionTreeLearner = new();
-        readonly RegressionAdaBoostLearner m_regressionAdaBoostLearner = new();
-        readonly RegressionRandomForestLearner m_regressionRandomForestLearner = new();
-        readonly RegressionExtremelyRandomizedTreesLearner m_regressionExtremelyRandomizedTreesLearner = new();
-        readonly RegressionAbsoluteLossGradientBoostLearner m_regressionAbsoluteLossGradientBoostLearner = new();
-        readonly RegressionHuberLossGradientBoostLearner m_regressionHuberLossGradientBoostLearner = new();
-        readonly RegressionQuantileLossGradientBoostLearner m_regressionQuantileLossGradientBoostLearner = new();
-        readonly RegressionSquareLossGradientBoostLearner m_regressionSquareLossGradientBoostLearner = new();
+        readonly Dictionary<string, ILearner<double>> m_learners = new()
+        {
+            { nameof(RegressionDecisionTreeLearner), new RegressionDecisionTreeLearner() },
+            { nameof(RegressionAdaBoostLearner), new RegressionAdaBoostLearner() },
+            { nameof(RegressionRandomForestLearner), new RegressionRandomForestLearner() },
+            { nameof(RegressionExtremelyRandomizedTreesLearner), new RegressionExtremelyRandomizedTreesLearner() },
+            { nameof(RegressionAbsoluteLossGradientBoostLearner), new RegressionAbsoluteLossGradientBoostLearner() },
+            { nameof(RegressionHuberLossGradientBoostLearner), new RegressionHuberLossGradientBoostLearner() },
+            { nameof(RegressionQuantileLossGradientBoostLearner), new RegressionQuantileLossGradientBoostLearner() },
+            { nameof(RegressionSquareLossGradientBoostLearner), new RegressionSquareLossGradientBoostLearner() }
+        };
 
         [GlobalSetup]
         public void GlobalSetup()
@@ -38,51 +43,16 @@ public static partial class Benchmarks
         }
 
         [Benchmark]
-        public void RegressionDecisionTreeLearner_Learn()
+        [ArgumentsSource(nameof(GetLearners))]
+        public void Learn(string learnerName)
         {
-            m_regressionDecisionTreeLearner.Learn(m_features, m_targets);
+            var learner = m_learners[learnerName];
+            learner.Learn(m_features, m_targets);
         }
 
-        [Benchmark]
-        public void RegressionAdaBoostLearner_Learn()
+        public IEnumerable<string> GetLearners()
         {
-            m_regressionAdaBoostLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void RegressionRandomForestLearner_Learn()
-        {
-            m_regressionRandomForestLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void RegressionExtremelyRandomizedTreesLearner_Learn()
-        {
-            m_regressionExtremelyRandomizedTreesLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void RegressionAbsoluteLossGradientBoostLearner_Learn()
-        {
-            m_regressionAbsoluteLossGradientBoostLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void RegressionHuberLossGradientBoostLearner_Learn()
-        {
-            m_regressionHuberLossGradientBoostLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void RegressionQuantileLossGradientBoostLearner_Learn()
-        {
-            m_regressionQuantileLossGradientBoostLearner.Learn(m_features, m_targets);
-        }
-
-        [Benchmark]
-        public void RegressionSquareLossGradientBoostLearner_Learn()
-        {
-            m_regressionSquareLossGradientBoostLearner.Learn(m_features, m_targets);
+            return m_learners.Keys;
         }
     }
 }
