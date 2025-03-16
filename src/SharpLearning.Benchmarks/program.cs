@@ -18,3 +18,5 @@ var config = (Debugger.IsAttached ? new DebugInProcessConfig() : DefaultConfig.I
 
 BenchmarkRunner.Run(typeof(Benchmarks.ClassificationLearners), config, args);
 BenchmarkRunner.Run(typeof(Benchmarks.RegressionLearners), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.ClassificationModels), config, args);
+BenchmarkRunner.Run(typeof(Benchmarks.RegressionModels), config, args);
