@@ -9,7 +9,7 @@ namespace SharpLearning.Benchmarks;
 public static partial class Benchmarks
 {
     [MemoryDiagnoser]
-    public class ClassificationLearnersPredict
+    public class ClassificationModels
     {
         readonly IReadOnlyDictionary<string, ILearner<double>> m_learners =
             DefaultLearners.NameToClassificationLearner;
