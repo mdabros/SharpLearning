@@ -10,7 +10,7 @@ namespace SharpLearning.Benchmarks;
 public static class DefaultLearners
 {
     // Define classification learners here. Use default parameters for benchmarks.
-    public static readonly IReadOnlyDictionary<string, ILearner<double>> NameToClassificationLearner =
+    public static readonly IReadOnlyDictionary<string, ILearner<double>> LearnerNameToLearnerClassification =
         new Dictionary<string, ILearner<double>>()
     {
         { nameof(ClassificationDecisionTreeLearner), new ClassificationDecisionTreeLearner() },
@@ -21,7 +21,7 @@ public static class DefaultLearners
     };
 
     // Define regression learners here. Use default parameters for benchmarks.
-    public static readonly IReadOnlyDictionary<string, ILearner<double>> NameToRegressionLearner =
+    public static readonly IReadOnlyDictionary<string, ILearner<double>> LearnerNameToLearnerRegression =
         new Dictionary<string, ILearner<double>>()
     {
         { nameof(RegressionDecisionTreeLearner), new RegressionDecisionTreeLearner() },

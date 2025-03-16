@@ -12,7 +12,7 @@ public static partial class Benchmarks
     public class ClassificationLearners
     {
         readonly IReadOnlyDictionary<string, ILearner<double>> m_learners =
-            DefaultLearners.NameToClassificationLearner;
+            DefaultLearners.LearnerNameToLearnerClassification;
 
         F64Matrix m_features;
         double[] m_targets;
