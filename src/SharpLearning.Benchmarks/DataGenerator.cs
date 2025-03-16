@@ -6,7 +6,7 @@ namespace SharpLearning.Benchmarks;
 
 public static class DataGenerator
 {
-    // default data size for benchmarks.
+    // Default data size for benchmarks.
     const int Rows = 1000;
     const int Cols = 10;
     const int MinTargetValue = 0;
